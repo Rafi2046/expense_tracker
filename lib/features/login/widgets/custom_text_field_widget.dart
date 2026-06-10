@@ -1,6 +1,8 @@
+import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
-class CustomTextFieldWidget extends StatelessWidget {
+class CustomTextFieldWidget extends StatefulWidget {
   final String label;
   final String hintText;
   final bool obscureText;
@@ -15,6 +17,13 @@ class CustomTextFieldWidget extends StatelessWidget {
   });
 
   @override
+  State<CustomTextFieldWidget> createState() => _CustomTextFieldWidgetState();
+}
+
+class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
+  bool _obscureText = true;
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -22,29 +31,38 @@ class CustomTextFieldWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-                color: Colors.black87,
-              ),
-            ),
+            Text(widget.label, style: AppTextStyles.textFieldLabel),
 
-            if (trailingLabelWidget != null) trailingLabelWidget!,
+            if (widget.trailingLabelWidget != null) widget.trailingLabelWidget!,
           ],
         ),
-        const SizedBox(height: 8),
-
+        const SizedBox(height: 4),
         TextFormField(
-          obscureText: obscureText,
+          obscureText: _obscureText,
+          style: AppTextStyles.textFieldHint,
           decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: const TextStyle(color: Colors.grey),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
+            hintText: widget.hintText,
+            hintStyle: TextStyle(color: AppColors.loginLabelColor),
+
+            suffixIcon: widget.obscureText
+                ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                    icon: Icon(
+                      _obscureText ? Icons.visibility_off : Icons.visibility,
+                    ),
+                  )
+                : null,
+
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.zero,
+              borderSide: BorderSide(color: AppColors.borderColor, width: 1.5),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.borderColor, width: 1.5),
             ),
           ),
         ),

@@ -2,15 +2,14 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/features/login/pages/login_screen.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
+import 'package:expense_tracker/features/login/widgets/custom_round_button.dart';
+import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../widgets/custom_text_field_widget.dart';
-import 'create_account_screen.dart';
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class CreateAccountScreen extends StatelessWidget {
+  const CreateAccountScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,36 +35,40 @@ class LoginScreen extends StatelessWidget {
                       Image.asset(AppImages.splashLogo, height: 64, width: 64),
 
                       Text(
-                        'Welcome Back',
+                        'Create Account',
                         textAlign: TextAlign.center,
                         style: AppTextStyles.loginTitle,
                       ),
 
                       Text(
-                        'Sign in to continue your financial journey',
+                        'Join us to manage your finances smarter.',
                         textAlign: TextAlign.center,
                         style: AppTextStyles.loginSubTitle,
                       ),
 
                       const CustomTextFieldWidget(
+                        label: 'Full Name',
+                        hintText: 'John Doe',
+                      ),
+
+                      CustomTextFieldWidget(
                         label: 'Email Address',
-                        hintText: 'you@example.com',
+                        hintText: 'john@example.com',
                       ),
 
                       CustomTextFieldWidget(
                         label: 'Password',
                         hintText: '••••••••',
                         obscureText: true,
-                        trailingLabelWidget: GestureDetector(
-                          onTap: () {},
-                          child: Text(
-                            'Forgot Password?',
-                            style: AppTextStyles.textFieldLabelPassword,
-                          ),
-                        ),
                       ),
-
-                      CustomButton(text: 'Sign In', onPressed: () {}),
+                      CustomTextFieldWidget(
+                        label: 'Confirm Password',
+                        hintText: '••••••••',
+                        obscureText: true,
+                      ),
+                      SizedBox(height: 16),
+                      CustomButton(text: 'Sign Up', onPressed: () {}),
+                      SizedBox(height: 8),
 
                       Row(
                         children: [
@@ -80,7 +83,7 @@ class LoginScreen extends StatelessWidget {
                               horizontal: AppSpacing.p16,
                             ),
                             child: const Text(
-                              'or',
+                              'Or sign up with',
                               style: TextStyle(color: AppColors.dividerOrColor),
                             ),
                           ),
@@ -92,56 +95,50 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      CustomButton(
-                        leading: Image.asset(AppImages.googleLogo),
-                        showBorder: true,
-                        borderColor: AppColors.borderColor,
-                        text: 'Continue with Google',
-                        textColor: AppColors.googleTextColor,
-                        fontFamily: GoogleFonts.inter().fontFamily,
-                        onPressed: () {},
-                        backgroundColor: AppColors.white,
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomRoundButton(
+                            imagePath: AppImages.googleLogo,
+                            onPressed: () {},
+                          ),
+
+                          const SizedBox(width: 24),
+
+                          CustomRoundButton(
+                            imagePath: AppImages.appleLogo,
+                            iconSize: 26,
+                            onPressed: () {},
+                          ),
+
+                          const SizedBox(width: 24),
+
+                          CustomRoundButton(
+                            imagePath: AppImages.facebookLogo,
+                            onPressed: () {},
+                          ),
+                        ],
                       ),
 
-                      CustomButton(
-                        leading: Image.asset(AppImages.facebookLogo),
-                        showBorder: true,
-                        borderColor: AppColors.borderColor,
-                        text:'Continue with Facebook',
-                        textColor: AppColors.white,
-                        fontFamily: GoogleFonts.inter().fontFamily,
-                        onPressed: () {},
-                        backgroundColor: AppColors.facebookTextColor,
-                      ),
-                      CustomButton(
-                        leading: Transform.scale(
-                          scale: 1.4,
-                          child: Image.asset(AppImages.appleLogo),
-                        ),
-
-                        showBorder: true,
-                        borderColor: AppColors.borderColor,
-                        text: 'Continue with Apple',
-                        textColor: AppColors.googleTextColor,
-                        fontFamily: GoogleFonts.inter().fontFamily,
-                        onPressed: () {},
-                        backgroundColor: AppColors.white,
-                      ),
-                      SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Don't have an account? ",
+                            "Already have an account? ",
                             style: AppTextStyles.accountText,
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>  CreateAccountScreen()
-                              ));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginScreen(),
+                                ),
+                              );
                             },
                             child: Text(
-                              'Sign Up',
+                              'Log In',
                               style: AppTextStyles.signUpText,
                             ),
                           ),

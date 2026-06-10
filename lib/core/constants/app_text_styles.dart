@@ -22,12 +22,47 @@ class AppTextStyles {
     fontSize: 30,
     fontFamily: GoogleFonts.workSans().fontFamily,
     color: AppColors.loginTitle,
+
+
     fontWeight: FontWeight.w600,
   );
   static TextStyle loginSubTitle = TextStyle(
     fontSize: 14,
     fontFamily: GoogleFonts.inter().fontFamily,
     color: AppColors.loginSubTitle,
+    fontWeight: FontWeight.w400,
+  );
+  static TextStyle textFieldLabel  = TextStyle(
+    fontSize: 12,
+    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+    color: AppColors.loginLabelColor,
+    fontWeight: FontWeight.w500,
+  );
+  static TextStyle textFieldHint  = TextStyle(
+    fontSize: 14,
+    fontFamily: GoogleFonts.inter().fontFamily,
+    color: AppColors.loginLabelColor,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle textFieldLabelPassword  = TextStyle(
+    fontSize: 12,
+    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+    color: AppColors.loginLabelPasswordColor,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle signUpText  = TextStyle(
+    fontSize: 14,
+    fontFamily: GoogleFonts.inter().fontFamily,
+    color: AppColors.loginLabelPasswordColor,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle accountText  = TextStyle(
+    fontSize: 14,
+    fontFamily: GoogleFonts.inter().fontFamily,
+    color: AppColors.dividerOrColor,
     fontWeight: FontWeight.w400,
   );
 }
