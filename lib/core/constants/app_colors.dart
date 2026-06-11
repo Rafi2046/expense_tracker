@@ -14,6 +14,7 @@ class AppColors {
   static const Color dividerColor= Color(0xFFBBCABF);
   static const Color googleTextColor= Color(0xFF1F2937);
   static const Color facebookTextColor= Color(0xFF3177F1);
+  static const Color black= Color(0xFF000000);
 
 
 

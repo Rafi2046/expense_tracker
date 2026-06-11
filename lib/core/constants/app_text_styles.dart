@@ -65,4 +65,9 @@ class AppTextStyles {
     color: AppColors.dividerOrColor,
     fontWeight: FontWeight.w400,
   );
+  static TextStyle appbarTitle = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w500,
+    color: AppColors.black,
+  );
 }

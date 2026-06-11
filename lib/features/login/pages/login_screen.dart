@@ -2,6 +2,8 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
+import 'package:expense_tracker/features/login/pages/forgot_password_screen.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -57,7 +59,14 @@ class LoginScreen extends StatelessWidget {
                         hintText: '••••••••',
                         obscureText: true,
                         trailingLabelWidget: GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ForgotPasswordScreen(),
+                              ),
+                            );
+                          },
                           child: Text(
                             'Forgot Password?',
                             style: AppTextStyles.textFieldLabelPassword,
@@ -65,7 +74,17 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
 
-                      CustomButton(text: 'Sign In', onPressed: () {}),
+                      CustomButton(
+                        text: 'Sign In',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BottomNavScreen(),
+                            ),
+                          );
+                        },
+                      ),
 
                       Row(
                         children: [
@@ -107,11 +126,11 @@ class LoginScreen extends StatelessWidget {
                         leading: Image.asset(AppImages.facebookLogo),
                         showBorder: true,
                         borderColor: AppColors.borderColor,
-                        text:'Continue with Facebook',
-                        textColor: AppColors.white,
+                        text: 'Continue with Facebook',
+                        textColor: AppColors.black,
                         fontFamily: GoogleFonts.inter().fontFamily,
                         onPressed: () {},
-                        backgroundColor: AppColors.facebookTextColor,
+                        backgroundColor: AppColors.white,
                       ),
                       CustomButton(
                         leading: Transform.scale(
@@ -137,8 +156,12 @@ class LoginScreen extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>  CreateAccountScreen()
-                              ));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CreateAccountScreen(),
+                                ),
+                              );
                             },
                             child: Text(
                               'Sign Up',

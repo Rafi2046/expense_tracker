@@ -5,4 +5,18 @@ class AppImages {
   static const String googleLogo = 'assets/app_logo/google_icon.webp';
   static const String facebookLogo = 'assets/app_logo/facebook.png';
   static const String appleLogo = 'assets/app_logo/apple.webp';
+  static const String forgetPassLogo = 'assets/app_logo/forget_password_img.png';
+  static const String otpLogo = 'assets/app_logo/forgot_password_logo.png';
+  static const String tick = 'assets/app_logo/right_sign.png';
+
+
+  //bottom nav bar
+  static const String homeIcon = 'assets/app_icons/home_icon.webp';
+  static const String ledgerIcon = 'assets/app_icons/ledger_icon.webp';
+  static const String analyticsIcon = 'assets/app_icons/analytics_icons.webp';
+  static const String settingsIcon = 'assets/app_icons/settings_icon.webp';
+
+  //dashboad
+
+  static const String backIcon = 'assets/icons/arrowbackIcon.webp';
 }
