@@ -1,71 +1,98 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_images.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+class HomepageAppbarWidget extends StatelessWidget
+    implements PreferredSizeWidget {
+  final String name;
+  final String? profilePhoto;
+  final VoidCallback onProfileTap;
+  final VoidCallback notificationOnTap;
 
-class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final bool showMenuIcon;
-  final bool resetForm;
-  final VoidCallback? onPopOut;
-  final bool? backArrow;
-
-  const AppBarWidget({
+  const HomepageAppbarWidget({
     super.key,
-    required this.title,
-    this.showMenuIcon = false,
-    this.onPopOut,
-    this.resetForm = false,
-    this.backArrow,
+    required this.name,
+    this.profilePhoto,
+    required this.onProfileTap,
+    required this.notificationOnTap,
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(50);
-
-  Widget? _buildLeading(BuildContext context) {
-    if (showMenuIcon) {
-      return IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () => Scaffold.of(context).openDrawer(),
-      );
-    }
-
-    if (backArrow == false) {
-      return null;
-    }
-
-    return IconButton(
-      icon: Image.asset('assets/app_icons/arrowbackIcon.webp'),
-      onPressed: resetForm && onPopOut != null
-          ? onPopOut
-          : () => Navigator.pop(context),
-    );
-  }
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 2.0);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      scrolledUnderElevation: 0,
+      backgroundColor: Colors.white,
       elevation: 0,
-      backgroundColor: AppColors.white,
-      systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarColor: AppColors.white,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+      scrolledUnderElevation: 0,
+      titleSpacing: 16,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          InkWell(
+            onTap: onProfileTap,
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 4.0,
+                horizontal: 8.0,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircleAvatar(
+                    radius: 18,
+                    backgroundColor: Colors.grey.shade200,
+                    child: Text(
+                      name.isNotEmpty ? name[0].toUpperCase() : 'U',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        fontFamily: GoogleFonts.workSans().fontFamily,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    name,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      fontFamily: GoogleFonts.workSans().fontFamily,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Colors.black87,
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          IconButton(
+            onPressed: notificationOnTap,
+            icon: const Icon(
+              Icons.notifications_none_outlined,
+              color: AppColors.notificationIcon,
+              size: 26,
+            ),
+          ),
+        ],
       ),
-      centerTitle: true,
-      toolbarHeight: 50,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(20),
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(2.0),
+        child: Container(
+          color: AppColors.dividerColor,
+          height: 2.0,
         ),
       ),
-      title: Text(title, style: AppTextStyles.appbarTitle),
-      leading: _buildLeading(context),
     );
   }
 }

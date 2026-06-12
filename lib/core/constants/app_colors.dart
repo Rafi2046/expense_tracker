@@ -15,10 +15,10 @@ class AppColors {
   static const Color googleTextColor= Color(0xFF1F2937);
   static const Color facebookTextColor= Color(0xFF3177F1);
   static const Color black= Color(0xFF000000);
-
-
-
-
-
-
+  static const Color containerColorGrey = Color(0xFFF5F5F5);
+  static const Color notificationIcon = Color(0xFF146C48);
+  static const Color selectedColor =   Color(0xFF00BFA5);
+  static const Color activeGreen = Color(0xFF2EBD85);
+  static const Color selectionGreenBg = Color(0xFFE8F8F5);
+  static const Color infoBannerBackground = Color(0xFFF4F5FB);
 }

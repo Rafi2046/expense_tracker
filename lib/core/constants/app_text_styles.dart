@@ -70,4 +70,15 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
     color: AppColors.black,
   );
+
+   static TextStyle createProfile= TextStyle(
+     fontSize: 16,
+     fontWeight: FontWeight.bold,
+     fontFamily: GoogleFonts.workSans().fontFamily,
+     color: AppColors.selectedColor,
+   );
+
+
+
+
 }
