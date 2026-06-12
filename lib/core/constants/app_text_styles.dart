@@ -102,9 +102,136 @@ class AppTextStyles {
     fontFamily: GoogleFonts.workSans().fontFamily,
     color: AppColors.selectedColor,
   );
+
+  static TextStyle cardTitle = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+    color: AppColors.textMuted,
+    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+    letterSpacing: 1.0,
+  );
+
+  static TextStyle cardValueGreen = TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.bold,
+    color: AppColors.buttonColor,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle cardValueRed = TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.bold,
+    color: AppColors.activeRed,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle cardTrendGreen = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.bold,
+    color: AppColors.activeGreen,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle cardTrendRed = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.bold,
+    color: AppColors.activeRed,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle cardStatusText = TextStyle(
+    fontSize: 13,
+    color: AppColors.loginSubTitle,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
   static TextStyle profileInfo = TextStyle(
     fontSize: 13,
     color: AppColors.dividerOrColor,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle insightsHeaderTitle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AppColors.black,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle summaryCardLabel = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+    color: AppColors.textMuted,
+    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+    letterSpacing: 1.0,
+  );
+
+  static TextStyle summaryCardValue = TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.bold,
+    color: AppColors.activeGreen,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle summaryCardTrendText = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.bold,
+    color: AppColors.activeGreen,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle timeFrameSelectedText = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: Colors.white,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle timeFrameUnselectedText = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textMuted,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle sectionHeaderTitle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AppColors.black,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle viewAllText = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: AppColors.activeGreen,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle dialogTitle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AppColors.black,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle dialogBody = TextStyle(
+    fontSize: 13,
+    color: AppColors.loginSubTitle,
+    fontFamily: GoogleFonts.inter().fontFamily,
+    height: 1.4,
+  );
+
+  static TextStyle dialogBulletText = TextStyle(
+    fontSize: 12,
+    color: AppColors.loginSubTitle,
+    fontFamily: GoogleFonts.inter().fontFamily,
+  );
+
+  static TextStyle dialogCloseButton = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    color: AppColors.buttonColor,
     fontFamily: GoogleFonts.workSans().fontFamily,
   );
 }

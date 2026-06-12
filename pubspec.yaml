@@ -38,6 +38,7 @@ dependencies:
   flutter_otp_text_field: ^1.5.1+1
   salomon_bottom_bar: ^3.3.2
   provider: ^6.1.5+1
+  syncfusion_flutter_charts: ^33.2.12
 
 dev_dependencies:
   flutter_test:

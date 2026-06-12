@@ -1,7 +1,9 @@
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/appbar_widget.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
+import 'package:expense_tracker/features/dashboard/pages/income_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
+import 'package:expense_tracker/features/dashboard/widgets/dashboard_stat_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -40,10 +42,81 @@ class DashboardScreen extends StatelessWidget {
         },
         notificationOnTap: () {},
       ),
-      body: const Column(
-        children: [
-          // Dashboard screen contents go here
-        ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 1.40,
+                // Customizes card aspect ratio
+                children: [
+                  DashboardStatCard(
+                    title: 'Income',
+                    value: '\$5,240',
+                    percentageText: '+12%',
+                    isPositive: true,
+                    isTrend: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const IncomeInsightsScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  DashboardStatCard(
+                    title: 'Expense',
+                    value: '\$2,180',
+                    percentageText: '-5%',
+                    isPositive: false,
+                    isTrend: true,
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Expense details clicked')),
+                      );
+                    },
+                  ),
+                  DashboardStatCard(
+                    title: 'To Receive',
+                    value: '\$850',
+                    statusText: '3 pending',
+                    isPositive: true,
+                    isTrend: false,
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('To Receive pending list clicked'),
+                        ),
+                      );
+                    },
+                  ),
+                  DashboardStatCard(
+                    title: 'To Give',
+                    value: '\$320',
+                    statusText: 'Due in 2 days',
+                    isPositive: false,
+                    isTrend: false,
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('To Give due list clicked'),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

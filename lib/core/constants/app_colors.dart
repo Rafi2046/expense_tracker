@@ -21,4 +21,6 @@ class AppColors {
   static const Color activeGreen = Color(0xFF2EBD85);
   static const Color selectionGreenBg = Color(0xFFE8F8F5);
   static const Color infoBannerBackground = Color(0xFFF4F5FB);
+  static const Color activeRed = Color(0xFFDC3545);
+  static const Color textMuted = Color(0xFF888888);
 }
