@@ -71,6 +71,32 @@ class AppTextStyles {
     color: AppColors.black,
   );
 
+  static TextStyle profileTitle = TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.bold,
+    color: AppColors.black,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle profileSubtitle = TextStyle(
+    fontSize: 14,
+    color: AppColors.loginSubTitle,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle profileCardTitle = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: AppColors.black,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle profileCardSubtitle = TextStyle(
+    fontSize: 13,
+    color: AppColors.loginSubTitle,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
    static TextStyle createProfile= TextStyle(
      fontSize: 16,
      fontWeight: FontWeight.bold,

@@ -1,8 +1,15 @@
+import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'features/splash/pages/splash_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ProfileProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -12,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.white)),
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.white)),
       home: SplashScreen(),
     );
   }
