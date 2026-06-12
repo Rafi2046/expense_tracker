@@ -1,24 +1,21 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_info_banner.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_type_card.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/dashboard/pages/create_profile_name_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class SelectProfileScreen extends StatefulWidget {
+class SelectProfileScreen extends StatelessWidget {
   const SelectProfileScreen({super.key});
 
   @override
-  State<SelectProfileScreen> createState() => _SelectProfileScreenState();
-}
-
-class _SelectProfileScreenState extends State<SelectProfileScreen> {
-  // 'business' or 'personal'
-  String _selectedType = 'business';
-
-  @override
   Widget build(BuildContext context) {
+    final provider = context.watch<ProfileProvider>();
+    final isBusiness = provider.creationProfileType == 'business';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -52,11 +49,9 @@ class _SelectProfileScreenState extends State<SelectProfileScreen> {
                 icon: Icons.storefront,
                 title: 'Business Management',
                 subtitle: 'Manage your business accounting and inventory easily.',
-                isSelected: _selectedType == 'business',
+                isSelected: isBusiness,
                 onTap: () {
-                  setState(() {
-                    _selectedType = 'business';
-                  });
+                  provider.setCreationProfileType('business');
                 },
               ),
               
@@ -67,11 +62,9 @@ class _SelectProfileScreenState extends State<SelectProfileScreen> {
                 icon: Icons.person,
                 title: 'Personal Finance',
                 subtitle: 'Track your expenses and maintain your credits with friends.',
-                isSelected: _selectedType == 'personal',
+                isSelected: !isBusiness,
                 onTap: () {
-                  setState(() {
-                    _selectedType = 'personal';
-                  });
+                  provider.setCreationProfileType('personal');
                 },
               ),
               
@@ -91,7 +84,7 @@ class _SelectProfileScreenState extends State<SelectProfileScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => CreateProfileNameScreen(
-                        isBusiness: _selectedType == 'business',
+                        isBusiness: isBusiness,
                       ),
                     ),
                   );

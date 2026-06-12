@@ -1,6 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ProfileInfoBanner extends StatelessWidget {
   const ProfileInfoBanner({super.key});
@@ -25,11 +25,7 @@ class ProfileInfoBanner extends StatelessWidget {
           Expanded(
             child: Text(
               'You can also create & manage multiple profiles from the homepage later.',
-              style: TextStyle(
-                fontSize: 13,
-                color: const Color(0xFF565E74),
-                fontFamily: GoogleFonts.workSans().fontFamily,
-              ),
+              style: AppTextStyles.profileInfo,
             ),
           ),
         ],

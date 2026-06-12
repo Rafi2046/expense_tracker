@@ -1,10 +1,11 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
+import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_selection_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_name_input_field.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CreateProfileNameScreen extends StatefulWidget {
   final bool isBusiness;
@@ -17,20 +18,6 @@ class CreateProfileNameScreen extends StatefulWidget {
 
 class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
   final TextEditingController _nameController = TextEditingController();
-  final List<String> _categories = [
-    'Agriculture',
-    'Auto / Parts',
-    'Bakery',
-    'Beauty Parlour',
-    'Cable Operator',
-    'Catering',
-    'Clothing',
-    'Computer Services',
-    'Construction',
-    'Consulting',
-    'Cosmetics',
-    'Dairy Products',
-  ];
 
   @override
   void dispose() {
@@ -38,7 +25,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
     super.dispose();
   }
 
-  void _showCategoryBottomSheet() {
+  void _showCategoryBottomSheet(BuildContext context, ProfileProvider provider) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -48,16 +35,9 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
       ),
       builder: (context) {
         return CategorySelectionSheetContent(
-          categories: _categories,
           onCategorySelected: (cat) {
             Navigator.pop(context); // Close bottom sheet
-            
-            // Return the newly created profile
-            final newProfile = UserProfile(
-              id: DateTime.now().millisecondsSinceEpoch.toString(),
-              name: _nameController.text.trim(),
-              type: widget.isBusiness ? 'Business ($cat)' : 'Personal',
-            );
+            final newProfile = provider.finalizeProfileCreation();
             Navigator.pop(context, newProfile); // Return from name screen
           },
         );
@@ -67,6 +47,8 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<ProfileProvider>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -104,21 +86,20 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
                 text: 'Continue',
                 backgroundColor: AppColors.activeGreen,
                 onPressed: () {
-                  if (_nameController.text.trim().isEmpty) {
+                  final name = _nameController.text.trim();
+                  if (name.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Please enter your name')),
                     );
                     return;
                   }
 
+                  provider.setCreationName(name);
+
                   if (widget.isBusiness) {
-                    _showCategoryBottomSheet();
+                    _showCategoryBottomSheet(context, provider);
                   } else {
-                    final newProfile = UserProfile(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(),
-                      name: _nameController.text.trim(),
-                      type: 'Personal',
-                    );
+                    final newProfile = provider.finalizeProfileCreation();
                     Navigator.pop(context, newProfile);
                   }
                 },

@@ -1,6 +1,5 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ProfileNameInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -9,35 +8,10 @@ class ProfileNameInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return CustomTextFieldWidget(
+      label: 'Your Name',
+      hintText: 'Enter name',
       controller: controller,
-      style: TextStyle(
-        fontSize: 16,
-        color: Colors.black,
-        fontFamily: GoogleFonts.workSans().fontFamily,
-      ),
-      decoration: InputDecoration(
-        labelText: 'Your Name',
-        labelStyle: TextStyle(
-          color: Colors.grey.shade600,
-          fontFamily: GoogleFonts.workSans().fontFamily,
-        ),
-        floatingLabelStyle: const TextStyle(
-          color: AppColors.activeGreen,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey.shade300),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColors.activeGreen, width: 2),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey.shade300),
-        ),
-      ),
     );
   }
 }

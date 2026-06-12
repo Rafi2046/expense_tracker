@@ -1,32 +1,21 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-class CategorySelectionSheetContent extends StatefulWidget {
-  final List<String> categories;
+class CategorySelectionSheetContent extends StatelessWidget {
   final Function(String) onCategorySelected;
 
   const CategorySelectionSheetContent({
     super.key,
-    required this.categories,
     required this.onCategorySelected,
   });
 
   @override
-  State<CategorySelectionSheetContent> createState() =>
-      _CategorySelectionSheetContentState();
-}
-
-class _CategorySelectionSheetContentState
-    extends State<CategorySelectionSheetContent> {
-  String _searchQuery = '';
-  String? _selectedCategory;
-
-  @override
   Widget build(BuildContext context) {
-    final filteredCategories = widget.categories
-        .where((c) => c.toLowerCase().contains(_searchQuery.toLowerCase()))
-        .toList();
+    final provider = context.watch<ProfileProvider>();
+    final filteredCategories = provider.filteredCategories;
 
     return Container(
       padding: const EdgeInsets.all(20.0),
@@ -83,9 +72,7 @@ class _CategorySelectionSheetContentState
               ),
             ),
             onChanged: (val) {
-              setState(() {
-                _searchQuery = val;
-              });
+              provider.setCategorySearchQuery(val);
             },
           ),
           const SizedBox(height: 16),
@@ -100,7 +87,7 @@ class _CategorySelectionSheetContentState
               itemCount: filteredCategories.length,
               itemBuilder: (context, index) {
                 final cat = filteredCategories[index];
-                final isSelected = cat == _selectedCategory;
+                final isSelected = cat == provider.selectedCategory;
 
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
@@ -119,13 +106,11 @@ class _CategorySelectionSheetContentState
                     color: isSelected ? AppColors.activeGreen : Colors.grey.shade300,
                   ),
                   onTap: () {
-                    setState(() {
-                      _selectedCategory = cat;
-                    });
+                    provider.setSelectedCategory(cat);
                     
                     // Delayed selection notification to let the user see selection
                     Future.delayed(const Duration(milliseconds: 200), () {
-                      widget.onCategorySelected(cat);
+                      onCategorySelected(cat);
                     });
                   },
                 );

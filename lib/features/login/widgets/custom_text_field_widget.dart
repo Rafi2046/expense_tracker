@@ -7,6 +7,7 @@ class CustomTextFieldWidget extends StatefulWidget {
   final String hintText;
   final bool obscureText;
   final Widget? trailingLabelWidget;
+  final TextEditingController? controller;
 
   const CustomTextFieldWidget({
     super.key,
@@ -14,6 +15,7 @@ class CustomTextFieldWidget extends StatefulWidget {
     required this.hintText,
     this.obscureText = false,
     this.trailingLabelWidget,
+    this.controller,
   });
 
   @override
@@ -21,7 +23,13 @@ class CustomTextFieldWidget extends StatefulWidget {
 }
 
 class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
-  bool _obscureText = true;
+  late bool _obscureText;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscureText = widget.obscureText;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +46,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
         ),
         const SizedBox(height: 4),
         TextFormField(
+          controller: widget.controller,
           obscureText: _obscureText,
           style: AppTextStyles.textFieldHint,
           decoration: InputDecoration(

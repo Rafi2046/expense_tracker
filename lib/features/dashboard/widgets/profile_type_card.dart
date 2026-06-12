@@ -39,7 +39,9 @@ class ProfileTypeCard extends StatelessWidget {
               height: 48,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isSelected ? AppColors.activeGreen : Colors.grey.shade100,
+                color: isSelected
+                    ? AppColors.activeGreen
+                    : Colors.grey.shade100,
               ),
               child: Icon(
                 icon,
@@ -51,23 +53,14 @@ class ProfileTypeCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: AppTextStyles.profileCardTitle,
-                  ),
+                  Text(title, style: AppTextStyles.profileCardTitle),
                   const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: AppTextStyles.profileCardSubtitle,
-                  ),
+                  Text(subtitle, style: AppTextStyles.profileCardSubtitle),
                 ],
               ),
             ),
             if (isSelected)
-              const Icon(
-                Icons.check_circle,
-                color: AppColors.activeGreen,
-              ),
+              const Icon(Icons.check_circle, color: AppColors.activeGreen),
           ],
         ),
       ),
