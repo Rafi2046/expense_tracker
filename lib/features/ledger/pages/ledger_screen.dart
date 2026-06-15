@@ -1,9 +1,9 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/ledger/widgets/ledger_balance_header.dart';
 import 'package:expense_tracker/features/ledger/widgets/ledger_transaction_row.dart';
 import 'package:expense_tracker/features/ledger/widgets/ledger_transactions_card.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LedgerScreen extends StatelessWidget {
   const LedgerScreen({super.key});
@@ -73,23 +73,6 @@ class LedgerScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
-      appBar: AppBar(
-        title: Text(
-          'Ledger',
-          style: AppTextStyles.insightsHeaderTitle,
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: const Color(0xFFE0E0E0),
-            height: 1.0,
-          ),
-        ),
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showSnackBar(context, 'Add transaction clicked'),
         backgroundColor: AppColors.activeGreen,
@@ -108,6 +91,28 @@ class LedgerScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Header Title
+                Text(
+                  'Ledger',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                    fontFamily: GoogleFonts.workSans().fontFamily,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                // Header Subtitle
+                Text(
+                  'Track your transaction history and balance.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.loginSubTitle,
+                    fontFamily: GoogleFonts.workSans().fontFamily,
+                  ),
+                ),
+                const SizedBox(height: 24),
+
                 // Total Balance Header
                 const LedgerBalanceHeader(
                   balance: '\$12,450.00',
