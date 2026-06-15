@@ -1,8 +1,14 @@
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/appbar_widget.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
+import 'package:expense_tracker/features/dashboard/pages/expense_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/income_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
+import 'package:expense_tracker/features/dashboard/widgets/dashboard_budget_status.dart';
+import 'package:expense_tracker/features/dashboard/widgets/dashboard_quick_actions.dart';
+import 'package:expense_tracker/features/dashboard/widgets/dashboard_recent_activity.dart';
+import 'package:expense_tracker/features/dashboard/widgets/dashboard_spending_categories.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_stat_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -79,8 +85,11 @@ class DashboardScreen extends StatelessWidget {
                     isPositive: false,
                     isTrend: true,
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Expense details clicked')),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ExpenseInsightsScreen(),
+                        ),
                       );
                     },
                   ),
@@ -111,6 +120,73 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       );
                     },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              DashboardQuickActions(
+                onActionTap: (label) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Quick Action: $label clicked')),
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+              DashboardRecentActivity(
+                items: [
+                  RecentActivityItem(
+                    title: 'Apple Store',
+                    category: 'Electronics',
+                    timeText: 'Today',
+                    amount: 199.00,
+                    isIncome: false,
+                    icon: Icons.shopping_bag_outlined,
+                  ),
+                  RecentActivityItem(
+                    title: 'Wild Ginger',
+                    category: 'Food',
+                    timeText: 'Yesterday',
+                    amount: 42.50,
+                    isIncome: false,
+                    icon: Icons.restaurant,
+                  ),
+                  RecentActivityItem(
+                    title: 'Monthly Salary',
+                    category: 'Income',
+                    timeText: '2 days ago',
+                    amount: 4200.00,
+                    isIncome: true,
+                    icon: Icons.payments_outlined,
+                  ),
+                ],
+                onViewAllTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Recent Activity View All clicked')),
+                  );
+                },
+                onItemTap: (item) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Tapped activity: ${item.title}')),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              const DashboardSpendingCategories(
+                categoryName: 'Food',
+                percentage: 42,
+              ),
+              const SizedBox(height: 20),
+              DashboardBudgetStatus(
+                items: [
+                  BudgetStatusItem(
+                    categoryName: 'Entertainment',
+                    percentage: 80,
+                    color: AppColors.expensePink,
+                  ),
+                  BudgetStatusItem(
+                    categoryName: 'Utilities',
+                    percentage: 45,
+                    color: AppColors.activeGreen,
                   ),
                 ],
               ),

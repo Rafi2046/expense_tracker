@@ -23,4 +23,6 @@ class AppColors {
   static const Color infoBannerBackground = Color(0xFFF4F5FB);
   static const Color activeRed = Color(0xFFDC3545);
   static const Color textMuted = Color(0xFF888888);
+  static const Color expensePink = Color(0xFFE24361);
+  static const Color chipBackground = Color(0xFFF1EFF5);
 }
