@@ -108,6 +108,19 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
 
+                // UTILITIES Settings Group
+                SettingsGroupCard(
+                  title: 'Utilities',
+                  children: [
+                    SettingsOptionRow(
+                      icon: Icons.note_alt_outlined,
+                      title: 'Notebook',
+                      onTap: () => _showSnackBar(context, 'Notebook clicked'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
                 // SUPPORT Settings Group
                 SettingsGroupCard(
                   title: 'Support',
