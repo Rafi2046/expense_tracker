@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/features/settings/widgets/logout_dialog.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_option_row.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_profile_card.dart';
@@ -125,7 +126,12 @@ class SettingsScreen extends StatelessWidget {
                       icon: Icons.logout,
                       title: 'Logout',
                       color: AppColors.activeRed,
-                      onTap: () => _showSnackBar(context, 'Logout clicked'),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const LogoutDialog(),
+                        );
+                      },
                     ),
                   ],
                 ),
