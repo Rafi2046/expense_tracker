@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/features/analytics/pages/analytics_screen.dart';
+import 'package:expense_tracker/features/bottom_navigation/widgets/exit_dialog.dart';
 import 'package:expense_tracker/features/dashboard/pages/dashboard_screen.dart';
 import 'package:expense_tracker/features/ledger/pages/ledger_screen.dart';
 import 'package:expense_tracker/features/settings/pages/settings_screen.dart';
@@ -34,6 +35,19 @@ class _AppBottomNavState extends State<BottomNavScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (_currentIndex != 0) {
+          setState(() {
+            _currentIndex = 0;
+          });
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) => const ExitDialog(),
+          );
+        }
+      },
       child: Scaffold(
         backgroundColor: const Color(0xFFF8F9FA),
         body: _screens[_currentIndex],
