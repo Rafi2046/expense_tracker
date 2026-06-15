@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/shortcut_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/edit_shortcuts_sheet.dart';
+import 'package:expense_tracker/features/notes/pages/add_note_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -152,12 +153,21 @@ class DashboardShortcutsCard extends StatelessWidget {
                     final item = activeShortcuts[index];
                     return GestureDetector(
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${item.label} shortcut clicked'),
-                            duration: const Duration(seconds: 1),
-                          ),
-                        );
+                        if (item.id == 'add_note') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AddNoteScreen(),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${item.label} shortcut clicked'),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                        }
                       },
                       child: Column(
                         mainAxisSize: MainAxisSize.min,

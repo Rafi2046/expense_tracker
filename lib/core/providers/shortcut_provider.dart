@@ -31,7 +31,6 @@ class ShortcutProvider extends ChangeNotifier {
     ShortcutItem(id: 'income', label: 'Income'),
     ShortcutItem(id: 'expense', label: 'Expense'),
     ShortcutItem(id: 'payment_in', label: 'Payment In'),
-    ShortcutItem(id: 'add_party', label: 'Add Party'),
   ];
 
   List<ShortcutItem> get shortcuts => List.unmodifiable(_shortcuts);

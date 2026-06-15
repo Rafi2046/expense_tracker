@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/features/notes/pages/notebook_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/logout_dialog.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_option_row.dart';
@@ -108,14 +109,21 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
 
-                // UTILITIES Settings Group
+                 // UTILITIES Settings Group
                 SettingsGroupCard(
                   title: 'Utilities',
                   children: [
                     SettingsOptionRow(
                       icon: Icons.note_alt_outlined,
                       title: 'Notebook',
-                      onTap: () => _showSnackBar(context, 'Notebook clicked'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NotebookScreen(),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
