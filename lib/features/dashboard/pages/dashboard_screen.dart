@@ -61,7 +61,7 @@ class DashboardScreen extends StatelessWidget {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
                 childAspectRatio: 1.40,
-                // Customizes card aspect ratio
+
                 children: [
                   DashboardStatCard(
                     title: 'Income',
@@ -155,7 +155,9 @@ class DashboardScreen extends StatelessWidget {
                 ],
                 onViewAllTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Recent Activity View All clicked')),
+                    const SnackBar(
+                      content: Text('Recent Activity View All clicked'),
+                    ),
                   );
                 },
                 onItemTap: (item) {
