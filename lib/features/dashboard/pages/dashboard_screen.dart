@@ -6,8 +6,8 @@ import 'package:expense_tracker/features/dashboard/pages/expense_insights_screen
 import 'package:expense_tracker/features/dashboard/pages/income_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_budget_status.dart';
-import 'package:expense_tracker/features/dashboard/widgets/dashboard_quick_actions.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_recent_activity.dart';
+import 'package:expense_tracker/features/dashboard/widgets/dashboard_shortcuts_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_spending_categories.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_stat_card.dart';
 import 'package:flutter/material.dart';
@@ -124,13 +124,7 @@ class DashboardScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 24),
-              DashboardQuickActions(
-                onActionTap: (label) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Quick Action: $label clicked')),
-                  );
-                },
-              ),
+              const DashboardShortcutsCard(),
               const SizedBox(height: 24),
               DashboardRecentActivity(
                 items: [
