@@ -138,73 +138,91 @@ class DashboardShortcutsCard extends StatelessWidget {
                     ),
                   ),
                 )
-              : GridView.builder(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.zero,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: activeShortcuts.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 1.2,
-                  ),
-                  itemBuilder: (context, index) {
-                    final item = activeShortcuts[index];
-                    return GestureDetector(
-                      onTap: () {
-                        if (item.id == 'add_note') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AddNoteScreen(),
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('${item.label} shortcut clicked'),
-                              duration: const Duration(seconds: 1),
-                            ),
-                          );
-                        }
-                      },
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Round Icon Container
-                          Container(
-                            width: 56,
-                            height: 56,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFE8F8F5),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: _buildShortcutIcon(item.id),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          // Label
-                          Text(
-                            item.label,
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: const Color(0xFF31394D),
-                              fontFamily: GoogleFonts.workSans().fontFamily,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+              : _buildGrid(context, activeShortcuts),
         ),
       ],
+    );
+  }
+
+  Widget _buildGrid(BuildContext context, List<ShortcutItem> activeShortcuts) {
+    final List<List<ShortcutItem>> chunks = [];
+    for (var i = 0; i < activeShortcuts.length; i += 3) {
+      final end = (i + 3 > activeShortcuts.length) ? activeShortcuts.length : i + 3;
+      chunks.add(activeShortcuts.sublist(i, end));
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (int rowIndex = 0; rowIndex < chunks.length; rowIndex++) ...[
+          if (rowIndex > 0) const SizedBox(height: 16),
+          Row(
+            children: [
+              for (int colIndex = 0; colIndex < 3; colIndex++) ...[
+                if (colIndex < chunks[rowIndex].length)
+                  Expanded(
+                    child: _buildShortcutItem(context, chunks[rowIndex][colIndex]),
+                  )
+                else
+                  const Expanded(child: SizedBox()),
+              ],
+            ],
+          ),
+        ]
+      ],
+    );
+  }
+
+  Widget _buildShortcutItem(BuildContext context, ShortcutItem item) {
+    return GestureDetector(
+      onTap: () {
+        if (item.id == 'add_note') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddNoteScreen(),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${item.label} shortcut clicked'),
+              duration: const Duration(seconds: 1),
+            ),
+          );
+        }
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Round Icon Container
+          Container(
+            width: 56,
+            height: 56,
+            decoration: const BoxDecoration(
+              color: Color(0xFFE8F8F5),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: _buildShortcutIcon(item.id),
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Label
+          Text(
+            item.label,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF31394D),
+              fontFamily: GoogleFonts.workSans().fontFamily,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
