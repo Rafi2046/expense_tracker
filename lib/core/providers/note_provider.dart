@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
+import 'package:expense_tracker/core/utils/database_helper.dart';
 import 'package:flutter/material.dart';
 
 class NoteItem {
@@ -65,85 +64,46 @@ class NoteProvider extends ChangeNotifier {
   List<NoteItem> get notes => List.unmodifiable(_notes);
   bool get isLoading => _isLoading;
 
-  void _loadNotes() {
+  Future<void> _loadNotes() async {
     try {
-      final notesString = SharedPrefsHelper.getString('saved_notes');
-      if (notesString != null) {
-        final List<dynamic> jsonList = jsonDecode(notesString);
-        _notes = jsonList.map((item) => NoteItem.fromJson(item as Map<String, dynamic>)).toList();
-      } else {
-        // Initial mock notes for first launch
-        _notes = [
-          NoteItem(
-            id: '1',
-            title: 'Business Startup Plans',
-            content: '1. Finalize the budget sheet.\n2. Review target audience demographic.\n3. Apply for local trade licenses.',
-            createdAt: DateTime.now().subtract(const Duration(days: 2)),
-            category: 'Business',
-          ),
-          NoteItem(
-            id: '2',
-            title: 'Monthly Groceries List',
-            content: '- Rice & Lentils\n- Fresh Vegetables\n- Almond Milk\n- Olive Oil',
-            createdAt: DateTime.now().subtract(const Duration(days: 5)),
-            category: 'Personal',
-          ),
-          NoteItem(
-            id: '3',
-            title: 'General Ledger Ideas',
-            content: 'Explore combining payment in and payment out ledgers into a single combined view for easier daily balance checks.',
-            createdAt: DateTime.now().subtract(const Duration(hours: 4)),
-            category: 'General',
-          ),
-        ];
-        _saveNotesToPrefs();
-      }
+      _notes = await DatabaseHelper.instance.readAllNotes();
     } catch (e) {
-      debugPrint('Error loading notes: $e');
+      debugPrint('Error loading notes from SQLite: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  void _saveNotesToPrefs() {
-    try {
-      final notesString = jsonEncode(_notes.map((n) => n.toJson()).toList());
-      SharedPrefsHelper.setString('saved_notes', notesString);
-    } catch (e) {
-      debugPrint('Error saving notes: $e');
-    }
-  }
-
-  void addNote(NoteItem note) {
+  Future<void> addNote(NoteItem note) async {
     _notes.insert(0, note);
     notifyListeners();
-    _saveNotesToPrefs();
+    await DatabaseHelper.instance.insertNote(note);
   }
 
-  void insertNote(int index, NoteItem note) {
+  Future<void> insertNote(int index, NoteItem note) async {
     if (index >= 0 && index <= _notes.length) {
       _notes.insert(index, note);
     } else {
       _notes.add(note);
     }
     notifyListeners();
-    _saveNotesToPrefs();
+    await DatabaseHelper.instance.insertNote(note);
   }
 
-  void updateNote(NoteItem updatedNote) {
+  Future<void> updateNote(NoteItem updatedNote) async {
     final index = _notes.indexWhere((n) => n.id == updatedNote.id);
     if (index != -1) {
       _notes[index] = updatedNote;
       notifyListeners();
-      _saveNotesToPrefs();
+      await DatabaseHelper.instance.updateNote(updatedNote);
     }
   }
 
-  void deleteNote(String id) {
+  Future<void> deleteNote(String id) async {
     _notes.removeWhere((n) => n.id == id);
     notifyListeners();
-    _saveNotesToPrefs();
+    await DatabaseHelper.instance.deleteNote(id);
   }
 
   List<NoteItem> searchNotes(String query) {
