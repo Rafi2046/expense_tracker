@@ -61,11 +61,9 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
               child: DebtTotalCard(
                 title: 'TOTAL YOU OWE',
                 amount: debtProvider.totalToGive,
-                gradientColors: const [
-                  Color(0xFFB01D2E),
-                  Color(0xFFDC3545),
-                ],
-                guideText: 'Swipe left on any item to quickly settle, or tap ✎ to edit details.',
+                gradientColors: const [Color(0xFFB01D2E), Color(0xFFDC3545)],
+                guideText:
+                    'Swipe left on any item to quickly settle, or tap ✎ to edit details.',
                 showGuide: _showGuide,
                 onDismissGuide: () {
                   setState(() {
@@ -77,8 +75,10 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
             ),
             if (items.isNotEmpty)
               Padding(
-
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -94,7 +94,10 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                         ),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.activeRed.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
@@ -155,7 +158,10 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                     )
                   : ListView.builder(
                       itemCount: items.length,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       itemBuilder: (context, index) {
                         final item = items[index];
                         return DebtItemRow(
