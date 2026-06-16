@@ -165,4 +165,12 @@ class DebtProvider extends ChangeNotifier {
     _items.removeWhere((i) => i.id == id);
     notifyListeners();
   }
+
+  void updateDebtItem(DebtItem updatedItem) {
+    final index = _items.indexWhere((i) => i.id == updatedItem.id);
+    if (index != -1) {
+      _items[index] = updatedItem;
+      notifyListeners();
+    }
+  }
 }
