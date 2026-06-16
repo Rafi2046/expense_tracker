@@ -1,10 +1,13 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
+import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/appbar_widget.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
 import 'package:expense_tracker/features/dashboard/pages/expense_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/income_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/to_receive_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/to_give_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_budget_status.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_recent_activity.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_shortcuts_card.dart';
@@ -20,6 +23,7 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final profileProvider = context.watch<ProfileProvider>();
     final currentProfile = profileProvider.currentProfile;
+    final debtProvider = context.watch<DebtProvider>();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
@@ -95,28 +99,30 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   DashboardStatCard(
                     title: 'To Receive',
-                    value: '\$850',
-                    statusText: '3 pending',
+                    value: '\$${debtProvider.totalToReceive.toStringAsFixed(2)}',
+                    statusText: '${debtProvider.toReceiveUnpaid.length} pending',
                     isPositive: true,
                     isTrend: false,
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('To Receive pending list clicked'),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ToReceiveScreen(),
                         ),
                       );
                     },
                   ),
                   DashboardStatCard(
                     title: 'To Give',
-                    value: '\$320',
-                    statusText: 'Due in 2 days',
+                    value: '\$${debtProvider.totalToGive.toStringAsFixed(2)}',
+                    statusText: '${debtProvider.toGiveUnpaid.length} pending',
                     isPositive: false,
                     isTrend: false,
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('To Give due list clicked'),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ToGiveScreen(),
                         ),
                       );
                     },
