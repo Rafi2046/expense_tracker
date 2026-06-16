@@ -1,5 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/shortcut_provider.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/edit_shortcuts_sheet.dart';
 import 'package:expense_tracker/features/notes/pages/add_note_screen.dart';
 import 'package:flutter/material.dart';
@@ -182,6 +184,24 @@ class DashboardShortcutsCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => const AddNoteScreen(),
             ),
+          );
+        } else if (item.id == 'expense') {
+          AddTransactionSheet.show(context: context, isIncome: false);
+        } else if (item.id == 'income') {
+          AddTransactionSheet.show(context: context, isIncome: true);
+        } else if (item.id == 'payment_out') {
+          AddEditDebtSheet.show(
+            context: context,
+            payeeLabel: 'Payee Name',
+            themeColor: AppColors.activeRed,
+            isReceive: false,
+          );
+        } else if (item.id == 'payment_in') {
+          AddEditDebtSheet.show(
+            context: context,
+            payeeLabel: 'Client/Friend Name',
+            themeColor: AppColors.buttonColor,
+            isReceive: true,
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

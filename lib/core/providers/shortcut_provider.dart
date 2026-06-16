@@ -29,7 +29,7 @@ class ShortcutProvider extends ChangeNotifier {
     ShortcutItem(id: 'add_note', label: 'Add Note'),
     ShortcutItem(id: 'payment_out', label: 'Payment Out'),
     ShortcutItem(id: 'income', label: 'Income'),
-    ShortcutItem(id: 'expense', label: 'Expense'),
+    ShortcutItem(id: 'expense', label: 'Daily Expense'),
     ShortcutItem(id: 'payment_in', label: 'Payment In'),
   ];
 

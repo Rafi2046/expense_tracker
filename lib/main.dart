@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/providers/shortcut_provider.dart';
 import 'package:expense_tracker/core/providers/note_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
+import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'features/splash/pages/splash_screen.dart';
@@ -17,6 +18,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ShortcutProvider()),
         ChangeNotifierProvider(create: (_) => NoteProvider()),
         ChangeNotifierProvider(create: (_) => DebtProvider()),
+        ChangeNotifierProvider(create: (_) => TransactionProvider()),
       ],
       child: const MyApp(),
     ),
