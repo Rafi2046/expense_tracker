@@ -77,6 +77,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
             ),
             if (items.isNotEmpty)
               Padding(
+
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
