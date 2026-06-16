@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -140,7 +141,7 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
               controller: _amountController,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
-                labelText: 'Amount (\$)',
+                labelText: 'Amount (${context.currencySymbol})',
                 labelStyle: GoogleFonts.inter(fontSize: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSpacing.br12),

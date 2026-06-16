@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -93,10 +94,7 @@ class DashboardRecentActivity extends StatelessWidget {
 
                 // Trailing amount
                 Text(
-                  '${isInc ? '+' : '-'}\$${item.amount.toStringAsFixed(2).replaceAllMapped(
-                        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                        (Match m) => '${m[1]},',
-                      )}',
+                  '${isInc ? '+' : '-'}${context.formatAmount(item.amount)}',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,

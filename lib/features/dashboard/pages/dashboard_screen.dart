@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/appbar_widget.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
 import 'package:expense_tracker/features/dashboard/pages/expense_insights_screen.dart';
@@ -65,7 +66,7 @@ class DashboardScreen extends StatelessWidget {
                     Expanded(
                       child: DashboardStatCard(
                         title: 'Income',
-                        value: '\$5,240',
+                        value: context.formatAmount(5240),
                         percentageText: '+12%',
                         isPositive: true,
                         isTrend: true,
@@ -83,7 +84,7 @@ class DashboardScreen extends StatelessWidget {
                     Expanded(
                       child: DashboardStatCard(
                         title: 'Expense',
-                        value: '\$2,180',
+                        value: context.formatAmount(2180),
                         percentageText: '-5%',
                         isPositive: false,
                         isTrend: true,
@@ -108,7 +109,7 @@ class DashboardScreen extends StatelessWidget {
                     Expanded(
                       child: DashboardStatCard(
                         title: 'To Receive',
-                        value: '\$${debtProvider.totalToReceive.toStringAsFixed(2)}',
+                        value: context.formatAmount(debtProvider.totalToReceive),
                         statusText: '${debtProvider.toReceiveUnpaid.length} pending',
                         isPositive: true,
                         isTrend: false,
@@ -126,7 +127,7 @@ class DashboardScreen extends StatelessWidget {
                     Expanded(
                       child: DashboardStatCard(
                         title: 'To Give',
-                        value: '\$${debtProvider.totalToGive.toStringAsFixed(2)}',
+                        value: context.formatAmount(debtProvider.totalToGive),
                         statusText: '${debtProvider.toGiveUnpaid.length} pending',
                         isPositive: false,
                         isTrend: false,

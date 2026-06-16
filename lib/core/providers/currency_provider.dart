@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 
 class CurrencyInfo {
@@ -102,4 +103,16 @@ class CurrencyProvider extends ChangeNotifier {
     await SharedPrefsHelper.setString(_prefsKey, code);
     notifyListeners();
   }
+}
+
+extension CurrencyFormatter on BuildContext {
+  String formatAmount(double amount) {
+    final currency = watch<CurrencyProvider>().selectedCurrency;
+    return '${currency.symbol}${amount.toStringAsFixed(2).replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    )}';
+  }
+
+  String get currencySymbol => watch<CurrencyProvider>().selectedCurrency.symbol;
 }

@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/select_category_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_selector_tile.dart';
 import 'package:flutter/material.dart';
@@ -117,7 +118,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
             const Icon(Icons.check_circle_outline, color: Colors.white),
             const SizedBox(width: 8),
             Text(
-              '${widget.isIncome ? "Income" : "Expense"} added: \$${amount.toStringAsFixed(2)}',
+              '${widget.isIncome ? "Income" : "Expense"} added: ${context.formatAmount(amount)}',
               style: GoogleFonts.workSans(fontWeight: FontWeight.w600),
             ),
           ],
@@ -207,7 +208,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                       color: themeColor,
                     ),
                     decoration: InputDecoration(
-                      prefixText: '\$ ',
+                      prefixText: '${context.currencySymbol} ',
                       prefixStyle: GoogleFonts.workSans(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,

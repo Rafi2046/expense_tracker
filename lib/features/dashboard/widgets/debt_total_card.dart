@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 
 class DebtTotalCard extends StatelessWidget {
   final String title;
@@ -65,7 +66,7 @@ class DebtTotalCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '\$${amount.toStringAsFixed(2)}',
+                        context.formatAmount(amount),
                         style: GoogleFonts.workSans(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
