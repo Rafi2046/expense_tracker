@@ -2,6 +2,8 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/dashboard/pages/expense_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/income_insights_screen.dart';
 import 'package:expense_tracker/features/notes/pages/notebook_screen.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/features/settings/pages/currency_selection_screen.dart';
 import 'package:expense_tracker/features/settings/pages/manage_categories_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/logout_dialog.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
@@ -9,6 +11,7 @@ import 'package:expense_tracker/features/settings/widgets/settings_option_row.da
 import 'package:expense_tracker/features/settings/widgets/settings_profile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -73,6 +76,9 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currencyProvider = context.watch<CurrencyProvider>();
+    final selectedCurrency = currencyProvider.selectedCurrency;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
       body: SafeArea(
@@ -167,8 +173,15 @@ class SettingsScreen extends StatelessWidget {
                     SettingsOptionRow(
                       icon: Icons.payments_outlined,
                       title: 'Currency',
-                      trailingText: 'USD (\$)',
-                      onTap: () => _showSnackBar(context, 'Currency clicked'),
+                      trailingText: '${selectedCurrency.code} (${selectedCurrency.symbol})',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CurrencySelectionScreen(),
+                          ),
+                        );
+                      },
                     ),
                     SettingsOptionRow(
                       icon: Icons.palette_outlined,
