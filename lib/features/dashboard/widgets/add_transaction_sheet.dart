@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/select_category_sheet.dart';
+import 'package:expense_tracker/features/dashboard/widgets/transaction_selector_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -239,7 +240,13 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
               const SizedBox(height: 20),
 
               // Category Selector Tile
-              InkWell(
+              TransactionSelectorTile(
+                leadingIcon: Icons.category_outlined,
+                labelText: 'Category',
+                valueText: _selectedCategory ?? 'Select Category',
+                isValueSelected: _selectedCategory != null,
+                themeColor: secondaryThemeColor,
+                trailingIcon: Icons.arrow_forward_ios_rounded,
                 onTap: () {
                   SelectCategorySheet.show(
                     context: context,
@@ -252,108 +259,18 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                     },
                   );
                 },
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade100),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.category_outlined,
-                        color: secondaryThemeColor,
-                        size: 22,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Category',
-                              style: GoogleFonts.workSans(
-                                fontSize: 12,
-                                color: Colors.grey.shade500,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              _selectedCategory ?? 'Select Category',
-                              style: GoogleFonts.workSans(
-                                fontSize: 15,
-                                fontWeight: _selectedCategory != null ? FontWeight.w600 : FontWeight.w400,
-                                color: _selectedCategory != null ? Colors.black87 : Colors.grey.shade400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: Colors.grey.shade400,
-                        size: 16,
-                      ),
-                    ],
-                  ),
-                ),
               ),
               const SizedBox(height: 16),
 
               // Date Selector Tile
-              InkWell(
+              TransactionSelectorTile(
+                leadingIcon: Icons.calendar_today_outlined,
+                labelText: 'Date',
+                valueText: DateFormat('EEEE, MMM d, yyyy').format(_selectedDate),
+                isValueSelected: true,
+                themeColor: secondaryThemeColor,
+                trailingIcon: Icons.edit_calendar_outlined,
                 onTap: () => _selectDate(context),
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade100),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.calendar_today_outlined,
-                        color: secondaryThemeColor,
-                        size: 22,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Date',
-                              style: GoogleFonts.workSans(
-                                fontSize: 12,
-                                color: Colors.grey.shade500,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              DateFormat('EEEE, MMM d, yyyy').format(_selectedDate),
-                              style: GoogleFonts.workSans(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Icon(
-                        Icons.edit_calendar_outlined,
-                        color: Colors.grey.shade400,
-                        size: 18,
-                      ),
-                    ],
-                  ),
-                ),
               ),
               const SizedBox(height: 16),
 

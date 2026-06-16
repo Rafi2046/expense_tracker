@@ -1,5 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/features/dashboard/widgets/category_input_row.dart';
+import 'package:expense_tracker/features/dashboard/widgets/category_list_row.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -104,32 +106,11 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> with Si
       child: Column(
         children: [
           // Inline Input Row
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _inputController,
-                    decoration: InputDecoration(
-                      hintText: 'Add new category...',
-                      hintStyle: GoogleFonts.workSans(color: Colors.grey.shade400, fontSize: 14),
-                      border: InputBorder.none,
-                    ),
-                    onSubmitted: (_) => _addCategory(provider, isIncome),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.add_circle, color: themeColor, size: 28),
-                  onPressed: () => _addCategory(provider, isIncome),
-                ),
-              ],
-            ),
+          CategoryInputRow(
+            controller: _inputController,
+            themeColor: themeColor,
+            onSubmitted: (_) => _addCategory(provider, isIncome),
+            onAddPressed: () => _addCategory(provider, isIncome),
           ),
           const SizedBox(height: 16),
 
@@ -160,32 +141,24 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> with Si
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: const Color(0xFFF0F0F0)),
                         ),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-                          leading: Icon(Icons.label_outline_rounded, color: themeColor),
-                          title: Text(
-                            cat,
-                            style: GoogleFonts.workSans(
-                              fontSize: 15,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.delete_outline_rounded, color: Colors.grey.shade400),
-                            onPressed: () {
-                              if (isIncome) {
-                                provider.deleteIncomeCategory(cat);
-                              } else {
-                                provider.deleteExpenseCategory(cat);
-                              }
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Category "$cat" removed.'),
-                                  duration: const Duration(seconds: 1),
-                                ),
-                              );
-                            },
-                          ),
+                        child: CategoryListRow(
+                          categoryName: cat,
+                          themeColor: themeColor,
+                          showLeadingIcon: true,
+                          showSelection: false,
+                          onDelete: () {
+                            if (isIncome) {
+                              provider.deleteIncomeCategory(cat);
+                            } else {
+                              provider.deleteExpenseCategory(cat);
+                            }
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Category "$cat" removed.'),
+                                duration: const Duration(seconds: 1),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },

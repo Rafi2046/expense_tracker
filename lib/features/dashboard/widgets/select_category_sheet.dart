@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/features/dashboard/widgets/category_list_row.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -245,65 +246,29 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                         final cat = filteredCategories[index];
                         final isSelected = cat == widget.selectedCategory;
 
-                        return Row(
-                          children: [
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  widget.onCategorySelected(cat);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 14.0),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        cat,
-                                        style: GoogleFonts.workSans(
-                                          fontSize: 15,
-                                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Container(
-                                        width: 20,
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: isSelected ? activeThemeColor : Colors.grey.shade300,
-                                            width: isSelected ? 6 : 2,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                        return CategoryListRow(
+                          categoryName: cat,
+                          themeColor: activeThemeColor,
+                          isSelected: isSelected,
+                          showSelection: true,
+                          showLeadingIcon: false,
+                          onTap: () {
+                            Navigator.pop(context);
+                            widget.onCategorySelected(cat);
+                          },
+                          onDelete: () {
+                            if (widget.isIncome) {
+                              provider.deleteIncomeCategory(cat);
+                            } else {
+                              provider.deleteExpenseCategory(cat);
+                            }
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Category "$cat" removed.'),
+                                duration: const Duration(seconds: 1),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            IconButton(
-                              icon: Icon(
-                                Icons.delete_outline_rounded,
-                                color: Colors.grey.shade400,
-                                size: 20,
-                              ),
-                              onPressed: () {
-                                if (widget.isIncome) {
-                                  provider.deleteIncomeCategory(cat);
-                                } else {
-                                  provider.deleteExpenseCategory(cat);
-                                }
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Category "$cat" removed.'),
-                                    duration: const Duration(seconds: 1),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
+                            );
+                          },
                         );
                       },
                     ),
