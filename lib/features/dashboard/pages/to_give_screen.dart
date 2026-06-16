@@ -8,8 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class ToGiveScreen extends StatelessWidget {
+class ToGiveScreen extends StatefulWidget {
   const ToGiveScreen({super.key});
+
+  @override
+  State<ToGiveScreen> createState() => _ToGiveScreenState();
+}
+
+class _ToGiveScreenState extends State<ToGiveScreen> {
+  bool _showGuide = true;
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +61,73 @@ class ToGiveScreen extends StatelessWidget {
               child: DebtTotalCard(
                 title: 'TOTAL YOU OWE',
                 amount: debtProvider.totalToGive,
-                amountColor: AppColors.activeRed,
-                borderColor: const Color(0xFFFEE2E2),
+                gradientColors: const [
+                  Color(0xFFB01D2E),
+                  Color(0xFFDC3545),
+                ],
+                guideText: 'Swipe left on any item to quickly settle, or tap ✎ to edit details.',
+                showGuide: _showGuide,
+                onDismissGuide: () {
+                  setState(() {
+                    _showGuide = false;
+                  });
+                },
+                cardIcon: Icons.arrow_upward_rounded,
               ),
             ),
+            if (items.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Active Payables',
+                          style: GoogleFonts.workSans(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: AppColors.activeRed.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            '${items.length}',
+                            style: GoogleFonts.workSans(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.activeRed,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (!_showGuide)
+                      IconButton(
+                        constraints: const BoxConstraints(),
+                        padding: EdgeInsets.zero,
+                        icon: Icon(
+                          Icons.info_outline_rounded,
+                          color: Colors.grey.shade400,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _showGuide = true;
+                          });
+                        },
+                        tooltip: 'Show Guide',
+                      ),
+                  ],
+                ),
+              ),
             const SizedBox(height: 8),
             Expanded(
               child: items.isEmpty

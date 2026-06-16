@@ -8,8 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class ToReceiveScreen extends StatelessWidget {
+class ToReceiveScreen extends StatefulWidget {
   const ToReceiveScreen({super.key});
+
+  @override
+  State<ToReceiveScreen> createState() => _ToReceiveScreenState();
+}
+
+class _ToReceiveScreenState extends State<ToReceiveScreen> {
+  bool _showGuide = true;
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +61,73 @@ class ToReceiveScreen extends StatelessWidget {
               child: DebtTotalCard(
                 title: 'TOTAL OWED TO YOU',
                 amount: debtProvider.totalToReceive,
-                amountColor: AppColors.buttonColor,
-                borderColor: const Color(0xFFEBF5FB),
+                gradientColors: const [
+                  Color(0xFF0C4E3C),
+                  Color(0xFF197F63),
+                ],
+                guideText: 'Swipe left on any item to quickly settle, or tap ✎ to edit details.',
+                showGuide: _showGuide,
+                onDismissGuide: () {
+                  setState(() {
+                    _showGuide = false;
+                  });
+                },
+                cardIcon: Icons.arrow_downward_rounded,
               ),
             ),
+            if (items.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Pending Collections',
+                          style: GoogleFonts.workSans(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: AppColors.buttonColor.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            '${items.length}',
+                            style: GoogleFonts.workSans(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.buttonColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (!_showGuide)
+                      IconButton(
+                        constraints: const BoxConstraints(),
+                        padding: EdgeInsets.zero,
+                        icon: Icon(
+                          Icons.info_outline_rounded,
+                          color: Colors.grey.shade400,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _showGuide = true;
+                          });
+                        },
+                        tooltip: 'Show Guide',
+                      ),
+                  ],
+                ),
+              ),
             const SizedBox(height: 8),
             Expanded(
               child: items.isEmpty

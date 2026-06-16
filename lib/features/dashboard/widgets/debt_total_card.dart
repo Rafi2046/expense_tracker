@@ -5,54 +5,139 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 class DebtTotalCard extends StatelessWidget {
   final String title;
   final double amount;
-  final Color amountColor;
-  final Color borderColor;
+  final List<Color> gradientColors;
+  final String guideText;
+  final bool showGuide;
+  final VoidCallback onDismissGuide;
+  final IconData cardIcon;
 
   const DebtTotalCard({
     super.key,
     required this.title,
     required this.amount,
-    required this.amountColor,
-    required this.borderColor,
+    required this.gradientColors,
+    required this.guideText,
+    required this.showGuide,
+    required this.onDismissGuide,
+    required this.cardIcon,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(AppSpacing.r16),
-        border: Border.all(color: borderColor),
+        gradient: LinearGradient(
+          colors: gradientColors,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(5),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: gradientColors.first.withValues(alpha: 0.25),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: GoogleFonts.jetBrainsMono(
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey.shade400,
-              letterSpacing: 1.0,
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title.toUpperCase(),
+                        style: GoogleFonts.jetBrainsMono(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white70,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '\$${amount.toStringAsFixed(2)}',
+                        style: GoogleFonts.workSans(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  cardIcon,
+                  color: Colors.white.withValues(alpha: 0.15),
+                  size: 48,
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            '\$${amount.toStringAsFixed(2)}',
-            style: GoogleFonts.workSans(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: amountColor,
-            ),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
+            child: showGuide
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        height: 1,
+                        color: Colors.white.withValues(alpha: 0.15),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 12, 12, 16),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(
+                              Icons.lightbulb_outline_rounded,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                guideText,
+                                style: GoogleFonts.inter(
+                                  fontSize: 12,
+                                  color: Colors.white.withValues(alpha: 0.9),
+                                  height: 1.4,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            GestureDetector(
+                              onTap: onDismissGuide,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.close_rounded,
+                                  color: Colors.white70,
+                                  size: 14,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
           ),
         ],
       ),

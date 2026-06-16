@@ -118,67 +118,107 @@ class DebtItemRow extends StatelessWidget {
           border: Border.all(color: const Color(0xFFF0F0F0)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withAlpha(5),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          leading: Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: _getAvatarBg(item.name),
-              shape: BoxShape.circle,
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              _getInitials(item.name),
-              style: GoogleFonts.workSans(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: _getAvatarFg(item.name),
-              ),
-            ),
-          ),
-          title: Text(
-            item.name,
-            style: GoogleFonts.workSans(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: Text(
-              item.detail,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                color: Colors.grey.shade500,
-              ),
-            ),
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
+          child: Stack(
             children: [
-              Text(
-                '\$${item.amount.toStringAsFixed(2)}',
-                style: GoogleFonts.workSans(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
+              Positioned(
+                left: 0,
+                top: 0,
+                bottom: 0,
+                child: Container(
+                  width: 4,
                   color: themeColor,
                 ),
               ),
-              const SizedBox(width: 8),
-              GestureDetector(
-                onTap: onEditTap,
-                child: Icon(
-                  Icons.edit_outlined,
-                  color: Colors.grey.shade400,
-                  size: 18,
+              ListTile(
+                contentPadding: const EdgeInsets.only(
+                  left: 20,
+                  right: 16,
+                  top: 8,
+                  bottom: 8,
+                ),
+                leading: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [
+                        _getAvatarBg(item.name),
+                        _getAvatarBg(item.name).withValues(alpha: 0.85),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    border: Border.all(
+                      color: _getAvatarFg(item.name).withValues(alpha: 0.15),
+                      width: 1,
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    _getInitials(item.name),
+                    style: GoogleFonts.workSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: _getAvatarFg(item.name),
+                    ),
+                  ),
+                ),
+                title: Text(
+                  item.name,
+                  style: GoogleFonts.workSans(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Text(
+                    item.detail,
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '\$${item.amount.toStringAsFixed(2)}',
+                      style: GoogleFonts.workSans(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: themeColor,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    GestureDetector(
+                      onTap: onEditTap,
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade50,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.grey.shade200),
+                        ),
+                        child: Icon(
+                          Icons.edit_outlined,
+                          color: Colors.grey.shade600,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
