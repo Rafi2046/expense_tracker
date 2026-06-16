@@ -58,76 +58,90 @@ class DashboardScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 1.40,
-
-                children: [
-                  DashboardStatCard(
-                    title: 'Income',
-                    value: '\$5,240',
-                    percentageText: '+12%',
-                    isPositive: true,
-                    isTrend: true,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const IncomeInsightsScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  DashboardStatCard(
-                    title: 'Expense',
-                    value: '\$2,180',
-                    percentageText: '-5%',
-                    isPositive: false,
-                    isTrend: true,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ExpenseInsightsScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  DashboardStatCard(
-                    title: 'To Receive',
-                    value: '\$${debtProvider.totalToReceive.toStringAsFixed(2)}',
-                    statusText: '${debtProvider.toReceiveUnpaid.length} pending',
-                    isPositive: true,
-                    isTrend: false,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ToReceiveScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  DashboardStatCard(
-                    title: 'To Give',
-                    value: '\$${debtProvider.totalToGive.toStringAsFixed(2)}',
-                    statusText: '${debtProvider.toGiveUnpaid.length} pending',
-                    isPositive: false,
-                    isTrend: false,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ToGiveScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: DashboardStatCard(
+                        title: 'Income',
+                        value: '\$5,240',
+                        percentageText: '+12%',
+                        isPositive: true,
+                        isTrend: true,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const IncomeInsightsScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: DashboardStatCard(
+                        title: 'Expense',
+                        value: '\$2,180',
+                        percentageText: '-5%',
+                        isPositive: false,
+                        isTrend: true,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ExpenseInsightsScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      child: DashboardStatCard(
+                        title: 'To Receive',
+                        value: '\$${debtProvider.totalToReceive.toStringAsFixed(2)}',
+                        statusText: '${debtProvider.toReceiveUnpaid.length} pending',
+                        isPositive: true,
+                        isTrend: false,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ToReceiveScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: DashboardStatCard(
+                        title: 'To Give',
+                        value: '\$${debtProvider.totalToGive.toStringAsFixed(2)}',
+                        statusText: '${debtProvider.toGiveUnpaid.length} pending',
+                        isPositive: false,
+                        isTrend: false,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ToGiveScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 24),
               const DashboardShortcutsCard(),

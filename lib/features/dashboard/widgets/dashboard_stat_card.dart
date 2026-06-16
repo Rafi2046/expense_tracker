@@ -55,24 +55,32 @@ class DashboardStatCard extends StatelessWidget {
               ),
             ),
 
-            // Card Contents
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16.0,
-                vertical: 20.0,
+                vertical: 12.0,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title.toUpperCase(), style: AppTextStyles.cardTitle),
-                  const SizedBox(height: 8),
                   Text(
-                    value,
-                    style: isPositive
-                        ? AppTextStyles.cardValueGreen
-                        : AppTextStyles.cardValueRed,
+                    title.toUpperCase(),
+                    style: AppTextStyles.cardTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 4),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      value,
+                      style: isPositive
+                          ? AppTextStyles.cardValueGreen
+                          : AppTextStyles.cardValueRed,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
                   if (isTrend && percentageText != null)
                     Row(
                       mainAxisSize: MainAxisSize.min,
@@ -85,16 +93,25 @@ class DashboardStatCard extends StatelessWidget {
                           size: 16,
                         ),
                         const SizedBox(width: 4),
-                        Text(
-                          percentageText!,
-                          style: isPositive
-                              ? AppTextStyles.cardTrendGreen
-                              : AppTextStyles.cardTrendRed,
+                        Flexible(
+                          child: Text(
+                            percentageText!,
+                            style: isPositive
+                                ? AppTextStyles.cardTrendGreen
+                                : AppTextStyles.cardTrendRed,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     )
                   else if (!isTrend && statusText != null)
-                    Text(statusText!, style: AppTextStyles.cardStatusText),
+                    Text(
+                      statusText!,
+                      style: AppTextStyles.cardStatusText,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                 ],
               ),
             ),
