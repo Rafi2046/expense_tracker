@@ -1,7 +1,9 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/features/analytics/widgets/monthly_comparison_card.dart';
 import 'package:expense_tracker/features/analytics/widgets/spending_overview_card.dart';
 import 'package:expense_tracker/features/analytics/widgets/top_spending_categories_card.dart';
+import 'package:expense_tracker/features/analytics/widgets/top_spending_category_row.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -96,13 +98,13 @@ class AnalyticsScreen extends StatelessWidget {
 
                 // Spending Overview Card
                 SpendingOverviewCard(
-                  totalAmount: '\$4,250',
+                  totalAmount: '${context.currencySymbol}4,250',
                   items: spendingItems,
                 ),
                 const SizedBox(height: 20),
 
                 // Monthly Comparison Card
-                const MonthlyComparisonCard(
+                MonthlyComparisonCard(
                   currentAmount: 4250,
                   previousAmount: 3800,
                   netChangeText: '+11.8%',

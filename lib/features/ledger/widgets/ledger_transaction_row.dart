@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -28,7 +29,7 @@ class LedgerTransactionRow extends StatelessWidget {
     final iconBgColor = isIncome ? const Color(0xFFE8F8F5) : const Color(0xFFF2F4F4);
     final iconColor = isIncome ? AppColors.activeGreen : const Color(0xFF31394D);
     final amountColor = isIncome ? AppColors.activeGreen : AppColors.expensePink;
-    final amountPrefix = isIncome ? '+\$' : '-\$';
+    final amountPrefix = isIncome ? '+${context.currencySymbol}' : '-${context.currencySymbol}';
 
     return InkWell(
       onTap: onTap,

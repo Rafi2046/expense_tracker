@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -173,7 +174,7 @@ class _ExpenseCategoriesBreakdownCardState extends State<ExpenseCategoriesBreakd
                     ),
                   ),
                   Text(
-                    'Tk. ${item.amount.toStringAsFixed(0).replaceAllMapped(
+                    '${context.currencySymbol} ${item.amount.toStringAsFixed(0).replaceAllMapped(
                           RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                           (Match m) => '${m[1]},',
                         )}',

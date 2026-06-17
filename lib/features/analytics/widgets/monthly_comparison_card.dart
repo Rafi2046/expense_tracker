@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/features/analytics/widgets/comparison_progress_row.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -64,82 +65,20 @@ class MonthlyComparisonCard extends StatelessWidget {
           const SizedBox(height: 20),
 
           // Current Month Row Info
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Current Month',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF31394D),
-                  fontFamily: GoogleFonts.workSans().fontFamily,
-                ),
-              ),
-              Text(
-                '\$${currentAmount.toStringAsFixed(0).replaceAllMapped(
-                      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                      (Match m) => '${m[1]},',
-                    )}',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          // Current Month Progress Bar
-          ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: LinearProgressIndicator(
-              value: currentProgress,
-              backgroundColor: const Color(0xFFF0F0F0),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.activeGreen),
-              minHeight: 12,
-            ),
+          ComparisonProgressRow(
+            label: 'Current Month',
+            amount: currentAmount,
+            progress: currentProgress,
+            progressColor: AppColors.activeGreen,
           ),
           const SizedBox(height: 16),
 
           // Previous Month Row Info
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Previous Month',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF31394D),
-                  fontFamily: GoogleFonts.workSans().fontFamily,
-                ),
-              ),
-              Text(
-                '\$${previousAmount.toStringAsFixed(0).replaceAllMapped(
-                      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                      (Match m) => '${m[1]},',
-                    )}',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          // Previous Month Progress Bar
-          ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: LinearProgressIndicator(
-              value: previousProgress,
-              backgroundColor: const Color(0xFFF0F0F0),
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFB3C5B9)),
-              minHeight: 12,
-            ),
+          ComparisonProgressRow(
+            label: 'Previous Month',
+            amount: previousAmount,
+            progress: previousProgress,
+            progressColor: const Color(0xFFB3C5B9),
           ),
           const SizedBox(height: 20),
 

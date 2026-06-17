@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/features/ledger/widgets/ledger_balance_header.dart';
 import 'package:expense_tracker/features/ledger/widgets/ledger_transaction_row.dart';
 import 'package:expense_tracker/features/ledger/widgets/ledger_transactions_card.dart';
@@ -114,8 +115,8 @@ class LedgerScreen extends StatelessWidget {
                 const SizedBox(height: 24),
 
                 // Total Balance Header
-                const LedgerBalanceHeader(
-                  balance: '\$12,450.00',
+                LedgerBalanceHeader(
+                  balance: context.formatAmount(12450.00),
                   trendPercentage: '+2.4%',
                 ),
                 const SizedBox(height: 24),

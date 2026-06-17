@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/expense_breakdown_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/expense_categories_breakdown_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/expense_time_frame_selector.dart';
@@ -130,11 +131,11 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
     ),
   ];
 
-  final List<ExpenseBreakdownItem> _quarterlyBreakdowns = [
+  List<ExpenseBreakdownItem> get _quarterlyBreakdowns => [
     ExpenseBreakdownItem(
       title: 'Cash',
       subtitle: '21 transactions',
-      amount: 'Tk. 14,553',
+      amount: '${context.currencySymbol} 14,553',
       icon: Icons.payments_outlined,
     ),
   ];
@@ -187,14 +188,14 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                 ExpenseTrendChartCard(
                   timeFrame: 'Daily',
                   title: 'Expense (Today)',
-                  amount: 'Tk. 0',
+                  amount: '${context.currencySymbol} 0',
                   chartData: _dailyChartData,
                 )
               else if (_selectedTimeFrame == 'Weekly')
                 ExpenseTrendChartCard(
                   timeFrame: 'Weekly',
                   title: 'Expense (This Week)',
-                  amount: 'Tk. 0',
+                  amount: '${context.currencySymbol} 0',
                   trendPercentage: '100.0% This Week',
                   chartData: _weeklyChartData,
                 )
@@ -202,7 +203,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                 ExpenseTrendChartCard(
                   timeFrame: 'Monthly',
                   title: 'Expense (June)',
-                  amount: 'Tk. 500',
+                  amount: '${context.currencySymbol} 500',
                   trendPercentage: '96.44% This Month',
                   chartData: _monthlyChartData,
                 )
@@ -217,14 +218,14 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                 const SizedBox(height: 20),
                 ExpenseCategoriesBreakdownCard(
                   suffixText: '(This Month)',
-                  totalAmount: 'Tk. 500',
+                  totalAmount: '${context.currencySymbol} 500',
                   categories: _monthlyCategories,
                 ),
               ] else if (_selectedTimeFrame == 'Quarterly') ...[
                 const SizedBox(height: 20),
                 ExpenseCategoriesBreakdownCard(
                   suffixText: '(This Quarter)',
-                  totalAmount: 'Tk. 14,553',
+                  totalAmount: '${context.currencySymbol} 14,553',
                   categories: _quarterlyCategories,
                 ),
               ],
