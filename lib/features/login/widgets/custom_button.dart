@@ -72,7 +72,7 @@ class CustomButton extends StatelessWidget {
                     if (leading != null) const SizedBox(width: 12),
 
                     SizedBox(
-                      width: 190,
+                      width: 220,
                       child: Text(
                         text,
                         textAlign: TextAlign.left,
