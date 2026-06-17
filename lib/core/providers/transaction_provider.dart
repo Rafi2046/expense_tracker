@@ -18,16 +18,151 @@ class TransactionItem {
   });
 }
 
+enum TransactionSortOption {
+  latest,
+  amountHighToLow,
+  amountLowToHigh,
+}
+
 class TransactionProvider extends ChangeNotifier {
   final List<String> _expenseCategories = [];
-
   final List<String> _incomeCategories = [];
-
   final List<TransactionItem> _transactions = [];
+
+  // Month, Search, and Sort states
+  late final List<DateTime> availableMonths;
+  int selectedMonthIndex = 6; // Center (current month)
+  bool isSearching = false;
+  String searchQuery = '';
+  TransactionSortOption sortOption = TransactionSortOption.latest;
+
+  TransactionProvider() {
+    _expenseCategories.addAll([
+      'Dining',
+      'Transport',
+      'Entertainment',
+      'Shopping',
+      'Medicine',
+      'Food',
+      'General'
+    ]);
+    _incomeCategories.addAll([
+      'Salary',
+      'Freelance',
+      'Investment',
+      'Rent',
+      'Consulting'
+    ]);
+
+    // Generate 12 months centered around the current month (index 6 is current)
+    final now = DateTime.now();
+    availableMonths = List.generate(12, (index) {
+      return DateTime(now.year, now.month - 6 + index);
+    });
+
+    // Seed mock data for the current month
+    _transactions.addAll([
+      TransactionItem(
+        id: '1',
+        amount: 50.0,
+        category: 'Transport',
+        note: 'Bus Rental',
+        isIncome: false,
+        dateTime: DateTime.now().subtract(const Duration(hours: 3)),
+      ),
+      TransactionItem(
+        id: '2',
+        amount: 500.0,
+        category: 'Medicine',
+        note: 'Medicine',
+        isIncome: false,
+        dateTime: DateTime.now().subtract(const Duration(hours: 6)),
+      ),
+    ]);
+  }
 
   List<String> get expenseCategories => List.unmodifiable(_expenseCategories);
   List<String> get incomeCategories => List.unmodifiable(_incomeCategories);
   List<TransactionItem> get transactions => List.unmodifiable(_transactions);
+
+  // Getters for selected month and active transactions
+  DateTime get selectedMonth => availableMonths[selectedMonthIndex];
+
+  List<TransactionItem> get monthlyTransactions {
+    final month = selectedMonth;
+    return _transactions.where((tx) {
+      return tx.dateTime.year == month.year && tx.dateTime.month == month.month;
+    }).toList();
+  }
+
+  List<TransactionItem> get filteredTransactions {
+    final monthTrans = monthlyTransactions;
+    List<TransactionItem> results;
+    if (!isSearching || searchQuery.trim().isEmpty) {
+      results = List.from(monthTrans);
+    } else {
+      final query = searchQuery.toLowerCase().trim();
+      results = monthTrans.where((tx) {
+        return tx.note.toLowerCase().contains(query) ||
+            tx.category.toLowerCase().contains(query);
+      }).toList();
+    }
+
+    // Apply sorting
+    switch (sortOption) {
+      case TransactionSortOption.latest:
+        results.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+        break;
+      case TransactionSortOption.amountHighToLow:
+        results.sort((a, b) => b.amount.compareTo(a.amount));
+        break;
+      case TransactionSortOption.amountLowToHigh:
+        results.sort((a, b) => a.amount.compareTo(b.amount));
+        break;
+    }
+    return results;
+  }
+
+  // Monthly stats calculations (based on month transactions before search query filter)
+  double get monthlyIncome {
+    return monthlyTransactions
+        .where((tx) => tx.isIncome)
+        .fold(0.0, (sum, tx) => sum + tx.amount);
+  }
+
+  double get monthlyExpense {
+    return monthlyTransactions
+        .where((tx) => !tx.isIncome)
+        .fold(0.0, (sum, tx) => sum + tx.amount);
+  }
+
+  double get monthlyNetBalance => monthlyIncome - monthlyExpense;
+
+  // Actions
+  void selectMonthIndex(int index) {
+    if (index >= 0 && index < availableMonths.length) {
+      selectedMonthIndex = index;
+      notifyListeners();
+    }
+  }
+
+  void updateSortOption(TransactionSortOption option) {
+    sortOption = option;
+    notifyListeners();
+  }
+
+  void updateSearchQuery(String query) {
+    searchQuery = query;
+    notifyListeners();
+  }
+
+  void toggleSearching(bool value) {
+    isSearching = value;
+    if (!value) {
+      searchQuery = '';
+    }
+    notifyListeners();
+  }
 
   void addExpenseCategory(String category) {
     final cleanCategory = category.trim();

@@ -6,7 +6,6 @@ import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
-import 'login_screen.dart';
 
 Color accentPurpleColor = const Color(0xFF6A53A1);
 Color primaryColor = const Color(0xFF121212);

@@ -106,12 +106,26 @@ class CurrencyProvider extends ChangeNotifier {
 }
 
 extension CurrencyFormatter on BuildContext {
-  String formatAmount(double amount) {
-    final currency = watch<CurrencyProvider>().selectedCurrency;
+  String formatAmount(double amount, {bool listen = true}) {
+    final currency = listen
+        ? watch<CurrencyProvider>().selectedCurrency
+        : read<CurrencyProvider>().selectedCurrency;
     return '${currency.symbol}${amount.toStringAsFixed(2).replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
       (Match m) => '${m[1]},',
     )}';
+  }
+
+  String formatValueWithoutSymbol(double value) {
+    return (value % 1 == 0)
+        ? value.toStringAsFixed(0).replaceAllMapped(
+              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+              (Match m) => '${m[1]},',
+            )
+        : value.toStringAsFixed(2).replaceAllMapped(
+              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+              (Match m) => '${m[1]},',
+            );
   }
 
   String get currencySymbol => watch<CurrencyProvider>().selectedCurrency.symbol;

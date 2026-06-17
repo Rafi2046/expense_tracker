@@ -1,168 +1,182 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
-import 'package:expense_tracker/features/ledger/widgets/ledger_balance_header.dart';
-import 'package:expense_tracker/features/ledger/widgets/ledger_transaction_row.dart';
-import 'package:expense_tracker/features/ledger/widgets/ledger_transactions_card.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
+import 'package:expense_tracker/features/ledger/widgets/ledger_month_selector.dart';
+import 'package:expense_tracker/features/ledger/widgets/ledger_stats_cards.dart';
+import 'package:expense_tracker/features/ledger/widgets/ledger_transaction_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-class LedgerScreen extends StatelessWidget {
+class LedgerScreen extends StatefulWidget {
   const LedgerScreen({super.key});
 
-  void _showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 1),
-      ),
-    );
+  @override
+  State<LedgerScreen> createState() => _LedgerScreenState();
+}
+
+class _LedgerScreenState extends State<LedgerScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Mock Transaction Data
-    final transactions = [
-      _MockTransaction(
-        title: 'Apple Store',
-        dateText: 'Oct 24, 2023',
-        category: 'Electronics',
-        amount: 999.00,
-        isIncome: false,
-        icon: Icons.shopping_bag_outlined,
-      ),
-      _MockTransaction(
-        title: 'The Green Bistro',
-        dateText: 'Oct 23, 2023',
-        category: 'Dining',
-        amount: 42.50,
-        isIncome: false,
-        icon: Icons.restaurant,
-      ),
-      _MockTransaction(
-        title: 'Monthly Salary',
-        dateText: 'Oct 20, 2023',
-        category: 'Income',
-        amount: 4500.00,
-        isIncome: true,
-        icon: Icons.payments_outlined,
-      ),
-      _MockTransaction(
-        title: 'Uber Trip',
-        dateText: 'Oct 19, 2023',
-        category: 'Transport',
-        amount: 15.20,
-        isIncome: false,
-        icon: Icons.directions_car_outlined,
-      ),
-      _MockTransaction(
-        title: 'Streaming Service',
-        dateText: 'Oct 18, 2023',
-        category: 'Entertainment',
-        amount: 12.99,
-        isIncome: false,
-        icon: Icons.play_circle_outline,
-      ),
-      _MockTransaction(
-        title: 'Dividend Payout',
-        dateText: 'Oct 15, 2023',
-        category: 'Investment',
-        amount: 125.40,
-        isIncome: true,
-        icon: Icons.savings_outlined,
-      ),
-    ];
+    final provider = context.watch<TransactionProvider>();
+    final isSearching = provider.isSearching;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showSnackBar(context, 'Add transaction clicked'),
-        backgroundColor: AppColors.activeGreen,
-        elevation: 4,
-        shape: const CircleBorder(),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 28,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                style: GoogleFonts.workSans(
+                  fontSize: 16,
+                  color: Colors.black87,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Search Ledger...',
+                  hintStyle: GoogleFonts.workSans(color: Colors.grey.shade400),
+                  border: InputBorder.none,
+                ),
+                onChanged: (val) => provider.updateSearchQuery(val),
+              )
+            : Text(
+                'Ledger',
+                style: GoogleFonts.workSans(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              isSearching ? Icons.close_rounded : Icons.search_rounded,
+              color: const Color(0xFF31394D),
+            ),
+            onPressed: () {
+              final wasSearching = provider.isSearching;
+              provider.toggleSearching(!wasSearching);
+              if (wasSearching) {
+                _searchController.clear();
+              }
+            },
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header Title
-                Text(
-                  'Ledger',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
-                  ),
+      body: const SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.p16,
+                  vertical: AppSpacing.p20,
                 ),
-                const SizedBox(height: 6),
-                // Header Subtitle
-                Text(
-                  'Track your transaction history and balance.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.loginSubTitle,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
-                  ),
-                ),
-                const SizedBox(height: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Stats Summary Cards (Income vs Expense + Net Balance)
+                    LedgerStatsCards(),
+                    SizedBox(height: AppSpacing.s20),
 
-                // Total Balance Header
-                LedgerBalanceHeader(
-                  balance: context.formatAmount(12450.00),
-                  trendPercentage: '+2.4%',
-                ),
-                const SizedBox(height: 24),
+                    // Month Selector Slider
+                    LedgerMonthSelector(),
+                    SizedBox(height: AppSpacing.s20),
 
-                // Transactions Card
-                LedgerTransactionsCard(
-                  onFilterTap: () => _showSnackBar(context, 'Filter clicked'),
-                  children: transactions
-                      .map((tx) => LedgerTransactionRow(
-                            title: tx.title,
-                            dateText: tx.dateText,
-                            category: tx.category,
-                            amount: tx.amount,
-                            isIncome: tx.isIncome,
-                            icon: tx.icon,
-                            onTap: () => _showSnackBar(
-                              context,
-                              'Tapped: ${tx.title}',
-                            ),
-                          ))
-                      .toList(),
+                    // Transactions Card List
+                    LedgerTransactionList(),
+                  ],
                 ),
-                const SizedBox(height: 24),
-              ],
+              ),
             ),
-          ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(top: BorderSide(color: Color(0xFFF1F1F1), width: 1.0)),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.p16,
+          vertical: AppSpacing.p12,
+        ),
+        child: Row(
+          children: [
+            // Add Income Button
+            Expanded(
+              child: SizedBox(
+                height: 50,
+                child: ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.account_balance_wallet_outlined,
+                    size: 18,
+                  ),
+                  label: const Text('Add Income'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.activeGreen,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppSpacing.br12),
+                    ),
+                    textStyle: GoogleFonts.workSans(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    AddTransactionSheet.show(context: context, isIncome: true);
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.s12),
+
+            // Add Expense Button
+            Expanded(
+              child: SizedBox(
+                height: 50,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.payments_outlined, size: 18),
+                  label: const Text('Add Expense'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.expensePink,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppSpacing.br12),
+                    ),
+                    textStyle: GoogleFonts.workSans(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    AddTransactionSheet.show(context: context, isIncome: false);
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
-}
-
-class _MockTransaction {
-  final String title;
-  final String dateText;
-  final String category;
-  final double amount;
-  final bool isIncome;
-  final IconData icon;
-
-  _MockTransaction({
-    required this.title,
-    required this.dateText,
-    required this.category,
-    required this.amount,
-    required this.isIncome,
-    required this.icon,
-  });
 }

@@ -118,7 +118,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
             const Icon(Icons.check_circle_outline, color: Colors.white),
             const SizedBox(width: 8),
             Text(
-              '${widget.isIncome ? "Income" : "Expense"} added: ${context.formatAmount(amount)}',
+              '${widget.isIncome ? "Income" : "Expense"} added: ${context.formatAmount(amount, listen: false)}',
               style: GoogleFonts.workSans(fontWeight: FontWeight.w600),
             ),
           ],
