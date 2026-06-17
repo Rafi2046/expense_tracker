@@ -81,35 +81,30 @@ class SettingsScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: Text(
+          'Settings',
+          style: GoogleFonts.workSans(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Settings Header Title
-                Text(
-                  'Settings',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                // Settings Header Subtitle
-                Text(
-                  'Manage your account and app preferences.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.loginSubTitle,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
-                  ),
-                ),
-                const SizedBox(height: 24),
-
                 // User Profile Card
                 SettingsProfileCard(
                   name: 'Alexander Vance',

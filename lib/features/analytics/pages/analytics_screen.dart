@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/features/analytics/widgets/monthly_comparison_card.dart';
 import 'package:expense_tracker/features/analytics/widgets/spending_overview_card.dart';
@@ -67,35 +66,30 @@ class AnalyticsScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: Text(
+          'Analytics',
+          style: GoogleFonts.workSans(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Analytics Header Title (matches Settings header style)
-                Text(
-                  'Analytics',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                // Analytics Header Subtitle
-                Text(
-                  'Track and analyze your spending distributions.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.loginSubTitle,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
-                  ),
-                ),
-                const SizedBox(height: 24),
-
                 // Spending Overview Card
                 SpendingOverviewCard(
                   totalAmount: '${context.currencySymbol}4,250',
@@ -115,7 +109,7 @@ class AnalyticsScreen extends StatelessWidget {
                 TopSpendingCategoriesCard(
                   items: topCategories,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
               ],
             ),
           ),
