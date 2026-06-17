@@ -1,5 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:flutter/material.dart';
@@ -13,150 +11,192 @@ class LedgerStatsCards extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.watch<TransactionProvider>();
     final currencySymbol = context.currencySymbol;
-    
+
     final totalIncome = provider.monthlyIncome;
     final totalExpense = provider.monthlyExpense;
     final netBalance = provider.monthlyNetBalance;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            // Income Card
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(AppSpacing.p16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(AppSpacing.br12),
-                  border: Border.all(
-                    color: const Color(0xFFF1F1F1),
-                    width: 1.0,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.01),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFF32235B), // Deep royal purple
+            Color(0xFF6A53A1), // Soft premium violet
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF6A53A1).withValues(alpha: 0.25),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Net Balance Label
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'NET BALANCE',
+                style: GoogleFonts.workSans(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white70,
+                  letterSpacing: 1.2,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Text(
+                  provider.selectedMonth.year.toString(),
+                  style: GoogleFonts.workSans(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+
+          // Net Balance Value
+          Text(
+            '${netBalance >= 0 ? '' : '- '}$currencySymbol ${context.formatValueWithoutSymbol(netBalance.abs())}',
+            style: GoogleFonts.workSans(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              letterSpacing: -0.5,
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Divider
+          Container(height: 1, color: Colors.white.withValues(alpha: 0.15)),
+          const SizedBox(height: 18),
+
+          // Income vs Expense row
+          Row(
+            children: [
+              // Income Column
+              Expanded(
+                child: Row(
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Income',
-                          style: GoogleFonts.workSans(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.textMuted,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        const Icon(
-                          Icons.arrow_downward_rounded,
-                          color: AppColors.activeGreen,
-                          size: 14,
-                        ),
-                      ],
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.arrow_downward_rounded,
+                        color: Color(0xFF2ECC71), // soft green
+                        size: 16,
+                      ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '$currencySymbol ${context.formatValueWithoutSymbol(totalIncome)}',
-                      style: GoogleFonts.workSans(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.activeGreen,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Income',
+                            style: GoogleFonts.workSans(
+                              fontSize: 12,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            '$currencySymbol ${context.formatValueWithoutSymbol(totalIncome)}',
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.workSans(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-            const SizedBox(width: AppSpacing.s12),
 
-            // Expense Card
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(AppSpacing.p16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(AppSpacing.br12),
-                  border: Border.all(
-                    color: const Color(0xFFF1F1F1),
-                    width: 1.0,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.01),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              // Vertial Divider line
+              Container(
+                width: 1,
+                height: 36,
+                color: Colors.white.withValues(alpha: 0.15),
+              ),
+              const SizedBox(width: 16),
+
+              // Expense Column
+              Expanded(
+                child: Row(
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Expense',
-                          style: GoogleFonts.workSans(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.textMuted,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        const Icon(
-                          Icons.arrow_upward_rounded,
-                          color: AppColors.expensePink,
-                          size: 14,
-                        ),
-                      ],
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.arrow_upward_rounded,
+                        color: Color(0xFFF1948A), // soft light red
+                        size: 16,
+                      ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '$currencySymbol ${context.formatValueWithoutSymbol(totalExpense)}',
-                      style: GoogleFonts.workSans(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.expensePink,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Expense',
+                            style: GoogleFonts.workSans(
+                              fontSize: 12,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            '$currencySymbol ${context.formatValueWithoutSymbol(totalExpense)}',
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.workSans(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: AppSpacing.s16),
-
-        // Net Balance Summary Text
-        Row(
-          children: [
-            Text(
-              'Net Balance: ',
-              style: GoogleFonts.workSans(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.loginSubTitle,
-              ),
-            ),
-            Text(
-              '${netBalance >= 0 ? '' : '- '}$currencySymbol ${context.formatValueWithoutSymbol(netBalance.abs())}',
-              style: GoogleFonts.workSans(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF1F2937),
-              ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

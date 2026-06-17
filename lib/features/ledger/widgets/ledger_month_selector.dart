@@ -5,8 +5,48 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class LedgerMonthSelector extends StatelessWidget {
+class LedgerMonthSelector extends StatefulWidget {
   const LedgerMonthSelector({super.key});
+
+  @override
+  State<LedgerMonthSelector> createState() => _LedgerMonthSelectorState();
+}
+
+class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Scroll to the selected month after the widget finishes building
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToSelectedMonth(animate: false));
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToSelectedMonth({bool animate = true}) {
+    if (!_scrollController.hasClients) return;
+    final provider = Provider.of<TransactionProvider>(context, listen: false);
+    final index = provider.selectedMonthIndex;
+
+    // Item width is 76 + 12 (margin) = 88
+    final targetOffset = (index * 88.0) - (MediaQuery.of(context).size.width / 2) + 44.0;
+    final clampedOffset = targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent);
+
+    if (animate) {
+      _scrollController.animateTo(
+        clampedOffset,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeOutCubic,
+      );
+    } else {
+      _scrollController.jumpTo(clampedOffset);
+    }
+  }
 
   void _showSortBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -148,72 +188,115 @@ class LedgerMonthSelector extends StatelessWidget {
     final provider = context.watch<TransactionProvider>();
     final months = provider.availableMonths;
     final selectedIndex = provider.selectedMonthIndex;
-    final selectedMonth = provider.selectedMonth;
+
+    // Listen to changes to index and auto scroll
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToSelectedMonth());
 
     return Row(
       children: [
-        // Month Selector Card
+        // Horizontal calendar slider
         Expanded(
-          child: Container(
-            height: 48,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(AppSpacing.br12),
-              border: Border.all(
-                color: const Color(0xFFF1F1F1),
-                width: 1.0,
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.chevron_left_rounded,
-                    size: 22,
+          child: SizedBox(
+            height: 60,
+            child: ListView.builder(
+              controller: _scrollController,
+              scrollDirection: Axis.horizontal,
+              itemCount: months.length,
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                final month = months[index];
+                final isSelected = index == selectedIndex;
+                final isCurrent = index == 6;
+
+                return GestureDetector(
+                  onTap: () {
+                    provider.selectMonthIndex(index);
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 76,
+                    margin: const EdgeInsets.only(right: 12),
+                    decoration: BoxDecoration(
+                      gradient: isSelected
+                          ? const LinearGradient(
+                              colors: [Color(0xFF4A3482), Color(0xFF6A53A1)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            )
+                          : null,
+                      color: isSelected
+                          ? null
+                          : isCurrent
+                              ? const Color(0xFFECEFF1)
+                              : Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isSelected
+                            ? Colors.transparent
+                            : isCurrent
+                                ? const Color(0xFFCFD8DC)
+                                : const Color(0xFFF1F1F1),
+                        width: 1.0,
+                      ),
+                      boxShadow: isSelected
+                          ? [
+                              BoxShadow(
+                                color: const Color(0xFF6A53A1).withValues(alpha: 0.2),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              )
+                            ]
+                          : null,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          DateFormat('MMM').format(month).toUpperCase(),
+                          style: GoogleFonts.workSans(
+                            fontSize: 13,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                            color: isSelected ? Colors.white : Colors.black87,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          DateFormat('yyyy').format(month),
+                          style: GoogleFonts.workSans(
+                            fontSize: 10,
+                            fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
+                            color: isSelected ? Colors.white70 : Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  color: selectedIndex > 0 ? Colors.black87 : Colors.grey.shade300,
-                  onPressed: selectedIndex > 0
-                      ? () => provider.selectMonthIndex(selectedIndex - 1)
-                      : null,
-                ),
-                Text(
-                  DateFormat('MMMM yyyy').format(selectedMonth),
-                  style: GoogleFonts.workSans(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.chevron_right_rounded,
-                    size: 22,
-                  ),
-                  color: selectedIndex < months.length - 1
-                      ? Colors.black87
-                      : Colors.grey.shade300,
-                  onPressed: selectedIndex < months.length - 1
-                      ? () => provider.selectMonthIndex(selectedIndex + 1)
-                      : null,
-                ),
-              ],
+                );
+              },
             ),
           ),
         ),
         const SizedBox(width: AppSpacing.s12),
 
-        // Filter Button
+        // Filter button
         Container(
-          width: 48,
-          height: 48,
+          width: 52,
+          height: 60,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(AppSpacing.br12),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: const Color(0xFFF1F1F1),
               width: 1.0,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.01),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: IconButton(
             icon: const Icon(Icons.tune_rounded, size: 20),
