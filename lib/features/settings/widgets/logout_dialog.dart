@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/features/login/pages/login_screen.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -82,15 +83,18 @@ class LogoutDialog extends StatelessWidget {
                 Expanded(
                   child: CustomButton(
                     text: 'Logout',
-                    onPressed: () {
+                    onPressed: () async {
                       Navigator.pop(context); // Close dialog
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                        (route) => false,
-                      );
+                      await AuthService().signOut();
+                      if (context.mounted) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                          (route) => false,
+                        );
+                      }
                     },
                     backgroundColor: AppColors.activeRed,
                     textColor: Colors.white,

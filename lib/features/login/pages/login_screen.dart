@@ -2,17 +2,93 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
 import 'package:expense_tracker/features/login/pages/forgot_password_screen.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../widgets/custom_text_field_widget.dart';
 import 'create_account_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  final AuthService _authService = AuthService();
+
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleEmailLogin() async {
+    if (_emailController.text.trim().isEmpty ||
+        _passwordController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter both email and password')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final user = await _authService.loginWithEmail(
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+      );
+
+      if (user != null && mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const BottomNavScreen()),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _handleGoogleLogin() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final user = await _authService.signInWithGoogle();
+
+      if (user != null && mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const BottomNavScreen()),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +125,14 @@ class LoginScreen extends StatelessWidget {
                         style: AppTextStyles.loginSubTitle,
                       ),
 
-                      const CustomTextFieldWidget(
+                      CustomTextFieldWidget(
+                        controller: _emailController,
                         label: 'Email Address',
                         hintText: 'you@example.com',
                       ),
 
                       CustomTextFieldWidget(
+                        controller: _passwordController,
                         label: 'Password',
                         hintText: '••••••••',
                         obscureText: true,
@@ -63,7 +141,8 @@ class LoginScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ForgotPasswordScreen(),
+                                builder: (context) =>
+                                    const ForgotPasswordScreen(),
                               ),
                             );
                           },
@@ -75,15 +154,8 @@ class LoginScreen extends StatelessWidget {
                       ),
 
                       CustomButton(
-                        text: 'Sign In',
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BottomNavScreen(),
-                            ),
-                          );
-                        },
+                        text: _isLoading ? 'Signing In...' : 'Sign In',
+                        onPressed: _isLoading ? () {} : _handleEmailLogin,
                       ),
 
                       Row(
@@ -95,7 +167,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: AppSpacing.p16,
                             ),
                             child: const Text(
@@ -111,6 +183,8 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ],
                       ),
+
+                      // Google Login Button
                       CustomButton(
                         leading: Image.asset(AppImages.googleLogo),
                         showBorder: true,
@@ -118,7 +192,7 @@ class LoginScreen extends StatelessWidget {
                         text: 'Continue with Google',
                         textColor: AppColors.googleTextColor,
                         fontFamily: GoogleFonts.inter().fontFamily,
-                        onPressed: () {},
+                        onPressed: _isLoading ? () {} : _handleGoogleLogin,
                         backgroundColor: AppColors.white,
                       ),
 
@@ -132,12 +206,12 @@ class LoginScreen extends StatelessWidget {
                         onPressed: () {},
                         backgroundColor: AppColors.white,
                       ),
+
                       CustomButton(
                         leading: Transform.scale(
                           scale: 1.4,
                           child: Image.asset(AppImages.appleLogo),
                         ),
-
                         showBorder: true,
                         borderColor: AppColors.borderColor,
                         text: 'Continue with Apple',
@@ -146,7 +220,8 @@ class LoginScreen extends StatelessWidget {
                         onPressed: () {},
                         backgroundColor: AppColors.white,
                       ),
-                      SizedBox(height: 8),
+
+                      const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -159,7 +234,8 @@ class LoginScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CreateAccountScreen(),
+                                  builder: (context) =>
+                                      const CreateAccountScreen(),
                                 ),
                               );
                             },
