@@ -7,6 +7,8 @@ class SettingsOptionRow extends StatelessWidget {
   final String title;
   final String? trailingText;
   final Color? color;
+  final Color? iconBgColor;
+  final Color? iconColor;
   final VoidCallback onTap;
 
   const SettingsOptionRow({
@@ -15,25 +17,33 @@ class SettingsOptionRow extends StatelessWidget {
     required this.title,
     this.trailingText,
     this.color,
+    this.iconBgColor,
+    this.iconColor,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final defaultColor = color ?? Colors.black87;
-    final leadingIconColor = color ?? const Color(0xFF31394D);
 
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         child: Row(
           children: [
-            // Leading Icon
-            Icon(
-              icon,
-              color: leadingIconColor,
-              size: 22,
+            // Squircle leading icon container
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: iconBgColor ?? const Color(0xFFF3F4F6),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                icon,
+                color: iconColor ?? color ?? const Color(0xFF4B5563),
+                size: 18,
+              ),
             ),
             const SizedBox(width: 16),
 
@@ -41,11 +51,10 @@ class SettingsOptionRow extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+                style: GoogleFonts.workSans(
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w600,
                   color: defaultColor,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
                 ),
               ),
             ),
@@ -54,20 +63,20 @@ class SettingsOptionRow extends StatelessWidget {
             if (trailingText != null) ...[
               Text(
                 trailingText!,
-                style: TextStyle(
+                style: GoogleFonts.workSans(
                   fontSize: 13,
                   color: AppColors.textMuted,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: 6),
             ],
 
             // Chevron Arrow
             Icon(
-              Icons.chevron_right,
-              color: color ?? AppColors.textMuted,
-              size: 20,
+              Icons.chevron_right_rounded,
+              color: color ?? Colors.grey.shade400,
+              size: 18,
             ),
           ],
         ),

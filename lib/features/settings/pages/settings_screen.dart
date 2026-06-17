@@ -118,17 +118,23 @@ class SettingsScreen extends StatelessWidget {
                   title: 'Account',
                   children: [
                     SettingsOptionRow(
-                      icon: Icons.person_outline,
+                      icon: Icons.person_rounded,
+                      iconBgColor: const Color(0xFFE3F2FD),
+                      iconColor: const Color(0xFF1E88E5),
                       title: 'Personal Information',
                       onTap: () => _showSnackBar(context, 'Personal Information clicked'),
                     ),
                     SettingsOptionRow(
-                      icon: Icons.lock_outline,
+                      icon: Icons.lock_rounded,
+                      iconBgColor: const Color(0xFFFFF3E0),
+                      iconColor: const Color(0xFFFB8C00),
                       title: 'Security & Privacy',
                       onTap: () => _showSnackBar(context, 'Security & Privacy clicked'),
                     ),
                     SettingsOptionRow(
-                      icon: Icons.notifications_none_outlined,
+                      icon: Icons.notifications_rounded,
+                      iconBgColor: const Color(0xFFFCE4EC),
+                      iconColor: const Color(0xFFD81B60),
                       title: 'Notifications',
                       onTap: () => _showSnackBar(context, 'Notifications clicked'),
                     ),
@@ -141,7 +147,9 @@ class SettingsScreen extends StatelessWidget {
                   title: 'Management',
                   children: [
                     SettingsOptionRow(
-                      icon: Icons.category_outlined,
+                      icon: Icons.category_rounded,
+                      iconBgColor: const Color(0xFFF3E5F5),
+                      iconColor: const Color(0xFF8E24AA),
                       title: 'Manage Categories',
                       onTap: () {
                         Navigator.push(
@@ -153,7 +161,9 @@ class SettingsScreen extends StatelessWidget {
                       },
                     ),
                     SettingsOptionRow(
-                      icon: Icons.bar_chart_outlined,
+                      icon: Icons.bar_chart_rounded,
+                      iconBgColor: const Color(0xFFE8F8F5),
+                      iconColor: const Color(0xFF16A085),
                       title: 'View Reports',
                       onTap: () => _showReportSelectorDialog(context),
                     ),
@@ -166,7 +176,9 @@ class SettingsScreen extends StatelessWidget {
                   title: 'Preferences',
                   children: [
                     SettingsOptionRow(
-                      icon: Icons.payments_outlined,
+                      icon: Icons.payments_rounded,
+                      iconBgColor: const Color(0xFFE0F2F1),
+                      iconColor: const Color(0xFF00796B),
                       title: 'Currency',
                       trailingText: '${selectedCurrency.code} (${selectedCurrency.symbol})',
                       onTap: () {
@@ -179,13 +191,17 @@ class SettingsScreen extends StatelessWidget {
                       },
                     ),
                     SettingsOptionRow(
-                      icon: Icons.palette_outlined,
+                      icon: Icons.palette_rounded,
+                      iconBgColor: const Color(0xFFE8EAF6),
+                      iconColor: const Color(0xFF3F51B5),
                       title: 'Theme',
                       trailingText: 'Light',
                       onTap: () => _showSnackBar(context, 'Theme clicked'),
                     ),
                     SettingsOptionRow(
-                      icon: Icons.language,
+                      icon: Icons.language_rounded,
+                      iconBgColor: const Color(0xFFFFFDE7),
+                      iconColor: const Color(0xFFFBC02D),
                       title: 'Language',
                       trailingText: 'English',
                       onTap: () => _showSnackBar(context, 'Language clicked'),
@@ -199,7 +215,9 @@ class SettingsScreen extends StatelessWidget {
                   title: 'Utilities',
                   children: [
                     SettingsOptionRow(
-                      icon: Icons.note_alt_outlined,
+                      icon: Icons.book_rounded,
+                      iconBgColor: const Color(0xFFEFEBE9),
+                      iconColor: const Color(0xFF6D4C41),
                       title: 'Notebook',
                       onTap: () {
                         Navigator.push(
@@ -219,17 +237,23 @@ class SettingsScreen extends StatelessWidget {
                   title: 'Support',
                   children: [
                     SettingsOptionRow(
-                      icon: Icons.help_outline,
+                      icon: Icons.help_rounded,
+                      iconBgColor: const Color(0xFFECEFF1),
+                      iconColor: const Color(0xFF546E7A),
                       title: 'Help Center',
                       onTap: () => _showSnackBar(context, 'Help Center clicked'),
                     ),
                     SettingsOptionRow(
-                      icon: Icons.shield_outlined,
+                      icon: Icons.shield_rounded,
+                      iconBgColor: const Color(0xFFE8F5E9),
+                      iconColor: const Color(0xFF43A047),
                       title: 'Privacy Policy',
                       onTap: () => _showSnackBar(context, 'Privacy Policy clicked'),
                     ),
                     SettingsOptionRow(
-                      icon: Icons.logout,
+                      icon: Icons.logout_rounded,
+                      iconBgColor: const Color(0xFFFFF1F0),
+                      iconColor: const Color(0xFFE53935),
                       title: 'Logout',
                       color: AppColors.activeRed,
                       onTap: () {

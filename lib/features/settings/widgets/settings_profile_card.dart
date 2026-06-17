@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,29 +18,39 @@ class SettingsProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: AppColors.dividerColor.withValues(alpha: 0.5),
-          width: 1.0,
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFF32235B), // Deep royal purple
+            Color(0xFF6A53A1), // Soft premium violet
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.01),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: const Color(0xFF6A53A1).withValues(alpha: 0.2),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Row(
         children: [
-          // Circle Avatar
-          CircleAvatar(
-            radius: 28,
-            backgroundColor: Colors.grey.shade100,
-            backgroundImage: const AssetImage(AppImages.avatarImage),
+          // Circle Avatar with glowing white ring
+          Container(
+            padding: const EdgeInsets.all(2.5),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: CircleAvatar(
+              radius: 28,
+              backgroundColor: Colors.grey.shade100,
+              backgroundImage: const AssetImage(AppImages.avatarImage),
+            ),
           ),
           const SizedBox(width: 16),
 
@@ -52,37 +61,45 @@ class SettingsProfileCard extends StatelessWidget {
               children: [
                 Text(
                   name,
-                  style: TextStyle(
+                  style: GoogleFonts.workSans(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   email,
-                  style: TextStyle(
+                  style: GoogleFonts.workSans(
                     fontSize: 13,
-                    color: AppColors.loginSubTitle,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
+                    color: Colors.white70,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
             ),
           ),
 
-          // Edit Button
-          IconButton(
-            onPressed: onEditTap,
-            icon: const Icon(
-              Icons.edit_outlined,
-              color: Colors.black54,
-              size: 20,
+          // Edit Button with translucent circle overlay
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
             ),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-            splashRadius: 20,
+            alignment: Alignment.center,
+            child: IconButton(
+              onPressed: onEditTap,
+              icon: const Icon(
+                Icons.edit_outlined,
+                color: Colors.white,
+                size: 18,
+              ),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              splashRadius: 18,
+            ),
           ),
         ],
       ),

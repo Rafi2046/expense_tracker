@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -21,7 +20,7 @@ class SettingsGroupCard extends StatelessWidget {
       items.add(children[i]);
       if (i < children.length - 1) {
         items.add(Container(
-          color: AppColors.dividerColor.withValues(alpha: 0.3),
+          color: const Color(0xFFF1F1F1),
           height: 1.0,
         ));
       }
@@ -30,17 +29,16 @@ class SettingsGroupCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Group Header Title
+        // Group Header Title in Work Sans, colored purple
         Padding(
-          padding: const EdgeInsets.only(left: 4.0, bottom: 8.0),
+          padding: const EdgeInsets.only(left: 6.0, bottom: 10.0),
           child: Text(
             title.toUpperCase(),
-            style: TextStyle(
-              fontSize: 11,
+            style: GoogleFonts.workSans(
+              fontSize: 12,
               fontWeight: FontWeight.bold,
-              color: AppColors.loginSubTitle.withValues(alpha: 0.8),
-              fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-              letterSpacing: 1.2,
+              color: const Color(0xFF6A53A1), // Premium violet text accent
+              letterSpacing: 1.0,
             ),
           ),
         ),
@@ -51,13 +49,20 @@ class SettingsGroupCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(
-              color: AppColors.dividerColor.withValues(alpha: 0.5),
+              color: const Color(0xFFF1F1F1),
               width: 1.0,
             ),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.015),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             child: Column(
               children: items,
             ),
