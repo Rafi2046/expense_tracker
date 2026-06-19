@@ -35,25 +35,17 @@ class AuthService {
       await _googleSignIn.initialize();
 
       // 3. Trigger the new authentication flow (replaces signIn)
-      // Note: If the user cancels the popup, this throws an exception rather than returning null.
       final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
 
-      // 4. Get the ID token (this property is now synchronous)
+      // 4. Get the ID token (synchronous property in v7)
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
-      // 5. Explicitly request authorization scopes to get the access token
-      final clientAuth = await googleUser.authorizationClient.authorizeScopes([
-        'email',
-        'profile',
-      ]);
-
-      // 6. Build the Firebase credential using both tokens
+      // 5. Build the Firebase credential using the ID token
       final OAuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
-        accessToken: clientAuth.accessToken,
       );
 
-      // 7. Sign in to Firebase
+      // 6. Sign in to Firebase
       return await _auth.signInWithCredential(credential);
     } catch (e) {
       // Catches user cancellations or network errors
