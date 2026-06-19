@@ -5,12 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 class SettingsProfileCard extends StatelessWidget {
   final String name;
   final String email;
+  final String? photoUrl;
   final VoidCallback? onEditTap;
 
   const SettingsProfileCard({
     super.key,
     required this.name,
     required this.email,
+    this.photoUrl,
     this.onEditTap,
   });
 
@@ -49,7 +51,9 @@ class SettingsProfileCard extends StatelessWidget {
             child: CircleAvatar(
               radius: 28,
               backgroundColor: Colors.grey.shade100,
-              backgroundImage: const AssetImage(AppImages.avatarImage),
+              backgroundImage: (photoUrl != null && photoUrl!.startsWith('http'))
+                  ? NetworkImage(photoUrl!) as ImageProvider
+                  : const AssetImage(AppImages.avatarImage),
             ),
           ),
           const SizedBox(width: 16),
