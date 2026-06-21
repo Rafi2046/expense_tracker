@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -53,7 +54,9 @@ class SettingsProfileCard extends StatelessWidget {
               backgroundColor: Colors.grey.shade100,
               backgroundImage: (photoUrl != null && photoUrl!.startsWith('http'))
                   ? NetworkImage(photoUrl!) as ImageProvider
-                  : const AssetImage(AppImages.avatarImage),
+                  : (photoUrl != null && photoUrl!.isNotEmpty && File(photoUrl!).existsSync()
+                      ? FileImage(File(photoUrl!)) as ImageProvider
+                      : const AssetImage(AppImages.avatarImage)),
             ),
           ),
           const SizedBox(width: 16),

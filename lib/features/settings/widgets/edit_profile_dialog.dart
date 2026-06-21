@@ -1,9 +1,14 @@
+import 'dart:io';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class EditProfileDialog extends StatefulWidget {
   const EditProfileDialog({super.key});
@@ -15,6 +20,7 @@ class EditProfileDialog extends StatefulWidget {
 class _EditProfileDialogState extends State<EditProfileDialog> {
   final _nameController = TextEditingController();
   final _photoUrlController = TextEditingController();
+  File? _localImageFile;
   bool _isLoading = false;
 
   @override
@@ -24,6 +30,13 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     if (user != null) {
       _nameController.text = user.displayName ?? '';
       _photoUrlController.text = user.photoURL ?? '';
+      
+      // If photoURL is a local file path that exists, show it in the preview
+      if (user.photoURL != null &&
+          !user.photoURL!.startsWith('http') &&
+          File(user.photoURL!).existsSync()) {
+        _localImageFile = File(user.photoURL!);
+      }
     }
   }
 
@@ -34,6 +47,39 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     super.dispose();
   }
 
+  Future<void> _pickProfileImage() async {
+    final ImagePicker picker = ImagePicker();
+    try {
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        // Copy the image permanently to the application documents directory
+        final directory = await getApplicationDocumentsDirectory();
+        final user = FirebaseAuth.instance.currentUser;
+        final localFile = await File(image.path).copy('${directory.path}/profile_${user?.uid}.jpg');
+
+        setState(() {
+          _localImageFile = localFile;
+          _photoUrlController.text = localFile.path;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error selecting image: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _saveProfile() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -41,9 +87,15 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     setState(() => _isLoading = true);
 
     try {
-      await user.updateDisplayName(_nameController.text.trim());
-      await user.updatePhotoURL(_photoUrlController.text.trim());
+      final newName = _nameController.text.trim();
+      final newPhotoUrl = _photoUrlController.text.trim();
+
+      await user.updateDisplayName(newName);
+      await user.updatePhotoURL(newPhotoUrl);
       await user.reload();
+
+      // Backup local path in SharedPreferences for this specific user
+      await SharedPrefsHelper.setString('local_profile_photo_${user.uid}', newPhotoUrl);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -98,6 +150,49 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               ),
               const SizedBox(height: 20),
 
+              // Interactive Avatar Photo Picker
+              Center(
+                child: GestureDetector(
+                  onTap: _isLoading ? null : _pickProfileImage,
+                  child: Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(3.0),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF6A53A1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.grey.shade100,
+                          backgroundImage: _localImageFile != null
+                              ? FileImage(_localImageFile!) as ImageProvider
+                              : (_photoUrlController.text.startsWith('http')
+                                  ? NetworkImage(_photoUrlController.text) as ImageProvider
+                                  : (_photoUrlController.text.isNotEmpty && File(_photoUrlController.text).existsSync()
+                                      ? FileImage(File(_photoUrlController.text)) as ImageProvider
+                                      : const AssetImage(AppImages.avatarImage))),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF6A53A1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.camera_alt,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
               // Name Input
               CustomTextFieldWidget(
                 label: 'Display Name',
@@ -106,7 +201,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               ),
               const SizedBox(height: 16),
 
-              // Photo URL Input
+              // Photo URL Input (Still available for reference/fallback)
               CustomTextFieldWidget(
                 label: 'Profile Photo URL',
                 hintText: 'https://example.com/avatar.png',

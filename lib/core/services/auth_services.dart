@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
@@ -58,6 +60,25 @@ class AuthService {
       await _auth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message);
+    }
+  }
+
+  Future<String> uploadProfileImage(File file) async {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception('No user logged in');
+
+    try {
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('users')
+          .child(user.uid)
+          .child('profile.jpg');
+
+      final UploadTask uploadTask = storageRef.putFile(file);
+      final TaskSnapshot snapshot = await uploadTask;
+      return await snapshot.ref.getDownloadURL();
+    } catch (e) {
+      throw Exception('Failed to upload image: $e');
     }
   }
 
