@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,15 +46,22 @@ class HomepageAppbarWidget extends StatelessWidget
                   CircleAvatar(
                     radius: 18,
                     backgroundColor: Colors.grey.shade200,
-                    child: Text(
-                      name.isNotEmpty ? name[0].toUpperCase() : 'U',
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        fontFamily: GoogleFonts.workSans().fontFamily,
-                      ),
-                    ),
+                    backgroundImage: (profilePhoto != null && profilePhoto!.startsWith('http'))
+                        ? NetworkImage(profilePhoto!) as ImageProvider
+                        : (profilePhoto != null && profilePhoto!.isNotEmpty && File(profilePhoto!).existsSync()
+                            ? FileImage(File(profilePhoto!)) as ImageProvider
+                            : null),
+                    child: (profilePhoto != null && (profilePhoto!.startsWith('http') || (profilePhoto!.isNotEmpty && File(profilePhoto!).existsSync())))
+                        ? null
+                        : Text(
+                            name.isNotEmpty ? name[0].toUpperCase() : 'U',
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              fontFamily: GoogleFonts.workSans().fontFamily,
+                            ),
+                          ),
                   ),
                   const SizedBox(width: 8),
                   Text(

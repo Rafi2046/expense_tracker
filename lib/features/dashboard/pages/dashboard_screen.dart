@@ -4,6 +4,8 @@ import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/appbar_widget.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/dashboard/pages/expense_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/income_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
@@ -26,10 +28,20 @@ class DashboardScreen extends StatelessWidget {
     final currentProfile = profileProvider.currentProfile;
     final debtProvider = context.watch<DebtProvider>();
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
-      appBar: HomepageAppbarWidget(
-        name: currentProfile.name,
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.userChanges(),
+      builder: (context, snapshot) {
+        final user = snapshot.data;
+        final localPhoto = user != null
+            ? SharedPrefsHelper.getString('local_profile_photo_${user.uid}')
+            : null;
+        final photoUrl = localPhoto ?? user?.photoURL;
+
+        return Scaffold(
+          backgroundColor: const Color(0xFFF9F9F9),
+          appBar: HomepageAppbarWidget(
+            name: currentProfile.name,
+            profilePhoto: photoUrl,
         onProfileTap: () {
           ProfileSwitchSheet.show(
             context: context,
@@ -212,5 +224,7 @@ class DashboardScreen extends StatelessWidget {
         ),
       ),
     );
-  }
+  },
+);
+}
 }
