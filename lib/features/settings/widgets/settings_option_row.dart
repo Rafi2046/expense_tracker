@@ -6,6 +6,7 @@ class SettingsOptionRow extends StatelessWidget {
   final IconData icon;
   final String title;
   final String? trailingText;
+  final IconData? trailingIcon;
   final Color? color;
   final Color? iconBgColor;
   final Color? iconColor;
@@ -16,6 +17,7 @@ class SettingsOptionRow extends StatelessWidget {
     required this.icon,
     required this.title,
     this.trailingText,
+    this.trailingIcon,
     this.color,
     this.iconBgColor,
     this.iconColor,
@@ -74,7 +76,7 @@ class SettingsOptionRow extends StatelessWidget {
 
             // Chevron Arrow
             Icon(
-              Icons.chevron_right_rounded,
+              trailingIcon ?? Icons.chevron_right_rounded,
               color: color ?? Colors.grey.shade400,
               size: 18,
             ),

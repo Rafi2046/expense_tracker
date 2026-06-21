@@ -82,6 +82,37 @@ class AuthService {
     }
   }
 
+  Future<void> updatePersonalInfo({required String displayName}) async {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception('No user logged in');
+    try {
+      await user.updateDisplayName(displayName);
+      await user.reload();
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message);
+    }
+  }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception('No user logged in');
+    if (user.email == null) throw Exception('User email is null');
+
+    try {
+      final AuthCredential credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: currentPassword,
+      );
+      await user.reauthenticateWithCredential(credential);
+      await user.updatePassword(newPassword);
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message);
+    }
+  }
+
   Future<void> signOut() async {
     try {
       await _auth.signOut();
