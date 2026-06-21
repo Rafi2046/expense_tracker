@@ -84,8 +84,11 @@ class LogoutDialog extends StatelessWidget {
                   child: CustomButton(
                     text: 'Logout',
                     onPressed: () async {
-                      Navigator.pop(context); // Close dialog
-                      await AuthService().signOut();
+                      try {
+                        await AuthService().signOut();
+                      } catch (e) {
+                        // Ignore sign out errors so navigation always proceeds
+                      }
                       if (context.mounted) {
                         Navigator.pushAndRemoveUntil(
                           context,

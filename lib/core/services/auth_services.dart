@@ -83,8 +83,16 @@ class AuthService {
   }
 
   Future<void> signOut() async {
-    await _auth.signOut();
-    await _googleSignIn.signOut();
+    try {
+      await _auth.signOut();
+    } catch (e) {
+      // Ignore or log error
+    }
+    try {
+      await _googleSignIn.signOut();
+    } catch (e) {
+      // Ignore error since user might have logged in via email/password
+    }
   }
 
   Stream<User?> get userStateChanges => _auth.authStateChanges();

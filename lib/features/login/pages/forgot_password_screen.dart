@@ -3,7 +3,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/features/login/pages/login_screen.dart';
-import 'package:expense_tracker/features/login/pages/forgot_password_otp_screen.dart';
+import 'package:expense_tracker/features/login/pages/password_change_success_screen.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +62,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ForgotPasswordOtpScreen(),
+            builder: (context) => const PasswordChangeSuccessScreen(),
           ),
         );
       }

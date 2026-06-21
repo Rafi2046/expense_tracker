@@ -28,13 +28,13 @@ class PasswordChangeSuccessScreen extends StatelessWidget {
               ),
 
               Text(
-                'Password Changed!',
+                'Reset Link Sent!',
                 textAlign: TextAlign.center,
                 style: AppTextStyles.loginTitle,
               ),
 
               Text(
-                'Your password has been successfully changed. You can now log in with your new password.',
+                'We have sent a password reset link to your email. Please click the link in your inbox to set your new password, then return here to log in.',
                 textAlign: TextAlign.center,
                 style: AppTextStyles.loginSubTitle,
               ),
@@ -42,11 +42,12 @@ class PasswordChangeSuccessScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               CustomButton(
-                text: 'Get Started',
+                text: 'Back to Login',
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                    (route) => false,
                   );
                 },
               ),
