@@ -9,6 +9,7 @@ import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/dashboard/pages/expense_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/income_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/notifications_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/to_receive_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/to_give_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_budget_status.dart';
@@ -63,7 +64,14 @@ class DashboardScreen extends StatelessWidget {
             },
           );
         },
-        notificationOnTap: () {},
+        notificationOnTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NotificationsScreen(),
+            ),
+          );
+        },
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -38,6 +38,15 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   final _noteController = TextEditingController();
   String? _selectedCategory;
   DateTime _selectedDate = DateTime.now();
+  String? _selectedIncomeMonth;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isIncome) {
+      _selectedIncomeMonth = DateFormat('MMMM yyyy').format(DateTime.now());
+    }
+  }
 
   @override
   void dispose() {
@@ -72,6 +81,94 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
     }
   }
 
+  void _showMonthSelector(BuildContext context) {
+    final provider = context.read<TransactionProvider>();
+    final months = provider.availableMonths;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Select Income Month',
+                style: GoogleFonts.workSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.40,
+                ),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: months.length,
+                  separatorBuilder: (context, index) => const Divider(
+                    color: Color(0xFFF5F5F5),
+                    height: 1,
+                  ),
+                  itemBuilder: (context, index) {
+                    final monthDate = months[index];
+                    final label = DateFormat('MMMM yyyy').format(monthDate);
+                    final isSelected = _selectedIncomeMonth == label;
+
+                    return ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        label,
+                        style: GoogleFonts.workSans(
+                          fontSize: 15,
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      trailing: isSelected
+                          ? const Icon(Icons.check_circle, color: AppColors.activeGreen)
+                          : null,
+                      onTap: () {
+                        setState(() {
+                          _selectedIncomeMonth = label;
+                        });
+                        Navigator.pop(ctx);
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void _save(BuildContext context) {
     if (!_formKey.currentState!.validate()) return;
     
@@ -104,6 +201,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
       note: _noteController.text.trim(),
       isIncome: widget.isIncome,
       dateTime: _selectedDate,
+      incomeMonth: widget.isIncome ? _selectedIncomeMonth : null,
     );
 
     provider.addTransaction(newItem);
@@ -274,6 +372,20 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 onTap: () => _selectDate(context),
               ),
               const SizedBox(height: 16),
+
+              // Income Month Selector Tile (Only for income)
+              if (widget.isIncome) ...[
+                TransactionSelectorTile(
+                  leadingIcon: Icons.calendar_month_outlined,
+                  labelText: 'Income Month',
+                  valueText: _selectedIncomeMonth ?? 'Select Month',
+                  isValueSelected: _selectedIncomeMonth != null,
+                  themeColor: secondaryThemeColor,
+                  trailingIcon: Icons.arrow_forward_ios_rounded,
+                  onTap: () => _showMonthSelector(context),
+                ),
+                const SizedBox(height: 16),
+              ],
 
               // Note/Memo Input Field
               TextFormField(

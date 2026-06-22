@@ -86,6 +86,7 @@ class LedgerTransactionList extends StatelessWidget {
             amount: tx.amount,
             isIncome: tx.isIncome,
             icon: tx.isIncome ? Icons.arrow_downward : Icons.arrow_upward,
+            incomeMonth: tx.incomeMonth,
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

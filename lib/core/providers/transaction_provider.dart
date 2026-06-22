@@ -7,6 +7,7 @@ class TransactionItem {
   final String note;
   final bool isIncome;
   final DateTime dateTime;
+  final String? incomeMonth;
 
   TransactionItem({
     required this.id,
@@ -15,6 +16,7 @@ class TransactionItem {
     required this.note,
     required this.isIncome,
     required this.dateTime,
+    this.incomeMonth,
   });
 }
 
@@ -37,22 +39,7 @@ class TransactionProvider extends ChangeNotifier {
   TransactionSortOption sortOption = TransactionSortOption.latest;
 
   TransactionProvider() {
-    _expenseCategories.addAll([
-      'Dining',
-      'Transport',
-      'Entertainment',
-      'Shopping',
-      'Medicine',
-      'Food',
-      'General'
-    ]);
-    _incomeCategories.addAll([
-      'Salary',
-      'Freelance',
-      'Investment',
-      'Rent',
-      'Consulting'
-    ]);
+
 
     // Generate 12 months centered around the current month (index 6 is current)
     final now = DateTime.now();

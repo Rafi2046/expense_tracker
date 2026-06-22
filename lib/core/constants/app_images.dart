@@ -21,6 +21,8 @@ class AppImages {
   static const String backIcon = 'assets/icons/arrowbackIcon.webp';
   static const String avatarImage= 'assets/background_images/man_photo.webp';
   static const String bellIcon= 'assets/app_icons/bell_icon.webp';
+  static const String notifications = 'assets/app_icons/notifications.png';
+
 
 // Ledger
   static const String transactions = 'assets/app_icons/no_transactions.png';

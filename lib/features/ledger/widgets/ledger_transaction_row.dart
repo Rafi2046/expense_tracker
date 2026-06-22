@@ -11,6 +11,7 @@ class LedgerTransactionRow extends StatelessWidget {
   final bool isIncome;
   final IconData icon;
   final VoidCallback onTap;
+  final String? incomeMonth;
 
   const LedgerTransactionRow({
     super.key,
@@ -21,6 +22,7 @@ class LedgerTransactionRow extends StatelessWidget {
     required this.isIncome,
     required this.icon,
     required this.onTap,
+    this.incomeMonth,
   });
 
   IconData _getCategoryIcon(String cat) {
@@ -150,7 +152,7 @@ class LedgerTransactionRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '$dateText  •  $category',
+                      '$dateText  •  $category${incomeMonth != null ? '  •  For $incomeMonth' : ''}',
                       style: GoogleFonts.workSans(
                         fontSize: 12,
                         color: AppColors.textMuted,
