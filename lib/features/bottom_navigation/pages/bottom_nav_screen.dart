@@ -5,6 +5,7 @@ import 'package:expense_tracker/features/bottom_navigation/widgets/exit_dialog.d
 import 'package:expense_tracker/features/dashboard/pages/dashboard_screen.dart';
 import 'package:expense_tracker/features/ledger/pages/ledger_screen.dart';
 import 'package:expense_tracker/features/settings/pages/settings_screen.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BottomNavScreen extends StatefulWidget {
@@ -115,7 +116,7 @@ class _AppBottomNavState extends State<BottomNavScreen> {
             const SizedBox(height: 4),
 
             Text(
-              item.title,
+              context.translate(item.title.toLowerCase()),
               style: TextStyle(
                 fontSize: 12,
                 fontFamily: GoogleFonts.jetBrainsMono().fontFamily,

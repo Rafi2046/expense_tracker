@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/notification_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/notification_empty_state.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
-              'Close',
+              context.translate('close'),
               style: GoogleFonts.workSans(fontWeight: FontWeight.bold, color: AppColors.buttonColor),
             ),
           ),
@@ -106,7 +107,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Notifications',
+          context.translate('notifications'),
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
             color: Colors.black87,
@@ -119,7 +120,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             TextButton(
               onPressed: () => provider.markAllAsRead(),
               child: Text(
-                'Mark read',
+                context.translate('mark_read'),
                 style: GoogleFonts.workSans(
                   fontWeight: FontWeight.w600,
                   color: AppColors.activeGreen,
@@ -206,7 +207,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget _buildFilterChip(String label) {
     final isSelected = _selectedFilter == label;
     return ChoiceChip(
-      label: Text(label),
+      label: Text(context.translate(label.toLowerCase())),
       selected: isSelected,
       onSelected: (val) {
         if (val) {

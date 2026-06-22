@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -81,7 +82,7 @@ class DashboardRecentActivity extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${item.category}  •  ${item.timeText}',
+                        '${context.translate(item.category.toLowerCase())}  •  ${item.timeText}',
                         style: TextStyle(
                           fontSize: 12,
                           color: AppColors.textMuted,
@@ -143,7 +144,7 @@ class DashboardRecentActivity extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Recent Activity',
+                  context.translate('recent_activity'),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -154,7 +155,7 @@ class DashboardRecentActivity extends StatelessWidget {
                 GestureDetector(
                   onTap: onViewAllTap,
                   child: Text(
-                    'View All',
+                    context.translate('view_all'),
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,

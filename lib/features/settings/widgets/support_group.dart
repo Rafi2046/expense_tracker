@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/settings/widgets/logout_dialog.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_option_row.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 
 class SupportGroup extends StatelessWidget {
@@ -12,27 +13,27 @@ class SupportGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SettingsGroupCard(
-      title: 'Support',
+      title: context.translate('support'),
       children: [
         SettingsOptionRow(
           icon: Icons.help_rounded,
           iconBgColor: const Color(0xFFECEFF1),
           iconColor: const Color(0xFF546E7A),
-          title: 'Help Center',
+          title: context.translate('help_center'),
           onTap: () => onSnackBar('Help Center clicked'),
         ),
         SettingsOptionRow(
           icon: Icons.shield_rounded,
           iconBgColor: const Color(0xFFE8F5E9),
           iconColor: const Color(0xFF43A047),
-          title: 'Privacy Policy',
+          title: context.translate('privacy_policy'),
           onTap: () => onSnackBar('Privacy Policy clicked'),
         ),
         SettingsOptionRow(
           icon: Icons.logout_rounded,
           iconBgColor: const Color(0xFFFFF1F0),
           iconColor: const Color(0xFFE53935),
-          title: 'Logout',
+          title: context.translate('logout'),
           color: AppColors.activeRed,
           onTap: () {
             showDialog(

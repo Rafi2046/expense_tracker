@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/shortcut_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/edit_shortcuts_sheet.dart';
@@ -68,7 +69,7 @@ class DashboardShortcutsCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Quick Actions',
+              context.translate('quick_actions'),
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -90,7 +91,7 @@ class DashboardShortcutsCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      'Edit Menu',
+                      context.translate('edit_menu'),
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -230,7 +231,7 @@ class DashboardShortcutsCard extends StatelessWidget {
           const SizedBox(height: 8),
           // Label
           Text(
-            item.label,
+            context.translate(item.id),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

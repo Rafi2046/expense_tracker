@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -53,7 +54,7 @@ class DashboardSpendingCategories extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 4.0, bottom: 8.0),
             child: Text(
-              'SPENDING CATEGORIES',
+              context.translate('top_spending_categories').toUpperCase(),
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
@@ -101,7 +102,7 @@ class DashboardSpendingCategories extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        categoryName,
+                        context.translate(categoryName.toLowerCase()),
                         style: TextStyle(
                           fontSize: 11,
                           color: AppColors.textMuted,

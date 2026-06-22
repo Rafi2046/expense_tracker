@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_input_row.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_list_row.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> with Si
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Manage Categories',
+          context.translate('manage_categories'),
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
             color: Colors.black87,
@@ -81,9 +82,9 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> with Si
           unselectedLabelColor: Colors.grey,
           indicatorColor: AppColors.buttonColor,
           labelStyle: GoogleFonts.workSans(fontWeight: FontWeight.bold, fontSize: 14),
-          tabs: const [
-            Tab(text: 'Expense'),
-            Tab(text: 'Income'),
+          tabs: [
+            Tab(text: context.translate('expense')),
+            Tab(text: context.translate('income')),
           ],
         ),
       ),
@@ -124,7 +125,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> with Si
                         Icon(Icons.category_outlined, size: 48, color: Colors.grey.shade300),
                         const SizedBox(height: 8),
                         Text(
-                          'No categories created yet.',
+                          context.translate('no_categories_yet'),
                           style: GoogleFonts.workSans(color: Colors.grey.shade400, fontSize: 14),
                         ),
                       ],

@@ -3,6 +3,7 @@ import 'package:expense_tracker/features/settings/widgets/settings_group_card.da
 import 'package:expense_tracker/features/settings/widgets/settings_option_row.dart';
 import 'package:expense_tracker/features/settings/widgets/inline_password_form.dart';
 import 'package:expense_tracker/features/settings/widgets/inline_google_notice.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -34,13 +35,13 @@ class _AccountGroupState extends State<AccountGroup> {
   @override
   Widget build(BuildContext context) {
     return SettingsGroupCard(
-      title: 'Account',
+      title: context.translate('account'),
       children: [
         SettingsOptionRow(
           icon: Icons.person_rounded,
           iconBgColor: const Color(0xFFE3F2FD),
           iconColor: const Color(0xFF1E88E5),
-          title: 'Personal Information',
+          title: context.translate('personal_info'),
           onTap: () {
             Navigator.push(
               context,
@@ -56,7 +57,7 @@ class _AccountGroupState extends State<AccountGroup> {
               icon: Icons.lock_rounded,
               iconBgColor: const Color(0xFFFFF3E0),
               iconColor: const Color(0xFFFB8C00),
-              title: 'Password Change',
+              title: context.translate('password_change'),
               trailingIcon: _isSecurityExpanded 
                   ? Icons.keyboard_arrow_down_rounded 
                   : Icons.chevron_right_rounded,
@@ -98,7 +99,7 @@ class _AccountGroupState extends State<AccountGroup> {
           icon: Icons.notifications_rounded,
           iconBgColor: const Color(0xFFFCE4EC),
           iconColor: const Color(0xFFD81B60),
-          title: 'Notifications',
+          title: context.translate('notifications'),
           onTap: () => widget.onSnackBar('Notifications clicked'),
         ),
       ],

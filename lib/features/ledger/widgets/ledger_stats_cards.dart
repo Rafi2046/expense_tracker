@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +46,7 @@ class LedgerStatsCards extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'NET BALANCE',
+                context.translate('total_balance').toUpperCase(),
                 style: GoogleFonts.workSans(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
@@ -116,7 +117,7 @@ class LedgerStatsCards extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Income',
+                            context.translate('income'),
                             style: GoogleFonts.workSans(
                               fontSize: 12,
                               color: Colors.white70,
@@ -170,7 +171,7 @@ class LedgerStatsCards extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Expense',
+                            context.translate('expense'),
                             style: GoogleFonts.workSans(
                               fontSize: 12,
                               color: Colors.white70,

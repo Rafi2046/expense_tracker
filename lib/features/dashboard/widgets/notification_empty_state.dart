@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_images.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -29,7 +30,7 @@ class NotificationEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'No Notifications Yet !',
+              context.translate('no_notifications'),
               style: GoogleFonts.workSans(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -38,7 +39,7 @@ class NotificationEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "You're all caught up! We'll notify you when somethings new comes up.",
+              context.translate('all_caught_up'),
               textAlign: TextAlign.center,
               style: GoogleFonts.workSans(
                 fontSize: 14,

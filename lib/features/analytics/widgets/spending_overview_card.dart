@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -94,7 +95,7 @@ class SpendingOverviewCard extends StatelessWidget {
         children: [
           // Header
           Text(
-            'Spending Overview',
+            context.translate('distribution'),
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -104,7 +105,7 @@ class SpendingOverviewCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Current Month Distribution',
+            context.translate('current_month_distribution'),
             style: TextStyle(
               fontSize: 13,
               color: AppColors.textMuted,
@@ -140,7 +141,7 @@ class SpendingOverviewCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Total',
+                        context.translate('total'),
                         style: TextStyle(
                           fontSize: 12,
                           color: AppColors.textMuted,

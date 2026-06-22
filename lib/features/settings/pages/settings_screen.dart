@@ -11,6 +11,7 @@ import 'package:expense_tracker/features/settings/widgets/settings_profile_card.
 import 'package:expense_tracker/features/settings/widgets/edit_profile_dialog.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -34,7 +35,7 @@ class SettingsScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppSpacing.r16),
         ),
         title: Text(
-          'Select Report Type',
+          context.translate('select_report_type'),
           style: GoogleFonts.workSans(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         content: Column(
@@ -42,7 +43,7 @@ class SettingsScreen extends StatelessWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.trending_down, color: AppColors.activeRed),
-              title: Text('Expense Insights', style: GoogleFonts.workSans(fontSize: 15)),
+              title: Text(context.translate('expense_insights'), style: GoogleFonts.workSans(fontSize: 15)),
               trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
               onTap: () {
                 Navigator.pop(ctx);
@@ -57,7 +58,7 @@ class SettingsScreen extends StatelessWidget {
             const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.trending_up, color: AppColors.activeGreen),
-              title: Text('Income Insights', style: GoogleFonts.workSans(fontSize: 15)),
+              title: Text(context.translate('income_insights'), style: GoogleFonts.workSans(fontSize: 15)),
               trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
               onTap: () {
                 Navigator.pop(ctx);
@@ -84,7 +85,7 @@ class SettingsScreen extends StatelessWidget {
         elevation: 0,
         scrolledUnderElevation: 0,
         title: Text(
-          'Settings',
+          context.translate('settings'),
           style: GoogleFonts.workSans(
             fontSize: 20,
             fontWeight: FontWeight.bold,

@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,7 +20,7 @@ class LedgerBalanceHeader extends StatelessWidget {
       children: [
         // Title Label
         Text(
-          'TOTAL BALANCE',
+          context.translate('total_balance').toUpperCase(),
           style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.bold,

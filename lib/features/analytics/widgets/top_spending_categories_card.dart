@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/analytics/widgets/top_spending_category_row.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,7 +39,7 @@ class TopSpendingCategoriesCard extends StatelessWidget {
         children: [
           // Header
           Text(
-            'Top Spending Categories',
+            context.translate('top_spending_categories'),
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -48,7 +49,7 @@ class TopSpendingCategoriesCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Highest expenditure areas',
+            context.translate('highest_expenditure_areas'),
             style: TextStyle(
               fontSize: 13,
               color: AppColors.textMuted,

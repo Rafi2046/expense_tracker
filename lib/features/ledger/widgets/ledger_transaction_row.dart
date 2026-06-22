@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -152,7 +153,7 @@ class LedgerTransactionRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '$dateText  •  $category${incomeMonth != null ? '  •  For $incomeMonth' : ''}',
+                      '$dateText  •  ${context.translate(category.toLowerCase())}${incomeMonth != null ? '  •  ${context.translate('for')} $incomeMonth' : ''}',
                       style: GoogleFonts.workSans(
                         fontSize: 12,
                         color: AppColors.textMuted,

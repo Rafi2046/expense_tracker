@@ -6,9 +6,11 @@ import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'features/splash/pages/splash_screen.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 // 1. Added Firebase imports
 import 'package:firebase_core/firebase_core.dart';
@@ -17,6 +19,7 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefsHelper.init();
+  await initializeDateFormatting(); // Enable local date names (Bangla, Hindi, Urdu)
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -32,6 +35,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
         ChangeNotifierProvider(create: (_) => CurrencyProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
       ],
       child: const MyApp(),
     ),

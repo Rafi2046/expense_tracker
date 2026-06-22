@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/analytics/widgets/monthly_comparison_card.dart';
 import 'package:expense_tracker/features/analytics/widgets/spending_overview_card.dart';
 import 'package:expense_tracker/features/analytics/widgets/top_spending_categories_card.dart';
@@ -14,25 +15,25 @@ class AnalyticsScreen extends StatelessWidget {
     // 1. Spending Overview Data
     final spendingItems = [
       SpendingDistributionItem(
-        category: 'Housing',
+        category: context.translate('housing'),
         percentage: 40,
         amount: 1700,
         color: const Color(0xFF1EA97C),
       ),
       SpendingDistributionItem(
-        category: 'Food',
+        category: context.translate('food'),
         percentage: 30,
         amount: 1275,
         color: const Color(0xFF2EBD85),
       ),
       SpendingDistributionItem(
-        category: 'Transport',
+        category: context.translate('transport'),
         percentage: 20,
         amount: 850,
         color: const Color(0xFF80E2B9),
       ),
       SpendingDistributionItem(
-        category: 'Utilities',
+        category: context.translate('utilities'),
         percentage: 10,
         amount: 425,
         color: const Color(0xFFD2F8E7),
@@ -42,22 +43,22 @@ class AnalyticsScreen extends StatelessWidget {
     // 2. Top Spending Categories Data
     final topCategories = [
       TopSpendingCategoryItem(
-        title: 'Housing',
-        subtitle: 'Rent & Maintenance',
+        title: context.translate('housing'),
+        subtitle: context.translate('rent_maintenance'),
         amount: 1700,
         percentage: 40,
         icon: Icons.home_outlined,
       ),
       TopSpendingCategoryItem(
-        title: 'Food',
-        subtitle: 'Groceries & Dining',
+        title: context.translate('food'),
+        subtitle: context.translate('groceries_dining'),
         amount: 1275,
         percentage: 30,
         icon: Icons.restaurant,
       ),
       TopSpendingCategoryItem(
-        title: 'Transport',
-        subtitle: 'Fuel & Transit',
+        title: context.translate('transport'),
+        subtitle: context.translate('fuel_transit'),
         amount: 850,
         percentage: 20,
         icon: Icons.directions_car_outlined,
@@ -71,7 +72,7 @@ class AnalyticsScreen extends StatelessWidget {
         elevation: 0,
         scrolledUnderElevation: 0,
         title: Text(
-          'Analytics',
+          context.translate('analytics'),
           style: GoogleFonts.workSans(
             fontSize: 20,
             fontWeight: FontWeight.bold,

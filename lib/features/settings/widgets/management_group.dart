@@ -1,6 +1,7 @@
 import 'package:expense_tracker/features/settings/pages/manage_categories_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_option_row.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 
 class ManagementGroup extends StatelessWidget {
@@ -11,13 +12,13 @@ class ManagementGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SettingsGroupCard(
-      title: 'Management',
+      title: context.translate('management'),
       children: [
         SettingsOptionRow(
           icon: Icons.category_rounded,
           iconBgColor: const Color(0xFFF3E5F5),
           iconColor: const Color(0xFF8E24AA),
-          title: 'Manage Categories',
+          title: context.translate('manage_categories'),
           onTap: () {
             Navigator.push(
               context,
@@ -31,7 +32,7 @@ class ManagementGroup extends StatelessWidget {
           icon: Icons.bar_chart_rounded,
           iconBgColor: const Color(0xFFE8F8F5),
           iconColor: const Color(0xFF16A085),
-          title: 'View Reports',
+          title: context.translate('view_reports'),
           onTap: onShowReportSelector,
         ),
       ],

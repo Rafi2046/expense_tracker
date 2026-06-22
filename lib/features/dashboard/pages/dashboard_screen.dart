@@ -10,6 +10,7 @@ import 'package:expense_tracker/features/dashboard/pages/expense_insights_screen
 import 'package:expense_tracker/features/dashboard/pages/income_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/notifications_screen.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/pages/to_receive_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/to_give_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_budget_status.dart';
@@ -85,7 +86,7 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: DashboardStatCard(
-                        title: 'Income',
+                        title: context.translate('income'),
                         value: context.formatAmount(5240),
                         percentageText: '+12%',
                         isPositive: true,
@@ -103,7 +104,7 @@ class DashboardScreen extends StatelessWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       child: DashboardStatCard(
-                        title: 'Expense',
+                        title: context.translate('expense'),
                         value: context.formatAmount(2180),
                         percentageText: '-5%',
                         isPositive: false,
@@ -128,9 +129,9 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: DashboardStatCard(
-                        title: 'To Receive',
+                        title: context.translate('to_receive'),
                         value: context.formatAmount(debtProvider.totalToReceive),
-                        statusText: '${debtProvider.toReceiveUnpaid.length} pending',
+                        statusText: '${debtProvider.toReceiveUnpaid.length} ${context.translate('pending')}',
                         isPositive: true,
                         isTrend: false,
                         onTap: () {
@@ -146,9 +147,9 @@ class DashboardScreen extends StatelessWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       child: DashboardStatCard(
-                        title: 'To Give',
+                        title: context.translate('to_give'),
                         value: context.formatAmount(debtProvider.totalToGive),
-                        statusText: '${debtProvider.toGiveUnpaid.length} pending',
+                        statusText: '${debtProvider.toGiveUnpaid.length} ${context.translate('pending')}',
                         isPositive: false,
                         isTrend: false,
                         onTap: () {
@@ -172,7 +173,7 @@ class DashboardScreen extends StatelessWidget {
                   RecentActivityItem(
                     title: 'Apple Store',
                     category: 'Electronics',
-                    timeText: 'Today',
+                    timeText: context.translate('today'),
                     amount: 199.00,
                     isIncome: false,
                     icon: Icons.shopping_bag_outlined,
@@ -180,7 +181,7 @@ class DashboardScreen extends StatelessWidget {
                   RecentActivityItem(
                     title: 'Wild Ginger',
                     category: 'Food',
-                    timeText: 'Yesterday',
+                    timeText: context.translate('yesterday'),
                     amount: 42.50,
                     isIncome: false,
                     icon: Icons.restaurant,
@@ -188,7 +189,7 @@ class DashboardScreen extends StatelessWidget {
                   RecentActivityItem(
                     title: 'Monthly Salary',
                     category: 'Income',
-                    timeText: '2 days ago',
+                    timeText: '2 ${context.translate('days_ago')}',
                     amount: 4200.00,
                     isIncome: true,
                     icon: Icons.payments_outlined,

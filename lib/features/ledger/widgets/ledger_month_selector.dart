@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -145,7 +146,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Sort Transactions',
+                        context.translate('sort_transactions'),
                         style: GoogleFonts.workSans(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -168,11 +169,11 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                   const SizedBox(height: 20),
 
                   // Options list
-                  buildSortItem('Latest', TransactionSortOption.latest, Icons.calendar_today_rounded),
+                  buildSortItem(context.translate('sort_latest'), TransactionSortOption.latest, Icons.calendar_today_rounded),
                   const SizedBox(height: 12),
-                  buildSortItem('Amount: High to Low', TransactionSortOption.amountHighToLow, Icons.trending_down_rounded),
+                  buildSortItem(context.translate('sort_amount_high_low'), TransactionSortOption.amountHighToLow, Icons.trending_down_rounded),
                   const SizedBox(height: 12),
-                  buildSortItem('Amount: Low to High', TransactionSortOption.amountLowToHigh, Icons.trending_up_rounded),
+                  buildSortItem(context.translate('sort_amount_low_high'), TransactionSortOption.amountLowToHigh, Icons.trending_up_rounded),
                   const SizedBox(height: 12),
                 ],
               ),
@@ -186,6 +187,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TransactionProvider>();
+    final locale = context.watch<LanguageProvider>().currentLanguageCode;
     final months = provider.availableMonths;
     final selectedIndex = provider.selectedMonthIndex;
 
@@ -252,7 +254,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          DateFormat('MMM').format(month).toUpperCase(),
+                          DateFormat('MMM', locale).format(month).toUpperCase(),
                           style: GoogleFonts.workSans(
                             fontSize: 13,
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
@@ -262,7 +264,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          DateFormat('yyyy').format(month),
+                          DateFormat('yyyy', locale).format(month),
                           style: GoogleFonts.workSans(
                             fontSize: 10,
                             fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,

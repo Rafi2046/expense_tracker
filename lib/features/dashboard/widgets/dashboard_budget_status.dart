@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -51,7 +52,7 @@ class DashboardBudgetStatus extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 4.0, bottom: 16.0),
             child: Text(
-              'BUDGET STATUS',
+              context.translate('budget_status').toUpperCase(),
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
@@ -77,7 +78,7 @@ class DashboardBudgetStatus extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        item.categoryName,
+                        context.translate(item.categoryName.toLowerCase()),
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,

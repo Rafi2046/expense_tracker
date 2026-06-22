@@ -8,6 +8,7 @@ import 'package:expense_tracker/features/ledger/widgets/ledger_transaction_list.
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class LedgerScreen extends StatefulWidget {
   const LedgerScreen({super.key});
@@ -45,14 +46,14 @@ class _LedgerScreenState extends State<LedgerScreen> {
                   color: Colors.black87,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Search Ledger...',
+                  hintText: context.translate('search_hint'),
                   hintStyle: GoogleFonts.workSans(color: Colors.grey.shade400),
                   border: InputBorder.none,
                 ),
                 onChanged: (val) => provider.updateSearchQuery(val),
               )
             : Text(
-                'Ledger',
+                context.translate('ledger'),
                 style: GoogleFonts.workSans(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -128,7 +129,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
                     Icons.account_balance_wallet_outlined,
                     size: 18,
                   ),
-                  label: const Text('Add Income'),
+                  label: Text(context.translate('add_income')),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.activeGreen,
                     foregroundColor: Colors.white,
@@ -155,7 +156,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
                 height: 50,
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.payments_outlined, size: 18),
-                  label: const Text('Add Expense'),
+                  label: Text(context.translate('add_expense')),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.expensePink,
                     foregroundColor: Colors.white,

@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/ledger/widgets/ledger_transaction_row.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,24 +10,25 @@ import 'package:provider/provider.dart';
 class LedgerTransactionList extends StatelessWidget {
   const LedgerTransactionList({super.key});
 
-  String _getGroupHeader(DateTime dateTime) {
+  String _getGroupHeader(BuildContext context, DateTime dateTime, String locale) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
     final txDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
 
     if (txDate == today) {
-      return 'Today';
+      return context.translate('today');
     } else if (txDate == yesterday) {
-      return 'Yesterday';
+      return context.translate('yesterday');
     } else {
-      return DateFormat('dd MMMM yyyy').format(dateTime);
+      return DateFormat('dd MMMM yyyy', locale).format(dateTime);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TransactionProvider>();
+    final locale = context.watch<LanguageProvider>().currentLanguageCode;
     final filteredTransactions = provider.filteredTransactions;
 
     if (filteredTransactions.isEmpty) {
@@ -53,7 +55,7 @@ class LedgerTransactionList extends StatelessWidget {
     // Group transactions by date
     final Map<String, List<TransactionItem>> grouped = {};
     for (var tx in filteredTransactions) {
-      final header = _getGroupHeader(tx.dateTime);
+      final header = _getGroupHeader(context, tx.dateTime, locale);
       if (grouped[header] == null) {
         grouped[header] = [];
       }
@@ -80,7 +82,7 @@ class LedgerTransactionList extends StatelessWidget {
       for (var tx in txs) {
         listItems.add(
           LedgerTransactionRow(
-            title: tx.note.isNotEmpty ? tx.note : tx.category,
+            title: tx.note.isNotEmpty ? tx.note : context.translate(tx.category.toLowerCase()),
             dateText: DateFormat('h:mm a').format(tx.dateTime), // simplified time format
             category: tx.category,
             amount: tx.amount,
@@ -91,7 +93,7 @@ class LedgerTransactionList extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    'Transaction details: ${tx.note.isNotEmpty ? tx.note : tx.category}',
+                    'Transaction details: ${tx.note.isNotEmpty ? tx.note : context.translate(tx.category.toLowerCase())}',
                   ),
                   duration: const Duration(seconds: 1),
                 ),
