@@ -98,6 +98,7 @@ class SettingsScreen extends StatelessWidget {
         ),
       ),
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -150,7 +151,7 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: AppSpacing.s24),
 
                 SupportGroup(onSnackBar: (msg) => _showSnackBar(context, msg)),
-                const SizedBox(height: AppSpacing.s24),
+                const SizedBox(height: 100), // Spacer to scroll past floating bottom nav
               ],
             ),
           ),

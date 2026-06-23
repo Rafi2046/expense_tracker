@@ -56,7 +56,6 @@ class TopSpendingCategoriesCard extends StatelessWidget {
               fontFamily: GoogleFonts.workSans().fontFamily,
             ),
           ),
-          const SizedBox(height: 20),
 
           // Categories List
           ListView.separated(

@@ -1,3 +1,4 @@
+import 'package:expense_tracker/features/dashboard/pages/notifications_screen.dart';
 import 'package:expense_tracker/features/settings/pages/personal_info_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_option_row.dart';
@@ -100,7 +101,7 @@ class _AccountGroupState extends State<AccountGroup> {
           iconBgColor: const Color(0xFFFCE4EC),
           iconColor: const Color(0xFFD81B60),
           title: context.translate('notifications'),
-          onTap: () => widget.onSnackBar('Notifications clicked'),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsScreen()))
         ),
       ],
     );

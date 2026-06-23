@@ -85,6 +85,7 @@ class AnalyticsScreen extends StatelessWidget {
         ),
       ),
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
@@ -110,7 +111,7 @@ class AnalyticsScreen extends StatelessWidget {
                 TopSpendingCategoriesCard(
                   items: topCategories,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 100), // Spacer to scroll past floating bottom nav
               ],
             ),
           ),

@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
@@ -80,102 +79,100 @@ class _LedgerScreenState extends State<LedgerScreen> {
           child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
         ),
       ),
-      body: const SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSpacing.p16,
-                  vertical: AppSpacing.p20,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Stats Summary Cards (Income vs Expense + Net Balance)
-                    LedgerStatsCards(),
-                    SizedBox(height: AppSpacing.s20),
+      body: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.p16,
+            vertical: AppSpacing.p20,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Stats Summary Cards (Income vs Expense + Net Balance)
+              const LedgerStatsCards(),
+              const SizedBox(height: AppSpacing.s20),
 
-                    // Month Selector Slider
-                    LedgerMonthSelector(),
-                    SizedBox(height: AppSpacing.s20),
+              // Month Selector Slider
+              const LedgerMonthSelector(),
+              const SizedBox(height: 12),
 
-                    // Transactions Card List
-                    LedgerTransactionList(),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Color(0xFFF1F1F1), width: 1.0)),
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.p16,
-          vertical: AppSpacing.p12,
-        ),
-        child: Row(
-          children: [
-            // Add Income Button
-            Expanded(
-              child: SizedBox(
-                height: 50,
-                child: ElevatedButton.icon(
-                  icon: const Icon(
-                    Icons.account_balance_wallet_outlined,
-                    size: 18,
-                  ),
-                  label: Text(context.translate('add_income')),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.activeGreen,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.br12),
-                    ),
-                    textStyle: GoogleFonts.workSans(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
+              // Inline Add Income & Add Expense Buttons Row
+              Row(
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      height: 46,
+                      child: TextButton.icon(
+                        icon: const Icon(
+                          Icons.account_balance_wallet_outlined,
+                          size: 16,
+                          color: Color(0xFF006C49),
+                        ),
+                        label: Text(
+                          context.translate('add_income'),
+                          style: GoogleFonts.workSans(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF006C49),
+                          ),
+                        ),
+                        style: TextButton.styleFrom(
+                          backgroundColor: const Color(0xFFE6F3EE),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () {
+                          AddTransactionSheet.show(
+                            context: context,
+                            isIncome: true,
+                          );
+                        },
+                      ),
                     ),
                   ),
-                  onPressed: () {
-                    AddTransactionSheet.show(context: context, isIncome: true);
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.s12),
-
-            // Add Expense Button
-            Expanded(
-              child: SizedBox(
-                height: 50,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.payments_outlined, size: 18),
-                  label: Text(context.translate('add_expense')),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.expensePink,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.br12),
-                    ),
-                    textStyle: GoogleFonts.workSans(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: SizedBox(
+                      height: 46,
+                      child: TextButton.icon(
+                        icon: const Icon(
+                          Icons.payments_outlined,
+                          size: 16,
+                          color: Color(0xFFD9383A),
+                        ),
+                        label: Text(
+                          context.translate('add_expense'),
+                          style: GoogleFonts.workSans(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFFD9383A),
+                          ),
+                        ),
+                        style: TextButton.styleFrom(
+                          backgroundColor: const Color(0xFFFDECEC),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () {
+                          AddTransactionSheet.show(
+                            context: context,
+                            isIncome: false,
+                          );
+                        },
+                      ),
                     ),
                   ),
-                  onPressed: () {
-                    AddTransactionSheet.show(context: context, isIncome: false);
-                  },
-                ),
+                ],
               ),
-            ),
-          ],
+
+              LedgerTransactionList(),
+            ],
+          ),
         ),
       ),
     );

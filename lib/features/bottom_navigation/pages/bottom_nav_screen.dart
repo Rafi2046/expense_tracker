@@ -50,26 +50,43 @@ class _AppBottomNavState extends State<BottomNavScreen> {
         }
       },
       child: Scaffold(
+        extendBody: true,
         backgroundColor: const Color(0xFFF8F9FA),
-        body: _screens[_currentIndex],
+        body: IndexedStack(
+          index: _currentIndex,
+          children: _screens,
+        ),
 
         bottomNavigationBar: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            border: Border(top: BorderSide(color: Color(0xFFBBCABF), width: 2)),
+          color: Colors.transparent,
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: MediaQuery.of(context).padding.bottom + 10,
+            top: 6,
           ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List.generate(
-                  _navItems.length,
-                  (index) => _buildNavItem(
-                    item: _navItems[index],
-                    index: index,
-                    isSelected: _currentIndex == index,
-                  ),
+          child: Container(
+            height: 53,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: const Color(0xFFF1F1F1), width: 1.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 16,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: List.generate(
+                _navItems.length,
+                (index) => _buildNavItem(
+                  item: _navItems[index],
+                  index: index,
+                  isSelected: _currentIndex == index,
                 ),
               ),
             ),
@@ -86,6 +103,7 @@ class _AppBottomNavState extends State<BottomNavScreen> {
   }) {
     const activeColor = Color(0xFF006C49);
     const inactiveColor = Color(0xFF31394D);
+    const indicatorColor = Color(0xFF006C49);
 
     return GestureDetector(
       onTap: () {
@@ -95,35 +113,44 @@ class _AppBottomNavState extends State<BottomNavScreen> {
       },
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
-        width: 75,
+        width: 70,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedOpacity(
-              duration: const Duration(milliseconds: 200),
-              opacity: isSelected ? 1.0 : 0.0,
-              child: Container(height: 2, width: 24, color: activeColor),
-            ),
-            const SizedBox(height: 6),
+            if (isSelected) ...[
+              // Top active indicator bar
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                height: 3,
+                width: 18,
+                decoration: BoxDecoration(
+                  color: indicatorColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              const SizedBox(height: 6),
+            ],
 
             Image.asset(
               item.icon,
-              width: 24,
-              height: 24,
+              width: 15, // Reduced icon size from 22 to 18
+              height: 15,
               color: isSelected ? activeColor : inactiveColor,
             ),
-            const SizedBox(height: 4),
 
-            Text(
-              context.translate(item.title.toLowerCase()),
-              style: TextStyle(
-                fontSize: 12,
-                fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected ? activeColor : inactiveColor,
+            if (isSelected) ...[
+              const SizedBox(height: 4),
+              Text(
+                context.translate(item.title.toLowerCase()),
+                style: TextStyle(
+                  fontSize: 10, // Reduced text size from 11 to 10
+                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                  fontWeight: FontWeight.w600,
+                  color: activeColor,
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),
