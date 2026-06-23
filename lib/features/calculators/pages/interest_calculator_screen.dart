@@ -55,7 +55,7 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
     if (principalText.isEmpty || rateText.isEmpty || periodText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(context.translate('please_fill_fields')),
+          content: Text(context.translate('please_fill_fields', listen: false)),
           backgroundColor: Colors.red,
         ),
       );
@@ -69,7 +69,7 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
     if (principal <= 0 || rate < 0 || periodValue <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(context.translate('please_enter_valid')),
+          content: Text(context.translate('please_enter_valid', listen: false)),
           backgroundColor: Colors.red,
         ),
       );

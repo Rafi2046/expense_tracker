@@ -50,7 +50,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
     if (amountText.isEmpty || rateText.isEmpty || tenureText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(context.translate('please_fill_fields')),
+          content: Text(context.translate('please_fill_fields', listen: false)),
           backgroundColor: Colors.red,
         ),
       );
@@ -64,7 +64,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
     if (amount <= 0 || rate < 0 || years <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(context.translate('please_enter_valid')),
+          content: Text(context.translate('please_enter_valid', listen: false)),
           backgroundColor: Colors.red,
         ),
       );

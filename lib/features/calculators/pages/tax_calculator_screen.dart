@@ -48,7 +48,7 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
     if (amountText.isEmpty || rateText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(context.translate('please_fill_fields')),
+          content: Text(context.translate('please_fill_fields', listen: false)),
           backgroundColor: Colors.red,
         ),
       );
@@ -61,7 +61,7 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
     if (amount <= 0 || rate < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(context.translate('please_enter_valid')),
+          content: Text(context.translate('please_enter_valid', listen: false)),
           backgroundColor: Colors.red,
         ),
       );
