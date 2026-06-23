@@ -234,4 +234,40 @@ class AppTextStyles {
     color: AppColors.buttonColor,
     fontFamily: GoogleFonts.workSans().fontFamily,
   );
+
+  static TextStyle calculatorTitle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: Colors.black87,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle calculatorLabel = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+    color: Colors.black54,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle calculatorInputText = TextStyle(
+    fontSize: 14.5,
+    fontWeight: FontWeight.bold,
+    color: Colors.black87,
+    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+  );
+
+  static TextStyle calculatorResultAmount = TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  static TextStyle calculatorResultLabel = TextStyle(
+    fontSize: 11,
+    fontWeight: FontWeight.bold,
+    color: Colors.white70,
+    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+    letterSpacing: 1.5,
+  );
 }
