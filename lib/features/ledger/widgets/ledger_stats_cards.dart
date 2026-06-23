@@ -28,16 +28,16 @@ class LedgerStatsCards extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6A53A1).withValues(alpha: 0.25),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+            color: const Color(0xFF6A53A1).withValues(alpha: 0.18),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -48,16 +48,16 @@ class LedgerStatsCards extends StatelessWidget {
               Text(
                 context.translate('total_balance').toUpperCase(),
                 style: GoogleFonts.workSans(
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: FontWeight.bold,
                   color: Colors.white70,
-                  letterSpacing: 1.2,
+                  letterSpacing: 1.0,
                 ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
+                  horizontal: 8,
+                  vertical: 3,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.15),
@@ -66,7 +66,7 @@ class LedgerStatsCards extends StatelessWidget {
                 child: Text(
                   provider.selectedMonth.year.toString(),
                   style: GoogleFonts.workSans(
-                    fontSize: 11,
+                    fontSize: 10,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -74,23 +74,23 @@ class LedgerStatsCards extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
 
           // Net Balance Value
           Text(
             '${netBalance >= 0 ? '' : '- '}$currencySymbol ${context.formatValueWithoutSymbol(netBalance.abs())}',
             style: GoogleFonts.workSans(
-              fontSize: 32,
+              fontSize: 26,
               fontWeight: FontWeight.bold,
               color: Colors.white,
               letterSpacing: -0.5,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 14),
 
           // Divider
           Container(height: 1, color: Colors.white.withValues(alpha: 0.15)),
-          const SizedBox(height: 18),
+          const SizedBox(height: 12),
 
           // Income vs Expense row
           Row(
@@ -100,7 +100,7 @@ class LedgerStatsCards extends StatelessWidget {
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.15),
                         shape: BoxShape.circle,
@@ -108,10 +108,10 @@ class LedgerStatsCards extends StatelessWidget {
                       child: const Icon(
                         Icons.arrow_downward_rounded,
                         color: Color(0xFF2ECC71), // soft green
-                        size: 16,
+                        size: 14,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,17 +119,17 @@ class LedgerStatsCards extends StatelessWidget {
                           Text(
                             context.translate('income'),
                             style: GoogleFonts.workSans(
-                              fontSize: 12,
+                              fontSize: 11,
                               color: Colors.white70,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const SizedBox(height: 3),
+                          const SizedBox(height: 2),
                           Text(
                             '$currencySymbol ${context.formatValueWithoutSymbol(totalIncome)}',
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.workSans(
-                              fontSize: 15,
+                              fontSize: 13,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -144,17 +144,17 @@ class LedgerStatsCards extends StatelessWidget {
               // Vertial Divider line
               Container(
                 width: 1,
-                height: 36,
+                height: 28,
                 color: Colors.white.withValues(alpha: 0.15),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
 
               // Expense Column
               Expanded(
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.15),
                         shape: BoxShape.circle,
@@ -162,10 +162,10 @@ class LedgerStatsCards extends StatelessWidget {
                       child: const Icon(
                         Icons.arrow_upward_rounded,
                         color: Color(0xFFF1948A), // soft light red
-                        size: 16,
+                        size: 14,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,17 +173,17 @@ class LedgerStatsCards extends StatelessWidget {
                           Text(
                             context.translate('expense'),
                             style: GoogleFonts.workSans(
-                              fontSize: 12,
+                              fontSize: 11,
                               color: Colors.white70,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const SizedBox(height: 3),
+                          const SizedBox(height: 2),
                           Text(
                             '$currencySymbol ${context.formatValueWithoutSymbol(totalExpense)}',
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.workSans(
-                              fontSize: 15,
+                              fontSize: 13,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),

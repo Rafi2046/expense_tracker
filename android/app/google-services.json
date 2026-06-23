@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "1018341294472-kb1d9ec6hv3s3ds6lodl6e1vu5a560ak.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.expense_tracker",
+            "certificate_hash": "3135e5c3e87d4c8fe1612e7afa516cde1db880ce"
+          }
+        },
+        {
           "client_id": "1018341294472-on5co00vr8j4qadbqm3i70isbbfp7r26.apps.googleusercontent.com",
           "client_type": 3
         }

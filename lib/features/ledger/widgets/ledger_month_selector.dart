@@ -34,8 +34,8 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
     final provider = Provider.of<TransactionProvider>(context, listen: false);
     final index = provider.selectedMonthIndex;
 
-    // Item width is 76 + 12 (margin) = 88
-    final targetOffset = (index * 88.0) - (MediaQuery.of(context).size.width / 2) + 44.0;
+    // Item width is 68 + 10 (margin) = 78
+    final targetOffset = (index * 78.0) - (MediaQuery.of(context).size.width / 2) + 39.0;
     final clampedOffset = targetOffset.clamp(0.0, _scrollController.position.maxScrollExtent);
 
     if (animate) {
@@ -199,7 +199,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
         // Horizontal calendar slider
         Expanded(
           child: SizedBox(
-            height: 60,
+            height: 50,
             child: ListView.builder(
               controller: _scrollController,
               scrollDirection: Axis.horizontal,
@@ -216,8 +216,8 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    width: 76,
-                    margin: const EdgeInsets.only(right: 12),
+                    width: 68,
+                    margin: const EdgeInsets.only(right: 10),
                     decoration: BoxDecoration(
                       gradient: isSelected
                           ? const LinearGradient(
@@ -231,7 +231,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                           : isCurrent
                               ? const Color(0xFFECEFF1)
                               : Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isSelected
                             ? Colors.transparent
@@ -244,8 +244,8 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                           ? [
                               BoxShadow(
                                 color: const Color(0xFF6A53A1).withValues(alpha: 0.2),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
+                                blurRadius: 6,
+                                offset: const Offset(0, 3),
                               )
                             ]
                           : null,
@@ -256,17 +256,17 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                         Text(
                           DateFormat('MMM', locale).format(month).toUpperCase(),
                           style: GoogleFonts.workSans(
-                            fontSize: 13,
+                            fontSize: 12,
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                             color: isSelected ? Colors.white : Colors.black87,
                             letterSpacing: 0.5,
                           ),
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 1),
                         Text(
                           DateFormat('yyyy', locale).format(month),
                           style: GoogleFonts.workSans(
-                            fontSize: 10,
+                            fontSize: 9,
                             fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
                             color: isSelected ? Colors.white70 : Colors.grey.shade500,
                           ),
@@ -283,11 +283,11 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
 
         // Filter button
         Container(
-          width: 52,
-          height: 60,
+          width: 44,
+          height: 50,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: const Color(0xFFF1F1F1),
               width: 1.0,
@@ -301,7 +301,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
             ],
           ),
           child: IconButton(
-            icon: const Icon(Icons.tune_rounded, size: 20),
+            icon: const Icon(Icons.tune_rounded, size: 18),
             color: const Color(0xFF31394D),
             onPressed: () => _showSortBottomSheet(context),
           ),

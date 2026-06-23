@@ -55,7 +55,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Password reset email sent! Please check your inbox.'),
+            content: Text(
+              'Password reset email sent! Please check your inbox.',
+            ),
             backgroundColor: Color(0xFF6A53A1),
           ),
         );
@@ -88,7 +90,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 20.0,
+            ),
             child: Column(
               spacing: AppSpacing.s16,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -96,7 +101,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               children: [
                 Image.asset(
                   AppImages.forgetPassLogo,
-                  height: 380,
+                  height: 320,
                   width: double.infinity,
                   fit: BoxFit.contain,
                 ),
@@ -110,7 +115,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   textAlign: TextAlign.center,
                   style: AppTextStyles.loginSubTitle,
                 ),
-                const SizedBox(height: 8),
+
                 CustomTextFieldWidget(
                   label: 'Email Address',
                   hintText: 'Enter your email',
@@ -123,12 +128,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Remember password? ", style: AppTextStyles.accountText),
+                    Text(
+                      "Remember password? ",
+                      style: AppTextStyles.accountText,
+                    ),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
                         );
                       },
                       child: Text('Log in', style: AppTextStyles.signUpText),

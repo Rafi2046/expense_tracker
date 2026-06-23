@@ -21,7 +21,7 @@ class SettingsProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [
@@ -31,12 +31,12 @@ class SettingsProfileCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6A53A1).withValues(alpha: 0.2),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
+            color: const Color(0xFF6A53A1).withValues(alpha: 0.15),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -44,13 +44,13 @@ class SettingsProfileCard extends StatelessWidget {
         children: [
           // Circle Avatar with glowing white ring
           Container(
-            padding: const EdgeInsets.all(2.5),
+            padding: const EdgeInsets.all(1.5),
             decoration: const BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
             ),
             child: CircleAvatar(
-              radius: 28,
+              radius: 24,
               backgroundColor: Colors.grey.shade100,
               backgroundImage: (photoUrl != null && photoUrl!.startsWith('http'))
                   ? NetworkImage(photoUrl!) as ImageProvider
@@ -59,38 +59,44 @@ class SettingsProfileCard extends StatelessWidget {
                       : const AssetImage(AppImages.avatarImage)),
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 12),
 
           // User Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.workSans(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   email,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.workSans(
-                    fontSize: 13,
-                    color: Colors.white70,
+                    fontSize: 12,
+                    color: Colors.white.withValues(alpha: 0.75),
                     fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
             ),
           ),
+          const SizedBox(width: 12),
 
           // Edit Button with translucent circle overlay
           Container(
-            width: 36,
-            height: 36,
+            width: 32,
+            height: 32,
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.15),
               shape: BoxShape.circle,
@@ -101,11 +107,11 @@ class SettingsProfileCard extends StatelessWidget {
               icon: const Icon(
                 Icons.edit_outlined,
                 color: Colors.white,
-                size: 18,
+                size: 16,
               ),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
-              splashRadius: 18,
+              splashRadius: 16,
             ),
           ),
         ],

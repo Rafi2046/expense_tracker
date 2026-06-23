@@ -138,7 +138,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
                       borderRadius: BorderRadius.circular(AppSpacing.br12),
                     ),
                     textStyle: GoogleFonts.workSans(
-                      fontSize: 15,
+                      fontSize: 13,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -165,7 +165,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
                       borderRadius: BorderRadius.circular(AppSpacing.br12),
                     ),
                     textStyle: GoogleFonts.workSans(
-                      fontSize: 15,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

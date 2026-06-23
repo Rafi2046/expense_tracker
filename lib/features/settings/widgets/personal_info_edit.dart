@@ -47,6 +47,7 @@ class PersonalInfoEdit extends StatelessWidget {
     required String label,
     required String hintText,
     required TextEditingController controller,
+    required IconData prefixIcon,
     TextInputType keyboardType = TextInputType.text,
   }) {
     return Column(
@@ -61,20 +62,32 @@ class PersonalInfoEdit extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFFF5F6F8),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: TextFormField(
-            controller: controller,
-            keyboardType: keyboardType,
-            style: GoogleFonts.workSans(fontSize: 14.5, color: Colors.black87),
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: GoogleFonts.workSans(fontSize: 14, color: Colors.grey.shade400),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
+          style: GoogleFonts.workSans(fontSize: 14.5, color: Colors.black87),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: const Color(0xFFF5F6F8),
+            prefixIcon: Icon(
+              prefixIcon,
+              color: Colors.grey.shade500,
+              size: 18,
+            ),
+            hintText: hintText,
+            hintStyle: GoogleFonts.workSans(fontSize: 14, color: Colors.grey.shade400),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFF6A53A1), width: 1.5),
             ),
           ),
         ),
@@ -87,48 +100,71 @@ class PersonalInfoEdit extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Circular Avatar with edit indicator
-        Center(
-          child: Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(4.0),
-                decoration: const BoxDecoration(
-                  color: Color(0xFF6A53A1),
-                  shape: BoxShape.circle,
-                ),
-                child: CircleAvatar(
-                  radius: 56,
-                  backgroundColor: Colors.grey.shade100,
-                  backgroundImage: localImageFile != null
-                      ? FileImage(localImageFile!) as ImageProvider
-                      : (photoUrl.startsWith('http')
-                          ? NetworkImage(photoUrl) as ImageProvider
-                          : (photoUrl.isNotEmpty && File(photoUrl).existsSync()
-                              ? FileImage(File(photoUrl)) as ImageProvider
-                              : const AssetImage(AppImages.avatarImage))),
-                ),
-              ),
-              GestureDetector(
-                onTap: onPickImage,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF6A53A1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.camera_alt,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                ),
+        // Premium Profile Header Card for editing
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 16,
+                offset: const Offset(0, 8),
               ),
             ],
+            border: Border.all(color: const Color(0xFFF1F1F1), width: 1),
+          ),
+          child: Center(
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(2.0),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                    border: Border.all(color: const Color(0xFF6A53A1), width: 2.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF6A53A1).withValues(alpha: 0.15),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: CircleAvatar(
+                    radius: 44,
+                    backgroundColor: Colors.grey.shade100,
+                    backgroundImage: localImageFile != null
+                        ? FileImage(localImageFile!) as ImageProvider
+                        : (photoUrl.startsWith('http')
+                            ? NetworkImage(photoUrl) as ImageProvider
+                            : (photoUrl.isNotEmpty && File(photoUrl).existsSync()
+                                ? FileImage(File(photoUrl)) as ImageProvider
+                                : const AssetImage(AppImages.avatarImage))),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: onPickImage,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF6A53A1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      color: Colors.white,
+                      size: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 24),
 
         // First Name & Last Name (Side by Side)
         Row(
@@ -138,6 +174,7 @@ class PersonalInfoEdit extends StatelessWidget {
                 label: 'First Name',
                 hintText: 'First Name',
                 controller: firstNameController,
+                prefixIcon: Icons.person_outline_rounded,
               ),
             ),
             const SizedBox(width: 16),
@@ -146,6 +183,7 @@ class PersonalInfoEdit extends StatelessWidget {
                 label: 'Last Name',
                 hintText: 'Last Name',
                 controller: lastNameController,
+                prefixIcon: Icons.person_outline_rounded,
               ),
             ),
           ],
@@ -157,6 +195,7 @@ class PersonalInfoEdit extends StatelessWidget {
           label: 'Phone Number',
           hintText: 'Enter phone number',
           controller: phoneController,
+          prefixIcon: Icons.phone_outlined,
           keyboardType: TextInputType.phone,
         ),
         const SizedBox(height: 20),
@@ -174,26 +213,38 @@ class PersonalInfoEdit extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFF5F6F8),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: TextFormField(
-                controller: dobController,
-                readOnly: true,
-                onTap: onSelectDate,
-                style: GoogleFonts.workSans(fontSize: 14.5, color: Colors.black87),
-                decoration: InputDecoration(
-                  hintText: 'DD/MM/YYYY',
-                  hintStyle: GoogleFonts.workSans(fontSize: 14, color: Colors.grey.shade400),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  suffixIcon: Icon(
-                    Icons.calendar_today_rounded,
-                    color: Colors.grey.shade500,
-                    size: 18,
-                  ),
+            TextFormField(
+              controller: dobController,
+              readOnly: true,
+              onTap: onSelectDate,
+              style: GoogleFonts.workSans(fontSize: 14.5, color: Colors.black87),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color(0xFFF5F6F8),
+                prefixIcon: Icon(
+                  Icons.cake_outlined,
+                  color: Colors.grey.shade500,
+                  size: 18,
+                ),
+                hintText: 'DD/MM/YYYY',
+                hintStyle: GoogleFonts.workSans(fontSize: 14, color: Colors.grey.shade400),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFF6A53A1), width: 1.5),
+                ),
+                suffixIcon: Icon(
+                  Icons.calendar_today_rounded,
+                  color: Colors.grey.shade500,
+                  size: 18,
                 ),
               ),
             ),
@@ -201,7 +252,7 @@ class PersonalInfoEdit extends StatelessWidget {
         ),
         const SizedBox(height: 20),
 
-        // Gender Choice Chips
+        // Gender Custom Selector (50/50 Split)
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -215,31 +266,51 @@ class PersonalInfoEdit extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Row(
-              children: ['Male', 'Female', 'Other'].map((gender) {
+              children: ['Male', 'Female'].map((gender) {
                 final isSelected = selectedGender == gender;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 12.0),
-                  child: ChoiceChip(
-                    label: Text(
-                      gender,
-                      style: GoogleFonts.workSans(
-                        color: isSelected ? Colors.white : Colors.black87,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13.5,
+                final genderIcon = gender == 'Male' ? Icons.male_rounded : Icons.female_rounded;
+                final activeColor = gender == 'Male' ? const Color(0xFF1E88E5) : const Color(0xFFD81B60);
+
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () => onGenderChanged(gender),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      margin: EdgeInsets.only(
+                        right: gender == 'Male' ? 6.0 : 0.0,
+                        left: gender == 'Female' ? 6.0 : 0.0,
+                      ),
+                      height: 46,
+                      decoration: BoxDecoration(
+                        color: isSelected ? activeColor : const Color(0xFFF5F6F8),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isSelected ? activeColor : Colors.transparent,
+                          width: 1,
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Positioned(
+                            left: 16,
+                            child: Icon(
+                              genderIcon,
+                              color: isSelected ? Colors.white : activeColor,
+                              size: 18,
+                            ),
+                          ),
+                          Text(
+                            gender,
+                            style: GoogleFonts.workSans(
+                              color: isSelected ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    selected: isSelected,
-                    selectedColor: const Color(0xFF0C4E3C),
-                    backgroundColor: const Color(0xFFF5F6F8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    side: BorderSide.none,
-                    onSelected: (selected) {
-                      if (selected) {
-                        onGenderChanged(gender);
-                      }
-                    },
                   ),
                 );
               }).toList(),
@@ -253,6 +324,7 @@ class PersonalInfoEdit extends StatelessWidget {
           label: 'Occupation',
           hintText: 'e.g. Software Engineer',
           controller: occupationController,
+          prefixIcon: Icons.work_outline_rounded,
         ),
         const SizedBox(height: 20),
 
@@ -279,40 +351,17 @@ class PersonalInfoEdit extends StatelessWidget {
                 border: Border.all(color: Colors.grey.shade200, width: 1.0),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    userEmail,
-                    style: GoogleFonts.workSans(
-                      fontSize: 15,
-                      color: Colors.black54,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: providerName == 'Google' ? const Color(0xFFE8F5E9) : const Color(0xFFE3F2FD),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          providerName == 'Google' ? Icons.g_mobiledata : Icons.email_outlined,
-                          color: providerName == 'Google' ? const Color(0xFF2E7D32) : const Color(0xFF1565C0),
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          providerName,
-                          style: GoogleFonts.workSans(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: providerName == 'Google' ? const Color(0xFF2E7D32) : const Color(0xFF1565C0),
-                          ),
-                        ),
-                      ],
+                  Expanded(
+                    child: Text(
+                      userEmail,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.workSans(
+                        fontSize: 15,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ],

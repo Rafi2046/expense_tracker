@@ -208,7 +208,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     final occupation = _occupationController.text.trim();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
