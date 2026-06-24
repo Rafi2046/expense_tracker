@@ -39,6 +39,7 @@ class AllTransactionsReportScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
+      extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -74,43 +75,42 @@ class AllTransactionsReportScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: ReportBottomActions(
+        onDownload: () => _showExportSuccess(context, 'PDF/Excel'),
+        onPrint: () => _showExportSuccess(context, 'Printer Output'),
+        onExcel: () => _showExportSuccess(context, 'Excel File'),
+        onShare: () async {
+          final format = await ShareReportSheet.show(context);
+          if (format != null && context.mounted) {
+            _showExportSuccess(context, format.toUpperCase());
+          }
+        },
+      ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const ReportDateSelector(),
-                    const SizedBox(height: 12),
-                    const AllTransactionsFilterBar(),
-                    const SizedBox(height: 16),
-                    const AllTransactionsSummaryGrid(),
-                    const SizedBox(height: 24),
-                    Text(
-                      'Transaction Lists',
-                      style: AppTextStyles.reportSectionHeader.copyWith(color: Colors.black87),
-                    ),
-                    const SizedBox(height: 12),
-                    const AllTransactionsList(),
-                  ],
-                ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            top: 12.0,
+            bottom: 100.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const ReportDateSelector(),
+              const SizedBox(height: 12),
+              const AllTransactionsFilterBar(),
+              const SizedBox(height: 16),
+              const AllTransactionsSummaryGrid(),
+              const SizedBox(height: 24),
+              Text(
+                'Transaction Lists',
+                style: AppTextStyles.reportSectionHeader.copyWith(color: Colors.black87),
               ),
-            ),
-            ReportBottomActions(
-              onDownload: () => _showExportSuccess(context, 'PDF/Excel'),
-              onPrint: () => _showExportSuccess(context, 'Printer Output'),
-              onExcel: () => _showExportSuccess(context, 'Excel File'),
-              onShare: () async {
-                final format = await ShareReportSheet.show(context);
-                if (format != null && context.mounted) {
-                  _showExportSuccess(context, format.toUpperCase());
-                }
-              },
-            ),
-          ],
+              const SizedBox(height: 12),
+              const AllTransactionsList(),
+            ],
+          ),
         ),
       ),
     );

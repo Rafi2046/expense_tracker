@@ -39,6 +39,7 @@ class PartyStatementScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
+      extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -70,74 +71,74 @@ class PartyStatementScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: partyName != null
+          ? ReportBottomActions(
+              onDownload: () => _showExportSuccess(context, 'PDF/Excel'),
+              onPrint: () => _showExportSuccess(context, 'Printer Output'),
+              onExcel: () => _showExportSuccess(context, 'Excel File'),
+              onShare: () async {
+                final format = await ShareReportSheet.show(context);
+                if (format != null && context.mounted) {
+                  _showExportSuccess(context, format.toUpperCase());
+                }
+              },
+            )
+          : null,
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const ReportDateSelector(),
-                    const SizedBox(height: 12),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            top: 12.0,
+            bottom: 100.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const ReportDateSelector(),
+              const SizedBox(height: 12),
 
-                    // Party Selector Dropdown Chip
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: InkWell(
-                        onTap: () async {
-                          final selected = await PartySelectSheet.show(
-                            context,
-                            selectedPartyName: partyName,
-                          );
-                          if (selected != null) {
-                            reportsProvider.setStatementParty(
-                              selected == 'clear_selection' ? null : selected,
-                            );
-                          }
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF1F2F4),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                partyName ?? 'Select Party',
-                                style: AppTextStyles.reportTileTitle.copyWith(fontSize: 13.5),
-                              ),
-                              const SizedBox(width: 4),
-                              const Icon(Icons.arrow_drop_down, color: Colors.black87, size: 18),
-                            ],
-                          ),
-                        ),
-                      ),
+              // Party Selector Dropdown Chip
+              Align(
+                alignment: Alignment.centerLeft,
+                child: InkWell(
+                  onTap: () async {
+                    final selected = await PartySelectSheet.show(
+                      context,
+                      selectedPartyName: partyName,
+                    );
+                    if (selected != null) {
+                      reportsProvider.setStatementParty(
+                        selected == 'clear_selection' ? null : selected,
+                      );
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F2F4),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    const SizedBox(height: 24),
-                    const PartyStatementBalanceCard(),
-                    if (partyName != null) const SizedBox(height: 24),
-                    const PartyStatementList(),
-                  ],
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          partyName ?? 'Select Party',
+                          style: AppTextStyles.reportTileTitle.copyWith(fontSize: 13.5),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(Icons.arrow_drop_down, color: Colors.black87, size: 18),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-            if (partyName != null)
-              ReportBottomActions(
-                onDownload: () => _showExportSuccess(context, 'PDF/Excel'),
-                onPrint: () => _showExportSuccess(context, 'Printer Output'),
-                onExcel: () => _showExportSuccess(context, 'Excel File'),
-                onShare: () async {
-                  final format = await ShareReportSheet.show(context);
-                  if (format != null && context.mounted) {
-                    _showExportSuccess(context, format.toUpperCase());
-                  }
-                },
-              ),
-          ],
+              const SizedBox(height: 24),
+              const PartyStatementBalanceCard(),
+              if (partyName != null) const SizedBox(height: 24),
+              const PartyStatementList(),
+            ],
+          ),
         ),
       ),
     );

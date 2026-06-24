@@ -38,6 +38,7 @@ class CashInHandStatementScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
+      extendBody: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -59,39 +60,39 @@ class CashInHandStatementScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: isNotEmpty
+          ? ReportBottomActions(
+              onDownload: () => _showExportSuccess(context, 'PDF/Excel'),
+              onPrint: () => _showExportSuccess(context, 'Printer Output'),
+              onExcel: () => _showExportSuccess(context, 'Excel File'),
+              onShare: () async {
+                final format = await ShareReportSheet.show(context);
+                if (format != null && context.mounted) {
+                  _showExportSuccess(context, format.toUpperCase());
+                }
+              },
+            )
+          : null,
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const ReportDateSelector(),
-                    const SizedBox(height: 16),
-                    if (isNotEmpty) ...[
-                      const CashStatementBalanceCard(),
-                      const SizedBox(height: 24),
-                    ],
-                    const CashStatementList(),
-                  ],
-                ),
-              ),
-            ),
-            if (isNotEmpty)
-              ReportBottomActions(
-                onDownload: () => _showExportSuccess(context, 'PDF/Excel'),
-                onPrint: () => _showExportSuccess(context, 'Printer Output'),
-                onExcel: () => _showExportSuccess(context, 'Excel File'),
-                onShare: () async {
-                  final format = await ShareReportSheet.show(context);
-                  if (format != null && context.mounted) {
-                    _showExportSuccess(context, format.toUpperCase());
-                  }
-                },
-              ),
-          ],
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            top: 12.0,
+            bottom: 100.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const ReportDateSelector(),
+              const SizedBox(height: 16),
+              if (isNotEmpty) ...[
+                const CashStatementBalanceCard(),
+                const SizedBox(height: 24),
+              ],
+              const CashStatementList(),
+            ],
+          ),
         ),
       ),
     );
