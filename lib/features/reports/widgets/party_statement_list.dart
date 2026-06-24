@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -24,37 +25,39 @@ class PartyStatementList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Doc graphic container matching the mockup
-              Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  shape: BoxShape.circle,
-                ),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Icon(
-                      Icons.text_snippet_outlined,
-                      size: 72,
-                      color: Colors.grey.shade300,
-                    ),
-                    Positioned(
-                      bottom: 30,
-                      right: 30,
-                      child: Icon(
-                        Icons.person_search_outlined,
-                        size: 28,
-                        color: Colors.grey.shade400,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
+              // Container(
+              //   width: 150,
+              //   height: 150,
+              //   decoration: BoxDecoration(
+              //     color: Colors.grey.shade50,
+              //     shape: BoxShape.circle,
+              //   ),
+              //   child: Stack(
+              //     alignment: Alignment.center,
+              //     children: [
+              //       Icon(
+              //         Icons.text_snippet_outlined,
+              //         size: 72,
+              //         color: Colors.grey.shade300,
+              //       ),
+              //       Positioned(
+              //         bottom: 30,
+              //         right: 30,
+              //         child: Icon(
+              //           Icons.person_search_outlined,
+              //           size: 28,
+              //           color: Colors.grey.shade400,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              Image.asset(AppImages.partyReportIcon,width: 150,height: 200,),
+
+
               Text(
                 'Select Party to View Report',
-                style: AppTextStyles.reportAppBarTitle,
+                style: AppTextStyles.reportAppBar,
               ),
             ],
           ),

@@ -87,9 +87,9 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
           // Drag handle
           Center(
             child: Container(
-              width: 40,
-              height: 5,
-              margin: const EdgeInsets.only(top: 12),
+              width: 36,
+              height: 4,
+              margin: const EdgeInsets.only(top: 10),
               decoration: BoxDecoration(
                 color: Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(10),
@@ -99,26 +99,34 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
 
           // Header row
           Padding(
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 16.0, bottom: 12.0),
+            padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 12.0, bottom: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Select Party to View Report',
-                  style: GoogleFonts.workSans(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.black87,
+                Expanded(
+                  child: Text(
+                    'Select Party to View Report',
+                    style: GoogleFonts.workSans(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
+                const SizedBox(width: 12),
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'clear_selection'),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                   child: Text(
                     'CLEAR',
                     style: GoogleFonts.workSans(
                       color: AppColors.activeRed,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
                     ),
                   ),
                 ),
@@ -129,7 +137,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
 
           // Search Box
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
             child: TextFormField(
               controller: _searchController,
               onChanged: (val) {
@@ -137,24 +145,24 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                   _searchQuery = val;
                 });
               },
-              style: GoogleFonts.workSans(fontSize: 15, color: Colors.black87),
+              style: GoogleFonts.workSans(fontSize: 14, color: Colors.black87),
               decoration: InputDecoration(
                 hintText: 'Search parties...',
-                hintStyle: GoogleFonts.workSans(fontSize: 15, color: Colors.grey.shade400),
-                prefixIcon: Icon(Icons.search, color: Colors.grey.shade400, size: 22),
+                hintStyle: GoogleFonts.workSans(fontSize: 14, color: Colors.grey.shade400),
+                prefixIcon: Icon(Icons.search, color: Colors.grey.shade400, size: 20),
                 filled: true,
                 fillColor: const Color(0xFFF8FAFC),
-                contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(color: Colors.grey.shade100, width: 1),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(color: Colors.grey.shade100, width: 1),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(color: AppColors.activeGreen, width: 1.5),
                 ),
               ),
@@ -194,15 +202,15 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
 
                       return ListTile(
                         onTap: () => Navigator.pop(context, party.name),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         leading: Container(
-                          width: 44,
-                          height: 44,
+                          width: 36,
+                          height: 36,
                           decoration: BoxDecoration(
                             color: const Color(0xFFF1F2F4),
                             shape: BoxShape.circle,
                             border: isSelected
-                                ? Border.all(color: AppColors.activeGreen, width: 2)
+                                ? Border.all(color: AppColors.activeGreen, width: 1.5)
                                 : null,
                           ),
                           child: Center(
@@ -211,7 +219,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                               style: GoogleFonts.workSans(
                                 color: const Color(0xFF31394D),
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                                fontSize: 13,
                               ),
                             ),
                           ),
@@ -219,23 +227,23 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                         title: Text(
                           party.name,
                           style: GoogleFonts.workSans(
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                             color: Colors.black87,
-                            fontSize: 15,
+                            fontSize: 14,
                           ),
                         ),
                         subtitle: Text(
                           party.phone ?? 'No phone number',
                           style: GoogleFonts.workSans(
                             color: Colors.grey.shade500,
-                            fontSize: 13,
+                            fontSize: 12,
                           ),
                         ),
                         trailing: isSelected
                             ? const Icon(
                                 Icons.check_circle_rounded,
                                 color: AppColors.activeGreen,
-                                size: 22,
+                                size: 18,
                               )
                             : null,
                       );

@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_input_row.dart';
@@ -14,7 +15,8 @@ class ManageCategoriesScreen extends StatefulWidget {
   State<ManageCategoriesScreen> createState() => _ManageCategoriesScreenState();
 }
 
-class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> with SingleTickerProviderStateMixin {
+class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _inputController = TextEditingController();
 
@@ -81,7 +83,10 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> with Si
           labelColor: AppColors.buttonColor,
           unselectedLabelColor: Colors.grey,
           indicatorColor: AppColors.buttonColor,
-          labelStyle: GoogleFonts.workSans(fontWeight: FontWeight.bold, fontSize: 14),
+          labelStyle: GoogleFonts.workSans(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
           tabs: [
             Tab(text: context.translate('expense')),
             Tab(text: context.translate('income')),
@@ -98,8 +103,13 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> with Si
     );
   }
 
-  Widget _buildCategoryListSection(TransactionProvider provider, {required bool isIncome}) {
-    final categories = isIncome ? provider.incomeCategories : provider.expenseCategories;
+  Widget _buildCategoryListSection(
+    TransactionProvider provider, {
+    required bool isIncome,
+  }) {
+    final categories = isIncome
+        ? provider.incomeCategories
+        : provider.expenseCategories;
     final themeColor = isIncome ? AppColors.activeGreen : AppColors.activeRed;
 
     return Padding(
@@ -122,11 +132,18 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> with Si
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.category_outlined, size: 48, color: Colors.grey.shade300),
+                        Image.asset(
+                          AppImages.categoriesIcon,
+                          width: 100,
+                          height: 100,
+                        ),
                         const SizedBox(height: 8),
                         Text(
                           context.translate('no_categories_yet'),
-                          style: GoogleFonts.workSans(color: Colors.grey.shade400, fontSize: 14),
+                          style: GoogleFonts.workSans(
+                            color: Colors.grey.shade400,
+                            fontSize: 14,
+                          ),
                         ),
                       ],
                     ),

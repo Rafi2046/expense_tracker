@@ -30,9 +30,9 @@ class ShareReportSheet extends StatelessWidget {
           // Drag handle
           Center(
             child: Container(
-              width: 40,
-              height: 5,
-              margin: const EdgeInsets.only(top: 12, bottom: 12),
+              width: 36,
+              height: 4,
+              margin: const EdgeInsets.only(top: 10, bottom: 8),
               decoration: BoxDecoration(
                 color: Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(10),
@@ -42,12 +42,12 @@ class ShareReportSheet extends StatelessWidget {
 
           // Header
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
             child: Text(
               'Share Report',
               style: GoogleFonts.workSans(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
                 color: Colors.black87,
               ),
             ),
@@ -57,10 +57,10 @@ class ShareReportSheet extends StatelessWidget {
           // Share Options
           ListTile(
             onTap: () => Navigator.pop(context, 'image'),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
             leading: Container(
-              width: 40,
-              height: 40,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(8),
@@ -68,25 +68,25 @@ class ShareReportSheet extends StatelessWidget {
               child: const Icon(
                 Icons.image_outlined,
                 color: AppColors.activeGreen,
-                size: 22,
+                size: 18,
               ),
             ),
             title: Text(
               'Share Image',
               style: GoogleFonts.workSans(
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
                 color: Colors.black87,
-                fontSize: 15,
+                fontSize: 14,
               ),
             ),
           ),
           const Divider(color: Color(0xFFF8FAFC), height: 1),
           ListTile(
             onTap: () => Navigator.pop(context, 'pdf'),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
             leading: Container(
-              width: 40,
-              height: 40,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(8),
@@ -94,19 +94,19 @@ class ShareReportSheet extends StatelessWidget {
               child: const Icon(
                 Icons.picture_as_pdf_outlined,
                 color: AppColors.activeGreen,
-                size: 22,
+                size: 18,
               ),
             ),
             title: Text(
               'Share PDF',
               style: GoogleFonts.workSans(
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
                 color: Colors.black87,
-                fontSize: 15,
+                fontSize: 14,
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
         ],
       ),
     );

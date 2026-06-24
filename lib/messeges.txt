@@ -1,0 +1,39 @@
+
+1. Enforce strict UI-only rule: screen files must never contain logic, state handling, navigation calls, or dialogs. Everything must be delegated to widgets or controllers. Treat screens as pure composition layers only.
+   every class file will have a single class...you will not make multiple classes in a single file.insted make a new file for each class. For example, if you have a HomeScreen, and it has three sections, you will make three separate widget files for each section and then call those widgets in the HomeScreen file. The HomeScreen file will only be responsible for arranging those widgets on the screen, it will not contain any logic or state handling. This way, we keep our code clean and maintainable.
+2. Don't  make _widgets inside view  classes and then call them in the body....instead make widget classes and then import the class in the view and use.
+
+Architecture & Structure
+2. Use MVVM folder architecture.
+3. Use a Repository/Service layer between ViewModel and API — ViewModel calls Repository, Repository calls ApiService (never call http/dio directly from a ViewModel. Use Dio package for API calls).
+4. Make reusable common widgets (AppTextField, AppBar, AppSwitch, LoadingWidget, ErrorWidget, EmptyStateWidget, etc.).
+5. Make helper classes (e.g., Validators for form validation — email, password, required fields).
+
+Widgets & Views
+6. Use a StatelessWidget for every view class.
+7. Use const constructors wherever possible.
+
+State Management
+8. Use Provider as state management.
+9. Keep all business logic and functions in the ViewModel.
+10. Call every function/business logic from the ViewModel, then call that from the View.
+11. Use Consumer/Selector instead of broad Provider.of(context) calls to avoid unnecessary rebuilds.
+12. Dispose controllers (TextEditingController, ScrollController, etc.) in the ViewModel's/View's dispose().
+13. Define an AppState (loading / success / error / empty) pattern so Views can react consistently to ViewModel state.
+
+Data & Models
+14. Create model/DTO classes with fromJson/toJson for every API response.
+15. Define custom exception classes (NetworkException, ServerException, etc.) for consistent error handling.
+16. Wrap local storage (SharedPreferences/flutter_secure_storage/drift) in a LocalStorageService instead of calling it raw.
+
+App-Wide Constants
+17. Make AppTextStyle, AppColors, AppDimensions, and AppImages classes.
+18. Make an AppStrings class (avoid hardcoded text, sets up future localization).
+19. Make an AppConstants class (API base URL, timeouts, default values).
+20. Make an AppTheme/ThemeData class that wires AppColors/AppTextStyle into the app.
+21. Define AppRoutes and a routing strategy (named routes or router package).
+
+Code Quality
+22. Follow proper null safety — prefer ? over !.
+23. Set up analysis_options.yaml with lint rules to enforce conventions automatically.
+24. Follow consistent naming: snake_case for files, PascalCase for classes.

@@ -43,32 +43,41 @@ class SelectDateOptionSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-            child: Text(
-              'Select Date',
-              style: AppTextStyles.dialogTitle.copyWith(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Drag handle
+        Center(
+          child: Container(
+            width: 36,
+            height: 4,
+            margin: const EdgeInsets.only(top: 10, bottom: 8),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
-          const Divider(color: Color(0xFFF1F1F1)),
-          ...DateRangeOption.values.map((option) {
-            return _buildOption(
-              context: context,
-              reportsProvider: reportsProvider,
-              option: option,
-            );
-          }),
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
+          child: Text(
+            'Select Date',
+            style: AppTextStyles.dialogTitle.copyWith(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        const Divider(color: Color(0xFFF1F1F1), height: 1),
+        ...DateRangeOption.values.map((option) {
+          return _buildOption(
+            context: context,
+            reportsProvider: reportsProvider,
+            option: option,
+          );
+        }),
+      ],
     );
   }
 
@@ -103,7 +112,7 @@ class SelectDateOptionSheet extends StatelessWidget {
         }
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         child: Row(
           children: [
             Expanded(
@@ -113,36 +122,37 @@ class SelectDateOptionSheet extends StatelessWidget {
                   Text(
                     title,
                     style: AppTextStyles.reportTileTitle.copyWith(
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                       color: isSelected ? Colors.black87 : Colors.grey.shade800,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 3),
                   Text(
                     subtitle,
                     style: AppTextStyles.reportTransactionSubtitle.copyWith(
                       color: Colors.grey.shade400,
+                      fontSize: 11,
                     ),
                   ),
                 ],
               ),
             ),
             Container(
-              width: 20,
-              height: 20,
+              width: 18,
+              height: 18,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: isSelected ? AppColors.activeGreen : Colors.grey.shade300,
-                  width: 2,
+                  width: 1.5,
                 ),
               ),
               child: isSelected
                   ? Center(
                       child: Container(
-                        width: 10,
-                        height: 10,
+                        width: 8,
+                        height: 8,
                         decoration: const BoxDecoration(
                           color: AppColors.activeGreen,
                           shape: BoxShape.circle,

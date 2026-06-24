@@ -48,9 +48,9 @@ class TransactionTypeSelectSheet extends StatelessWidget {
           // Drag handle
           Center(
             child: Container(
-              width: 40,
-              height: 5,
-              margin: const EdgeInsets.only(top: 12, bottom: 12),
+              width: 36,
+              height: 4,
+              margin: const EdgeInsets.only(top: 10, bottom: 8),
               decoration: BoxDecoration(
                 color: Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(10),
@@ -60,12 +60,12 @@ class TransactionTypeSelectSheet extends StatelessWidget {
 
           // Header
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
             child: Text(
               'Select Transaction Type',
               style: GoogleFonts.workSans(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
                 color: Colors.black87,
               ),
             ),
@@ -87,30 +87,30 @@ class TransactionTypeSelectSheet extends StatelessWidget {
 
               return ListTile(
                 onTap: () => Navigator.pop(context, type),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
                 title: Text(
                   type,
                   style: GoogleFonts.workSans(
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     color: Colors.black87,
-                    fontSize: 15,
+                    fontSize: 14,
                   ),
                 ),
                 trailing: Container(
-                  width: 20,
-                  height: 20,
+                  width: 18,
+                  height: 18,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: isSelected ? AppColors.activeGreen : Colors.grey.shade300,
-                      width: 2,
+                      width: 1.5,
                     ),
                   ),
                   child: isSelected
                       ? Center(
                           child: Container(
-                            width: 10,
-                            height: 10,
+                            width: 8,
+                            height: 8,
                             decoration: const BoxDecoration(
                               color: AppColors.activeGreen,
                               shape: BoxShape.circle,
@@ -122,7 +122,7 @@ class TransactionTypeSelectSheet extends StatelessWidget {
               );
             },
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
         ],
       ),
     );

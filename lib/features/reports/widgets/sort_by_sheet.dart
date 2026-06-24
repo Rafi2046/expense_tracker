@@ -28,49 +28,58 @@ class SortBySheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-              child: Text(
-                'Sort By:',
-                style: AppTextStyles.dialogTitle.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Drag handle
+          Center(
+            child: Container(
+              width: 36,
+              height: 4,
+              margin: const EdgeInsets.only(top: 10, bottom: 8),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
-            const Divider(color: Color(0xFFF1F1F1)),
-            _buildOption(
-              context: context,
-              title: 'Latest',
-              option: ReportSortOption.latest,
-              icon: Icons.swap_vert_rounded,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
+            child: Text(
+              'Sort By:',
+              style: AppTextStyles.dialogTitle.copyWith(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-            _buildOption(
-              context: context,
-              title: 'Oldest',
-              option: ReportSortOption.oldest,
-              icon: Icons.swap_vert_rounded,
-            ),
-            _buildOption(
-              context: context,
-              title: 'Amount: High to Low',
-              option: ReportSortOption.amountHighToLow,
-              icon: Icons.sort_rounded,
-            ),
-            _buildOption(
-              context: context,
-              title: 'Amount: Low to High',
-              option: ReportSortOption.amountLowToHigh,
-              icon: Icons.sort_rounded,
-            ),
-          ],
-        ),
+          ),
+          const Divider(color: Color(0xFFF1F1F1), height: 1),
+          _buildOption(
+            context: context,
+            title: 'Latest',
+            option: ReportSortOption.latest,
+            icon: Icons.swap_vert_rounded,
+          ),
+          _buildOption(
+            context: context,
+            title: 'Oldest',
+            option: ReportSortOption.oldest,
+            icon: Icons.swap_vert_rounded,
+          ),
+          _buildOption(
+            context: context,
+            title: 'Amount: High to Low',
+            option: ReportSortOption.amountHighToLow,
+            icon: Icons.sort_rounded,
+          ),
+          _buildOption(
+            context: context,
+            title: 'Amount: Low to High',
+            option: ReportSortOption.amountLowToHigh,
+            icon: Icons.sort_rounded,
+          ),
+        ],
       ),
     );
   }
@@ -86,40 +95,40 @@ class SortBySheet extends StatelessWidget {
     return InkWell(
       onTap: () => Navigator.pop(context, option),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         child: Row(
           children: [
             Icon(
               icon,
               color: Colors.grey.shade600,
-              size: 22,
+              size: 18,
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 14),
             Expanded(
               child: Text(
                 title,
                 style: AppTextStyles.reportTileTitle.copyWith(
-                  fontSize: 15,
+                  fontSize: 14,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   color: isSelected ? Colors.black87 : Colors.grey.shade700,
                 ),
               ),
             ),
             Container(
-              width: 20,
-              height: 20,
+              width: 18,
+              height: 18,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: isSelected ? AppColors.activeGreen : Colors.grey.shade300,
-                  width: 2,
+                  width: 1.5,
                 ),
               ),
               child: isSelected
                   ? Center(
                       child: Container(
-                        width: 10,
-                        height: 10,
+                        width: 8,
+                        height: 8,
                         decoration: const BoxDecoration(
                           color: AppColors.activeGreen,
                           shape: BoxShape.circle,

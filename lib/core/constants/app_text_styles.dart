@@ -319,7 +319,12 @@ class AppTextStyles {
     fontWeight: FontWeight.bold,
     color: Colors.black87,
   );
-
+  static TextStyle reportAppBar = TextStyle(
+    fontSize: 18,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    fontWeight: FontWeight.bold,
+    color: Colors.blueGrey,
+  );
   static TextStyle reportSectionHeader = TextStyle(
     fontSize: 14,
     fontFamily: GoogleFonts.workSans().fontFamily,

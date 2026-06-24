@@ -104,9 +104,22 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
       ),
       child: Column(
         children: [
+          // Drag handle
+          Center(
+            child: Container(
+              width: 36,
+              height: 4,
+              margin: const EdgeInsets.only(top: 10),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+
           // Close button & title row
           Padding(
-            padding: const EdgeInsets.only(left: 12.0, right: 16.0, top: 12.0),
+            padding: const EdgeInsets.only(left: 12.0, right: 16.0, top: 6.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -117,8 +130,8 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                 Text(
                   'Select Date',
                   style: GoogleFonts.workSans(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
                     color: Colors.black87,
                   ),
                 ),
@@ -130,7 +143,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
 
           // Date display
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -139,14 +152,14 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                     Text(
                       _rangeText,
                       style: GoogleFonts.workSans(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
                         color: Colors.black87,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     IconButton(
-                      icon: Icon(Icons.edit_outlined, color: Colors.grey.shade400, size: 20),
+                      icon: Icon(Icons.edit_outlined, color: Colors.grey.shade400, size: 18),
                       onPressed: () async {
                         final result = await SelectDateInputDialog.show(
                           context,
@@ -174,7 +187,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
 
           // S M T W T F S weekday headings
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) {
@@ -186,7 +199,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                       style: GoogleFonts.workSans(
                         color: Colors.grey.shade500,
                         fontWeight: FontWeight.w600,
-                        fontSize: 13,
+                        fontSize: 12,
                       ),
                     ),
                   ),
@@ -194,12 +207,12 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
               }).toList(),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
 
           // Scrollable calendar content
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 children: [
                   _buildMonthCalendar(_currentMonth),
@@ -214,22 +227,27 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
 
           // Bottom Cancel / Ok Actions
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                   child: Text(
                     'Cancel',
                     style: GoogleFonts.workSans(
                       color: AppColors.activeGreen,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
                     ),
                   ),
                 ),
-                const SizedBox(width: 24),
+                const SizedBox(width: 16),
                 ElevatedButton(
                   onPressed: _startDate == null || _endDate == null
                       ? null
@@ -244,9 +262,9 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                     disabledBackgroundColor: Colors.grey.shade100,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
                   ),
                   child: Text(
                     'Ok',
@@ -254,8 +272,8 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                       color: _startDate == null || _endDate == null
                           ? Colors.grey.shade400
                           : Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
                     ),
                   ),
                 ),
