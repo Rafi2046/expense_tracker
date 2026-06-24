@@ -1,35 +1,14 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/reports/widgets/bank_statement_balance_card.dart';
 import 'package:expense_tracker/features/reports/widgets/bank_statement_list.dart';
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
 import 'package:expense_tracker/features/reports/widgets/report_date_selector.dart';
-import 'package:expense_tracker/features/reports/widgets/share_report_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 
 class BankStatementScreen extends StatelessWidget {
   const BankStatementScreen({super.key});
-
-  void _showExportSuccess(BuildContext context, String format) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle_outline, color: Colors.white),
-            const SizedBox(width: 8),
-            Text(
-              'Report exported to $format successfully!',
-              style: AppTextStyles.partySubmitButtonText.copyWith(fontSize: 14),
-            ),
-          ],
-        ),
-        backgroundColor: AppColors.activeGreen,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +22,7 @@ class BankStatementScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: const BackButton(color: Colors.black87),
         title: Text(
           'Bank Statement',
           style: AppTextStyles.reportAppBarTitle,
@@ -61,16 +37,8 @@ class BankStatementScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: isNotEmpty
-          ? ReportBottomActions(
-              onDownload: () => _showExportSuccess(context, 'PDF/Excel'),
-              onPrint: () => _showExportSuccess(context, 'Printer Output'),
-              onExcel: () => _showExportSuccess(context, 'Excel File'),
-              onShare: () async {
-                final format = await ShareReportSheet.show(context);
-                if (format != null && context.mounted) {
-                  _showExportSuccess(context, format.toUpperCase());
-                }
-              },
+          ? const ReportBottomActions(
+              reportName: 'Bank Statement',
             )
           : null,
       body: SafeArea(

@@ -1,20 +1,35 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/features/reports/widgets/share_report_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ReportBottomActions extends StatelessWidget {
-  final VoidCallback onDownload;
-  final VoidCallback onPrint;
-  final VoidCallback onExcel;
-  final VoidCallback onShare;
+  final String reportName;
 
   const ReportBottomActions({
     super.key,
-    required this.onDownload,
-    required this.onPrint,
-    required this.onExcel,
-    required this.onShare,
+    required this.reportName,
   });
+
+  void _showExportSuccess(BuildContext context, String format) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle_outline, color: Colors.white),
+            const SizedBox(width: 8),
+            Text(
+              'Report exported to $format successfully!',
+              style: AppTextStyles.partySubmitButtonText.copyWith(fontSize: 14),
+            ),
+          ],
+        ),
+        backgroundColor: AppColors.activeGreen,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,22 +61,27 @@ class ReportBottomActions extends StatelessWidget {
             _buildActionItem(
               icon: Icons.download_outlined,
               label: 'Download',
-              onTap: onDownload,
+              onTap: () => _showExportSuccess(context, 'PDF/Excel'),
             ),
             _buildActionItem(
               icon: Icons.print_outlined,
               label: 'Print PDF',
-              onTap: onPrint,
+              onTap: () => _showExportSuccess(context, 'Printer Output'),
             ),
             _buildActionItem(
               icon: Icons.table_chart_outlined,
               label: 'Excel',
-              onTap: onExcel,
+              onTap: () => _showExportSuccess(context, 'Excel File'),
             ),
             _buildActionItem(
               icon: Icons.share_outlined,
               label: 'Share',
-              onTap: onShare,
+              onTap: () async {
+                final format = await ShareReportSheet.show(context);
+                if (format != null && context.mounted) {
+                  _showExportSuccess(context, format.toUpperCase());
+                }
+              },
             ),
           ],
         ),

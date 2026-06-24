@@ -2,16 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-
-class SelectDateInputDialogResult {
-  final DateTimeRange range;
-  final bool shouldSubmit;
-
-  SelectDateInputDialogResult({
-    required this.range,
-    required this.shouldSubmit,
-  });
-}
+import 'package:expense_tracker/features/reports/models/select_date_input_dialog_result.dart';
 
 class SelectDateInputDialog extends StatefulWidget {
   final DateTimeRange initialRange;

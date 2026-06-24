@@ -1,105 +1,19 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
-import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
-import 'package:expense_tracker/features/reports/widgets/share_report_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PartyReportSummary {
-  final String name;
-  final String? phone;
-  final double netBalance; // positive = Receivable (To Receive), negative = Payable (To Give)
-  final int transactionCount;
-
-  PartyReportSummary({
-    required this.name,
-    this.phone,
-    required this.netBalance,
-    required this.transactionCount,
-  });
-}
-
-class PartiesReportScreen extends StatefulWidget {
+class PartiesReportScreen extends StatelessWidget {
   const PartiesReportScreen({super.key});
 
   @override
-  State<PartiesReportScreen> createState() => _PartiesReportScreenState();
-}
-
-class _PartiesReportScreenState extends State<PartiesReportScreen> {
-  String _searchQuery = '';
-
-  String _getInitials(String name) {
-    if (name.trim().isEmpty) return '?';
-    final parts = name.trim().split(RegExp(r'\s+'));
-    if (parts.length == 1) {
-      return parts[0][0].toUpperCase();
-    }
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  }
-
-  void _showExportSuccess(String format) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle_outline, color: Colors.white),
-            const SizedBox(width: 8),
-            Text(
-              'Report exported to $format successfully!',
-              style: AppTextStyles.partySubmitButtonText.copyWith(fontSize: 14),
-            ),
-          ],
-        ),
-        backgroundColor: AppColors.activeGreen,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final debtProvider = context.watch<DebtProvider>();
+    final reportsProvider = context.watch<ReportsProvider>();
     final currencySymbol = context.currencySymbol;
-
-    // Group debt items by party name
-    final Map<String, List<DebtItem>> grouped = {};
-    for (var item in debtProvider.items) {
-      grouped.putIfAbsent(item.name, () => []).add(item);
-    }
-
-    final List<PartyReportSummary> summaries = [];
-    grouped.forEach((name, items) {
-      double net = 0.0;
-      String? phone;
-
-      for (var item in items) {
-        if (item.phone != null) phone = item.phone;
-        if (item.isReceive) {
-          net += item.amount;
-        } else {
-          net -= item.amount;
-        }
-      }
-
-      summaries.add(PartyReportSummary(
-        name: name,
-        phone: phone,
-        netBalance: net,
-        transactionCount: items.length,
-      ));
-    });
-
-    // Filter by search query
-    final filtered = summaries.where((item) {
-      if (_searchQuery.trim().isEmpty) return true;
-      final q = _searchQuery.toLowerCase().trim();
-      final matchName = item.name.toLowerCase().contains(q);
-      final matchPhone = item.phone?.toLowerCase().contains(q) ?? false;
-      return matchName || matchPhone;
-    }).toList();
+    final filtered = reportsProvider.partyReportSummaries;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
@@ -107,10 +21,7 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: const BackButton(color: Colors.black87),
         title: Text(
           'Parties Report',
           style: AppTextStyles.reportAppBarTitle,
@@ -135,10 +46,9 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
                   children: [
                     // Search bar
                     TextFormField(
+                      initialValue: reportsProvider.partiesSearchQuery,
                       onChanged: (val) {
-                        setState(() {
-                          _searchQuery = val;
-                        });
+                        reportsProvider.setPartiesSearch(val);
                       },
                       style: AppTextStyles.partyFormInput,
                       decoration: InputDecoration(
@@ -211,7 +121,7 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              _getInitials(item.name),
+                                              item.initials,
                                               style: AppTextStyles.reportTileTitle.copyWith(fontWeight: FontWeight.bold),
                                             ),
                                           ),
@@ -262,16 +172,8 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
             ),
 
             // Persistent bottom actions
-            ReportBottomActions(
-              onDownload: () => _showExportSuccess('PDF/Excel'),
-              onPrint: () => _showExportSuccess('Printer Output'),
-              onExcel: () => _showExportSuccess('Excel File'),
-              onShare: () async {
-                final format = await ShareReportSheet.show(context);
-                if (format != null) {
-                  _showExportSuccess(format.toUpperCase());
-                }
-              },
+            const ReportBottomActions(
+              reportName: 'Parties Report',
             ),
           ],
         ),

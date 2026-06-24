@@ -1,10 +1,11 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:expense_tracker/features/reports/pages/all_transactions_report_screen.dart';
 import 'package:expense_tracker/features/reports/pages/bank_statement_screen.dart';
 import 'package:expense_tracker/features/reports/pages/cash_in_hand_statement_screen.dart';
 import 'package:expense_tracker/features/reports/pages/income_expense_report_screen.dart';
 import 'package:expense_tracker/features/reports/pages/parties_report_screen.dart';
 import 'package:expense_tracker/features/reports/pages/party_statement_screen.dart';
+import 'package:expense_tracker/features/reports/widgets/report_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,10 +20,7 @@ class ViewReportsScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: const BackButton(color: Colors.black87),
         title: Text(
           'Reports',
           style: GoogleFonts.workSans(
@@ -97,29 +95,29 @@ class ViewReportsScreen extends StatelessWidget {
             const SizedBox(height: 10),
 
             _buildReportCard(context, items: [
-              _ReportItem(
+              const ReportItem(
                 icon: Icons.receipt_long_rounded,
                 title: 'All Transactions',
                 subtitle: 'Complete transaction history',
-                destination: const AllTransactionsReportScreen(),
+                destination: AllTransactionsReportScreen(),
               ),
-              _ReportItem(
+              const ReportItem(
                 icon: Icons.people_alt_outlined,
                 title: 'Party Statement',
                 subtitle: 'View per-party ledger',
-                destination: const PartyStatementScreen(),
+                destination: PartyStatementScreen(),
               ),
-              _ReportItem(
+              const ReportItem(
                 icon: Icons.account_balance_wallet_outlined,
                 title: 'Cash In Hand',
                 subtitle: 'Track your cash balance',
-                destination: const CashInHandStatementScreen(),
+                destination: CashInHandStatementScreen(),
               ),
-              _ReportItem(
+              const ReportItem(
                 icon: Icons.account_balance_outlined,
                 title: 'Bank Statement',
                 subtitle: 'Bank account summary',
-                destination: const BankStatementScreen(),
+                destination: BankStatementScreen(),
               ),
             ]),
 
@@ -128,17 +126,17 @@ class ViewReportsScreen extends StatelessWidget {
             const SizedBox(height: 10),
 
             _buildReportCard(context, items: [
-              _ReportItem(
+              const ReportItem(
                 icon: Icons.people_outline_rounded,
                 title: 'Parties Report',
                 subtitle: 'Payable & receivable overview',
-                destination: const PartiesReportScreen(),
+                destination: PartiesReportScreen(),
               ),
-              _ReportItem(
+              const ReportItem(
                 icon: Icons.trending_up_rounded,
                 title: 'Income & Expense',
                 subtitle: 'Profit/loss breakdown',
-                destination: const IncomeExpenseReportScreen(),
+                destination: IncomeExpenseReportScreen(),
               ),
             ]),
 
@@ -164,7 +162,7 @@ class ViewReportsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildReportCard(BuildContext context, {required List<_ReportItem> items}) {
+  Widget _buildReportCard(BuildContext context, {required List<ReportItem> items}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -183,7 +181,7 @@ class ViewReportsScreen extends StatelessWidget {
           final isLast = index == items.length - 1;
           return Column(
             children: [
-              _buildReportTile(context, item: item),
+              ReportTile(item: item),
               if (!isLast)
                 Divider(
                   color: Colors.grey.shade100,
@@ -197,87 +195,4 @@ class ViewReportsScreen extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildReportTile(BuildContext context, {required _ReportItem item}) {
-    return InkWell(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => item.destination),
-      ),
-      borderRadius: BorderRadius.circular(16),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          children: [
-            // Icon container
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: AppColors.activeGreen.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(item.icon, color: AppColors.activeGreen, size: 18),
-            ),
-            const SizedBox(width: 14),
-
-            // Title + subtitle
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.title,
-                    style: GoogleFonts.workSans(
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF1E2A3A),
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    item.subtitle,
-                    style: GoogleFonts.workSans(
-                      fontSize: 11,
-                      color: Colors.grey.shade500,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Chevron
-            Container(
-              width: 26,
-              height: 26,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF4F6F9),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 11,
-                color: Colors.black54,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ReportItem {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Widget destination;
-
-  const _ReportItem({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.destination,
-  });
 }

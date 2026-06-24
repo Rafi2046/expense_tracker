@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/model/unified_transaction.dart';
 import 'package:expense_tracker/core/model/ledger_item.dart';
 import 'package:expense_tracker/core/model/category_summary.dart';
+import 'package:expense_tracker/core/model/party_report_summary.dart';
 
 enum ReportSortOption {
   latest,
@@ -42,6 +43,9 @@ class ReportsProvider extends ChangeNotifier {
   // Party Statement filtering
   String? _selectedPartyNameForStatement;
 
+  // Parties Report filtering
+  String _partiesSearchQuery = '';
+
   ReportsProvider() {
     _selectedDateRange = getDateTimeRangeForOption(DateRangeOption.thisMonth);
   }
@@ -60,6 +64,7 @@ class ReportsProvider extends ChangeNotifier {
   String? get selectedPartyName => _selectedPartyName;
   String? get selectedPartyNameForStatement => _selectedPartyNameForStatement;
   ReportSortOption get sortOption => _sortOption;
+  String get partiesSearchQuery => _partiesSearchQuery;
 
   // Setters/actions
   void setDateRange(DateTimeRange? range, {DateRangeOption option = DateRangeOption.custom}) {
@@ -100,6 +105,11 @@ class ReportsProvider extends ChangeNotifier {
 
   void setSortOption(ReportSortOption option) {
     _sortOption = option;
+    notifyListeners();
+  }
+
+  void setPartiesSearch(String query) {
+    _partiesSearchQuery = query;
     notifyListeners();
   }
 
@@ -521,5 +531,47 @@ class ReportsProvider extends ChangeNotifier {
       'incomeSummaries': incomeSummaries,
       'expenseSummaries': expenseSummaries,
     };
+  }
+
+  // 5. Parties Report Calculations
+  List<PartyReportSummary> get partyReportSummaries {
+    if (_debtProvider == null) return [];
+
+    // Group debt items by party name
+    final Map<String, List<DebtItem>> grouped = {};
+    for (var item in _debtProvider!.items) {
+      grouped.putIfAbsent(item.name, () => []).add(item);
+    }
+
+    final List<PartyReportSummary> summaries = [];
+    grouped.forEach((name, items) {
+      double net = 0.0;
+      String? phone;
+
+      for (var item in items) {
+        if (item.phone != null) phone = item.phone;
+        if (item.isReceive) {
+          net += item.amount;
+        } else {
+          net -= item.amount;
+        }
+      }
+
+      summaries.add(PartyReportSummary(
+        name: name,
+        phone: phone,
+        netBalance: net,
+        transactionCount: items.length,
+      ));
+    });
+
+    // Filter by search query
+    return summaries.where((item) {
+      if (_partiesSearchQuery.trim().isEmpty) return true;
+      final q = _partiesSearchQuery.toLowerCase().trim();
+      final matchName = item.name.toLowerCase().contains(q);
+      final matchPhone = item.phone?.toLowerCase().contains(q) ?? false;
+      return matchName || matchPhone;
+    }).toList();
   }
 }
