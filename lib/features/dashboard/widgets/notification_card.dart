@@ -7,11 +7,7 @@ class NotificationCard extends StatelessWidget {
   final NotificationItem item;
   final VoidCallback onTap;
 
-  const NotificationCard({
-    super.key,
-    required this.item,
-    required this.onTap,
-  });
+  const NotificationCard({super.key, required this.item, required this.onTap});
 
   Color _getTypeColor(NotificationType type) {
     switch (type) {
@@ -61,7 +57,9 @@ class NotificationCard extends StatelessWidget {
         color: item.isRead ? AppColors.white : const Color(0xFFF7FCFA),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: item.isRead ? const Color(0xFFF0F0F0) : AppColors.activeGreen.withValues(alpha: 0.1),
+          color: item.isRead
+              ? const Color(0xFFF0F0F0)
+              : AppColors.activeGreen.withValues(alpha: 0.1),
           width: 1,
         ),
         boxShadow: [
@@ -108,7 +106,9 @@ class NotificationCard extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.workSans(
-                                fontWeight: item.isRead ? FontWeight.w600 : FontWeight.bold,
+                                fontWeight: item.isRead
+                                    ? FontWeight.w600
+                                    : FontWeight.bold,
                                 fontSize: 14.5,
                                 color: AppColors.loginTitle,
                               ),

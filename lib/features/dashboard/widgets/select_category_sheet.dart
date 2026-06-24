@@ -50,7 +50,10 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
     super.dispose();
   }
 
-  void _showAddNewCategoryDialog(BuildContext context, TransactionProvider provider) {
+  void _showAddNewCategoryDialog(
+    BuildContext context,
+    TransactionProvider provider,
+  ) {
     final textController = TextEditingController();
     showDialog(
       context: context,
@@ -59,7 +62,9 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
           borderRadius: BorderRadius.circular(AppSpacing.r16),
         ),
         title: Text(
-          widget.isIncome ? 'Add New Income Category' : 'Add New Expense Category',
+          widget.isIncome
+              ? 'Add New Income Category'
+              : 'Add New Expense Category',
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
             fontSize: 16,
@@ -70,7 +75,10 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
           autofocus: true,
           decoration: InputDecoration(
             hintText: 'Category Name',
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.grey.shade300),
@@ -78,7 +86,9 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
-                color: widget.isIncome ? AppColors.activeGreen : AppColors.activeRed,
+                color: widget.isIncome
+                    ? AppColors.activeGreen
+                    : AppColors.activeRed,
                 width: 2,
               ),
             ),
@@ -97,7 +107,9 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: widget.isIncome ? AppColors.activeGreen : AppColors.activeRed,
+              backgroundColor: widget.isIncome
+                  ? AppColors.activeGreen
+                  : AppColors.activeRed,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -131,13 +143,17 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TransactionProvider>();
-    final allCategories = widget.isIncome ? provider.incomeCategories : provider.expenseCategories;
-    
+    final allCategories = widget.isIncome
+        ? provider.incomeCategories
+        : provider.expenseCategories;
+
     final filteredCategories = allCategories
         .where((c) => c.toLowerCase().contains(_searchQuery.toLowerCase()))
         .toList();
 
-    final activeThemeColor = widget.isIncome ? AppColors.activeGreen : AppColors.activeRed;
+    final activeThemeColor = widget.isIncome
+        ? AppColors.activeGreen
+        : AppColors.activeRed;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -157,151 +173,164 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            // Top Drag Handle
-            Center(
-              child: Container(
-                width: 40,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(height: 18),
-            
-            Text(
-              widget.isIncome ? 'Select Category for Income' : 'Select Category for Expense',
-              style: GoogleFonts.workSans(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Search input field matching mockup exactly
-            TextField(
-              controller: _searchController,
-              style: GoogleFonts.workSans(
-                fontSize: 15,
-                color: Colors.black87,
-              ),
-              decoration: InputDecoration(
-                hintText: 'Search Category...',
-                hintStyle: GoogleFonts.workSans(
-                  fontSize: 15,
-                  color: Colors.grey.shade400,
-                ),
-                prefixIcon: Icon(Icons.search_rounded, color: Colors.grey.shade400, size: 20),
-                contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.grey.shade200, width: 1),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.grey.shade200, width: 1),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: activeThemeColor, width: 1.5),
-                ),
-              ),
-              onChanged: (val) {
-                setState(() {
-                  _searchQuery = val;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-
-            // Scrollable List
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.40,
-              ),
-              child: filteredCategories.isEmpty
-                  ? Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Text(
-                          'No categories found.',
-                          style: GoogleFonts.workSans(
-                            color: Colors.grey.shade400,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    )
-                  : ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: filteredCategories.length,
-                      separatorBuilder: (context, index) => const Divider(
-                        color: Color(0xFFF5F5F5),
-                        height: 1,
-                      ),
-                      itemBuilder: (context, index) {
-                        final cat = filteredCategories[index];
-                        final isSelected = cat == widget.selectedCategory;
-
-                        return CategoryListRow(
-                          categoryName: cat,
-                          themeColor: activeThemeColor,
-                          isSelected: isSelected,
-                          showSelection: true,
-                          showLeadingIcon: false,
-                          onTap: () {
-                            Navigator.pop(context);
-                            widget.onCategorySelected(cat);
-                          },
-                          onDelete: () {
-                            if (widget.isIncome) {
-                              provider.deleteIncomeCategory(cat);
-                            } else {
-                              provider.deleteExpenseCategory(cat);
-                            }
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Category "$cat" removed.'),
-                                duration: const Duration(seconds: 1),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-            ),
-            
-            const SizedBox(height: 16),
-
-            // Bottom Border Button: + Add New Category
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: OutlinedButton.icon(
-                icon: const Icon(Icons.add, size: 18),
-                label: const Text('Add New Category'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.black87,
-                  side: BorderSide(color: Colors.grey.shade200, width: 1.5),
-                  shape: RoundedRectangleBorder(
+              // Top Drag Handle
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  textStyle: GoogleFonts.workSans(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 18),
+
+              Text(
+                widget.isIncome
+                    ? 'Select Category for Income'
+                    : 'Select Category for Expense',
+                style: GoogleFonts.workSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Search input field matching mockup exactly
+              TextField(
+                controller: _searchController,
+                style: GoogleFonts.workSans(
+                  fontSize: 15,
+                  color: Colors.black87,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Search Category...',
+                  hintStyle: GoogleFonts.workSans(
+                    fontSize: 15,
+                    color: Colors.grey.shade400,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.search_rounded,
+                    color: Colors.grey.shade400,
+                    size: 20,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 16,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade200,
+                      width: 1,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade200,
+                      width: 1,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: activeThemeColor, width: 1.5),
                   ),
                 ),
-                onPressed: () => _showAddNewCategoryDialog(context, provider),
+                onChanged: (val) {
+                  setState(() {
+                    _searchQuery = val;
+                  });
+                },
               ),
-            ),
-            const SizedBox(height: 8),
-          ],
+              const SizedBox(height: 16),
+
+              // Scrollable List
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.40,
+                ),
+                child: filteredCategories.isEmpty
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text(
+                            'No categories found.',
+                            style: GoogleFonts.workSans(
+                              color: Colors.grey.shade400,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      )
+                    : ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: filteredCategories.length,
+                        separatorBuilder: (context, index) =>
+                            const Divider(color: Color(0xFFF5F5F5), height: 1),
+                        itemBuilder: (context, index) {
+                          final cat = filteredCategories[index];
+                          final isSelected = cat == widget.selectedCategory;
+
+                          return CategoryListRow(
+                            categoryName: cat,
+                            themeColor: activeThemeColor,
+                            isSelected: isSelected,
+                            showSelection: true,
+                            showLeadingIcon: false,
+                            onTap: () {
+                              Navigator.pop(context);
+                              widget.onCategorySelected(cat);
+                            },
+                            onDelete: () {
+                              if (widget.isIncome) {
+                                provider.deleteIncomeCategory(cat);
+                              } else {
+                                provider.deleteExpenseCategory(cat);
+                              }
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Category "$cat" removed.'),
+                                  duration: const Duration(seconds: 1),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Bottom Border Button: + Add New Category
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: OutlinedButton.icon(
+                  icon: const Icon(Icons.add, size: 18),
+                  label: const Text('Add New Category'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.black87,
+                    side: BorderSide(color: Colors.grey.shade200, width: 1.5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    textStyle: GoogleFonts.workSans(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  onPressed: () => _showAddNewCategoryDialog(context, provider),
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

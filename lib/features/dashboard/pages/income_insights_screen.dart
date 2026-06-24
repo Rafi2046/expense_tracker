@@ -42,7 +42,11 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
               ),
               Row(
                 children: [
-                  const Icon(Icons.trending_up, color: AppColors.activeGreen, size: 16),
+                  const Icon(
+                    Icons.trending_up,
+                    color: AppColors.activeGreen,
+                    size: 16,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     '+12.5%',
@@ -101,7 +105,11 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                   ),
                   Row(
                     children: [
-                      const Icon(Icons.trending_up, color: AppColors.activeGreen, size: 16),
+                      const Icon(
+                        Icons.trending_up,
+                        color: AppColors.activeGreen,
+                        size: 16,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         '+12.4%',
@@ -156,7 +164,9 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                 child: const LinearProgressIndicator(
                   value: 0.25,
                   backgroundColor: Color(0xFFE0E0E0),
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.activeGreen),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    AppColors.activeGreen,
+                  ),
                   minHeight: 4,
                 ),
               ),
@@ -207,10 +217,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
         scrolledUnderElevation: 0,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: const Color(0xFFE0E0E0),
-            height: 1.0,
-          ),
+          child: Container(color: const Color(0xFFE0E0E0), height: 1.0),
         ),
       ),
       body: SingleChildScrollView(

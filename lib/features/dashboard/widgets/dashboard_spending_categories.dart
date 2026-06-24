@@ -84,7 +84,9 @@ class DashboardSpendingCategories extends StatelessWidget {
                         innerRadius: '78%',
                         startAngle: 270,
                         endAngle: 270,
-                        dataLabelSettings: const DataLabelSettings(isVisible: false),
+                        dataLabelSettings: const DataLabelSettings(
+                          isVisible: false,
+                        ),
                       ),
                     ],
                   ),

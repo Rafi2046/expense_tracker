@@ -33,48 +33,47 @@ class SelectProfileScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Select Your Profile',
-                style: AppTextStyles.profileTitle,
-              ),
+              Text('Select Your Profile', style: AppTextStyles.profileTitle),
               const SizedBox(height: 6),
               Text(
                 'What will you use the app mostly for?',
                 style: AppTextStyles.profileSubtitle,
               ),
               const SizedBox(height: 24),
-              
+
               // Business Management Card
               ProfileTypeCard(
                 icon: Icons.storefront,
                 title: 'Business Management',
-                subtitle: 'Manage your business accounting and inventory easily.',
+                subtitle:
+                    'Manage your business accounting and inventory easily.',
                 isSelected: isBusiness,
                 onTap: () {
                   provider.setCreationProfileType('business');
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Personal Finance Card
               ProfileTypeCard(
                 icon: Icons.person,
                 title: 'Personal Finance',
-                subtitle: 'Track your expenses and maintain your credits with friends.',
+                subtitle:
+                    'Track your expenses and maintain your credits with friends.',
                 isSelected: !isBusiness,
                 onTap: () {
                   provider.setCreationProfileType('personal');
                 },
               ),
-              
+
               const Spacer(),
-              
+
               // Info Banner
               const ProfileInfoBanner(),
-              
+
               const SizedBox(height: 16),
-              
+
               // Continue Button
               CustomButton(
                 text: 'Continue',
@@ -83,9 +82,8 @@ class SelectProfileScreen extends StatelessWidget {
                   final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CreateProfileNameScreen(
-                        isBusiness: isBusiness,
-                      ),
+                      builder: (context) =>
+                          CreateProfileNameScreen(isBusiness: isBusiness),
                     ),
                   );
                   if (result != null && context.mounted) {

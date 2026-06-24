@@ -24,10 +24,7 @@ class IncomeTrendChart extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(
-          color: AppColors.dividerColor,
-          width: 1.0,
-        ),
+        border: Border.all(color: AppColors.dividerColor, width: 1.0),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -48,7 +45,11 @@ class IncomeTrendChart extends StatelessWidget {
               IconButton(
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
-                icon: const Icon(Icons.info_outline, color: Colors.grey, size: 20),
+                icon: const Icon(
+                  Icons.info_outline,
+                  color: Colors.grey,
+                  size: 20,
+                ),
                 onPressed: () {
                   showDialog(
                     context: context,

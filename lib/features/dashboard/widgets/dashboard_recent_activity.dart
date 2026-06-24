@@ -85,14 +85,9 @@ class DashboardRecentActivity extends StatelessWidget {
                 offset: const Offset(0, 3),
               ),
             ],
-            border: Border.all(
-              color: const Color(0xFFF0F0F0),
-              width: 1,
-            ),
+            border: Border.all(color: const Color(0xFFF0F0F0), width: 1),
           ),
-          child: Column(
-            children: _buildListItems(context),
-          ),
+          child: Column(children: _buildListItems(context)),
         ),
       ],
     );
@@ -109,10 +104,15 @@ class DashboardRecentActivity extends StatelessWidget {
           onTap: () => onItemTap(item),
           borderRadius: BorderRadius.vertical(
             top: i == 0 ? const Radius.circular(14) : Radius.zero,
-            bottom: i == items.length - 1 ? const Radius.circular(14) : Radius.zero,
+            bottom: i == items.length - 1
+                ? const Radius.circular(14)
+                : Radius.zero,
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 11.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 14.0,
+              vertical: 11.0,
+            ),
             child: Row(
               children: [
                 // Icon container
@@ -127,7 +127,9 @@ class DashboardRecentActivity extends StatelessWidget {
                   ),
                   child: Icon(
                     item.icon,
-                    color: isInc ? AppColors.activeGreen : const Color(0xFF4A5568),
+                    color: isInc
+                        ? AppColors.activeGreen
+                        : const Color(0xFF4A5568),
                     size: 17,
                   ),
                 ),
@@ -165,7 +167,9 @@ class DashboardRecentActivity extends StatelessWidget {
                   style: GoogleFonts.workSans(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w700,
-                    color: isInc ? AppColors.activeGreen : AppColors.expensePink,
+                    color: isInc
+                        ? AppColors.activeGreen
+                        : AppColors.expensePink,
                   ),
                 ),
               ],

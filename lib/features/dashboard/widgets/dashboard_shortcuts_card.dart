@@ -21,7 +21,11 @@ class DashboardShortcutsCard extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(top: 4.0),
-              child: Icon(Icons.account_balance_wallet_outlined, size: 18, color: activeGreen),
+              child: Icon(
+                Icons.account_balance_wallet_outlined,
+                size: 18,
+                color: activeGreen,
+              ),
             ),
             Positioned(
               top: 0,
@@ -30,16 +34,28 @@ class DashboardShortcutsCard extends StatelessWidget {
           ],
         );
       case 'income':
-        return const Icon(Icons.payments_outlined, size: 20, color: activeGreen);
+        return const Icon(
+          Icons.payments_outlined,
+          size: 20,
+          color: activeGreen,
+        );
       case 'expense':
-        return const Icon(Icons.account_balance_wallet_outlined, size: 20, color: activeGreen);
+        return const Icon(
+          Icons.account_balance_wallet_outlined,
+          size: 20,
+          color: activeGreen,
+        );
       case 'payment_in':
         return const Stack(
           alignment: Alignment.center,
           children: [
             Padding(
               padding: EdgeInsets.only(top: 4.0),
-              child: Icon(Icons.account_balance_wallet_outlined, size: 18, color: activeGreen),
+              child: Icon(
+                Icons.account_balance_wallet_outlined,
+                size: 18,
+                color: activeGreen,
+              ),
             ),
             Positioned(
               top: 0,
@@ -48,7 +64,11 @@ class DashboardShortcutsCard extends StatelessWidget {
           ],
         );
       case 'add_party':
-        return const Icon(Icons.person_add_outlined, size: 20, color: activeGreen);
+        return const Icon(
+          Icons.person_add_outlined,
+          size: 20,
+          color: activeGreen,
+        );
       default:
         return const Icon(Icons.help_outline, size: 20, color: activeGreen);
     }
@@ -118,10 +138,7 @@ class DashboardShortcutsCard extends StatelessWidget {
                 offset: const Offset(0, 3),
               ),
             ],
-            border: Border.all(
-              color: const Color(0xFFF0F0F0),
-              width: 1,
-            ),
+            border: Border.all(color: const Color(0xFFF0F0F0), width: 1),
           ),
           child: activeShortcuts.isEmpty
               ? Center(
@@ -146,7 +163,9 @@ class DashboardShortcutsCard extends StatelessWidget {
   Widget _buildGrid(BuildContext context, List<ShortcutItem> activeShortcuts) {
     final List<List<ShortcutItem>> chunks = [];
     for (var i = 0; i < activeShortcuts.length; i += 3) {
-      final end = (i + 3 > activeShortcuts.length) ? activeShortcuts.length : i + 3;
+      final end = (i + 3 > activeShortcuts.length)
+          ? activeShortcuts.length
+          : i + 3;
       chunks.add(activeShortcuts.sublist(i, end));
     }
 
@@ -160,14 +179,17 @@ class DashboardShortcutsCard extends StatelessWidget {
               for (int colIndex = 0; colIndex < 3; colIndex++) ...[
                 if (colIndex < chunks[rowIndex].length)
                   Expanded(
-                    child: _buildShortcutItem(context, chunks[rowIndex][colIndex]),
+                    child: _buildShortcutItem(
+                      context,
+                      chunks[rowIndex][colIndex],
+                    ),
                   )
                 else
                   const Expanded(child: SizedBox()),
               ],
             ],
           ),
-        ]
+        ],
       ],
     );
   }
@@ -178,9 +200,7 @@ class DashboardShortcutsCard extends StatelessWidget {
         if (item.id == 'add_party') {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const AddPartyScreen(),
-            ),
+            MaterialPageRoute(builder: (context) => const AddPartyScreen()),
           );
         } else if (item.id == 'expense') {
           AddTransactionSheet.show(context: context, isIncome: false);
@@ -221,9 +241,7 @@ class DashboardShortcutsCard extends StatelessWidget {
               color: AppColors.activeGreen.withValues(alpha: 0.08),
               shape: BoxShape.circle,
             ),
-            child: Center(
-              child: _buildShortcutIcon(item.id),
-            ),
+            child: Center(child: _buildShortcutIcon(item.id)),
           ),
           const SizedBox(height: 6),
           // Label

@@ -23,10 +23,7 @@ class DailyDistributionChart extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(
-          color: AppColors.dividerColor,
-          width: 1.0,
-        ),
+        border: Border.all(color: AppColors.dividerColor, width: 1.0),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -81,7 +78,8 @@ class DailyDistributionChart extends StatelessWidget {
                   dataSource: data,
                   xValueMapper: (DailyChartData item, _) => item.timeLabel,
                   yValueMapper: (DailyChartData item, _) => item.value,
-                  pointColorMapper: (DailyChartData item, _) => item.isHighlighted
+                  pointColorMapper: (DailyChartData item, _) =>
+                      item.isHighlighted
                       ? AppColors.activeGreen
                       : AppColors.activeGreen.withValues(alpha: 0.3),
                   borderRadius: const BorderRadius.only(

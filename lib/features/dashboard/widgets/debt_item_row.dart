@@ -87,11 +87,7 @@ class DebtItemRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Icon(
-              Icons.check_circle_outline,
-              color: themeColor,
-              size: 24,
-            ),
+            Icon(Icons.check_circle_outline, color: themeColor, size: 24),
           ],
         ),
       ),
@@ -133,10 +129,7 @@ class DebtItemRow extends StatelessWidget {
                 left: 0,
                 top: 0,
                 bottom: 0,
-                child: Container(
-                  width: 4,
-                  color: themeColor,
-                ),
+                child: Container(width: 4, color: themeColor),
               ),
               ListTile(
                 contentPadding: const EdgeInsets.only(

@@ -71,9 +71,7 @@ class _PartyAvatarPickerState extends State<PartyAvatarPicker> {
                     ),
                   ],
                 ),
-                child: ClipOval(
-                  child: _buildAvatarImage(),
-                ),
+                child: ClipOval(child: _buildAvatarImage()),
               ),
               // Camera Icon Badge Overlay
               Positioned(
@@ -124,11 +122,7 @@ class _PartyAvatarPickerState extends State<PartyAvatarPicker> {
         height: 80,
       );
     } else {
-      return const Icon(
-        Icons.person_rounded,
-        color: Colors.white,
-        size: 44,
-      );
+      return const Icon(Icons.person_rounded, color: Colors.white, size: 44);
     }
   }
 }

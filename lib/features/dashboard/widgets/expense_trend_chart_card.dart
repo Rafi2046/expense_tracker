@@ -151,7 +151,10 @@ class ExpenseTrendChartCard extends StatelessWidget {
                 majorGridLines: const MajorGridLines(
                   width: 1,
                   color: Color(0xFFEEEEEE),
-                  dashArray: <double>[4, 4], // Dashed grid lines as in screenshots
+                  dashArray: <double>[
+                    4,
+                    4,
+                  ], // Dashed grid lines as in screenshots
                 ),
                 axisLine: const AxisLine(width: 0),
                 majorTickLines: const MajorTickLines(width: 0),
@@ -188,7 +191,8 @@ class ExpenseTrendChartCard extends StatelessWidget {
                   dataSource: chartData,
                   xValueMapper: (ExpenseChartData item, _) => item.label,
                   yValueMapper: (ExpenseChartData item, _) => item.value,
-                  pointColorMapper: (ExpenseChartData item, _) => item.isHighlighted
+                  pointColorMapper: (ExpenseChartData item, _) =>
+                      item.isHighlighted
                       ? AppColors.expensePink
                       : AppColors.expensePink.withValues(alpha: 0.3),
                   borderRadius: const BorderRadius.only(

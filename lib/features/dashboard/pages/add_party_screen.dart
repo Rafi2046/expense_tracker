@@ -59,10 +59,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
         centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: const Color(0xFFF1F1F1),
-            height: 1.0,
-          ),
+          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
         ),
       ),
       body: SafeArea(
@@ -70,7 +67,10 @@ class _AddPartyFormState extends State<AddPartyForm> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 12.0,
+                ),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -92,7 +92,10 @@ class _AddPartyFormState extends State<AddPartyForm> {
                         decoration: InputDecoration(
                           hintText: 'Party Name',
                           hintStyle: AppTextStyles.partyFormHint,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           filled: true,
                           fillColor: Colors.white,
                           border: OutlineInputBorder(
@@ -105,7 +108,10 @@ class _AddPartyFormState extends State<AddPartyForm> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.activeGreen, width: 1.5),
+                            borderSide: const BorderSide(
+                              color: AppColors.activeGreen,
+                              width: 1.5,
+                            ),
                           ),
                         ),
                         validator: (value) {
@@ -119,15 +125,16 @@ class _AddPartyFormState extends State<AddPartyForm> {
                       // Progressive Disclosure Form Animation (Secondary inputs slide/fade in)
                       AnimatedSwitcher(
                         duration: const Duration(milliseconds: 300),
-                        transitionBuilder: (Widget child, Animation<double> animation) {
-                          return SizeTransition(
-                            sizeFactor: animation,
-                            child: FadeTransition(
-                              opacity: animation,
-                              child: child,
-                            ),
-                          );
-                        },
+                        transitionBuilder:
+                            (Widget child, Animation<double> animation) {
+                              return SizeTransition(
+                                sizeFactor: animation,
+                                child: FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                ),
+                              );
+                            },
                         child: provider.isNameNotEmpty
                             ? Column(
                                 key: const ValueKey('expanded_inputs'),
@@ -141,20 +148,31 @@ class _AddPartyFormState extends State<AddPartyForm> {
                                     decoration: InputDecoration(
                                       hintText: 'Phone Number',
                                       hintStyle: AppTextStyles.partyFormHint,
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 12,
+                                          ),
                                       filled: true,
                                       fillColor: Colors.white,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(color: Colors.grey.shade100),
+                                        borderSide: BorderSide(
+                                          color: Colors.grey.shade100,
+                                        ),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(color: Colors.grey.shade200),
+                                        borderSide: BorderSide(
+                                          color: Colors.grey.shade200,
+                                        ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(color: AppColors.activeGreen, width: 1.5),
+                                        borderSide: const BorderSide(
+                                          color: AppColors.activeGreen,
+                                          width: 1.5,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -174,21 +192,32 @@ class _AddPartyFormState extends State<AddPartyForm> {
                                     duration: const Duration(milliseconds: 200),
                                     child: provider.activeTabIndex == 0
                                         ? CreditInfoForm(
-                                            key: const ValueKey('credit_info_tab'),
-                                            balanceController: provider.balanceController,
-                                            dateController: provider.dateController,
+                                            key: const ValueKey(
+                                              'credit_info_tab',
+                                            ),
+                                            balanceController:
+                                                provider.balanceController,
+                                            dateController:
+                                                provider.dateController,
                                             isReceive: provider.isReceive,
-                                            currencySymbol: context.currencySymbol,
+                                            currencySymbol:
+                                                context.currencySymbol,
                                             onToggleChanged: (value) {
                                               provider.setReceive(value);
                                             },
-                                            onSelectDate: () => provider.selectDate(context),
+                                            onSelectDate: () =>
+                                                provider.selectDate(context),
                                           )
                                         : AdditionalDetailsForm(
-                                            key: const ValueKey('additional_details_tab'),
-                                            emailController: provider.emailController,
-                                            addressController: provider.addressController,
-                                            vatController: provider.vatController,
+                                            key: const ValueKey(
+                                              'additional_details_tab',
+                                            ),
+                                            emailController:
+                                                provider.emailController,
+                                            addressController:
+                                                provider.addressController,
+                                            vatController:
+                                                provider.vatController,
                                           ),
                                   ),
                                 ],
@@ -203,12 +232,17 @@ class _AddPartyFormState extends State<AddPartyForm> {
 
             // Bottom Save Button
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 12.0,
+              ),
               child: SizedBox(
                 width: double.infinity,
                 height: 48,
                 child: MouseRegion(
-                  cursor: provider.isNameNotEmpty ? SystemMouseCursors.click : SystemMouseCursors.basic,
+                  cursor: provider.isNameNotEmpty
+                      ? SystemMouseCursors.click
+                      : SystemMouseCursors.basic,
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     child: ElevatedButton(
@@ -217,7 +251,9 @@ class _AddPartyFormState extends State<AddPartyForm> {
                             ? AppColors.activeGreen
                             : const Color(0xFFF1F2F4),
                         elevation: provider.isNameNotEmpty ? 1.5 : 0,
-                        shadowColor: AppColors.activeGreen.withValues(alpha: 0.25),
+                        shadowColor: AppColors.activeGreen.withValues(
+                          alpha: 0.25,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

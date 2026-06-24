@@ -31,7 +31,10 @@ class CategoryInputRow extends StatelessWidget {
               controller: controller,
               decoration: InputDecoration(
                 hintText: 'Add new category...',
-                hintStyle: GoogleFonts.workSans(color: Colors.grey.shade400, fontSize: 14),
+                hintStyle: GoogleFonts.workSans(
+                  color: Colors.grey.shade400,
+                  fontSize: 14,
+                ),
                 border: InputBorder.none,
               ),
               onSubmitted: onSubmitted,

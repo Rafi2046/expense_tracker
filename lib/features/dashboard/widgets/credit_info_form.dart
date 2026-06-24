@@ -34,7 +34,9 @@ class CreditInfoForm extends StatelessWidget {
               child: TextFormField(
                 controller: balanceController,
                 style: AppTextStyles.partyFormInput,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: InputDecoration(
                   hintText: 'Opening Balance',
                   hintStyle: AppTextStyles.partyFormHint,
@@ -43,7 +45,10 @@ class CreditInfoForm extends StatelessWidget {
                     color: Colors.black54,
                     fontWeight: FontWeight.w600,
                   ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -56,7 +61,10 @@ class CreditInfoForm extends StatelessWidget {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.activeGreen, width: 1.5),
+                    borderSide: const BorderSide(
+                      color: AppColors.activeGreen,
+                      width: 1.5,
+                    ),
                   ),
                 ),
               ),
@@ -77,7 +85,10 @@ class CreditInfoForm extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   filled: true,
                   fillColor: Colors.white,
                   suffixIcon: Icon(
@@ -95,7 +106,10 @@ class CreditInfoForm extends StatelessWidget {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.activeGreen, width: 1.5),
+                    borderSide: const BorderSide(
+                      color: AppColors.activeGreen,
+                      width: 1.5,
+                    ),
                   ),
                 ),
               ),

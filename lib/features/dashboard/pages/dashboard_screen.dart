@@ -1,24 +1,27 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/providers/profile_provider.dart';
-import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/providers/profile_provider.dart';
+import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/appbar_widget.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/dashboard/pages/expense_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/income_insights_screen.dart';
-import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/notifications_screen.dart';
-import 'package:expense_tracker/core/providers/language_provider.dart';
-import 'package:expense_tracker/features/dashboard/pages/to_receive_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/to_give_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/to_receive_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_budget_status.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_recent_activity.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_shortcuts_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_spending_categories.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_stat_card.dart';
+import 'package:expense_tracker/features/reports/pages/view_reports_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -29,6 +32,38 @@ class DashboardScreen extends StatelessWidget {
     final profileProvider = context.watch<ProfileProvider>();
     final currentProfile = profileProvider.currentProfile;
     final debtProvider = context.watch<DebtProvider>();
+    final txProvider = context.watch<TransactionProvider>();
+
+    // Calculate Cash Balance and Bank Balance dynamically
+    double cashBalance = 0.0;
+    double bankBalance = 0.0;
+
+    for (var tx in txProvider.transactions) {
+      if (tx.paymentMethod == 'Cash') {
+        if (tx.isIncome) {
+          cashBalance += tx.amount;
+        } else {
+          cashBalance -= tx.amount;
+        }
+      } else if (tx.paymentMethod == 'Bank') {
+        if (tx.isIncome) {
+          bankBalance += tx.amount;
+        } else {
+          bankBalance -= tx.amount;
+        }
+      }
+    }
+
+    for (var d in debtProvider.items) {
+      if (d.isReceive) {
+        cashBalance += d.amount;
+      } else {
+        cashBalance -= d.amount;
+      }
+    }
+
+    final double totalBalance = cashBalance + bankBalance;
+    final String currentMonthName = DateFormat('MMMM').format(DateTime.now());
 
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.userChanges(),
@@ -44,197 +79,295 @@ class DashboardScreen extends StatelessWidget {
           appBar: HomepageAppbarWidget(
             name: currentProfile.name,
             profilePhoto: photoUrl,
-        onProfileTap: () {
-          ProfileSwitchSheet.show(
-            context: context,
-            currentProfileId: currentProfile.id,
-            profiles: profileProvider.profiles,
-            onProfileSelected: (selectedProfile) {
-              profileProvider.selectProfile(selectedProfile);
+            onProfileTap: () {
+              ProfileSwitchSheet.show(
+                context: context,
+                currentProfileId: currentProfile.id,
+                profiles: profileProvider.profiles,
+                onProfileSelected: (selectedProfile) {
+                  profileProvider.selectProfile(selectedProfile);
+                },
+                onCreateNewTap: () async {
+                  final newProfile = await Navigator.push<UserProfile>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SelectProfileScreen(),
+                    ),
+                  );
+                  if (newProfile != null) {
+                    profileProvider.addProfile(newProfile);
+                  }
+                },
+              );
             },
-            onCreateNewTap: () async {
-              final newProfile = await Navigator.push<UserProfile>(
+            notificationOnTap: () {
+              Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const SelectProfileScreen(),
+                  builder: (context) => const NotificationsScreen(),
                 ),
               );
-              if (newProfile != null) {
-                profileProvider.addProfile(newProfile);
-              }
             },
-          );
-        },
-        notificationOnTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const NotificationsScreen(),
-            ),
-          );
-        },
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: DashboardStatCard(
-                        title: context.translate('income'),
-                        value: context.formatAmount(5240),
-                        percentageText: '+12%',
-                        isPositive: true,
-                        isTrend: true,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const IncomeInsightsScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: DashboardStatCard(
-                        title: context.translate('expense'),
-                        value: context.formatAmount(2180),
-                        percentageText: '-5%',
-                        isPositive: false,
-                        isTrend: true,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ExpenseInsightsScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: DashboardStatCard(
-                        title: context.translate('to_receive'),
-                        value: context.formatAmount(debtProvider.totalToReceive),
-                        statusText: '${debtProvider.toReceiveUnpaid.length} ${context.translate('pending')}',
-                        isPositive: true,
-                        isTrend: false,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ToReceiveScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: DashboardStatCard(
-                        title: context.translate('to_give'),
-                        value: context.formatAmount(debtProvider.totalToGive),
-                        statusText: '${debtProvider.toGiveUnpaid.length} ${context.translate('pending')}',
-                        isPositive: false,
-                        isTrend: false,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ToGiveScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              const DashboardShortcutsCard(),
-              const SizedBox(height: 24),
-              DashboardRecentActivity(
-                items: [
-                  RecentActivityItem(
-                    title: 'Apple Store',
-                    category: 'Electronics',
-                    timeText: context.translate('today'),
-                    amount: 199.00,
-                    isIncome: false,
-                    icon: Icons.shopping_bag_outlined,
-                  ),
-                  RecentActivityItem(
-                    title: 'Wild Ginger',
-                    category: 'Food',
-                    timeText: context.translate('yesterday'),
-                    amount: 42.50,
-                    isIncome: false,
-                    icon: Icons.restaurant,
-                  ),
-                  RecentActivityItem(
-                    title: 'Monthly Salary',
-                    category: 'Income',
-                    timeText: '2 ${context.translate('days_ago')}',
-                    amount: 4200.00,
-                    isIncome: true,
-                    icon: Icons.payments_outlined,
-                  ),
-                ],
-                onViewAllTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Recent Activity View All clicked'),
-                    ),
-                  );
-                },
-                onItemTap: (item) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Tapped activity: ${item.title}')),
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-              const DashboardSpendingCategories(
-                categoryName: 'Food',
-                percentage: 42,
-              ),
-              const SizedBox(height: 20),
-              DashboardBudgetStatus(
-                items: [
-                  BudgetStatusItem(
-                    categoryName: 'Entertainment',
-                    percentage: 80,
-                    color: AppColors.expensePink,
-                  ),
-                  BudgetStatusItem(
-                    categoryName: 'Utilities',
-                    percentage: 45,
-                    color: AppColors.activeGreen,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 80),
-            ],
           ),
-        ),
-      ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Row 1: Income and Expense Card
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: DashboardStatCard(
+                            title:
+                                '${context.translate('income')} ($currentMonthName)',
+                            value: context.formatAmount(
+                              txProvider.monthlyIncome,
+                            ),
+                            percentageText: '+12%',
+                            isPositive: true,
+                            isTrend: true,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const IncomeInsightsScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: DashboardStatCard(
+                            title:
+                                '${context.translate('expense')} ($currentMonthName)',
+                            value: context.formatAmount(
+                              txProvider.monthlyExpense,
+                            ),
+                            percentageText: '-5%',
+                            isPositive: false,
+                            isTrend: true,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ExpenseInsightsScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Row 2: To Receive and To Give Card
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: DashboardStatCard(
+                            title: context.translate('to_receive'),
+                            value: context.formatAmount(
+                              debtProvider.totalToReceive,
+                            ),
+                            statusText:
+                                '${debtProvider.toReceiveUnpaid.length} ${context.translate('pending')}',
+                            isPositive: true,
+                            isTrend: false,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ToReceiveScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: DashboardStatCard(
+                            title: context.translate('to_give'),
+                            value: context.formatAmount(
+                              debtProvider.totalToGive,
+                            ),
+                            statusText:
+                                '${debtProvider.toGiveUnpaid.length} ${context.translate('pending')}',
+                            isPositive: false,
+                            isTrend: false,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ToGiveScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Row 3: Total Balance and Reports Card
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: DashboardStatCard(
+                            title:
+                                '${context.translate('cash')} & ${context.translate('bank')}',
+                            value: context.translate('total_balance'),
+                            statusText: context.formatAmount(totalBalance),
+                            isPositive: true,
+                            isTrend: false,
+                            onTap: () {
+                              // Tapping "Total Balance" expands or shows a breakdown dialog
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Account Balance Detail'),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Cash In Hand: ${context.formatAmount(cashBalance)}',
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Bank Account: ${context.formatAmount(bankBalance)}',
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      const Divider(),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Net Balance: ${context.formatAmount(totalBalance)}',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('Close'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: DashboardStatCard(
+                            title: 'Transactions, Parties, In...',
+                            value: context.translate('reports'),
+                            isPositive: true,
+                            isTrend: false,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ViewReportsScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  const DashboardShortcutsCard(),
+                  const SizedBox(height: 24),
+                  DashboardRecentActivity(
+                    items: [
+                      RecentActivityItem(
+                        title: 'Apple Store',
+                        category: 'Electronics',
+                        timeText: 'Today',
+                        amount: 199.00,
+                        isIncome: false,
+                        icon: Icons.shopping_bag_outlined,
+                      ),
+                      RecentActivityItem(
+                        title: 'Wild Ginger',
+                        category: 'Food',
+                        timeText: 'Yesterday',
+                        amount: 42.50,
+                        isIncome: false,
+                        icon: Icons.restaurant,
+                      ),
+                      RecentActivityItem(
+                        title: 'Monthly Salary',
+                        category: 'Income',
+                        timeText: '2 days ago',
+                        amount: 4200.00,
+                        isIncome: true,
+                        icon: Icons.payments_outlined,
+                      ),
+                    ],
+                    onViewAllTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Recent Activity View All clicked'),
+                        ),
+                      );
+                    },
+                    onItemTap: (item) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Tapped activity: ${item.title}'),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  const DashboardSpendingCategories(
+                    categoryName: 'Food',
+                    percentage: 42,
+                  ),
+                  const SizedBox(height: 20),
+                  DashboardBudgetStatus(
+                    items: [
+                      BudgetStatusItem(
+                        categoryName: 'Entertainment',
+                        percentage: 80,
+                        color: AppColors.expensePink,
+                      ),
+                      BudgetStatusItem(
+                        categoryName: 'Utilities',
+                        percentage: 45,
+                        color: AppColors.activeGreen,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 80),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
-  },
-);
-}
+  }
 }

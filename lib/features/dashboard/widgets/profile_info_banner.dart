@@ -16,11 +16,7 @@ class ProfileInfoBanner extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.info,
-            color: Color(0xFF565E74),
-            size: 20,
-          ),
+          const Icon(Icons.info, color: Color(0xFF565E74), size: 20),
           const SizedBox(width: 10),
           Expanded(
             child: Text(

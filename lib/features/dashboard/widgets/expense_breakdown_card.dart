@@ -97,11 +97,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                       color: item.iconBgColor,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
-                      item.icon,
-                      color: item.iconColor,
-                      size: 24,
-                    ),
+                    child: Icon(item.icon, color: item.iconColor, size: 24),
                   ),
                   const SizedBox(width: 16),
 

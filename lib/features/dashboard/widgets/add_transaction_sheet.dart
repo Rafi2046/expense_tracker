@@ -11,15 +11,9 @@ import 'package:provider/provider.dart';
 class AddTransactionSheet extends StatefulWidget {
   final bool isIncome;
 
-  const AddTransactionSheet({
-    super.key,
-    required this.isIncome,
-  });
+  const AddTransactionSheet({super.key, required this.isIncome});
 
-  static void show({
-    required BuildContext context,
-    required bool isIncome,
-  }) {
+  static void show({required BuildContext context, required bool isIncome}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -65,7 +59,9 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: widget.isIncome ? AppColors.buttonColor : AppColors.activeRed,
+              primary: widget.isIncome
+                  ? AppColors.buttonColor
+                  : AppColors.activeRed,
               onPrimary: Colors.white,
               onSurface: Colors.black87,
             ),
@@ -129,10 +125,8 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 child: ListView.separated(
                   shrinkWrap: true,
                   itemCount: months.length,
-                  separatorBuilder: (context, index) => const Divider(
-                    color: Color(0xFFF5F5F5),
-                    height: 1,
-                  ),
+                  separatorBuilder: (context, index) =>
+                      const Divider(color: Color(0xFFF5F5F5), height: 1),
                   itemBuilder: (context, index) {
                     final monthDate = months[index];
                     final label = DateFormat('MMMM yyyy').format(monthDate);
@@ -144,12 +138,17 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                         label,
                         style: GoogleFonts.workSans(
                           fontSize: 15,
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.w400,
                           color: Colors.black87,
                         ),
                       ),
                       trailing: isSelected
-                          ? const Icon(Icons.check_circle, color: AppColors.activeGreen)
+                          ? const Icon(
+                              Icons.check_circle,
+                              color: AppColors.activeGreen,
+                            )
                           : null,
                       onTap: () {
                         setState(() {
@@ -171,7 +170,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
 
   void _save(BuildContext context) {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (_selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -221,7 +220,9 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
             ),
           ],
         ),
-        backgroundColor: widget.isIncome ? AppColors.activeGreen : AppColors.activeRed,
+        backgroundColor: widget.isIncome
+            ? AppColors.activeGreen
+            : AppColors.activeRed,
         duration: const Duration(seconds: 3),
       ),
     );
@@ -229,8 +230,12 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = widget.isIncome ? AppColors.buttonColor : AppColors.activeRed;
-    final secondaryThemeColor = widget.isIncome ? AppColors.activeGreen : AppColors.activeRed;
+    final themeColor = widget.isIncome
+        ? AppColors.buttonColor
+        : AppColors.activeRed;
+    final secondaryThemeColor = widget.isIncome
+        ? AppColors.activeGreen
+        : AppColors.activeRed;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -252,198 +257,228 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-              // Drag handle
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Title Row
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    widget.isIncome ? 'Add Income' : 'Add Expense',
-                    style: GoogleFonts.workSans(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                // Drag handle
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(Icons.close, size: 20, color: Colors.grey.shade600),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-
-              // Large Amount Input
-              Center(
-                child: SizedBox(
-                  width: 260,
-                  child: TextFormField(
-                    controller: _amountController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.workSans(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
-                      color: themeColor,
-                    ),
-                    decoration: InputDecoration(
-                      prefixText: '${context.currencySymbol} ',
-                      prefixStyle: GoogleFonts.workSans(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: themeColor.withValues(alpha: 0.6),
-                      ),
-                      hintText: '0.00',
-                      hintStyle: GoogleFonts.workSans(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey.shade300,
-                      ),
-                      border: InputBorder.none,
-                    ),
-                    validator: (val) {
-                      if (val == null || val.trim().isEmpty) {
-                        return 'Enter an amount';
-                      }
-                      if (double.tryParse(val) == null) {
-                        return 'Enter a valid number';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Divider
-              Divider(color: Colors.grey.shade100, height: 1),
-              const SizedBox(height: 20),
-
-              // Category Selector Tile
-              TransactionSelectorTile(
-                leadingIcon: Icons.category_outlined,
-                labelText: 'Category',
-                valueText: _selectedCategory ?? 'Select Category',
-                isValueSelected: _selectedCategory != null,
-                themeColor: secondaryThemeColor,
-                trailingIcon: Icons.arrow_forward_ios_rounded,
-                onTap: () {
-                  SelectCategorySheet.show(
-                    context: context,
-                    isIncome: widget.isIncome,
-                    selectedCategory: _selectedCategory,
-                    onCategorySelected: (cat) {
-                      setState(() {
-                        _selectedCategory = cat;
-                      });
-                    },
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Date Selector Tile
-              TransactionSelectorTile(
-                leadingIcon: Icons.calendar_today_outlined,
-                labelText: 'Date',
-                valueText: DateFormat('EEEE, MMM d, yyyy').format(_selectedDate),
-                isValueSelected: true,
-                themeColor: secondaryThemeColor,
-                trailingIcon: Icons.edit_calendar_outlined,
-                onTap: () => _selectDate(context),
-              ),
-              const SizedBox(height: 16),
-
-              // Income Month Selector Tile (Only for income)
-              if (widget.isIncome) ...[
-                TransactionSelectorTile(
-                  leadingIcon: Icons.calendar_month_outlined,
-                  labelText: 'Income Month',
-                  valueText: _selectedIncomeMonth ?? 'Select Month',
-                  isValueSelected: _selectedIncomeMonth != null,
-                  themeColor: secondaryThemeColor,
-                  trailingIcon: Icons.arrow_forward_ios_rounded,
-                  onTap: () => _showMonthSelector(context),
                 ),
                 const SizedBox(height: 16),
+
+                // Title Row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.isIncome ? 'Add Income' : 'Add Expense',
+                      style: GoogleFonts.workSans(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.close,
+                          size: 20,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                // Large Amount Input
+                Center(
+                  child: SizedBox(
+                    width: 260,
+                    child: TextFormField(
+                      controller: _amountController,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.workSans(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: themeColor,
+                      ),
+                      decoration: InputDecoration(
+                        prefixText: '${context.currencySymbol} ',
+                        prefixStyle: GoogleFonts.workSans(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: themeColor.withValues(alpha: 0.6),
+                        ),
+                        hintText: '0.00',
+                        hintStyle: GoogleFonts.workSans(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey.shade300,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                      validator: (val) {
+                        if (val == null || val.trim().isEmpty) {
+                          return 'Enter an amount';
+                        }
+                        if (double.tryParse(val) == null) {
+                          return 'Enter a valid number';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Divider
+                Divider(color: Colors.grey.shade100, height: 1),
+                const SizedBox(height: 20),
+
+                // Category Selector Tile
+                TransactionSelectorTile(
+                  leadingIcon: Icons.category_outlined,
+                  labelText: 'Category',
+                  valueText: _selectedCategory ?? 'Select Category',
+                  isValueSelected: _selectedCategory != null,
+                  themeColor: secondaryThemeColor,
+                  trailingIcon: Icons.arrow_forward_ios_rounded,
+                  onTap: () {
+                    SelectCategorySheet.show(
+                      context: context,
+                      isIncome: widget.isIncome,
+                      selectedCategory: _selectedCategory,
+                      onCategorySelected: (cat) {
+                        setState(() {
+                          _selectedCategory = cat;
+                        });
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                // Date Selector Tile
+                TransactionSelectorTile(
+                  leadingIcon: Icons.calendar_today_outlined,
+                  labelText: 'Date',
+                  valueText: DateFormat(
+                    'EEEE, MMM d, yyyy',
+                  ).format(_selectedDate),
+                  isValueSelected: true,
+                  themeColor: secondaryThemeColor,
+                  trailingIcon: Icons.edit_calendar_outlined,
+                  onTap: () => _selectDate(context),
+                ),
+                const SizedBox(height: 16),
+
+                // Income Month Selector Tile (Only for income)
+                if (widget.isIncome) ...[
+                  TransactionSelectorTile(
+                    leadingIcon: Icons.calendar_month_outlined,
+                    labelText: 'Income Month',
+                    valueText: _selectedIncomeMonth ?? 'Select Month',
+                    isValueSelected: _selectedIncomeMonth != null,
+                    themeColor: secondaryThemeColor,
+                    trailingIcon: Icons.arrow_forward_ios_rounded,
+                    onTap: () => _showMonthSelector(context),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+
+                // Note/Memo Input Field
+                TextFormField(
+                  controller: _noteController,
+                  maxLines: 2,
+                  style: GoogleFonts.workSans(
+                    fontSize: 15,
+                    color: Colors.black87,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Add a note/detail (optional)...',
+                    hintStyle: GoogleFonts.workSans(
+                      fontSize: 15,
+                      color: Colors.grey.shade400,
+                    ),
+                    prefixIcon: Icon(
+                      Icons.notes_rounded,
+                      color: Colors.grey.shade400,
+                      size: 22,
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey.shade50,
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 14,
+                      horizontal: 16,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Colors.grey.shade100,
+                        width: 1,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Colors.grey.shade100,
+                        width: 1,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: secondaryThemeColor,
+                        width: 1.5,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Solid Save Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: themeColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      elevation: 1,
+                    ),
+                    onPressed: () => _save(context),
+                    child: Text(
+                      widget.isIncome ? 'Save Income' : 'Save Expense',
+                      style: GoogleFonts.workSans(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
               ],
-
-              // Note/Memo Input Field
-              TextFormField(
-                controller: _noteController,
-                maxLines: 2,
-                style: GoogleFonts.workSans(fontSize: 15, color: Colors.black87),
-                decoration: InputDecoration(
-                  hintText: 'Add a note/detail (optional)...',
-                  hintStyle: GoogleFonts.workSans(fontSize: 15, color: Colors.grey.shade400),
-                  prefixIcon: Icon(Icons.notes_rounded, color: Colors.grey.shade400, size: 22),
-                  filled: true,
-                  fillColor: Colors.grey.shade50,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.shade100, width: 1),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey.shade100, width: 1),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: secondaryThemeColor, width: 1.5),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Solid Save Button
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: themeColor,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    elevation: 1,
-                  ),
-                  onPressed: () => _save(context),
-                  child: Text(
-                    widget.isIncome ? 'Save Income' : 'Save Expense',
-                    style: GoogleFonts.workSans(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-            ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

@@ -30,7 +30,10 @@ class CategoryListRow extends StatelessWidget {
             onTap: onTap,
             borderRadius: BorderRadius.circular(10),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(
+                vertical: 12.0,
+                horizontal: 8.0,
+              ),
               child: Row(
                 children: [
                   if (showLeadingIcon) ...[
@@ -43,7 +46,9 @@ class CategoryListRow extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.workSans(
                         fontSize: 15,
-                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.w400,
                         color: Colors.black87,
                       ),
                     ),

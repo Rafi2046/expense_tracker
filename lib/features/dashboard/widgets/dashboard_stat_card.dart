@@ -9,6 +9,7 @@ class DashboardStatCard extends StatelessWidget {
   final String? percentageText;
   final bool isPositive;
   final bool isTrend;
+  final Color? textColor;
   final VoidCallback? onTap;
 
   const DashboardStatCard({
@@ -19,6 +20,7 @@ class DashboardStatCard extends StatelessWidget {
     this.percentageText,
     required this.isPositive,
     required this.isTrend,
+    this.textColor,
     this.onTap,
   });
 
@@ -39,17 +41,30 @@ class DashboardStatCard extends StatelessWidget {
         ),
         child: Stack(
           children: [
+            // Scaled-down top-right corner color block with arrow icon
             Positioned(
               top: 0,
               right: 0,
               child: Container(
-                width: 32,
-                height: 32,
+                width: 24,
+                height: 24,
                 decoration: BoxDecoration(
                   color: cornerColor,
                   borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(15),
-                    bottomLeft: Radius.circular(32),
+                    bottomLeft: Radius.circular(24),
+                  ),
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 4, bottom: 4),
+                    child: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 8,
+                      color: isPositive
+                          ? AppColors.activeGreen
+                          : AppColors.activeRed,
+                    ),
                   ),
                 ),
               ),
@@ -57,30 +72,43 @@ class DashboardStatCard extends StatelessWidget {
 
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 12.0,
+                horizontal: 12.0,
+                vertical: 10.0,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title.toUpperCase(),
-                    style: AppTextStyles.cardTitle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
+                  // Value (Large Text) on Top - scaled from 22 to 17
                   FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: Text(
                       value,
-                      style: isPositive
-                          ? AppTextStyles.cardValueGreen
-                          : AppTextStyles.cardValueRed,
+                      style:
+                          (isPositive
+                                  ? AppTextStyles.cardValueGreen
+                                  : AppTextStyles.cardValueRed)
+                              .copyWith(fontSize: 17, color: textColor),
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 2), // reduced from 4
+                  // Title (Small Mixed Case Text) on Bottom - scaled from 12 to 10.5
+                  Text(
+                    title,
+                    style: AppTextStyles.cardTitle.copyWith(
+                      fontSize: 10.5,
+                      color: AppColors.textMuted,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.1,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  // Trend / Status indicator if present
+                  if ((isTrend && percentageText != null) ||
+                      (!isTrend && statusText != null))
+                    const SizedBox(height: 4), // reduced from 6
                   if (isTrend && percentageText != null)
                     Row(
                       mainAxisSize: MainAxisSize.min,
@@ -90,15 +118,19 @@ class DashboardStatCard extends StatelessWidget {
                           color: isPositive
                               ? AppColors.activeGreen
                               : AppColors.activeRed,
-                          size: 16,
+                          size: 13, // reduced from 16
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: 3),
                         Flexible(
                           child: Text(
                             percentageText!,
-                            style: isPositive
-                                ? AppTextStyles.cardTrendGreen
-                                : AppTextStyles.cardTrendRed,
+                            style:
+                                (isPositive
+                                        ? AppTextStyles.cardTrendGreen
+                                        : AppTextStyles.cardTrendRed)
+                                    .copyWith(
+                                      fontSize: 10.5, // reduced from 13
+                                    ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -108,7 +140,9 @@ class DashboardStatCard extends StatelessWidget {
                   else if (!isTrend && statusText != null)
                     Text(
                       statusText!,
-                      style: AppTextStyles.cardStatusText,
+                      style: AppTextStyles.cardStatusText.copyWith(
+                        fontSize: 10.5, // reduced from 13
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

@@ -30,7 +30,10 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
   void initState() {
     super.initState();
     // Read the current shortcuts from Provider and make a copy
-    final shortcutProvider = Provider.of<ShortcutProvider>(context, listen: false);
+    final shortcutProvider = Provider.of<ShortcutProvider>(
+      context,
+      listen: false,
+    );
     _draftShortcuts = List.from(shortcutProvider.shortcuts);
   }
 
@@ -43,7 +46,11 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
           children: [
             Padding(
               padding: EdgeInsets.only(top: 5.0),
-              child: Icon(Icons.account_balance_wallet_outlined, size: 20, color: activeGreen),
+              child: Icon(
+                Icons.account_balance_wallet_outlined,
+                size: 20,
+                color: activeGreen,
+              ),
             ),
             Positioned(
               top: 0,
@@ -52,16 +59,28 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
           ],
         );
       case 'income':
-        return const Icon(Icons.payments_outlined, size: 22, color: activeGreen);
+        return const Icon(
+          Icons.payments_outlined,
+          size: 22,
+          color: activeGreen,
+        );
       case 'expense':
-        return const Icon(Icons.account_balance_wallet_outlined, size: 22, color: activeGreen);
+        return const Icon(
+          Icons.account_balance_wallet_outlined,
+          size: 22,
+          color: activeGreen,
+        );
       case 'payment_in':
         return const Stack(
           alignment: Alignment.center,
           children: [
             Padding(
               padding: EdgeInsets.only(top: 5.0),
-              child: Icon(Icons.account_balance_wallet_outlined, size: 20, color: activeGreen),
+              child: Icon(
+                Icons.account_balance_wallet_outlined,
+                size: 20,
+                color: activeGreen,
+              ),
             ),
             Positioned(
               top: 0,
@@ -70,7 +89,11 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
           ],
         );
       case 'add_party':
-        return const Icon(Icons.person_add_outlined, size: 22, color: activeGreen);
+        return const Icon(
+          Icons.person_add_outlined,
+          size: 22,
+          color: activeGreen,
+        );
       default:
         return const Icon(Icons.help_outline, size: 22, color: activeGreen);
     }
@@ -104,7 +127,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
               ),
             ),
           ),
-          
+
           // Header title
           Text(
             'Edit Quick Actions',
@@ -116,11 +139,12 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Reorderable list
           Theme(
             data: theme.copyWith(
-              canvasColor: Colors.transparent, // Prevents default background shadow during drag
+              canvasColor: Colors
+                  .transparent, // Prevents default background shadow during drag
             ),
             child: ReorderableListView.builder(
               shrinkWrap: true,
@@ -141,7 +165,10 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                 return Container(
                   key: ValueKey(item.id),
                   margin: const EdgeInsets.symmetric(vertical: 6),
-                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 4,
+                    horizontal: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -153,7 +180,10 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                       ReorderableDragStartListener(
                         index: index,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 8,
+                          ),
                           child: Icon(
                             Icons.drag_indicator_rounded,
                             color: Colors.grey.shade400,
@@ -162,7 +192,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      
+
                       // Circle icon background
                       Container(
                         width: 40,
@@ -171,12 +201,10 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                           color: Color(0xFFE8F8F5),
                           shape: BoxShape.circle,
                         ),
-                        child: Center(
-                          child: _buildShortcutIcon(item.id),
-                        ),
+                        child: Center(child: _buildShortcutIcon(item.id)),
                       ),
                       const SizedBox(width: 12),
-                      
+
                       // Label
                       Expanded(
                         child: Text(
@@ -189,7 +217,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                           ),
                         ),
                       ),
-                      
+
                       // Checkbox styled or Locked Icon
                       if (item.id == 'add_party')
                         const Padding(
@@ -213,7 +241,9 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                           ),
                           onChanged: (val) {
                             setState(() {
-                              _draftShortcuts[index] = item.copyWith(isEnabled: val ?? false);
+                              _draftShortcuts[index] = item.copyWith(
+                                isEnabled: val ?? false,
+                              );
                             });
                           },
                         ),
@@ -224,7 +254,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
             ),
           ),
           const SizedBox(height: 24),
-          
+
           // Action buttons row
           Row(
             children: [
@@ -254,7 +284,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                 ),
               ),
               const SizedBox(width: 12),
-              
+
               // Save Button
               Expanded(
                 child: SizedBox(
@@ -262,7 +292,9 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                   child: ElevatedButton(
                     onPressed: () {
                       // Save draft state to Provider
-                      context.read<ShortcutProvider>().updateShortcuts(_draftShortcuts);
+                      context.read<ShortcutProvider>().updateShortcuts(
+                        _draftShortcuts,
+                      );
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(

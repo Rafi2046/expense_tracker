@@ -53,9 +53,9 @@ class LanguageProvider extends ChangeNotifier {
   }
 
   String translate(String key) {
-    return _localizedValues[_currentLanguageCode]?[key] ?? 
-           _localizedValues['en']?[key] ?? 
-           key;
+    return _localizedValues[_currentLanguageCode]?[key] ??
+        _localizedValues['en']?[key] ??
+        key;
   }
 }
 
@@ -67,6 +67,8 @@ extension TranslationExtension on BuildContext {
 
 const Map<String, Map<String, String>> _localizedValues = {
   'en': {
+    'cash': 'Cash',
+    'bank': 'Bank',
     'home': 'Home',
     'ledger': 'Ledger',
     'analytics': 'Analytics',
@@ -89,9 +91,11 @@ const Map<String, Map<String, String>> _localizedValues = {
     'management': 'Management',
     'manage_categories': 'Manage Categories',
     'view_reports': 'View Reports',
+    'reports': 'Reports',
     'select_language': 'Select Language',
     'no_notifications': 'No Notifications Yet !',
-    'all_caught_up': "You're all caught up! We'll notify you when somethings new comes up.",
+    'all_caught_up':
+        "You're all caught up! We'll notify you when somethings new comes up.",
     'add_income': 'Add Income',
     'add_expense': 'Add Expense',
     'category': 'Category',
@@ -208,6 +212,8 @@ const Map<String, Map<String, String>> _localizedValues = {
     'frequency_yearly': 'Yearly',
   },
   'bn': {
+    'cash': 'নগদ',
+    'bank': 'ব্যাংক',
     'home': 'হোম',
     'ledger': 'লেজার',
     'analytics': 'বিশ্লেষণ',
@@ -230,6 +236,7 @@ const Map<String, Map<String, String>> _localizedValues = {
     'management': 'ব্যবস্থাপনা',
     'manage_categories': 'ক্যাটাগরি পরিচালনা',
     'view_reports': 'রিপোর্ট দেখুন',
+    'reports': 'রিপোর্ট',
     'select_language': 'ভাষা নির্বাচন করুন',
     'no_notifications': 'কোন নোটিফিকেশন নেই!',
     'all_caught_up': 'আপনি সম্পূর্ণ আপডেট আছেন! নতুন কিছু আসলে জানানো হবে।',
@@ -349,6 +356,8 @@ const Map<String, Map<String, String>> _localizedValues = {
     'frequency_yearly': 'বার্ষিক',
   },
   'hi': {
+    'cash': 'नकद',
+    'bank': 'बैंक',
     'home': 'होम',
     'ledger': 'खाता बही',
     'analytics': 'विश्लेषण',
@@ -371,9 +380,11 @@ const Map<String, Map<String, String>> _localizedValues = {
     'management': 'प्रबंधन',
     'manage_categories': 'श्रेणियों का प्रबंधन',
     'view_reports': 'रिपोर्ट देखें',
+    'reports': 'रिपोर्ट',
     'select_language': 'भाषा चुनें',
     'no_notifications': 'अभी कोई सूचना नहीं!',
-    'all_caught_up': 'आप पूरी तरह से अपडेट हैं! कुछ नया आने पर हम सूचित करेंगे।',
+    'all_caught_up':
+        'आप पूरी तरह से अपडेट हैं! कुछ नया आने पर हम सूचित करेंगे।',
     'add_income': 'आय जोड़ें',
     'add_expense': 'व्यय जोड़ें',
     'category': 'श्रेणी',
@@ -475,7 +486,8 @@ const Map<String, Map<String, String>> _localizedValues = {
     'tax_rate': 'कर की दर',
     'total_amount': 'कुल राशि',
     'tax_calculation_info': 'कर गणना की जानकारी',
-    'tax_exclusive_desc': 'मूल मूल्य पर कर की गणना की जाती है और जोड़ा जाता है।',
+    'tax_exclusive_desc':
+        'मूल मूल्य पर कर की गणना की जाती है और जोड़ा जाता है।',
     'tax_inclusive_desc': 'मूल्य में पहले से ही कर शामिल है।',
     'amount_label': 'राशि',
     'calculate_tax': 'कर की गणना करें',
@@ -490,6 +502,8 @@ const Map<String, Map<String, String>> _localizedValues = {
     'frequency_yearly': 'वार्षिक',
   },
   'ur': {
+    'cash': 'نقد',
+    'bank': 'بینک',
     'home': 'ہوم',
     'ledger': 'لیجر',
     'analytics': 'تجزیہ',
@@ -512,9 +526,11 @@ const Map<String, Map<String, String>> _localizedValues = {
     'management': 'انتظامیہ',
     'manage_categories': 'اقسام کا انتظام',
     'view_reports': 'رپورٹس دیکھیں',
+    'reports': 'رپورٹس',
     'select_language': 'زبان منتخب کریں',
     'no_notifications': 'ابھی کوئی نوٹیفکیشن نہیں ہے!',
-    'all_caught_up': 'آپ مکمل طور پر اپ ڈیٹ ہیں! کچھ نیا آنے پر ہم مطلع کریں گے۔',
+    'all_caught_up':
+        'آپ مکمل طور پر اپ ڈیٹ ہیں! کچھ نیا آنے پر ہم مطلع کریں گے۔',
     'add_income': 'آمدنی شامل کریں',
     'add_expense': 'اخراجات شامل کریں',
     'category': 'زمرہ',
@@ -616,7 +632,8 @@ const Map<String, Map<String, String>> _localizedValues = {
     'tax_rate': 'ٹیکس کی شرح',
     'total_amount': 'کل رقم',
     'tax_calculation_info': 'ٹیکس حساب کتاب کی معلومات',
-    'tax_exclusive_desc': 'ٹیکس بنیادی قیمت پر لگایا جاتا ہے اور اس میں جمع کیا جاتا ہے۔',
+    'tax_exclusive_desc':
+        'ٹیکس بنیادی قیمت پر لگایا جاتا ہے اور اس میں جمع کیا جاتا ہے۔',
     'tax_inclusive_desc': 'قیمت میں پہلے ہی ٹیکس کی رقم شامل ہے۔',
     'amount_label': 'رقم',
     'calculate_tax': 'ٹیکس کا حساب لگائیں',
@@ -629,5 +646,5 @@ const Map<String, Map<String, String>> _localizedValues = {
     'frequency_quarterly': 'سہ ماہی',
     'frequency_half_yearly': 'نصف سالانہ',
     'frequency_yearly': 'سالانہ',
-  }
+  },
 };

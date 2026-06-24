@@ -28,30 +28,24 @@ class IncomeSummaryCard extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(
-          color: AppColors.dividerColor,
-          width: 1.0,
-        ),
+        border: Border.all(color: AppColors.dividerColor, width: 1.0),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label.toUpperCase(),
-            style: AppTextStyles.summaryCardLabel,
-          ),
+          Text(label.toUpperCase(), style: AppTextStyles.summaryCardLabel),
           const SizedBox(height: 8),
-          Text(
-            amount,
-            style: AppTextStyles.summaryCardValue,
-          ),
+          Text(amount, style: AppTextStyles.summaryCardValue),
           if (percentageText != null && compareText != null) ...[
             const SizedBox(height: 12),
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.selectionGreenBg,
                     borderRadius: BorderRadius.circular(6),
@@ -76,7 +70,11 @@ class IncomeSummaryCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                const Icon(Icons.trending_up, color: AppColors.activeGreen, size: 16),
+                const Icon(
+                  Icons.trending_up,
+                  color: AppColors.activeGreen,
+                  size: 16,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   percentageText!,

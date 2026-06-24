@@ -61,11 +61,9 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
               child: DebtTotalCard(
                 title: 'TOTAL OWED TO YOU',
                 amount: debtProvider.totalToReceive,
-                gradientColors: const [
-                  Color(0xFF0C4E3C),
-                  Color(0xFF197F63),
-                ],
-                guideText: 'Swipe left on any item to quickly settle, or tap ✎ to edit details.',
+                gradientColors: const [Color(0xFF0C4E3C), Color(0xFF197F63)],
+                guideText:
+                    'Swipe left on any item to quickly settle, or tap ✎ to edit details.',
                 showGuide: _showGuide,
                 onDismissGuide: () {
                   setState(() {
@@ -77,7 +75,10 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
             ),
             if (items.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -93,7 +94,10 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                         ),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.buttonColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
@@ -154,7 +158,10 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                     )
                   : ListView.builder(
                       itemCount: items.length,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       itemBuilder: (context, index) {
                         final item = items[index];
                         return DebtItemRow(

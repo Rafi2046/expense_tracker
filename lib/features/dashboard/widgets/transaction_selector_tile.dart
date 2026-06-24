@@ -35,11 +35,7 @@ class TransactionSelectorTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(
-              leadingIcon,
-              color: themeColor,
-              size: 22,
-            ),
+            Icon(leadingIcon, color: themeColor, size: 22),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -58,18 +54,18 @@ class TransactionSelectorTile extends StatelessWidget {
                     valueText,
                     style: GoogleFonts.workSans(
                       fontSize: 15,
-                      fontWeight: isValueSelected ? FontWeight.w600 : FontWeight.w400,
-                      color: isValueSelected ? Colors.black87 : Colors.grey.shade400,
+                      fontWeight: isValueSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400,
+                      color: isValueSelected
+                          ? Colors.black87
+                          : Colors.grey.shade400,
                     ),
                   ),
                 ],
               ),
             ),
-            Icon(
-              trailingIcon,
-              color: Colors.grey.shade400,
-              size: 16,
-            ),
+            Icon(trailingIcon, color: Colors.grey.shade400, size: 16),
           ],
         ),
       ),

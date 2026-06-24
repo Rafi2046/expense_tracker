@@ -31,11 +31,7 @@ class TransactionContainerRow extends StatelessWidget {
               color: Color(0xFFF3F5F4),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              color: AppColors.buttonColor,
-              size: 22,
-            ),
+            child: Icon(icon, color: AppColors.buttonColor, size: 22),
           ),
           const SizedBox(width: 14),
           Expanded(

@@ -33,7 +33,9 @@ class ExpenseTimeFrameSelector extends StatelessWidget {
                   vertical: 10.0,
                 ),
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.expensePink : AppColors.chipBackground,
+                  color: isSelected
+                      ? AppColors.expensePink
+                      : AppColors.chipBackground,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Text(

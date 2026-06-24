@@ -23,10 +23,7 @@ class WeeklyTrendChart extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(
-          color: AppColors.dividerColor,
-          width: 1.0,
-        ),
+        border: Border.all(color: AppColors.dividerColor, width: 1.0),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -100,7 +97,8 @@ class WeeklyTrendChart extends StatelessWidget {
                   dataSource: data,
                   xValueMapper: (WeeklyChartData item, _) => item.dayLabel,
                   yValueMapper: (WeeklyChartData item, _) => item.value,
-                  pointColorMapper: (WeeklyChartData item, _) => item.isHighlighted
+                  pointColorMapper: (WeeklyChartData item, _) =>
+                      item.isHighlighted
                       ? AppColors.activeGreen
                       : AppColors.activeGreen.withValues(alpha: 0.3),
                   borderRadius: const BorderRadius.only(

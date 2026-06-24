@@ -13,7 +13,8 @@ class CreateProfileNameScreen extends StatefulWidget {
   const CreateProfileNameScreen({super.key, required this.isBusiness});
 
   @override
-  State<CreateProfileNameScreen> createState() => _CreateProfileNameScreenState();
+  State<CreateProfileNameScreen> createState() =>
+      _CreateProfileNameScreenState();
 }
 
 class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
@@ -25,7 +26,10 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
     super.dispose();
   }
 
-  void _showCategoryBottomSheet(BuildContext context, ProfileProvider provider) {
+  void _showCategoryBottomSheet(
+    BuildContext context,
+    ProfileProvider provider,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -66,10 +70,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Create an Account',
-                style: AppTextStyles.profileTitle,
-              ),
+              Text('Create an Account', style: AppTextStyles.profileTitle),
               const SizedBox(height: 6),
               Text(
                 'Please enter the following details to get started',

@@ -20,10 +20,7 @@ class TransactionListContainer extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(
-          color: AppColors.dividerColor,
-          width: 1.0,
-        ),
+        border: Border.all(color: AppColors.dividerColor, width: 1.0),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -37,18 +34,12 @@ class TransactionListContainer extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 3,
-                  child: Text(
-                    title,
-                    style: AppTextStyles.sectionHeaderTitle,
-                  ),
+                  child: Text(title, style: AppTextStyles.sectionHeaderTitle),
                 ),
                 const SizedBox(width: 8),
                 Flexible(
                   flex: 2,
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: trailing,
-                  ),
+                  child: Align(alignment: Alignment.topRight, child: trailing),
                 ),
               ],
             ),

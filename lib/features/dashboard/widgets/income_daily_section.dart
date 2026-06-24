@@ -39,10 +39,7 @@ class IncomeDailySection extends StatelessWidget {
               minimumSize: Size.zero,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            child: Text(
-              'View All',
-              style: AppTextStyles.viewAllText,
-            ),
+            child: Text('View All', style: AppTextStyles.viewAllText),
           ),
           children: [
             TransactionContainerRow(

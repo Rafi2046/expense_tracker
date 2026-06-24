@@ -25,10 +25,7 @@ class IncomeTransactionRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: AppColors.dividerColor,
-          width: 1.0,
-        ),
+        border: Border.all(color: AppColors.dividerColor, width: 1.0),
       ),
       child: Row(
         children: [
@@ -39,14 +36,10 @@ class IncomeTransactionRow extends StatelessWidget {
               color: Color(0xFFF3F5F4),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              color: AppColors.buttonColor,
-              size: 22,
-            ),
+            child: Icon(icon, color: AppColors.buttonColor, size: 22),
           ),
           const SizedBox(width: 14),
-          
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +65,7 @@ class IncomeTransactionRow extends StatelessWidget {
               ],
             ),
           ),
-          
+
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [

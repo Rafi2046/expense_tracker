@@ -26,7 +26,10 @@ class AdditionalDetailsForm extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'Party Email',
             hintStyle: AppTextStyles.partyFormHint,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(
@@ -39,7 +42,10 @@ class AdditionalDetailsForm extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.activeGreen, width: 1.5),
+              borderSide: const BorderSide(
+                color: AppColors.activeGreen,
+                width: 1.5,
+              ),
             ),
           ),
         ),
@@ -52,7 +58,10 @@ class AdditionalDetailsForm extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'Party Address',
             hintStyle: AppTextStyles.partyFormHint,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(
@@ -65,7 +74,10 @@ class AdditionalDetailsForm extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.activeGreen, width: 1.5),
+              borderSide: const BorderSide(
+                color: AppColors.activeGreen,
+                width: 1.5,
+              ),
             ),
           ),
         ),
@@ -78,7 +90,10 @@ class AdditionalDetailsForm extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'VAT Number',
             hintStyle: AppTextStyles.partyFormHint,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(
@@ -91,7 +106,10 @@ class AdditionalDetailsForm extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.activeGreen, width: 1.5),
+              borderSide: const BorderSide(
+                color: AppColors.activeGreen,
+                width: 1.5,
+              ),
             ),
           ),
         ),

@@ -18,10 +18,7 @@ class BudgetStatusItem {
 class DashboardBudgetStatus extends StatelessWidget {
   final List<BudgetStatusItem> items;
 
-  const DashboardBudgetStatus({
-    super.key,
-    required this.items,
-  });
+  const DashboardBudgetStatus({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {

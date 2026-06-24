@@ -31,7 +31,9 @@ class AddEditDebtSheet extends StatefulWidget {
       isScrollControlled: true,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.br20)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.br20),
+        ),
       ),
       builder: (context) {
         return AddEditDebtSheet(
@@ -105,7 +107,7 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                 IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
-                )
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -117,10 +119,14 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSpacing.br12),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
               ),
-              validator: (val) =>
-                  val == null || val.trim().isEmpty ? 'Please enter a name' : null,
+              validator: (val) => val == null || val.trim().isEmpty
+                  ? 'Please enter a name'
+                  : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -131,27 +137,38 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSpacing.br12),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
               ),
-              validator: (val) =>
-                  val == null || val.trim().isEmpty ? 'Please enter details' : null,
+              validator: (val) => val == null || val.trim().isEmpty
+                  ? 'Please enter details'
+                  : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _amountController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: InputDecoration(
                 labelText: 'Amount (${context.currencySymbol})',
                 labelStyle: GoogleFonts.inter(fontSize: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSpacing.br12),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
               ),
               validator: (val) {
-                if (val == null || val.trim().isEmpty) return 'Please enter an amount';
+                if (val == null || val.trim().isEmpty)
+                  return 'Please enter an amount';
                 final parsed = double.tryParse(val);
-                if (parsed == null || parsed <= 0) return 'Please enter a valid positive number';
+                if (parsed == null || parsed <= 0)
+                  return 'Please enter a valid positive number';
                 return null;
               },
             ),

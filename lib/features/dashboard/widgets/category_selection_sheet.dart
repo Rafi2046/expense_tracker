@@ -35,7 +35,7 @@ class CategorySelectionSheetContent extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           Text(
             'Select Business Category',
             style: TextStyle(
@@ -46,7 +46,7 @@ class CategorySelectionSheetContent extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Search Bar
           TextField(
             style: TextStyle(
@@ -68,7 +68,10 @@ class CategorySelectionSheetContent extends StatelessWidget {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: AppColors.activeGreen, width: 2),
+                borderSide: const BorderSide(
+                  color: AppColors.activeGreen,
+                  width: 2,
+                ),
               ),
             ),
             onChanged: (val) {
@@ -103,11 +106,13 @@ class CategorySelectionSheetContent extends StatelessWidget {
                     isSelected
                         ? Icons.radio_button_checked
                         : Icons.radio_button_unchecked,
-                    color: isSelected ? AppColors.activeGreen : Colors.grey.shade300,
+                    color: isSelected
+                        ? AppColors.activeGreen
+                        : Colors.grey.shade300,
                   ),
                   onTap: () {
                     provider.setSelectedCategory(cat);
-                    
+
                     // Delayed selection notification to let the user see selection
                     Future.delayed(const Duration(milliseconds: 200), () {
                       onCategorySelected(cat);

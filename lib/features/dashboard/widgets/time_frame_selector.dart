@@ -20,10 +20,7 @@ class TimeFrameSelector extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(100),
-        border: Border.all(
-          color: AppColors.dividerColor,
-          width: 1.0,
-        ),
+        border: Border.all(color: AppColors.dividerColor, width: 1.0),
       ),
       padding: const EdgeInsets.all(4.0),
       child: Row(
@@ -39,7 +36,9 @@ class TimeFrameSelector extends StatelessWidget {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.buttonColor : Colors.transparent,
+                  color: isSelected
+                      ? AppColors.buttonColor
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: Text(

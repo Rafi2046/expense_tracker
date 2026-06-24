@@ -32,10 +32,7 @@ class IncomeMonthlySection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Recent Income',
-              style: AppTextStyles.sectionHeaderTitle,
-            ),
+            Text('Recent Income', style: AppTextStyles.sectionHeaderTitle),
             TextButton(
               onPressed: () {},
               style: TextButton.styleFrom(
@@ -43,10 +40,7 @@ class IncomeMonthlySection extends StatelessWidget {
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: Text(
-                'View All',
-                style: AppTextStyles.viewAllText,
-              ),
+              child: Text('View All', style: AppTextStyles.viewAllText),
             ),
           ],
         ),

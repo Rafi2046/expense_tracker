@@ -29,10 +29,12 @@ class ExpenseCategoriesBreakdownCard extends StatefulWidget {
   });
 
   @override
-  State<ExpenseCategoriesBreakdownCard> createState() => _ExpenseCategoriesBreakdownCardState();
+  State<ExpenseCategoriesBreakdownCard> createState() =>
+      _ExpenseCategoriesBreakdownCardState();
 }
 
-class _ExpenseCategoriesBreakdownCardState extends State<ExpenseCategoriesBreakdownCard> {
+class _ExpenseCategoriesBreakdownCardState
+    extends State<ExpenseCategoriesBreakdownCard> {
   bool _isExpanded = false;
 
   @override
@@ -103,13 +105,18 @@ class _ExpenseCategoriesBreakdownCardState extends State<ExpenseCategoriesBreakd
                     series: <CircularSeries<CategoryBreakdownItem, String>>[
                       DoughnutSeries<CategoryBreakdownItem, String>(
                         dataSource: widget.categories,
-                        xValueMapper: (CategoryBreakdownItem item, _) => item.name,
-                        yValueMapper: (CategoryBreakdownItem item, _) => item.amount,
-                        pointColorMapper: (CategoryBreakdownItem item, _) => item.color,
+                        xValueMapper: (CategoryBreakdownItem item, _) =>
+                            item.name,
+                        yValueMapper: (CategoryBreakdownItem item, _) =>
+                            item.amount,
+                        pointColorMapper: (CategoryBreakdownItem item, _) =>
+                            item.color,
                         innerRadius: '75%',
                         startAngle: 270,
                         endAngle: 270,
-                        dataLabelSettings: const DataLabelSettings(isVisible: false),
+                        dataLabelSettings: const DataLabelSettings(
+                          isVisible: false,
+                        ),
                       ),
                     ],
                   ),
@@ -174,10 +181,7 @@ class _ExpenseCategoriesBreakdownCardState extends State<ExpenseCategoriesBreakd
                     ),
                   ),
                   Text(
-                    '${context.currencySymbol} ${item.amount.toStringAsFixed(0).replaceAllMapped(
-                          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                          (Match m) => '${m[1]},',
-                        )}',
+                    '${context.currencySymbol} ${item.amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,

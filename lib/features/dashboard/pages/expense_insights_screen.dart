@@ -159,10 +159,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
         scrolledUnderElevation: 0,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: const Color(0xFFE0E0E0),
-            height: 1.0,
-          ),
+          child: Container(color: const Color(0xFFE0E0E0), height: 1.0),
         ),
       ),
       body: SingleChildScrollView(

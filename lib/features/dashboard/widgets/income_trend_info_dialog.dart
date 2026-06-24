@@ -8,9 +8,7 @@ class IncomeTrendInfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       backgroundColor: Colors.white,
       elevation: 5,
       child: Padding(
@@ -27,10 +25,7 @@ class IncomeTrendInfoDialog extends StatelessWidget {
                   size: 24,
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  'Income Trend Chart',
-                  style: AppTextStyles.dialogTitle,
-                ),
+                Text('Income Trend Chart', style: AppTextStyles.dialogTitle),
               ],
             ),
             const SizedBox(height: 12),
@@ -91,15 +86,15 @@ class IncomeTrendInfoDialog extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
                 style: TextButton.styleFrom(
                   foregroundColor: AppColors.buttonColor,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text(
-                  'Close',
-                  style: AppTextStyles.dialogCloseButton,
-                ),
+                child: Text('Close', style: AppTextStyles.dialogCloseButton),
               ),
             ),
           ],
