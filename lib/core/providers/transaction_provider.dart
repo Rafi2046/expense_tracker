@@ -205,4 +205,37 @@ class TransactionProvider extends ChangeNotifier {
     _transactions.insert(0, transaction);
     notifyListeners();
   }
+
+  void transferBalance(double amount, String fromAccount, String toAccount) {
+    final now = DateTime.now();
+    final expenseItem = TransactionItem(
+      id: '${now.millisecondsSinceEpoch}_1',
+      amount: amount,
+      category: 'Transfer',
+      note: 'Transfer to $toAccount',
+      isIncome: false,
+      dateTime: now,
+      paymentMethod: fromAccount,
+    );
+    
+    final incomeItem = TransactionItem(
+      id: '${now.millisecondsSinceEpoch}_2',
+      amount: amount,
+      category: 'Transfer',
+      note: 'Transfer from $fromAccount',
+      isIncome: true,
+      dateTime: now,
+      paymentMethod: toAccount,
+    );
+    
+    _transactions.insert(0, expenseItem);
+    _transactions.insert(0, incomeItem);
+    notifyListeners();
+  }
+
+  void deleteTransaction(String id) {
+    _transactions.removeWhere((tx) => tx.id == id);
+    notifyListeners();
+  }
 }
+

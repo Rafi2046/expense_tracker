@@ -18,10 +18,10 @@ class ReportDateSelector extends StatelessWidget {
     final subtitle = reportsProvider.getDateRangeSubtitle(selectedOption, dateRange);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(color: const Color(0xFFF1F1F1)),
       ),
       child: Row(
@@ -29,18 +29,18 @@ class ReportDateSelector extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.calendar_month_outlined, color: Colors.grey.shade600, size: 20),
+              Icon(Icons.calendar_month_outlined, color: Colors.grey.shade600, size: 16),
               const SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: AppTextStyles.reportTransactionTitle,
+                    style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 13.5),
                   ),
                   Text(
                     subtitle,
-                    style: AppTextStyles.reportTransactionSubtitle,
+                    style: AppTextStyles.reportTransactionSubtitle.copyWith(fontSize: 11),
                   ),
                 ],
               ),
@@ -63,6 +63,7 @@ class ReportDateSelector extends StatelessWidget {
               'CHANGE',
               style: AppTextStyles.reportSectionHeader.copyWith(
                 color: AppColors.activeGreen,
+                fontSize: 11,
               ),
             ),
           ),

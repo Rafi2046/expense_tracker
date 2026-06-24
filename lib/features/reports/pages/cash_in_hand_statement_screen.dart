@@ -53,6 +53,7 @@ class CashInHandStatementScreen extends StatelessWidget {
         ),
         centerTitle: true,
         bottom: PreferredSize(
+
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
             color: const Color(0xFFF1F1F1),
@@ -74,7 +75,9 @@ class CashInHandStatementScreen extends StatelessWidget {
             )
           : null,
       body: SafeArea(
+
         child: SingleChildScrollView(
+
           padding: const EdgeInsets.only(
             left: 16.0,
             right: 16.0,
@@ -85,10 +88,10 @@ class CashInHandStatementScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const ReportDateSelector(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               if (isNotEmpty) ...[
                 const CashStatementBalanceCard(),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
               ],
               const CashStatementList(),
             ],

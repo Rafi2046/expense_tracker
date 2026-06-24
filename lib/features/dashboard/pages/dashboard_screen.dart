@@ -19,6 +19,7 @@ import 'package:expense_tracker/features/dashboard/widgets/dashboard_shortcuts_c
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_spending_categories.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_stat_card.dart';
 import 'package:expense_tracker/features/reports/pages/view_reports_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/total_balance_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -233,43 +234,10 @@ class DashboardScreen extends StatelessWidget {
                             isPositive: true,
                             isTrend: false,
                             onTap: () {
-                              // Tapping "Total Balance" expands or shows a breakdown dialog
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('Account Balance Detail'),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Cash In Hand: ${context.formatAmount(cashBalance)}',
-                                        style: const TextStyle(fontSize: 14),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        'Bank Account: ${context.formatAmount(bankBalance)}',
-                                        style: const TextStyle(fontSize: 14),
-                                      ),
-                                      const SizedBox(height: 12),
-                                      const Divider(),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        'Net Balance: ${context.formatAmount(totalBalance)}',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const Text('Close'),
-                                    ),
-                                  ],
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const TotalBalanceScreen(),
                                 ),
                               );
                             },

@@ -85,10 +85,10 @@ class BankStatementScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const ReportDateSelector(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               if (isNotEmpty) ...[
                 const BankStatementBalanceCard(),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
               ],
               const BankStatementList(),
             ],

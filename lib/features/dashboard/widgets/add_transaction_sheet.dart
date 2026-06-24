@@ -33,6 +33,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   String? _selectedCategory;
   DateTime _selectedDate = DateTime.now();
   String? _selectedIncomeMonth;
+  String _paymentMethod = 'Cash';
 
   @override
   void initState() {
@@ -201,6 +202,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
       isIncome: widget.isIncome,
       dateTime: _selectedDate,
       incomeMonth: widget.isIncome ? _selectedIncomeMonth : null,
+      paymentMethod: _paymentMethod,
     );
 
     provider.addTransaction(newItem);
@@ -399,6 +401,22 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   ),
                   const SizedBox(height: 16),
                 ],
+
+                // Payment Mode Selector Tile
+                TransactionSelectorTile(
+                  leadingIcon: Icons.account_balance_wallet_outlined,
+                  labelText: 'Payment Mode',
+                  valueText: _paymentMethod,
+                  isValueSelected: true,
+                  themeColor: secondaryThemeColor,
+                  trailingIcon: Icons.swap_horiz_rounded,
+                  onTap: () {
+                    setState(() {
+                      _paymentMethod = _paymentMethod == 'Cash' ? 'Bank' : 'Cash';
+                    });
+                  },
+                ),
+                const SizedBox(height: 16),
 
                 // Note/Memo Input Field
                 TextFormField(

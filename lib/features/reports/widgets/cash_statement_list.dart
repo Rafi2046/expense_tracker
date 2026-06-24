@@ -38,22 +38,22 @@ class CashStatementList extends StatelessWidget {
       children: [
         Text(
           'Transaction Lists',
-          style: AppTextStyles.reportTransactionTitle,
+          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 14.5),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: filtered.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 10),
+          separatorBuilder: (context, index) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
             final tx = filtered[index];
 
             return Container(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: const Color(0xFFF1F1F1)),
               ),
               child: Row(
@@ -65,26 +65,26 @@ class CashStatementList extends StatelessWidget {
                       children: [
                         Text(
                           tx.title,
-                          style: AppTextStyles.reportTransactionTitle,
+                          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 13.5),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 2),
                         Text(
                           '${tx.subtitle}\n${DateFormat('dd MMM yyyy').format(tx.dateTime)}',
-                          style: AppTextStyles.reportTransactionSubtitle,
+                          style: AppTextStyles.reportTransactionSubtitle.copyWith(fontSize: 11, height: 1.25),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 6),
                         // Running Balance pill
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                           decoration: BoxDecoration(
                             color: const Color(0xFFE8F8F5),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             'Bal: $currencySymbol ${tx.runningBalance.toStringAsFixed(0)}',
                             style: AppTextStyles.reportStatLabel.copyWith(
                               color: AppColors.activeGreen,
-                              fontSize: 11,
+                              fontSize: 10,
                             ),
                           ),
                         ),
@@ -94,6 +94,7 @@ class CashStatementList extends StatelessWidget {
                   Text(
                     '$currencySymbol ${tx.amount.toStringAsFixed(0)}',
                     style: AppTextStyles.reportTransactionTitle.copyWith(
+                      fontSize: 14,
                       color: tx.isCredit ? AppColors.activeGreen : AppColors.activeRed,
                     ),
                   ),

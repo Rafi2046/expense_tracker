@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/utils/category_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -26,64 +27,12 @@ class LedgerTransactionRow extends StatelessWidget {
     this.incomeMonth,
   });
 
-  IconData _getCategoryIcon(String cat) {
-    switch (cat.toLowerCase()) {
-      case 'dining':
-      case 'food':
-        return Icons.restaurant_rounded;
-      case 'transport':
-        return Icons.directions_bus_rounded;
-      case 'medicine':
-        return Icons.medical_services_rounded;
-      case 'salary':
-        return Icons.payments_rounded;
-      case 'freelance':
-        return Icons.work_rounded;
-      case 'entertainment':
-        return Icons.sports_esports_rounded;
-      case 'shopping':
-        return Icons.shopping_bag_rounded;
-      case 'investment':
-        return Icons.trending_up_rounded;
-      case 'rent':
-        return Icons.home_rounded;
-      default:
-        return Icons.category_rounded;
-    }
-  }
-
-  Color _getCategoryColor(String cat) {
-    switch (cat.toLowerCase()) {
-      case 'dining':
-      case 'food':
-        return const Color(0xFFF39C12); // Orange
-      case 'transport':
-        return const Color(0xFF3498DB); // Blue
-      case 'medicine':
-        return const Color(0xFFE74C3C); // Red
-      case 'salary':
-        return const Color(0xFF2ECC71); // Green
-      case 'freelance':
-        return const Color(0xFF1ABC9C); // Teal
-      case 'entertainment':
-        return const Color(0xFF9B59B6); // Purple
-      case 'shopping':
-        return const Color(0xFFE91E63); // Pink
-      case 'investment':
-        return const Color(0xFF27AE60); // Emerald
-      case 'rent':
-        return const Color(0xFFE67E22); // Orange-Red
-      default:
-        return const Color(0xFF95A5A6); // Grey
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final amountColor = isIncome ? AppColors.activeGreen : AppColors.expensePink;
     final amountPrefix = isIncome ? '+ ' : '- ';
-    final catColor = _getCategoryColor(category);
-    final catIcon = _getCategoryIcon(category);
+    final catColor = CategoryUtils.getColor(category);
+    final catIcon = CategoryUtils.getIcon(category);
     
     final formattedAmount = (amount % 1 == 0)
         ? amount.toStringAsFixed(0).replaceAllMapped(
