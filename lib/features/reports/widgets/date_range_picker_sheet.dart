@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/features/reports/widgets/select_date_input_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -144,7 +145,27 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Icon(Icons.edit_outlined, color: Colors.grey.shade400, size: 20),
+                    IconButton(
+                      icon: Icon(Icons.edit_outlined, color: Colors.grey.shade400, size: 20),
+                      onPressed: () async {
+                        final result = await SelectDateInputDialog.show(
+                          context,
+                          initialRange: DateTimeRange(
+                            start: _startDate ?? DateTime.now(),
+                            end: _endDate ?? DateTime.now(),
+                          ),
+                        );
+                        if (result != null && context.mounted) {
+                          setState(() {
+                            _startDate = result.range.start;
+                            _endDate = result.range.end;
+                          });
+                          if (result.shouldSubmit) {
+                            Navigator.pop(context, result.range);
+                          }
+                        }
+                      },
+                    ),
                   ],
                 ),
               ],

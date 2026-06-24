@@ -1,24 +1,21 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/features/reports/widgets/date_range_picker_sheet.dart';
+import 'package:expense_tracker/core/providers/reports_provider.dart';
+import 'package:expense_tracker/features/reports/widgets/select_date_option_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ReportDateSelector extends StatelessWidget {
-  final DateTimeRange? dateRange;
-  final ValueChanged<DateTimeRange> onRangeChanged;
-
-  const ReportDateSelector({
-    super.key,
-    required this.dateRange,
-    required this.onRangeChanged,
-  });
+  const ReportDateSelector({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final dateRangeStr = dateRange != null
-        ? '${DateFormat('01 MMM yyyy').format(dateRange!.start)} - ${DateFormat('dd MMM yyyy').format(dateRange!.end)}'
-        : 'Select range';
+    final reportsProvider = context.watch<ReportsProvider>();
+    final dateRange = reportsProvider.selectedDateRange;
+    final selectedOption = reportsProvider.selectedOption;
+
+    final title = reportsProvider.getDateRangeOptionTitle(selectedOption);
+    final subtitle = reportsProvider.getDateRangeSubtitle(selectedOption, dateRange);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -38,11 +35,11 @@ class ReportDateSelector extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'This Month',
+                    title,
                     style: AppTextStyles.reportTransactionTitle,
                   ),
                   Text(
-                    dateRangeStr,
+                    subtitle,
                     style: AppTextStyles.reportTransactionSubtitle,
                   ),
                 ],
@@ -51,12 +48,15 @@ class ReportDateSelector extends StatelessWidget {
           ),
           TextButton(
             onPressed: () async {
-              final range = await DateRangePickerSheet.show(
+              final result = await SelectDateOptionSheet.show(
                 context,
-                initialSelectedRange: dateRange,
+                currentOption: selectedOption,
               );
-              if (range != null) {
-                onRangeChanged(range);
+              if (result != null && context.mounted) {
+                reportsProvider.setDateRangeOption(
+                  result['option'] as DateRangeOption,
+                  customRange: result['range'] as DateTimeRange?,
+                );
               }
             },
             child: Text(

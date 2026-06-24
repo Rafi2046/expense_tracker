@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -20,8 +21,16 @@ class AllTransactionsList extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 40.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.receipt_long_rounded, color: Colors.grey.shade300, size: 48),
+              Image.asset(
+                AppImages.transactionsIcon,
+                width: 90,
+                height: 90,
+                fit: BoxFit.contain,
+              ),
+
               const SizedBox(height: 12),
               Text(
                 'No transactions matched filters',
@@ -58,10 +67,7 @@ class AllTransactionsList extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    tx.title,
-                    style: AppTextStyles.reportTransactionTitle,
-                  ),
+                  Text(tx.title, style: AppTextStyles.reportTransactionTitle),
                   const SizedBox(height: 4),
                   Text(
                     '${tx.subtitle} • ${DateFormat('dd MMM yyyy').format(tx.dateTime)}',

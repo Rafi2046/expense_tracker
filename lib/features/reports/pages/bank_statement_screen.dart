@@ -68,12 +68,7 @@ class BankStatementScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ReportDateSelector(
-                      dateRange: reportsProvider.selectedDateRange,
-                      onRangeChanged: (range) {
-                        reportsProvider.setDateRange(range);
-                      },
-                    ),
+                    const ReportDateSelector(),
                     const SizedBox(height: 16),
                     if (isNotEmpty) ...[
                       const BankStatementBalanceCard(),

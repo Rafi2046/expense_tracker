@@ -6,6 +6,7 @@ import 'package:expense_tracker/features/reports/widgets/all_transactions_summar
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
 import 'package:expense_tracker/features/reports/widgets/report_date_selector.dart';
 import 'package:expense_tracker/features/reports/widgets/share_report_sheet.dart';
+import 'package:expense_tracker/features/reports/widgets/sort_by_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
@@ -54,7 +55,15 @@ class AllTransactionsReportScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list_rounded, color: Colors.black87),
-            onPressed: () {},
+            onPressed: () async {
+              final selected = await SortBySheet.show(
+                context,
+                currentOption: reportsProvider.sortOption,
+              );
+              if (selected != null) {
+                reportsProvider.setSortOption(selected);
+              }
+            },
           ),
         ],
         bottom: PreferredSize(
@@ -74,12 +83,7 @@ class AllTransactionsReportScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ReportDateSelector(
-                      dateRange: reportsProvider.selectedDateRange,
-                      onRangeChanged: (range) {
-                        reportsProvider.setDateRange(range);
-                      },
-                    ),
+                    const ReportDateSelector(),
                     const SizedBox(height: 12),
                     const AllTransactionsFilterBar(),
                     const SizedBox(height: 16),

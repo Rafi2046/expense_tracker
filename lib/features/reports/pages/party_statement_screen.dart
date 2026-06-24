@@ -79,12 +79,7 @@ class PartyStatementScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ReportDateSelector(
-                      dateRange: reportsProvider.selectedDateRange,
-                      onRangeChanged: (range) {
-                        reportsProvider.setDateRange(range);
-                      },
-                    ),
+                    const ReportDateSelector(),
                     const SizedBox(height: 12),
 
                     // Party Selector Dropdown Chip

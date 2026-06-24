@@ -89,12 +89,9 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: Text(
-                          reportsProvider.selectedType,
-                          style: AppTextStyles.reportTileTitle.copyWith(fontSize: 13.5),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      Text(
+                        reportsProvider.selectedType,
+                        style: AppTextStyles.reportTileTitle.copyWith(fontSize: 11.5),
                       ),
                       const Icon(Icons.arrow_drop_down, color: Colors.black87),
                     ],
@@ -127,12 +124,9 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: Text(
-                          reportsProvider.selectedPartyName ?? 'Select Party',
-                          style: AppTextStyles.reportTileTitle.copyWith(fontSize: 13.5),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      Text(
+                        reportsProvider.selectedPartyName ?? 'Select Party',
+                        style: AppTextStyles.reportTileTitle.copyWith(fontSize: 11.5),
                       ),
                       const Icon(Icons.arrow_drop_down, color: Colors.black87),
                     ],

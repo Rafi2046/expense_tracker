@@ -27,6 +27,8 @@ class AppImages {
 // Ledger
   static const String transactions = 'assets/app_icons/no_transactions.png';
 
+// Settings
+  static const String transactionsIcon = 'assets/app_icons/transaction_icons.png';
 
 
 

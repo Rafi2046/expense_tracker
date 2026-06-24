@@ -6,8 +6,6 @@ import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.d
 import 'package:expense_tracker/features/reports/widgets/report_date_selector.dart';
 import 'package:expense_tracker/features/reports/widgets/share_report_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/providers/reports_provider.dart';
 
 class IncomeExpenseReportScreen extends StatelessWidget {
   const IncomeExpenseReportScreen({super.key});
@@ -33,8 +31,6 @@ class IncomeExpenseReportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final reportsProvider = context.watch<ReportsProvider>();
-
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
@@ -67,12 +63,7 @@ class IncomeExpenseReportScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ReportDateSelector(
-                      dateRange: reportsProvider.selectedDateRange,
-                      onRangeChanged: (range) {
-                        reportsProvider.setDateRange(range);
-                      },
-                    ),
+                    const ReportDateSelector(),
                     const SizedBox(height: 16),
                     const IncomeExpenseSummaryCard(),
                     const SizedBox(height: 24),

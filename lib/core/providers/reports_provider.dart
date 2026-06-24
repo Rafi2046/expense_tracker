@@ -1,9 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/model/unified_transaction.dart';
 import 'package:expense_tracker/core/model/ledger_item.dart';
 import 'package:expense_tracker/core/model/category_summary.dart';
+
+enum ReportSortOption {
+  latest,
+  oldest,
+  amountHighToLow,
+  amountLowToHigh,
+}
+
+enum DateRangeOption {
+  today,
+  yesterday,
+  thisWeek,
+  thisMonth,
+  lastMonth,
+  thisFiscalYear,
+  thisYear,
+  allTime,
+  custom,
+}
 
 class ReportsProvider extends ChangeNotifier {
   TransactionProvider? _txProvider;
@@ -11,21 +31,19 @@ class ReportsProvider extends ChangeNotifier {
 
   // Shared Date Range for all reports (defaults to current month)
   DateTimeRange? _selectedDateRange;
+  DateRangeOption _selectedOption = DateRangeOption.thisMonth;
 
-  // All Transactions filtering
+  // All Transactions filtering & sorting
   String _searchQuery = '';
   String _selectedType = 'All Transactions';
   String? _selectedPartyName;
+  ReportSortOption _sortOption = ReportSortOption.latest;
 
   // Party Statement filtering
   String? _selectedPartyNameForStatement;
 
   ReportsProvider() {
-    final now = DateTime.now();
-    _selectedDateRange = DateTimeRange(
-      start: DateTime(now.year, now.month, 1),
-      end: DateTime(now.year, now.month, now.day),
-    );
+    _selectedDateRange = getDateTimeRangeForOption(DateRangeOption.thisMonth);
   }
 
   void updateProviders(TransactionProvider tx, DebtProvider debt) {
@@ -36,14 +54,27 @@ class ReportsProvider extends ChangeNotifier {
 
   // Getters
   DateTimeRange? get selectedDateRange => _selectedDateRange;
+  DateRangeOption get selectedOption => _selectedOption;
   String get searchQuery => _searchQuery;
   String get selectedType => _selectedType;
   String? get selectedPartyName => _selectedPartyName;
   String? get selectedPartyNameForStatement => _selectedPartyNameForStatement;
+  ReportSortOption get sortOption => _sortOption;
 
   // Setters/actions
-  void setDateRange(DateTimeRange? range) {
+  void setDateRange(DateTimeRange? range, {DateRangeOption option = DateRangeOption.custom}) {
     _selectedDateRange = range;
+    _selectedOption = option;
+    notifyListeners();
+  }
+
+  void setDateRangeOption(DateRangeOption option, {DateTimeRange? customRange}) {
+    _selectedOption = option;
+    if (option == DateRangeOption.custom && customRange != null) {
+      _selectedDateRange = customRange;
+    } else {
+      _selectedDateRange = getDateTimeRangeForOption(option);
+    }
     notifyListeners();
   }
 
@@ -65,6 +96,105 @@ class ReportsProvider extends ChangeNotifier {
   void setStatementParty(String? partyName) {
     _selectedPartyNameForStatement = partyName;
     notifyListeners();
+  }
+
+  void setSortOption(ReportSortOption option) {
+    _sortOption = option;
+    notifyListeners();
+  }
+
+  // Helper: Get DateTimeRange for an option
+  DateTimeRange? getDateTimeRangeForOption(DateRangeOption option) {
+    final now = DateTime.now();
+    switch (option) {
+      case DateRangeOption.today:
+        return DateTimeRange(
+          start: DateTime(now.year, now.month, now.day),
+          end: DateTime(now.year, now.month, now.day),
+        );
+      case DateRangeOption.yesterday:
+        final yesterday = now.subtract(const Duration(days: 1));
+        return DateTimeRange(
+          start: DateTime(yesterday.year, yesterday.month, yesterday.day),
+          end: DateTime(yesterday.year, yesterday.month, yesterday.day),
+        );
+      case DateRangeOption.thisWeek:
+        // Sunday of current week
+        final sunday = now.subtract(Duration(days: now.weekday % 7));
+        final saturday = sunday.add(const Duration(days: 6));
+        return DateTimeRange(
+          start: DateTime(sunday.year, sunday.month, sunday.day),
+          end: DateTime(saturday.year, saturday.month, saturday.day),
+        );
+      case DateRangeOption.thisMonth:
+        return DateTimeRange(
+          start: DateTime(now.year, now.month, 1),
+          end: DateTime(now.year, now.month + 1, 0),
+        );
+      case DateRangeOption.lastMonth:
+        return DateTimeRange(
+          start: DateTime(now.year, now.month - 1, 1),
+          end: DateTime(now.year, now.month, 0),
+        );
+      case DateRangeOption.thisFiscalYear:
+        // Bangladesh/India: July 1 to June 30
+        int startYear = now.month >= 7 ? now.year : now.year - 1;
+        return DateTimeRange(
+          start: DateTime(startYear, 7, 1),
+          end: DateTime(startYear + 1, 6, 30),
+        );
+      case DateRangeOption.thisYear:
+        return DateTimeRange(
+          start: DateTime(now.year, 1, 1),
+          end: DateTime(now.year, 12, 31),
+        );
+      case DateRangeOption.allTime:
+        return null;
+      case DateRangeOption.custom:
+        return _selectedDateRange;
+    }
+  }
+
+  // Helper: Get Title string for Option
+  String getDateRangeOptionTitle(DateRangeOption option) {
+    switch (option) {
+      case DateRangeOption.today:
+        return 'Today';
+      case DateRangeOption.yesterday:
+        return 'Yesterday';
+      case DateRangeOption.thisWeek:
+        return 'This Week';
+      case DateRangeOption.thisMonth:
+        return 'This Month';
+      case DateRangeOption.lastMonth:
+        return 'Last Month';
+      case DateRangeOption.thisFiscalYear:
+        return 'This Fiscal Year';
+      case DateRangeOption.thisYear:
+        return 'This Year';
+      case DateRangeOption.allTime:
+        return 'All Time';
+      case DateRangeOption.custom:
+        return 'Custom Date';
+    }
+  }
+
+  // Helper: Get Formatted Subtitle for Option
+  String getDateRangeSubtitle(DateRangeOption option, DateTimeRange? range) {
+    if (option == DateRangeOption.allTime) {
+      return 'See Transactions of all time';
+    }
+    if (option == DateRangeOption.custom && range == null) {
+      return 'Select date from calendar';
+    }
+    final targetRange = range ?? getDateTimeRangeForOption(option);
+    if (targetRange == null) return 'Select range';
+
+    final DateFormat formatter = DateFormat('dd MMM yyyy');
+    if (option == DateRangeOption.today || option == DateRangeOption.yesterday) {
+      return formatter.format(targetRange.start);
+    }
+    return '${formatter.format(targetRange.start)} - ${formatter.format(targetRange.end)}';
   }
 
   // 1. All Transactions Screen Calculations
@@ -100,8 +230,21 @@ class ReportsProvider extends ChangeNotifier {
       ));
     }
 
-    // Sort by latest date first
-    all.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    // Apply sorting
+    switch (_sortOption) {
+      case ReportSortOption.latest:
+        all.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+        break;
+      case ReportSortOption.oldest:
+        all.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+        break;
+      case ReportSortOption.amountHighToLow:
+        all.sort((a, b) => b.amount.compareTo(a.amount));
+        break;
+      case ReportSortOption.amountLowToHigh:
+        all.sort((a, b) => a.amount.compareTo(b.amount));
+        break;
+    }
 
     // Filter
     return all.where((tx) {
@@ -249,6 +392,72 @@ class ReportsProvider extends ChangeNotifier {
 
   double get bankClosingBalance {
     final transactions = bankStatementTransactions;
+    if (transactions.isEmpty) return 0.0;
+    return transactions.first.runningBalance;
+  }
+
+  // Cash Statement Calculations
+  List<LedgerItem> get cashStatementTransactions {
+    if (_txProvider == null || _debtProvider == null) return [];
+
+    final List<LedgerItem> ledger = [];
+
+    // Incomes/Expenses matching Cash
+    for (var tx in _txProvider!.transactions) {
+      if (tx.paymentMethod == 'Cash') {
+        ledger.add(LedgerItem(
+          id: tx.id,
+          title: tx.isIncome ? 'Money In' : 'Money Out',
+          subtitle: tx.note.isNotEmpty ? '${tx.note} (${tx.category})' : tx.category,
+          amount: tx.amount,
+          dateTime: tx.dateTime,
+          isCredit: tx.isIncome,
+        ));
+      }
+    }
+
+    // Debts (all treated as Cash by default)
+    for (var d in _debtProvider!.items) {
+      ledger.add(LedgerItem(
+        id: d.id,
+        title: d.isReceive ? 'Money In' : 'Money Out',
+        subtitle: '${d.name} • ${d.detail}',
+        amount: d.amount,
+        dateTime: d.createdAt,
+        isCredit: d.isReceive,
+      ));
+    }
+
+    ledger.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+
+    double runningBal = 0.0;
+    for (var item in ledger) {
+      if (item.isCredit) {
+        runningBal += item.amount;
+      } else {
+        runningBal -= item.amount;
+      }
+      item.runningBalance = runningBal;
+    }
+
+    List<LedgerItem> filtered = [];
+    if (_selectedDateRange != null) {
+      final start = DateTime(_selectedDateRange!.start.year, _selectedDateRange!.start.month, _selectedDateRange!.start.day);
+      final end = DateTime(_selectedDateRange!.end.year, _selectedDateRange!.end.month, _selectedDateRange!.end.day, 23, 59, 59);
+
+      filtered = ledger.where((item) {
+        return !item.dateTime.isBefore(start) && !item.dateTime.isAfter(end);
+      }).toList();
+    } else {
+      filtered = List.from(ledger);
+    }
+
+    filtered.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    return filtered;
+  }
+
+  double get cashClosingBalance {
+    final transactions = cashStatementTransactions;
     if (transactions.isEmpty) return 0.0;
     return transactions.first.runningBalance;
   }
