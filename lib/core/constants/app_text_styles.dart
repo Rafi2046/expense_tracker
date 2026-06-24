@@ -312,4 +312,59 @@ class AppTextStyles {
     color: Colors.white,
     fontWeight: FontWeight.w600,
   );
+
+  static TextStyle reportAppBarTitle = TextStyle(
+    fontSize: 18,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    fontWeight: FontWeight.bold,
+    color: Colors.black87,
+  );
+
+  static TextStyle reportSectionHeader = TextStyle(
+    fontSize: 14,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    fontWeight: FontWeight.bold,
+    color: Colors.grey.shade500,
+  );
+
+  static TextStyle reportTileTitle = TextStyle(
+    fontSize: 15,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    fontWeight: FontWeight.w600,
+    color: const Color(0xFF31394D),
+  );
+
+  static TextStyle reportLargeValue = TextStyle(
+    fontSize: 26,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    fontWeight: FontWeight.bold,
+    color: Colors.black87,
+  );
+
+  static TextStyle reportStatLabel = TextStyle(
+    fontSize: 11.5,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    fontWeight: FontWeight.bold,
+    color: Colors.grey.shade400,
+  );
+
+  static TextStyle reportStatValue = TextStyle(
+    fontSize: 18,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    fontWeight: FontWeight.bold,
+    color: Colors.black87,
+  );
+
+  static TextStyle reportTransactionTitle = TextStyle(
+    fontSize: 15,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    fontWeight: FontWeight.bold,
+    color: Colors.black87,
+  );
+
+  static TextStyle reportTransactionSubtitle = TextStyle(
+    fontSize: 12,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    color: Colors.grey.shade500,
+  );
 }

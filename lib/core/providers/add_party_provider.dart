@@ -89,18 +89,20 @@ class AddPartyProvider extends ChangeNotifier {
     final balanceText = balanceController.text.trim();
     final double balance = balanceText.isEmpty ? 0.0 : (double.tryParse(balanceText) ?? 0.0);
 
-    if (balance > 0) {
-      final newDebt = DebtItem(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        name: name,
-        detail: 'Opening Balance',
-        amount: balance,
-        isReceive: _isReceive,
-        isSettled: false,
-        createdAt: _asOfDate,
-      );
-      debtProvider.addDebtItem(newDebt);
-    }
+    final newDebt = DebtItem(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: name,
+      detail: balance > 0 ? 'Opening Balance' : 'Register Party',
+      amount: balance,
+      isReceive: _isReceive,
+      isSettled: false,
+      createdAt: _asOfDate,
+      phone: phoneController.text.trim().isEmpty ? null : phoneController.text.trim(),
+      email: emailController.text.trim().isEmpty ? null : emailController.text.trim(),
+      address: addressController.text.trim().isEmpty ? null : addressController.text.trim(),
+      vat: vatController.text.trim().isEmpty ? null : vatController.text.trim(),
+    );
+    debtProvider.addDebtItem(newDebt);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

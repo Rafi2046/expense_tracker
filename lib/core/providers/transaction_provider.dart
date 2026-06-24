@@ -8,6 +8,7 @@ class TransactionItem {
   final bool isIncome;
   final DateTime dateTime;
   final String? incomeMonth;
+  final String paymentMethod; // 'Cash' or 'Bank'
 
   TransactionItem({
     required this.id,
@@ -17,13 +18,14 @@ class TransactionItem {
     required this.isIncome,
     required this.dateTime,
     this.incomeMonth,
+    this.paymentMethod = 'Cash',
   });
 }
 
 enum TransactionSortOption {
   latest,
   amountHighToLow,
-  amountLowToHigh,
+  amountLowToHigh;
 }
 
 class TransactionProvider extends ChangeNotifier {
@@ -39,8 +41,6 @@ class TransactionProvider extends ChangeNotifier {
   TransactionSortOption sortOption = TransactionSortOption.latest;
 
   TransactionProvider() {
-
-
     // Generate 12 months centered around the current month (index 6 is current)
     final now = DateTime.now();
     availableMonths = List.generate(12, (index) {
@@ -56,6 +56,7 @@ class TransactionProvider extends ChangeNotifier {
         note: 'Bus Rental',
         isIncome: false,
         dateTime: DateTime.now().subtract(const Duration(hours: 3)),
+        paymentMethod: 'Cash',
       ),
       TransactionItem(
         id: '2',
@@ -64,6 +65,25 @@ class TransactionProvider extends ChangeNotifier {
         note: 'Medicine',
         isIncome: false,
         dateTime: DateTime.now().subtract(const Duration(hours: 6)),
+        paymentMethod: 'Cash',
+      ),
+      TransactionItem(
+        id: '3',
+        amount: 300.0,
+        category: 'Online Shopping',
+        note: 'Gadget Purchase',
+        isIncome: false,
+        dateTime: DateTime.now().subtract(const Duration(days: 1)),
+        paymentMethod: 'Bank',
+      ),
+      TransactionItem(
+        id: '4',
+        amount: 500.0,
+        category: 'Income #1',
+        note: 'Commission',
+        isIncome: true,
+        dateTime: DateTime.now().subtract(const Duration(days: 2)),
+        paymentMethod: 'Cash',
       ),
     ]);
   }

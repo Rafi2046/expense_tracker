@@ -1,7 +1,5 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
-import 'package:expense_tracker/features/dashboard/pages/expense_insights_screen.dart';
-import 'package:expense_tracker/features/dashboard/pages/income_insights_screen.dart';
+import 'package:expense_tracker/features/reports/pages/view_reports_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/account_group.dart';
 import 'package:expense_tracker/features/settings/widgets/management_group.dart';
 import 'package:expense_tracker/features/settings/widgets/preferences_group.dart';
@@ -23,55 +21,6 @@ class SettingsScreen extends StatelessWidget {
       SnackBar(
         content: Text(message),
         duration: const Duration(seconds: 1),
-      ),
-    );
-  }
-
-  void _showReportSelectorDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.r16),
-        ),
-        title: Text(
-          context.translate('select_report_type'),
-          style: GoogleFonts.workSans(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.trending_down, color: AppColors.activeRed),
-              title: Text(context.translate('expense_insights'), style: GoogleFonts.workSans(fontSize: 15)),
-              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
-              onTap: () {
-                Navigator.pop(ctx);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ExpenseInsightsScreen(),
-                  ),
-                );
-              },
-            ),
-            const Divider(height: 1),
-            ListTile(
-              leading: const Icon(Icons.trending_up, color: AppColors.activeGreen),
-              title: Text(context.translate('income_insights'), style: GoogleFonts.workSans(fontSize: 15)),
-              trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
-              onTap: () {
-                Navigator.pop(ctx);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const IncomeInsightsScreen(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -141,7 +90,16 @@ class SettingsScreen extends StatelessWidget {
                 AccountGroup(onSnackBar: (msg) => _showSnackBar(context, msg)),
                 const SizedBox(height: AppSpacing.s24),
 
-                ManagementGroup(onShowReportSelector: () => _showReportSelectorDialog(context)),
+                ManagementGroup(
+                  onShowReportSelector: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ViewReportsScreen(),
+                      ),
+                    );
+                  },
+                ),
                 const SizedBox(height: AppSpacing.s24),
 
                 PreferencesGroup(onSnackBar: (msg) => _showSnackBar(context, msg)),

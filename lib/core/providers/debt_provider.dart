@@ -8,6 +8,10 @@ class DebtItem {
   final bool isReceive; // true = To Receive, false = To Give
   final bool isSettled;
   final DateTime createdAt;
+  final String? phone;
+  final String? email;
+  final String? address;
+  final String? vat;
 
   DebtItem({
     required this.id,
@@ -17,6 +21,10 @@ class DebtItem {
     required this.isReceive,
     this.isSettled = false,
     required this.createdAt,
+    this.phone,
+    this.email,
+    this.address,
+    this.vat,
   });
 
   DebtItem copyWith({
@@ -27,6 +35,10 @@ class DebtItem {
     bool? isReceive,
     bool? isSettled,
     DateTime? createdAt,
+    String? phone,
+    String? email,
+    String? address,
+    String? vat,
   }) {
     return DebtItem(
       id: id ?? this.id,
@@ -36,6 +48,10 @@ class DebtItem {
       isReceive: isReceive ?? this.isReceive,
       isSettled: isSettled ?? this.isSettled,
       createdAt: createdAt ?? this.createdAt,
+      phone: phone ?? this.phone,
+      email: email ?? this.email,
+      address: address ?? this.address,
+      vat: vat ?? this.vat,
     );
   }
 }
