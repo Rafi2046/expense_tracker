@@ -29,80 +29,79 @@ class TopSpendingCategoryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        // Icon in grey circle
-        Container(
-          width: 40,
-          height: 40,
-          decoration: const BoxDecoration(
-            color: Color(0xFFF2F4F4),
-            shape: BoxShape.circle,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        children: [
+          // Icon in rounded square
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF3F4F6),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              item.icon,
+              color: const Color(0xFF4A5568),
+              size: 17,
+            ),
           ),
-          child: Icon(
-            item.icon,
-            color: const Color(0xFF31394D),
-            size: 20,
-          ),
-        ),
-        const SizedBox(width: 16),
+          const SizedBox(width: 12),
 
-        // Info
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          // Info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.title,
+                  style: GoogleFonts.workSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF1E2A3A),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  item.subtitle,
+                  style: GoogleFonts.workSans(
+                    fontSize: 10.5,
+                    color: Colors.grey.shade400,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Trailing (Amount & Percentage)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                item.title,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
+                '${context.currencySymbol}${item.amount.toStringAsFixed(0).replaceAllMapped(
+                      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                      (Match m) => '${m[1]},',
+                    )}',
+                style: GoogleFonts.workSans(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF1E2A3A),
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
               Text(
-                item.subtitle,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textMuted,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
+                '${item.percentage.toStringAsFixed(0)}%',
+                style: GoogleFonts.workSans(
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.activeRed,
                 ),
               ),
             ],
           ),
-        ),
-
-        // Trailing (Amount & Percentage)
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              '${context.currencySymbol}${item.amount.toStringAsFixed(0).replaceAllMapped(
-                    RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                    (Match m) => '${m[1]},',
-                  )}',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-                fontFamily: GoogleFonts.workSans().fontFamily,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '${item.percentage.toStringAsFixed(0)}%',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: AppColors.activeRed,
-                fontFamily: GoogleFonts.workSans().fontFamily,
-              ),
-            ),
-          ],
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

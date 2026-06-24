@@ -24,21 +24,21 @@ class MonthlyComparisonCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(14.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(
-          color: AppColors.dividerColor.withValues(alpha: 0.5),
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.01),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: const Offset(0, 3),
           ),
         ],
+        border: Border.all(
+          color: const Color(0xFFF0F0F0),
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,23 +46,21 @@ class MonthlyComparisonCard extends StatelessWidget {
           // Header
           Text(
             'Monthly Comparison',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-              fontFamily: GoogleFonts.workSans().fontFamily,
+            style: GoogleFonts.workSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFF1E2A3A),
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           Text(
             'This Month vs Last Month',
-            style: TextStyle(
-              fontSize: 13,
-              color: AppColors.textMuted,
-              fontFamily: GoogleFonts.workSans().fontFamily,
+            style: GoogleFonts.workSans(
+              fontSize: 11,
+              color: Colors.grey.shade400,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
 
           // Current Month Row Info
           ComparisonProgressRow(
@@ -71,7 +69,7 @@ class MonthlyComparisonCard extends StatelessWidget {
             progress: currentProgress,
             progressColor: AppColors.activeGreen,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
 
           // Previous Month Row Info
           ComparisonProgressRow(
@@ -80,14 +78,11 @@ class MonthlyComparisonCard extends StatelessWidget {
             progress: previousProgress,
             progressColor: const Color(0xFFB3C5B9),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
 
           // Divider
-          Container(
-            color: AppColors.dividerColor.withValues(alpha: 0.3),
-            height: 1.0,
-          ),
-          const SizedBox(height: 16),
+          Divider(color: Colors.grey.shade100, height: 1),
+          const SizedBox(height: 12),
 
           // Net Change Row
           Row(
@@ -95,11 +90,10 @@ class MonthlyComparisonCard extends StatelessWidget {
             children: [
               Text(
                 'Net Change',
-                style: TextStyle(
-                  fontSize: 14,
+                style: GoogleFonts.workSans(
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xFF31394D),
-                  fontFamily: GoogleFonts.workSans().fontFamily,
+                  color: const Color(0xFF4A5568),
                 ),
               ),
               Row(
@@ -107,16 +101,15 @@ class MonthlyComparisonCard extends StatelessWidget {
                   const Icon(
                     Icons.trending_up,
                     color: AppColors.activeRed,
-                    size: 16,
+                    size: 14,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     netChangeText,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                    style: GoogleFonts.workSans(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.activeRed,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
                 ],

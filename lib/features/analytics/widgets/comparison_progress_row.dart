@@ -26,11 +26,10 @@ class ComparisonProgressRow extends StatelessWidget {
           children: [
             Text(
               label,
-              style: TextStyle(
-                fontSize: 14,
+              style: GoogleFonts.workSans(
+                fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: const Color(0xFF31394D),
-                fontFamily: GoogleFonts.workSans().fontFamily,
+                color: const Color(0xFF4A5568),
               ),
             ),
             Text(
@@ -38,23 +37,22 @@ class ComparisonProgressRow extends StatelessWidget {
                     RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                     (Match m) => '${m[1]},',
                   )}',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-                fontFamily: GoogleFonts.workSans().fontFamily,
+              style: GoogleFonts.workSans(
+                fontSize: 12.5,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF1E2A3A),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         ClipRRect(
           borderRadius: BorderRadius.circular(100),
           child: LinearProgressIndicator(
             value: progress,
             backgroundColor: const Color(0xFFF0F0F0),
             valueColor: AlwaysStoppedAnimation<Color>(progressColor),
-            minHeight: 12,
+            minHeight: 8,
           ),
         ),
       ],

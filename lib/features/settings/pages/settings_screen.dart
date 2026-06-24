@@ -28,7 +28,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: const Color(0xFFF4F6F9),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -36,14 +36,15 @@ class SettingsScreen extends StatelessWidget {
         title: Text(
           context.translate('settings'),
           style: GoogleFonts.workSans(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
             color: Colors.black87,
+            letterSpacing: -0.3,
           ),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
+          child: Container(color: const Color(0xFFF0F0F0), height: 1.0),
         ),
       ),
       body: SafeArea(
@@ -52,7 +53,7 @@ class SettingsScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.s16,
-              vertical: AppSpacing.s20,
+              vertical: 18.0,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,11 +85,11 @@ class SettingsScreen extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: AppSpacing.s24),
+                const SizedBox(height: 20),
 
                 // Settings Groups
                 AccountGroup(onSnackBar: (msg) => _showSnackBar(context, msg)),
-                const SizedBox(height: AppSpacing.s24),
+                const SizedBox(height: 20),
 
                 ManagementGroup(
                   onShowReportSelector: () {
@@ -100,13 +101,13 @@ class SettingsScreen extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: AppSpacing.s24),
+                const SizedBox(height: 20),
 
                 PreferencesGroup(onSnackBar: (msg) => _showSnackBar(context, msg)),
-                const SizedBox(height: AppSpacing.s24),
+                const SizedBox(height: 20),
 
                 const UtilitiesGroup(),
-                const SizedBox(height: AppSpacing.s24),
+                const SizedBox(height: 20),
 
                 SupportGroup(onSnackBar: (msg) => _showSnackBar(context, msg)),
                 const SizedBox(height: 100), // Spacer to scroll past floating bottom nav

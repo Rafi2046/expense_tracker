@@ -20,37 +20,37 @@ class DashboardShortcutsCard extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 6.0),
-              child: Icon(Icons.account_balance_wallet_outlined, size: 24, color: activeGreen),
+              padding: EdgeInsets.only(top: 4.0),
+              child: Icon(Icons.account_balance_wallet_outlined, size: 18, color: activeGreen),
             ),
             Positioned(
               top: 0,
-              child: Icon(Icons.arrow_upward, size: 12, color: activeGreen),
+              child: Icon(Icons.arrow_upward, size: 9, color: activeGreen),
             ),
           ],
         );
       case 'income':
-        return const Icon(Icons.payments_outlined, size: 28, color: activeGreen);
+        return const Icon(Icons.payments_outlined, size: 20, color: activeGreen);
       case 'expense':
-        return const Icon(Icons.account_balance_wallet_outlined, size: 28, color: activeGreen);
+        return const Icon(Icons.account_balance_wallet_outlined, size: 20, color: activeGreen);
       case 'payment_in':
         return const Stack(
           alignment: Alignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 6.0),
-              child: Icon(Icons.account_balance_wallet_outlined, size: 24, color: activeGreen),
+              padding: EdgeInsets.only(top: 4.0),
+              child: Icon(Icons.account_balance_wallet_outlined, size: 18, color: activeGreen),
             ),
             Positioned(
               top: 0,
-              child: Icon(Icons.arrow_downward, size: 12, color: activeGreen),
+              child: Icon(Icons.arrow_downward, size: 9, color: activeGreen),
             ),
           ],
         );
       case 'add_party':
-        return const Icon(Icons.person_add_outlined, size: 28, color: activeGreen);
+        return const Icon(Icons.person_add_outlined, size: 20, color: activeGreen);
       default:
-        return const Icon(Icons.help_outline, size: 28, color: activeGreen);
+        return const Icon(Icons.help_outline, size: 20, color: activeGreen);
     }
   }
 
@@ -63,60 +63,59 @@ class DashboardShortcutsCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Section Header Row
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              context.translate('quick_actions'),
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-                fontFamily: GoogleFonts.workSans().fontFamily,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                context.translate('quick_actions'),
+                style: GoogleFonts.workSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF1E2A3A),
+                ),
               ),
-            ),
-            GestureDetector(
-              onTap: () => EditShortcutsSheet.show(context),
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
+              GestureDetector(
+                onTap: () => EditShortcutsSheet.show(context),
+                behavior: HitTestBehavior.opaque,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(
                       Icons.edit_square,
-                      size: 18,
+                      size: 13,
                       color: AppColors.activeGreen,
                     ),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: 4),
                     Text(
                       context.translate('edit_menu'),
-                      style: TextStyle(
-                        fontSize: 14,
+                      style: GoogleFonts.workSans(
+                        fontSize: 11.5,
                         fontWeight: FontWeight.w600,
                         color: AppColors.activeGreen,
-                        fontFamily: GoogleFonts.workSans().fontFamily,
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
-        
+        const SizedBox(height: 10),
+
         // Container Card
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withAlpha(5),
+                color: Colors.black.withValues(alpha: 0.03),
                 blurRadius: 10,
-                offset: const Offset(0, 4),
+                offset: const Offset(0, 3),
               ),
             ],
             border: Border.all(
@@ -127,14 +126,13 @@ class DashboardShortcutsCard extends StatelessWidget {
           child: activeShortcuts.isEmpty
               ? Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(12.0),
                     child: Text(
                       'No quick actions enabled. Tap "Edit Menu" to add some.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade500,
-                        fontFamily: GoogleFonts.workSans().fontFamily,
+                      style: GoogleFonts.workSans(
+                        fontSize: 12,
+                        color: Colors.grey.shade400,
                       ),
                     ),
                   ),
@@ -156,7 +154,7 @@ class DashboardShortcutsCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         for (int rowIndex = 0; rowIndex < chunks.length; rowIndex++) ...[
-          if (rowIndex > 0) const SizedBox(height: 16),
+          if (rowIndex > 0) const SizedBox(height: 12),
           Row(
             children: [
               for (int colIndex = 0; colIndex < 3; colIndex++) ...[
@@ -211,33 +209,33 @@ class DashboardShortcutsCard extends StatelessWidget {
           );
         }
       },
+      behavior: HitTestBehavior.opaque,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Round Icon Container
           Container(
-            width: 56,
-            height: 56,
-            decoration: const BoxDecoration(
-              color: Color(0xFFE8F8F5),
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: AppColors.activeGreen.withValues(alpha: 0.08),
               shape: BoxShape.circle,
             ),
             child: Center(
               child: _buildShortcutIcon(item.id),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           // Label
           Text(
             context.translate(item.id),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 13,
+            style: GoogleFonts.workSans(
+              fontSize: 10.5,
               fontWeight: FontWeight.w500,
-              color: const Color(0xFF31394D),
-              fontFamily: GoogleFonts.workSans().fontFamily,
+              color: const Color(0xFF4A5568),
             ),
           ),
         ],

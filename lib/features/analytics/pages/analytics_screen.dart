@@ -66,7 +66,7 @@ class AnalyticsScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: const Color(0xFFF4F6F9),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -74,21 +74,22 @@ class AnalyticsScreen extends StatelessWidget {
         title: Text(
           context.translate('analytics'),
           style: GoogleFonts.workSans(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
             color: Colors.black87,
+            letterSpacing: -0.3,
           ),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
+          child: Container(color: const Color(0xFFF0F0F0), height: 1.0),
         ),
       ),
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 18.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -97,7 +98,7 @@ class AnalyticsScreen extends StatelessWidget {
                   totalAmount: '${context.currencySymbol}4,250',
                   items: spendingItems,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 18),
 
                 // Monthly Comparison Card
                 MonthlyComparisonCard(
@@ -105,7 +106,7 @@ class AnalyticsScreen extends StatelessWidget {
                   previousAmount: 3800,
                   netChangeText: '+11.8%',
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 18),
 
                 // Top Spending Categories Card
                 TopSpendingCategoriesCard(

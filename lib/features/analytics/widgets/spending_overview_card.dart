@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,21 +32,20 @@ class SpendingOverviewCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 10,
-          height: 10,
+          width: 8,
+          height: 8,
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 6),
         Text(
           '$category ${percentage.toStringAsFixed(0)}%',
-          style: TextStyle(
-            fontSize: 13,
+          style: GoogleFonts.workSans(
+            fontSize: 11,
             fontWeight: FontWeight.w500,
-            color: const Color(0xFF31394D),
-            fontFamily: GoogleFonts.workSans().fontFamily,
+            color: const Color(0xFF4A5568),
           ),
         ),
       ],
@@ -58,9 +56,7 @@ class SpendingOverviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (items.isEmpty) return const SizedBox.shrink();
 
-    // Split items for 2x2 legend matching screenshot layout:
-    // Left column: Housing, Transport
-    // Right column: Food, Utilities
+    // Split items for 2x2 legend
     final leftColumnItems = <SpendingDistributionItem>[];
     final rightColumnItems = <SpendingDistributionItem>[];
 
@@ -74,21 +70,21 @@ class SpendingOverviewCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(14.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(
-          color: AppColors.dividerColor.withValues(alpha: 0.5),
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.01),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: const Offset(0, 3),
           ),
         ],
+        border: Border.all(
+          color: const Color(0xFFF0F0F0),
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,29 +92,27 @@ class SpendingOverviewCard extends StatelessWidget {
           // Header
           Text(
             context.translate('distribution'),
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-              fontFamily: GoogleFonts.workSans().fontFamily,
+            style: GoogleFonts.workSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFF1E2A3A),
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           Text(
             context.translate('current_month_distribution'),
-            style: TextStyle(
-              fontSize: 13,
-              color: AppColors.textMuted,
-              fontFamily: GoogleFonts.workSans().fontFamily,
+            style: GoogleFonts.workSans(
+              fontSize: 11,
+              color: Colors.grey.shade400,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
-          // Donut Chart inside a Stack
+          // Donut Chart
           Center(
             child: SizedBox(
-              height: 180,
-              width: 180,
+              height: 160,
+              width: 160,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -142,21 +136,19 @@ class SpendingOverviewCard extends StatelessWidget {
                     children: [
                       Text(
                         context.translate('total'),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textMuted,
+                        style: GoogleFonts.workSans(
+                          fontSize: 10.5,
+                          color: Colors.grey.shade400,
                           fontWeight: FontWeight.w500,
-                          fontFamily: GoogleFonts.workSans().fontFamily,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 2),
                       Text(
                         totalAmount,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                          fontFamily: GoogleFonts.workSans().fontFamily,
+                        style: GoogleFonts.workSans(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF1E2A3A),
                         ),
                       ),
                     ],
@@ -165,7 +157,7 @@ class SpendingOverviewCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 14),
 
           // 2x2 Legend Row
           Row(
@@ -176,7 +168,7 @@ class SpendingOverviewCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: leftColumnItems
                       .map((item) => Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
+                            padding: const EdgeInsets.only(bottom: 8.0),
                             child: _buildLegendItem(item.category, item.percentage, item.color),
                           ))
                       .toList(),
@@ -187,7 +179,7 @@ class SpendingOverviewCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: rightColumnItems
                       .map((item) => Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
+                            padding: const EdgeInsets.only(bottom: 8.0),
                             child: _buildLegendItem(item.category, item.percentage, item.color),
                           ))
                       .toList(),
