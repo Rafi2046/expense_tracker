@@ -26,6 +26,11 @@ enum DateRangeOption {
   custom,
 }
 
+enum PartyStatementViewMode {
+  card,
+  table,
+}
+
 class ReportsProvider extends ChangeNotifier {
   TransactionProvider? _txProvider;
   DebtProvider? _debtProvider;
@@ -46,6 +51,9 @@ class ReportsProvider extends ChangeNotifier {
   // Parties Report filtering
   String _partiesSearchQuery = '';
 
+  // Party Statement view mode
+  PartyStatementViewMode _partyStatementViewMode = PartyStatementViewMode.card;
+
   ReportsProvider() {
     _selectedDateRange = getDateTimeRangeForOption(DateRangeOption.thisMonth);
   }
@@ -65,6 +73,7 @@ class ReportsProvider extends ChangeNotifier {
   String? get selectedPartyNameForStatement => _selectedPartyNameForStatement;
   ReportSortOption get sortOption => _sortOption;
   String get partiesSearchQuery => _partiesSearchQuery;
+  PartyStatementViewMode get partyStatementViewMode => _partyStatementViewMode;
 
   // Setters/actions
   void setDateRange(DateTimeRange? range, {DateRangeOption option = DateRangeOption.custom}) {
@@ -110,6 +119,11 @@ class ReportsProvider extends ChangeNotifier {
 
   void setPartiesSearch(String query) {
     _partiesSearchQuery = query;
+    notifyListeners();
+  }
+
+  void setPartyStatementViewMode(PartyStatementViewMode mode) {
+    _partyStatementViewMode = mode;
     notifyListeners();
   }
 

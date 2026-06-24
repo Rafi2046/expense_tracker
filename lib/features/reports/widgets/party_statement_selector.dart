@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_select_sheet.dart';
@@ -11,6 +12,7 @@ class PartyStatementSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
     final partyName = reportsProvider.selectedPartyNameForStatement;
+    final isSelected = partyName != null;
 
     return Align(
       alignment: Alignment.centerLeft,
@@ -26,21 +28,30 @@ class PartyStatementSelector extends StatelessWidget {
             );
           }
         },
+        borderRadius: BorderRadius.circular(20),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: const Color(0xFFF1F2F4),
-            borderRadius: BorderRadius.circular(12),
+            color: isSelected ? AppColors.activeGreen : const Color(0xFFF1F2F4),
+            borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 partyName ?? 'Select Party',
-                style: AppTextStyles.reportTileTitle.copyWith(fontSize: 13.5),
+                style: AppTextStyles.reportTileTitle.copyWith(
+                  fontSize: 13.5,
+                  color: isSelected ? Colors.white : Colors.black87,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                ),
               ),
               const SizedBox(width: 4),
-              const Icon(Icons.arrow_drop_down, color: Colors.black87, size: 18),
+              Icon(
+                Icons.keyboard_arrow_down,
+                color: isSelected ? Colors.white : Colors.black87,
+                size: 18,
+              ),
             ],
           ),
         ),

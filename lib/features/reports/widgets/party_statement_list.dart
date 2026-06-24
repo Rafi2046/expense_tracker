@@ -24,36 +24,7 @@ class PartyStatementList extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Doc graphic container matching the mockup
-              // Container(
-              //   width: 150,
-              //   height: 150,
-              //   decoration: BoxDecoration(
-              //     color: Colors.grey.shade50,
-              //     shape: BoxShape.circle,
-              //   ),
-              //   child: Stack(
-              //     alignment: Alignment.center,
-              //     children: [
-              //       Icon(
-              //         Icons.text_snippet_outlined,
-              //         size: 72,
-              //         color: Colors.grey.shade300,
-              //       ),
-              //       Positioned(
-              //         bottom: 30,
-              //         right: 30,
-              //         child: Icon(
-              //           Icons.person_search_outlined,
-              //           size: 28,
-              //           color: Colors.grey.shade400,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              Image.asset(AppImages.partyReportIcon,width: 150,height: 200,),
-
+              Image.asset(AppImages.partyReportIcon, width: 150, height: 200),
 
               Text(
                 'Select Party to View Report',
@@ -71,7 +42,9 @@ class PartyStatementList extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 40.0),
           child: Text(
             'No transactions in this period',
-            style: AppTextStyles.reportTransactionSubtitle.copyWith(fontSize: 14),
+            style: AppTextStyles.reportTransactionSubtitle.copyWith(
+              fontSize: 14,
+            ),
           ),
         ),
       );
@@ -80,10 +53,7 @@ class PartyStatementList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Transaction Lists',
-          style: AppTextStyles.reportTransactionTitle,
-        ),
+        Text('Transaction Lists', style: AppTextStyles.reportTransactionTitle),
         const SizedBox(height: 12),
         ListView.separated(
           shrinkWrap: true,
@@ -120,7 +90,9 @@ class PartyStatementList extends StatelessWidget {
                   Text(
                     '$currencySymbol ${tx.amount.toStringAsFixed(0)}',
                     style: AppTextStyles.reportTransactionTitle.copyWith(
-                      color: tx.isReceive ? AppColors.activeGreen : AppColors.activeRed,
+                      color: tx.isReceive
+                          ? AppColors.activeGreen
+                          : AppColors.activeRed,
                     ),
                   ),
                 ],
