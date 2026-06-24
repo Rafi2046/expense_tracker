@@ -4,7 +4,7 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/edit_shortcuts_sheet.dart';
-import 'package:expense_tracker/features/notes/pages/add_note_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/add_party_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +15,6 @@ class DashboardShortcutsCard extends StatelessWidget {
   Widget _buildShortcutIcon(String id) {
     const Color activeGreen = AppColors.activeGreen;
     switch (id) {
-      case 'add_note':
-        return const Icon(Icons.notes, size: 28, color: activeGreen);
       case 'payment_out':
         return const Stack(
           alignment: Alignment.center,
@@ -179,11 +177,11 @@ class DashboardShortcutsCard extends StatelessWidget {
   Widget _buildShortcutItem(BuildContext context, ShortcutItem item) {
     return GestureDetector(
       onTap: () {
-        if (item.id == 'add_note') {
+        if (item.id == 'add_party') {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const AddNoteScreen(),
+              builder: (context) => const AddPartyScreen(),
             ),
           );
         } else if (item.id == 'expense') {

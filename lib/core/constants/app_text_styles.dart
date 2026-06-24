@@ -270,4 +270,46 @@ class AppTextStyles {
     fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
     letterSpacing: 1.5,
   );
+
+  static TextStyle partyFormLabel = TextStyle(
+    fontSize: 14,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    color: AppColors.loginLabelColor,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle partyFormInput = TextStyle(
+    fontSize: 13.5,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    color: AppColors.loginTitle,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle partyFormHint = TextStyle(
+    fontSize: 10.5,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    color: Colors.grey.shade400,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle partyTabActive = TextStyle(
+    fontSize: 13.5,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    color: AppColors.activeGreen,
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle partyTabInactive = TextStyle(
+    fontSize: 13.5,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    color: AppColors.loginSubTitle,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle partySubmitButtonText = TextStyle(
+    fontSize: 16,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+    color: Colors.white,
+    fontWeight: FontWeight.w600,
+  );
 }

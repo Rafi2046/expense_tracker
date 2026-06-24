@@ -37,8 +37,6 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
   Widget _buildShortcutIcon(String id) {
     const Color activeGreen = AppColors.activeGreen;
     switch (id) {
-      case 'add_note':
-        return const Icon(Icons.notes, size: 22, color: activeGreen);
       case 'payment_out':
         return const Stack(
           alignment: Alignment.center,
@@ -192,23 +190,33 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                         ),
                       ),
                       
-                      // Checkbox styled
-                      Checkbox(
-                        value: item.isEnabled,
-                        activeColor: AppColors.activeGreen,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+                      // Checkbox styled or Locked Icon
+                      if (item.id == 'add_party')
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Icon(
+                            Icons.lock_rounded,
+                            color: AppColors.activeGreen,
+                            size: 20,
+                          ),
+                        )
+                      else
+                        Checkbox(
+                          value: item.isEnabled,
+                          activeColor: AppColors.activeGreen,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          side: BorderSide(
+                            color: Colors.grey.shade300,
+                            width: 1.5,
+                          ),
+                          onChanged: (val) {
+                            setState(() {
+                              _draftShortcuts[index] = item.copyWith(isEnabled: val ?? false);
+                            });
+                          },
                         ),
-                        side: BorderSide(
-                          color: Colors.grey.shade300,
-                          width: 1.5,
-                        ),
-                        onChanged: (val) {
-                          setState(() {
-                            _draftShortcuts[index] = item.copyWith(isEnabled: val ?? false);
-                          });
-                        },
-                      ),
                     ],
                   ),
                 );

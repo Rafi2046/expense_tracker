@@ -17,19 +17,25 @@ class NotificationsScreen extends StatefulWidget {
 class _NotificationsScreenState extends State<NotificationsScreen> {
   String _selectedFilter = 'All';
 
-  List<NotificationItem> _getFilteredNotifications(List<NotificationItem> notifications) {
+  List<NotificationItem> _getFilteredNotifications(
+    List<NotificationItem> notifications,
+  ) {
     if (_selectedFilter == 'All') {
       return notifications;
     }
     final type = _selectedFilter == 'Alerts'
         ? NotificationType.alert
         : _selectedFilter == 'Updates'
-            ? NotificationType.update
-            : NotificationType.credit;
+        ? NotificationType.update
+        : NotificationType.credit;
     return notifications.where((n) => n.type == type).toList();
   }
 
-  void _showNotificationDetails(BuildContext context, NotificationItem item, NotificationProvider provider) {
+  void _showNotificationDetails(
+    BuildContext context,
+    NotificationItem item,
+    NotificationProvider provider,
+  ) {
     provider.markAsRead(item.id);
     showDialog(
       context: context,
@@ -42,21 +48,31 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             Expanded(
               child: Text(
                 item.title,
-                style: GoogleFonts.workSans(fontWeight: FontWeight.bold, fontSize: 16),
+                style: GoogleFonts.workSans(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ),
           ],
         ),
         content: Text(
           item.description,
-          style: GoogleFonts.workSans(fontSize: 14, color: AppColors.loginTitle, height: 1.4),
+          style: GoogleFonts.workSans(
+            fontSize: 14,
+            color: AppColors.loginTitle,
+            height: 1.4,
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
               context.translate('close'),
-              style: GoogleFonts.workSans(fontWeight: FontWeight.bold, color: AppColors.buttonColor),
+              style: GoogleFonts.workSans(
+                fontWeight: FontWeight.bold,
+                color: AppColors.buttonColor,
+              ),
             ),
           ),
         ],
@@ -131,10 +147,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: const Color(0xFFF1F1F1),
-            height: 1.0,
-          ),
+          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
         ),
       ),
       body: Column(
@@ -160,7 +173,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             child: filtered.isEmpty
                 ? const NotificationEmptyState()
                 : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     itemCount: filtered.length,
                     itemBuilder: (context, index) {
                       final item = filtered[index];
@@ -175,13 +191,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             color: Colors.red.shade50,
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child: const Icon(Icons.delete_outline, color: AppColors.activeRed),
+                          child: const Icon(
+                            Icons.delete_outline,
+                            color: AppColors.activeRed,
+                          ),
                         ),
                         onDismissed: (direction) {
                           provider.deleteNotification(item.id);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Notification "${item.title}" dismissed'),
+                              content: Text(
+                                'Notification "${item.title}" dismissed',
+                              ),
                               action: SnackBarAction(
                                 label: 'Undo',
                                 onPressed: () {
@@ -193,7 +214,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         },
                         child: NotificationCard(
                           item: item,
-                          onTap: () => _showNotificationDetails(context, item, provider),
+                          onTap: () =>
+                              _showNotificationDetails(context, item, provider),
                         ),
                       );
                     },
@@ -226,7 +248,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
-          color: isSelected ? AppColors.buttonColor.withValues(alpha: 0.3) : Colors.transparent,
+          color: isSelected
+              ? AppColors.buttonColor.withValues(alpha: 0.3)
+              : Colors.transparent,
         ),
       ),
       showCheckmark: false,

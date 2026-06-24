@@ -26,7 +26,7 @@ class ShortcutItem {
 
 class ShortcutProvider extends ChangeNotifier {
   List<ShortcutItem> _shortcuts = [
-    ShortcutItem(id: 'add_note', label: 'Add Note'),
+    ShortcutItem(id: 'add_party', label: 'Add Party', isEnabled: true),
     ShortcutItem(id: 'payment_out', label: 'Payment Out'),
     ShortcutItem(id: 'income', label: 'Income'),
     ShortcutItem(id: 'expense', label: 'Daily Expense'),
@@ -36,10 +36,15 @@ class ShortcutProvider extends ChangeNotifier {
   List<ShortcutItem> get shortcuts => List.unmodifiable(_shortcuts);
 
   List<ShortcutItem> get activeShortcuts =>
-      _shortcuts.where((item) => item.isEnabled).toList();
+      _shortcuts.where((item) => item.id == 'add_party' || item.isEnabled).toList();
 
   void updateShortcuts(List<ShortcutItem> updatedList) {
-    _shortcuts = List.from(updatedList);
+    _shortcuts = updatedList.map((item) {
+      if (item.id == 'add_party') {
+        return item.copyWith(isEnabled: true);
+      }
+      return item;
+    }).toList();
     notifyListeners();
   }
 }
