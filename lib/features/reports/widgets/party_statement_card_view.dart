@@ -48,19 +48,36 @@ class PartyStatementCardView extends StatelessWidget {
       runningBalances[tx.id] = balance;
     }
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final isReceivable = netBalance >= 0;
     final cardBgGradient = isReceivable
-        ? const LinearGradient(
-            colors: [Color(0xFFF4FBF9), Color(0xFFE8F7F3)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          )
-        : const LinearGradient(
-            colors: [Color(0xFFFFF7F7), Color(0xFFFDECEC)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          );
-    final cardBorderColor = isReceivable ? const Color(0xFFD3EFE8) : const Color(0xFFFBD7D7);
+        ? (isDark
+            ? LinearGradient(
+                colors: [AppColors.activeGreen.withValues(alpha: 0.15), AppColors.activeGreen.withValues(alpha: 0.03)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : const LinearGradient(
+                colors: [Color(0xFFF4FBF9), Color(0xFFE8F7F3)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ))
+        : (isDark
+            ? LinearGradient(
+                colors: [AppColors.activeRed.withValues(alpha: 0.15), AppColors.activeRed.withValues(alpha: 0.03)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : const LinearGradient(
+                colors: [Color(0xFFFFF7F7), Color(0xFFFDECEC)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ));
+    final cardBorderColor = isReceivable
+        ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.3) : const Color(0xFFD3EFE8))
+        : (isDark ? AppColors.activeRed.withValues(alpha: 0.3) : const Color(0xFFFBD7D7));
     final cardAccentColor = isReceivable ? AppColors.activeGreen : AppColors.activeRed;
 
     return Column(
@@ -99,7 +116,9 @@ class PartyStatementCardView extends StatelessWidget {
                           Text(
                             isReceivable ? 'Total Receivables' : 'Total Payables',
                             style: AppTextStyles.reportStatLabel.copyWith(
-                              color: isReceivable ? const Color(0xFF146C48).withValues(alpha: 0.7) : const Color(0xFFDC3545).withValues(alpha: 0.7),
+                              color: isReceivable
+                                  ? (isDark ? AppColors.activeGreen : const Color(0xFF146C48)).withValues(alpha: 0.7)
+                                  : (isDark ? AppColors.activeRed : const Color(0xFFDC3545)).withValues(alpha: 0.7),
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.5,
@@ -132,17 +151,17 @@ class PartyStatementCardView extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF2FBF7),
+                  color: isDark ? AppColors.activeGreen.withValues(alpha: 0.08) : const Color(0xFFF2FBF7),
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFD8F3E5)),
+                  border: Border.all(color: isDark ? AppColors.activeGreen.withValues(alpha: 0.2) : const Color(0xFFD8F3E5)),
                 ),
                 child: Row(
                   children: [
                     Container(
                       width: 32,
                       height: 32,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFE1F7EC),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.activeGreen.withValues(alpha: 0.15) : const Color(0xFFE1F7EC),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -159,7 +178,7 @@ class PartyStatementCardView extends StatelessWidget {
                           Text(
                             'Money In',
                             style: AppTextStyles.reportStatLabel.copyWith(
-                              color: const Color(0xFF146C48).withValues(alpha: 0.7),
+                              color: (isDark ? AppColors.activeGreen : const Color(0xFF146C48)).withValues(alpha: 0.7),
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
                             ),
@@ -170,7 +189,7 @@ class PartyStatementCardView extends StatelessWidget {
                             style: AppTextStyles.reportTransactionTitle.copyWith(
                               fontSize: 14.5,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                         ],
@@ -185,17 +204,17 @@ class PartyStatementCardView extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFF5F5),
+                  color: isDark ? AppColors.activeRed.withValues(alpha: 0.08) : const Color(0xFFFFF5F5),
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFFAD1D1)),
+                  border: Border.all(color: isDark ? AppColors.activeRed.withValues(alpha: 0.2) : const Color(0xFFFAD1D1)),
                 ),
                 child: Row(
                   children: [
                     Container(
                       width: 32,
                       height: 32,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFFFEAEA),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFFEAEA),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -212,7 +231,7 @@ class PartyStatementCardView extends StatelessWidget {
                           Text(
                             'Money Out',
                             style: AppTextStyles.reportStatLabel.copyWith(
-                              color: const Color(0xFFDC3545).withValues(alpha: 0.7),
+                              color: (isDark ? AppColors.activeRed : const Color(0xFFDC3545)).withValues(alpha: 0.7),
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
                             ),
@@ -223,7 +242,7 @@ class PartyStatementCardView extends StatelessWidget {
                             style: AppTextStyles.reportTransactionTitle.copyWith(
                               fontSize: 14.5,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                         ],
@@ -243,6 +262,7 @@ class PartyStatementCardView extends StatelessWidget {
           style: AppTextStyles.reportTransactionTitle.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 15,
+            color: theme.colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 12),
@@ -259,12 +279,12 @@ class PartyStatementCardView extends StatelessWidget {
             return Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.cardColor,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFF1F1F1)),
+                border: Border.all(color: theme.dividerColor),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.005),
+                    color: Colors.black.withValues(alpha: isDark ? 0.05 : 0.005),
                     blurRadius: 5,
                     offset: const Offset(0, 2),
                   ),
@@ -277,7 +297,7 @@ class PartyStatementCardView extends StatelessWidget {
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF5F6F8),
+                      color: isDark ? Colors.white10 : const Color(0xFFF5F6F8),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
@@ -296,7 +316,7 @@ class PartyStatementCardView extends StatelessWidget {
                           style: AppTextStyles.reportTransactionTitle.copyWith(
                             fontSize: 13.5,
                             fontWeight: FontWeight.w600,
-                            color: Colors.black87,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -307,12 +327,17 @@ class PartyStatementCardView extends StatelessWidget {
                           children: [
                             Text(
                               DateFormat('dd MMM yyyy • h:mm a').format(tx.createdAt),
-                              style: AppTextStyles.reportTransactionSubtitle.copyWith(fontSize: 10.5),
+                              style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                                fontSize: 10.5,
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
-                                color: isTxBalPositive ? const Color(0xFFE8F8F5) : const Color(0xFFFDE8E8),
+                                color: isTxBalPositive
+                                    ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.15) : const Color(0xFFE8F8F5))
+                                    : (isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFDE8E8)),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(

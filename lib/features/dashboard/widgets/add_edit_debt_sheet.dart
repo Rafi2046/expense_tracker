@@ -29,7 +29,7 @@ class AddEditDebtSheet extends StatefulWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).cardColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(AppSpacing.br20),
@@ -76,9 +76,27 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final titleText = widget.item == null
         ? (widget.isReceive ? 'Add Owed Entry' : 'Add Owed Entry (To Give)')
         : (widget.isReceive ? 'Edit Owed Entry' : 'Edit Owed Entry (To Give)');
+
+    final inputStyle = GoogleFonts.inter(
+      fontSize: 14,
+      color: theme.colorScheme.onSurface,
+    );
+    final labelStyle = GoogleFonts.inter(
+      fontSize: 14,
+      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+    );
+    final enabledBorderSide = BorderSide(
+      color: theme.dividerTheme.color ?? (isDark ? Colors.white12 : Colors.grey.shade300),
+    );
+    final focusedBorderSide = BorderSide(
+      color: widget.themeColor,
+      width: 1.5,
+    );
 
     return Padding(
       padding: EdgeInsets.only(
@@ -101,11 +119,11 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                   style: GoogleFonts.workSans(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.close),
+                  icon: Icon(Icons.close, color: theme.colorScheme.onSurface),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -113,11 +131,21 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
             const SizedBox(height: 16),
             TextFormField(
               controller: _nameController,
+              style: inputStyle,
               decoration: InputDecoration(
                 labelText: widget.payeeLabel,
-                labelStyle: GoogleFonts.inter(fontSize: 14),
+                labelStyle: labelStyle,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSpacing.br12),
+                  borderSide: enabledBorderSide,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppSpacing.br12),
+                  borderSide: enabledBorderSide,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppSpacing.br12),
+                  borderSide: focusedBorderSide,
                 ),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -131,11 +159,21 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
             const SizedBox(height: 12),
             TextFormField(
               controller: _detailController,
+              style: inputStyle,
               decoration: InputDecoration(
                 labelText: 'Details (e.g. Dinner Split, Rent, etc.)',
-                labelStyle: GoogleFonts.inter(fontSize: 14),
+                labelStyle: labelStyle,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSpacing.br12),
+                  borderSide: enabledBorderSide,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppSpacing.br12),
+                  borderSide: enabledBorderSide,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppSpacing.br12),
+                  borderSide: focusedBorderSide,
                 ),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -149,14 +187,24 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
             const SizedBox(height: 12),
             TextFormField(
               controller: _amountController,
+              style: inputStyle,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
               decoration: InputDecoration(
                 labelText: 'Amount (${context.currencySymbol})',
-                labelStyle: GoogleFonts.inter(fontSize: 14),
+                labelStyle: labelStyle,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSpacing.br12),
+                  borderSide: enabledBorderSide,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppSpacing.br12),
+                  borderSide: enabledBorderSide,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppSpacing.br12),
+                  borderSide: focusedBorderSide,
                 ),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -164,11 +212,13 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                 ),
               ),
               validator: (val) {
-                if (val == null || val.trim().isEmpty)
+                if (val == null || val.trim().isEmpty) {
                   return 'Please enter an amount';
+                }
                 final parsed = double.tryParse(val);
-                if (parsed == null || parsed <= 0)
+                if (parsed == null || parsed <= 0) {
                   return 'Please enter a valid positive number';
+                }
                 return null;
               },
             ),

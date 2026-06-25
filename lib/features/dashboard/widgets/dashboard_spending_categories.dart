@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,24 +25,27 @@ class DashboardSpendingCategories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final remainingColor = isDark ? AppTheme.brandPrimaryLight : const Color(0xFFC6F4DF);
+    
     final List<_DonutItem> chartData = [
       _DonutItem('Active', percentage, AppColors.activeGreen),
-      _DonutItem('Remaining', 100 - percentage, const Color(0xFFC6F4DF)),
+      _DonutItem('Remaining', 100 - percentage, remainingColor),
     ];
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         border: Border.all(
-          color: AppColors.dividerColor.withValues(alpha: 0.5),
+          color: Theme.of(context).dividerTheme.color ?? AppColors.dividerColor.withValues(alpha: 0.5),
           width: 1.0,
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.01),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.01),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -58,7 +62,7 @@ class DashboardSpendingCategories extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
-                color: AppColors.loginSubTitle.withValues(alpha: 0.8),
+                color: isDark ? Colors.white60 : AppColors.loginSubTitle.withValues(alpha: 0.8),
                 fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
                 letterSpacing: 1.2,
               ),
@@ -98,7 +102,7 @@ class DashboardSpendingCategories extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontFamily: GoogleFonts.workSans().fontFamily,
                         ),
                       ),

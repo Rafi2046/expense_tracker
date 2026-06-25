@@ -23,9 +23,10 @@ class HomepageAppbarWidget extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       elevation: 0,
       scrolledUnderElevation: 0,
       titleSpacing: 16,
@@ -45,7 +46,7 @@ class HomepageAppbarWidget extends StatelessWidget
                 children: [
                   CircleAvatar(
                     radius: 18,
-                    backgroundColor: Colors.grey.shade200,
+                    backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey.shade200,
                     backgroundImage: (profilePhoto != null && profilePhoto!.startsWith('http'))
                         ? NetworkImage(profilePhoto!) as ImageProvider
                         : (profilePhoto != null && profilePhoto!.isNotEmpty && File(profilePhoto!).existsSync()
@@ -56,7 +57,7 @@ class HomepageAppbarWidget extends StatelessWidget
                         : Text(
                             name.isNotEmpty ? name[0].toUpperCase() : 'U',
                             style: TextStyle(
-                              color: Colors.black87,
+                              color: onSurface,
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                               fontFamily: GoogleFonts.workSans().fontFamily,
@@ -67,16 +68,16 @@ class HomepageAppbarWidget extends StatelessWidget
                   Text(
                     name,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: onSurface,
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
                   const SizedBox(width: 4),
-                  const Icon(
+                  Icon(
                     Icons.keyboard_arrow_down,
-                    color: Colors.black87,
+                    color: onSurface,
                     size: 20,
                   ),
                 ],
@@ -97,7 +98,7 @@ class HomepageAppbarWidget extends StatelessWidget
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(2.0),
         child: Container(
-          color: AppColors.dividerColor,
+          color: Theme.of(context).dividerTheme.color ?? AppColors.dividerColor,
           height: 2.0,
         ),
       ),

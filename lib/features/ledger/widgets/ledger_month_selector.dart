@@ -58,9 +58,10 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
           builder: (context, provider, child) {
             final activeOption = provider.sortOption;
 
-            Widget buildSortItem(String title, TransactionSortOption option, IconData icon) {
+             Widget buildSortItem(String title, TransactionSortOption option, IconData icon) {
               final isSelected = activeOption == option;
               final accentColor = const Color(0xFF6A53A1); // premium purple/violet accent
+              final isDarkItem = Theme.of(context).brightness == Brightness.dark;
 
               return InkWell(
                 onTap: () {
@@ -83,13 +84,15 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: isSelected ? accentColor.withValues(alpha: 0.1) : Colors.grey.shade100,
+                          color: isSelected
+                              ? accentColor.withValues(alpha: 0.1)
+                              : (isDarkItem ? Colors.grey.shade800 : Colors.grey.shade100),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           icon,
                           size: 16,
-                          color: isSelected ? accentColor : Colors.grey.shade600,
+                          color: isSelected ? accentColor : (isDarkItem ? Colors.white60 : Colors.grey.shade600),
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -99,7 +102,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                           style: GoogleFonts.workSans(
                             fontSize: 14,
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                            color: isSelected ? accentColor : Colors.black87,
+                            color: isSelected ? accentColor : (isDarkItem ? Colors.white70 : Colors.black87),
                           ),
                         ),
                       ),
@@ -115,10 +118,11 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
               );
             }
 
+            final isDarkSheet = Theme.of(context).brightness == Brightness.dark;
             return Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(24),
                   topRight: Radius.circular(24),
                 ),
@@ -134,7 +138,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                       width: 40,
                       height: 5,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
+                        color: isDarkSheet ? Colors.grey.shade700 : Colors.grey.shade300,
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -150,7 +154,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                         style: GoogleFonts.workSans(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       GestureDetector(
@@ -158,10 +162,14 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
+                            color: isDarkSheet ? Colors.grey.shade800 : Colors.grey.shade100,
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(Icons.close, size: 18, color: Colors.grey.shade600),
+                          child: Icon(
+                            Icons.close,
+                            size: 18,
+                            color: isDarkSheet ? Colors.white70 : Colors.grey.shade600,
+                          ),
                         ),
                       ),
                     ],
@@ -210,6 +218,8 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                 final isSelected = index == selectedIndex;
                 final isCurrent = index == 6;
 
+                final isDarkSlider = Theme.of(context).brightness == Brightness.dark;
+
                 return GestureDetector(
                   onTap: () {
                     provider.selectMonthIndex(index);
@@ -229,15 +239,17 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                       color: isSelected
                           ? null
                           : isCurrent
-                              ? const Color(0xFFECEFF1)
-                              : Colors.white,
+                              ? (isDarkSlider ? Colors.grey.shade800 : const Color(0xFFECEFF1))
+                              : (isDarkSlider ? Theme.of(context).cardColor : Colors.white),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isSelected
                             ? Colors.transparent
                             : isCurrent
-                                ? const Color(0xFFCFD8DC)
-                                : const Color(0xFFF1F1F1),
+                                ? (isDarkSlider ? Colors.grey.shade700 : const Color(0xFFCFD8DC))
+                                : (isDarkSlider
+                                    ? (Theme.of(context).dividerTheme.color ?? const Color(0xFF2D2D2D))
+                                    : const Color(0xFFF1F1F1)),
                         width: 1.0,
                       ),
                       boxShadow: isSelected
@@ -258,7 +270,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                           style: GoogleFonts.workSans(
                             fontSize: 12,
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                            color: isSelected ? Colors.white : Colors.black87,
+                            color: isSelected ? Colors.white : (isDarkSlider ? Colors.white70 : Colors.black87),
                             letterSpacing: 0.5,
                           ),
                         ),
@@ -268,7 +280,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                           style: GoogleFonts.workSans(
                             fontSize: 9,
                             fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
-                            color: isSelected ? Colors.white70 : Colors.grey.shade500,
+                            color: isSelected ? Colors.white70 : (isDarkSlider ? Colors.grey.shade400 : Colors.grey.shade500),
                           ),
                         ),
                       ],
@@ -286,10 +298,12 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
           width: 44,
           height: 50,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: const Color(0xFFF1F1F1),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? (Theme.of(context).dividerTheme.color ?? const Color(0xFF2D2D2D))
+                  : const Color(0xFFF1F1F1),
               width: 1.0,
             ),
             boxShadow: [
@@ -302,7 +316,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
           ),
           child: IconButton(
             icon: const Icon(Icons.tune_rounded, size: 18),
-            color: const Color(0xFF31394D),
+            color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : const Color(0xFF31394D),
             onPressed: () => _showSortBottomSheet(context),
           ),
         ),

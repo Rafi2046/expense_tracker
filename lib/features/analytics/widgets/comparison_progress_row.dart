@@ -18,6 +18,9 @@ class ComparisonProgressRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,7 +32,7 @@ class ComparisonProgressRow extends StatelessWidget {
               style: GoogleFonts.workSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: const Color(0xFF4A5568),
+                color: isDark ? Colors.white60 : const Color(0xFF4A5568),
               ),
             ),
             Text(
@@ -40,7 +43,7 @@ class ComparisonProgressRow extends StatelessWidget {
               style: GoogleFonts.workSans(
                 fontSize: 12.5,
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFF1E2A3A),
+                color: onSurface,
               ),
             ),
           ],
@@ -50,7 +53,7 @@ class ComparisonProgressRow extends StatelessWidget {
           borderRadius: BorderRadius.circular(100),
           child: LinearProgressIndicator(
             value: progress,
-            backgroundColor: const Color(0xFFF0F0F0),
+            backgroundColor: isDark ? Colors.grey.shade800 : const Color(0xFFF0F0F0),
             valueColor: AlwaysStoppedAnimation<Color>(progressColor),
             minHeight: 8,
           ),

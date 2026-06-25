@@ -17,6 +17,8 @@ class PartyStatementList extends StatelessWidget {
     final transactions = reportsProvider.partyStatementTransactions;
     final currencySymbol = context.currencySymbol;
 
+    final theme = Theme.of(context);
+
     if (partyName == null) {
       return Center(
         child: Padding(
@@ -25,10 +27,12 @@ class PartyStatementList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(AppImages.partyReportIcon, width: 150, height: 200),
-
+              const SizedBox(height: 16),
               Text(
                 'Select Party to View Report',
-                style: AppTextStyles.reportAppBar,
+                style: AppTextStyles.reportAppBar.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                ),
               ),
             ],
           ),
@@ -44,6 +48,7 @@ class PartyStatementList extends StatelessWidget {
             'No transactions in this period',
             style: AppTextStyles.reportTransactionSubtitle.copyWith(
               fontSize: 14,
+              color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
         ),
@@ -53,7 +58,12 @@ class PartyStatementList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Transaction Lists', style: AppTextStyles.reportTransactionTitle),
+        Text(
+          'Transaction Lists',
+          style: AppTextStyles.reportTransactionTitle.copyWith(
+            color: theme.colorScheme.onSurface,
+          ),
+        ),
         const SizedBox(height: 12),
         ListView.separated(
           shrinkWrap: true,
@@ -66,9 +76,9 @@ class PartyStatementList extends StatelessWidget {
             return Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.cardColor,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFF1F1F1)),
+                border: Border.all(color: theme.dividerColor),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -78,12 +88,16 @@ class PartyStatementList extends StatelessWidget {
                     children: [
                       Text(
                         tx.detail,
-                        style: AppTextStyles.reportTransactionTitle,
+                        style: AppTextStyles.reportTransactionTitle.copyWith(
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         DateFormat('dd MMM yyyy').format(tx.createdAt),
-                        style: AppTextStyles.reportTransactionSubtitle,
+                        style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),

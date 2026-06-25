@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_select_sheet.dart';
@@ -13,6 +12,8 @@ class PartyStatementSelector extends StatelessWidget {
     final reportsProvider = context.watch<ReportsProvider>();
     final partyName = reportsProvider.selectedPartyNameForStatement;
     final isSelected = partyName != null;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Align(
       alignment: Alignment.centerLeft,
@@ -32,7 +33,7 @@ class PartyStatementSelector extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.activeGreen : const Color(0xFFF1F2F4),
+            color: isSelected ? theme.primaryColor : (isDark ? Colors.white10 : const Color(0xFFF1F2F4)),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
@@ -42,14 +43,14 @@ class PartyStatementSelector extends StatelessWidget {
                 partyName ?? 'Select Party',
                 style: AppTextStyles.reportTileTitle.copyWith(
                   fontSize: 13.5,
-                  color: isSelected ? Colors.white : Colors.black87,
+                  color: isSelected ? Colors.white : theme.colorScheme.onSurface,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 ),
               ),
               const SizedBox(width: 4),
               Icon(
                 Icons.keyboard_arrow_down,
-                color: isSelected ? Colors.white : Colors.black87,
+                color: isSelected ? Colors.white : theme.colorScheme.onSurface,
                 size: 18,
               ),
             ],

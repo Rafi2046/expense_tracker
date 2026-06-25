@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_select_sheet.dart';
@@ -32,6 +31,8 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
   @override
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Column(
       children: [
@@ -41,25 +42,25 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
           onChanged: (val) {
             reportsProvider.setAllTransactionsSearch(val);
           },
-          style: AppTextStyles.partyFormInput,
+          style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: 'Search Transactions...',
-            hintStyle: AppTextStyles.partyFormHint.copyWith(fontSize: 14),
-            prefixIcon: Icon(Icons.search, color: Colors.grey.shade400, size: 20),
+            hintStyle: AppTextStyles.partyFormHint.copyWith(fontSize: 14, color: isDark ? Colors.white30 : null),
+            prefixIcon: Icon(Icons.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: theme.cardColor,
             contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade100, width: 1),
+              borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade100, width: 1),
+              borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.activeGreen, width: 1.5),
+              borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
             ),
           ),
         ),
@@ -83,7 +84,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF1F2F4),
+                    color: isDark ? Colors.white10 : const Color(0xFFF1F2F4),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -91,9 +92,9 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                     children: [
                       Text(
                         reportsProvider.selectedType,
-                        style: AppTextStyles.reportTileTitle.copyWith(fontSize: 11.5),
+                        style: AppTextStyles.reportTileTitle.copyWith(fontSize: 11.5, color: theme.colorScheme.onSurface),
                       ),
-                      const Icon(Icons.arrow_drop_down, color: Colors.black87),
+                      Icon(Icons.arrow_drop_down, color: theme.colorScheme.onSurface),
                     ],
                   ),
                 ),
@@ -118,7 +119,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF1F2F4),
+                    color: isDark ? Colors.white10 : const Color(0xFFF1F2F4),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -126,9 +127,9 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                     children: [
                       Text(
                         reportsProvider.selectedPartyName ?? 'Select Party',
-                        style: AppTextStyles.reportTileTitle.copyWith(fontSize: 11.5),
+                        style: AppTextStyles.reportTileTitle.copyWith(fontSize: 11.5, color: theme.colorScheme.onSurface),
                       ),
-                      const Icon(Icons.arrow_drop_down, color: Colors.black87),
+                      Icon(Icons.arrow_drop_down, color: theme.colorScheme.onSurface),
                     ],
                   ),
                 ),

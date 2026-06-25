@@ -14,6 +14,8 @@ class BankStatementList extends StatelessWidget {
     final reportsProvider = context.watch<ReportsProvider>();
     final filtered = reportsProvider.bankStatementTransactions;
     final currencySymbol = context.currencySymbol;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     if (filtered.isEmpty) {
       return Center(
@@ -27,19 +29,19 @@ class BankStatementList extends StatelessWidget {
                 width: 150,
                 height: 150,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
+                  color: isDark ? Colors.white10 : Colors.grey.shade50,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.text_snippet_outlined,
                   size: 72,
-                  color: Colors.grey.shade200,
+                  color: isDark ? Colors.white30 : Colors.grey.shade200,
                 ),
               ),
               const SizedBox(height: 16),
               Text(
                 'No Transaction Found',
-                style: AppTextStyles.reportAppBarTitle,
+                style: AppTextStyles.reportAppBarTitle.copyWith(color: theme.colorScheme.onSurface),
               ),
             ],
           ),
@@ -52,7 +54,7 @@ class BankStatementList extends StatelessWidget {
       children: [
         Text(
           'Transaction Lists',
-          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 14.5),
+          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 14.5, color: theme.colorScheme.onSurface),
         ),
         const SizedBox(height: 10),
         ListView.separated(
@@ -66,9 +68,9 @@ class BankStatementList extends StatelessWidget {
             return Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.cardColor,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFFF1F1F1)),
+                border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,25 +81,29 @@ class BankStatementList extends StatelessWidget {
                       children: [
                         Text(
                           tx.title,
-                          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 13.5),
+                          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 13.5, color: theme.colorScheme.onSurface),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           '${tx.subtitle}\n${DateFormat('dd MMM yyyy').format(tx.dateTime)}',
-                          style: AppTextStyles.reportTransactionSubtitle.copyWith(fontSize: 11, height: 1.25),
+                          style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                            fontSize: 11,
+                            height: 1.25,
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          ),
                         ),
                         const SizedBox(height: 6),
                         // Running Balance pill
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFE8F8F5),
+                            color: isDark ? Colors.white10 : const Color(0xFFE8F8F5),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             'Bal: $currencySymbol ${tx.runningBalance.toStringAsFixed(0)}',
                             style: AppTextStyles.reportStatLabel.copyWith(
-                              color: AppColors.activeGreen,
+                              color: theme.primaryColor,
                               fontSize: 10,
                             ),
                           ),
@@ -109,7 +115,7 @@ class BankStatementList extends StatelessWidget {
                     '$currencySymbol ${tx.amount.toStringAsFixed(0)}',
                     style: AppTextStyles.reportTransactionTitle.copyWith(
                       fontSize: 14,
-                      color: tx.isCredit ? AppColors.activeGreen : AppColors.activeRed,
+                      color: tx.isCredit ? theme.primaryColor : AppColors.activeRed,
                     ),
                   ),
                 ],

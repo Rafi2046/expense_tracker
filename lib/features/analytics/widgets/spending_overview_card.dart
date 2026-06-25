@@ -27,7 +27,7 @@ class SpendingOverviewCard extends StatelessWidget {
     required this.items,
   });
 
-  Widget _buildLegendItem(String category, double percentage, Color color) {
+  Widget _buildLegendItem(BuildContext context, String category, double percentage, Color color) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -45,7 +45,7 @@ class SpendingOverviewCard extends StatelessWidget {
           style: GoogleFonts.workSans(
             fontSize: 11,
             fontWeight: FontWeight.w500,
-            color: const Color(0xFF4A5568),
+            color: Theme.of(context).brightness == Brightness.dark ? Colors.white60 : const Color(0xFF4A5568),
           ),
         ),
       ],
@@ -55,6 +55,9 @@ class SpendingOverviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) return const SizedBox.shrink();
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final onSurface = Theme.of(context).colorScheme.onSurface;
 
     // Split items for 2x2 legend
     final leftColumnItems = <SpendingDistributionItem>[];
@@ -72,17 +75,17 @@ class SpendingOverviewCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
         ],
         border: Border.all(
-          color: const Color(0xFFF0F0F0),
+          color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF0F0F0),
           width: 1,
         ),
       ),
@@ -95,7 +98,7 @@ class SpendingOverviewCard extends StatelessWidget {
             style: GoogleFonts.workSans(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF1E2A3A),
+              color: onSurface,
             ),
           ),
           const SizedBox(height: 2),
@@ -148,7 +151,7 @@ class SpendingOverviewCard extends StatelessWidget {
                         style: GoogleFonts.workSans(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
-                          color: const Color(0xFF1E2A3A),
+                          color: onSurface,
                         ),
                       ),
                     ],
@@ -169,7 +172,7 @@ class SpendingOverviewCard extends StatelessWidget {
                   children: leftColumnItems
                       .map((item) => Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
-                            child: _buildLegendItem(item.category, item.percentage, item.color),
+                            child: _buildLegendItem(context, item.category, item.percentage, item.color),
                           ))
                       .toList(),
                 ),
@@ -180,7 +183,7 @@ class SpendingOverviewCard extends StatelessWidget {
                   children: rightColumnItems
                       .map((item) => Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
-                            child: _buildLegendItem(item.category, item.percentage, item.color),
+                            child: _buildLegendItem(context, item.category, item.percentage, item.color),
                           ))
                       .toList(),
                 ),

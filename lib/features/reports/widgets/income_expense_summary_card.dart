@@ -13,6 +13,7 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
     final reportsProvider = context.watch<ReportsProvider>();
     final data = reportsProvider.incomeExpenseData;
     final currencySymbol = context.currencySymbol;
+    final theme = Theme.of(context);
 
     final double totalIncome = data['totalIncome'] ?? 0.0;
     final double totalExpense = data['totalExpense'] ?? 0.0;
@@ -22,22 +23,24 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             netProfit >= 0 ? 'Net Profit' : 'Net Loss',
-            style: AppTextStyles.reportStatLabel,
+            style: AppTextStyles.reportStatLabel.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
           ),
           const SizedBox(height: 6),
           Text(
             '$currencySymbol ${netProfit.abs().toStringAsFixed(0)}',
             style: AppTextStyles.reportLargeValue.copyWith(
-              color: netProfit >= 0 ? AppColors.activeGreen : AppColors.activeRed,
+              color: netProfit >= 0 ? theme.primaryColor : AppColors.activeRed,
             ),
           ),
           const SizedBox(height: 16),
@@ -49,19 +52,21 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
                   children: [
                     Text(
                       'Total Income',
-                      style: AppTextStyles.reportStatLabel,
+                      style: AppTextStyles.reportStatLabel.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       '$currencySymbol ${totalIncome.toStringAsFixed(0)}',
                       style: AppTextStyles.reportTransactionTitle.copyWith(
-                        color: AppColors.activeGreen,
+                        color: theme.primaryColor,
                       ),
                     ),
                   ],
                 ),
               ),
-              Container(width: 1, height: 30, color: Colors.grey.shade100),
+              Container(width: 1, height: 30, color: theme.dividerTheme.color ?? Colors.grey.shade100),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -69,7 +74,9 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
                   children: [
                     Text(
                       'Total Expense',
-                      style: AppTextStyles.reportStatLabel,
+                      style: AppTextStyles.reportStatLabel.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(

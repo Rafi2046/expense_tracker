@@ -165,25 +165,29 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
       debtProvider.items,
     );
 
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87, size: 20),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           widget.accountType == 'Cash' ? 'Cash' : 'Bank Account',
-          style: AppTextStyles.reportAppBarTitle.copyWith(fontSize: 16.5),
+          style: AppTextStyles.reportAppBarTitle.copyWith(
+            fontSize: 16.5,
+            color: theme.appBarTheme.titleTextStyle?.color,
+          ),
         ),
         centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
-            color: const Color(0xFFF1F1F1),
+            color: theme.dividerTheme.color,
             height: 1.0,
           ),
         ),
@@ -241,7 +245,10 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                     ? Center(
                         child: Text(
                           'No transactions found',
-                          style: GoogleFonts.workSans(color: Colors.grey, fontSize: 13),
+                          style: GoogleFonts.workSans(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            fontSize: 13,
+                          ),
                         ),
                       )
                     : ListView.builder(
@@ -261,7 +268,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                 child: ElevatedButton(
                   onPressed: () => showAdjustBalanceBottomSheet(context, initialAccount: widget.accountType),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2EBD85),
+                    backgroundColor: theme.primaryColor,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

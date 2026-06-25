@@ -16,6 +16,8 @@ class ExpenseTimeFrameSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -35,7 +37,7 @@ class ExpenseTimeFrameSelector extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? AppColors.expensePink
-                      : AppColors.chipBackground,
+                      : (isDark ? Colors.white12 : AppColors.chipBackground),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Text(
@@ -43,7 +45,7 @@ class ExpenseTimeFrameSelector extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                    color: isSelected ? Colors.white : Colors.black87,
+                    color: isSelected ? Colors.white : theme.colorScheme.onSurface,
                     fontFamily: GoogleFonts.workSans().fontFamily,
                   ),
                 ),

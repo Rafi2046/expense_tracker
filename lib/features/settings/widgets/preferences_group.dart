@@ -4,6 +4,7 @@ import 'package:expense_tracker/features/settings/pages/currency_selection_scree
 import 'package:expense_tracker/features/settings/widgets/language_selector_sheet.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_option_row.dart';
+import 'package:expense_tracker/features/settings/widgets/theme_dropdown_row.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,13 +38,8 @@ class PreferencesGroup extends StatelessWidget {
             );
           },
         ),
-        SettingsOptionRow(
-          icon: Icons.palette_rounded,
-          iconBgColor: const Color(0xFFE8EAF6),
-          iconColor: const Color(0xFF3F51B5),
-          title: context.translate('theme'),
-          trailingText: 'Light',
-          onTap: () => onSnackBar('Theme clicked'),
+        ThemeDropdownRow(
+          onSnackBar: onSnackBar,
         ),
         SettingsOptionRow(
           icon: Icons.language_rounded,

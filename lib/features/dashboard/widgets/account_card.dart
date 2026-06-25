@@ -24,11 +24,12 @@ class AccountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFF3F4F6), width: 1.2),
+        border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF3F4F6), width: 1.2),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.01),
@@ -67,7 +68,7 @@ class AccountCard extends StatelessWidget {
                       style: GoogleFonts.workSans(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1F2937),
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -88,7 +89,7 @@ class AccountCard extends StatelessWidget {
                 style: GoogleFonts.workSans(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF006C49),
+                  color: theme.primaryColor,
                 ),
               ),
             ],

@@ -46,12 +46,15 @@ class AccountTransactionRow extends StatelessWidget {
         : const Color(0xFFDC3545);
     final amountPrefix = isIncome ? '+ ' : '- ';
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFF1F1F1), width: 1.2),
+        border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), width: 1.2),
       ),
       child: InkWell(
         onTap: () {
@@ -115,7 +118,7 @@ class AccountTransactionRow extends StatelessWidget {
                       style: GoogleFonts.workSans(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1F2937),
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -125,7 +128,7 @@ class AccountTransactionRow extends StatelessWidget {
                       vertical: 3,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE6F3EE),
+                      color: isDark ? Colors.white10 : const Color(0xFFE6F3EE),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
@@ -133,7 +136,7 @@ class AccountTransactionRow extends StatelessWidget {
                       style: GoogleFonts.workSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF006C49),
+                        color: isDark ? theme.primaryColor : const Color(0xFF006C49),
                       ),
                     ),
                   ),

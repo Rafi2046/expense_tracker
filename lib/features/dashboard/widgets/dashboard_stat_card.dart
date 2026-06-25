@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class DashboardStatCard extends StatelessWidget {
@@ -26,17 +27,24 @@ class DashboardStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final cornerColor = isPositive
-        ? AppColors.selectionGreenBg
-        : const Color(0xFFFFECEE);
+        ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.15) : AppColors.selectionGreenBg)
+        : (isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFFECEE));
+    final valueColor = isPositive
+        ? (isDark ? AppTheme.brandPrimaryDark : AppTheme.brandPrimaryLight)
+        : AppColors.activeRed;
 
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: AppColors.dividerColor, width: 1.0),
+          color: Theme.of(context).cardColor,
+          border: Border.all(
+            color: Theme.of(context).dividerTheme.color ?? AppColors.dividerColor,
+            width: 1.0,
+          ),
           borderRadius: BorderRadius.circular(16),
         ),
         child: ClipRRect(
@@ -89,7 +97,7 @@ class DashboardStatCard extends StatelessWidget {
                             (isPositive
                                     ? AppTextStyles.cardValueGreen
                                     : AppTextStyles.cardValueRed)
-                                .copyWith(fontSize: 17, color: textColor),
+                                .copyWith(fontSize: 17, color: textColor ?? valueColor),
                       ),
                     ),
                     const SizedBox(height: 2),

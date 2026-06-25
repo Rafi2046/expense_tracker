@@ -9,9 +9,10 @@ class ReportSortButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
+    final theme = Theme.of(context);
 
     return IconButton(
-      icon: const Icon(Icons.filter_list_rounded, color: Colors.black87),
+      icon: Icon(Icons.filter_list_rounded, color: theme.appBarTheme.iconTheme?.color ?? theme.colorScheme.onSurface),
       onPressed: () async {
         final selected = await SortBySheet.show(
           context,

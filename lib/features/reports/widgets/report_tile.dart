@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +12,9 @@ class ReportTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return InkWell(
       onTap: () => Navigator.push(
         context,
@@ -28,10 +30,10 @@ class ReportTile extends StatelessWidget {
               width: 38,
               height: 38,
               decoration: BoxDecoration(
-                color: AppColors.activeGreen.withValues(alpha: 0.1),
+                color: theme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(item.icon, color: AppColors.activeGreen, size: 18),
+              child: Icon(item.icon, color: theme.primaryColor, size: 18),
             ),
             const SizedBox(width: 14),
 
@@ -45,7 +47,7 @@ class ReportTile extends StatelessWidget {
                     style: GoogleFonts.workSans(
                       fontSize: 13.5,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF1E2A3A),
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -53,7 +55,7 @@ class ReportTile extends StatelessWidget {
                     item.subtitle,
                     style: GoogleFonts.workSans(
                       fontSize: 11,
-                      color: Colors.grey.shade500,
+                      color: isDark ? Colors.white60 : Colors.grey.shade500,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -66,13 +68,13 @@ class ReportTile extends StatelessWidget {
               width: 26,
               height: 26,
               decoration: BoxDecoration(
-                color: const Color(0xFFF4F6F9),
+                color: isDark ? Colors.white10 : const Color(0xFFF4F6F9),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_forward_ios_rounded,
                 size: 11,
-                color: Colors.black54,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
             ),
           ],

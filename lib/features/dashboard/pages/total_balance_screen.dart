@@ -75,24 +75,29 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
       return 'Tk. $formatted';
     }
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87, size: 20),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Cash & Bank Accounts',
-          style: AppTextStyles.reportAppBarTitle.copyWith(fontSize: 16.5),
+          style: AppTextStyles.reportAppBarTitle.copyWith(
+            fontSize: 16.5,
+            color: theme.appBarTheme.titleTextStyle?.color,
+          ),
         ),
         centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
+          child: Container(color: theme.dividerTheme.color, height: 1.0),
         ),
       ),
       body: SafeArea(
@@ -122,22 +127,22 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                     style: GoogleFonts.workSans(
                       fontSize: 14.5,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   TextButton.icon(
                     onPressed: () => showNewAccountDialog(context),
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.add,
                       size: 14,
-                      color: Color(0xFF006C49),
+                      color: theme.primaryColor,
                     ),
                     label: Text(
                       'New Account',
                       style: GoogleFonts.workSans(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF006C49),
+                        color: theme.primaryColor,
                       ),
                     ),
                     style: TextButton.styleFrom(
@@ -159,8 +164,8 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                       subtitle: 'Cash in Hand',
                       balance: _showBalances ? formatAmount(cashBalance) : 'Tk. ••••',
                       icon: Icons.payments_outlined,
-                      iconBg: const Color(0xFFE6F3EE),
-                      iconColor: const Color(0xFF006C49),
+                      iconBg: isDark ? Colors.white10 : const Color(0xFFE6F3EE),
+                      iconColor: isDark ? theme.primaryColor : const Color(0xFF006C49),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -176,7 +181,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                       subtitle: 'Electronic Transfer',
                       balance: _showBalances ? formatAmount(bankBalance) : 'Tk. ••••',
                       icon: Icons.account_balance_outlined,
-                      iconBg: const Color(0xFFEBF3F9),
+                      iconBg: isDark ? Colors.white10 : const Color(0xFFEBF3F9),
                       iconColor: const Color(0xFF2980B9),
                       onTap: () {
                         Navigator.push(
@@ -198,10 +203,10 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                 child: ElevatedButton(
                   onPressed: () => showAdjustBalanceBottomSheet(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0C4E3C),
+                    backgroundColor: theme.primaryColor,
                     foregroundColor: Colors.white,
                     elevation: 1,
-                    shadowColor: const Color(0xFF0C4E3C).withValues(alpha: 0.2),
+                    shadowColor: theme.primaryColor.withValues(alpha: 0.2),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

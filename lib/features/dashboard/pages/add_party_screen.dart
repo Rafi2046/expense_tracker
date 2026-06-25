@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/add_party_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
@@ -37,29 +36,30 @@ class _AddPartyFormState extends State<AddPartyForm> {
   Widget build(BuildContext context) {
     final provider = context.watch<AddPartyProvider>();
     final debtProvider = context.read<DebtProvider>();
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Add New Party',
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: theme.appBarTheme.titleTextStyle?.color,
             fontSize: 18,
           ),
         ),
         centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
+          child: Container(color: theme.dividerTheme.color, height: 1.0),
         ),
       ),
       body: SafeArea(
@@ -88,7 +88,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
                       // Party Name Field
                       TextFormField(
                         controller: provider.nameController,
-                        style: AppTextStyles.partyFormInput,
+                        style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
                         decoration: InputDecoration(
                           hintText: 'Party Name',
                           hintStyle: AppTextStyles.partyFormHint,
@@ -97,19 +97,19 @@ class _AddPartyFormState extends State<AddPartyForm> {
                             vertical: 12,
                           ),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: theme.cardColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.grey.shade100),
+                            borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.grey.shade200),
+                            borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade200),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                              color: AppColors.activeGreen,
+                            borderSide: BorderSide(
+                              color: theme.primaryColor,
                               width: 1.5,
                             ),
                           ),
@@ -143,7 +143,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
                                   // Phone Number Field
                                   TextFormField(
                                     controller: provider.phoneController,
-                                    style: AppTextStyles.partyFormInput,
+                                    style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
                                     keyboardType: TextInputType.phone,
                                     decoration: InputDecoration(
                                       hintText: 'Phone Number',
@@ -154,23 +154,23 @@ class _AddPartyFormState extends State<AddPartyForm> {
                                             vertical: 12,
                                           ),
                                       filled: true,
-                                      fillColor: Colors.white,
+                                      fillColor: theme.cardColor,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide(
-                                          color: Colors.grey.shade100,
+                                          color: theme.dividerTheme.color ?? Colors.grey.shade100,
                                         ),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide(
-                                          color: Colors.grey.shade200,
+                                          color: theme.dividerTheme.color ?? Colors.grey.shade200,
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                          color: AppColors.activeGreen,
+                                        borderSide: BorderSide(
+                                          color: theme.primaryColor,
                                           width: 1.5,
                                         ),
                                       ),
@@ -248,10 +248,10 @@ class _AddPartyFormState extends State<AddPartyForm> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: provider.isNameNotEmpty
-                            ? AppColors.activeGreen
-                            : const Color(0xFFF1F2F4),
+                            ? theme.primaryColor
+                            : (isDark ? Colors.white10 : const Color(0xFFF1F2F4)),
                         elevation: provider.isNameNotEmpty ? 1.5 : 0,
-                        shadowColor: AppColors.activeGreen.withValues(
+                        shadowColor: theme.primaryColor.withValues(
                           alpha: 0.25,
                         ),
                         shape: RoundedRectangleBorder(
@@ -271,7 +271,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
                           fontSize: 15,
                           color: provider.isNameNotEmpty
                               ? Colors.white
-                              : const Color(0xFFC1C7D0),
+                              : (isDark ? Colors.white30 : const Color(0xFFC1C7D0)),
                         ),
                       ),
                     ),

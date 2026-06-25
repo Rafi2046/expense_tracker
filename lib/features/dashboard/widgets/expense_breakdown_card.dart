@@ -34,13 +34,16 @@ class ExpenseBreakdownCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (items.isEmpty) return const SizedBox.shrink();
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         border: Border.all(
-          color: AppColors.dividerColor.withValues(alpha: 0.5),
+          color: (theme.dividerTheme.color ?? AppColors.dividerColor).withValues(alpha: 0.5),
           width: 1.0,
         ),
         borderRadius: BorderRadius.circular(16),
@@ -61,7 +64,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: theme.colorScheme.onSurface,
                 fontFamily: GoogleFonts.workSans().fontFamily,
               ),
               children: [
@@ -94,7 +97,11 @@ class ExpenseBreakdownCard extends StatelessWidget {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: item.iconBgColor,
+                      color: isDark
+                          ? (item.iconBgColor == const Color(0xFFE8F8F5)
+                              ? AppColors.activeGreen.withValues(alpha: 0.15)
+                              : item.iconBgColor.withValues(alpha: 0.2))
+                          : item.iconBgColor,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(item.icon, color: item.iconColor, size: 24),
@@ -111,7 +118,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: theme.colorScheme.onSurface,
                             fontFamily: GoogleFonts.workSans().fontFamily,
                           ),
                         ),
@@ -134,7 +141,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),

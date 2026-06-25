@@ -13,17 +13,19 @@ class CashStatementBalanceCard extends StatelessWidget {
     final reportsProvider = context.watch<ReportsProvider>();
     final closingBalance = reportsProvider.cashClosingBalance;
     final currencySymbol = context.currencySymbol;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.01),
+            color: Colors.black.withValues(alpha: isDark ? 0.1 : 0.01),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
@@ -34,14 +36,17 @@ class CashStatementBalanceCard extends StatelessWidget {
         children: [
           Text(
             'Closing Balance',
-            style: AppTextStyles.reportStatLabel.copyWith(fontSize: 11),
+            style: AppTextStyles.reportStatLabel.copyWith(
+              fontSize: 11,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             '$currencySymbol ${closingBalance.toStringAsFixed(0)}',
             style: AppTextStyles.reportLargeValue.copyWith(
               fontSize: 20,
-              color: closingBalance >= 0 ? AppColors.activeGreen : AppColors.activeRed,
+              color: closingBalance >= 0 ? theme.primaryColor : AppColors.activeRed,
             ),
           ),
         ],

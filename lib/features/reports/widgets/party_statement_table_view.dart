@@ -38,19 +38,36 @@ class PartyStatementTableView extends StatelessWidget {
       runningBalances[tx.id] = balance;
     }
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final isReceivable = netBalance >= 0;
     final cardBgGradient = isReceivable
-        ? const LinearGradient(
-            colors: [Color(0xFFF4FBF9), Color(0xFFE8F7F3)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          )
-        : const LinearGradient(
-            colors: [Color(0xFFFFF7F7), Color(0xFFFDECEC)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          );
-    final cardBorderColor = isReceivable ? const Color(0xFFD3EFE8) : const Color(0xFFFBD7D7);
+        ? (isDark
+            ? LinearGradient(
+                colors: [AppColors.activeGreen.withValues(alpha: 0.15), AppColors.activeGreen.withValues(alpha: 0.03)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : const LinearGradient(
+                colors: [Color(0xFFF4FBF9), Color(0xFFE8F7F3)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ))
+        : (isDark
+            ? LinearGradient(
+                colors: [AppColors.activeRed.withValues(alpha: 0.15), AppColors.activeRed.withValues(alpha: 0.03)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : const LinearGradient(
+                colors: [Color(0xFFFFF7F7), Color(0xFFFDECEC)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ));
+    final cardBorderColor = isReceivable
+        ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.3) : const Color(0xFFD3EFE8))
+        : (isDark ? AppColors.activeRed.withValues(alpha: 0.3) : const Color(0xFFFBD7D7));
     final cardAccentColor = isReceivable ? AppColors.activeGreen : AppColors.activeRed;
 
     return Column(
@@ -89,7 +106,9 @@ class PartyStatementTableView extends StatelessWidget {
                           Text(
                             'Net Balance',
                             style: AppTextStyles.reportStatLabel.copyWith(
-                              color: isReceivable ? const Color(0xFF146C48).withValues(alpha: 0.7) : const Color(0xFFDC3545).withValues(alpha: 0.7),
+                              color: isReceivable
+                                  ? (isDark ? AppColors.activeGreen : const Color(0xFF146C48)).withValues(alpha: 0.7)
+                                  : (isDark ? AppColors.activeRed : const Color(0xFFDC3545)).withValues(alpha: 0.7),
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.5,
@@ -128,7 +147,7 @@ class PartyStatementTableView extends StatelessWidget {
                     Text(
                       'Transactions',
                       style: AppTextStyles.reportStatLabel.copyWith(
-                        color: Colors.black87,
+                        color: theme.colorScheme.onSurface,
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
                       ),
@@ -136,7 +155,10 @@ class PartyStatementTableView extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       '${transactions.length} entries',
-                      style: AppTextStyles.reportTransactionSubtitle.copyWith(fontSize: 11),
+                      style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                        fontSize: 11,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),
@@ -195,7 +217,7 @@ class PartyStatementTableView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        const Divider(color: Color(0xFFF1F1F1), height: 1),
+        Divider(color: theme.dividerColor, height: 1),
         const SizedBox(height: 12),
 
         // Table Rows
@@ -211,12 +233,12 @@ class PartyStatementTableView extends StatelessWidget {
 
             return Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.cardColor,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFF1F1F1)),
+                border: Border.all(color: theme.dividerColor),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.005),
+                    color: Colors.black.withValues(alpha: isDark ? 0.05 : 0.005),
                     blurRadius: 5,
                     offset: const Offset(0, 2),
                   ),
@@ -238,7 +260,7 @@ class PartyStatementTableView extends StatelessWidget {
                             style: AppTextStyles.reportTransactionTitle.copyWith(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -249,12 +271,17 @@ class PartyStatementTableView extends StatelessWidget {
                             children: [
                               Text(
                                 DateFormat('dd MMM yyyy • h:mm a').format(tx.createdAt),
-                                style: AppTextStyles.reportTransactionSubtitle.copyWith(fontSize: 10.5),
+                                style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                                  fontSize: 10.5,
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
                               ),
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
-                                  color: isTxBalPositive ? const Color(0xFFE8F8F5) : const Color(0xFFFDE8E8),
+                                  color: isTxBalPositive
+                                      ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.15) : const Color(0xFFE8F8F5))
+                                      : (isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFDE8E8)),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
@@ -283,9 +310,9 @@ class PartyStatementTableView extends StatelessWidget {
                           ? Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFE8F8F5),
+                                color: isDark ? AppColors.activeGreen.withValues(alpha: 0.15) : const Color(0xFFE8F8F5),
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: const Color(0xFFD1F2E5)),
+                                border: Border.all(color: isDark ? AppColors.activeGreen.withValues(alpha: 0.3) : const Color(0xFFD1F2E5)),
                               ),
                               child: Text(
                                 tx.amount.toStringAsFixed(0),
@@ -311,9 +338,9 @@ class PartyStatementTableView extends StatelessWidget {
                           ? Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFFDE8E8),
+                                color: isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFDE8E8),
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: const Color(0xFFFAD1D1)),
+                                border: Border.all(color: isDark ? AppColors.activeRed.withValues(alpha: 0.3) : const Color(0xFFFAD1D1)),
                               ),
                               child: Text(
                                 tx.amount.toStringAsFixed(0),

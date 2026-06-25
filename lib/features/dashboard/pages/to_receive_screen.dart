@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.dart';
@@ -22,20 +21,21 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
   Widget build(BuildContext context) {
     final debtProvider = context.watch<DebtProvider>();
     final items = debtProvider.toReceiveUnpaid;
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'To Receive',
           style: AppTextStyles.appbarTitle.copyWith(
+            color: theme.appBarTheme.titleTextStyle?.color,
             fontFamily: GoogleFonts.workSans().fontFamily,
             fontWeight: FontWeight.w600,
           ),
@@ -46,10 +46,10 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
         onPressed: () => AddEditDebtSheet.show(
           context: context,
           payeeLabel: 'Client/Friend Name',
-          themeColor: AppColors.buttonColor,
+          themeColor: theme.primaryColor,
           isReceive: true,
         ),
-        backgroundColor: AppColors.buttonColor,
+        backgroundColor: theme.primaryColor,
         elevation: 2,
         child: const Icon(Icons.add, color: Colors.white, size: 28),
       ),
@@ -89,7 +89,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                           style: GoogleFonts.workSans(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -99,7 +99,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                             vertical: 3,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.buttonColor.withValues(alpha: 0.1),
+                            color: theme.primaryColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -107,7 +107,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                             style: GoogleFonts.workSans(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.buttonColor,
+                              color: theme.primaryColor,
                             ),
                           ),
                         ),
@@ -166,12 +166,12 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                         final item = items[index];
                         return DebtItemRow(
                           item: item,
-                          themeColor: AppColors.buttonColor,
+                          themeColor: theme.primaryColor,
                           onEditTap: () => AddEditDebtSheet.show(
                             context: context,
                             item: item,
                             payeeLabel: 'Client/Friend Name',
-                            themeColor: AppColors.buttonColor,
+                            themeColor: theme.primaryColor,
                             isReceive: true,
                           ),
                         );

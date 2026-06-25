@@ -18,12 +18,14 @@ class QuarterlyTrendChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.primaryColor;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: AppColors.dividerColor, width: 1.0),
+        color: theme.cardColor,
+        border: Border.all(color: theme.dividerTheme.color ?? AppColors.dividerColor, width: 1.0),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -37,7 +39,7 @@ class QuarterlyTrendChart extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: theme.colorScheme.onSurface,
                   fontFamily: GoogleFonts.workSans().fontFamily,
                 ),
               ),
@@ -46,8 +48,8 @@ class QuarterlyTrendChart extends StatelessWidget {
                   Container(
                     width: 10,
                     height: 10,
-                    decoration: const BoxDecoration(
-                      color: AppColors.activeGreen,
+                    decoration: BoxDecoration(
+                      color: primaryColor,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -80,7 +82,7 @@ class QuarterlyTrendChart extends StatelessWidget {
                     details.text,
                     TextStyle(
                       fontSize: 11,
-                      color: isCurrent ? Colors.black : AppColors.textMuted,
+                      color: isCurrent ? theme.colorScheme.onSurface : AppColors.textMuted,
                       fontWeight: isCurrent ? FontWeight.bold : FontWeight.w600,
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
@@ -99,8 +101,8 @@ class QuarterlyTrendChart extends StatelessWidget {
                   yValueMapper: (QuarterlyChartData item, _) => item.value,
                   pointColorMapper: (QuarterlyChartData item, _) =>
                       item.isHighlighted
-                      ? AppColors.activeGreen
-                      : AppColors.activeGreen.withValues(alpha: 0.3),
+                      ? primaryColor
+                      : primaryColor.withValues(alpha: 0.3),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(4),
                     topRight: Radius.circular(4),

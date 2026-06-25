@@ -147,13 +147,13 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
                   content: Text(
                     'Account "${_nameController.text}" created successfully!',
                   ),
-                  backgroundColor: const Color(0xFF006C49),
+                  backgroundColor: Theme.of(context).primaryColor,
                 ),
               );
             }
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF006C49),
+            backgroundColor: Theme.of(context).primaryColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),

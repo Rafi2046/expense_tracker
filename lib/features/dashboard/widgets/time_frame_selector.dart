@@ -16,11 +16,12 @@ class TimeFrameSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(100),
-        border: Border.all(color: AppColors.dividerColor, width: 1.0),
+        border: Border.all(color: theme.dividerTheme.color ?? AppColors.dividerColor, width: 1.0),
       ),
       padding: const EdgeInsets.all(4.0),
       child: Row(
@@ -37,7 +38,7 @@ class TimeFrameSelector extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? AppColors.buttonColor
+                      ? theme.primaryColor
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(100),
                 ),

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -81,9 +80,9 @@ class _PartyAvatarPickerState extends State<PartyAvatarPicker> {
                   width: 26,
                   height: 26,
                   decoration: BoxDecoration(
-                    color: AppColors.activeGreen,
+                    color: Theme.of(context).primaryColor,
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
+                    border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 2),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.1),

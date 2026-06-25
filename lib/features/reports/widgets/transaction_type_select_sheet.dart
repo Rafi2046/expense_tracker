@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,6 +24,9 @@ class TransactionTypeSelectSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final types = [
       'All Transactions',
       'Payment In',
@@ -34,9 +36,9 @@ class TransactionTypeSelectSheet extends StatelessWidget {
     ];
 
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
         ),
@@ -52,7 +54,7 @@ class TransactionTypeSelectSheet extends StatelessWidget {
               height: 4,
               margin: const EdgeInsets.only(top: 10, bottom: 8),
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
+                color: isDark ? Colors.white24 : Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -66,19 +68,19 @@ class TransactionTypeSelectSheet extends StatelessWidget {
               style: GoogleFonts.workSans(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
-                color: Colors.black87,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ),
-          const Divider(color: Color(0xFFF1F1F1), height: 1),
+          Divider(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), height: 1),
 
           // Options List
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: types.length,
-            separatorBuilder: (context, index) => const Divider(
-              color: Color(0xFFF8FAFC),
+            separatorBuilder: (context, index) => Divider(
+              color: theme.dividerTheme.color ?? const Color(0xFFF8FAFC),
               height: 1,
             ),
             itemBuilder: (context, index) {
@@ -92,7 +94,7 @@ class TransactionTypeSelectSheet extends StatelessWidget {
                   type,
                   style: GoogleFonts.workSans(
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                    color: Colors.black87,
+                    color: theme.colorScheme.onSurface,
                     fontSize: 14,
                   ),
                 ),
@@ -102,7 +104,7 @@ class TransactionTypeSelectSheet extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isSelected ? AppColors.activeGreen : Colors.grey.shade300,
+                      color: isSelected ? theme.primaryColor : (isDark ? Colors.white24 : Colors.grey.shade300),
                       width: 1.5,
                     ),
                   ),
@@ -111,8 +113,8 @@ class TransactionTypeSelectSheet extends StatelessWidget {
                           child: Container(
                             width: 8,
                             height: 8,
-                            decoration: const BoxDecoration(
-                              color: AppColors.activeGreen,
+                            decoration: BoxDecoration(
+                              color: theme.primaryColor,
                               shape: BoxShape.circle,
                             ),
                           ),

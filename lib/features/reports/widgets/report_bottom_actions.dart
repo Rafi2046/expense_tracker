@@ -33,6 +33,9 @@ class ReportBottomActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       color: Colors.transparent,
       padding: EdgeInsets.only(
@@ -44,12 +47,12 @@ class ReportBottomActions extends StatelessWidget {
       child: Container(
         height: 58,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: const Color(0xFFF1F1F1), width: 1.0),
+          border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), width: 1.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
               blurRadius: 16,
               offset: const Offset(0, 8),
             ),
@@ -59,21 +62,25 @@ class ReportBottomActions extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildActionItem(
+              context: context,
               icon: Icons.download_outlined,
               label: 'Download',
               onTap: () => _showExportSuccess(context, 'PDF/Excel'),
             ),
             _buildActionItem(
+              context: context,
               icon: Icons.print_outlined,
               label: 'Print PDF',
               onTap: () => _showExportSuccess(context, 'Printer Output'),
             ),
             _buildActionItem(
+              context: context,
               icon: Icons.table_chart_outlined,
               label: 'Excel',
               onTap: () => _showExportSuccess(context, 'Excel File'),
             ),
             _buildActionItem(
+              context: context,
               icon: Icons.share_outlined,
               label: 'Share',
               onTap: () async {
@@ -90,10 +97,13 @@ class ReportBottomActions extends StatelessWidget {
   }
 
   Widget _buildActionItem({
+    required BuildContext context,
     required IconData icon,
     required String label,
     required VoidCallback onTap,
   }) {
+    final theme = Theme.of(context);
+
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -103,7 +113,7 @@ class ReportBottomActions extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: AppColors.activeGreen, size: 22),
+            Icon(icon, color: theme.primaryColor, size: 22),
             const SizedBox(height: 4),
             Text(
               label,
@@ -111,7 +121,7 @@ class ReportBottomActions extends StatelessWidget {
                 fontSize: 10,
                 fontFamily: GoogleFonts.workSans().fontFamily,
                 fontWeight: FontWeight.w600,
-                color: Colors.black87,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ],

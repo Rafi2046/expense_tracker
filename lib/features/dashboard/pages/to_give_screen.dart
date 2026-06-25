@@ -22,20 +22,21 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
   Widget build(BuildContext context) {
     final debtProvider = context.watch<DebtProvider>();
     final items = debtProvider.toGiveUnpaid;
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'To Give',
           style: AppTextStyles.appbarTitle.copyWith(
+            color: theme.appBarTheme.titleTextStyle?.color,
             fontFamily: GoogleFonts.workSans().fontFamily,
             fontWeight: FontWeight.w600,
           ),
@@ -49,7 +50,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
           themeColor: AppColors.activeRed,
           isReceive: false,
         ),
-        backgroundColor: AppColors.buttonColor,
+        backgroundColor: theme.primaryColor,
         elevation: 2,
         child: const Icon(Icons.add, color: Colors.white, size: 28),
       ),
@@ -89,7 +90,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                           style: GoogleFonts.workSans(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(width: 8),

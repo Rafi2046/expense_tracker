@@ -7,14 +7,17 @@ import 'new_account_dialog.dart';
 
 /// Central helper function to show the overall Adjust Balance Bottom Sheet.
 void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}) {
+  final theme = Theme.of(context);
+  final isDark = theme.brightness == Brightness.dark;
+
   showModalBottomSheet(
     context: context,
     backgroundColor: Colors.transparent,
     builder: (ctx) {
       return Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
@@ -29,7 +32,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
                 width: 32,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
+                  color: isDark ? Colors.white24 : Colors.grey.shade200,
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
@@ -40,7 +43,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
               style: GoogleFonts.workSans(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 16),
@@ -51,7 +54,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
               title: 'Add/Reduce Money',
               subtitle: 'Add or reduce money from your account',
               icon: Icons.add,
-              iconBg: const Color(0xFFFDECEC),
+              iconBg: isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFDECEC),
               iconColor: AppColors.activeRed,
               onTap: () {
                 Navigator.pop(ctx);
@@ -66,7 +69,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
               title: 'Transfer Balance',
               subtitle: 'Easily transfer your balance to another account',
               icon: Icons.swap_horiz_rounded,
-              iconBg: const Color(0xFFEBF3F9),
+              iconBg: isDark ? const Color(0xFF2980B9).withValues(alpha: 0.15) : const Color(0xFFEBF3F9),
               iconColor: const Color(0xFF2980B9),
               onTap: () {
                 Navigator.pop(ctx);
@@ -90,11 +93,13 @@ Widget _buildAdjustOptionTile({
   required Color iconColor,
   required VoidCallback onTap,
 }) {
+  final theme = Theme.of(context);
+  final isDark = theme.brightness == Brightness.dark;
   return Container(
     decoration: BoxDecoration(
-      color: const Color(0xFFF9F9F9),
+      color: isDark ? Colors.white10 : const Color(0xFFF9F9F9),
       borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: const Color(0xFFF1F1F1), width: 1.2),
+      border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), width: 1.2),
     ),
     child: InkWell(
       onTap: onTap,
@@ -123,7 +128,7 @@ Widget _buildAdjustOptionTile({
                     style: GoogleFonts.workSans(
                       fontSize: 13.5,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1F2937),
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -146,14 +151,16 @@ Widget _buildAdjustOptionTile({
 
 /// Central helper to choose between Income and Expense for Add/Reduce Money.
 void showAddReduceChoiceSheet(BuildContext context) {
+  final theme = Theme.of(context);
+  final isDark = theme.brightness == Brightness.dark;
   showModalBottomSheet(
     context: context,
     backgroundColor: Colors.transparent,
     builder: (ctx) {
       return Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
@@ -168,7 +175,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                 width: 32,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
+                  color: isDark ? Colors.white24 : Colors.grey.shade200,
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
@@ -179,7 +186,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
               style: GoogleFonts.workSans(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 16),
@@ -189,21 +196,23 @@ void showAddReduceChoiceSheet(BuildContext context) {
                   child: SizedBox(
                     height: 46,
                     child: TextButton.icon(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.arrow_downward,
                         size: 16,
-                        color: Color(0xFF006C49),
+                        color: isDark ? theme.primaryColor : const Color(0xFF006C49),
                       ),
                       label: Text(
                         'Add Income',
                         style: GoogleFonts.workSans(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF006C49),
+                          color: isDark ? theme.primaryColor : const Color(0xFF006C49),
                         ),
                       ),
                       style: TextButton.styleFrom(
-                        backgroundColor: const Color(0xFFE6F3EE),
+                        backgroundColor: isDark
+                            ? theme.primaryColor.withValues(alpha: 0.15)
+                            : const Color(0xFFE6F3EE),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -223,21 +232,23 @@ void showAddReduceChoiceSheet(BuildContext context) {
                   child: SizedBox(
                     height: 46,
                     child: TextButton.icon(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.arrow_upward,
                         size: 16,
-                        color: Color(0xFFD9383A),
+                        color: isDark ? AppColors.activeRed : const Color(0xFFD9383A),
                       ),
                       label: Text(
                         'Add Expense',
                         style: GoogleFonts.workSans(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFFD9383A),
+                          color: isDark ? AppColors.activeRed : const Color(0xFFD9383A),
                         ),
                       ),
                       style: TextButton.styleFrom(
-                        backgroundColor: const Color(0xFFFDECEC),
+                        backgroundColor: isDark
+                            ? AppColors.activeRed.withValues(alpha: 0.15)
+                            : const Color(0xFFFDECEC),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

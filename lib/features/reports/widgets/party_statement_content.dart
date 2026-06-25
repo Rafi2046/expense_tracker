@@ -15,6 +15,8 @@ class PartyStatementContent extends StatelessWidget {
     final partyName = reportsProvider.selectedPartyNameForStatement;
     final transactions = reportsProvider.partyStatementTransactions;
 
+    final theme = Theme.of(context);
+
     if (partyName == null) {
       return Center(
         child: Padding(
@@ -27,7 +29,7 @@ class PartyStatementContent extends StatelessWidget {
               Text(
                 'Select Party to View Report',
                 style: AppTextStyles.reportAppBarTitle.copyWith(
-                  color: Colors.grey.shade400,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -45,14 +47,14 @@ class PartyStatementContent extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.receipt_long_rounded, color: Colors.grey.shade200, size: 72),
+              Icon(Icons.receipt_long_rounded, color: theme.brightness == Brightness.dark ? Colors.white12 : Colors.grey.shade200, size: 72),
               const SizedBox(height: 16),
               Text(
                 'No Transactions Found',
                 style: AppTextStyles.reportTransactionSubtitle.copyWith(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: Colors.grey.shade600,
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
             ],

@@ -93,7 +93,7 @@ class DashboardShortcutsCard extends StatelessWidget {
                 style: GoogleFonts.workSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF1E2A3A),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               GestureDetector(
@@ -129,16 +129,19 @@ class DashboardShortcutsCard extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
+                color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.2 : 0.03),
                 blurRadius: 10,
                 offset: const Offset(0, 3),
               ),
             ],
-            border: Border.all(color: const Color(0xFFF0F0F0), width: 1),
+            border: Border.all(
+              color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF0F0F0),
+              width: 1,
+            ),
           ),
           child: activeShortcuts.isEmpty
               ? Center(
@@ -253,7 +256,7 @@ class DashboardShortcutsCard extends StatelessWidget {
             style: GoogleFonts.workSans(
               fontSize: 10.5,
               fontWeight: FontWeight.w500,
-              color: const Color(0xFF4A5568),
+              color: Theme.of(context).brightness == Brightness.dark ? Colors.white60 : const Color(0xFF4A5568),
             ),
           ),
         ],

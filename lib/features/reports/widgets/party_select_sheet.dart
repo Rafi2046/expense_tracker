@@ -53,6 +53,8 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
   Widget build(BuildContext context) {
     final debtProvider = context.watch<DebtProvider>();
     final mediaQuery = MediaQuery.of(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     // Group items by name to get unique parties
     final Map<String, DebtItem> uniqueParties = {};
@@ -75,9 +77,9 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
 
     return Container(
       height: mediaQuery.size.height * 0.75,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
         ),
@@ -91,7 +93,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
               height: 4,
               margin: const EdgeInsets.only(top: 10),
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
+                color: isDark ? Colors.white24 : Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -109,7 +111,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                     style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -133,7 +135,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
               ],
             ),
           ),
-          const Divider(color: Color(0xFFF1F1F1), height: 1),
+          Divider(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), height: 1),
 
           // Search Box
           Padding(
@@ -145,25 +147,25 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                   _searchQuery = val;
                 });
               },
-              style: GoogleFonts.workSans(fontSize: 14, color: Colors.black87),
+              style: GoogleFonts.workSans(fontSize: 14, color: theme.colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: 'Search parties...',
-                hintStyle: GoogleFonts.workSans(fontSize: 14, color: Colors.grey.shade400),
-                prefixIcon: Icon(Icons.search, color: Colors.grey.shade400, size: 20),
+                hintStyle: GoogleFonts.workSans(fontSize: 14, color: isDark ? Colors.white30 : Colors.grey.shade400),
+                prefixIcon: Icon(Icons.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
                 filled: true,
-                fillColor: const Color(0xFFF8FAFC),
+                fillColor: isDark ? Colors.white10 : const Color(0xFFF8FAFC),
                 contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.grey.shade100, width: 1),
+                  borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.grey.shade100, width: 1),
+                  borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: AppColors.activeGreen, width: 1.5),
+                  borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
                 ),
               ),
             ),
@@ -176,12 +178,12 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.people_outline_rounded, color: Colors.grey.shade300, size: 48),
+                        Icon(Icons.people_outline_rounded, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
                         const SizedBox(height: 12),
                         Text(
                           'No parties found',
                           style: GoogleFonts.workSans(
-                            color: Colors.grey.shade500,
+                            color: isDark ? Colors.white60 : Colors.grey.shade500,
                             fontWeight: FontWeight.w500,
                             fontSize: 15,
                           ),
@@ -192,8 +194,8 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                 : ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     itemCount: filteredParties.length,
-                    separatorBuilder: (context, index) => const Divider(
-                      color: Color(0xFFF8FAFC),
+                    separatorBuilder: (context, index) => Divider(
+                      color: theme.dividerTheme.color ?? const Color(0xFFF8FAFC),
                       height: 1,
                     ),
                     itemBuilder: (context, index) {
@@ -207,17 +209,17 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                           width: 36,
                           height: 36,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF1F2F4),
+                            color: isDark ? Colors.white10 : const Color(0xFFF1F2F4),
                             shape: BoxShape.circle,
                             border: isSelected
-                                ? Border.all(color: AppColors.activeGreen, width: 1.5)
+                                ? Border.all(color: theme.primaryColor, width: 1.5)
                                 : null,
                           ),
                           child: Center(
                             child: Text(
                               _getInitials(party.name),
                               style: GoogleFonts.workSans(
-                                color: const Color(0xFF31394D),
+                                color: theme.colorScheme.onSurface,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
                               ),
@@ -228,21 +230,21 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                           party.name,
                           style: GoogleFonts.workSans(
                             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                            color: Colors.black87,
+                            color: theme.colorScheme.onSurface,
                             fontSize: 14,
                           ),
                         ),
                         subtitle: Text(
                           party.phone ?? 'No phone number',
                           style: GoogleFonts.workSans(
-                            color: Colors.grey.shade500,
+                            color: isDark ? Colors.white60 : Colors.grey.shade500,
                             fontSize: 12,
                           ),
                         ),
                         trailing: isSelected
-                            ? const Icon(
+                            ? Icon(
                                 Icons.check_circle_rounded,
-                                color: AppColors.activeGreen,
+                                color: theme.primaryColor,
                                 size: 18,
                               )
                             : null,

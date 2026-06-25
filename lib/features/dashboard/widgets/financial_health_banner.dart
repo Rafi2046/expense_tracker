@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,7 +10,7 @@ class FinancialHealthBanner extends StatelessWidget {
       width: double.infinity,
       height: 120,
       decoration: BoxDecoration(
-        color: AppColors.buttonColor,
+        color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Stack(

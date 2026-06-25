@@ -92,12 +92,14 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Container(
       height: mediaQuery.size.height * 0.85,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
         ),
@@ -111,7 +113,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
               height: 4,
               margin: const EdgeInsets.only(top: 10),
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
+                color: theme.dividerColor,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -124,7 +126,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.close_rounded, color: Colors.black54),
+                  icon: Icon(Icons.close_rounded, color: theme.colorScheme.onSurfaceVariant),
                   onPressed: () => Navigator.pop(context),
                 ),
                 Text(
@@ -132,14 +134,14 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                   style: GoogleFonts.workSans(
                     fontWeight: FontWeight.w600,
                     fontSize: 15,
-                    color: Colors.black87,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(width: 48), // Spacer to balance the close button
               ],
             ),
           ),
-          const Divider(color: Color(0xFFF1F1F1), height: 1),
+          Divider(color: theme.dividerColor, height: 1),
 
           // Date display
           Padding(
@@ -154,12 +156,12 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                       style: GoogleFonts.workSans(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(width: 6),
                     IconButton(
-                      icon: Icon(Icons.edit_outlined, color: Colors.grey.shade400, size: 18),
+                      icon: Icon(Icons.edit_outlined, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5), size: 18),
                       onPressed: () async {
                         final result = await SelectDateInputDialog.show(
                           context,
@@ -197,7 +199,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                     child: Text(
                       day,
                       style: GoogleFonts.workSans(
-                        color: Colors.grey.shade500,
+                        color: theme.colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
                         fontSize: 12,
                       ),
@@ -223,7 +225,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
             ),
           ),
 
-          const Divider(color: Color(0xFFF1F1F1), height: 1),
+          Divider(color: theme.dividerColor, height: 1),
 
           // Bottom Cancel / Ok Actions
           Padding(
@@ -259,7 +261,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.activeGreen,
-                    disabledBackgroundColor: Colors.grey.shade100,
+                    disabledBackgroundColor: isDark ? Colors.white10 : Colors.grey.shade100,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -270,7 +272,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                     'Ok',
                     style: GoogleFonts.workSans(
                       color: _startDate == null || _endDate == null
-                          ? Colors.grey.shade400
+                          ? (isDark ? Colors.white24 : Colors.grey.shade400)
                           : Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
@@ -286,6 +288,8 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
   }
 
   Widget _buildMonthCalendar(DateTime month) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final year = month.year;
     final monthNumber = month.month;
     final monthName = DateFormat('MMMM yyyy').format(month);
@@ -303,7 +307,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
             style: GoogleFonts.workSans(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: theme.colorScheme.onSurface,
             ),
           ),
         ),
@@ -332,7 +336,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
             if (isSelected) {
               boxColor = AppColors.activeGreen;
             } else if (isInRange) {
-              boxColor = const Color(0xFFE8F8F5);
+              boxColor = isDark ? AppColors.activeGreen.withValues(alpha: 0.15) : const Color(0xFFE8F8F5);
               // Handle border radiuses for ranges
               if (date.weekday == DateTime.sunday) {
                 rangeBorderRadius = const BorderRadius.only(
@@ -352,7 +356,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
               behavior: HitTestBehavior.opaque,
               child: Container(
                 decoration: BoxDecoration(
-                  color: isInRange ? const Color(0xFFE8F8F5) : null,
+                  color: isInRange ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.15) : const Color(0xFFE8F8F5)) : null,
                   borderRadius: rangeBorderRadius,
                 ),
                 child: Center(
@@ -371,7 +375,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                               ? Colors.white
                               : (isInRange
                                   ? AppColors.activeGreen
-                                  : Colors.black87),
+                                  : theme.colorScheme.onSurface),
                           fontWeight:
                               isSelected || isInRange ? FontWeight.bold : FontWeight.w500,
                           fontSize: 14,

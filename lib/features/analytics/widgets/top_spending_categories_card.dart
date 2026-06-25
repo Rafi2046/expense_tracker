@@ -15,21 +15,24 @@ class TopSpendingCategoriesCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (items.isEmpty) return const SizedBox.shrink();
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
         ],
         border: Border.all(
-          color: const Color(0xFFF0F0F0),
+          color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF0F0F0),
           width: 1,
         ),
       ),
@@ -42,7 +45,7 @@ class TopSpendingCategoriesCard extends StatelessWidget {
             style: GoogleFonts.workSans(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF1E2A3A),
+              color: onSurface,
             ),
           ),
           const SizedBox(height: 2),
@@ -60,7 +63,7 @@ class TopSpendingCategoriesCard extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
             separatorBuilder: (context, index) => Divider(
-              color: Colors.grey.shade100,
+              color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF1F1F1),
               height: 1,
               indent: 48,
               endIndent: 0,

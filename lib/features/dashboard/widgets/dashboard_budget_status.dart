@@ -24,19 +24,20 @@ class DashboardBudgetStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     if (items.isEmpty) return const SizedBox.shrink();
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         border: Border.all(
-          color: AppColors.dividerColor.withValues(alpha: 0.5),
+          color: Theme.of(context).dividerTheme.color ?? AppColors.dividerColor.withValues(alpha: 0.5),
           width: 1.0,
         ),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.01),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.01),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -53,7 +54,7 @@ class DashboardBudgetStatus extends StatelessWidget {
               style: TextStyle(
                 fontSize: 10.5,
                 fontWeight: FontWeight.bold,
-                color: AppColors.loginSubTitle.withValues(alpha: 0.8),
+                color: isDark ? Colors.white60 : AppColors.loginSubTitle.withValues(alpha: 0.8),
                 fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
                 letterSpacing: 1.2,
               ),
@@ -69,6 +70,7 @@ class DashboardBudgetStatus extends StatelessWidget {
             separatorBuilder: (context, index) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
               final item = items[index];
+              final labelColor = isDark ? Colors.white70 : const Color(0xFF31394D);
               return Padding(
                 padding: const EdgeInsets.only(left: 2.0, right: 2.0),
                 child: Column(
@@ -82,7 +84,7 @@ class DashboardBudgetStatus extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF31394D),
+                            color: labelColor,
                             fontFamily: GoogleFonts.workSans().fontFamily,
                           ),
                         ),
@@ -91,7 +93,7 @@ class DashboardBudgetStatus extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12.5,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF31394D),
+                            color: labelColor,
                             fontFamily: GoogleFonts.workSans().fontFamily,
                           ),
                         ),
@@ -102,7 +104,7 @@ class DashboardBudgetStatus extends StatelessWidget {
                       borderRadius: BorderRadius.circular(100),
                       child: LinearProgressIndicator(
                         value: item.percentage / 100.0,
-                        backgroundColor: const Color(0xFFF0F0F0),
+                        backgroundColor: isDark ? Colors.grey.shade800 : const Color(0xFFF0F0F0),
                         valueColor: AlwaysStoppedAnimation<Color>(item.color),
                         minHeight: 6,
                       ),

@@ -33,13 +33,15 @@ class AccountBalanceHeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.primaryColor;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFF1F1F1), width: 1.2),
+        border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), width: 1.2),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.01),
@@ -81,7 +83,7 @@ class AccountBalanceHeaderCard extends StatelessWidget {
                 style: GoogleFonts.workSans(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF006C49),
+                  color: primaryColor,
                 ),
               ),
             ],
@@ -97,18 +99,18 @@ class AccountBalanceHeaderCard extends StatelessWidget {
                 ),
               );
             },
-            icon: const Icon(Icons.description_outlined, size: 14, color: Color(0xFF006C49)),
+            icon: Icon(Icons.description_outlined, size: 14, color: primaryColor),
             label: Text(
               'View Report',
               style: GoogleFonts.workSans(
                 fontSize: 11.5,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF006C49),
+                color: primaryColor,
               ),
             ),
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: Color(0xFFE6F3EE)),
-              backgroundColor: const Color(0xFFE6F3EE),
+              side: BorderSide(color: primaryColor.withValues(alpha: 0.15)),
+              backgroundColor: primaryColor.withValues(alpha: 0.1),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

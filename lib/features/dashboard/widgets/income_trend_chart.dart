@@ -19,12 +19,14 @@ class IncomeTrendChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.primaryColor;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: AppColors.dividerColor, width: 1.0),
+        color: theme.cardColor,
+        border: Border.all(color: theme.dividerTheme.color ?? AppColors.dividerColor, width: 1.0),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -38,7 +40,7 @@ class IncomeTrendChart extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: theme.colorScheme.onSurface,
                   fontFamily: GoogleFonts.workSans().fontFamily,
                 ),
               ),
@@ -76,9 +78,9 @@ class IncomeTrendChart extends StatelessWidget {
                 ),
               ),
               primaryYAxis: NumericAxis(
-                majorGridLines: const MajorGridLines(
+                majorGridLines: MajorGridLines(
                   width: 1,
-                  color: Color(0xFFF0F0F0),
+                  color: theme.dividerTheme.color ?? const Color(0xFFF0F0F0),
                 ),
                 axisLine: const AxisLine(width: 0),
                 majorTickLines: const MajorTickLines(width: 0),
@@ -118,8 +120,8 @@ class IncomeTrendChart extends StatelessWidget {
                   xValueMapper: (ChartData item, _) => item.month,
                   yValueMapper: (ChartData item, _) => item.value,
                   pointColorMapper: (ChartData item, _) => item.isCurrent
-                      ? AppColors.buttonColor
-                      : AppColors.activeGreen.withValues(alpha: 0.4),
+                      ? primaryColor
+                      : primaryColor.withValues(alpha: 0.4),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(4),
                     topRight: Radius.circular(4),

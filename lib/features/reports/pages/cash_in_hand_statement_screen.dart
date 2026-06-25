@@ -14,24 +14,25 @@ class CashInHandStatementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
     final isNotEmpty = reportsProvider.cashStatementTransactions.isNotEmpty;
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: theme.scaffoldBackgroundColor,
       extendBody: true,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
-        leading: const BackButton(color: Colors.black87),
+        leading: BackButton(color: theme.appBarTheme.iconTheme?.color),
         title: Text(
           'Cash In Hand Statement',
-          style: AppTextStyles.reportAppBarTitle,
+          style: AppTextStyles.reportAppBarTitle.copyWith(color: theme.appBarTheme.titleTextStyle?.color),
         ),
         centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
-            color: const Color(0xFFF1F1F1),
+            color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1),
             height: 1.0,
           ),
         ),

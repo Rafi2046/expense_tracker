@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +14,10 @@ class SortBySheet extends StatelessWidget {
     BuildContext context, {
     required ReportSortOption currentOption,
   }) {
+    final theme = Theme.of(context);
     return showModalBottomSheet<ReportSortOption>(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: theme.cardColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -27,6 +27,9 @@ class SortBySheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -39,7 +42,7 @@ class SortBySheet extends StatelessWidget {
               height: 4,
               margin: const EdgeInsets.only(top: 10, bottom: 8),
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
+                color: isDark ? Colors.white24 : Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -51,10 +54,11 @@ class SortBySheet extends StatelessWidget {
               style: AppTextStyles.dialogTitle.copyWith(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ),
-          const Divider(color: Color(0xFFF1F1F1), height: 1),
+          Divider(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), height: 1),
           _buildOption(
             context: context,
             title: 'Latest',
@@ -90,6 +94,8 @@ class SortBySheet extends StatelessWidget {
     required ReportSortOption option,
     required IconData icon,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final isSelected = currentOption == option;
 
     return InkWell(
@@ -100,7 +106,7 @@ class SortBySheet extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: Colors.grey.shade600,
+              color: isDark ? Colors.white60 : Colors.grey.shade600,
               size: 18,
             ),
             const SizedBox(width: 14),
@@ -110,7 +116,7 @@ class SortBySheet extends StatelessWidget {
                 style: AppTextStyles.reportTileTitle.copyWith(
                   fontSize: 14,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected ? Colors.black87 : Colors.grey.shade700,
+                  color: isSelected ? theme.colorScheme.onSurface : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
             ),
@@ -120,7 +126,7 @@ class SortBySheet extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? AppColors.activeGreen : Colors.grey.shade300,
+                  color: isSelected ? theme.primaryColor : (isDark ? Colors.white24 : Colors.grey.shade300),
                   width: 1.5,
                 ),
               ),
@@ -129,8 +135,8 @@ class SortBySheet extends StatelessWidget {
                       child: Container(
                         width: 8,
                         height: 8,
-                        decoration: const BoxDecoration(
-                          color: AppColors.activeGreen,
+                        decoration: BoxDecoration(
+                          color: theme.primaryColor,
                           shape: BoxShape.circle,
                         ),
                       ),

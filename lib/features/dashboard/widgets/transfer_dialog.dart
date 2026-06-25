@@ -159,13 +159,13 @@ class _TransferDialogState extends State<TransferDialog> {
                   content: Text(
                     'Successfully transferred Tk. $amount from $_fromAccount to $_toAccount',
                   ),
-                  backgroundColor: const Color(0xFF006C49),
+                  backgroundColor: Theme.of(context).primaryColor,
                 ),
               );
             }
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF006C49),
+            backgroundColor: Theme.of(context).primaryColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),

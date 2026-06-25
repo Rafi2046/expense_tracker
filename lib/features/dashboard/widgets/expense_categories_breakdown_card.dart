@@ -41,6 +41,8 @@ class _ExpenseCategoriesBreakdownCardState
   Widget build(BuildContext context) {
     if (widget.categories.isEmpty) return const SizedBox.shrink();
 
+    final theme = Theme.of(context);
+
     // Determine how many items to show
     final showExpandButton = widget.categories.length > 3;
     final displayList = (_isExpanded || !showExpandButton)
@@ -51,9 +53,9 @@ class _ExpenseCategoriesBreakdownCardState
       width: double.infinity,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         border: Border.all(
-          color: AppColors.dividerColor.withValues(alpha: 0.5),
+          color: (theme.dividerTheme.color ?? AppColors.dividerColor).withValues(alpha: 0.5),
           width: 1.0,
         ),
         borderRadius: BorderRadius.circular(16),
@@ -74,7 +76,7 @@ class _ExpenseCategoriesBreakdownCardState
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: theme.colorScheme.onSurface,
                 fontFamily: GoogleFonts.workSans().fontFamily,
               ),
               children: [
@@ -138,7 +140,7 @@ class _ExpenseCategoriesBreakdownCardState
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: theme.colorScheme.onSurface,
                           fontFamily: GoogleFonts.workSans().fontFamily,
                         ),
                       ),
@@ -175,7 +177,7 @@ class _ExpenseCategoriesBreakdownCardState
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: Colors.black87,
+                        color: theme.colorScheme.onSurface,
                         fontFamily: GoogleFonts.workSans().fontFamily,
                       ),
                     ),
@@ -185,7 +187,7 @@ class _ExpenseCategoriesBreakdownCardState
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),

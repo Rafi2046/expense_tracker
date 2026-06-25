@@ -14,6 +14,8 @@ class CashStatementList extends StatelessWidget {
     final reportsProvider = context.watch<ReportsProvider>();
     final filtered = reportsProvider.cashStatementTransactions;
     final currencySymbol = context.currencySymbol;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     if (filtered.isEmpty) {
       return Center(
@@ -21,11 +23,14 @@ class CashStatementList extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 40.0),
           child: Column(
             children: [
-              Icon(Icons.wallet_rounded, color: Colors.grey.shade300, size: 48),
+              Icon(Icons.wallet_rounded, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
               const SizedBox(height: 12),
               Text(
                 'No cash transactions found',
-                style: AppTextStyles.reportTransactionSubtitle.copyWith(fontSize: 14),
+                style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                  fontSize: 14,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
               ),
             ],
           ),
@@ -38,7 +43,7 @@ class CashStatementList extends StatelessWidget {
       children: [
         Text(
           'Transaction Lists',
-          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 14.5),
+          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 14.5, color: theme.colorScheme.onSurface),
         ),
         const SizedBox(height: 10),
         ListView.separated(
@@ -52,9 +57,9 @@ class CashStatementList extends StatelessWidget {
             return Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.cardColor,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFFF1F1F1)),
+                border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,25 +70,29 @@ class CashStatementList extends StatelessWidget {
                       children: [
                         Text(
                           tx.title,
-                          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 13.5),
+                          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 13.5, color: theme.colorScheme.onSurface),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           '${tx.subtitle}\n${DateFormat('dd MMM yyyy').format(tx.dateTime)}',
-                          style: AppTextStyles.reportTransactionSubtitle.copyWith(fontSize: 11, height: 1.25),
+                          style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                            fontSize: 11,
+                            height: 1.25,
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          ),
                         ),
                         const SizedBox(height: 6),
                         // Running Balance pill
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFE8F8F5),
+                            color: isDark ? Colors.white10 : const Color(0xFFE8F8F5),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             'Bal: $currencySymbol ${tx.runningBalance.toStringAsFixed(0)}',
                             style: AppTextStyles.reportStatLabel.copyWith(
-                              color: AppColors.activeGreen,
+                              color: theme.primaryColor,
                               fontSize: 10,
                             ),
                           ),
@@ -95,7 +104,7 @@ class CashStatementList extends StatelessWidget {
                     '$currencySymbol ${tx.amount.toStringAsFixed(0)}',
                     style: AppTextStyles.reportTransactionTitle.copyWith(
                       fontSize: 14,
-                      color: tx.isCredit ? AppColors.activeGreen : AppColors.activeRed,
+                      color: tx.isCredit ? theme.primaryColor : AppColors.activeRed,
                     ),
                   ),
                 ],

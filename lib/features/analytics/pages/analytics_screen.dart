@@ -65,10 +65,12 @@ class AnalyticsScreen extends StatelessWidget {
       ),
     ];
 
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F6F9),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         title: Text(
@@ -76,13 +78,16 @@ class AnalyticsScreen extends StatelessWidget {
           style: GoogleFonts.workSans(
             fontSize: 17,
             fontWeight: FontWeight.w700,
-            color: Colors.black87,
+            color: onSurface,
             letterSpacing: -0.3,
           ),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF0F0F0), height: 1.0),
+          child: Container(
+            color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF0F0F0),
+            height: 1.0,
+          ),
         ),
       ),
       body: SafeArea(

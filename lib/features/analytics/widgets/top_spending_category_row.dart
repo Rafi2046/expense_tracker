@@ -29,6 +29,9 @@ class TopSpendingCategoryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
@@ -38,12 +41,12 @@ class TopSpendingCategoryRow extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: const Color(0xFFF3F4F6),
+              color: isDark ? Colors.white.withValues(alpha: 0.08) : const Color(0xFFF3F4F6),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
               item.icon,
-              color: const Color(0xFF4A5568),
+              color: isDark ? Colors.white70 : const Color(0xFF4A5568),
               size: 17,
             ),
           ),
@@ -59,7 +62,7 @@ class TopSpendingCategoryRow extends StatelessWidget {
                   style: GoogleFonts.workSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF1E2A3A),
+                    color: onSurface,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -86,7 +89,7 @@ class TopSpendingCategoryRow extends StatelessWidget {
                 style: GoogleFonts.workSans(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF1E2A3A),
+                  color: onSurface,
                 ),
               ),
               const SizedBox(height: 2),

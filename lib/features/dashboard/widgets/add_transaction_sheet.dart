@@ -51,6 +51,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final theme = Theme.of(context);
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
@@ -58,13 +59,13 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
       lastDate: DateTime(2101),
       builder: (context, child) {
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
+          data: theme.copyWith(
+            colorScheme: theme.colorScheme.copyWith(
               primary: widget.isIncome
-                  ? AppColors.buttonColor
+                  ? theme.primaryColor
                   : AppColors.activeRed,
               onPrimary: Colors.white,
-              onSurface: Colors.black87,
+              onSurface: theme.colorScheme.onSurface,
             ),
           ),
           child: child!,
@@ -86,10 +87,13 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) {
+        final innerTheme = Theme.of(ctx);
+        final innerIsDark = innerTheme.brightness == Brightness.dark;
+
         return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            color: innerTheme.cardColor,
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(24),
               topRight: Radius.circular(24),
             ),
@@ -104,7 +108,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   width: 40,
                   height: 5,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: innerIsDark ? Colors.white24 : Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -115,7 +119,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 style: GoogleFonts.workSans(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: innerTheme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 16),
@@ -127,7 +131,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   shrinkWrap: true,
                   itemCount: months.length,
                   separatorBuilder: (context, index) =>
-                      const Divider(color: Color(0xFFF5F5F5), height: 1),
+                      Divider(color: innerTheme.dividerTheme.color ?? const Color(0xFFF5F5F5), height: 1),
                   itemBuilder: (context, index) {
                     final monthDate = months[index];
                     final label = DateFormat('MMMM yyyy').format(monthDate);
@@ -142,7 +146,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                           fontWeight: isSelected
                               ? FontWeight.w600
                               : FontWeight.w400,
-                          color: Colors.black87,
+                          color: innerTheme.colorScheme.onSurface,
                         ),
                       ),
                       trailing: isSelected
@@ -232,11 +236,14 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final themeColor = widget.isIncome
-        ? AppColors.buttonColor
+        ? theme.primaryColor
         : AppColors.activeRed;
     final secondaryThemeColor = widget.isIncome
-        ? AppColors.activeGreen
+        ? theme.primaryColor
         : AppColors.activeRed;
 
     return Padding(
@@ -244,9 +251,9 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),
           ),
@@ -265,7 +272,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                     width: 40,
                     height: 5,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: isDark ? Colors.white24 : Colors.grey.shade300,
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
@@ -281,7 +288,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                       style: GoogleFonts.workSans(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                     GestureDetector(
@@ -289,13 +296,13 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: isDark ? Colors.white10 : Colors.grey.shade100,
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.close,
                           size: 20,
-                          color: Colors.grey.shade600,
+                          color: isDark ? Colors.white60 : Colors.grey.shade600,
                         ),
                       ),
                     ),
@@ -329,7 +336,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                         hintStyle: GoogleFonts.workSans(
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
-                          color: Colors.grey.shade300,
+                          color: isDark ? Colors.white12 : Colors.grey.shade300,
                         ),
                         border: InputBorder.none,
                       ),
@@ -348,7 +355,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 const SizedBox(height: 16),
 
                 // Divider
-                Divider(color: Colors.grey.shade100, height: 1),
+                Divider(color: theme.dividerTheme.color ?? Colors.grey.shade100, height: 1),
                 const SizedBox(height: 20),
 
                 // Category Selector Tile
@@ -424,21 +431,21 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   maxLines: 2,
                   style: GoogleFonts.workSans(
                     fontSize: 15,
-                    color: Colors.black87,
+                    color: theme.colorScheme.onSurface,
                   ),
                   decoration: InputDecoration(
                     hintText: 'Add a note/detail (optional)...',
                     hintStyle: GoogleFonts.workSans(
                       fontSize: 15,
-                      color: Colors.grey.shade400,
+                      color: isDark ? Colors.white30 : Colors.grey.shade400,
                     ),
                     prefixIcon: Icon(
                       Icons.notes_rounded,
-                      color: Colors.grey.shade400,
+                      color: isDark ? Colors.white30 : Colors.grey.shade400,
                       size: 22,
                     ),
                     filled: true,
-                    fillColor: Colors.grey.shade50,
+                    fillColor: isDark ? Colors.white10 : Colors.grey.shade50,
                     contentPadding: const EdgeInsets.symmetric(
                       vertical: 14,
                       horizontal: 16,
@@ -446,14 +453,14 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: Colors.grey.shade100,
+                        color: theme.dividerTheme.color ?? Colors.grey.shade100,
                         width: 1,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: Colors.grey.shade100,
+                        color: theme.dividerTheme.color ?? Colors.grey.shade100,
                         width: 1,
                       ),
                     ),

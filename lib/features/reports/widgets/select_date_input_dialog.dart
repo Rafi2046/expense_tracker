@@ -103,13 +103,15 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final isOkEnabled = _startDate != null && _endDate != null && !_startDate!.isAfter(_endDate!);
 
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: theme.cardColor,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -120,7 +122,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
               Text(
                 'Select Date',
                 style: AppTextStyles.reportStatLabel.copyWith(
-                  color: Colors.grey.shade500,
+                  color: isDark ? Colors.white30 : Colors.grey.shade500,
                   fontSize: 12,
                 ),
               ),
@@ -134,11 +136,12 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                       style: AppTextStyles.reportAppBarTitle.copyWith(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.calendar_today_outlined, color: Colors.black87),
+                    icon: Icon(Icons.calendar_today_outlined, color: theme.colorScheme.onSurface),
                     onPressed: () {
                       final currentStart = _startDate ?? widget.initialRange.start;
                       final currentEnd = _endDate ?? widget.initialRange.end;
@@ -168,7 +171,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                           'Start date',
                           style: AppTextStyles.reportStatLabel.copyWith(
                             fontSize: 11,
-                            color: _startError != null ? AppColors.activeRed : AppColors.activeGreen,
+                            color: _startError != null ? AppColors.activeRed : theme.primaryColor,
                           ),
                         ),
                         TextField(
@@ -177,15 +180,15 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                           keyboardType: TextInputType.datetime,
                           decoration: InputDecoration(
                             hintText: 'm/d/yyyy',
-                            focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.activeGreen, width: 2),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: theme.primaryColor, width: 2),
                             ),
                             enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey.shade300),
+                              borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade300),
                             ),
                             errorText: _startError,
                           ),
-                          style: AppTextStyles.partyFormInput.copyWith(fontSize: 15),
+                          style: AppTextStyles.partyFormInput.copyWith(fontSize: 15, color: theme.colorScheme.onSurface),
                         ),
                       ],
                     ),
@@ -199,7 +202,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                           'End date',
                           style: AppTextStyles.reportStatLabel.copyWith(
                             fontSize: 11,
-                            color: _endError != null ? AppColors.activeRed : Colors.grey.shade600,
+                            color: _endError != null ? AppColors.activeRed : (isDark ? Colors.white60 : Colors.grey.shade600),
                           ),
                         ),
                         TextField(
@@ -208,15 +211,15 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                           keyboardType: TextInputType.datetime,
                           decoration: InputDecoration(
                             hintText: 'm/d/yyyy',
-                            focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: AppColors.activeGreen, width: 2),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: theme.primaryColor, width: 2),
                             ),
                             enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey.shade300),
+                              borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade300),
                             ),
                             errorText: _endError,
                           ),
-                          style: AppTextStyles.partyFormInput.copyWith(fontSize: 15),
+                          style: AppTextStyles.partyFormInput.copyWith(fontSize: 15, color: theme.colorScheme.onSurface),
                         ),
                       ],
                     ),
@@ -232,7 +235,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                     child: Text(
                       'Cancel',
                       style: AppTextStyles.dialogCloseButton.copyWith(
-                        color: AppColors.activeGreen,
+                        color: theme.primaryColor,
                         fontSize: 15,
                       ),
                     ),
@@ -253,7 +256,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                     child: Text(
                       'Ok',
                       style: AppTextStyles.dialogCloseButton.copyWith(
-                        color: isOkEnabled ? AppColors.activeGreen : Colors.grey.shade400,
+                        color: isOkEnabled ? theme.primaryColor : (isDark ? Colors.white24 : Colors.grey.shade400),
                         fontSize: 15,
                       ),
                     ),

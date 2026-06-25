@@ -23,12 +23,14 @@ class IncomeSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: AppColors.dividerColor, width: 1.0),
+        color: theme.cardColor,
+        border: Border.all(color: theme.dividerTheme.color ?? AppColors.dividerColor, width: 1.0),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -47,7 +49,9 @@ class IncomeSummaryCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.selectionGreenBg,
+                    color: isDark 
+                        ? AppColors.activeGreen.withValues(alpha: 0.15) 
+                        : AppColors.selectionGreenBg,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
@@ -60,7 +64,7 @@ class IncomeSummaryCard extends StatelessWidget {
                   compareText!,
                   style: TextStyle(
                     fontSize: 13,
-                    color: AppColors.loginSubTitle,
+                    color: isDark ? Colors.white70 : AppColors.loginSubTitle,
                     fontFamily: GoogleFonts.workSans().fontFamily,
                   ),
                 ),
@@ -92,7 +96,7 @@ class IncomeSummaryCard extends StatelessWidget {
             const SizedBox(height: 16),
             Container(
               height: 1,
-              color: AppColors.dividerColor.withValues(alpha: 0.5),
+              color: (theme.dividerTheme.color ?? AppColors.dividerColor).withValues(alpha: 0.5),
             ),
           ],
           if (bottomContent != null) ...[

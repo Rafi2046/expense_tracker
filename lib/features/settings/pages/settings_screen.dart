@@ -27,10 +27,11 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F6F9),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.cardColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         title: Text(
@@ -38,13 +39,18 @@ class SettingsScreen extends StatelessWidget {
           style: GoogleFonts.workSans(
             fontSize: 17,
             fontWeight: FontWeight.w700,
-            color: Colors.black87,
+            color: theme.colorScheme.onSurface,
             letterSpacing: -0.3,
           ),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF0F0F0), height: 1.0),
+          child: Container(
+            color: theme.brightness == Brightness.dark
+                ? const Color(0xFF2D2D2D)
+                : const Color(0xFFF1F1F1),
+            height: 1.0,
+          ),
         ),
       ),
       body: SafeArea(
@@ -110,7 +116,7 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 SupportGroup(onSnackBar: (msg) => _showSnackBar(context, msg)),
-                const SizedBox(height: 100), // Spacer to scroll past floating bottom nav
+                const SizedBox(height: 150), // Spacer to scroll past floating bottom nav
               ],
             ),
           ),

@@ -18,9 +18,17 @@ class DebtItemRow extends StatelessWidget {
     required this.onEditTap,
   });
 
-  Color _getAvatarBg(String name) {
+  Color _getAvatarBg(BuildContext context, String name) {
     final hash = name.hashCode.abs();
-    final colors = [
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = isDark ? [
+      const Color(0xFF2EBD85).withValues(alpha: 0.15),
+      const Color(0xFFDC3545).withValues(alpha: 0.15),
+      const Color(0xFF2980B9).withValues(alpha: 0.15),
+      const Color(0xFFD35400).withValues(alpha: 0.15),
+      const Color(0xFF8E44AD).withValues(alpha: 0.15),
+      const Color(0xFF607D8B).withValues(alpha: 0.15),
+    ] : [
       const Color(0xFFE8F8F5), // soft green
       const Color(0xFFFEE2E2), // soft red/pink
       const Color(0xFFEBF5FB), // soft blue
@@ -31,9 +39,17 @@ class DebtItemRow extends StatelessWidget {
     return colors[hash % colors.length];
   }
 
-  Color _getAvatarFg(String name) {
+  Color _getAvatarFg(BuildContext context, String name) {
     final hash = name.hashCode.abs();
-    final colors = [
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = isDark ? [
+      const Color(0xFF5EDCAE),
+      const Color(0xFFFCA5A5),
+      const Color(0xFF76B9E4),
+      const Color(0xFFF5A069),
+      const Color(0xFFC084FC),
+      const Color(0xFF90A4AE),
+    ] : [
       const Color(0xFF2EBD85),
       const Color(0xFFDC3545),
       const Color(0xFF2980B9),
@@ -56,6 +72,8 @@ class DebtItemRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final debtProvider = context.read<DebtProvider>();
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Dismissible(
       key: ValueKey(item.id),
@@ -65,14 +83,18 @@ class DebtItemRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         margin: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
-          color: themeColor == AppColors.activeRed
-              ? const Color(0xFFFEE2E2)
-              : const Color(0xFFE8F8F5),
+          color: isDark
+              ? themeColor.withValues(alpha: 0.15)
+              : (themeColor == AppColors.activeRed
+                  ? const Color(0xFFFEE2E2)
+                  : const Color(0xFFE8F8F5)),
           borderRadius: BorderRadius.circular(AppSpacing.r16),
           border: Border.all(
-            color: themeColor == AppColors.activeRed
-                ? const Color(0xFFFCA5A5)
-                : const Color(0xFFA3E4D7),
+            color: isDark
+                ? themeColor.withValues(alpha: 0.3)
+                : (themeColor == AppColors.activeRed
+                    ? const Color(0xFFFCA5A5)
+                    : const Color(0xFFA3E4D7)),
           ),
         ),
         child: Row(
@@ -110,9 +132,9 @@ class DebtItemRow extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(AppSpacing.r16),
-          border: Border.all(color: const Color(0xFFF0F0F0)),
+          border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF0F0F0)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.03),
@@ -145,14 +167,14 @@ class DebtItemRow extends StatelessWidget {
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
                       colors: [
-                        _getAvatarBg(item.name),
-                        _getAvatarBg(item.name).withValues(alpha: 0.85),
+                        _getAvatarBg(context, item.name),
+                        _getAvatarBg(context, item.name).withValues(alpha: 0.85),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     border: Border.all(
-                      color: _getAvatarFg(item.name).withValues(alpha: 0.15),
+                      color: _getAvatarFg(context, item.name).withValues(alpha: 0.15),
                       width: 1,
                     ),
                   ),
@@ -162,7 +184,7 @@ class DebtItemRow extends StatelessWidget {
                     style: GoogleFonts.workSans(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: _getAvatarFg(item.name),
+                      color: _getAvatarFg(context, item.name),
                     ),
                   ),
                 ),
@@ -171,7 +193,7 @@ class DebtItemRow extends StatelessWidget {
                   style: GoogleFonts.workSans(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 subtitle: Padding(
@@ -180,7 +202,7 @@ class DebtItemRow extends StatelessWidget {
                     item.detail,
                     style: GoogleFonts.inter(
                       fontSize: 13,
-                      color: Colors.grey.shade500,
+                      color: AppColors.textMuted,
                     ),
                   ),
                 ),
@@ -201,13 +223,13 @@ class DebtItemRow extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade50,
+                          color: isDark ? Colors.white12 : Colors.grey.shade50,
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.grey.shade200),
+                          border: Border.all(color: theme.dividerTheme.color ?? Colors.grey.shade200),
                         ),
                         child: Icon(
                           Icons.edit_outlined,
-                          color: Colors.grey.shade600,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                           size: 16,
                         ),
                       ),

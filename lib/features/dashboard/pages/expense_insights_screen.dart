@@ -142,24 +142,26 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Expense Insights',
-          style: AppTextStyles.insightsHeaderTitle,
+          style: AppTextStyles.insightsHeaderTitle.copyWith(
+            color: theme.appBarTheme.titleTextStyle?.color,
+          ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFE0E0E0), height: 1.0),
+          child: Container(color: theme.dividerTheme.color, height: 1.0),
         ),
       ),
       body: SingleChildScrollView(

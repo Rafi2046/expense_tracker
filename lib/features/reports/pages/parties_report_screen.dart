@@ -14,23 +14,25 @@ class PartiesReportScreen extends StatelessWidget {
     final reportsProvider = context.watch<ReportsProvider>();
     final currencySymbol = context.currencySymbol;
     final filtered = reportsProvider.partyReportSummaries;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
-        leading: const BackButton(color: Colors.black87),
+        leading: BackButton(color: theme.appBarTheme.iconTheme?.color),
         title: Text(
           'Parties Report',
-          style: AppTextStyles.reportAppBarTitle,
+          style: AppTextStyles.reportAppBarTitle.copyWith(color: theme.appBarTheme.titleTextStyle?.color),
         ),
         centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
-            color: const Color(0xFFF1F1F1),
+            color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1),
             height: 1.0,
           ),
         ),
@@ -50,25 +52,25 @@ class PartiesReportScreen extends StatelessWidget {
                       onChanged: (val) {
                         reportsProvider.setPartiesSearch(val);
                       },
-                      style: AppTextStyles.partyFormInput,
+                      style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
                       decoration: InputDecoration(
                         hintText: 'Search parties...',
-                        hintStyle: AppTextStyles.partyFormHint.copyWith(fontSize: 14),
-                        prefixIcon: Icon(Icons.search, color: Colors.grey.shade400, size: 20),
+                        hintStyle: AppTextStyles.partyFormHint.copyWith(fontSize: 14, color: isDark ? Colors.white30 : null),
+                        prefixIcon: Icon(Icons.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: theme.cardColor,
                         contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey.shade100, width: 1),
+                          borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey.shade100, width: 1),
+                          borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: AppColors.activeGreen, width: 1.5),
+                          borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
                         ),
                       ),
                     ),
@@ -81,11 +83,14 @@ class PartiesReportScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 60.0),
                               child: Column(
                                 children: [
-                                  Icon(Icons.people_outline_rounded, color: Colors.grey.shade300, size: 48),
+                                  Icon(Icons.people_outline_rounded, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
                                   const SizedBox(height: 12),
                                   Text(
                                     'No parties found',
-                                    style: AppTextStyles.reportTransactionSubtitle.copyWith(fontSize: 14),
+                                    style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                                      fontSize: 14,
+                                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -103,9 +108,9 @@ class PartiesReportScreen extends StatelessWidget {
                               return Container(
                                 padding: const EdgeInsets.all(14),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: theme.cardColor,
                                   borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: const Color(0xFFF1F1F1)),
+                                  border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,14 +120,17 @@ class PartiesReportScreen extends StatelessWidget {
                                         Container(
                                           width: 44,
                                           height: 44,
-                                          decoration: const BoxDecoration(
-                                            color: Color(0xFFF1F2F4),
+                                          decoration: BoxDecoration(
+                                            color: isDark ? Colors.white10 : const Color(0xFFF1F2F4),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Center(
                                             child: Text(
                                               item.initials,
-                                              style: AppTextStyles.reportTileTitle.copyWith(fontWeight: FontWeight.bold),
+                                              style: AppTextStyles.reportTileTitle.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: theme.colorScheme.onSurface,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -132,12 +140,16 @@ class PartiesReportScreen extends StatelessWidget {
                                           children: [
                                             Text(
                                               item.name,
-                                              style: AppTextStyles.reportTransactionTitle,
+                                              style: AppTextStyles.reportTransactionTitle.copyWith(
+                                                color: theme.colorScheme.onSurface,
+                                              ),
                                             ),
                                             const SizedBox(height: 4),
                                             Text(
                                               '${item.phone ?? "No phone"} • ${item.transactionCount} txs',
-                                              style: AppTextStyles.reportTransactionSubtitle,
+                                              style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -148,15 +160,17 @@ class PartiesReportScreen extends StatelessWidget {
                                       children: [
                                         Text(
                                           isReceivable ? 'To Receive' : 'To Give',
-                                          style: AppTextStyles.reportStatLabel,
+                                          style: AppTextStyles.reportStatLabel.copyWith(
+                                            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                          ),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           '$currencySymbol ${item.netBalance.abs().toStringAsFixed(0)}',
                                           style: AppTextStyles.reportTransactionTitle.copyWith(
                                             color: item.netBalance == 0
-                                                ? Colors.grey.shade600
-                                                : (isReceivable ? AppColors.activeGreen : AppColors.activeRed),
+                                                ? (isDark ? Colors.white38 : Colors.grey.shade600)
+                                                : (isReceivable ? theme.primaryColor : AppColors.activeRed),
                                           ),
                                         ),
                                       ],

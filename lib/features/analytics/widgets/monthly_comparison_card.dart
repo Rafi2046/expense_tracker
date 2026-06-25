@@ -22,21 +22,24 @@ class MonthlyComparisonCard extends StatelessWidget {
     final currentProgress = maxAmount > 0 ? currentAmount / maxAmount : 0.0;
     final previousProgress = maxAmount > 0 ? previousAmount / maxAmount : 0.0;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
         ],
         border: Border.all(
-          color: const Color(0xFFF0F0F0),
+          color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF0F0F0),
           width: 1,
         ),
       ),
@@ -49,7 +52,7 @@ class MonthlyComparisonCard extends StatelessWidget {
             style: GoogleFonts.workSans(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF1E2A3A),
+              color: onSurface,
             ),
           ),
           const SizedBox(height: 2),
@@ -76,12 +79,15 @@ class MonthlyComparisonCard extends StatelessWidget {
             label: 'Previous Month',
             amount: previousAmount,
             progress: previousProgress,
-            progressColor: const Color(0xFFB3C5B9),
+            progressColor: isDark ? Colors.grey.shade700 : const Color(0xFFB3C5B9),
           ),
           const SizedBox(height: 16),
 
           // Divider
-          Divider(color: Colors.grey.shade100, height: 1),
+          Divider(
+            color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF1F1F1),
+            height: 1,
+          ),
           const SizedBox(height: 12),
 
           // Net Change Row
@@ -93,7 +99,7 @@ class MonthlyComparisonCard extends StatelessWidget {
                 style: GoogleFonts.workSans(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xFF4A5568),
+                  color: isDark ? Colors.white60 : const Color(0xFF4A5568),
                 ),
               ),
               Row(

@@ -15,13 +15,17 @@ class SettingsGroupCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (children.isEmpty) return const SizedBox.shrink();
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final dividerColor = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1);
+
     final List<Widget> items = [];
     for (int i = 0; i < children.length; i++) {
       items.add(children[i]);
       if (i < children.length - 1) {
         items.add(
           Divider(
-            color: Colors.grey.shade100,
+            color: dividerColor,
             height: 1,
             indent: 52,
             endIndent: 14,
@@ -41,7 +45,7 @@ class SettingsGroupCard extends StatelessWidget {
             style: GoogleFonts.workSans(
               fontSize: 10.5,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF6A53A1),
+              color: isDark ? const Color(0xFFB39DDB) : const Color(0xFF6A53A1),
               letterSpacing: 1.2,
             ),
           ),
@@ -51,7 +55,7 @@ class SettingsGroupCard extends StatelessWidget {
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
@@ -61,7 +65,7 @@ class SettingsGroupCard extends StatelessWidget {
               ),
             ],
             border: Border.all(
-              color: const Color(0xFFF0F0F0),
+              color: dividerColor,
               width: 1,
             ),
           ),

@@ -35,6 +35,7 @@ class _AccountGroupState extends State<AccountGroup> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SettingsGroupCard(
       title: context.translate('account'),
       children: [
@@ -73,7 +74,10 @@ class _AccountGroupState extends State<AccountGroup> {
               secondChild: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(height: 1.0, color: const Color(0xFFF1F1F1)),
+                  Container(
+                    height: 1.0,
+                    color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1),
+                  ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
                     child: _isGoogleUser 

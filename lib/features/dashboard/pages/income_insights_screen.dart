@@ -36,7 +36,9 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                 'Vs Yesterday',
                 style: TextStyle(
                   fontSize: 13,
-                  color: AppColors.loginSubTitle,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? AppColors.loginSubTitle
+                      : Colors.white70,
                   fontFamily: GoogleFonts.workSans().fontFamily,
                 ),
               ),
@@ -76,7 +78,9 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                     'Avg. Daily',
                     style: TextStyle(
                       fontSize: 13,
-                      color: AppColors.loginSubTitle,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? AppColors.loginSubTitle
+                          : Colors.white70,
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
@@ -85,7 +89,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.black,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
@@ -99,7 +103,9 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                     'Vs Last Week',
                     style: TextStyle(
                       fontSize: 13,
-                      color: AppColors.loginSubTitle,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? AppColors.loginSubTitle
+                          : Colors.white70,
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
@@ -143,7 +149,9 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                     'Projected Year End',
                     style: TextStyle(
                       fontSize: 13,
-                      color: AppColors.loginSubTitle,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? AppColors.loginSubTitle
+                          : Colors.white70,
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
@@ -152,7 +160,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.black,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
@@ -161,10 +169,12 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
               const SizedBox(height: 12),
               ClipRRect(
                 borderRadius: BorderRadius.circular(100),
-                child: const LinearProgressIndicator(
+                child: LinearProgressIndicator(
                   value: 0.25,
-                  backgroundColor: Color(0xFFE0E0E0),
-                  valueColor: AlwaysStoppedAnimation<Color>(
+                  backgroundColor: Theme.of(context).brightness == Brightness.light
+                      ? const Color(0xFFE0E0E0)
+                      : Colors.white12,
+                  valueColor: const AlwaysStoppedAnimation<Color>(
                     AppColors.activeGreen,
                   ),
                   minHeight: 4,
@@ -200,24 +210,26 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Income Insights',
-          style: AppTextStyles.insightsHeaderTitle,
+          style: AppTextStyles.insightsHeaderTitle.copyWith(
+            color: theme.appBarTheme.titleTextStyle?.color,
+          ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFE0E0E0), height: 1.0),
+          child: Container(color: theme.dividerTheme.color, height: 1.0),
         ),
       ),
       body: SingleChildScrollView(

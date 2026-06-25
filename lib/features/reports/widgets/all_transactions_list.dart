@@ -15,6 +15,8 @@ class AllTransactionsList extends StatelessWidget {
     final reportsProvider = context.watch<ReportsProvider>();
     final filtered = reportsProvider.filteredTransactions;
     final currencySymbol = context.currencySymbol;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     if (filtered.isEmpty) {
       return Center(
@@ -35,7 +37,7 @@ class AllTransactionsList extends StatelessWidget {
               Text(
                 'No transactions matched filters',
                 style: AppTextStyles.reportTileTitle.copyWith(
-                  color: Colors.grey.shade500,
+                  color: isDark ? Colors.white60 : Colors.grey.shade500,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -57,9 +59,9 @@ class AllTransactionsList extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFF1F1F1)),
+            border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,18 +69,23 @@ class AllTransactionsList extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(tx.title, style: AppTextStyles.reportTransactionTitle),
+                  Text(
+                    tx.title,
+                    style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
+                  ),
                   const SizedBox(height: 4),
                   Text(
                     '${tx.subtitle} • ${DateFormat('dd MMM yyyy').format(tx.dateTime)}',
-                    style: AppTextStyles.reportTransactionSubtitle,
+                    style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
                   ),
                 ],
               ),
               Text(
                 '$currencySymbol ${tx.amount.toStringAsFixed(0)}',
                 style: AppTextStyles.reportTransactionTitle.copyWith(
-                  color: isCredit ? AppColors.activeGreen : AppColors.activeRed,
+                  color: isCredit ? theme.primaryColor : AppColors.activeRed,
                 ),
               ),
             ],

@@ -18,12 +18,14 @@ class ReportStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,13 +33,15 @@ class ReportStatCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: AppTextStyles.reportStatLabel,
+            style: AppTextStyles.reportStatLabel.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             '$currencySymbol ${amount.toStringAsFixed(0)}',
             style: AppTextStyles.reportStatValue.copyWith(
-              color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
+              color: isPositive ? theme.primaryColor : AppColors.activeRed,
             ),
           ),
         ],

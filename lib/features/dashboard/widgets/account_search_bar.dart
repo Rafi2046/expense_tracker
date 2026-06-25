@@ -19,15 +19,16 @@ class AccountSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       children: [
         Expanded(
           child: Container(
             height: 38,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: theme.cardColor,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFFF1F1F1)),
+              border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
@@ -37,7 +38,7 @@ class AccountSearchBar extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     controller: controller,
-                    style: GoogleFonts.workSans(fontSize: 13, color: Colors.black87),
+                    style: GoogleFonts.workSans(fontSize: 13, color: theme.colorScheme.onSurface),
                     decoration: const InputDecoration(
                       hintText: 'Search Transactions...',
                       hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
@@ -65,12 +66,12 @@ class AccountSearchBar extends StatelessWidget {
           height: 38,
           width: 38,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFFF1F1F1)),
+            border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
           ),
           child: IconButton(
-            icon: const Icon(Icons.filter_list_rounded, color: Colors.black87, size: 18),
+            icon: Icon(Icons.filter_list_rounded, color: theme.colorScheme.onSurface, size: 18),
             padding: EdgeInsets.zero,
             onPressed: () {
               if (hasActiveFilters) {

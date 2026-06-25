@@ -14,26 +14,28 @@ class ViewReportsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F6F9),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
-        leading: const BackButton(color: Colors.black87),
+        leading: BackButton(color: theme.appBarTheme.iconTheme?.color),
         title: Text(
           'Reports',
           style: GoogleFonts.workSans(
             fontSize: 17,
             fontWeight: FontWeight.w700,
-            color: Colors.black87,
+            color: theme.appBarTheme.titleTextStyle?.color,
             letterSpacing: -0.3,
           ),
         ),
         centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF0F0F0), height: 1.0),
+          child: Container(color: theme.dividerTheme.color ?? const Color(0xFFF0F0F0), height: 1.0),
         ),
       ),
       body: SingleChildScrollView(
@@ -91,7 +93,7 @@ class ViewReportsScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 22),
-            _buildSectionLabel('POPULAR REPORTS'),
+            _buildSectionLabel(context, 'POPULAR REPORTS'),
             const SizedBox(height: 10),
 
             _buildReportCard(context, items: [
@@ -122,7 +124,7 @@ class ViewReportsScreen extends StatelessWidget {
             ]),
 
             const SizedBox(height: 22),
-            _buildSectionLabel('BROWSE ALL'),
+            _buildSectionLabel(context, 'BROWSE ALL'),
             const SizedBox(height: 10),
 
             _buildReportCard(context, items: [
@@ -147,7 +149,7 @@ class ViewReportsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionLabel(String label) {
+  Widget _buildSectionLabel(BuildContext context, String label) {
     return Padding(
       padding: const EdgeInsets.only(left: 2.0),
       child: Text(
@@ -155,7 +157,7 @@ class ViewReportsScreen extends StatelessWidget {
         style: GoogleFonts.workSans(
           fontSize: 10.5,
           fontWeight: FontWeight.w700,
-          color: Colors.grey.shade400,
+          color: Theme.of(context).brightness == Brightness.dark ? Colors.white38 : Colors.grey.shade500,
           letterSpacing: 1.2,
         ),
       ),
@@ -163,13 +165,16 @@ class ViewReportsScreen extends StatelessWidget {
   }
 
   Widget _buildReportCard(BuildContext context, {required List<ReportItem> items}) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -184,7 +189,7 @@ class ViewReportsScreen extends StatelessWidget {
               ReportTile(item: item),
               if (!isLast)
                 Divider(
-                  color: Colors.grey.shade100,
+                  color: theme.dividerTheme.color ?? Colors.grey.shade100,
                   height: 1,
                   indent: 60,
                   endIndent: 16,

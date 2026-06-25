@@ -29,6 +29,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final showHeader = timeFrame != 'Quarterly';
 
     // Configure Y-Axis based on selected timeframe
@@ -59,9 +60,9 @@ class ExpenseTrendChartCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         border: Border.all(
-          color: AppColors.dividerColor.withValues(alpha: 0.5),
+          color: (theme.dividerTheme.color ?? AppColors.dividerColor).withValues(alpha: 0.5),
           width: 1.0,
         ),
         borderRadius: BorderRadius.circular(16),
@@ -101,7 +102,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: theme.colorScheme.onSurface,
                           fontFamily: GoogleFonts.workSans().fontFamily,
                         ),
                       ),
@@ -148,10 +149,10 @@ class ExpenseTrendChartCard extends StatelessWidget {
                 ),
               ),
               primaryYAxis: NumericAxis(
-                majorGridLines: const MajorGridLines(
+                majorGridLines: MajorGridLines(
                   width: 1,
-                  color: Color(0xFFEEEEEE),
-                  dashArray: <double>[
+                  color: theme.dividerTheme.color ?? const Color(0xFFEEEEEE),
+                  dashArray: const <double>[
                     4,
                     4,
                   ], // Dashed grid lines as in screenshots

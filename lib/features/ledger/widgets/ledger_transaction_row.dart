@@ -44,18 +44,19 @@ class LedgerTransactionRow extends StatelessWidget {
               (Match m) => '${m[1]},',
             );
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFFF1F1F1),
+          color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF1F1F1),
           width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.015),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.015),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -97,7 +98,7 @@ class LedgerTransactionRow extends StatelessWidget {
                       style: GoogleFonts.workSans(
                         fontSize: 14.5,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF1F2937),
+                        color: isDark ? Colors.white70 : const Color(0xFF1F2937),
                       ),
                     ),
                     const SizedBox(height: 3),

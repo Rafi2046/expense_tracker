@@ -18,12 +18,14 @@ class DailyDistributionChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.primaryColor;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: AppColors.dividerColor, width: 1.0),
+        color: theme.cardColor,
+        border: Border.all(color: theme.dividerTheme.color ?? AppColors.dividerColor, width: 1.0),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -37,7 +39,7 @@ class DailyDistributionChart extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: theme.colorScheme.onSurface,
                   fontFamily: GoogleFonts.workSans().fontFamily,
                 ),
               ),
@@ -80,8 +82,8 @@ class DailyDistributionChart extends StatelessWidget {
                   yValueMapper: (DailyChartData item, _) => item.value,
                   pointColorMapper: (DailyChartData item, _) =>
                       item.isHighlighted
-                      ? AppColors.activeGreen
-                      : AppColors.activeGreen.withValues(alpha: 0.3),
+                      ? primaryColor
+                      : primaryColor.withValues(alpha: 0.3),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(4),
                     topRight: Radius.circular(4),

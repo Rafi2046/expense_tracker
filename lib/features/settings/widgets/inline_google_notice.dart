@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -7,20 +6,22 @@ class InlineGoogleNotice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.dividerColor, width: 1.0),
+            border: Border.all(color: theme.dividerColor, width: 1.0),
           ),
           child: Column(
             children: [
-              const Icon(
+              Icon(
                 Icons.g_mobiledata_rounded,
-                color: Color(0xFF2E7D32),
+                color: theme.primaryColor,
                 size: 36,
               ),
               const SizedBox(height: 8),
@@ -29,7 +30,7 @@ class InlineGoogleNotice extends StatelessWidget {
                 style: GoogleFonts.workSans(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 6),
@@ -38,7 +39,7 @@ class InlineGoogleNotice extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: GoogleFonts.workSans(
                   fontSize: 12,
-                  color: AppColors.loginSubTitle,
+                  color: theme.colorScheme.onSurfaceVariant,
                   height: 1.4,
                 ),
               ),

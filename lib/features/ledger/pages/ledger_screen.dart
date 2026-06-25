@@ -30,10 +30,13 @@ class _LedgerScreenState extends State<LedgerScreen> {
     final provider = context.watch<TransactionProvider>();
     final isSearching = provider.isSearching;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         title: isSearching
@@ -42,11 +45,11 @@ class _LedgerScreenState extends State<LedgerScreen> {
                 autofocus: true,
                 style: GoogleFonts.workSans(
                   fontSize: 16,
-                  color: Colors.black87,
+                  color: onSurface,
                 ),
                 decoration: InputDecoration(
                   hintText: context.translate('search_hint'),
-                  hintStyle: GoogleFonts.workSans(color: Colors.grey.shade400),
+                  hintStyle: GoogleFonts.workSans(color: isDark ? Colors.white38 : Colors.grey.shade400),
                   border: InputBorder.none,
                 ),
                 onChanged: (val) => provider.updateSearchQuery(val),
@@ -56,14 +59,14 @@ class _LedgerScreenState extends State<LedgerScreen> {
                 style: GoogleFonts.workSans(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: onSurface,
                 ),
               ),
         actions: [
           IconButton(
             icon: Icon(
               isSearching ? Icons.close_rounded : Icons.search_rounded,
-              color: const Color(0xFF31394D),
+              color: isDark ? Colors.white70 : const Color(0xFF31394D),
             ),
             onPressed: () {
               final wasSearching = provider.isSearching;
@@ -76,7 +79,10 @@ class _LedgerScreenState extends State<LedgerScreen> {
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
+          child: Container(
+            color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF1F1F1),
+            height: 1.0,
+          ),
         ),
       ),
       body: SafeArea(

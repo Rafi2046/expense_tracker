@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,10 +14,13 @@ class ShareReportSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
         ),
@@ -34,7 +36,7 @@ class ShareReportSheet extends StatelessWidget {
               height: 4,
               margin: const EdgeInsets.only(top: 10, bottom: 8),
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
+                color: isDark ? Colors.white24 : Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -48,11 +50,11 @@ class ShareReportSheet extends StatelessWidget {
               style: GoogleFonts.workSans(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
-                color: Colors.black87,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ),
-          const Divider(color: Color(0xFFF1F1F1), height: 1),
+          Divider(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), height: 1),
 
           // Share Options
           ListTile(
@@ -62,12 +64,12 @@ class ShareReportSheet extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
+                color: isDark ? Colors.white10 : const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.image_outlined,
-                color: AppColors.activeGreen,
+                color: theme.primaryColor,
                 size: 18,
               ),
             ),
@@ -75,12 +77,12 @@ class ShareReportSheet extends StatelessWidget {
               'Share Image',
               style: GoogleFonts.workSans(
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
+                color: theme.colorScheme.onSurface,
                 fontSize: 14,
               ),
             ),
           ),
-          const Divider(color: Color(0xFFF8FAFC), height: 1),
+          Divider(color: theme.dividerTheme.color ?? const Color(0xFFF8FAFC), height: 1),
           ListTile(
             onTap: () => Navigator.pop(context, 'pdf'),
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
@@ -88,12 +90,12 @@ class ShareReportSheet extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
+                color: isDark ? Colors.white10 : const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.picture_as_pdf_outlined,
-                color: AppColors.activeGreen,
+                color: theme.primaryColor,
                 size: 18,
               ),
             ),
@@ -101,7 +103,7 @@ class ShareReportSheet extends StatelessWidget {
               'Share PDF',
               style: GoogleFonts.workSans(
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
+                color: theme.colorScheme.onSurface,
                 fontSize: 14,
               ),
             ),

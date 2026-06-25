@@ -13,11 +13,14 @@ class PartySegmentedTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       height: 40,
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F2F4),
+        color: isDark ? Colors.white10 : const Color(0xFFF1F2F4),
         borderRadius: BorderRadius.circular(20),
       ),
       child: LayoutBuilder(
@@ -36,11 +39,11 @@ class PartySegmentedTabs extends StatelessWidget {
                   width: tabWidth - 4,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: isDark ? theme.cardColor : Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
+                        color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
                         blurRadius: 6,
                         offset: const Offset(0, 1.5),
                       ),
@@ -61,7 +64,9 @@ class PartySegmentedTabs extends StatelessWidget {
                           'Credit Info',
                           style: activeIndex == 0
                               ? AppTextStyles.partyTabActive
-                              : AppTextStyles.partyTabInactive,
+                              : AppTextStyles.partyTabInactive.copyWith(
+                                  color: isDark ? Colors.white60 : null,
+                                ),
                         ),
                       ),
                     ),
@@ -76,7 +81,9 @@ class PartySegmentedTabs extends StatelessWidget {
                           'Additional Details',
                           style: activeIndex == 1
                               ? AppTextStyles.partyTabActive
-                              : AppTextStyles.partyTabInactive,
+                              : AppTextStyles.partyTabInactive.copyWith(
+                                  color: isDark ? Colors.white60 : null,
+                                ),
                         ),
                       ),
                     ),

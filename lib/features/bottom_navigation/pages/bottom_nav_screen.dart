@@ -51,7 +51,7 @@ class _AppBottomNavState extends State<BottomNavScreen> {
       },
       child: Scaffold(
         extendBody: true,
-        backgroundColor: const Color(0xFFF8F9FA),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: IndexedStack(
           index: _currentIndex,
           children: _screens,
@@ -68,12 +68,15 @@ class _AppBottomNavState extends State<BottomNavScreen> {
           child: Container(
             height: 53,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0xFFF1F1F1), width: 1.0),
+              border: Border.all(
+                color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF1F1F1),
+                width: 1.0,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
+                  color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.2 : 0.05),
                   blurRadius: 16,
                   offset: const Offset(0, 8),
                 ),
@@ -101,9 +104,10 @@ class _AppBottomNavState extends State<BottomNavScreen> {
     required int index,
     required bool isSelected,
   }) {
-    const activeColor = Color(0xFF006C49);
-    const inactiveColor = Color(0xFF31394D);
-    const indicatorColor = Color(0xFF006C49);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeColor = Theme.of(context).primaryColor;
+    final inactiveColor = isDark ? Colors.white54 : const Color(0xFF31394D);
+    final indicatorColor = Theme.of(context).primaryColor;
 
     return GestureDetector(
       onTap: () {

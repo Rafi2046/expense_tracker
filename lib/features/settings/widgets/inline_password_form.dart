@@ -107,6 +107,9 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
     required bool obscureText,
     required VoidCallback onToggleObscure,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -115,29 +118,35 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
           style: GoogleFonts.workSans(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: Colors.black54,
+            color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 6),
         Container(
           decoration: BoxDecoration(
-            color: const Color(0xFFF5F6F8),
+            color: isDark ? Colors.white10 : const Color(0xFFF5F6F8),
             borderRadius: BorderRadius.circular(12),
           ),
           child: TextFormField(
             controller: controller,
             obscureText: obscureText,
-            style: GoogleFonts.workSans(fontSize: 14.5, color: Colors.black87),
+            style: GoogleFonts.workSans(
+              fontSize: 14.5,
+              color: theme.colorScheme.onSurface,
+            ),
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: GoogleFonts.workSans(fontSize: 14, color: Colors.grey.shade400),
+              hintStyle: GoogleFonts.workSans(
+                fontSize: 14,
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+              ),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               suffixIcon: IconButton(
                 onPressed: onToggleObscure,
                 icon: Icon(
                   obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                  color: Colors.grey.shade500,
+                  color: theme.colorScheme.onSurfaceVariant,
                   size: 20,
                 ),
               ),
@@ -192,7 +201,7 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
         ElevatedButton(
           onPressed: _isLoading ? null : _updatePassword,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF0C4E3C),
+            backgroundColor: Theme.of(context).primaryColor,
             foregroundColor: Colors.white,
             elevation: 0,
             padding: const EdgeInsets.symmetric(vertical: 14),

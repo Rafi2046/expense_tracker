@@ -76,7 +76,7 @@ class DashboardScreen extends StatelessWidget {
         final photoUrl = localPhoto ?? user?.photoURL;
 
         return Scaffold(
-          backgroundColor: const Color(0xFFF9F9F9),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: HomepageAppbarWidget(
             name: currentProfile.name,
             profilePhoto: photoUrl,

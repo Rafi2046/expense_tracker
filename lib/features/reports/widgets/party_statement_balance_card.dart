@@ -14,6 +14,7 @@ class PartyStatementBalanceCard extends StatelessWidget {
     final partyName = reportsProvider.selectedPartyNameForStatement;
     final totals = reportsProvider.partyStatementTotals;
     final currencySymbol = context.currencySymbol;
+    final theme = Theme.of(context);
 
     if (partyName == null) return const SizedBox.shrink();
 
@@ -23,12 +24,12 @@ class PartyStatementBalanceCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF1F1F1)),
+        border: Border.all(color: theme.dividerColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
+            color: Colors.black.withValues(alpha: theme.brightness == Brightness.dark ? 0.2 : 0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -39,7 +40,10 @@ class PartyStatementBalanceCard extends StatelessWidget {
         children: [
           Text(
             partyName,
-            style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 18),
+            style: AppTextStyles.reportTransactionTitle.copyWith(
+              fontSize: 18,
+              color: theme.colorScheme.onSurface,
+            ),
           ),
           const SizedBox(height: 12),
           Row(
@@ -50,7 +54,9 @@ class PartyStatementBalanceCard extends StatelessWidget {
                 children: [
                   Text(
                     netBalance >= 0 ? 'To Receive' : 'To Give',
-                    style: AppTextStyles.reportStatLabel,
+                    style: AppTextStyles.reportStatLabel.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(

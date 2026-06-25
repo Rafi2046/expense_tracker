@@ -52,7 +52,7 @@ class DashboardRecentActivity extends StatelessWidget {
                 style: GoogleFonts.workSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF1E2A3A),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               GestureDetector(
@@ -76,16 +76,19 @@ class DashboardRecentActivity extends StatelessWidget {
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
+                color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.2 : 0.03),
                 blurRadius: 10,
                 offset: const Offset(0, 3),
               ),
             ],
-            border: Border.all(color: const Color(0xFFF0F0F0), width: 1),
+            border: Border.all(
+              color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF0F0F0),
+              width: 1,
+            ),
           ),
           child: Column(children: _buildListItems(context)),
         ),
@@ -122,14 +125,18 @@ class DashboardRecentActivity extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isInc
                         ? AppColors.activeGreen.withValues(alpha: 0.08)
-                        : const Color(0xFFF3F4F6),
+                        : (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white.withValues(alpha: 0.08)
+                            : const Color(0xFFF3F4F6)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     item.icon,
                     color: isInc
                         ? AppColors.activeGreen
-                        : const Color(0xFF4A5568),
+                        : (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white70
+                            : const Color(0xFF4A5568)),
                     size: 17,
                   ),
                 ),
@@ -145,7 +152,7 @@ class DashboardRecentActivity extends StatelessWidget {
                         style: GoogleFonts.workSans(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF1E2A3A),
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -181,7 +188,7 @@ class DashboardRecentActivity extends StatelessWidget {
       if (i < items.length - 1) {
         widgets.add(
           Divider(
-            color: Colors.grey.shade100,
+            color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF1F1F1),
             height: 1,
             indent: 62,
             endIndent: 14,

@@ -9,24 +9,28 @@ class PartyStatementViewToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
     final mode = reportsProvider.partyStatementViewMode;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Container(
       height: 38,
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F2F4),
+        color: isDark ? Colors.white10 : const Color(0xFFF1F2F4),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildTab(
+            context: context,
             isActive: mode == PartyStatementViewMode.card,
             icon: Icons.layers_outlined,
             onTap: () => reportsProvider.setPartyStatementViewMode(PartyStatementViewMode.card),
           ),
           _buildTab(
+            context: context,
             isActive: mode == PartyStatementViewMode.table,
             icon: Icons.insert_chart_outlined_rounded,
             onTap: () => reportsProvider.setPartyStatementViewMode(PartyStatementViewMode.table),
@@ -37,10 +41,14 @@ class PartyStatementViewToggle extends StatelessWidget {
   }
 
   Widget _buildTab({
+    required BuildContext context,
     required bool isActive,
     required IconData icon,
     required VoidCallback onTap,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -48,12 +56,12 @@ class PartyStatementViewToggle extends StatelessWidget {
         width: 36,
         height: 32,
         decoration: BoxDecoration(
-          color: isActive ? Colors.white : Colors.transparent,
+          color: isActive ? theme.cardColor : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
+                    color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.08),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -62,7 +70,7 @@ class PartyStatementViewToggle extends StatelessWidget {
         ),
         child: Icon(
           icon,
-          color: isActive ? Colors.black87 : Colors.grey.shade500,
+          color: isActive ? theme.colorScheme.onSurface : (isDark ? Colors.white38 : Colors.grey.shade500),
           size: 20,
         ),
       ),

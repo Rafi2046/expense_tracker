@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -26,7 +25,18 @@ class SettingsOptionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultColor = color ?? Colors.black87;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
+    final defaultColor = color ?? theme.colorScheme.onSurface;
+    
+    final resolvedIconBg = isDark
+        ? (iconColor?.withValues(alpha: 0.15) ?? const Color(0xFF2D2D2D))
+        : (iconBgColor ?? const Color(0xFFF3F4F6));
+        
+    final resolvedIconColor = isDark
+        ? (iconColor ?? color ?? Colors.white70)
+        : (iconColor ?? color ?? const Color(0xFF4B5563));
 
     return InkWell(
       onTap: onTap,
@@ -38,12 +48,12 @@ class SettingsOptionRow extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: iconBgColor ?? const Color(0xFFF3F4F6),
+                color: resolvedIconBg,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
                 icon,
-                color: iconColor ?? color ?? const Color(0xFF4B5563),
+                color: resolvedIconColor,
                 size: 18,
               ),
             ),
@@ -67,7 +77,7 @@ class SettingsOptionRow extends StatelessWidget {
                 trailingText!,
                 style: GoogleFonts.workSans(
                   fontSize: 13,
-                  color: AppColors.textMuted,
+                  color: theme.colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -77,7 +87,7 @@ class SettingsOptionRow extends StatelessWidget {
             // Chevron Arrow
             Icon(
               trailingIcon ?? Icons.chevron_right_rounded,
-              color: color ?? Colors.grey.shade400,
+              color: color ?? (isDark ? Colors.white60 : Colors.grey.shade400),
               size: 18,
             ),
           ],
