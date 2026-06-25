@@ -13,6 +13,7 @@ class LedgerTransactionRow extends StatelessWidget {
   final bool isIncome;
   final IconData icon;
   final VoidCallback onTap;
+  final VoidCallback? onDelete;
   final String? incomeMonth;
 
   const LedgerTransactionRow({
@@ -24,6 +25,7 @@ class LedgerTransactionRow extends StatelessWidget {
     required this.isIncome,
     required this.icon,
     required this.onTap,
+    this.onDelete,
     this.incomeMonth,
   });
 

@@ -59,18 +59,6 @@ class SpendingOverviewCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final onSurface = Theme.of(context).colorScheme.onSurface;
 
-    // Split items for 2x2 legend
-    final leftColumnItems = <SpendingDistributionItem>[];
-    final rightColumnItems = <SpendingDistributionItem>[];
-
-    for (int i = 0; i < items.length; i++) {
-      if (i % 2 == 0) {
-        leftColumnItems.add(items[i]);
-      } else {
-        rightColumnItems.add(items[i]);
-      }
-    }
-
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14.0),
@@ -142,6 +130,7 @@ class SpendingOverviewCard extends StatelessWidget {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Column(
+
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
@@ -171,33 +160,17 @@ class SpendingOverviewCard extends StatelessWidget {
           ),
           const SizedBox(height: 14),
 
-          // 2x2 Legend Row
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: leftColumnItems
-                      .map((item) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: _buildLegendItem(context, item.category, item.percentage, item.color),
-                          ))
-                      .toList(),
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: rightColumnItems
-                      .map((item) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: _buildLegendItem(context, item.category, item.percentage, item.color),
-                          ))
-                      .toList(),
-                ),
-              ),
-            ],
+          // Centered 2-Column Legend
+          Center(
+            child: Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 24.0,
+              runSpacing: 12.0,
+              children: items.map((item) => SizedBox(
+                width: 130,
+                child: _buildLegendItem(context, item.category, item.percentage, item.color),
+              )).toList(),
+            ),
           ),
         ],
       ),

@@ -1,6 +1,8 @@
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:expense_tracker/features/ledger/widgets/ledger_transaction_row.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -81,24 +83,69 @@ class LedgerTransactionList extends StatelessWidget {
       
       for (var tx in txs) {
         listItems.add(
-          LedgerTransactionRow(
-            title: tx.note.isNotEmpty ? tx.note : context.translate(tx.category.toLowerCase()),
-            dateText: DateFormat('h:mm a').format(tx.dateTime), // simplified time format
-            category: tx.category,
-            amount: tx.amount,
-            isIncome: tx.isIncome,
-            icon: tx.isIncome ? Icons.arrow_downward : Icons.arrow_upward,
-            incomeMonth: tx.incomeMonth,
-            onTap: () {
+          Dismissible(
+            key: ValueKey(tx.id),
+            direction: DismissDirection.endToStart,
+            confirmDismiss: (_) async {
+              return await showDialog<bool>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Text('Delete Transaction'),
+                  content: Text(
+                    'Delete "${tx.note.isNotEmpty ? tx.note : context.translate(tx.category.toLowerCase())}"?',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      child: Text('Cancel',
+                        style: GoogleFonts.workSans(color: AppColors.textMuted),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      child: Text('Delete',
+                        style: GoogleFonts.workSans(color: AppColors.activeRed),
+                      ),
+                    ),
+                  ],
+                ),
+              ) ?? false;
+            },
+            onDismissed: (_) {
+              context.read<TransactionProvider>().deleteTransaction(tx.id);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
-                    'Transaction details: ${tx.note.isNotEmpty ? tx.note : context.translate(tx.category.toLowerCase())}',
-                  ),
-                  duration: const Duration(seconds: 1),
+                  content: Text('Transaction deleted'),
+                  duration: const Duration(seconds: 2),
                 ),
               );
             },
+            background: Container(
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 24),
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                color: AppColors.activeRed,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Icon(Icons.delete_outline, color: Colors.white, size: 28),
+            ),
+            child: LedgerTransactionRow(
+              title: tx.note.isNotEmpty ? tx.note : context.translate(tx.category.toLowerCase()),
+              dateText: DateFormat('h:mm a').format(tx.dateTime),
+              category: tx.category,
+              amount: tx.amount,
+              isIncome: tx.isIncome,
+              icon: tx.isIncome ? Icons.arrow_downward : Icons.arrow_upward,
+              incomeMonth: tx.incomeMonth,
+              onTap: () {
+                AddTransactionSheet.show(
+                  context: context,
+                  isIncome: tx.isIncome,
+                  transaction: tx,
+                );
+              },
+            ),
           ),
         );
       }
