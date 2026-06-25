@@ -10,6 +10,7 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
   static const String _webNotesKey = 'web_notes';
+  static const String _webBudgetKey = 'web_budget';
 
   DatabaseHelper._init();
 
@@ -28,7 +29,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -59,6 +60,14 @@ class DatabaseHelper {
         lastModified TEXT NOT NULL
       )
     ''');
+    await db.execute('''
+      CREATE TABLE budget (
+        id TEXT PRIMARY KEY,
+        amount REAL NOT NULL,
+        syncStatus TEXT NOT NULL DEFAULT 'synced',
+        lastModified TEXT NOT NULL
+      )
+    ''');
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -75,6 +84,16 @@ class DatabaseHelper {
           paymentMethod TEXT NOT NULL DEFAULT 'Cash',
           syncStatus TEXT NOT NULL DEFAULT 'synced',
           isDeleted INTEGER NOT NULL DEFAULT 0,
+          lastModified TEXT NOT NULL
+        )
+      ''');
+    }
+    if (oldVersion < 3) {
+      await db.execute('''
+        CREATE TABLE budget (
+          id TEXT PRIMARY KEY,
+          amount REAL NOT NULL,
+          syncStatus TEXT NOT NULL DEFAULT 'synced',
           lastModified TEXT NOT NULL
         )
       ''');
@@ -375,6 +394,86 @@ class DatabaseHelper {
         whereArgs: [id]);
     if (maps.isEmpty) return null;
     return maps.first['syncStatus'] as String?;
+  }
+
+  // ─── Budget CRUD ───────────────────────────────────────────────
+
+  Map<String, dynamic>? _readWebBudget() {
+    final jsonString = SharedPrefsHelper.getString(_webBudgetKey);
+    if (jsonString == null || jsonString.isEmpty) return null;
+    try {
+      return jsonDecode(jsonString) as Map<String, dynamic>;
+    } catch (e) {
+      debugPrint('Error reading web budget: $e');
+      return null;
+    }
+  }
+
+  Future<void> _writeWebBudget(Map<String, dynamic>? data) async {
+    if (data == null) {
+      await SharedPrefsHelper.remove(_webBudgetKey);
+    } else {
+      await SharedPrefsHelper.setString(_webBudgetKey, jsonEncode(data));
+    }
+  }
+
+  Future<void> insertOrUpdateBudget(double amount, {String syncStatus = 'pending'}) async {
+    final row = {
+      'id': 'monthly',
+      'amount': amount,
+      'syncStatus': syncStatus,
+      'lastModified': DateTime.now().toIso8601String(),
+    };
+
+    if (kIsWeb) {
+      await _writeWebBudget(row);
+      return;
+    }
+
+    final db = await instance.database;
+    await db.insert('budget', row, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<double?> readBudget() async {
+    if (kIsWeb) {
+      final data = _readWebBudget();
+      if (data == null) return null;
+      return (data['amount'] as num).toDouble();
+    }
+
+    final db = await instance.database;
+    final maps = await db.query('budget', where: 'id = ?', whereArgs: ['monthly']);
+    if (maps.isEmpty) return null;
+    return (maps.first['amount'] as num).toDouble();
+  }
+
+  Future<String?> getBudgetSyncStatus() async {
+    if (kIsWeb) {
+      final data = _readWebBudget();
+      if (data == null) return null;
+      return data['syncStatus'] as String?;
+    }
+
+    final db = await instance.database;
+    final maps = await db.query('budget',
+        columns: ['syncStatus'],
+        where: 'id = ?',
+        whereArgs: ['monthly']);
+    if (maps.isEmpty) return null;
+    return maps.first['syncStatus'] as String?;
+  }
+
+  Future<void> markBudgetSynced() async {
+    if (kIsWeb) {
+      final data = _readWebBudget();
+      if (data == null) return;
+      await _writeWebBudget({...data, 'syncStatus': 'synced'});
+      return;
+    }
+
+    final db = await instance.database;
+    await db.update('budget', {'syncStatus': 'synced'},
+        where: 'id = ?', whereArgs: ['monthly']);
   }
 
   // Close database connection

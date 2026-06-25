@@ -13,6 +13,7 @@ import 'package:expense_tracker/features/dashboard/pages/notifications_screen.da
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/to_give_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/to_receive_screen.dart';
+import 'package:expense_tracker/features/dashboard/widgets/budget_summary_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_budget_status.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_recent_activity.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_shortcuts_card.dart';
@@ -264,6 +265,8 @@ class DashboardScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 24),
+                  BudgetSummaryCard(monthlyExpense: txProvider.monthlyExpense),
                   const SizedBox(height: 24),
                   const DashboardShortcutsCard(),
                   const SizedBox(height: 24),

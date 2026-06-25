@@ -9,6 +9,7 @@ import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/theme_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
+import 'package:expense_tracker/core/providers/budget_provider.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => BudgetProvider()),
         ChangeNotifierProxyProvider2<TransactionProvider, DebtProvider, ReportsProvider>(
           create: (_) => ReportsProvider(),
           update: (_, txProvider, debtProvider, reportsProvider) =>
