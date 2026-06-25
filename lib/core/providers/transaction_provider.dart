@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../utils/database_helper.dart';
 
 class TransactionItem {
   final String id;
@@ -12,6 +13,7 @@ class TransactionItem {
   final DateTime dateTime;
   final String? incomeMonth;
   final String paymentMethod; // 'Cash' or 'Bank'
+  final DateTime lastModified;
 
   TransactionItem({
     required this.id,
@@ -22,7 +24,8 @@ class TransactionItem {
     required this.dateTime,
     this.incomeMonth,
     this.paymentMethod = 'Cash',
-  });
+    DateTime? lastModified,
+  }) : lastModified = lastModified ?? dateTime;
 
   Map<String, dynamic> toMap() => {
         'amount': amount,
@@ -32,6 +35,7 @@ class TransactionItem {
         'dateTime': dateTime.toIso8601String(),
         'incomeMonth': incomeMonth,
         'paymentMethod': paymentMethod,
+        'lastModified': lastModified.toIso8601String(),
       };
 
   factory TransactionItem.fromMap(String id, Map<String, dynamic> map) =>
@@ -44,6 +48,36 @@ class TransactionItem {
         dateTime: DateTime.parse(map['dateTime'] as String),
         incomeMonth: map['incomeMonth'] as String?,
         paymentMethod: map['paymentMethod'] as String? ?? 'Cash',
+        lastModified: map['lastModified'] != null
+            ? DateTime.parse(map['lastModified'] as String)
+            : null,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'amount': amount,
+        'category': category,
+        'note': note,
+        'isIncome': isIncome ? 1 : 0,
+        'dateTime': dateTime.toIso8601String(),
+        'incomeMonth': incomeMonth,
+        'paymentMethod': paymentMethod,
+        'lastModified': lastModified.toIso8601String(),
+      };
+
+  factory TransactionItem.fromJson(Map<String, dynamic> json) =>
+      TransactionItem(
+        id: json['id'] as String,
+        amount: (json['amount'] as num).toDouble(),
+        category: json['category'] as String,
+        note: json['note'] as String? ?? '',
+        isIncome: (json['isIncome'] as int) == 1,
+        dateTime: DateTime.parse(json['dateTime'] as String),
+        incomeMonth: json['incomeMonth'] as String?,
+        paymentMethod: json['paymentMethod'] as String? ?? 'Cash',
+        lastModified: json['lastModified'] != null
+            ? DateTime.parse(json['lastModified'] as String)
+            : null,
       );
 }
 
@@ -56,11 +90,15 @@ enum TransactionSortOption {
 class TransactionProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final DatabaseHelper _db = DatabaseHelper.instance;
   StreamSubscription<User?>? _authSubscription;
   StreamSubscription<QuerySnapshot>? _firestoreSubscription;
   final Set<String> _knownDocIds = {};
+  final Set<String> _pendingIds = {};
 
   bool _isLoading = true;
+  String? _currentUid;
+  bool _isRetrying = false;
 
   final List<String> _expenseCategories = [];
   final List<String> _incomeCategories = [];
@@ -80,13 +118,15 @@ class TransactionProvider extends ChangeNotifier {
       return DateTime(now.year, now.month - 6 + index);
     });
 
-    // Listen to auth changes to load transactions from Firestore
+    // Listen to auth changes
     _authSubscription = _auth.authStateChanges().listen((user) {
       _firestoreSubscription?.cancel();
       _knownDocIds.clear();
+      _pendingIds.clear();
       if (user != null) {
         _startListening(user.uid);
       } else {
+        _currentUid = null;
         _transactions.clear();
         _isLoading = false;
         notifyListeners();
@@ -95,9 +135,17 @@ class TransactionProvider extends ChangeNotifier {
   }
 
   void _startListening(String uid) {
+    _currentUid = uid;
     _isLoading = true;
     notifyListeners();
 
+    // 1. Load from SQLite immediately
+    _loadFromDatabase().then((_) {
+      // 2. Retry any pending operations
+      _retryPendingOperations();
+    });
+
+    // 3. Attach Firestore snapshot for ongoing sync
     _firestoreSubscription = _firestore
         .collection('users')
         .doc(uid)
@@ -111,21 +159,31 @@ class TransactionProvider extends ChangeNotifier {
             case DocumentChangeType.added:
               if (!_knownDocIds.contains(docId)) {
                 _knownDocIds.add(docId);
-                _transactions.add(
-                  TransactionItem.fromMap(docId, change.doc.data()!),
-                );
+                final item =
+                    TransactionItem.fromMap(docId, change.doc.data()!);
+                _transactions.add(item);
+                _db.insertTransaction(item, syncStatus: 'synced');
               }
               break;
             case DocumentChangeType.modified:
-              final index = _transactions.indexWhere((t) => t.id == docId);
-              if (index != -1) {
-                _transactions[index] =
-                    TransactionItem.fromMap(docId, change.doc.data()!);
+              if (!_pendingIds.contains(docId)) {
+                final index =
+                    _transactions.indexWhere((t) => t.id == docId);
+                if (index != -1) {
+                  _transactions[index] =
+                      TransactionItem.fromMap(docId, change.doc.data()!);
+                }
+                _db.updateTransaction(
+                  TransactionItem.fromMap(docId, change.doc.data()!),
+                  syncStatus: 'synced',
+                );
               }
               break;
             case DocumentChangeType.removed:
               _knownDocIds.remove(docId);
+              _pendingIds.remove(docId);
               _transactions.removeWhere((t) => t.id == docId);
+              _db.hardDeleteTransaction(docId);
               break;
           }
         }
@@ -138,6 +196,64 @@ class TransactionProvider extends ChangeNotifier {
         notifyListeners();
       },
     );
+  }
+
+  Future<void> _loadFromDatabase() async {
+    try {
+      final items = await _db.readAllTransactions();
+      _transactions.addAll(items);
+      for (final item in items) {
+        _knownDocIds.add(item.id);
+      }
+      // Protect pending local changes from snapshot overwrites
+      final pendingIds = await _db.readAllPendingIds();
+      _pendingIds.addAll(pendingIds);
+    } catch (e) {
+      debugPrint('Error loading transactions from database: $e');
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> _retryPendingOperations() async {
+    if (_isRetrying) return;
+    _isRetrying = true;
+    try {
+      final uid = _currentUid;
+      if (uid == null) return;
+
+      final pending = await _db.readPendingSyncs();
+      for (final item in pending) {
+        _firestore
+            .collection('users')
+            .doc(uid)
+            .collection('transactions')
+            .doc(item.id)
+            .set(item.toMap())
+            .then((_) {
+          _db.markSynced(item.id);
+          _pendingIds.remove(item.id);
+        }).catchError((_) {});
+      }
+
+      final deleteIds = await _db.readPendingDeleteIds();
+      for (final id in deleteIds) {
+        _firestore
+            .collection('users')
+            .doc(uid)
+            .collection('transactions')
+            .doc(id)
+            .delete()
+            .then((_) {
+          _db.hardDeleteTransaction(id);
+          _pendingIds.remove(id);
+        }).catchError((_) {});
+      }
+    } catch (e) {
+      debugPrint('Retry pending operations error: $e');
+    } finally {
+      _isRetrying = false;
+    }
   }
 
   bool get isLoading => _isLoading;
@@ -265,6 +381,7 @@ class TransactionProvider extends ChangeNotifier {
         .collection('transactions')
         .doc();
 
+    final now = DateTime.now();
     final uniqueTransaction = TransactionItem(
       id: docRef.id,
       amount: transaction.amount,
@@ -274,17 +391,25 @@ class TransactionProvider extends ChangeNotifier {
       dateTime: transaction.dateTime,
       incomeMonth: transaction.incomeMonth,
       paymentMethod: transaction.paymentMethod,
+      lastModified: now,
     );
 
+    // 1. SQLite first (always succeeds locally)
+    _db.insertTransaction(uniqueTransaction, syncStatus: 'pending_create');
+
+    // 2. Update local state
     _knownDocIds.add(uniqueTransaction.id);
+    _pendingIds.add(uniqueTransaction.id);
     _transactions.insert(0, uniqueTransaction);
     notifyListeners();
 
-    docRef.set(uniqueTransaction.toMap()).catchError((error) {
+    // 3. Try Firestore — never rollback SQLite on failure
+    docRef.set(uniqueTransaction.toMap()).then((_) async {
+      _pendingIds.remove(uniqueTransaction.id);
+      await _db.markSynced(uniqueTransaction.id);
+      _retryPendingOperations();
+    }).catchError((error) {
       debugPrint('Firestore addTransaction error: $error');
-      _knownDocIds.remove(uniqueTransaction.id);
-      _transactions.removeWhere((t) => t.id == uniqueTransaction.id);
-      notifyListeners();
     });
   }
 
@@ -306,6 +431,7 @@ class TransactionProvider extends ChangeNotifier {
       isIncome: false,
       dateTime: now,
       paymentMethod: fromAccount,
+      lastModified: now,
     );
 
     final incomeItem = TransactionItem(
@@ -316,24 +442,34 @@ class TransactionProvider extends ChangeNotifier {
       isIncome: true,
       dateTime: now,
       paymentMethod: toAccount,
+      lastModified: now,
     );
 
+    // 1. SQLite first
+    _db.insertTransaction(expenseItem, syncStatus: 'pending_create');
+    _db.insertTransaction(incomeItem, syncStatus: 'pending_create');
+
+    // 2. Local state
     _knownDocIds.add(expenseItem.id);
     _knownDocIds.add(incomeItem.id);
+    _pendingIds.add(expenseItem.id);
+    _pendingIds.add(incomeItem.id);
     _transactions.insert(0, expenseItem);
     _transactions.insert(0, incomeItem);
     notifyListeners();
 
+    // 3. Try Firestore
     final batch = _firestore.batch();
     batch.set(txRef.doc(expenseItem.id), expenseItem.toMap());
     batch.set(txRef.doc(incomeItem.id), incomeItem.toMap());
-    batch.commit().catchError((error) {
+    batch.commit().then((_) async {
+      _pendingIds.remove(expenseItem.id);
+      _pendingIds.remove(incomeItem.id);
+      await _db.markSynced(expenseItem.id);
+      await _db.markSynced(incomeItem.id);
+      _retryPendingOperations();
+    }).catchError((error) {
       debugPrint('Firestore transferBalance error: $error');
-      _knownDocIds.remove(expenseItem.id);
-      _knownDocIds.remove(incomeItem.id);
-      _transactions.removeWhere((t) => t.id == expenseItem.id);
-      _transactions.removeWhere((t) => t.id == incomeItem.id);
-      notifyListeners();
     });
   }
 
@@ -344,23 +480,28 @@ class TransactionProvider extends ChangeNotifier {
     final index = _transactions.indexWhere((t) => t.id == id);
     if (index == -1) return;
 
-    final removedItem = _transactions[index];
+    // 1. SQLite first
+    _db.softDeleteTransaction(id);
 
+    // 2. Local state
     _knownDocIds.remove(id);
+    _pendingIds.add(id);
     _transactions.removeAt(index);
     notifyListeners();
 
+    // 3. Try Firestore
     _firestore
         .collection('users')
         .doc(user.uid)
         .collection('transactions')
         .doc(id)
         .delete()
-        .catchError((error) {
+        .then((_) async {
+      _pendingIds.remove(id);
+      await _db.hardDeleteTransaction(id);
+      _retryPendingOperations();
+    }).catchError((error) {
       debugPrint('Firestore deleteTransaction error: $error');
-      _knownDocIds.add(id);
-      _transactions.insert(0, removedItem);
-      notifyListeners();
     });
   }
 
@@ -371,24 +512,39 @@ class TransactionProvider extends ChangeNotifier {
     final index = _transactions.indexWhere((t) => t.id == transaction.id);
     if (index == -1) return;
 
-    final oldTransaction = _transactions[index];
-    _transactions[index] = transaction;
+    final updated = TransactionItem(
+      id: transaction.id,
+      amount: transaction.amount,
+      category: transaction.category,
+      note: transaction.note,
+      isIncome: transaction.isIncome,
+      dateTime: transaction.dateTime,
+      incomeMonth: transaction.incomeMonth,
+      paymentMethod: transaction.paymentMethod,
+      lastModified: DateTime.now(),
+    );
+
+    // 1. SQLite first
+    _db.updateTransaction(updated, syncStatus: 'pending_update');
+
+    // 2. Local state
+    _pendingIds.add(updated.id);
+    _transactions[index] = updated;
     notifyListeners();
 
+    // 3. Try Firestore
     _firestore
         .collection('users')
         .doc(user.uid)
         .collection('transactions')
-        .doc(transaction.id)
-        .update(transaction.toMap())
-        .catchError((error) {
+        .doc(updated.id)
+        .update(updated.toMap())
+        .then((_) async {
+      _pendingIds.remove(updated.id);
+      await _db.markSynced(updated.id);
+      _retryPendingOperations();
+    }).catchError((error) {
       debugPrint('Firestore updateTransaction error: $error');
-      final currentIndex =
-          _transactions.indexWhere((t) => t.id == transaction.id);
-      if (currentIndex != -1) {
-        _transactions[currentIndex] = oldTransaction;
-        notifyListeners();
-      }
     });
   }
 

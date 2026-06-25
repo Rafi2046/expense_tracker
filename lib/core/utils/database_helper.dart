@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../providers/note_provider.dart';
+import '../providers/transaction_provider.dart';
 import 'shared_prefs_helper.dart';
 
 class DatabaseHelper {
@@ -27,8 +28,9 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
+      onUpgrade: _onUpgrade,
     );
   }
 
@@ -42,6 +44,41 @@ class DatabaseHelper {
         category TEXT NOT NULL
       )
     ''');
+    await db.execute('''
+      CREATE TABLE transactions (
+        id TEXT PRIMARY KEY,
+        amount REAL NOT NULL,
+        category TEXT NOT NULL,
+        note TEXT NOT NULL,
+        isIncome INTEGER NOT NULL,
+        dateTime TEXT NOT NULL,
+        incomeMonth TEXT,
+        paymentMethod TEXT NOT NULL DEFAULT 'Cash',
+        syncStatus TEXT NOT NULL DEFAULT 'synced',
+        isDeleted INTEGER NOT NULL DEFAULT 0,
+        lastModified TEXT NOT NULL
+      )
+    ''');
+  }
+
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('''
+        CREATE TABLE transactions (
+          id TEXT PRIMARY KEY,
+          amount REAL NOT NULL,
+          category TEXT NOT NULL,
+          note TEXT NOT NULL,
+          isIncome INTEGER NOT NULL,
+          dateTime TEXT NOT NULL,
+          incomeMonth TEXT,
+          paymentMethod TEXT NOT NULL DEFAULT 'Cash',
+          syncStatus TEXT NOT NULL DEFAULT 'synced',
+          isDeleted INTEGER NOT NULL DEFAULT 0,
+          lastModified TEXT NOT NULL
+        )
+      ''');
+    }
   }
 
   // Helper method to read web notes
@@ -139,6 +176,205 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  // ─── Transaction CRUD ──────────────────────────────────────────
+
+  static const String _webTxKey = 'web_transactions';
+
+  List<Map<String, dynamic>> _readWebTransactions() {
+    final jsonString = SharedPrefsHelper.getString(_webTxKey);
+    if (jsonString == null || jsonString.isEmpty) return [];
+    try {
+      return (jsonDecode(jsonString) as List<dynamic>)
+          .cast<Map<String, dynamic>>();
+    } catch (e) {
+      debugPrint('Error reading web transactions: $e');
+      return [];
+    }
+  }
+
+  Future<void> _writeWebTransactions(List<Map<String, dynamic>> data) async {
+    await SharedPrefsHelper.setString(_webTxKey, jsonEncode(data));
+  }
+
+  Future<void> insertTransaction(
+    TransactionItem item, {
+    String syncStatus = 'pending_create',
+  }) async {
+    final row = {
+      ...item.toJson(),
+      'syncStatus': syncStatus,
+      'isDeleted': 0,
+    };
+
+    if (kIsWeb) {
+      final data = _readWebTransactions();
+      data.removeWhere((r) => r['id'] == item.id);
+      data.insert(0, row);
+      await _writeWebTransactions(data);
+      return;
+    }
+
+    final db = await instance.database;
+    await db.insert('transactions', row,
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<List<TransactionItem>> readAllTransactions() async {
+    if (kIsWeb) {
+      final data = _readWebTransactions()
+          .where((r) => r['isDeleted'] == 0)
+          .toList()
+        ..sort((a, b) => (b['dateTime'] as String)
+            .compareTo(a['dateTime'] as String));
+      return data.map((r) => TransactionItem.fromJson(r)).toList();
+    }
+
+    final db = await instance.database;
+    final maps = await db.query('transactions',
+        where: 'isDeleted = 0', orderBy: 'dateTime DESC');
+    return maps.map((m) => TransactionItem.fromJson(m)).toList();
+  }
+
+  Future<List<TransactionItem>> readPendingSyncs() async {
+    if (kIsWeb) {
+      final data = _readWebTransactions()
+          .where((r) =>
+              r['isDeleted'] == 0 &&
+              (r['syncStatus'] == 'pending_create' ||
+                  r['syncStatus'] == 'pending_update'))
+          .toList();
+      return data.map((r) => TransactionItem.fromJson(r)).toList();
+    }
+
+    final db = await instance.database;
+    final maps = await db.query('transactions',
+        where:
+            'isDeleted = 0 AND syncStatus IN (?, ?)',
+        whereArgs: ['pending_create', 'pending_update']);
+    return maps.map((m) => TransactionItem.fromJson(m)).toList();
+  }
+
+  Future<List<String>> readPendingDeleteIds() async {
+    if (kIsWeb) {
+      return _readWebTransactions()
+          .where((r) => r['isDeleted'] == 1 && r['syncStatus'] == 'pending_delete')
+          .map((r) => r['id'] as String)
+          .toList();
+    }
+
+    final db = await instance.database;
+    final maps = await db.query('transactions',
+        columns: ['id'],
+        where: 'isDeleted = 1 AND syncStatus = ?',
+        whereArgs: ['pending_delete']);
+    return maps.map((m) => m['id'] as String).toList();
+  }
+
+  Future<Set<String>> readAllPendingIds() async {
+    if (kIsWeb) {
+      return _readWebTransactions()
+          .where((r) => r['syncStatus'] != 'synced')
+          .map((r) => r['id'] as String)
+          .toSet();
+    }
+
+    final db = await instance.database;
+    final maps = await db.query('transactions',
+        columns: ['id'],
+        where: 'syncStatus != ?',
+        whereArgs: ['synced']);
+    return maps.map((m) => m['id'] as String).toSet();
+  }
+
+  Future<void> updateTransaction(
+    TransactionItem item, {
+    String? syncStatus,
+  }) async {
+    final row = item.toJson();
+    if (syncStatus != null) row['syncStatus'] = syncStatus;
+
+    if (kIsWeb) {
+      final data = _readWebTransactions();
+      final index = data.indexWhere((r) => r['id'] == item.id);
+      if (index != -1) {
+        data[index] = {...data[index], ...row};
+        await _writeWebTransactions(data);
+      }
+      return;
+    }
+
+    final db = await instance.database;
+    await db.update('transactions', row,
+        where: 'id = ?', whereArgs: [item.id]);
+  }
+
+  Future<void> softDeleteTransaction(String id) async {
+    if (kIsWeb) {
+      final data = _readWebTransactions();
+      final index = data.indexWhere((r) => r['id'] == id);
+      if (index != -1) {
+        data[index] = {
+          ...data[index],
+          'isDeleted': 1,
+          'syncStatus': 'pending_delete',
+        };
+        await _writeWebTransactions(data);
+      }
+      return;
+    }
+
+    final db = await instance.database;
+    await db.update('transactions',
+        {'isDeleted': 1, 'syncStatus': 'pending_delete'},
+        where: 'id = ?',
+        whereArgs: [id]);
+  }
+
+  Future<void> hardDeleteTransaction(String id) async {
+    if (kIsWeb) {
+      final data = _readWebTransactions();
+      data.removeWhere((r) => r['id'] == id);
+      await _writeWebTransactions(data);
+      return;
+    }
+
+    final db = await instance.database;
+    await db.delete('transactions', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<void> markSynced(String id) async {
+    if (kIsWeb) {
+      final data = _readWebTransactions();
+      final index = data.indexWhere((r) => r['id'] == id);
+      if (index != -1) {
+        data[index] = {...data[index], 'syncStatus': 'synced'};
+        await _writeWebTransactions(data);
+      }
+      return;
+    }
+
+    final db = await instance.database;
+    await db.update('transactions', {'syncStatus': 'synced'},
+        where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<String?> getSyncStatus(String id) async {
+    if (kIsWeb) {
+      final data = _readWebTransactions();
+      final index = data.indexWhere((r) => r['id'] == id);
+      if (index == -1) return null;
+      return data[index]['syncStatus'] as String?;
+    }
+
+    final db = await instance.database;
+    final maps = await db.query('transactions',
+        columns: ['syncStatus'],
+        where: 'id = ?',
+        whereArgs: [id]);
+    if (maps.isEmpty) return null;
+    return maps.first['syncStatus'] as String?;
   }
 
   // Close database connection
