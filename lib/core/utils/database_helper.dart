@@ -11,6 +11,7 @@ class DatabaseHelper {
   static Database? _database;
   static const String _webNotesKey = 'web_notes';
   static const String _webBudgetKey = 'web_budget';
+  static const String _webCategoryKey = 'web_categories';
 
   DatabaseHelper._init();
 
@@ -29,7 +30,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 3,
+      version: 4,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -68,6 +69,16 @@ class DatabaseHelper {
         lastModified TEXT NOT NULL
       )
     ''');
+    await db.execute('''
+      CREATE TABLE categories (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        isIncome INTEGER NOT NULL,
+        syncStatus TEXT NOT NULL DEFAULT 'synced',
+        isDeleted INTEGER NOT NULL DEFAULT 0,
+        lastModified TEXT NOT NULL
+      )
+    ''');
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -94,6 +105,18 @@ class DatabaseHelper {
           id TEXT PRIMARY KEY,
           amount REAL NOT NULL,
           syncStatus TEXT NOT NULL DEFAULT 'synced',
+          lastModified TEXT NOT NULL
+        )
+      ''');
+    }
+    if (oldVersion < 4) {
+      await db.execute('''
+        CREATE TABLE categories (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          isIncome INTEGER NOT NULL,
+          syncStatus TEXT NOT NULL DEFAULT 'synced',
+          isDeleted INTEGER NOT NULL DEFAULT 0,
           lastModified TEXT NOT NULL
         )
       ''');
@@ -474,6 +497,158 @@ class DatabaseHelper {
     final db = await instance.database;
     await db.update('budget', {'syncStatus': 'synced'},
         where: 'id = ?', whereArgs: ['monthly']);
+  }
+
+  // ─── Category CRUD ─────────────────────────────────────────────
+
+  List<Map<String, dynamic>> _readWebCategories() {
+    final jsonString = SharedPrefsHelper.getString(_webCategoryKey);
+    if (jsonString == null || jsonString.isEmpty) return [];
+    try {
+      return (jsonDecode(jsonString) as List<dynamic>).cast<Map<String, dynamic>>();
+    } catch (e) {
+      debugPrint('Error reading web categories: $e');
+      return [];
+    }
+  }
+
+  Future<void> _writeWebCategories(List<Map<String, dynamic>> data) async {
+    await SharedPrefsHelper.setString(_webCategoryKey, jsonEncode(data));
+  }
+
+  Future<void> insertCategory(
+    CategoryItem item, {
+    String syncStatus = 'pending_create',
+  }) async {
+    final row = {
+      ...item.toJson(),
+      'syncStatus': syncStatus,
+      'isDeleted': 0,
+    };
+
+    if (kIsWeb) {
+      final data = _readWebCategories();
+      data.removeWhere((r) => r['id'] == item.id);
+      data.insert(0, row);
+      await _writeWebCategories(data);
+      return;
+    }
+
+    final db = await instance.database;
+    await db.insert('categories', row, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<List<CategoryItem>> readAllCategories() async {
+    if (kIsWeb) {
+      final data = _readWebCategories()
+          .where((r) => r['isDeleted'] == 0)
+          .toList();
+      return data.map((r) => CategoryItem.fromJson(r)).toList();
+    }
+
+    final db = await instance.database;
+    final maps = await db.query('categories',
+        where: 'isDeleted = 0');
+    return maps.map((m) => CategoryItem.fromJson(m)).toList();
+  }
+
+  Future<List<CategoryItem>> readPendingCategorySyncs() async {
+    if (kIsWeb) {
+      final data = _readWebCategories()
+          .where((r) =>
+              r['isDeleted'] == 0 &&
+              r['syncStatus'] == 'pending_create')
+          .toList();
+      return data.map((r) => CategoryItem.fromJson(r)).toList();
+    }
+
+    final db = await instance.database;
+    final maps = await db.query('categories',
+        where: 'isDeleted = 0 AND syncStatus = ?',
+        whereArgs: ['pending_create']);
+    return maps.map((m) => CategoryItem.fromJson(m)).toList();
+  }
+
+  Future<List<String>> readPendingCategoryDeleteIds() async {
+    if (kIsWeb) {
+      return _readWebCategories()
+          .where((r) => r['isDeleted'] == 1 && r['syncStatus'] == 'pending_delete')
+          .map((r) => r['id'] as String)
+          .toList();
+    }
+
+    final db = await instance.database;
+    final maps = await db.query('categories',
+        columns: ['id'],
+        where: 'isDeleted = 1 AND syncStatus = ?',
+        whereArgs: ['pending_delete']);
+    return maps.map((m) => m['id'] as String).toList();
+  }
+
+  Future<Set<String>> readAllPendingCategoryIds() async {
+    if (kIsWeb) {
+      return _readWebCategories()
+          .where((r) => r['syncStatus'] != 'synced')
+          .map((r) => r['id'] as String)
+          .toSet();
+    }
+
+    final db = await instance.database;
+    final maps = await db.query('categories',
+        columns: ['id'],
+        where: 'syncStatus != ?',
+        whereArgs: ['synced']);
+    return maps.map((m) => m['id'] as String).toSet();
+  }
+
+  Future<void> softDeleteCategory(String id) async {
+    if (kIsWeb) {
+      final data = _readWebCategories();
+      final index = data.indexWhere((r) => r['id'] == id);
+      if (index != -1) {
+        data[index] = {
+          ...data[index],
+          'isDeleted': 1,
+          'syncStatus': 'pending_delete',
+        };
+        await _writeWebCategories(data);
+      }
+      return;
+    }
+
+    final db = await instance.database;
+    await db.update('categories',
+        {'isDeleted': 1, 'syncStatus': 'pending_delete'},
+        where: 'id = ?',
+        whereArgs: [id]);
+  }
+
+  Future<void> hardDeleteCategory(String id) async {
+    if (kIsWeb) {
+      final data = _readWebCategories();
+      data.removeWhere((r) => r['id'] == id);
+      await _writeWebCategories(data);
+      return;
+    }
+
+    final db = await instance.database;
+    await db.delete('categories', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<void> markCategorySynced(String id) async {
+    if (kIsWeb) {
+      final data = _readWebCategories();
+      final index = data.indexWhere((r) => r['id'] == id);
+      if (index != -1) {
+        data[index] = {...data[index], 'syncStatus': 'synced'};
+        await _writeWebCategories(data);
+      }
+      return;
+    }
+
+    final db = await instance.database;
+    await db.update('categories', {'syncStatus': 'synced'},
+        where: 'id = ?', whereArgs: [id]);
   }
 
   // Close database connection

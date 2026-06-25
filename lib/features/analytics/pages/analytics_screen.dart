@@ -1,69 +1,121 @@
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/analytics/widgets/monthly_comparison_card.dart';
 import 'package:expense_tracker/features/analytics/widgets/spending_overview_card.dart';
 import 'package:expense_tracker/features/analytics/widgets/top_spending_categories_card.dart';
 import 'package:expense_tracker/features/analytics/widgets/top_spending_category_row.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class AnalyticsScreen extends StatelessWidget {
   const AnalyticsScreen({super.key});
 
+  static const _colorPalette = [
+    Color(0xFF1EA97C),
+    Color(0xFF2EBD85),
+    Color(0xFF80E2B9),
+    Color(0xFFD2F8E7),
+    Color(0xFFE24361),
+    Color(0xFFF59E0B),
+    Color(0xFFEF4444),
+    Color(0xFF8B5CF6),
+    Color(0xFF6366F1),
+    Color(0xFF06B6D4),
+  ];
+
+  static const _namedCategoryColors = <String, Color>{
+    'housing': Color(0xFF1EA97C),
+    'food': Color(0xFF2EBD85),
+    'transport': Color(0xFF80E2B9),
+    'utilities': Color(0xFFD2F8E7),
+    'entertainment': Color(0xFFE24361),
+    'shopping': Color(0xFFF59E0B),
+    'health': Color(0xFFEF4444),
+    'education': Color(0xFF8B5CF6),
+    'salary': Color(0xFF2EBD85),
+    'investment': Color(0xFF6366F1),
+  };
+
+  static const _namedCategoryIcons = <String, IconData>{
+    'housing': Icons.home_outlined,
+    'food': Icons.restaurant,
+    'transport': Icons.directions_car_outlined,
+    'utilities': Icons.flash_on_outlined,
+    'entertainment': Icons.movie_outlined,
+    'shopping': Icons.shopping_bag_outlined,
+    'health': Icons.health_and_safety_outlined,
+    'education': Icons.school_outlined,
+    'salary': Icons.payments_outlined,
+    'investment': Icons.trending_up_outlined,
+  };
+
+  Color _categoryColor(String category, int index) {
+    final key = category.toLowerCase();
+    return _namedCategoryColors[key] ?? _colorPalette[index % _colorPalette.length];
+  }
+
+  IconData _categoryIcon(String category) {
+    return _namedCategoryIcons[category.toLowerCase()] ?? Icons.receipt_long_outlined;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // 1. Spending Overview Data
-    final spendingItems = [
-      SpendingDistributionItem(
-        category: context.translate('housing'),
-        percentage: 40,
-        amount: 1700,
-        color: const Color(0xFF1EA97C),
-      ),
-      SpendingDistributionItem(
-        category: context.translate('food'),
-        percentage: 30,
-        amount: 1275,
-        color: const Color(0xFF2EBD85),
-      ),
-      SpendingDistributionItem(
-        category: context.translate('transport'),
-        percentage: 20,
-        amount: 850,
-        color: const Color(0xFF80E2B9),
-      ),
-      SpendingDistributionItem(
-        category: context.translate('utilities'),
-        percentage: 10,
-        amount: 425,
-        color: const Color(0xFFD2F8E7),
-      ),
-    ];
+    final txProvider = context.watch<TransactionProvider>();
+    final totalExpense = txProvider.monthlyExpense;
+    final breakdown = txProvider.categoryExpenseBreakdown;
+    final prevExpense = txProvider.previousMonthExpense;
+    final changePct = txProvider.expenseChangePercent;
 
-    // 2. Top Spending Categories Data
-    final topCategories = [
-      TopSpendingCategoryItem(
-        title: context.translate('housing'),
-        subtitle: context.translate('rent_maintenance'),
-        amount: 1700,
-        percentage: 40,
-        icon: Icons.home_outlined,
-      ),
-      TopSpendingCategoryItem(
-        title: context.translate('food'),
-        subtitle: context.translate('groceries_dining'),
-        amount: 1275,
-        percentage: 30,
-        icon: Icons.restaurant,
-      ),
-      TopSpendingCategoryItem(
-        title: context.translate('transport'),
-        subtitle: context.translate('fuel_transit'),
-        amount: 850,
-        percentage: 20,
-        icon: Icons.directions_car_outlined,
-      ),
-    ];
+    const int maxSlices = 11;
+    final sorted = breakdown.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    final List<MapEntry<String, double>> top;
+    final double othersTotal;
+    if (sorted.length <= maxSlices) {
+      top = sorted;
+      othersTotal = 0;
+    } else {
+      top = sorted.take(maxSlices - 1).toList();
+      othersTotal = sorted.skip(maxSlices - 1).fold(0.0, (s, e) => s + e.value);
+    }
+
+    final spendingItems = <SpendingDistributionItem>[];
+    for (int i = 0; i < top.length; i++) {
+      final e = top[i];
+      final pct = totalExpense > 0 ? (e.value / totalExpense) * 100 : 0.0;
+      spendingItems.add(SpendingDistributionItem(
+        category: e.key,
+        percentage: pct,
+        amount: e.value,
+        color: _categoryColor(e.key, i),
+      ));
+    }
+    if (othersTotal > 0) {
+      final othersPct = totalExpense > 0 ? (othersTotal / totalExpense) * 100 : 0.0;
+      spendingItems.add(SpendingDistributionItem(
+        category: 'Others',
+        percentage: othersPct,
+        amount: othersTotal,
+        color: _colorPalette.last,
+      ));
+    }
+
+    final changeSign = changePct >= 0 ? '+' : '';
+    final changeText = '$changeSign${changePct.toStringAsFixed(1)}%';
+
+    final topItems = txProvider.topSpendingCategories(5).map((t) {
+      final (name, amount, pct) = t;
+      return TopSpendingCategoryItem(
+        title: name,
+        subtitle: '',
+        amount: amount,
+        percentage: pct,
+        icon: _categoryIcon(name),
+      );
+    }).toList();
 
     final onSurface = Theme.of(context).colorScheme.onSurface;
 
@@ -98,26 +150,21 @@ class AnalyticsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Spending Overview Card
                 SpendingOverviewCard(
-                  totalAmount: '${context.currencySymbol}4,250',
+                  totalAmount: context.formatAmount(totalExpense),
                   items: spendingItems,
                 ),
                 const SizedBox(height: 18),
-
-                // Monthly Comparison Card
                 MonthlyComparisonCard(
-                  currentAmount: 4250,
-                  previousAmount: 3800,
-                  netChangeText: '+11.8%',
+                  currentAmount: totalExpense,
+                  previousAmount: prevExpense,
+                  netChangeText: changeText,
                 ),
                 const SizedBox(height: 18),
-
-                // Top Spending Categories Card
                 TopSpendingCategoriesCard(
-                  items: topCategories,
+                  items: topItems,
                 ),
-                const SizedBox(height: 100), // Spacer to scroll past floating bottom nav
+                const SizedBox(height: 100),
               ],
             ),
           ),

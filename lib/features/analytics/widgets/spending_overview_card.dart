@@ -134,27 +134,36 @@ class SpendingOverviewCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        context.translate('total'),
-                        style: GoogleFonts.workSans(
-                          fontSize: 10.5,
-                          color: Colors.grey.shade400,
-                          fontWeight: FontWeight.w500,
-                        ),
+                  Container(
+                    width: 100,
+                    height: 80,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            context.translate('total'),
+                            style: GoogleFonts.workSans(
+                              fontSize: 10.5,
+                              color: Colors.grey.shade400,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            totalAmount,
+                            style: GoogleFonts.workSans(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: onSurface,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        totalAmount,
-                        style: GoogleFonts.workSans(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: onSurface,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),

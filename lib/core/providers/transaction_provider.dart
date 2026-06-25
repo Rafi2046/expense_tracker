@@ -28,15 +28,15 @@ class TransactionItem {
   }) : lastModified = lastModified ?? dateTime;
 
   Map<String, dynamic> toMap() => {
-        'amount': amount,
-        'category': category,
-        'note': note,
-        'isIncome': isIncome,
-        'dateTime': dateTime.toIso8601String(),
-        'incomeMonth': incomeMonth,
-        'paymentMethod': paymentMethod,
-        'lastModified': lastModified.toIso8601String(),
-      };
+    'amount': amount,
+    'category': category,
+    'note': note,
+    'isIncome': isIncome,
+    'dateTime': dateTime.toIso8601String(),
+    'incomeMonth': incomeMonth,
+    'paymentMethod': paymentMethod,
+    'lastModified': lastModified.toIso8601String(),
+  };
 
   factory TransactionItem.fromMap(String id, Map<String, dynamic> map) =>
       TransactionItem(
@@ -54,16 +54,16 @@ class TransactionItem {
       );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'amount': amount,
-        'category': category,
-        'note': note,
-        'isIncome': isIncome ? 1 : 0,
-        'dateTime': dateTime.toIso8601String(),
-        'incomeMonth': incomeMonth,
-        'paymentMethod': paymentMethod,
-        'lastModified': lastModified.toIso8601String(),
-      };
+    'id': id,
+    'amount': amount,
+    'category': category,
+    'note': note,
+    'isIncome': isIncome ? 1 : 0,
+    'dateTime': dateTime.toIso8601String(),
+    'incomeMonth': incomeMonth,
+    'paymentMethod': paymentMethod,
+    'lastModified': lastModified.toIso8601String(),
+  };
 
   factory TransactionItem.fromJson(Map<String, dynamic> json) =>
       TransactionItem(
@@ -81,11 +81,53 @@ class TransactionItem {
       );
 }
 
-enum TransactionSortOption {
-  latest,
-  amountHighToLow,
-  amountLowToHigh;
+class CategoryItem {
+  final String id;
+  final String name;
+  final bool isIncome;
+  final DateTime lastModified;
+
+  CategoryItem({
+    required this.id,
+    required this.name,
+    required this.isIncome,
+    DateTime? lastModified,
+  }) : lastModified = lastModified ?? DateTime.now();
+
+  Map<String, dynamic> toMap() => {
+    'name': name,
+    'isIncome': isIncome,
+    'lastModified': lastModified.toIso8601String(),
+  };
+
+  factory CategoryItem.fromMap(String id, Map<String, dynamic> map) =>
+      CategoryItem(
+        id: id,
+        name: map['name'] as String,
+        isIncome: map['isIncome'] as bool,
+        lastModified: map['lastModified'] != null
+            ? DateTime.parse(map['lastModified'] as String)
+            : null,
+      );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'isIncome': isIncome ? 1 : 0,
+    'lastModified': lastModified.toIso8601String(),
+  };
+
+  factory CategoryItem.fromJson(Map<String, dynamic> json) => CategoryItem(
+    id: json['id'] as String,
+    name: json['name'] as String,
+    isIncome: (json['isIncome'] as int) == 1,
+    lastModified: json['lastModified'] != null
+        ? DateTime.parse(json['lastModified'] as String)
+        : null,
+  );
 }
+
+enum TransactionSortOption { latest, amountHighToLow, amountLowToHigh }
 
 class TransactionProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -93,15 +135,17 @@ class TransactionProvider extends ChangeNotifier {
   final DatabaseHelper _db = DatabaseHelper.instance;
   StreamSubscription<User?>? _authSubscription;
   StreamSubscription<QuerySnapshot>? _firestoreSubscription;
+  StreamSubscription<QuerySnapshot>? _categorySubscription;
   final Set<String> _knownDocIds = {};
   final Set<String> _pendingIds = {};
+  final Set<String> _knownCategoryIds = {};
+  final Set<String> _pendingCategoryIds = {};
 
   bool _isLoading = true;
   String? _currentUid;
   bool _isRetrying = false;
 
-  final List<String> _expenseCategories = [];
-  final List<String> _incomeCategories = [];
+  final List<CategoryItem> _categoryItems = [];
   final List<TransactionItem> _transactions = [];
 
   // Month, Search, and Sort states
@@ -121,13 +165,17 @@ class TransactionProvider extends ChangeNotifier {
     // Listen to auth changes
     _authSubscription = _auth.authStateChanges().listen((user) {
       _firestoreSubscription?.cancel();
+      _categorySubscription?.cancel();
       _knownDocIds.clear();
       _pendingIds.clear();
+      _knownCategoryIds.clear();
+      _pendingCategoryIds.clear();
       if (user != null) {
         _startListening(user.uid);
       } else {
         _currentUid = null;
         _transactions.clear();
+        _categoryItems.clear();
         _isLoading = false;
         notifyListeners();
       }
@@ -141,8 +189,9 @@ class TransactionProvider extends ChangeNotifier {
 
     // 1. Load from SQLite immediately
     _loadFromDatabase().then((_) {
-      // 2. Retry any pending operations
-      _retryPendingOperations();
+      _loadCategoriesFromDatabase().then((_) {
+        _retryPendingOperations();
+      });
     });
 
     // 3. Attach Firestore snapshot for ongoing sync
@@ -152,50 +201,93 @@ class TransactionProvider extends ChangeNotifier {
         .collection('transactions')
         .snapshots()
         .listen(
-      (snapshot) {
-        for (final change in snapshot.docChanges) {
-          final docId = change.doc.id;
-          switch (change.type) {
-            case DocumentChangeType.added:
-              if (!_knownDocIds.contains(docId)) {
-                _knownDocIds.add(docId);
-                final item =
-                    TransactionItem.fromMap(docId, change.doc.data()!);
-                _transactions.add(item);
-                _db.insertTransaction(item, syncStatus: 'synced');
+          (snapshot) {
+            for (final change in snapshot.docChanges) {
+              final docId = change.doc.id;
+              switch (change.type) {
+                case DocumentChangeType.added:
+                  if (!_knownDocIds.contains(docId)) {
+                    _knownDocIds.add(docId);
+                    final item = TransactionItem.fromMap(
+                      docId,
+                      change.doc.data()!,
+                    );
+                    _transactions.add(item);
+                    _db.insertTransaction(item, syncStatus: 'synced');
+                  }
+                  break;
+                case DocumentChangeType.modified:
+                  if (!_pendingIds.contains(docId)) {
+                    final index = _transactions.indexWhere(
+                      (t) => t.id == docId,
+                    );
+                    if (index != -1) {
+                      _transactions[index] = TransactionItem.fromMap(
+                        docId,
+                        change.doc.data()!,
+                      );
+                    }
+                    _db.updateTransaction(
+                      TransactionItem.fromMap(docId, change.doc.data()!),
+                      syncStatus: 'synced',
+                    );
+                  }
+                  break;
+                case DocumentChangeType.removed:
+                  _knownDocIds.remove(docId);
+                  _pendingIds.remove(docId);
+                  _transactions.removeWhere((t) => t.id == docId);
+                  _db.hardDeleteTransaction(docId);
+                  break;
               }
-              break;
-            case DocumentChangeType.modified:
-              if (!_pendingIds.contains(docId)) {
-                final index =
-                    _transactions.indexWhere((t) => t.id == docId);
-                if (index != -1) {
-                  _transactions[index] =
-                      TransactionItem.fromMap(docId, change.doc.data()!);
-                }
-                _db.updateTransaction(
-                  TransactionItem.fromMap(docId, change.doc.data()!),
-                  syncStatus: 'synced',
-                );
+            }
+            _isLoading = false;
+            notifyListeners();
+          },
+          onError: (error) {
+            debugPrint('Firestore snapshot listener error: $error');
+            _isLoading = false;
+            notifyListeners();
+          },
+        );
+    // 4. Attach Firestore snapshot for categories
+    _categorySubscription = _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('categories')
+        .snapshots()
+        .listen(
+          (snapshot) {
+            for (final change in snapshot.docChanges) {
+              final docId = change.doc.id;
+              switch (change.type) {
+                case DocumentChangeType.added:
+                  if (!_knownCategoryIds.contains(docId)) {
+                    _knownCategoryIds.add(docId);
+                    final item = CategoryItem.fromMap(
+                      docId,
+                      change.doc.data()!,
+                    );
+                    _categoryItems.add(item);
+                    _db.insertCategory(item, syncStatus: 'synced');
+                  }
+                  break;
+                case DocumentChangeType.removed:
+                  _knownCategoryIds.remove(docId);
+                  _pendingCategoryIds.remove(docId);
+                  _categoryItems.removeWhere((c) => c.id == docId);
+                  _db.hardDeleteCategory(docId);
+                  break;
+                case DocumentChangeType.modified:
+                  break;
               }
-              break;
-            case DocumentChangeType.removed:
-              _knownDocIds.remove(docId);
-              _pendingIds.remove(docId);
-              _transactions.removeWhere((t) => t.id == docId);
-              _db.hardDeleteTransaction(docId);
-              break;
-          }
-        }
-        _isLoading = false;
-        notifyListeners();
-      },
-      onError: (error) {
-        debugPrint('Firestore snapshot listener error: $error');
-        _isLoading = false;
-        notifyListeners();
-      },
-    );
+            }
+            notifyListeners();
+          },
+          onError: (error) {
+            debugPrint('Firestore categories snapshot listener error: $error');
+          },
+        );
   }
 
   Future<void> _loadFromDatabase() async {
@@ -215,6 +307,20 @@ class TransactionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> _loadCategoriesFromDatabase() async {
+    try {
+      final items = await _db.readAllCategories();
+      _categoryItems.addAll(items);
+      for (final item in items) {
+        _knownCategoryIds.add(item.id);
+      }
+      final pendingIds = await _db.readAllPendingCategoryIds();
+      _pendingCategoryIds.addAll(pendingIds);
+    } catch (e) {
+      debugPrint('Error loading categories from database: $e');
+    }
+  }
+
   Future<void> _retryPendingOperations() async {
     if (_isRetrying) return;
     _isRetrying = true;
@@ -231,9 +337,10 @@ class TransactionProvider extends ChangeNotifier {
             .doc(item.id)
             .set(item.toMap())
             .then((_) {
-          _db.markSynced(item.id);
-          _pendingIds.remove(item.id);
-        }).catchError((_) {});
+              _db.markSynced(item.id);
+              _pendingIds.remove(item.id);
+            })
+            .catchError((_) {});
       }
 
       final deleteIds = await _db.readPendingDeleteIds();
@@ -245,9 +352,42 @@ class TransactionProvider extends ChangeNotifier {
             .doc(id)
             .delete()
             .then((_) {
-          _db.hardDeleteTransaction(id);
-          _pendingIds.remove(id);
-        }).catchError((_) {});
+              _db.hardDeleteTransaction(id);
+              _pendingIds.remove(id);
+            })
+            .catchError((_) {});
+      }
+
+      // Retry pending category creates
+      final pendingCategories = await _db.readPendingCategorySyncs();
+      for (final item in pendingCategories) {
+        _firestore
+            .collection('users')
+            .doc(uid)
+            .collection('categories')
+            .doc(item.id)
+            .set(item.toMap())
+            .then((_) {
+              _db.markCategorySynced(item.id);
+              _pendingCategoryIds.remove(item.id);
+            })
+            .catchError((_) {});
+      }
+
+      // Retry pending category deletes
+      final deleteCategoryIds = await _db.readPendingCategoryDeleteIds();
+      for (final id in deleteCategoryIds) {
+        _firestore
+            .collection('users')
+            .doc(uid)
+            .collection('categories')
+            .doc(id)
+            .delete()
+            .then((_) {
+              _db.hardDeleteCategory(id);
+              _pendingCategoryIds.remove(id);
+            })
+            .catchError((_) {});
       }
     } catch (e) {
       debugPrint('Retry pending operations error: $e');
@@ -258,8 +398,14 @@ class TransactionProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  List<String> get expenseCategories => List.unmodifiable(_expenseCategories);
-  List<String> get incomeCategories => List.unmodifiable(_incomeCategories);
+  List<String> get expenseCategories => List.unmodifiable(
+    _categoryItems.where((c) => !c.isIncome).map((c) => c.name),
+  );
+
+  List<String> get incomeCategories => List.unmodifiable(
+    _categoryItems.where((c) => c.isIncome).map((c) => c.name),
+  );
+
   List<TransactionItem> get transactions => List.unmodifiable(_transactions);
 
   // Getters for selected month and active transactions
@@ -315,6 +461,67 @@ class TransactionProvider extends ChangeNotifier {
 
   double get monthlyNetBalance => monthlyIncome - monthlyExpense;
 
+  // ─── Analytics Getters ─────────────────────────────────────────
+
+  Map<String, double> get categoryExpenseBreakdown {
+    final Map<String, double> breakdown = {};
+    final Map<String, String> normalizedKeys = {};
+    for (final tx in monthlyTransactions.where((t) => !t.isIncome)) {
+      final normalized = tx.category.toLowerCase();
+      normalizedKeys.putIfAbsent(normalized, () => tx.category);
+      breakdown.update(normalized, (v) => v + tx.amount, ifAbsent: () => tx.amount);
+    }
+    return {for (final k in breakdown.keys) normalizedKeys[k]!: breakdown[k]!};
+  }
+
+  List<TransactionItem> get previousMonthTransactions {
+    final month = selectedMonth;
+    final prev = DateTime(month.year, month.month - 1, 1);
+    return _transactions
+        .where(
+          (tx) =>
+              tx.dateTime.year == prev.year && tx.dateTime.month == prev.month,
+        )
+        .toList();
+  }
+
+  double get previousMonthExpense {
+    return previousMonthTransactions
+        .where((tx) => !tx.isIncome)
+        .fold(0.0, (sum, tx) => sum + tx.amount);
+  }
+
+  double get previousMonthIncome {
+    return previousMonthTransactions
+        .where((tx) => tx.isIncome)
+        .fold(0.0, (sum, tx) => sum + tx.amount);
+  }
+
+  double get expenseChangePercent {
+    if (previousMonthExpense == 0) return monthlyExpense > 0 ? 100 : 0;
+    return ((monthlyExpense - previousMonthExpense) / previousMonthExpense) *
+        100;
+  }
+
+  double get incomeChangePercent {
+    if (previousMonthIncome == 0) return monthlyIncome > 0 ? 100 : 0;
+    return ((monthlyIncome - previousMonthIncome) / previousMonthIncome) * 100;
+  }
+
+  List<(String, double, double)> topSpendingCategories([int limit = 5]) {
+    final breakdown = categoryExpenseBreakdown;
+    final total = monthlyExpense;
+    if (total == 0) return [];
+
+    final sorted = breakdown.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    return sorted
+        .take(limit)
+        .map((e) => (e.key, e.value, (e.value / total) * 100))
+        .toList();
+  }
+
   // Actions
   void selectMonthIndex(int index) {
     if (index >= 0 && index < availableMonths.length) {
@@ -343,32 +550,148 @@ class TransactionProvider extends ChangeNotifier {
 
   void addExpenseCategory(String category) {
     final cleanCategory = category.trim();
-    if (cleanCategory.isNotEmpty && !_expenseCategories.contains(cleanCategory)) {
-      _expenseCategories.add(cleanCategory);
-      notifyListeners();
-    }
+    if (cleanCategory.isEmpty) return;
+    if (_categoryItems.any(
+      (c) => c.name.toLowerCase() == cleanCategory.toLowerCase() && !c.isIncome,
+    )) return;
+
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final docRef = _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('categories')
+        .doc();
+    final now = DateTime.now();
+    final item = CategoryItem(
+      id: docRef.id,
+      name: cleanCategory,
+      isIncome: false,
+      lastModified: now,
+    );
+
+    _db.insertCategory(item, syncStatus: 'pending_create');
+    _knownCategoryIds.add(item.id);
+    _pendingCategoryIds.add(item.id);
+    _categoryItems.add(item);
+    notifyListeners();
+
+    docRef
+        .set(item.toMap())
+        .then((_) async {
+          _pendingCategoryIds.remove(item.id);
+          await _db.markCategorySynced(item.id);
+          _retryPendingOperations();
+        })
+        .catchError((error) {
+          debugPrint('Firestore addExpenseCategory error: $error');
+        });
   }
 
   void deleteExpenseCategory(String category) {
-    if (_expenseCategories.contains(category)) {
-      _expenseCategories.remove(category);
-      notifyListeners();
-    }
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final idx = _categoryItems
+        .indexWhere((c) => c.name == category && !c.isIncome);
+    if (idx == -1) return;
+
+    final item = _categoryItems[idx];
+
+    _db.softDeleteCategory(item.id);
+    _knownCategoryIds.remove(item.id);
+    _pendingCategoryIds.add(item.id);
+    _categoryItems.removeAt(idx);
+    notifyListeners();
+
+    _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('categories')
+        .doc(item.id)
+        .delete()
+        .then((_) async {
+          _pendingCategoryIds.remove(item.id);
+          await _db.hardDeleteCategory(item.id);
+          _retryPendingOperations();
+        })
+        .catchError((error) {
+          debugPrint('Firestore deleteExpenseCategory error: $error');
+        });
   }
 
   void addIncomeCategory(String category) {
     final cleanCategory = category.trim();
-    if (cleanCategory.isNotEmpty && !_incomeCategories.contains(cleanCategory)) {
-      _incomeCategories.add(cleanCategory);
-      notifyListeners();
-    }
+    if (cleanCategory.isEmpty) return;
+    if (_categoryItems.any(
+      (c) => c.name.toLowerCase() == cleanCategory.toLowerCase() && c.isIncome,
+    )) return;
+
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final docRef = _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('categories')
+        .doc();
+    final now = DateTime.now();
+    final item = CategoryItem(
+      id: docRef.id,
+      name: cleanCategory,
+      isIncome: true,
+      lastModified: now,
+    );
+
+    _db.insertCategory(item, syncStatus: 'pending_create');
+    _knownCategoryIds.add(item.id);
+    _pendingCategoryIds.add(item.id);
+    _categoryItems.add(item);
+    notifyListeners();
+
+    docRef
+        .set(item.toMap())
+        .then((_) async {
+          _pendingCategoryIds.remove(item.id);
+          await _db.markCategorySynced(item.id);
+          _retryPendingOperations();
+        })
+        .catchError((error) {
+          debugPrint('Firestore addIncomeCategory error: $error');
+        });
   }
 
   void deleteIncomeCategory(String category) {
-    if (_incomeCategories.contains(category)) {
-      _incomeCategories.remove(category);
-      notifyListeners();
-    }
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final idx =
+        _categoryItems.indexWhere((c) => c.name == category && c.isIncome);
+    if (idx == -1) return;
+
+    final item = _categoryItems[idx];
+
+    _db.softDeleteCategory(item.id);
+    _knownCategoryIds.remove(item.id);
+    _pendingCategoryIds.add(item.id);
+    _categoryItems.removeAt(idx);
+    notifyListeners();
+
+    _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('categories')
+        .doc(item.id)
+        .delete()
+        .then((_) async {
+          _pendingCategoryIds.remove(item.id);
+          await _db.hardDeleteCategory(item.id);
+          _retryPendingOperations();
+        })
+        .catchError((error) {
+          debugPrint('Firestore deleteIncomeCategory error: $error');
+        });
   }
 
   void addTransaction(TransactionItem transaction) {
@@ -404,13 +727,16 @@ class TransactionProvider extends ChangeNotifier {
     notifyListeners();
 
     // 3. Try Firestore — never rollback SQLite on failure
-    docRef.set(uniqueTransaction.toMap()).then((_) async {
-      _pendingIds.remove(uniqueTransaction.id);
-      await _db.markSynced(uniqueTransaction.id);
-      _retryPendingOperations();
-    }).catchError((error) {
-      debugPrint('Firestore addTransaction error: $error');
-    });
+    docRef
+        .set(uniqueTransaction.toMap())
+        .then((_) async {
+          _pendingIds.remove(uniqueTransaction.id);
+          await _db.markSynced(uniqueTransaction.id);
+          _retryPendingOperations();
+        })
+        .catchError((error) {
+          debugPrint('Firestore addTransaction error: $error');
+        });
   }
 
   void transferBalance(double amount, String fromAccount, String toAccount) {
@@ -462,15 +788,18 @@ class TransactionProvider extends ChangeNotifier {
     final batch = _firestore.batch();
     batch.set(txRef.doc(expenseItem.id), expenseItem.toMap());
     batch.set(txRef.doc(incomeItem.id), incomeItem.toMap());
-    batch.commit().then((_) async {
-      _pendingIds.remove(expenseItem.id);
-      _pendingIds.remove(incomeItem.id);
-      await _db.markSynced(expenseItem.id);
-      await _db.markSynced(incomeItem.id);
-      _retryPendingOperations();
-    }).catchError((error) {
-      debugPrint('Firestore transferBalance error: $error');
-    });
+    batch
+        .commit()
+        .then((_) async {
+          _pendingIds.remove(expenseItem.id);
+          _pendingIds.remove(incomeItem.id);
+          await _db.markSynced(expenseItem.id);
+          await _db.markSynced(incomeItem.id);
+          _retryPendingOperations();
+        })
+        .catchError((error) {
+          debugPrint('Firestore transferBalance error: $error');
+        });
   }
 
   void deleteTransaction(String id) {
@@ -497,12 +826,13 @@ class TransactionProvider extends ChangeNotifier {
         .doc(id)
         .delete()
         .then((_) async {
-      _pendingIds.remove(id);
-      await _db.hardDeleteTransaction(id);
-      _retryPendingOperations();
-    }).catchError((error) {
-      debugPrint('Firestore deleteTransaction error: $error');
-    });
+          _pendingIds.remove(id);
+          await _db.hardDeleteTransaction(id);
+          _retryPendingOperations();
+        })
+        .catchError((error) {
+          debugPrint('Firestore deleteTransaction error: $error');
+        });
   }
 
   void updateTransaction(TransactionItem transaction) {
@@ -540,19 +870,20 @@ class TransactionProvider extends ChangeNotifier {
         .doc(updated.id)
         .update(updated.toMap())
         .then((_) async {
-      _pendingIds.remove(updated.id);
-      await _db.markSynced(updated.id);
-      _retryPendingOperations();
-    }).catchError((error) {
-      debugPrint('Firestore updateTransaction error: $error');
-    });
+          _pendingIds.remove(updated.id);
+          await _db.markSynced(updated.id);
+          _retryPendingOperations();
+        })
+        .catchError((error) {
+          debugPrint('Firestore updateTransaction error: $error');
+        });
   }
 
   @override
   void dispose() {
     _authSubscription?.cancel();
     _firestoreSubscription?.cancel();
+    _categorySubscription?.cancel();
     super.dispose();
   }
 }
-
