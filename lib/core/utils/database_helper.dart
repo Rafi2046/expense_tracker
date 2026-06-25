@@ -673,6 +673,58 @@ class DatabaseHelper {
     await db.delete('categories', where: 'id = ?', whereArgs: [id]);
   }
 
+  Future<void> renameCategory(String oldName, String newName, {required bool isIncome}) async {
+    if (oldName == newName) return;
+
+    if (kIsWeb) {
+      final categories = _readWebCategories();
+      final catIndex = categories.indexWhere(
+        (r) => r['name'] == oldName && r['isIncome'] == (isIncome ? 1 : 0) && r['isDeleted'] == 0,
+      );
+      if (catIndex != -1) {
+        categories[catIndex] = {
+          ...categories[catIndex],
+          'name': newName,
+          'syncStatus': 'pending_update',
+        };
+        await _writeWebCategories(categories);
+      }
+
+      final transactions = _readWebTransactions();
+      bool changed = false;
+      for (int i = 0; i < transactions.length; i++) {
+        if (transactions[i]['category'] == oldName && transactions[i]['isDeleted'] == 0) {
+          transactions[i] = {
+            ...transactions[i],
+            'category': newName,
+            'syncStatus': 'pending_update',
+          };
+          changed = true;
+        }
+      }
+      if (changed) {
+        await _writeWebTransactions(transactions);
+      }
+      return;
+    }
+
+    final db = await instance.database;
+    await db.transaction((txn) async {
+      await txn.update(
+        'categories',
+        {'name': newName, 'syncStatus': 'pending_update'},
+        where: 'name = ? AND isIncome = ? AND isDeleted = 0',
+        whereArgs: [oldName, isIncome ? 1 : 0],
+      );
+      await txn.update(
+        'transactions',
+        {'category': newName, 'syncStatus': 'pending_update'},
+        where: 'category = ? AND isDeleted = 0',
+        whereArgs: [oldName],
+      );
+    });
+  }
+
   Future<void> markCategorySynced(String id) async {
     if (kIsWeb) {
       final data = _readWebCategories();

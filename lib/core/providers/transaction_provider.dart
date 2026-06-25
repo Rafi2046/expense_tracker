@@ -694,6 +694,94 @@ class TransactionProvider extends ChangeNotifier {
         });
   }
 
+  void renameCategory(String oldName, String newName, {required bool isIncome}) {
+    final cleanNewName = newName.trim();
+    if (cleanNewName.isEmpty) return;
+    if (oldName.trim().toLowerCase() == cleanNewName.toLowerCase()) return;
+
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    // 1. SQLite atomic cascade
+    _db.renameCategory(oldName, cleanNewName, isIncome: isIncome);
+
+    // 2. Update local category items
+    CategoryItem? renamedCategory;
+    for (int i = 0; i < _categoryItems.length; i++) {
+      if (_categoryItems[i].name == oldName && _categoryItems[i].isIncome == isIncome) {
+        renamedCategory = CategoryItem(
+          id: _categoryItems[i].id,
+          name: cleanNewName,
+          isIncome: _categoryItems[i].isIncome,
+          lastModified: DateTime.now(),
+        );
+        _categoryItems[i] = renamedCategory;
+        _pendingCategoryIds.add(renamedCategory.id);
+        break;
+      }
+    }
+
+    // 3. Update local transactions
+    final affectedTxIds = <String>[];
+    for (int i = 0; i < _transactions.length; i++) {
+      if (_transactions[i].category == oldName) {
+        final updated = TransactionItem(
+          id: _transactions[i].id,
+          amount: _transactions[i].amount,
+          category: cleanNewName,
+          note: _transactions[i].note,
+          isIncome: _transactions[i].isIncome,
+          dateTime: _transactions[i].dateTime,
+          incomeMonth: _transactions[i].incomeMonth,
+          paymentMethod: _transactions[i].paymentMethod,
+          lastModified: DateTime.now(),
+        );
+        _transactions[i] = updated;
+        _pendingIds.add(updated.id);
+        affectedTxIds.add(updated.id);
+      }
+    }
+    notifyListeners();
+
+    // 4. Firestore batch
+    final batch = _firestore.batch();
+    if (renamedCategory != null) {
+      batch.update(
+        _firestore
+            .collection('users')
+            .doc(user.uid)
+            .collection('categories')
+            .doc(renamedCategory.id),
+        renamedCategory.toMap(),
+      );
+    }
+    for (final id in affectedTxIds) {
+      final tx = _transactions.firstWhere((t) => t.id == id);
+      batch.update(
+        _firestore
+            .collection('users')
+            .doc(user.uid)
+            .collection('transactions')
+            .doc(id),
+        tx.toMap(),
+      );
+    }
+
+    batch.commit().then((_) async {
+      if (renamedCategory != null) {
+        _pendingCategoryIds.remove(renamedCategory.id);
+        await _db.markCategorySynced(renamedCategory.id);
+      }
+      for (final id in affectedTxIds) {
+        _pendingIds.remove(id);
+        await _db.markSynced(id);
+      }
+      _retryPendingOperations();
+    }).catchError((error) {
+      debugPrint('Firestore renameCategory batch error: $error');
+    });
+  }
+
   void addTransaction(TransactionItem transaction) {
     final user = _auth.currentUser;
     if (user == null) return;

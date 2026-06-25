@@ -55,6 +55,95 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
     );
   }
 
+  void _showRenameDialog(
+    BuildContext context,
+    TransactionProvider provider,
+    String currentName,
+    bool isIncome,
+  ) {
+    final controller = TextEditingController(text: currentName);
+    final themeColor = isIncome ? AppColors.activeGreen : AppColors.activeRed;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Text(
+          'Rename Category',
+          style: GoogleFonts.workSans(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText: 'Category Name',
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: themeColor, width: 2),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.workSans(
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: themeColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            onPressed: () {
+              final newName = controller.text.trim();
+              if (newName.isNotEmpty && newName != currentName) {
+                provider.renameCategory(
+                  currentName,
+                  newName,
+                  isIncome: isIncome,
+                );
+                ScaffoldMessenger.of(ctx).showSnackBar(
+                  SnackBar(
+                    content: Text('Category renamed to "$newName".'),
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              }
+              Navigator.pop(ctx);
+            },
+            child: Text(
+              'Rename',
+              style: GoogleFonts.workSans(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TransactionProvider>();
@@ -182,6 +271,12 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
                               ),
                             );
                           },
+                          onEdit: () => _showRenameDialog(
+                            context,
+                            provider,
+                            cat,
+                            isIncome,
+                          ),
                         ),
                       );
                     },

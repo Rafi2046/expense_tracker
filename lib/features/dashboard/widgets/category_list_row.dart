@@ -9,6 +9,7 @@ class CategoryListRow extends StatelessWidget {
   final bool showLeadingIcon;
   final VoidCallback? onTap;
   final VoidCallback onDelete;
+  final VoidCallback? onEdit;
 
   const CategoryListRow({
     super.key,
@@ -19,6 +20,7 @@ class CategoryListRow extends StatelessWidget {
     this.showLeadingIcon = false,
     this.onTap,
     required this.onDelete,
+    this.onEdit,
   });
 
   @override
@@ -76,6 +78,15 @@ class CategoryListRow extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 4),
+        if (onEdit != null)
+          IconButton(
+            icon: Icon(
+              Icons.edit_outlined,
+              color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
+              size: 20,
+            ),
+            onPressed: onEdit,
+          ),
         IconButton(
           icon: Icon(
             Icons.delete_outline_rounded,
