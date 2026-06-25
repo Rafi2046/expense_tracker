@@ -1,34 +1,25 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/daily_distribution_chart.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_container_row.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_list_container.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class IncomeDailySection extends StatelessWidget {
   const IncomeDailySection({super.key});
 
-  static final List<DailyChartData> _dailyChartData = [
-    DailyChartData('00:00', 10),
-    DailyChartData(' ', 8),
-    DailyChartData('  ', 6),
-    DailyChartData('06:00', 12),
-    DailyChartData('   ', 30),
-    DailyChartData('    ', 45),
-    DailyChartData('12:00', 55, isHighlighted: true),
-    DailyChartData('     ', 25),
-    DailyChartData('      ', 15),
-    DailyChartData('18:00', 20),
-    DailyChartData('       ', 10),
-    DailyChartData('23:59', 5),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final analytics = context.watch<IncomeAnalyticsProvider>();
+    final todayTransactions = analytics.todayTransactions;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DailyDistributionChart(data: _dailyChartData),
+        DailyDistributionChart(data: analytics.dailyChartData),
         const SizedBox(height: 24),
         TransactionListContainer(
           title: "Today's Income",
@@ -41,29 +32,33 @@ class IncomeDailySection extends StatelessWidget {
             ),
             child: Text('View All', style: AppTextStyles.viewAllText),
           ),
-          children: [
-            TransactionContainerRow(
-              icon: Icons.work_outline,
-              title: 'Freelance Payment',
-              subtitle: 'Project: Emerald Design System',
-              amount: '+${context.currencySymbol}180.00',
-              subAmountLabel: '14:32',
-            ),
-            TransactionContainerRow(
-              icon: Icons.savings_outlined,
-              title: 'Dividend Yield',
-              subtitle: 'Monthly Asset Distribution',
-              amount: '+${context.currencySymbol}45.50',
-              subAmountLabel: '10:15',
-            ),
-            TransactionContainerRow(
-              icon: Icons.receipt_long_outlined,
-              title: 'Consultation Fee',
-              subtitle: 'Retainer: Weekly Sync',
-              amount: '+${context.currencySymbol}14.50',
-              subAmountLabel: '09:00',
-            ),
-          ],
+          children: todayTransactions.isEmpty
+              ? [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24.0),
+                    child: Center(child: Text('No income transactions today')),
+                  )
+                ]
+              : todayTransactions.map((tx) {
+                  IconData icon;
+                  final categoryLower = tx.category.toLowerCase();
+                  if (categoryLower.contains('salary')) {
+                    icon = Icons.account_balance_outlined;
+                  } else if (categoryLower.contains('freelance') || categoryLower.contains('business') || categoryLower.contains('work')) {
+                    icon = Icons.work_outline;
+                  } else if (categoryLower.contains('dividend') || categoryLower.contains('invest') || categoryLower.contains('saving')) {
+                    icon = Icons.savings_outlined;
+                  } else {
+                    icon = Icons.receipt_long_outlined;
+                  }
+                  return TransactionContainerRow(
+                    icon: icon,
+                    title: tx.note.isNotEmpty ? tx.note : tx.category,
+                    subtitle: tx.category,
+                    amount: '+${context.currencySymbol}${tx.amount.toStringAsFixed(2)}',
+                    subAmountLabel: DateFormat('HH:mm').format(tx.dateTime),
+                  );
+                }).toList(),
         ),
       ],
     );

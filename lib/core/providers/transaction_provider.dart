@@ -469,7 +469,11 @@ class TransactionProvider extends ChangeNotifier {
     for (final tx in monthlyTransactions.where((t) => !t.isIncome)) {
       final normalized = tx.category.toLowerCase();
       normalizedKeys.putIfAbsent(normalized, () => tx.category);
-      breakdown.update(normalized, (v) => v + tx.amount, ifAbsent: () => tx.amount);
+      breakdown.update(
+        normalized,
+        (v) => v + tx.amount,
+        ifAbsent: () => tx.amount,
+      );
     }
     return {for (final k in breakdown.keys) normalizedKeys[k]!: breakdown[k]!};
   }
@@ -553,7 +557,8 @@ class TransactionProvider extends ChangeNotifier {
     if (cleanCategory.isEmpty) return;
     if (_categoryItems.any(
       (c) => c.name.toLowerCase() == cleanCategory.toLowerCase() && !c.isIncome,
-    )) return;
+    ))
+      return;
 
     final user = _auth.currentUser;
     if (user == null) return;
@@ -593,8 +598,9 @@ class TransactionProvider extends ChangeNotifier {
     final user = _auth.currentUser;
     if (user == null) return;
 
-    final idx = _categoryItems
-        .indexWhere((c) => c.name == category && !c.isIncome);
+    final idx = _categoryItems.indexWhere(
+      (c) => c.name == category && !c.isIncome,
+    );
     if (idx == -1) return;
 
     final item = _categoryItems[idx];
@@ -626,7 +632,8 @@ class TransactionProvider extends ChangeNotifier {
     if (cleanCategory.isEmpty) return;
     if (_categoryItems.any(
       (c) => c.name.toLowerCase() == cleanCategory.toLowerCase() && c.isIncome,
-    )) return;
+    ))
+      return;
 
     final user = _auth.currentUser;
     if (user == null) return;
@@ -666,8 +673,9 @@ class TransactionProvider extends ChangeNotifier {
     final user = _auth.currentUser;
     if (user == null) return;
 
-    final idx =
-        _categoryItems.indexWhere((c) => c.name == category && c.isIncome);
+    final idx = _categoryItems.indexWhere(
+      (c) => c.name == category && c.isIncome,
+    );
     if (idx == -1) return;
 
     final item = _categoryItems[idx];
@@ -694,7 +702,11 @@ class TransactionProvider extends ChangeNotifier {
         });
   }
 
-  void renameCategory(String oldName, String newName, {required bool isIncome}) {
+  void renameCategory(
+    String oldName,
+    String newName, {
+    required bool isIncome,
+  }) {
     final cleanNewName = newName.trim();
     if (cleanNewName.isEmpty) return;
     if (oldName.trim().toLowerCase() == cleanNewName.toLowerCase()) return;
@@ -708,7 +720,8 @@ class TransactionProvider extends ChangeNotifier {
     // 2. Update local category items
     CategoryItem? renamedCategory;
     for (int i = 0; i < _categoryItems.length; i++) {
-      if (_categoryItems[i].name == oldName && _categoryItems[i].isIncome == isIncome) {
+      if (_categoryItems[i].name == oldName &&
+          _categoryItems[i].isIncome == isIncome) {
         renamedCategory = CategoryItem(
           id: _categoryItems[i].id,
           name: cleanNewName,
@@ -767,19 +780,22 @@ class TransactionProvider extends ChangeNotifier {
       );
     }
 
-    batch.commit().then((_) async {
-      if (renamedCategory != null) {
-        _pendingCategoryIds.remove(renamedCategory.id);
-        await _db.markCategorySynced(renamedCategory.id);
-      }
-      for (final id in affectedTxIds) {
-        _pendingIds.remove(id);
-        await _db.markSynced(id);
-      }
-      _retryPendingOperations();
-    }).catchError((error) {
-      debugPrint('Firestore renameCategory batch error: $error');
-    });
+    batch
+        .commit()
+        .then((_) async {
+          if (renamedCategory != null) {
+            _pendingCategoryIds.remove(renamedCategory.id);
+            await _db.markCategorySynced(renamedCategory.id);
+          }
+          for (final id in affectedTxIds) {
+            _pendingIds.remove(id);
+            await _db.markSynced(id);
+          }
+          _retryPendingOperations();
+        })
+        .catchError((error) {
+          debugPrint('Firestore renameCategory batch error: $error');
+        });
   }
 
   void addTransaction(TransactionItem transaction) {

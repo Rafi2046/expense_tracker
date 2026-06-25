@@ -77,7 +77,9 @@ class QuarterlyTrendChart extends StatelessWidget {
                 majorGridLines: const MajorGridLines(width: 0),
                 axisLine: const AxisLine(width: 0),
                 axisLabelFormatter: (AxisLabelRenderDetails details) {
-                  final isCurrent = details.text == 'SEP';
+                  final monthLabels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+                  final currentLabel = monthLabels[DateTime.now().month - 1];
+                  final isCurrent = details.text == currentLabel;
                   return ChartAxisLabel(
                     details.text,
                     TextStyle(

@@ -78,7 +78,9 @@ class WeeklyTrendChart extends StatelessWidget {
                 majorGridLines: const MajorGridLines(width: 0),
                 axisLine: const AxisLine(width: 0),
                 axisLabelFormatter: (AxisLabelRenderDetails details) {
-                  final isCurrent = details.text == 'Wed';
+                  final weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                  final currentLabel = weekdayLabels[DateTime.now().weekday - 1];
+                  final isCurrent = details.text == currentLabel;
                   return ChartAxisLabel(
                     details.text,
                     TextStyle(

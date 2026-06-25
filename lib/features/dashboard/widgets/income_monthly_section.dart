@@ -1,33 +1,24 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_transaction_row.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_trend_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class IncomeMonthlySection extends StatelessWidget {
   const IncomeMonthlySection({super.key});
 
-  static final List<ChartData> _chartData = [
-    ChartData('JAN', 4200),
-    ChartData('FEB', 4800),
-    ChartData('MAR', 5100),
-    ChartData('APR', 5800),
-    ChartData('MAY', 5500),
-    ChartData('JUN', 8420, isCurrent: true),
-    ChartData('JUL', 6400),
-    ChartData('AUG', 5800),
-    ChartData('SEP', 7200),
-    ChartData('OCT', 6900),
-    ChartData('NOV', 7400),
-    ChartData('DEC', 7900),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final analytics = context.watch<IncomeAnalyticsProvider>();
+    final monthlyTransactions = analytics.monthlyTransactions;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        IncomeTrendChart(data: _chartData),
+        IncomeTrendChart(data: analytics.monthlyChartData),
         const SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -45,43 +36,38 @@ class IncomeMonthlySection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        ListView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            IncomeTransactionRow(
-              icon: Icons.account_balance_outlined,
-              title: 'Monthly Salary',
-              subtitle: 'Oct 24, 2023 • Tech Corp',
-              amount: '+${context.currencySymbol}5,200.00',
-              status: 'completed',
-            ),
-            const SizedBox(height: 12),
-            IncomeTransactionRow(
-              icon: Icons.work_outline_rounded,
-              title: 'Freelance Project',
-              subtitle: 'Oct 20, 2023 • UI Design',
-              amount: '+${context.currencySymbol}1,850.00',
-              status: 'completed',
-            ),
-            const SizedBox(height: 12),
-            IncomeTransactionRow(
-              icon: Icons.show_chart_rounded,
-              title: 'Stock Dividends',
-              subtitle: 'Oct 18, 2023 • Portfolio',
-              amount: '+${context.currencySymbol}420.00',
-              status: 'completed',
-            ),
-            const SizedBox(height: 12),
-            IncomeTransactionRow(
-              icon: Icons.home_work_outlined,
-              title: 'Rental Income',
-              subtitle: 'Oct 15, 2023 • Apt 4B',
-              amount: '+${context.currencySymbol}950.00',
-              status: 'completed',
-            ),
-          ],
-        ),
+        monthlyTransactions.isEmpty
+            ? const Padding(
+                padding: EdgeInsets.symmetric(vertical: 24.0),
+                child: Center(child: Text('No income transactions this month')),
+              )
+            : ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: monthlyTransactions.length,
+                separatorBuilder: (context, index) => const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final tx = monthlyTransactions[index];
+                  IconData icon;
+                  final categoryLower = tx.category.toLowerCase();
+                  if (categoryLower.contains('salary')) {
+                    icon = Icons.account_balance_outlined;
+                  } else if (categoryLower.contains('freelance') || categoryLower.contains('business') || categoryLower.contains('work')) {
+                    icon = Icons.work_outline_rounded;
+                  } else if (categoryLower.contains('dividend') || categoryLower.contains('invest') || categoryLower.contains('saving')) {
+                    icon = Icons.show_chart_rounded;
+                  } else {
+                    icon = Icons.home_work_outlined;
+                  }
+                  return IncomeTransactionRow(
+                    icon: icon,
+                    title: tx.note.isNotEmpty ? tx.note : tx.category,
+                    subtitle: '${DateFormat('MMM dd, yyyy').format(tx.dateTime)} • ${tx.category}',
+                    amount: '+${context.currencySymbol}${tx.amount.toStringAsFixed(2)}',
+                    status: 'completed',
+                  );
+                },
+              ),
       ],
     );
   }

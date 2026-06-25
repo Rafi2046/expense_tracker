@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import 'dart:math' show max;
+
 class ChartData {
   final String month;
   final double value;
@@ -21,6 +23,11 @@ class IncomeTrendChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primaryColor = theme.primaryColor;
+    
+    final maxVal = data.map((d) => d.value).fold(0.0, (m, v) => v > m ? v : m);
+    final double computedMax = max(10000.0, (maxVal / 5000).ceil() * 5000.0);
+    final double computedInterval = computedMax / 2;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20.0),
@@ -85,8 +92,8 @@ class IncomeTrendChart extends StatelessWidget {
                 axisLine: const AxisLine(width: 0),
                 majorTickLines: const MajorTickLines(width: 0),
                 minimum: 0,
-                maximum: 10000,
-                interval: 5000,
+                maximum: computedMax,
+                interval: computedInterval,
                 labelFormat: '{value}',
                 labelStyle: TextStyle(
                   fontSize: 11,
@@ -98,10 +105,8 @@ class IncomeTrendChart extends StatelessWidget {
                   String label = details.text;
                   if (details.value == 0) {
                     label = '0';
-                  } else if (details.value == 5000) {
-                    label = '5k';
-                  } else if (details.value == 10000) {
-                    label = '10k';
+                  } else if (details.value >= 1000) {
+                    label = '${(details.value / 1000).toStringAsFixed(0)}k';
                   }
                   return ChartAxisLabel(
                     label,

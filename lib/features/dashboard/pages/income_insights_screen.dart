@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/financial_health_banner.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_daily_section.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_weekly_section.dart';
@@ -10,6 +11,7 @@ import 'package:expense_tracker/features/dashboard/widgets/income_summary_card.d
 import 'package:expense_tracker/features/dashboard/widgets/time_frame_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class IncomeInsightsScreen extends StatefulWidget {
   const IncomeInsightsScreen({super.key});
@@ -22,12 +24,15 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
   String _selectedTimeFrame = 'Monthly';
   final List<String> _timeFrames = ['Daily', 'Weekly', 'Monthly', 'Quarterly'];
 
-  Widget _buildSummaryCard() {
+  Widget _buildSummaryCard(IncomeAnalyticsProvider analytics) {
     switch (_selectedTimeFrame) {
       case 'Daily':
+        final change = analytics.dailyPercentageChange;
+        final isPositive = change >= 0;
+        final sign = isPositive ? '+' : '';
         return IncomeSummaryCard(
           label: 'Total Daily Income',
-          amount: '${context.currencySymbol}240.00',
+          amount: '${context.currencySymbol}${analytics.todayIncome.toStringAsFixed(2)}',
           showDivider: true,
           bottomContent: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -44,18 +49,18 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
               ),
               Row(
                 children: [
-                  const Icon(
-                    Icons.trending_up,
-                    color: AppColors.activeGreen,
+                  Icon(
+                    isPositive ? Icons.trending_up : Icons.trending_down,
+                    color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
                     size: 16,
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    '+12.5%',
+                    '$sign${change.toStringAsFixed(1)}%',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.activeGreen,
+                      color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
@@ -65,9 +70,13 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
           ),
         );
       case 'Weekly':
+        final avgDaily = analytics.currentWeekIncome / 7.0;
+        final change = analytics.weeklyPercentageChange;
+        final isPositive = change >= 0;
+        final sign = isPositive ? '+' : '';
         return IncomeSummaryCard(
           label: 'Total Weekly Income',
-          amount: '${context.currencySymbol}1,850.00',
+          amount: '${context.currencySymbol}${analytics.currentWeekIncome.toStringAsFixed(2)}',
           showDivider: true,
           bottomContent: Column(
             children: [
@@ -85,7 +94,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                     ),
                   ),
                   Text(
-                    '${context.currencySymbol}264.28',
+                    '${context.currencySymbol}${avgDaily.toStringAsFixed(2)}',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
@@ -111,18 +120,18 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                   ),
                   Row(
                     children: [
-                      const Icon(
-                        Icons.trending_up,
-                        color: AppColors.activeGreen,
+                      Icon(
+                        isPositive ? Icons.trending_up : Icons.trending_down,
+                        color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
                         size: 16,
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '+12.4%',
+                        '$sign${change.toStringAsFixed(1)}%',
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.activeGreen,
+                          color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
                           fontFamily: GoogleFonts.workSans().fontFamily,
                         ),
                       ),
@@ -134,10 +143,20 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
           ),
         );
       case 'Quarterly':
+        final q = ((DateTime.now().month - 1) ~/ 3) + 1;
+        final prevQStr = q == 1 ? 'Q4' : 'Q${q - 1}';
+        final change = analytics.quarterlyPercentageChange;
+        final isPositive = change >= 0;
+        final sign = isPositive ? '+' : '';
+        final quarterlyIncome = analytics.currentQuarterIncome;
+        final projectedYearEnd = quarterlyIncome * 4.0;
+        final monthOfQuarter = (DateTime.now().month - 1) % 3 + 1;
+        final dayOfMonth = DateTime.now().day;
+        final progress = (monthOfQuarter - 1) / 3.0 + (dayOfMonth / 90.0);
         return IncomeSummaryCard(
           label: 'Total Quarterly Income',
-          amount: '${context.currencySymbol}24,560.00',
-          percentageText: '+12.4% vs Q2',
+          amount: '${context.currencySymbol}${quarterlyIncome.toStringAsFixed(2)}',
+          percentageText: '$sign${change.toStringAsFixed(1)}% vs $prevQStr',
           showDivider: true,
           bottomContent: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,7 +175,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                     ),
                   ),
                   Text(
-                    '${context.currencySymbol}98,240.00',
+                    '${context.currencySymbol}${projectedYearEnd.toStringAsFixed(2)}',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
@@ -170,7 +189,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: LinearProgressIndicator(
-                  value: 0.25,
+                  value: progress.clamp(0.0, 1.0),
                   backgroundColor: Theme.of(context).brightness == Brightness.light
                       ? const Color(0xFFE0E0E0)
                       : Colors.white12,
@@ -185,10 +204,13 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
         );
       case 'Monthly':
       default:
+        final change = analytics.monthlyPercentageChange;
+        final isPositive = change >= 0;
+        final sign = isPositive ? '+' : '';
         return IncomeSummaryCard(
           label: 'Total Monthly Income',
-          amount: '+${context.currencySymbol}8,420.00',
-          percentageText: '+12.4%',
+          amount: '${isPositive ? '+' : ''}${context.currencySymbol}${analytics.currentMonthIncome.toStringAsFixed(2)}',
+          percentageText: '$sign${change.toStringAsFixed(1)}%',
           compareText: 'vs. last month',
         );
     }
@@ -211,6 +233,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final analytics = context.watch<IncomeAnalyticsProvider>();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -239,7 +262,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Summary card
-              _buildSummaryCard(),
+              _buildSummaryCard(analytics),
               const SizedBox(height: 20),
 
               // Timeframe selector
