@@ -364,6 +364,34 @@ class TransactionProvider extends ChangeNotifier {
     });
   }
 
+  void updateTransaction(TransactionItem transaction) {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    final index = _transactions.indexWhere((t) => t.id == transaction.id);
+    if (index == -1) return;
+
+    final oldTransaction = _transactions[index];
+    _transactions[index] = transaction;
+    notifyListeners();
+
+    _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('transactions')
+        .doc(transaction.id)
+        .update(transaction.toMap())
+        .catchError((error) {
+      debugPrint('Firestore updateTransaction error: $error');
+      final currentIndex =
+          _transactions.indexWhere((t) => t.id == transaction.id);
+      if (currentIndex != -1) {
+        _transactions[currentIndex] = oldTransaction;
+        notifyListeners();
+      }
+    });
+  }
+
   @override
   void dispose() {
     _authSubscription?.cancel();

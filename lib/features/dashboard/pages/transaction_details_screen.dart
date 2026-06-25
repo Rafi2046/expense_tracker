@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_detail_cards.dart';
 
 class TransactionDetailsScreen extends StatelessWidget {
@@ -135,11 +136,10 @@ class TransactionDetailsScreen extends StatelessWidget {
   }
 
   void _showEditDialog(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Editing transaction detail is coming soon!'),
-        duration: Duration(seconds: 2),
-      ),
+    AddTransactionSheet.show(
+      context: context,
+      isIncome: transaction.isIncome,
+      transaction: transaction,
     );
   }
 }

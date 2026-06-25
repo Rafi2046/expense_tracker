@@ -10,15 +10,29 @@ import 'package:provider/provider.dart';
 
 class AddTransactionSheet extends StatefulWidget {
   final bool isIncome;
+  final TransactionItem? transaction;
 
-  const AddTransactionSheet({super.key, required this.isIncome});
+  const AddTransactionSheet({
+    super.key,
+    required this.isIncome,
+    this.transaction,
+  });
 
-  static void show({required BuildContext context, required bool isIncome}) {
+  bool get isEditing => transaction != null;
+
+  static void show({
+    required BuildContext context,
+    required bool isIncome,
+    TransactionItem? transaction,
+  }) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => AddTransactionSheet(isIncome: isIncome),
+      builder: (context) => AddTransactionSheet(
+        isIncome: isIncome,
+        transaction: transaction,
+      ),
     );
   }
 
@@ -38,7 +52,15 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   @override
   void initState() {
     super.initState();
-    if (widget.isIncome) {
+    final tx = widget.transaction;
+    if (tx != null) {
+      _amountController.text = tx.amount.toString();
+      _noteController.text = tx.note;
+      _selectedCategory = tx.category;
+      _selectedDate = tx.dateTime;
+      _selectedIncomeMonth = tx.incomeMonth;
+      _paymentMethod = tx.paymentMethod;
+    } else if (widget.isIncome) {
       _selectedIncomeMonth = DateFormat('MMMM yyyy').format(DateTime.now());
     }
   }
@@ -198,22 +220,38 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
     }
 
     final provider = context.read<TransactionProvider>();
-    final newItem = TransactionItem(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      amount: amount,
-      category: _selectedCategory!,
-      note: _noteController.text.trim(),
-      isIncome: widget.isIncome,
-      dateTime: _selectedDate,
-      incomeMonth: widget.isIncome ? _selectedIncomeMonth : null,
-      paymentMethod: _paymentMethod,
-    );
+    final existing = widget.transaction;
 
-    provider.addTransaction(newItem);
+    if (existing != null) {
+      final updatedItem = TransactionItem(
+        id: existing.id,
+        amount: amount,
+        category: _selectedCategory!,
+        note: _noteController.text.trim(),
+        isIncome: widget.isIncome,
+        dateTime: _selectedDate,
+        incomeMonth: widget.isIncome ? _selectedIncomeMonth : null,
+        paymentMethod: _paymentMethod,
+      );
+      provider.updateTransaction(updatedItem);
+    } else {
+      provider.addTransaction(
+        TransactionItem(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          amount: amount,
+          category: _selectedCategory!,
+          note: _noteController.text.trim(),
+          isIncome: widget.isIncome,
+          dateTime: _selectedDate,
+          incomeMonth: widget.isIncome ? _selectedIncomeMonth : null,
+          paymentMethod: _paymentMethod,
+        ),
+      );
+    }
 
     Navigator.pop(context); // Close bottom sheet
 
-    // Show high-end success toast/snackbar
+    final action = existing != null ? 'updated' : 'added';
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -221,7 +259,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
             const Icon(Icons.check_circle_outline, color: Colors.white),
             const SizedBox(width: 8),
             Text(
-              '${widget.isIncome ? "Income" : "Expense"} added: ${context.formatAmount(amount, listen: false)}',
+              '${widget.isIncome ? "Income" : "Expense"} $action: ${context.formatAmount(amount, listen: false)}',
               style: GoogleFonts.workSans(fontWeight: FontWeight.w600),
             ),
           ],
@@ -284,7 +322,9 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.isIncome ? 'Add Income' : 'Add Expense',
+                      widget.isEditing
+                          ? (widget.isIncome ? 'Edit Income' : 'Edit Expense')
+                          : (widget.isIncome ? 'Add Income' : 'Add Expense'),
                       style: GoogleFonts.workSans(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -490,7 +530,9 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                     ),
                     onPressed: () => _save(context),
                     child: Text(
-                      widget.isIncome ? 'Save Income' : 'Save Expense',
+                      widget.isEditing
+                          ? (widget.isIncome ? 'Update Income' : 'Update Expense')
+                          : (widget.isIncome ? 'Save Income' : 'Save Expense'),
                       style: GoogleFonts.workSans(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
