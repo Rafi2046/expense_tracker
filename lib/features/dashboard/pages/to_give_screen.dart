@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_images.dart' show AppImages;
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.dart';
@@ -133,17 +134,17 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                   ],
                 ),
               ),
-            const SizedBox(height: 8),
+
             Expanded(
               child: items.isEmpty
                   ? Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.check_circle_outline,
-                            size: 64,
-                            color: Colors.grey.shade300,
+                          Image.asset(
+                            AppImages.pendingPayments,
+                            height: 150,
+                            width: 150,
                           ),
                           const SizedBox(height: 12),
                           Text(
