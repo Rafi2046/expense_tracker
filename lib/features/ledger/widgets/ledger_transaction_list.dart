@@ -92,7 +92,7 @@ class LedgerTransactionList extends StatelessWidget {
                 builder: (ctx) => AlertDialog(
                   title: const Text('Delete Transaction'),
                   content: Text(
-                    'Delete "${tx.note.isNotEmpty ? tx.note : context.translate(tx.category.toLowerCase())}"?',
+                    'Delete "${tx.note.isNotEmpty ? tx.note : tx.category}"?',
                   ),
                   actions: [
                     TextButton(
@@ -131,7 +131,7 @@ class LedgerTransactionList extends StatelessWidget {
               child: const Icon(Icons.delete_outline, color: Colors.white, size: 28),
             ),
             child: LedgerTransactionRow(
-              title: tx.note.isNotEmpty ? tx.note : context.translate(tx.category.toLowerCase()),
+              title: tx.note.isNotEmpty ? tx.note : tx.category,
               dateText: DateFormat('h:mm a').format(tx.dateTime),
               category: tx.category,
               amount: tx.amount,

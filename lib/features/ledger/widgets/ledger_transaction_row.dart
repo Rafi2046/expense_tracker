@@ -105,7 +105,7 @@ class LedgerTransactionRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '$dateText  •  ${context.translate(category.toLowerCase())}${incomeMonth != null ? '  •  ${context.translate('for')} $incomeMonth' : ''}',
+                      '$dateText  •  $category${incomeMonth != null ? '  •  ${context.translate('for')} $incomeMonth' : ''}',
                       style: GoogleFonts.workSans(
                         fontSize: 12,
                         color: AppColors.textMuted,
