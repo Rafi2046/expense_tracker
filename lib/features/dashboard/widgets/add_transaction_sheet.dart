@@ -60,8 +60,22 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
       _selectedDate = tx.dateTime;
       _selectedIncomeMonth = tx.incomeMonth;
       _paymentMethod = tx.paymentMethod;
-    } else if (widget.isIncome) {
-      _selectedIncomeMonth = DateFormat('MMMM yyyy').format(DateTime.now());
+    } else {
+      final provider = context.read<TransactionProvider>();
+      if (widget.isIncome) {
+        _selectedIncomeMonth = DateFormat('MMMM yyyy').format(DateTime.now());
+        final categories = provider.incomeCategories;
+        if (categories.isNotEmpty) {
+          final idx = categories.indexWhere((c) => c.toLowerCase().contains('salary'));
+          _selectedCategory = idx != -1 ? categories[idx] : categories.first;
+        }
+      } else {
+        final categories = provider.expenseCategories;
+        if (categories.isNotEmpty) {
+          final idx = categories.indexWhere((c) => c.toLowerCase().contains('misc') || c.toLowerCase().contains('other'));
+          _selectedCategory = idx != -1 ? categories[idx] : categories.first;
+        }
+      }
     }
   }
 
@@ -97,6 +111,9 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
+        if (widget.isIncome) {
+          _selectedIncomeMonth = DateFormat('MMMM yyyy').format(picked);
+        }
       });
     }
   }
@@ -221,13 +238,17 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
 
     final provider = context.read<TransactionProvider>();
     final existing = widget.transaction;
+    final noteText = _noteController.text.trim();
+    final finalNote = noteText.isEmpty && widget.isIncome && _selectedCategory != null
+        ? '$_selectedCategory for $_selectedIncomeMonth'
+        : noteText;
 
     if (existing != null) {
       final updatedItem = TransactionItem(
         id: existing.id,
         amount: amount,
         category: _selectedCategory!,
-        note: _noteController.text.trim(),
+        note: finalNote,
         isIncome: widget.isIncome,
         dateTime: _selectedDate,
         incomeMonth: widget.isIncome ? _selectedIncomeMonth : null,
@@ -240,7 +261,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           amount: amount,
           category: _selectedCategory!,
-          note: _noteController.text.trim(),
+          note: finalNote,
           isIncome: widget.isIncome,
           dateTime: _selectedDate,
           incomeMonth: widget.isIncome ? _selectedIncomeMonth : null,
