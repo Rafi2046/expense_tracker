@@ -48,23 +48,29 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final typeColor = _getTypeColor(item.type);
     final typeIcon = _getTypeIcon(item.type);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: item.isRead ? AppColors.white : const Color(0xFFF7FCFA),
+        color: item.isRead
+            ? theme.cardColor
+            : (isDark ? const Color(0xFF1B2A22) : const Color(0xFFF7FCFA)),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: item.isRead
-              ? const Color(0xFFF0F0F0)
-              : AppColors.activeGreen.withValues(alpha: 0.1),
+              ? (isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF0F0F0))
+              : (isDark
+                  ? AppColors.activeGreen.withValues(alpha: 0.35)
+                  : AppColors.activeGreen.withValues(alpha: 0.1)),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withAlpha(2),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -85,7 +91,7 @@ class NotificationCard extends StatelessWidget {
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
-                    color: typeColor.withValues(alpha: 0.1),
+                    color: typeColor.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(typeIcon, color: typeColor, size: 20),
@@ -110,7 +116,7 @@ class NotificationCard extends StatelessWidget {
                                     ? FontWeight.w600
                                     : FontWeight.bold,
                                 fontSize: 14.5,
-                                color: AppColors.loginTitle,
+                                color: theme.colorScheme.onSurface,
                               ),
                             ),
                           ),
@@ -119,7 +125,7 @@ class NotificationCard extends StatelessWidget {
                             _getTimeAgo(item.dateTime),
                             style: GoogleFonts.workSans(
                               fontSize: 11,
-                              color: AppColors.textMuted,
+                              color: isDark ? Colors.grey.shade500 : AppColors.textMuted,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -132,7 +138,7 @@ class NotificationCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.workSans(
                           fontSize: 13,
-                          color: AppColors.loginSubTitle,
+                          color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                           height: 1.4,
                         ),
                       ),

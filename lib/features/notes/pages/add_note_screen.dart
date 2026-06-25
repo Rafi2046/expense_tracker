@@ -76,14 +76,18 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final activeGreenColor = isDark ? const Color(0xFF10B981) : AppColors.activeGreen;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.cardColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -91,11 +95,12 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
           style: AppTextStyles.appbarTitle.copyWith(
             fontFamily: GoogleFonts.workSans().fontFamily,
             fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurface,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.check, color: AppColors.activeGreen, size: 28),
+            icon: Icon(Icons.check, color: activeGreenColor, size: 28),
             onPressed: _saveNote,
           ),
           const SizedBox(width: 8),
@@ -115,7 +120,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey.shade400,
+                    color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                     letterSpacing: 1.0,
                     fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
                   ),
@@ -125,19 +130,19 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                 Row(
                   children: _categories.map((cat) {
                     final isSelected = _selectedCategory == cat;
-                    Color chipColor = AppColors.chipBackground;
-                    Color textColor = Colors.black87;
+                    Color chipColor = isDark ? const Color(0xFF1E1E1E) : AppColors.chipBackground;
+                    Color textColor = isDark ? Colors.grey.shade400 : Colors.black87;
 
                     if (isSelected) {
                       if (cat == 'Business') {
-                        chipColor = const Color(0xFFE8F8F5); // light green bg
-                        textColor = AppColors.activeGreen;
+                        chipColor = isDark ? const Color(0xFF10B981).withValues(alpha: 0.15) : const Color(0xFFE8F8F5); // light green bg
+                        textColor = isDark ? const Color(0xFF10B981) : AppColors.activeGreen;
                       } else if (cat == 'Personal') {
-                        chipColor = const Color(0xFFEBF5FB); // light blue bg
-                        textColor = Colors.blue.shade700;
+                        chipColor = isDark ? Colors.blue.withValues(alpha: 0.15) : const Color(0xFFEBF5FB); // light blue bg
+                        textColor = isDark ? Colors.blue.shade400 : Colors.blue.shade700;
                       } else {
-                        chipColor = const Color(0xFFFEF9E7); // light yellow/grey bg
-                        textColor = Colors.orange.shade800;
+                        chipColor = isDark ? Colors.orange.withValues(alpha: 0.15) : const Color(0xFFFEF9E7); // light yellow/grey bg
+                        textColor = isDark ? Colors.orange.shade400 : Colors.orange.shade800;
                       }
                     }
 
@@ -163,7 +168,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                         },
                         elevation: 0,
                         pressElevation: 0,
-                        backgroundColor: AppColors.chipBackground,
+                        backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.chipBackground,
                         selectedColor: chipColor,
                         shadowColor: Colors.transparent,
                         surfaceTintColor: Colors.transparent,
@@ -186,7 +191,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: theme.colorScheme.onSurface,
                     fontFamily: GoogleFonts.workSans().fontFamily,
                   ),
                   decoration: InputDecoration(
@@ -194,7 +199,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     hintStyle: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey.shade300,
+                      color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                     border: InputBorder.none,
@@ -210,7 +215,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                 const SizedBox(height: 12),
                 
                 // Divider
-                Divider(color: Colors.grey.shade100, height: 1),
+                Divider(color: isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade100, height: 1),
                 const SizedBox(height: 16),
                 
                 // Content text area
@@ -223,14 +228,14 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     style: TextStyle(
                       fontSize: 15,
                       height: 1.5,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.inter().fontFamily,
                     ),
                     decoration: InputDecoration(
                       hintText: 'Start writing your note here...',
                       hintStyle: TextStyle(
                         fontSize: 15,
-                        color: Colors.grey.shade300,
+                        color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                         fontFamily: GoogleFonts.inter().fontFamily,
                       ),
                       border: InputBorder.none,

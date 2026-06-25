@@ -97,24 +97,28 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
     final interestRatio = _maturityAmount > 0 ? (_interest / _maturityAmount) : 0.0;
     final principalRatio = _maturityAmount > 0 ? (_principalAmount / _maturityAmount) : 0.0;
     final symbol = context.currencySymbol;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final primaryCalcColor = isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1);
+    final borderColor = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.cardColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black87, size: 20),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           context.translate('interest_calculator'),
-          style: AppTextStyles.calculatorTitle,
+          style: AppTextStyles.calculatorTitle.copyWith(color: theme.colorScheme.onSurface),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
+          child: Container(color: borderColor, height: 1.0),
         ),
       ),
       body: SafeArea(
@@ -145,8 +149,10 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
               CalculatorResultCard(
                 label: context.translate('maturity_amount'),
                 value: context.formatAmount(_maturityAmount),
-                gradientColors: const [Color(0xFF6A53A1), Color(0xFF8670BE)],
-                shadowColor: const Color(0xFF6A53A1),
+                gradientColors: isDark 
+                    ? const [Color(0xFF4C367C), Color(0xFF8E75C8)]
+                    : const [Color(0xFF6A53A1), Color(0xFF8670BE)],
+                shadowColor: isDark ? const Color(0xFF4C367C) : const Color(0xFF6A53A1),
                 subItems: [
                   CalculatorResultItem(title: context.translate('principal_invested'), value: context.formatAmount(_principalAmount)),
                   CalculatorResultItem(title: context.translate('interest_earned'), value: context.formatAmount(_interest)),
@@ -157,10 +163,10 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
               CalculatorBreakdownCard(
                 title: context.translate('investment_breakdown'),
                 label1: context.translate('principal'),
-                color1: const Color(0xFF6A53A1),
+                color1: primaryCalcColor,
                 ratio1: principalRatio,
                 label2: context.translate('interest_earned'),
-                color2: const Color(0xFF80E2B9),
+                color2: isDark ? const Color(0xFF10B981) : const Color(0xFF80E2B9),
                 ratio2: interestRatio,
               ),
               const SizedBox(height: 24),
@@ -186,7 +192,7 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
                 controller: _principalController,
                 prefix: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 8),
-                  child: Text(symbol, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF6A53A1))),
+                  child: Text(symbol, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -195,9 +201,9 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
                 label: context.translate('annual_interest_rate'),
                 hintText: context.translate('interest'),
                 controller: _rateController,
-                suffix: const Padding(
-                  padding: EdgeInsets.only(left: 8, right: 16),
-                  child: Text('%', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF6A53A1))),
+                suffix: Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 16),
+                  child: Text('%', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -205,7 +211,7 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
               CalculatorPeriodSelector(
                 controller: _periodController,
                 unit: _periodUnit,
-                themeColor: const Color(0xFF6A53A1),
+                themeColor: primaryCalcColor,
                 onChanged: (newVal) {
                   if (newVal != null) {
                     setState(() {
@@ -219,7 +225,7 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
               ElevatedButton(
                 onPressed: _performCalculation,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6A53A1),
+                  backgroundColor: primaryCalcColor,
                   foregroundColor: Colors.white,
                   minimumSize: const Size.fromHeight(52),
                   elevation: 0,

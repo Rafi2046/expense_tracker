@@ -86,24 +86,30 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
     final interestRatio = _totalPayment > 0 ? (_totalInterest / _totalPayment) : 0.0;
     final principalRatio = _totalPayment > 0 ? (_principalAmount / _totalPayment) : 0.0;
     final symbol = context.currencySymbol;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final primaryCalcColor = isDark ? const Color(0xFF10B981) : const Color(0xFF006C49);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.cardColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black87, size: 20),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           context.translate('emi_calculator'),
-          style: AppTextStyles.calculatorTitle,
+          style: AppTextStyles.calculatorTitle.copyWith(color: theme.colorScheme.onSurface),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
+          child: Container(
+            color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1),
+            height: 1.0,
+          ),
         ),
       ),
       body: SafeArea(
@@ -115,8 +121,10 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
               CalculatorResultCard(
                 label: context.translate('monthly_emi'),
                 value: context.formatAmount(_emi),
-                gradientColors: const [Color(0xFF006C49), Color(0xFF00895C)],
-                shadowColor: const Color(0xFF006C49),
+                gradientColors: isDark 
+                    ? const [Color(0xFF0C4E3C), Color(0xFF10B981)] 
+                    : const [Color(0xFF006C49), Color(0xFF00895C)],
+                shadowColor: isDark ? const Color(0xFF0C4E3C) : const Color(0xFF006C49),
                 subItems: [
                   CalculatorResultItem(title: context.translate('total_principal'), value: context.formatAmount(_principalAmount)),
                   CalculatorResultItem(title: context.translate('total_interest'), value: context.formatAmount(_totalInterest)),
@@ -128,7 +136,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
               CalculatorBreakdownCard(
                 title: context.translate('payment_breakdown'),
                 label1: context.translate('principal'),
-                color1: const Color(0xFF006C49),
+                color1: primaryCalcColor,
                 ratio1: principalRatio,
                 label2: context.translate('interest'),
                 color2: AppColors.expensePink,
@@ -142,7 +150,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 controller: _amountController,
                 prefix: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 8),
-                  child: Text(symbol, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF006C49))),
+                  child: Text(symbol, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -151,9 +159,9 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 label: context.translate('loan_interest_rate'),
                 hintText: context.translate('interest'),
                 controller: _rateController,
-                suffix: const Padding(
-                  padding: EdgeInsets.only(left: 8, right: 16),
-                  child: Text('%', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF006C49))),
+                suffix: Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 16),
+                  child: Text('%', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -164,7 +172,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 controller: _tenureController,
                 suffix: Padding(
                   padding: const EdgeInsets.only(left: 8, right: 16),
-                  child: Text(context.translate('years_label'), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF006C49))),
+                  child: Text(context.translate('years_label'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 24),
@@ -172,7 +180,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
               ElevatedButton(
                 onPressed: _performCalculation,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF006C49),
+                  backgroundColor: primaryCalcColor,
                   foregroundColor: Colors.white,
                   minimumSize: const Size.fromHeight(52),
                   elevation: 0,

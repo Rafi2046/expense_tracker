@@ -19,11 +19,16 @@ class CalculatorTypeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final trackBg = isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade200;
+    final pillBg = isDark ? const Color(0xFF2D2D2D) : Colors.white;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
+        color: trackBg,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -34,7 +39,7 @@ class CalculatorTypeSelector extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
-                  color: isSelected1 ? Colors.white : Colors.transparent,
+                  color: isSelected1 ? pillBg : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: isSelected1
                       ? [
@@ -51,7 +56,7 @@ class CalculatorTypeSelector extends StatelessWidget {
                     title1,
                     style: AppTextStyles.calculatorLabel.copyWith(
                       fontWeight: isSelected1 ? FontWeight.bold : FontWeight.w500,
-                      color: isSelected1 ? Colors.black87 : Colors.grey.shade600,
+                      color: isSelected1 ? theme.colorScheme.onSurface : (isDark ? Colors.grey.shade500 : Colors.grey.shade600),
                     ),
                   ),
                 ),
@@ -64,7 +69,7 @@ class CalculatorTypeSelector extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
-                  color: !isSelected1 ? Colors.white : Colors.transparent,
+                  color: !isSelected1 ? pillBg : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: !isSelected1
                       ? [
@@ -81,7 +86,7 @@ class CalculatorTypeSelector extends StatelessWidget {
                     title2,
                     style: AppTextStyles.calculatorLabel.copyWith(
                       fontWeight: !isSelected1 ? FontWeight.bold : FontWeight.w500,
-                      color: !isSelected1 ? Colors.black87 : Colors.grey.shade600,
+                      color: !isSelected1 ? theme.colorScheme.onSurface : (isDark ? Colors.grey.shade500 : Colors.grey.shade600),
                     ),
                   ),
                 ),

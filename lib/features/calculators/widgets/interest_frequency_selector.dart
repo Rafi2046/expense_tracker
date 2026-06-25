@@ -15,28 +15,34 @@ class InterestFrequencySelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final list = ['Monthly', 'Quarterly', 'Half-Yearly', 'Yearly'];
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final primaryCalcColor = isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1);
+    final borderColor = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF1F1F1), width: 1.0),
+        border: Border.all(color: borderColor, width: 1.0),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             context.translate('compounding_frequency'),
-            style: AppTextStyles.calculatorLabel,
+            style: AppTextStyles.calculatorLabel.copyWith(color: isDark ? Colors.grey.shade400 : null),
           ),
           DropdownButton<String>(
             value: value,
             underline: Container(),
             elevation: 2,
-            icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF6A53A1)),
+            dropdownColor: theme.cardColor,
+            icon: Icon(Icons.keyboard_arrow_down_rounded, color: primaryCalcColor),
             style: AppTextStyles.calculatorLabel.copyWith(
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF6A53A1),
+              color: primaryCalcColor,
             ),
             items: list.map<DropdownMenuItem<String>>((String val) {
               String displayVal = val;
@@ -56,7 +62,10 @@ class InterestFrequencySelector extends StatelessWidget {
               }
               return DropdownMenuItem<String>(
                 value: val,
-                child: Text(displayVal),
+                child: Text(
+                  displayVal,
+                  style: TextStyle(color: theme.colorScheme.onSurface),
+                ),
               );
             }).toList(),
             onChanged: onChanged,

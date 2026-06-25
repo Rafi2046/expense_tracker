@@ -8,6 +8,9 @@ class NotificationEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -24,7 +27,7 @@ class NotificationEmptyState extends StatelessWidget {
                 return Icon(
                   Icons.notifications_off_outlined,
                   size: 80,
-                  color: Colors.grey.shade300,
+                  color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                 );
               },
             ),
@@ -34,7 +37,7 @@ class NotificationEmptyState extends StatelessWidget {
               style: GoogleFonts.workSans(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 8),
@@ -43,7 +46,7 @@ class NotificationEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
               style: GoogleFonts.workSans(
                 fontSize: 14,
-                color: Colors.grey.shade500,
+                color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
                 height: 1.4,
               ),
             ),

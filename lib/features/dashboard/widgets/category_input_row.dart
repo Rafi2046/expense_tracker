@@ -17,22 +17,29 @@ class CategoryInputRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade200),
       ),
       child: Row(
         children: [
           Expanded(
             child: TextField(
               controller: controller,
+              style: GoogleFonts.workSans(
+                color: theme.colorScheme.onSurface,
+                fontSize: 14.5,
+              ),
               decoration: InputDecoration(
                 hintText: 'Add new category...',
                 hintStyle: GoogleFonts.workSans(
-                  color: Colors.grey.shade400,
+                  color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                   fontSize: 14,
                 ),
                 border: InputBorder.none,

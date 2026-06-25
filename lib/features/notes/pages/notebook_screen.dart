@@ -24,16 +24,18 @@ class _NotebookScreenState extends State<NotebookScreen> {
   }
 
   Future<bool?> _showDeleteConfirmationDialog(BuildContext context) {
+    final theme = Theme.of(context);
     return showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: theme.cardColor,
         title: Text(
           'Delete Note?',
-          style: AppTextStyles.dialogTitle,
+          style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface),
         ),
-        content: const Text(
+        content: Text(
           'Are you sure you want to delete this note permanently?',
-          style: TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: 14, color: theme.colorScheme.onSurface),
         ),
         actions: [
           TextButton(
@@ -63,19 +65,20 @@ class _NotebookScreenState extends State<NotebookScreen> {
     return '${months[dt.month - 1]} ${dt.day}, ${dt.year}';
   }
 
-  Widget _buildCategoryBadge(String category) {
-    Color bg = const Color(0xFFF1EFF5);
-    Color fg = Colors.black87;
+  Widget _buildCategoryBadge(BuildContext context, String category) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    Color bg = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1EFF5);
+    Color fg = isDark ? Colors.white70 : Colors.black87;
 
     if (category == 'Business') {
-      bg = const Color(0xFFE8F8F5);
-      fg = AppColors.activeGreen;
+      bg = isDark ? const Color(0xFF10B981).withValues(alpha: 0.15) : const Color(0xFFE8F8F5);
+      fg = isDark ? const Color(0xFF10B981) : AppColors.activeGreen;
     } else if (category == 'Personal') {
-      bg = const Color(0xFFEBF5FB);
-      fg = Colors.blue.shade700;
+      bg = isDark ? Colors.blue.withValues(alpha: 0.15) : const Color(0xFFEBF5FB);
+      fg = isDark ? Colors.blue.shade400 : Colors.blue.shade700;
     } else if (category == 'General') {
-      bg = const Color(0xFFFEF9E7);
-      fg = Colors.orange.shade800;
+      bg = isDark ? Colors.orange.withValues(alpha: 0.15) : const Color(0xFFFEF9E7);
+      fg = isDark ? Colors.orange.shade400 : Colors.orange.shade800;
     }
 
     return Container(
@@ -100,15 +103,17 @@ class _NotebookScreenState extends State<NotebookScreen> {
   Widget build(BuildContext context) {
     final noteProvider = context.watch<NoteProvider>();
     final notesList = noteProvider.searchNotes(_searchQuery);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.cardColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -116,6 +121,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
           style: AppTextStyles.appbarTitle.copyWith(
             fontFamily: GoogleFonts.workSans().fontFamily,
             fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurface,
           ),
         ),
       ),
@@ -134,7 +140,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
         children: [
           // Search box container
           Container(
-            color: Colors.white,
+            color: theme.cardColor,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: TextField(
               controller: _searchController,
@@ -145,16 +151,17 @@ class _NotebookScreenState extends State<NotebookScreen> {
               },
               style: TextStyle(
                 fontSize: 15,
+                color: theme.colorScheme.onSurface,
                 fontFamily: GoogleFonts.workSans().fontFamily,
               ),
               decoration: InputDecoration(
                 hintText: 'Search notes...',
                 hintStyle: TextStyle(
-                  color: Colors.grey.shade400,
+                  color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                   fontSize: 15,
                   fontFamily: GoogleFonts.workSans().fontFamily,
                 ),
-                prefixIcon: Icon(Icons.search, color: Colors.grey.shade400, size: 20),
+                prefixIcon: Icon(Icons.search, color: isDark ? Colors.grey.shade500 : Colors.grey.shade400, size: 20),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.clear, size: 18),
@@ -167,7 +174,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                       )
                     : null,
                 filled: true,
-                fillColor: const Color(0xFFF5F5F5),
+                fillColor: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF5F5F5),
                 contentPadding: const EdgeInsets.symmetric(vertical: 10),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -192,14 +199,14 @@ class _NotebookScreenState extends State<NotebookScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.note_alt_outlined, size: 64, color: Colors.grey.shade300),
+                              Icon(Icons.note_alt_outlined, size: 64, color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
                               const SizedBox(height: 16),
                               Text(
                                 _searchQuery.isEmpty ? 'No notes yet' : 'No matching notes found',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.grey.shade600,
+                                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                                   fontFamily: GoogleFonts.workSans().fontFamily,
                                 ),
                               ),
@@ -211,7 +218,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: Colors.grey.shade400,
+                                  color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                                   fontFamily: GoogleFonts.workSans().fontFamily,
                                 ),
                               ),
@@ -232,9 +239,9 @@ class _NotebookScreenState extends State<NotebookScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           margin: const EdgeInsets.only(bottom: 12),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFEE2E2), // soft light red (Tailwind red-100)
+                            color: isDark ? Colors.red.withValues(alpha: 0.1) : const Color(0xFFFEE2E2), // soft light red (Tailwind red-100)
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: const Color(0xFFFCA5A5)), // Tailwind red-300
+                            border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFFCA5A5)), // Tailwind red-300
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -242,16 +249,16 @@ class _NotebookScreenState extends State<NotebookScreen> {
                               Text(
                                 'Swipe to delete',
                                 style: TextStyle(
-                                  color: const Color(0xFFB91C1C), // Tailwind red-700
+                                  color: isDark ? Colors.red.shade400 : const Color(0xFFB91C1C), // Tailwind red-700
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
                                   fontFamily: GoogleFonts.workSans().fontFamily,
                                 ),
                               ),
                               const SizedBox(width: 8),
-                              const Icon(
+                              Icon(
                                 Icons.delete_outline_rounded,
-                                color: Color(0xFFB91C1C), // Tailwind red-700
+                                color: isDark ? Colors.red.shade400 : const Color(0xFFB91C1C), // Tailwind red-700
                                 size: 24,
                               ),
                             ],
@@ -279,12 +286,12 @@ class _NotebookScreenState extends State<NotebookScreen> {
                         child: Container(
                           margin: const EdgeInsets.only(bottom: 12),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: theme.cardColor,
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: const Color(0xFFF0F0F0)),
+                            border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF0F0F0)),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withAlpha(5),
+                                color: Colors.black.withValues(alpha: 0.02),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -316,7 +323,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.black87,
+                                            color: theme.colorScheme.onSurface,
                                             fontFamily: GoogleFonts.workSans().fontFamily,
                                           ),
                                         ),
@@ -347,7 +354,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                         },
                                         child: Icon(
                                           Icons.delete_outline_rounded,
-                                          color: Colors.grey.shade400,
+                                          color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                                           size: 20,
                                         ),
                                       ),
@@ -363,7 +370,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                     style: TextStyle(
                                       fontSize: 14,
                                       height: 1.4,
-                                      color: Colors.grey.shade600,
+                                      color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                                       fontFamily: GoogleFonts.inter().fontFamily,
                                     ),
                                   ),
@@ -377,11 +384,11 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                         _formatDate(note.createdAt),
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Colors.grey.shade400,
+                                          color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                                           fontFamily: GoogleFonts.workSans().fontFamily,
                                         ),
                                       ),
-                                      _buildCategoryBadge(note.category),
+                                      _buildCategoryBadge(context, note.category),
                                     ],
                                   ),
                                 ],

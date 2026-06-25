@@ -21,14 +21,15 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
     super.dispose();
   }
 
-  Widget _buildFlagIcon(String flagEmoji) {
+  Widget _buildFlagIcon(BuildContext context, String flagEmoji) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: 40,
       height: 40,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: const Color(0xFFF9FAFB),
-        border: Border.all(color: const Color(0xFFF3F4F6), width: 1.5),
+        color: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF9FAFB),
+        border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF3F4F6), width: 1.5),
       ),
       alignment: Alignment.center,
       child: Text(
@@ -45,6 +46,10 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
   Widget build(BuildContext context) {
     final provider = context.watch<CurrencyProvider>();
     final selectedCurrency = provider.selectedCurrency;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final activeGreenColor = isDark ? const Color(0xFF10B981) : const Color(0xFF064E3B);
+    final borderColor = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFE5E7EB);
 
     // Filter currencies based on search query
     final filtered = provider.currencies.where((c) {
@@ -73,13 +78,13 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
       });
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.cardColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF1F2937), size: 20),
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () {
             if (_isSearching) {
               setState(() {
@@ -96,26 +101,26 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
             ? Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF3F4F6),
+                  color: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF3F4F6),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Row(
                   children: [
-                    const Icon(Icons.search, color: Color(0xFF9CA3AF), size: 18),
+                    Icon(Icons.search, color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF), size: 18),
                     const SizedBox(width: 8),
                     Expanded(
                       child: TextField(
                         controller: _searchController,
                         autofocus: true,
                         style: GoogleFonts.workSans(
-                          color: const Color(0xFF1F2937),
+                          color: theme.colorScheme.onSurface,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
                         decoration: InputDecoration(
                           hintText: 'Search currency...',
-                          hintStyle: GoogleFonts.workSans(color: const Color(0xFF9CA3AF), fontSize: 14),
+                          hintStyle: GoogleFonts.workSans(color: isDark ? Colors.grey.shade600 : const Color(0xFF9CA3AF), fontSize: 14),
                           border: InputBorder.none,
                           isDense: true,
                         ),
@@ -132,37 +137,31 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
             : Text(
                 'Select Currency',
                 style: GoogleFonts.workSans(
-                  color: const Color(0xFF1F2937),
+                  color: theme.colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                   fontSize: 17,
                 ),
               ),
         centerTitle: true,
         actions: [
-          if (!_isSearching)
-            IconButton(
-              icon: const Icon(Icons.search, color: Color(0xFF1F2937), size: 20),
-              onPressed: () {
-                setState(() {
-                  _isSearching = true;
-                });
-              },
-            )
-          else
-            IconButton(
-              icon: const Icon(Icons.close, color: Color(0xFF1F2937), size: 20),
-              onPressed: () {
-                setState(() {
+          IconButton(
+            icon: Icon(_isSearching ? Icons.close : Icons.search, color: theme.colorScheme.onSurface, size: 20),
+            onPressed: () {
+              setState(() {
+                if (_isSearching) {
                   _isSearching = false;
                   _searchQuery = '';
                   _searchController.clear();
-                });
-              },
-            ),
+                } else {
+                  _isSearching = true;
+                }
+              });
+            },
+          ),
         ],
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(1),
-          child: Divider(color: Color(0xFFE5E7EB), height: 1, thickness: 1),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Divider(color: borderColor, height: 1, thickness: 1),
         ),
       ),
       body: SafeArea(
@@ -176,16 +175,16 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                 style: GoogleFonts.workSans(
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF9CA3AF),
+                  color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF),
                   letterSpacing: 1.2,
                 ),
               ),
               const SizedBox(height: 10),
               Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF9FAFB),
+                  color: theme.cardColor,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
+                  border: Border.all(color: borderColor, width: 1),
                 ),
                 child: Material(
                   color: Colors.transparent,
@@ -198,7 +197,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       child: Row(
                         children: [
-                          _buildFlagIcon(selectedCurrency.flag),
+                          _buildFlagIcon(context, selectedCurrency.flag),
                           const SizedBox(width: 14),
                           Expanded(
                             child: Column(
@@ -208,7 +207,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                                   selectedCurrency.name,
                                   style: GoogleFonts.workSans(
                                     fontSize: 15,
-                                    color: const Color(0xFF1F2937),
+                                    color: theme.colorScheme.onSurface,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -217,7 +216,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                                   selectedCurrency.code,
                                   style: GoogleFonts.workSans(
                                     fontSize: 12,
-                                    color: const Color(0xFF6B7280),
+                                    color: isDark ? Colors.grey.shade400 : const Color(0xFF6B7280),
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -229,13 +228,13 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                             style: GoogleFonts.workSans(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
-                              color: const Color(0xFF064E3B),
+                              color: activeGreenColor,
                             ),
                           ),
                           const SizedBox(width: 14),
-                          const Icon(
+                          Icon(
                             Icons.check_circle_rounded,
-                            color: Color(0xFF064E3B),
+                            color: activeGreenColor,
                             size: 22,
                           ),
                         ],
@@ -254,7 +253,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                 child: Center(
                   child: Text(
                     'No currencies found',
-                    style: GoogleFonts.workSans(color: const Color(0xFF9CA3AF), fontSize: 15),
+                    style: GoogleFonts.workSans(color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF), fontSize: 15),
                   ),
                 ),
               )
@@ -267,7 +266,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                     style: GoogleFonts.workSans(
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
-                      color: const Color(0xFF9CA3AF),
+                      color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF),
                       letterSpacing: 1.5,
                     ),
                   ),
@@ -276,8 +275,8 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: grouped[region]!.length,
-                  separatorBuilder: (context, index) => const Divider(
-                    color: Color(0xFFE5E7EB),
+                  separatorBuilder: (context, index) => Divider(
+                    color: borderColor,
                     height: 1,
                     thickness: 1,
                   ),
@@ -294,7 +293,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                         height: 68,
                         child: Row(
                           children: [
-                            _buildFlagIcon(currency.flag),
+                            _buildFlagIcon(context, currency.flag),
                             const SizedBox(width: 14),
                             Expanded(
                               child: Column(
@@ -305,7 +304,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                                     currency.name,
                                     style: GoogleFonts.workSans(
                                       fontSize: 15,
-                                      color: const Color(0xFF1F2937),
+                                      color: theme.colorScheme.onSurface,
                                       fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w400,
                                     ),
                                   ),
@@ -314,7 +313,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                                     currency.code,
                                     style: GoogleFonts.workSans(
                                       fontSize: 12,
-                                      color: const Color(0xFF6B7280),
+                                      color: isDark ? Colors.grey.shade400 : const Color(0xFF6B7280),
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -326,14 +325,14 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                               style: GoogleFonts.workSans(
                                 fontSize: 16,
                                 fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w500,
-                                color: isCurrent ? const Color(0xFF064E3B) : const Color(0xFF6B7280),
+                                color: isCurrent ? activeGreenColor : (isDark ? Colors.grey.shade400 : const Color(0xFF6B7280)),
                               ),
                             ),
                             if (isCurrent) ...[
                               const SizedBox(width: 14),
-                              const Icon(
+                              Icon(
                                 Icons.check_circle_rounded,
-                                color: Color(0xFF064E3B),
+                                color: activeGreenColor,
                                 size: 22,
                               ),
                             ],
@@ -343,7 +342,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                     );
                   },
                 ),
-                const Divider(color: Color(0xFFE5E7EB), height: 1, thickness: 1),
+                Divider(color: borderColor, height: 1, thickness: 1),
               ],
           ],
         ),

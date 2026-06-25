@@ -15,6 +15,7 @@ class CalculatorLegendItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       children: [
         Container(
@@ -31,7 +32,7 @@ class CalculatorLegendItem extends StatelessWidget {
           style: GoogleFonts.workSans(
             fontSize: 12,
             fontWeight: FontWeight.w500,
-            color: Colors.grey.shade600,
+            color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
           ),
         ),
       ],

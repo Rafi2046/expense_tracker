@@ -30,7 +30,8 @@ class PersonalInfoView extends StatelessWidget {
     required this.onEditTap,
   });
 
-  Widget _buildInfoRow({
+  Widget _buildInfoRow(
+    BuildContext context, {
     required IconData icon,
     required String label,
     required String value,
@@ -38,6 +39,8 @@ class PersonalInfoView extends StatelessWidget {
     Color iconBgColor = const Color(0xFFF3E8FF),
     Widget? trailing,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final resolvedIconBg = isDark ? iconColor.withValues(alpha: 0.15) : iconBgColor;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -45,7 +48,7 @@ class PersonalInfoView extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: iconBgColor,
+              color: resolvedIconBg,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, color: iconColor, size: 18),
@@ -60,7 +63,7 @@ class PersonalInfoView extends StatelessWidget {
                   style: GoogleFonts.workSans(
                     fontSize: 11.5,
                     fontWeight: FontWeight.w500,
-                    color: Colors.grey.shade500,
+                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -71,7 +74,9 @@ class PersonalInfoView extends StatelessWidget {
                   style: GoogleFonts.workSans(
                     fontSize: 14.5,
                     fontWeight: FontWeight.w600,
-                    color: value.isEmpty ? Colors.grey.shade400 : Colors.black87,
+                    color: value.isEmpty 
+                        ? (isDark ? Colors.grey.shade600 : Colors.grey.shade400) 
+                        : Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ],
@@ -85,6 +90,12 @@ class PersonalInfoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardBg = theme.cardColor;
+    final borderColor = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1);
+    final primaryColor = isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -92,7 +103,7 @@ class PersonalInfoView extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: cardBg,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
@@ -101,7 +112,7 @@ class PersonalInfoView extends StatelessWidget {
                 offset: const Offset(0, 8),
               ),
             ],
-            border: Border.all(color: const Color(0xFFF1F1F1), width: 1),
+            border: Border.all(color: borderColor, width: 1),
           ),
           child: Column(
             children: [
@@ -111,11 +122,11 @@ class PersonalInfoView extends StatelessWidget {
                 height: 90,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white,
-                  border: Border.all(color: const Color(0xFF6A53A1), width: 2.5),
+                  color: cardBg,
+                  border: Border.all(color: primaryColor, width: 2.5),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF6A53A1).withValues(alpha: 0.15),
+                      color: primaryColor.withValues(alpha: 0.15),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -125,7 +136,7 @@ class PersonalInfoView extends StatelessWidget {
                   padding: const EdgeInsets.all(2.0),
                   child: CircleAvatar(
                     radius: 40,
-                    backgroundColor: Colors.grey.shade100,
+                    backgroundColor: isDark ? Colors.grey.shade900 : Colors.grey.shade100,
                     backgroundImage: localImageFile != null
                         ? FileImage(localImageFile!) as ImageProvider
                         : (photoUrl.startsWith('http')
@@ -144,7 +155,7 @@ class PersonalInfoView extends StatelessWidget {
                 style: GoogleFonts.workSans(
                   fontSize: 19,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1F2937),
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
               if (occupation.isNotEmpty) ...[
@@ -155,7 +166,7 @@ class PersonalInfoView extends StatelessWidget {
                   style: GoogleFonts.workSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF6A53A1),
+                    color: primaryColor,
                   ),
                 ),
               ],
@@ -170,7 +181,7 @@ class PersonalInfoView extends StatelessWidget {
           style: GoogleFonts.workSans(
             fontSize: 11,
             fontWeight: FontWeight.bold,
-            color: Colors.grey.shade400,
+            color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
             letterSpacing: 1.2,
           ),
         ),
@@ -178,7 +189,7 @@ class PersonalInfoView extends StatelessWidget {
 
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: cardBg,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -187,36 +198,40 @@ class PersonalInfoView extends StatelessWidget {
                 offset: const Offset(0, 4),
               ),
             ],
-            border: Border.all(color: const Color(0xFFF1F1F1), width: 1),
+            border: Border.all(color: borderColor, width: 1),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           child: Column(
             children: [
               _buildInfoRow(
+                context,
                 icon: Icons.phone_outlined,
                 label: 'Phone Number',
                 value: phone,
                 iconColor: const Color(0xFF1E88E5),
                 iconBgColor: const Color(0xFFE3F2FD),
               ),
-              const Divider(height: 1, color: Color(0xFFF1F1F1)),
+              Divider(height: 1, color: borderColor),
               _buildInfoRow(
+                context,
                 icon: Icons.cake_outlined,
                 label: 'Date of Birth',
                 value: dob,
                 iconColor: const Color(0xFFD81B60),
                 iconBgColor: const Color(0xFFFCE4EC),
               ),
-              const Divider(height: 1, color: Color(0xFFF1F1F1)),
+              Divider(height: 1, color: borderColor),
               _buildInfoRow(
+                context,
                 icon: gender == 'Male' ? Icons.male : Icons.female,
                 label: 'Gender',
                 value: gender,
                 iconColor: gender == 'Male' ? const Color(0xFF1E88E5) : const Color(0xFFD81B60),
                 iconBgColor: gender == 'Male' ? const Color(0xFFE3F2FD) : const Color(0xFFFCE4EC),
               ),
-              const Divider(height: 1, color: Color(0xFFF1F1F1)),
+              Divider(height: 1, color: borderColor),
               _buildInfoRow(
+                context,
                 icon: Icons.mail_outline_rounded,
                 label: 'Email Address',
                 value: user.email ?? '',

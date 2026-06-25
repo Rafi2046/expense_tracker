@@ -21,15 +21,19 @@ class LanguageSelectorSheet extends StatelessWidget {
     final languageProvider = context.watch<LanguageProvider>();
     final languages = languageProvider.supportedLanguages;
     final currentLanguage = languageProvider.currentLanguage;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final iconBgColor = isDark ? const Color(0xFF10B981).withValues(alpha: 0.15) : AppColors.selectionGreenBg;
+    final iconColor = isDark ? const Color(0xFF10B981) : AppColors.buttonColor;
 
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(28),
             topRight: Radius.circular(28),
           ),
@@ -45,7 +49,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                 width: 44,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
@@ -58,12 +62,12 @@ class LanguageSelectorSheet extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: AppColors.selectionGreenBg,
+                    color: iconBgColor,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.translate_rounded,
-                    color: AppColors.buttonColor,
+                    color: iconColor,
                     size: 22,
                   ),
                 ),
@@ -77,7 +81,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                         style: GoogleFonts.workSans(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.loginTitle,
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -85,7 +89,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                         'Select your preferred interface language',
                         style: GoogleFonts.workSans(
                           fontSize: 12.5,
-                          color: AppColors.loginSubTitle,
+                          color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -129,6 +133,15 @@ class LanguageSelectorSheet extends StatelessWidget {
     LanguageProvider provider,
   ) {
     final isSelected = currentLanguage.code == lang.code;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final activeGreenColor = isDark ? const Color(0xFF10B981) : AppColors.activeGreen;
+    final cardBg = isSelected 
+        ? (isDark ? const Color(0xFF1B2A22) : AppColors.selectionGreenBg)
+        : theme.cardColor;
+    final borderColor = isSelected 
+        ? activeGreenColor 
+        : (isDark ? const Color(0xFF2D2D2D) : const Color(0xFFE5E7EB));
 
     return GestureDetector(
       onTap: () {
@@ -139,18 +152,16 @@ class LanguageSelectorSheet extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.selectionGreenBg : AppColors.white,
+          color: cardBg,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected 
-                ? AppColors.activeGreen 
-                : const Color(0xFFE5E7EB),
+            color: borderColor,
             width: isSelected ? 2.0 : 1.0,
           ),
           boxShadow: [
             BoxShadow(
               color: isSelected 
-                  ? AppColors.activeGreen.withValues(alpha: 0.05) 
+                  ? activeGreenColor.withValues(alpha: 0.05) 
                   : Colors.black.withValues(alpha: 0.02),
               blurRadius: 12,
               offset: const Offset(0, 4),
@@ -175,7 +186,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                   style: GoogleFonts.workSans(
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                     fontSize: 15.5,
-                    color: AppColors.loginTitle,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -185,19 +196,19 @@ class LanguageSelectorSheet extends StatelessWidget {
                   _getNativeName(lang.code),
                   style: GoogleFonts.workSans(
                     fontSize: 12.5,
-                    color: AppColors.loginSubTitle,
+                    color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
             ),
             if (isSelected)
-              const Positioned(
+              Positioned(
                 top: 0,
                 right: 0,
                 child: Icon(
                   Icons.check_circle_rounded,
-                  color: AppColors.activeGreen,
+                  color: activeGreenColor,
                   size: 20,
                 ),
               ),

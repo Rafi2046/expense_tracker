@@ -43,13 +43,16 @@ class PersonalInfoEdit extends StatelessWidget {
     required this.onCancel,
   });
 
-  Widget _buildTextField({
+  Widget _buildTextField(
+    BuildContext context, {
     required String label,
     required String hintText,
     required TextEditingController controller,
     required IconData prefixIcon,
     TextInputType keyboardType = TextInputType.text,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -58,24 +61,24 @@ class PersonalInfoEdit extends StatelessWidget {
           style: GoogleFonts.workSans(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: Colors.black54,
+            color: isDark ? Colors.grey.shade400 : Colors.black54,
           ),
         ),
         const SizedBox(height: 6),
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
-          style: GoogleFonts.workSans(fontSize: 14.5, color: Colors.black87),
+          style: GoogleFonts.workSans(fontSize: 14.5, color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
             filled: true,
-            fillColor: const Color(0xFFF5F6F8),
+            fillColor: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF5F6F8),
             prefixIcon: Icon(
               prefixIcon,
-              color: Colors.grey.shade500,
+              color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
               size: 18,
             ),
             hintText: hintText,
-            hintStyle: GoogleFonts.workSans(fontSize: 14, color: Colors.grey.shade400),
+            hintStyle: GoogleFonts.workSans(fontSize: 14, color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -87,7 +90,7 @@ class PersonalInfoEdit extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF6A53A1), width: 1.5),
+              borderSide: BorderSide(color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1), width: 1.5),
             ),
           ),
         ),
@@ -97,6 +100,13 @@ class PersonalInfoEdit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final cardBg = theme.cardColor;
+    final borderColor = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1);
+    final primaryColor = isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1);
+    final inputBg = isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF5F6F8);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -104,7 +114,7 @@ class PersonalInfoEdit extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: cardBg,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
@@ -113,7 +123,7 @@ class PersonalInfoEdit extends StatelessWidget {
                 offset: const Offset(0, 8),
               ),
             ],
-            border: Border.all(color: const Color(0xFFF1F1F1), width: 1),
+            border: Border.all(color: borderColor, width: 1),
           ),
           child: Center(
             child: Stack(
@@ -123,11 +133,11 @@ class PersonalInfoEdit extends StatelessWidget {
                   padding: const EdgeInsets.all(2.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white,
-                    border: Border.all(color: const Color(0xFF6A53A1), width: 2.5),
+                    color: cardBg,
+                    border: Border.all(color: primaryColor, width: 2.5),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF6A53A1).withValues(alpha: 0.15),
+                        color: primaryColor.withValues(alpha: 0.15),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -135,7 +145,7 @@ class PersonalInfoEdit extends StatelessWidget {
                   ),
                   child: CircleAvatar(
                     radius: 44,
-                    backgroundColor: Colors.grey.shade100,
+                    backgroundColor: isDark ? Colors.grey.shade900 : Colors.grey.shade100,
                     backgroundImage: localImageFile != null
                         ? FileImage(localImageFile!) as ImageProvider
                         : (photoUrl.startsWith('http')
@@ -149,8 +159,8 @@ class PersonalInfoEdit extends StatelessWidget {
                   onTap: onPickImage,
                   child: Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF6A53A1),
+                    decoration: BoxDecoration(
+                      color: primaryColor,
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -171,6 +181,7 @@ class PersonalInfoEdit extends StatelessWidget {
           children: [
             Expanded(
               child: _buildTextField(
+                context,
                 label: 'First Name',
                 hintText: 'First Name',
                 controller: firstNameController,
@@ -180,6 +191,7 @@ class PersonalInfoEdit extends StatelessWidget {
             const SizedBox(width: 16),
             Expanded(
               child: _buildTextField(
+                context,
                 label: 'Last Name',
                 hintText: 'Last Name',
                 controller: lastNameController,
@@ -192,6 +204,7 @@ class PersonalInfoEdit extends StatelessWidget {
 
         // Phone Input
         _buildTextField(
+          context,
           label: 'Phone Number',
           hintText: 'Enter phone number',
           controller: phoneController,
@@ -209,7 +222,7 @@ class PersonalInfoEdit extends StatelessWidget {
               style: GoogleFonts.workSans(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: Colors.black54,
+                color: isDark ? Colors.grey.shade400 : Colors.black54,
               ),
             ),
             const SizedBox(height: 6),
@@ -217,17 +230,17 @@ class PersonalInfoEdit extends StatelessWidget {
               controller: dobController,
               readOnly: true,
               onTap: onSelectDate,
-              style: GoogleFonts.workSans(fontSize: 14.5, color: Colors.black87),
+              style: GoogleFonts.workSans(fontSize: 14.5, color: theme.colorScheme.onSurface),
               decoration: InputDecoration(
                 filled: true,
-                fillColor: const Color(0xFFF5F6F8),
+                fillColor: inputBg,
                 prefixIcon: Icon(
                   Icons.cake_outlined,
-                  color: Colors.grey.shade500,
+                  color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                   size: 18,
                 ),
                 hintText: 'DD/MM/YYYY',
-                hintStyle: GoogleFonts.workSans(fontSize: 14, color: Colors.grey.shade400),
+                hintStyle: GoogleFonts.workSans(fontSize: 14, color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -239,11 +252,11 @@ class PersonalInfoEdit extends StatelessWidget {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF6A53A1), width: 1.5),
+                  borderSide: BorderSide(color: primaryColor, width: 1.5),
                 ),
                 suffixIcon: Icon(
                   Icons.calendar_today_rounded,
-                  color: Colors.grey.shade500,
+                  color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                   size: 18,
                 ),
               ),
@@ -261,7 +274,7 @@ class PersonalInfoEdit extends StatelessWidget {
               style: GoogleFonts.workSans(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: Colors.black54,
+                color: isDark ? Colors.grey.shade400 : Colors.black54,
               ),
             ),
             const SizedBox(height: 8),
@@ -282,7 +295,7 @@ class PersonalInfoEdit extends StatelessWidget {
                       ),
                       height: 46,
                       decoration: BoxDecoration(
-                        color: isSelected ? activeColor : const Color(0xFFF5F6F8),
+                        color: isSelected ? activeColor : inputBg,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: isSelected ? activeColor : Colors.transparent,
@@ -303,7 +316,7 @@ class PersonalInfoEdit extends StatelessWidget {
                           Text(
                             gender,
                             style: GoogleFonts.workSans(
-                              color: isSelected ? Colors.white : Colors.black87,
+                              color: isSelected ? Colors.white : theme.colorScheme.onSurface,
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
                             ),
@@ -321,6 +334,7 @@ class PersonalInfoEdit extends StatelessWidget {
 
         // Occupation Input
         _buildTextField(
+          context,
           label: 'Occupation',
           hintText: 'e.g. Software Engineer',
           controller: occupationController,
@@ -337,7 +351,7 @@ class PersonalInfoEdit extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: AppColors.loginLabelColor,
+                color: isDark ? Colors.grey.shade400 : AppColors.loginLabelColor,
                 fontFamily: GoogleFonts.workSans().fontFamily,
               ),
             ),
@@ -346,9 +360,9 @@ class PersonalInfoEdit extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               decoration: BoxDecoration(
-                color: const Color(0xFFF9F9FB),
+                color: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF9F9FB),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade200, width: 1.0),
+                border: Border.all(color: borderColor, width: 1.0),
               ),
               child: Row(
                 children: [
@@ -359,7 +373,7 @@ class PersonalInfoEdit extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.workSans(
                         fontSize: 15,
-                        color: Colors.black54,
+                        color: isDark ? Colors.grey.shade400 : Colors.black54,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -378,10 +392,10 @@ class PersonalInfoEdit extends StatelessWidget {
               child: CustomButton(
                 text: 'Cancel',
                 onPressed: isLoading ? () {} : onCancel,
-                backgroundColor: Colors.white,
-                textColor: const Color(0xFF31394D),
+                backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                textColor: theme.colorScheme.onSurface,
                 showBorder: true,
-                borderColor: AppColors.dividerColor,
+                borderColor: borderColor,
               ),
             ),
             const SizedBox(width: 12),
@@ -389,7 +403,7 @@ class PersonalInfoEdit extends StatelessWidget {
               child: CustomButton(
                 text: isLoading ? 'Saving...' : 'Save',
                 onPressed: isLoading ? () {} : onSave,
-                backgroundColor: const Color(0xFF0C4E3C),
+                backgroundColor: isDark ? const Color(0xFF0C4E3C) : const Color(0xFF0C4E3C),
                 textColor: Colors.white,
               ),
             ),

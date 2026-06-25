@@ -24,19 +24,22 @@ class CalculatorBreakdownCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF1F1F1), width: 1.0),
+        border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1), width: 1.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: AppTextStyles.profileCardTitle,
+            style: AppTextStyles.profileCardTitle.copyWith(color: theme.colorScheme.onSurface),
           ),
           const SizedBox(height: 16),
           ClipRRect(
@@ -44,7 +47,7 @@ class CalculatorBreakdownCard extends StatelessWidget {
             child: Container(
               height: 12,
               width: double.infinity,
-              color: const Color(0xFFF0F0F0),
+              color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF0F0F0),
               child: Row(
                 children: [
                   if (ratio1 > 0)

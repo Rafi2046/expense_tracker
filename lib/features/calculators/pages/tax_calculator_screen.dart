@@ -81,24 +81,28 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
   @override
   Widget build(BuildContext context) {
     final symbol = context.currencySymbol;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final primaryCalcColor = isDark ? const Color(0xFFF08955) : const Color(0xFFE06C45);
+    final borderColor = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.cardColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black87, size: 20),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           context.translate('tax_calculator'),
-          style: AppTextStyles.calculatorTitle,
+          style: AppTextStyles.calculatorTitle.copyWith(color: theme.colorScheme.onSurface),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
+          child: Container(color: borderColor, height: 1.0),
         ),
       ),
       body: SafeArea(
@@ -129,8 +133,10 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
               CalculatorResultCard(
                 label: context.translate('tax_amount'),
                 value: context.formatAmount(_taxAmount),
-                gradientColors: const [Color(0xFFE06C45), Color(0xFFF08955)],
-                shadowColor: const Color(0xFFE06C45),
+                gradientColors: isDark 
+                    ? const [Color(0xFF8F4125), Color(0xFFF08955)]
+                    : const [Color(0xFFE06C45), Color(0xFFF08955)],
+                shadowColor: isDark ? const Color(0xFF8F4125) : const Color(0xFFE06C45),
                 subItems: [
                   CalculatorResultItem(title: context.translate('base_amount'), value: context.formatAmount(_baseAmount)),
                   CalculatorResultItem(title: context.translate('tax_rate'), value: '${_taxRate.toStringAsFixed(1)}%'),
@@ -141,7 +147,7 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
 
               CalculatorInfoCard(
                 title: context.translate('tax_calculation_info'),
-                themeColor: const Color(0xFFE06C45),
+                themeColor: primaryCalcColor,
                 items: [
                   CalculatorInfoItem(
                     label: context.translate('tax_exclusive'),
@@ -161,7 +167,7 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
                 controller: _amountController,
                 prefix: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 8),
-                  child: Text(symbol, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFE06C45))),
+                  child: Text(symbol, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -170,9 +176,9 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
                 label: context.translate('tax_rate'),
                 hintText: context.translate('tax_rate'),
                 controller: _rateController,
-                suffix: const Padding(
-                  padding: EdgeInsets.only(left: 8, right: 16),
-                  child: Text('%', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFE06C45))),
+                suffix: Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 16),
+                  child: Text('%', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 24),
@@ -180,7 +186,7 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
               ElevatedButton(
                 onPressed: _performCalculation,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE06C45),
+                  backgroundColor: primaryCalcColor,
                   foregroundColor: Colors.white,
                   minimumSize: const Size.fromHeight(52),
                   elevation: 0,

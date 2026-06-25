@@ -122,13 +122,22 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
       builder: (context, child) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF6A53A1),
-              onPrimary: Colors.white,
-              onSurface: Colors.black87,
-            ),
+            colorScheme: isDark
+                ? const ColorScheme.dark(
+                    primary: Color(0xFF8E75C8),
+                    onPrimary: Colors.white,
+                    surface: Color(0xFF1E1E1E),
+                    onSurface: Colors.white,
+                  )
+                : const ColorScheme.light(
+                    primary: Color(0xFF6A53A1),
+                    onPrimary: Colors.white,
+                    surface: Colors.white,
+                    onSurface: Colors.black87,
+                  ),
           ),
           child: child!,
         );
@@ -204,17 +213,19 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final displayName = _user.displayName ?? 'Guest User';
     final occupation = _occupationController.text.trim();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.cardColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black87, size: 20),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -222,26 +233,29 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           style: GoogleFonts.workSans(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: theme.colorScheme.onSurface,
           ),
         ),
         actions: [
           if (!_isEditing)
             TextButton.icon(
               onPressed: () => setState(() => _isEditing = true),
-              icon: const Icon(Icons.edit_rounded, size: 16, color: Color(0xFF6A53A1)),
+              icon: Icon(Icons.edit_rounded, size: 16, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1)),
               label: Text(
                 'Edit',
                 style: GoogleFonts.workSans(
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF6A53A1),
+                  color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1),
                 ),
               ),
             )
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
+          child: Container(
+            color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1),
+            height: 1.0,
+          ),
         ),
       ),
       body: SafeArea(

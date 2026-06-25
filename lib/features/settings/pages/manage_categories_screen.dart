@@ -58,31 +58,34 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TransactionProvider>();
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final primaryTabColor = isDark ? const Color(0xFF8E75C8) : AppColors.buttonColor;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.cardColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           context.translate('manage_categories'),
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: theme.colorScheme.onSurface,
             fontSize: 18,
           ),
         ),
         centerTitle: true,
         bottom: TabBar(
           controller: _tabController,
-          labelColor: AppColors.buttonColor,
+          labelColor: primaryTabColor,
           unselectedLabelColor: Colors.grey,
-          indicatorColor: AppColors.buttonColor,
+          indicatorColor: primaryTabColor,
           labelStyle: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
             fontSize: 14,
@@ -111,6 +114,8 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
         ? provider.incomeCategories
         : provider.expenseCategories;
     final themeColor = isIncome ? AppColors.activeGreen : AppColors.activeRed;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -141,7 +146,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
                         Text(
                           context.translate('no_categories_yet'),
                           style: GoogleFonts.workSans(
-                            color: Colors.grey.shade400,
+                            color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                             fontSize: 14,
                           ),
                         ),
@@ -155,9 +160,9 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
                       return Container(
                         margin: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: theme.cardColor,
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: const Color(0xFFF0F0F0)),
+                          border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF0F0F0)),
                         ),
                         child: CategoryListRow(
                           categoryName: cat,

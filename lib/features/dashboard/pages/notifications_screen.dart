@@ -36,11 +36,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     NotificationItem item,
     NotificationProvider provider,
   ) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     provider.markAsRead(item.id);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: theme.cardColor,
         title: Row(
           children: [
             Icon(_getTypeIcon(item.type), color: _getTypeColor(item.type)),
@@ -51,6 +54,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 style: GoogleFonts.workSans(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
             ),
@@ -60,7 +64,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           item.description,
           style: GoogleFonts.workSans(
             fontSize: 14,
-            color: AppColors.loginTitle,
+            color: isDark ? Colors.grey.shade300 : AppColors.loginTitle,
             height: 1.4,
           ),
         ),
@@ -71,7 +75,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               context.translate('close'),
               style: GoogleFonts.workSans(
                 fontWeight: FontWeight.bold,
-                color: AppColors.buttonColor,
+                color: isDark ? const Color(0xFF8E75C8) : AppColors.buttonColor,
               ),
             ),
           ),
@@ -111,22 +115,24 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     final provider = context.watch<NotificationProvider>();
     final allNotifications = provider.notifications;
     final filtered = _getFilteredNotifications(allNotifications);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: theme.cardColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           context.translate('notifications'),
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: theme.colorScheme.onSurface,
             fontSize: 18,
           ),
         ),
@@ -147,7 +153,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
+          child: Container(
+            color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1),
+            height: 1.0,
+          ),
         ),
       ),
       body: Column(
@@ -155,7 +164,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           // Filter Chips Row
           if (allNotifications.isNotEmpty)
             Container(
-              color: AppColors.white,
+              color: theme.cardColor,
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               child: Row(
                 children: [
@@ -188,7 +197,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           padding: const EdgeInsets.only(right: 20.0),
                           margin: const EdgeInsets.only(bottom: 12),
                           decoration: BoxDecoration(
-                            color: Colors.red.shade50,
+                            color: isDark ? Colors.red.withValues(alpha: 0.1) : Colors.red.shade50,
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: const Icon(
@@ -228,6 +237,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   Widget _buildFilterChip(String label) {
     final isSelected = _selectedFilter == label;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final primaryColor = isDark ? const Color(0xFF8E75C8) : AppColors.buttonColor;
+
     return ChoiceChip(
       label: Text(context.translate(label.toLowerCase())),
       selected: isSelected,
@@ -238,10 +251,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           });
         }
       },
-      selectedColor: AppColors.buttonColor.withValues(alpha: 0.15),
-      backgroundColor: Colors.grey.shade100,
+      selectedColor: primaryColor.withValues(alpha: 0.15),
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade100,
       labelStyle: GoogleFonts.workSans(
-        color: isSelected ? AppColors.buttonColor : Colors.grey.shade600,
+        color: isSelected ? primaryColor : (isDark ? Colors.grey.shade400 : Colors.grey.shade600),
         fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
         fontSize: 13,
       ),
@@ -249,7 +262,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
           color: isSelected
-              ? AppColors.buttonColor.withValues(alpha: 0.3)
+              ? primaryColor.withValues(alpha: 0.3)
               : Colors.transparent,
         ),
       ),

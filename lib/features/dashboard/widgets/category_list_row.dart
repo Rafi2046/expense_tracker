@@ -23,6 +23,9 @@ class CategoryListRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Row(
       children: [
         Expanded(
@@ -49,7 +52,7 @@ class CategoryListRow extends StatelessWidget {
                         fontWeight: isSelected
                             ? FontWeight.w600
                             : FontWeight.w400,
-                        color: Colors.black87,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -61,7 +64,7 @@ class CategoryListRow extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: isSelected ? themeColor : Colors.grey.shade300,
+                          color: isSelected ? themeColor : (isDark ? Colors.grey.shade700 : Colors.grey.shade300),
                           width: isSelected ? 6 : 2,
                         ),
                       ),
@@ -76,7 +79,7 @@ class CategoryListRow extends StatelessWidget {
         IconButton(
           icon: Icon(
             Icons.delete_outline_rounded,
-            color: Colors.grey.shade400,
+            color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
             size: 20,
           ),
           onPressed: onDelete,

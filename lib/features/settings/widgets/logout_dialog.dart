@@ -10,11 +10,15 @@ class LogoutDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final borderColor = isDark ? const Color(0xFF2D2D2D) : AppColors.dividerColor;
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: theme.cardColor,
       insetPadding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -26,8 +30,8 @@ class LogoutDialog extends StatelessWidget {
             Container(
               width: 72,
               height: 72,
-              decoration: const BoxDecoration(
-                color: Color(0xFFFDE8E8), // Light red/pinkish circle
+              decoration: BoxDecoration(
+                color: isDark ? Colors.red.withValues(alpha: 0.15) : const Color(0xFFFDE8E8), // Light red/pinkish circle
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -44,7 +48,7 @@ class LogoutDialog extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: theme.colorScheme.onSurface,
                 fontFamily: GoogleFonts.workSans().fontFamily,
               ),
             ),
@@ -56,7 +60,7 @@ class LogoutDialog extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
-                color: AppColors.loginSubTitle,
+                color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                 fontFamily: GoogleFonts.workSans().fontFamily,
                 height: 1.4,
               ),
@@ -71,10 +75,10 @@ class LogoutDialog extends StatelessWidget {
                   child: CustomButton(
                     text: 'Cancel',
                     onPressed: () => Navigator.pop(context),
-                    backgroundColor: Colors.white,
-                    textColor: const Color(0xFF31394D),
+                    backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                    textColor: theme.colorScheme.onSurface,
                     showBorder: true,
-                    borderColor: AppColors.dividerColor,
+                    borderColor: borderColor,
                   ),
                 ),
                 const SizedBox(width: 12),

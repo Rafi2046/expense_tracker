@@ -15,19 +15,22 @@ class CalculatorInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF1F1F1), width: 1.0),
+        border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1), width: 1.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: AppTextStyles.profileCardTitle,
+            style: AppTextStyles.profileCardTitle.copyWith(color: theme.colorScheme.onSurface),
           ),
           const SizedBox(height: 12),
           ...items.map((item) => Padding(
@@ -45,7 +48,7 @@ class CalculatorInfoCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       item.description,
-                      style: AppTextStyles.profileCardSubtitle,
+                      style: AppTextStyles.profileCardSubtitle.copyWith(color: isDark ? Colors.grey.shade400 : null),
                     ),
                     const SizedBox(height: 4),
                   ],
