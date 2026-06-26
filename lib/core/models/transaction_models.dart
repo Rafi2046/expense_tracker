@@ -8,6 +8,7 @@ class TransactionItem {
   final String? incomeMonth;
   final String paymentMethod; // 'Cash' or 'Bank'
   final DateTime lastModified;
+  final String profileId;
 
   TransactionItem({
     required this.id,
@@ -19,6 +20,7 @@ class TransactionItem {
     this.incomeMonth,
     this.paymentMethod = 'Cash',
     DateTime? lastModified,
+    this.profileId = 'default_profile',
   }) : lastModified = lastModified ?? dateTime;
 
   Map<String, dynamic> toMap() => {
@@ -30,6 +32,7 @@ class TransactionItem {
     'incomeMonth': incomeMonth,
     'paymentMethod': paymentMethod,
     'lastModified': lastModified.toIso8601String(),
+    'profileId': profileId,
   };
 
   factory TransactionItem.fromMap(String id, Map<String, dynamic> map) =>
@@ -45,6 +48,7 @@ class TransactionItem {
         lastModified: map['lastModified'] != null
             ? DateTime.parse(map['lastModified'] as String)
             : null,
+        profileId: map['profileId'] as String? ?? 'default_profile',
       );
 
   Map<String, dynamic> toJson() => {
@@ -57,6 +61,7 @@ class TransactionItem {
     'incomeMonth': incomeMonth,
     'paymentMethod': paymentMethod,
     'lastModified': lastModified.toIso8601String(),
+    'profileId': profileId,
   };
 
   factory TransactionItem.fromJson(Map<String, dynamic> json) =>
@@ -72,6 +77,7 @@ class TransactionItem {
         lastModified: json['lastModified'] != null
             ? DateTime.parse(json['lastModified'] as String)
             : null,
+        profileId: json['profileId'] as String? ?? 'default_profile',
       );
 }
 
@@ -80,18 +86,21 @@ class CategoryItem {
   final String name;
   final bool isIncome;
   final DateTime lastModified;
+  final String profileId;
 
   CategoryItem({
     required this.id,
     required this.name,
     required this.isIncome,
     DateTime? lastModified,
+    this.profileId = 'default_profile',
   }) : lastModified = lastModified ?? DateTime.now();
 
   Map<String, dynamic> toMap() => {
     'name': name,
     'isIncome': isIncome,
     'lastModified': lastModified.toIso8601String(),
+    'profileId': profileId,
   };
 
   factory CategoryItem.fromMap(String id, Map<String, dynamic> map) =>
@@ -102,6 +111,7 @@ class CategoryItem {
         lastModified: map['lastModified'] != null
             ? DateTime.parse(map['lastModified'] as String)
             : null,
+        profileId: map['profileId'] as String? ?? 'default_profile',
       );
 
   Map<String, dynamic> toJson() => {
@@ -109,6 +119,7 @@ class CategoryItem {
     'name': name,
     'isIncome': isIncome ? 1 : 0,
     'lastModified': lastModified.toIso8601String(),
+    'profileId': profileId,
   };
 
   factory CategoryItem.fromJson(Map<String, dynamic> json) => CategoryItem(
@@ -118,5 +129,6 @@ class CategoryItem {
     lastModified: json['lastModified'] != null
         ? DateTime.parse(json['lastModified'] as String)
         : null,
+    profileId: json['profileId'] as String? ?? 'default_profile',
   );
 }

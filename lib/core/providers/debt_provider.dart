@@ -127,6 +127,8 @@ class DebtProvider extends ChangeNotifier {
   String? _currentUid;
   bool _isRetrying = false;
 
+  String _activeProfileId = 'default_profile';
+
   final List<DebtItem> _items = [];
 
   DebtProvider() {
@@ -150,8 +152,11 @@ class DebtProvider extends ChangeNotifier {
 
     _loadFromDatabase().then((_) {
       _retryPendingOperations();
+      _attachDebtListener(uid);
     });
+  }
 
+  void _attachDebtListener(String uid) {
     _firestoreSubscription = _firestore
         .collection('users')
         .doc(uid)
@@ -167,7 +172,7 @@ class DebtProvider extends ChangeNotifier {
                     _knownDocIds.add(docId);
                     final item = DebtItem.fromMap(docId, change.doc.data()!);
                     _items.add(item);
-                    _db.insertDebtItem(item, syncStatus: 'synced');
+                    _db.insertDebtItem(item, syncStatus: 'synced', profileId: _activeProfileId);
                   }
                   break;
                 case DocumentChangeType.modified:
@@ -179,6 +184,7 @@ class DebtProvider extends ChangeNotifier {
                     _db.updateDebtItem(
                       DebtItem.fromMap(docId, change.doc.data()!),
                       syncStatus: 'synced',
+                      profileId: _activeProfileId,
                     );
                   }
                   break;
@@ -186,7 +192,7 @@ class DebtProvider extends ChangeNotifier {
                   _knownDocIds.remove(docId);
                   _pendingIds.remove(docId);
                   _items.removeWhere((d) => d.id == docId);
-                  _db.hardDeleteDebtItem(docId);
+                  _db.hardDeleteDebtItem(docId, profileId: _activeProfileId);
                   break;
               }
             }
@@ -201,12 +207,12 @@ class DebtProvider extends ChangeNotifier {
 
   Future<void> _loadFromDatabase() async {
     try {
-      final items = await _db.readAllDebtItems();
+      final items = await _db.readAllDebtItems(profileId: _activeProfileId);
       _items.addAll(items);
       for (final item in items) {
         _knownDocIds.add(item.id);
       }
-      final pendingIds = await _db.readAllPendingDebtIds();
+      final pendingIds = await _db.readAllPendingDebtIds(profileId: _activeProfileId);
       _pendingIds.addAll(pendingIds);
     } catch (e) {
       debugPrint('Error loading debt items from database: $e');
@@ -221,7 +227,7 @@ class DebtProvider extends ChangeNotifier {
       final uid = _currentUid;
       if (uid == null) return;
 
-      final pending = await _db.readPendingDebtSyncs();
+      final pending = await _db.readPendingDebtSyncs(profileId: _activeProfileId);
       for (final item in pending) {
         _firestore
             .collection('users')
@@ -230,13 +236,13 @@ class DebtProvider extends ChangeNotifier {
             .doc(item.id)
             .set(item.toMap())
             .then((_) {
-              _db.markDebtSynced(item.id);
+              _db.markDebtSynced(item.id, profileId: _activeProfileId);
               _pendingIds.remove(item.id);
             })
             .catchError((_) {});
       }
 
-      final deleteIds = await _db.readPendingDebtDeleteIds();
+      final deleteIds = await _db.readPendingDebtDeleteIds(profileId: _activeProfileId);
       for (final id in deleteIds) {
         _firestore
             .collection('users')
@@ -245,7 +251,7 @@ class DebtProvider extends ChangeNotifier {
             .doc(id)
             .delete()
             .then((_) {
-              _db.hardDeleteDebtItem(id);
+              _db.hardDeleteDebtItem(id, profileId: _activeProfileId);
               _pendingIds.remove(id);
             })
             .catchError((_) {});
@@ -256,6 +262,8 @@ class DebtProvider extends ChangeNotifier {
       _isRetrying = false;
     }
   }
+
+  String get activeProfileId => _activeProfileId;
 
   List<DebtItem> get items => List.unmodifiable(_items);
 
@@ -279,7 +287,7 @@ class DebtProvider extends ChangeNotifier {
     final user = _auth.currentUser;
     if (user == null) return;
 
-    _db.insertDebtItem(item, syncStatus: 'pending_create');
+    _db.insertDebtItem(item, syncStatus: 'pending_create', profileId: _activeProfileId);
     _knownDocIds.add(item.id);
     _pendingIds.add(item.id);
     _items.insert(0, item);
@@ -293,7 +301,7 @@ class DebtProvider extends ChangeNotifier {
         .set(item.toMap())
         .then((_) async {
           _pendingIds.remove(item.id);
-          await _db.markDebtSynced(item.id);
+          await _db.markDebtSynced(item.id, profileId: _activeProfileId);
           _retryPendingOperations();
         })
         .catchError((error) {
@@ -330,7 +338,7 @@ class DebtProvider extends ChangeNotifier {
     final index = _items.indexWhere((i) => i.id == id);
     if (index == -1) return;
 
-    _db.softDeleteDebtItem(id);
+    _db.softDeleteDebtItem(id, profileId: _activeProfileId);
     _knownDocIds.remove(id);
     _pendingIds.add(id);
     _items.removeAt(index);
@@ -344,7 +352,7 @@ class DebtProvider extends ChangeNotifier {
         .delete()
         .then((_) async {
           _pendingIds.remove(id);
-          await _db.hardDeleteDebtItem(id);
+          await _db.hardDeleteDebtItem(id, profileId: _activeProfileId);
           _retryPendingOperations();
         })
         .catchError((error) {
@@ -366,7 +374,7 @@ class DebtProvider extends ChangeNotifier {
     final user = _auth.currentUser;
     if (user == null) return;
 
-    _db.updateDebtItem(updated, syncStatus: 'pending_update');
+    _db.updateDebtItem(updated, syncStatus: 'pending_update', profileId: _activeProfileId);
     _pendingIds.add(updated.id);
     _items[index] = updated;
     notifyListeners();
@@ -379,12 +387,25 @@ class DebtProvider extends ChangeNotifier {
         .update(updated.toMap())
         .then((_) async {
           _pendingIds.remove(updated.id);
-          await _db.markDebtSynced(updated.id);
+          await _db.markDebtSynced(updated.id, profileId: _activeProfileId);
           _retryPendingOperations();
         })
         .catchError((error) {
           debugPrint('Firestore updateDebtItem error: $error');
         });
+  }
+
+  void updateProfileId(String id) {
+    debugPrint('DebtProvider.updateProfileId: switching to $id');
+    _activeProfileId = id;
+    _firestoreSubscription?.cancel();
+    _knownDocIds.clear();
+    _pendingIds.clear();
+    _items.clear();
+    if (_currentUid != null) {
+      _startListening(_currentUid!);
+    }
+    notifyListeners();
   }
 
   @override

@@ -7,17 +7,15 @@ import 'package:expense_tracker/core/utils/database_helper.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 
 class SqliteTransactionRepository implements TransactionRepository {
-  static const String _webTxKey = 'web_transactions';
-  static const String _webCategoryKey = 'web_categories';
-
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
   Future<Database> get _database => _dbHelper.database;
 
   // ─── Web helpers ────────────────────────────────────────────────
 
-  List<Map<String, dynamic>> _readWebTransactions() {
-    final jsonString = SharedPrefsHelper.getString(_webTxKey);
+  List<Map<String, dynamic>> _readWebTransactions(String profileId) {
+    final key = 'web_transactions_$profileId';
+    final jsonString = SharedPrefsHelper.getString(key);
     if (jsonString == null || jsonString.isEmpty) return [];
     try {
       return (jsonDecode(jsonString) as List<dynamic>).cast<Map<String, dynamic>>();
@@ -27,12 +25,14 @@ class SqliteTransactionRepository implements TransactionRepository {
     }
   }
 
-  Future<void> _writeWebTransactions(List<Map<String, dynamic>> data) async {
-    await SharedPrefsHelper.setString(_webTxKey, jsonEncode(data));
+  Future<void> _writeWebTransactions(String profileId, List<Map<String, dynamic>> data) async {
+    final key = 'web_transactions_$profileId';
+    await SharedPrefsHelper.setString(key, jsonEncode(data));
   }
 
-  List<Map<String, dynamic>> _readWebCategories() {
-    final jsonString = SharedPrefsHelper.getString(_webCategoryKey);
+  List<Map<String, dynamic>> _readWebCategories(String profileId) {
+    final key = 'web_categories_$profileId';
+    final jsonString = SharedPrefsHelper.getString(key);
     if (jsonString == null || jsonString.isEmpty) return [];
     try {
       return (jsonDecode(jsonString) as List<dynamic>).cast<Map<String, dynamic>>();
@@ -42,16 +42,17 @@ class SqliteTransactionRepository implements TransactionRepository {
     }
   }
 
-  Future<void> _writeWebCategories(List<Map<String, dynamic>> data) async {
-    await SharedPrefsHelper.setString(_webCategoryKey, jsonEncode(data));
+  Future<void> _writeWebCategories(String profileId, List<Map<String, dynamic>> data) async {
+    final key = 'web_categories_$profileId';
+    await SharedPrefsHelper.setString(key, jsonEncode(data));
   }
 
   // ─── Transactions ───────────────────────────────────────────────
 
   @override
-  Future<List<TransactionItem>> getTransactions() async {
+  Future<List<TransactionItem>> getTransactions({required String profileId}) async {
     if (kIsWeb) {
-      final data = _readWebTransactions()
+      final data = _readWebTransactions(profileId)
           .where((r) => r['isDeleted'] == 0)
           .toList()
         ..sort((a, b) => (b['dateTime'] as String).compareTo(a['dateTime'] as String));
@@ -60,23 +61,26 @@ class SqliteTransactionRepository implements TransactionRepository {
 
     final db = await _database;
     final maps = await db.query('transactions',
-        where: 'isDeleted = 0', orderBy: 'dateTime DESC');
+        where: 'isDeleted = 0 AND profileId = ?',
+        whereArgs: [profileId],
+        orderBy: 'dateTime DESC');
     return maps.map((m) => TransactionItem.fromJson(m)).toList();
   }
 
   @override
-  Future<void> addTransaction(TransactionItem item, {String syncStatus = 'pending_create'}) async {
+  Future<void> addTransaction(TransactionItem item, {required String profileId, String syncStatus = 'pending_create'}) async {
     final row = {
       ...item.toJson(),
       'syncStatus': syncStatus,
       'isDeleted': 0,
+      'profileId': profileId,
     };
 
     if (kIsWeb) {
-      final data = _readWebTransactions();
+      final data = _readWebTransactions(profileId);
       data.removeWhere((r) => r['id'] == item.id);
       data.insert(0, row);
-      await _writeWebTransactions(data);
+      await _writeWebTransactions(profileId, data);
       return;
     }
 
@@ -85,28 +89,30 @@ class SqliteTransactionRepository implements TransactionRepository {
   }
 
   @override
-  Future<void> updateTransaction(TransactionItem item, {String? syncStatus}) async {
+  Future<void> updateTransaction(TransactionItem item, {required String profileId, String? syncStatus}) async {
     final row = item.toJson();
     if (syncStatus != null) row['syncStatus'] = syncStatus;
 
     if (kIsWeb) {
-      final data = _readWebTransactions();
+      final data = _readWebTransactions(profileId);
       final index = data.indexWhere((r) => r['id'] == item.id);
       if (index != -1) {
         data[index] = {...data[index], ...row};
-        await _writeWebTransactions(data);
+        await _writeWebTransactions(profileId, data);
       }
       return;
     }
 
     final db = await _database;
-    await db.update('transactions', row, where: 'id = ?', whereArgs: [item.id]);
+    await db.update('transactions', row,
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [item.id, profileId]);
   }
 
   @override
-  Future<void> deleteTransaction(String id, {bool hardDelete = false}) async {
+  Future<void> deleteTransaction(String id, {required String profileId, bool hardDelete = false}) async {
     if (kIsWeb) {
-      final data = _readWebTransactions();
+      final data = _readWebTransactions(profileId);
       if (hardDelete) {
         data.removeWhere((r) => r['id'] == id);
       } else {
@@ -119,24 +125,27 @@ class SqliteTransactionRepository implements TransactionRepository {
           };
         }
       }
-      await _writeWebTransactions(data);
+      await _writeWebTransactions(profileId, data);
       return;
     }
 
     final db = await _database;
     if (hardDelete) {
-      await db.delete('transactions', where: 'id = ?', whereArgs: [id]);
+      await db.delete('transactions',
+          where: 'id = ? AND profileId = ?',
+          whereArgs: [id, profileId]);
     } else {
       await db.update('transactions',
           {'isDeleted': 1, 'syncStatus': 'pending_delete'},
-          where: 'id = ?', whereArgs: [id]);
+          where: 'id = ? AND profileId = ?',
+          whereArgs: [id, profileId]);
     }
   }
 
   @override
-  Future<List<TransactionItem>> getPendingTransactions() async {
+  Future<List<TransactionItem>> getPendingTransactions({required String profileId}) async {
     if (kIsWeb) {
-      final data = _readWebTransactions()
+      final data = _readWebTransactions(profileId)
           .where((r) =>
               r['isDeleted'] == 0 &&
               (r['syncStatus'] == 'pending_create' || r['syncStatus'] == 'pending_update'))
@@ -146,15 +155,15 @@ class SqliteTransactionRepository implements TransactionRepository {
 
     final db = await _database;
     final maps = await db.query('transactions',
-        where: 'isDeleted = 0 AND syncStatus IN (?, ?)',
-        whereArgs: ['pending_create', 'pending_update']);
+        where: 'isDeleted = 0 AND profileId = ? AND syncStatus IN (?, ?)',
+        whereArgs: [profileId, 'pending_create', 'pending_update']);
     return maps.map((m) => TransactionItem.fromJson(m)).toList();
   }
 
   @override
-  Future<List<String>> getPendingDeleteTransactionIds() async {
+  Future<List<String>> getPendingDeleteTransactionIds({required String profileId}) async {
     if (kIsWeb) {
-      return _readWebTransactions()
+      return _readWebTransactions(profileId)
           .where((r) => r['isDeleted'] == 1 && r['syncStatus'] == 'pending_delete')
           .map((r) => r['id'] as String)
           .toList();
@@ -163,15 +172,15 @@ class SqliteTransactionRepository implements TransactionRepository {
     final db = await _database;
     final maps = await db.query('transactions',
         columns: ['id'],
-        where: 'isDeleted = 1 AND syncStatus = ?',
-        whereArgs: ['pending_delete']);
+        where: 'isDeleted = 1 AND profileId = ? AND syncStatus = ?',
+        whereArgs: [profileId, 'pending_delete']);
     return maps.map((m) => m['id'] as String).toList();
   }
 
   @override
-  Future<Set<String>> getAllPendingTransactionIds() async {
+  Future<Set<String>> getAllPendingTransactionIds({required String profileId}) async {
     if (kIsWeb) {
-      return _readWebTransactions()
+      return _readWebTransactions(profileId)
           .where((r) => r['syncStatus'] != 'synced')
           .map((r) => r['id'] as String)
           .toSet();
@@ -180,57 +189,61 @@ class SqliteTransactionRepository implements TransactionRepository {
     final db = await _database;
     final maps = await db.query('transactions',
         columns: ['id'],
-        where: 'syncStatus != ?',
-        whereArgs: ['synced']);
+        where: 'profileId = ? AND syncStatus != ?',
+        whereArgs: [profileId, 'synced']);
     return maps.map((m) => m['id'] as String).toSet();
   }
 
   @override
-  Future<void> markTransactionSynced(String id) async {
+  Future<void> markTransactionSynced(String id, {required String profileId}) async {
     if (kIsWeb) {
-      final data = _readWebTransactions();
+      final data = _readWebTransactions(profileId);
       final index = data.indexWhere((r) => r['id'] == id);
       if (index != -1) {
         data[index] = {...data[index], 'syncStatus': 'synced'};
-        await _writeWebTransactions(data);
+        await _writeWebTransactions(profileId, data);
       }
       return;
     }
 
     final db = await _database;
     await db.update('transactions', {'syncStatus': 'synced'},
-        where: 'id = ?', whereArgs: [id]);
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [id, profileId]);
   }
 
   // ─── Categories ─────────────────────────────────────────────────
 
   @override
-  Future<List<CategoryItem>> getCategories() async {
+  Future<List<CategoryItem>> getCategories({required String profileId}) async {
     if (kIsWeb) {
-      final data = _readWebCategories()
+      final data = _readWebCategories(profileId)
           .where((r) => r['isDeleted'] == 0)
           .toList();
       return data.map((r) => CategoryItem.fromJson(r)).toList();
     }
 
     final db = await _database;
-    final maps = await db.query('categories', where: 'isDeleted = 0');
+    final maps = await db.query('categories',
+        where: 'isDeleted = 0 AND profileId = ?',
+        whereArgs: [profileId]);
     return maps.map((m) => CategoryItem.fromJson(m)).toList();
   }
 
   @override
-  Future<void> addCategory(CategoryItem item, {String syncStatus = 'pending_create'}) async {
+  Future<void> addCategory(CategoryItem item, {required String profileId, String syncStatus = 'pending_create'}) async {
     final row = {
       ...item.toJson(),
       'syncStatus': syncStatus,
       'isDeleted': 0,
+      'profileId': profileId,
     };
 
     if (kIsWeb) {
-      final data = _readWebCategories();
+      final data = _readWebCategories(profileId);
       data.removeWhere((r) => r['id'] == item.id);
       data.insert(0, row);
-      await _writeWebCategories(data);
+      await _writeWebCategories(profileId, data);
       return;
     }
 
@@ -239,9 +252,9 @@ class SqliteTransactionRepository implements TransactionRepository {
   }
 
   @override
-  Future<void> deleteCategory(String id, {bool hardDelete = false}) async {
+  Future<void> deleteCategory(String id, {required String profileId, bool hardDelete = false}) async {
     if (kIsWeb) {
-      final data = _readWebCategories();
+      final data = _readWebCategories(profileId);
       if (hardDelete) {
         data.removeWhere((r) => r['id'] == id);
       } else {
@@ -254,26 +267,29 @@ class SqliteTransactionRepository implements TransactionRepository {
           };
         }
       }
-      await _writeWebCategories(data);
+      await _writeWebCategories(profileId, data);
       return;
     }
 
     final db = await _database;
     if (hardDelete) {
-      await db.delete('categories', where: 'id = ?', whereArgs: [id]);
+      await db.delete('categories',
+          where: 'id = ? AND profileId = ?',
+          whereArgs: [id, profileId]);
     } else {
       await db.update('categories',
           {'isDeleted': 1, 'syncStatus': 'pending_delete'},
-          where: 'id = ?', whereArgs: [id]);
+          where: 'id = ? AND profileId = ?',
+          whereArgs: [id, profileId]);
     }
   }
 
   @override
-  Future<void> renameCategory(String oldName, String newName, {required bool isIncome}) async {
+  Future<void> renameCategory(String oldName, String newName, {required bool isIncome, required String profileId}) async {
     if (oldName == newName) return;
 
     if (kIsWeb) {
-      final categories = _readWebCategories();
+      final categories = _readWebCategories(profileId);
       final catIndex = categories.indexWhere(
         (r) => r['name'] == oldName && r['isIncome'] == (isIncome ? 1 : 0) && r['isDeleted'] == 0,
       );
@@ -283,10 +299,10 @@ class SqliteTransactionRepository implements TransactionRepository {
           'name': newName,
           'syncStatus': 'pending_update',
         };
-        await _writeWebCategories(categories);
+        await _writeWebCategories(profileId, categories);
       }
 
-      final transactions = _readWebTransactions();
+      final transactions = _readWebTransactions(profileId);
       bool changed = false;
       for (int i = 0; i < transactions.length; i++) {
         if (transactions[i]['category'] == oldName && transactions[i]['isDeleted'] == 0) {
@@ -299,7 +315,7 @@ class SqliteTransactionRepository implements TransactionRepository {
         }
       }
       if (changed) {
-        await _writeWebTransactions(transactions);
+        await _writeWebTransactions(profileId, transactions);
       }
       return;
     }
@@ -309,22 +325,22 @@ class SqliteTransactionRepository implements TransactionRepository {
       await txn.update(
         'categories',
         {'name': newName, 'syncStatus': 'pending_update'},
-        where: 'name = ? AND isIncome = ? AND isDeleted = 0',
-        whereArgs: [oldName, isIncome ? 1 : 0],
+        where: 'name = ? AND isIncome = ? AND isDeleted = 0 AND profileId = ?',
+        whereArgs: [oldName, isIncome ? 1 : 0, profileId],
       );
       await txn.update(
         'transactions',
         {'category': newName, 'syncStatus': 'pending_update'},
-        where: 'category = ? AND isDeleted = 0',
-        whereArgs: [oldName],
+        where: 'category = ? AND isDeleted = 0 AND profileId = ?',
+        whereArgs: [oldName, profileId],
       );
     });
   }
 
   @override
-  Future<List<CategoryItem>> getPendingCategories() async {
+  Future<List<CategoryItem>> getPendingCategories({required String profileId}) async {
     if (kIsWeb) {
-      final data = _readWebCategories()
+      final data = _readWebCategories(profileId)
           .where((r) =>
               r['isDeleted'] == 0 && r['syncStatus'] == 'pending_create')
           .toList();
@@ -333,15 +349,15 @@ class SqliteTransactionRepository implements TransactionRepository {
 
     final db = await _database;
     final maps = await db.query('categories',
-        where: 'isDeleted = 0 AND syncStatus = ?',
-        whereArgs: ['pending_create']);
+        where: 'isDeleted = 0 AND profileId = ? AND syncStatus = ?',
+        whereArgs: [profileId, 'pending_create']);
     return maps.map((m) => CategoryItem.fromJson(m)).toList();
   }
 
   @override
-  Future<List<String>> getPendingDeleteCategoryIds() async {
+  Future<List<String>> getPendingDeleteCategoryIds({required String profileId}) async {
     if (kIsWeb) {
-      return _readWebCategories()
+      return _readWebCategories(profileId)
           .where((r) => r['isDeleted'] == 1 && r['syncStatus'] == 'pending_delete')
           .map((r) => r['id'] as String)
           .toList();
@@ -350,15 +366,15 @@ class SqliteTransactionRepository implements TransactionRepository {
     final db = await _database;
     final maps = await db.query('categories',
         columns: ['id'],
-        where: 'isDeleted = 1 AND syncStatus = ?',
-        whereArgs: ['pending_delete']);
+        where: 'isDeleted = 1 AND profileId = ? AND syncStatus = ?',
+        whereArgs: [profileId, 'pending_delete']);
     return maps.map((m) => m['id'] as String).toList();
   }
 
   @override
-  Future<Set<String>> getAllPendingCategoryIds() async {
+  Future<Set<String>> getAllPendingCategoryIds({required String profileId}) async {
     if (kIsWeb) {
-      return _readWebCategories()
+      return _readWebCategories(profileId)
           .where((r) => r['syncStatus'] != 'synced')
           .map((r) => r['id'] as String)
           .toSet();
@@ -367,25 +383,26 @@ class SqliteTransactionRepository implements TransactionRepository {
     final db = await _database;
     final maps = await db.query('categories',
         columns: ['id'],
-        where: 'syncStatus != ?',
-        whereArgs: ['synced']);
+        where: 'profileId = ? AND syncStatus != ?',
+        whereArgs: [profileId, 'synced']);
     return maps.map((m) => m['id'] as String).toSet();
   }
 
   @override
-  Future<void> markCategorySynced(String id) async {
+  Future<void> markCategorySynced(String id, {required String profileId}) async {
     if (kIsWeb) {
-      final data = _readWebCategories();
+      final data = _readWebCategories(profileId);
       final index = data.indexWhere((r) => r['id'] == id);
       if (index != -1) {
         data[index] = {...data[index], 'syncStatus': 'synced'};
-        await _writeWebCategories(data);
+        await _writeWebCategories(profileId, data);
       }
       return;
     }
 
     final db = await _database;
     await db.update('categories', {'syncStatus': 'synced'},
-        where: 'id = ?', whereArgs: [id]);
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [id, profileId]);
   }
 }

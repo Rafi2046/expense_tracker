@@ -11,10 +11,6 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
   static const String _webNotesKey = 'web_notes';
-  static const String _webBudgetKey = 'web_budget';
-  static const String _webCategoryKey = 'web_categories';
-  static const String _webDebtKey = 'web_debt_items';
-
   DatabaseHelper._init();
 
   Future<Database> get database async {
@@ -32,7 +28,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 5,
+      version: 6,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -45,7 +41,8 @@ class DatabaseHelper {
         title TEXT NOT NULL,
         content TEXT NOT NULL,
         createdAt TEXT NOT NULL,
-        category TEXT NOT NULL
+        category TEXT NOT NULL,
+        profileId TEXT NOT NULL DEFAULT 'default_profile'
       )
     ''');
     await db.execute('''
@@ -60,7 +57,8 @@ class DatabaseHelper {
         paymentMethod TEXT NOT NULL DEFAULT 'Cash',
         syncStatus TEXT NOT NULL DEFAULT 'synced',
         isDeleted INTEGER NOT NULL DEFAULT 0,
-        lastModified TEXT NOT NULL
+        lastModified TEXT NOT NULL,
+        profileId TEXT NOT NULL DEFAULT 'default_profile'
       )
     ''');
     await db.execute('''
@@ -78,7 +76,8 @@ class DatabaseHelper {
         isIncome INTEGER NOT NULL,
         syncStatus TEXT NOT NULL DEFAULT 'synced',
         isDeleted INTEGER NOT NULL DEFAULT 0,
-        lastModified TEXT NOT NULL
+        lastModified TEXT NOT NULL,
+        profileId TEXT NOT NULL DEFAULT 'default_profile'
       )
     ''');
     await db.execute('''
@@ -95,9 +94,24 @@ class DatabaseHelper {
         vat TEXT,
         createdAt TEXT NOT NULL,
         syncStatus TEXT NOT NULL DEFAULT 'synced',
-        isDeleted INTEGER NOT NULL DEFAULT 0
+        isDeleted INTEGER NOT NULL DEFAULT 0,
+        profileId TEXT NOT NULL DEFAULT 'default_profile'
       )
     ''');
+    await db.execute('''
+      CREATE TABLE profiles (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        type TEXT NOT NULL,
+        createdAt TEXT NOT NULL
+      )
+    ''');
+    await db.insert('profiles', {
+      'id': 'default_profile',
+      'name': 'Personal',
+      'type': 'Personal',
+      'createdAt': DateTime.now().toIso8601String(),
+    });
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -158,6 +172,34 @@ class DatabaseHelper {
           isDeleted INTEGER NOT NULL DEFAULT 0
         )
       ''');
+    }
+    if (oldVersion < 6) {
+      await db.execute('''
+        ALTER TABLE transactions ADD COLUMN profileId TEXT NOT NULL DEFAULT 'default_profile'
+      ''');
+      await db.execute('''
+        ALTER TABLE categories ADD COLUMN profileId TEXT NOT NULL DEFAULT 'default_profile'
+      ''');
+      await db.execute('''
+        ALTER TABLE debt_items ADD COLUMN profileId TEXT NOT NULL DEFAULT 'default_profile'
+      ''');
+      await db.execute('''
+        ALTER TABLE notes ADD COLUMN profileId TEXT NOT NULL DEFAULT 'default_profile'
+      ''');
+      await db.execute('''
+        CREATE TABLE profiles (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          type TEXT NOT NULL,
+          createdAt TEXT NOT NULL
+        )
+      ''');
+      await db.insert('profiles', {
+        'id': 'default_profile',
+        'name': 'Personal',
+        'type': 'Personal',
+        'createdAt': DateTime.now().toIso8601String(),
+      });
     }
   }
 
@@ -260,10 +302,9 @@ class DatabaseHelper {
 
   // ─── Transaction CRUD ──────────────────────────────────────────
 
-  static const String _webTxKey = 'web_transactions';
-
-  List<Map<String, dynamic>> _readWebTransactions() {
-    final jsonString = SharedPrefsHelper.getString(_webTxKey);
+  List<Map<String, dynamic>> _readWebTransactions(String profileId) {
+    final key = 'web_transactions_$profileId';
+    final jsonString = SharedPrefsHelper.getString(key);
     if (jsonString == null || jsonString.isEmpty) return [];
     try {
       return (jsonDecode(jsonString) as List<dynamic>)
@@ -274,25 +315,28 @@ class DatabaseHelper {
     }
   }
 
-  Future<void> _writeWebTransactions(List<Map<String, dynamic>> data) async {
-    await SharedPrefsHelper.setString(_webTxKey, jsonEncode(data));
+  Future<void> _writeWebTransactions(String profileId, List<Map<String, dynamic>> data) async {
+    final key = 'web_transactions_$profileId';
+    await SharedPrefsHelper.setString(key, jsonEncode(data));
   }
 
   Future<void> insertTransaction(
     TransactionItem item, {
     String syncStatus = 'pending_create',
+    String profileId = 'default_profile',
   }) async {
     final row = {
       ...item.toJson(),
       'syncStatus': syncStatus,
       'isDeleted': 0,
+      'profileId': profileId,
     };
 
     if (kIsWeb) {
-      final data = _readWebTransactions();
+      final data = _readWebTransactions(profileId);
       data.removeWhere((r) => r['id'] == item.id);
       data.insert(0, row);
-      await _writeWebTransactions(data);
+      await _writeWebTransactions(profileId, data);
       return;
     }
 
@@ -301,9 +345,9 @@ class DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<List<TransactionItem>> readAllTransactions() async {
+  Future<List<TransactionItem>> readAllTransactions({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebTransactions()
+      final data = _readWebTransactions(profileId)
           .where((r) => r['isDeleted'] == 0)
           .toList()
         ..sort((a, b) => (b['dateTime'] as String)
@@ -313,13 +357,15 @@ class DatabaseHelper {
 
     final db = await instance.database;
     final maps = await db.query('transactions',
-        where: 'isDeleted = 0', orderBy: 'dateTime DESC');
+        where: 'isDeleted = 0 AND profileId = ?',
+        whereArgs: [profileId],
+        orderBy: 'dateTime DESC');
     return maps.map((m) => TransactionItem.fromJson(m)).toList();
   }
 
-  Future<List<TransactionItem>> readPendingSyncs() async {
+  Future<List<TransactionItem>> readPendingSyncs({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebTransactions()
+      final data = _readWebTransactions(profileId)
           .where((r) =>
               r['isDeleted'] == 0 &&
               (r['syncStatus'] == 'pending_create' ||
@@ -331,14 +377,14 @@ class DatabaseHelper {
     final db = await instance.database;
     final maps = await db.query('transactions',
         where:
-            'isDeleted = 0 AND syncStatus IN (?, ?)',
-        whereArgs: ['pending_create', 'pending_update']);
+            'isDeleted = 0 AND profileId = ? AND syncStatus IN (?, ?)',
+        whereArgs: [profileId, 'pending_create', 'pending_update']);
     return maps.map((m) => TransactionItem.fromJson(m)).toList();
   }
 
-  Future<List<String>> readPendingDeleteIds() async {
+  Future<List<String>> readPendingDeleteIds({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      return _readWebTransactions()
+      return _readWebTransactions(profileId)
           .where((r) => r['isDeleted'] == 1 && r['syncStatus'] == 'pending_delete')
           .map((r) => r['id'] as String)
           .toList();
@@ -347,14 +393,14 @@ class DatabaseHelper {
     final db = await instance.database;
     final maps = await db.query('transactions',
         columns: ['id'],
-        where: 'isDeleted = 1 AND syncStatus = ?',
-        whereArgs: ['pending_delete']);
+        where: 'isDeleted = 1 AND profileId = ? AND syncStatus = ?',
+        whereArgs: [profileId, 'pending_delete']);
     return maps.map((m) => m['id'] as String).toList();
   }
 
-  Future<Set<String>> readAllPendingIds() async {
+  Future<Set<String>> readAllPendingIds({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      return _readWebTransactions()
+      return _readWebTransactions(profileId)
           .where((r) => r['syncStatus'] != 'synced')
           .map((r) => r['id'] as String)
           .toSet();
@@ -363,36 +409,38 @@ class DatabaseHelper {
     final db = await instance.database;
     final maps = await db.query('transactions',
         columns: ['id'],
-        where: 'syncStatus != ?',
-        whereArgs: ['synced']);
+        where: 'profileId = ? AND syncStatus != ?',
+        whereArgs: [profileId, 'synced']);
     return maps.map((m) => m['id'] as String).toSet();
   }
 
   Future<void> updateTransaction(
     TransactionItem item, {
     String? syncStatus,
+    String profileId = 'default_profile',
   }) async {
     final row = item.toJson();
     if (syncStatus != null) row['syncStatus'] = syncStatus;
 
     if (kIsWeb) {
-      final data = _readWebTransactions();
+      final data = _readWebTransactions(profileId);
       final index = data.indexWhere((r) => r['id'] == item.id);
       if (index != -1) {
         data[index] = {...data[index], ...row};
-        await _writeWebTransactions(data);
+        await _writeWebTransactions(profileId, data);
       }
       return;
     }
 
     final db = await instance.database;
     await db.update('transactions', row,
-        where: 'id = ?', whereArgs: [item.id]);
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [item.id, profileId]);
   }
 
-  Future<void> softDeleteTransaction(String id) async {
+  Future<void> softDeleteTransaction(String id, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebTransactions();
+      final data = _readWebTransactions(profileId);
       final index = data.indexWhere((r) => r['id'] == id);
       if (index != -1) {
         data[index] = {
@@ -400,7 +448,7 @@ class DatabaseHelper {
           'isDeleted': 1,
           'syncStatus': 'pending_delete',
         };
-        await _writeWebTransactions(data);
+        await _writeWebTransactions(profileId, data);
       }
       return;
     }
@@ -408,41 +456,44 @@ class DatabaseHelper {
     final db = await instance.database;
     await db.update('transactions',
         {'isDeleted': 1, 'syncStatus': 'pending_delete'},
-        where: 'id = ?',
-        whereArgs: [id]);
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [id, profileId]);
   }
 
-  Future<void> hardDeleteTransaction(String id) async {
+  Future<void> hardDeleteTransaction(String id, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebTransactions();
+      final data = _readWebTransactions(profileId);
       data.removeWhere((r) => r['id'] == id);
-      await _writeWebTransactions(data);
+      await _writeWebTransactions(profileId, data);
       return;
     }
 
     final db = await instance.database;
-    await db.delete('transactions', where: 'id = ?', whereArgs: [id]);
+    await db.delete('transactions',
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [id, profileId]);
   }
 
-  Future<void> markSynced(String id) async {
+  Future<void> markSynced(String id, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebTransactions();
+      final data = _readWebTransactions(profileId);
       final index = data.indexWhere((r) => r['id'] == id);
       if (index != -1) {
         data[index] = {...data[index], 'syncStatus': 'synced'};
-        await _writeWebTransactions(data);
+        await _writeWebTransactions(profileId, data);
       }
       return;
     }
 
     final db = await instance.database;
     await db.update('transactions', {'syncStatus': 'synced'},
-        where: 'id = ?', whereArgs: [id]);
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [id, profileId]);
   }
 
-  Future<String?> getSyncStatus(String id) async {
+  Future<String?> getSyncStatus(String id, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebTransactions();
+      final data = _readWebTransactions(profileId);
       final index = data.indexWhere((r) => r['id'] == id);
       if (index == -1) return null;
       return data[index]['syncStatus'] as String?;
@@ -451,16 +502,17 @@ class DatabaseHelper {
     final db = await instance.database;
     final maps = await db.query('transactions',
         columns: ['syncStatus'],
-        where: 'id = ?',
-        whereArgs: [id]);
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [id, profileId]);
     if (maps.isEmpty) return null;
     return maps.first['syncStatus'] as String?;
   }
 
   // ─── Budget CRUD ───────────────────────────────────────────────
 
-  Map<String, dynamic>? _readWebBudget() {
-    final jsonString = SharedPrefsHelper.getString(_webBudgetKey);
+  Map<String, dynamic>? _readWebBudget(String profileId) {
+    final key = 'web_budget_$profileId';
+    final jsonString = SharedPrefsHelper.getString(key);
     if (jsonString == null || jsonString.isEmpty) return null;
     try {
       return jsonDecode(jsonString) as Map<String, dynamic>;
@@ -470,24 +522,26 @@ class DatabaseHelper {
     }
   }
 
-  Future<void> _writeWebBudget(Map<String, dynamic>? data) async {
+  Future<void> _writeWebBudget(String profileId, Map<String, dynamic>? data) async {
+    final key = 'web_budget_$profileId';
     if (data == null) {
-      await SharedPrefsHelper.remove(_webBudgetKey);
+      await SharedPrefsHelper.remove(key);
     } else {
-      await SharedPrefsHelper.setString(_webBudgetKey, jsonEncode(data));
+      await SharedPrefsHelper.setString(key, jsonEncode(data));
     }
   }
 
-  Future<void> insertOrUpdateBudget(double amount, {String syncStatus = 'pending'}) async {
+  Future<void> insertOrUpdateBudget(double amount, {String syncStatus = 'pending', String profileId = 'default_profile'}) async {
     final row = {
       'id': 'monthly',
       'amount': amount,
       'syncStatus': syncStatus,
       'lastModified': DateTime.now().toIso8601String(),
+      'profileId': profileId,
     };
 
     if (kIsWeb) {
-      await _writeWebBudget(row);
+      await _writeWebBudget(profileId, row);
       return;
     }
 
@@ -495,22 +549,24 @@ class DatabaseHelper {
     await db.insert('budget', row, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<double?> readBudget() async {
+  Future<double?> readBudget({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebBudget();
+      final data = _readWebBudget(profileId);
       if (data == null) return null;
       return (data['amount'] as num).toDouble();
     }
 
     final db = await instance.database;
-    final maps = await db.query('budget', where: 'id = ?', whereArgs: ['monthly']);
+    final maps = await db.query('budget',
+        where: 'id = ? AND profileId = ?',
+        whereArgs: ['monthly', profileId]);
     if (maps.isEmpty) return null;
     return (maps.first['amount'] as num).toDouble();
   }
 
-  Future<String?> getBudgetSyncStatus() async {
+  Future<String?> getBudgetSyncStatus({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebBudget();
+      final data = _readWebBudget(profileId);
       if (data == null) return null;
       return data['syncStatus'] as String?;
     }
@@ -518,29 +574,31 @@ class DatabaseHelper {
     final db = await instance.database;
     final maps = await db.query('budget',
         columns: ['syncStatus'],
-        where: 'id = ?',
-        whereArgs: ['monthly']);
+        where: 'id = ? AND profileId = ?',
+        whereArgs: ['monthly', profileId]);
     if (maps.isEmpty) return null;
     return maps.first['syncStatus'] as String?;
   }
 
-  Future<void> markBudgetSynced() async {
+  Future<void> markBudgetSynced({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebBudget();
+      final data = _readWebBudget(profileId);
       if (data == null) return;
-      await _writeWebBudget({...data, 'syncStatus': 'synced'});
+      await _writeWebBudget(profileId, {...data, 'syncStatus': 'synced'});
       return;
     }
 
     final db = await instance.database;
     await db.update('budget', {'syncStatus': 'synced'},
-        where: 'id = ?', whereArgs: ['monthly']);
+        where: 'id = ? AND profileId = ?',
+        whereArgs: ['monthly', profileId]);
   }
 
   // ─── Category CRUD ─────────────────────────────────────────────
 
-  List<Map<String, dynamic>> _readWebCategories() {
-    final jsonString = SharedPrefsHelper.getString(_webCategoryKey);
+  List<Map<String, dynamic>> _readWebCategories(String profileId) {
+    final key = 'web_categories_$profileId';
+    final jsonString = SharedPrefsHelper.getString(key);
     if (jsonString == null || jsonString.isEmpty) return [];
     try {
       return (jsonDecode(jsonString) as List<dynamic>).cast<Map<String, dynamic>>();
@@ -550,25 +608,28 @@ class DatabaseHelper {
     }
   }
 
-  Future<void> _writeWebCategories(List<Map<String, dynamic>> data) async {
-    await SharedPrefsHelper.setString(_webCategoryKey, jsonEncode(data));
+  Future<void> _writeWebCategories(String profileId, List<Map<String, dynamic>> data) async {
+    final key = 'web_categories_$profileId';
+    await SharedPrefsHelper.setString(key, jsonEncode(data));
   }
 
   Future<void> insertCategory(
     CategoryItem item, {
     String syncStatus = 'pending_create',
+    String profileId = 'default_profile',
   }) async {
     final row = {
       ...item.toJson(),
       'syncStatus': syncStatus,
       'isDeleted': 0,
+      'profileId': profileId,
     };
 
     if (kIsWeb) {
-      final data = _readWebCategories();
+      final data = _readWebCategories(profileId);
       data.removeWhere((r) => r['id'] == item.id);
       data.insert(0, row);
-      await _writeWebCategories(data);
+      await _writeWebCategories(profileId, data);
       return;
     }
 
@@ -576,9 +637,9 @@ class DatabaseHelper {
     await db.insert('categories', row, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<List<CategoryItem>> readAllCategories() async {
+  Future<List<CategoryItem>> readAllCategories({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebCategories()
+      final data = _readWebCategories(profileId)
           .where((r) => r['isDeleted'] == 0)
           .toList();
       return data.map((r) => CategoryItem.fromJson(r)).toList();
@@ -586,13 +647,14 @@ class DatabaseHelper {
 
     final db = await instance.database;
     final maps = await db.query('categories',
-        where: 'isDeleted = 0');
+        where: 'isDeleted = 0 AND profileId = ?',
+        whereArgs: [profileId]);
     return maps.map((m) => CategoryItem.fromJson(m)).toList();
   }
 
-  Future<List<CategoryItem>> readPendingCategorySyncs() async {
+  Future<List<CategoryItem>> readPendingCategorySyncs({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebCategories()
+      final data = _readWebCategories(profileId)
           .where((r) =>
               r['isDeleted'] == 0 &&
               r['syncStatus'] == 'pending_create')
@@ -602,14 +664,14 @@ class DatabaseHelper {
 
     final db = await instance.database;
     final maps = await db.query('categories',
-        where: 'isDeleted = 0 AND syncStatus = ?',
-        whereArgs: ['pending_create']);
+        where: 'isDeleted = 0 AND profileId = ? AND syncStatus = ?',
+        whereArgs: [profileId, 'pending_create']);
     return maps.map((m) => CategoryItem.fromJson(m)).toList();
   }
 
-  Future<List<String>> readPendingCategoryDeleteIds() async {
+  Future<List<String>> readPendingCategoryDeleteIds({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      return _readWebCategories()
+      return _readWebCategories(profileId)
           .where((r) => r['isDeleted'] == 1 && r['syncStatus'] == 'pending_delete')
           .map((r) => r['id'] as String)
           .toList();
@@ -618,14 +680,14 @@ class DatabaseHelper {
     final db = await instance.database;
     final maps = await db.query('categories',
         columns: ['id'],
-        where: 'isDeleted = 1 AND syncStatus = ?',
-        whereArgs: ['pending_delete']);
+        where: 'isDeleted = 1 AND profileId = ? AND syncStatus = ?',
+        whereArgs: [profileId, 'pending_delete']);
     return maps.map((m) => m['id'] as String).toList();
   }
 
-  Future<Set<String>> readAllPendingCategoryIds() async {
+  Future<Set<String>> readAllPendingCategoryIds({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      return _readWebCategories()
+      return _readWebCategories(profileId)
           .where((r) => r['syncStatus'] != 'synced')
           .map((r) => r['id'] as String)
           .toSet();
@@ -634,14 +696,14 @@ class DatabaseHelper {
     final db = await instance.database;
     final maps = await db.query('categories',
         columns: ['id'],
-        where: 'syncStatus != ?',
-        whereArgs: ['synced']);
+        where: 'profileId = ? AND syncStatus != ?',
+        whereArgs: [profileId, 'synced']);
     return maps.map((m) => m['id'] as String).toSet();
   }
 
-  Future<void> softDeleteCategory(String id) async {
+  Future<void> softDeleteCategory(String id, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebCategories();
+      final data = _readWebCategories(profileId);
       final index = data.indexWhere((r) => r['id'] == id);
       if (index != -1) {
         data[index] = {
@@ -649,7 +711,7 @@ class DatabaseHelper {
           'isDeleted': 1,
           'syncStatus': 'pending_delete',
         };
-        await _writeWebCategories(data);
+        await _writeWebCategories(profileId, data);
       }
       return;
     }
@@ -657,27 +719,29 @@ class DatabaseHelper {
     final db = await instance.database;
     await db.update('categories',
         {'isDeleted': 1, 'syncStatus': 'pending_delete'},
-        where: 'id = ?',
-        whereArgs: [id]);
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [id, profileId]);
   }
 
-  Future<void> hardDeleteCategory(String id) async {
+  Future<void> hardDeleteCategory(String id, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebCategories();
+      final data = _readWebCategories(profileId);
       data.removeWhere((r) => r['id'] == id);
-      await _writeWebCategories(data);
+      await _writeWebCategories(profileId, data);
       return;
     }
 
     final db = await instance.database;
-    await db.delete('categories', where: 'id = ?', whereArgs: [id]);
+    await db.delete('categories',
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [id, profileId]);
   }
 
-  Future<void> renameCategory(String oldName, String newName, {required bool isIncome}) async {
+  Future<void> renameCategory(String oldName, String newName, {required bool isIncome, String profileId = 'default_profile'}) async {
     if (oldName == newName) return;
 
     if (kIsWeb) {
-      final categories = _readWebCategories();
+      final categories = _readWebCategories(profileId);
       final catIndex = categories.indexWhere(
         (r) => r['name'] == oldName && r['isIncome'] == (isIncome ? 1 : 0) && r['isDeleted'] == 0,
       );
@@ -687,10 +751,10 @@ class DatabaseHelper {
           'name': newName,
           'syncStatus': 'pending_update',
         };
-        await _writeWebCategories(categories);
+        await _writeWebCategories(profileId, categories);
       }
 
-      final transactions = _readWebTransactions();
+      final transactions = _readWebTransactions(profileId);
       bool changed = false;
       for (int i = 0; i < transactions.length; i++) {
         if (transactions[i]['category'] == oldName && transactions[i]['isDeleted'] == 0) {
@@ -703,7 +767,7 @@ class DatabaseHelper {
         }
       }
       if (changed) {
-        await _writeWebTransactions(transactions);
+        await _writeWebTransactions(profileId, transactions);
       }
       return;
     }
@@ -713,38 +777,40 @@ class DatabaseHelper {
       await txn.update(
         'categories',
         {'name': newName, 'syncStatus': 'pending_update'},
-        where: 'name = ? AND isIncome = ? AND isDeleted = 0',
-        whereArgs: [oldName, isIncome ? 1 : 0],
+        where: 'name = ? AND isIncome = ? AND isDeleted = 0 AND profileId = ?',
+        whereArgs: [oldName, isIncome ? 1 : 0, profileId],
       );
       await txn.update(
         'transactions',
         {'category': newName, 'syncStatus': 'pending_update'},
-        where: 'category = ? AND isDeleted = 0',
-        whereArgs: [oldName],
+        where: 'category = ? AND isDeleted = 0 AND profileId = ?',
+        whereArgs: [oldName, profileId],
       );
     });
   }
 
-  Future<void> markCategorySynced(String id) async {
+  Future<void> markCategorySynced(String id, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebCategories();
+      final data = _readWebCategories(profileId);
       final index = data.indexWhere((r) => r['id'] == id);
       if (index != -1) {
         data[index] = {...data[index], 'syncStatus': 'synced'};
-        await _writeWebCategories(data);
+        await _writeWebCategories(profileId, data);
       }
       return;
     }
 
     final db = await instance.database;
     await db.update('categories', {'syncStatus': 'synced'},
-        where: 'id = ?', whereArgs: [id]);
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [id, profileId]);
   }
 
   // ─── Debt Items CRUD ───────────────────────────────────────────
 
-  List<Map<String, dynamic>> _readWebDebtItems() {
-    final jsonString = SharedPrefsHelper.getString(_webDebtKey);
+  List<Map<String, dynamic>> _readWebDebtItems(String profileId) {
+    final key = 'web_debt_items_$profileId';
+    final jsonString = SharedPrefsHelper.getString(key);
     if (jsonString == null || jsonString.isEmpty) return [];
     try {
       return (jsonDecode(jsonString) as List<dynamic>).cast<Map<String, dynamic>>();
@@ -754,25 +820,28 @@ class DatabaseHelper {
     }
   }
 
-  Future<void> _writeWebDebtItems(List<Map<String, dynamic>> data) async {
-    await SharedPrefsHelper.setString(_webDebtKey, jsonEncode(data));
+  Future<void> _writeWebDebtItems(String profileId, List<Map<String, dynamic>> data) async {
+    final key = 'web_debt_items_$profileId';
+    await SharedPrefsHelper.setString(key, jsonEncode(data));
   }
 
   Future<void> insertDebtItem(
     DebtItem item, {
     String syncStatus = 'pending_create',
+    String profileId = 'default_profile',
   }) async {
     final row = {
       ...item.toJson(),
       'syncStatus': syncStatus,
       'isDeleted': 0,
+      'profileId': profileId,
     };
 
     if (kIsWeb) {
-      final data = _readWebDebtItems();
+      final data = _readWebDebtItems(profileId);
       data.removeWhere((r) => r['id'] == item.id);
       data.insert(0, row);
-      await _writeWebDebtItems(data);
+      await _writeWebDebtItems(profileId, data);
       return;
     }
 
@@ -780,9 +849,9 @@ class DatabaseHelper {
     await db.insert('debt_items', row, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<List<DebtItem>> readAllDebtItems() async {
+  Future<List<DebtItem>> readAllDebtItems({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebDebtItems()
+      final data = _readWebDebtItems(profileId)
           .where((r) => r['isDeleted'] == 0)
           .toList();
       return data.map((r) => DebtItem.fromJson(r)).toList();
@@ -790,35 +859,38 @@ class DatabaseHelper {
 
     final db = await instance.database;
     final maps = await db.query('debt_items',
-        where: 'isDeleted = 0');
+        where: 'isDeleted = 0 AND profileId = ?',
+        whereArgs: [profileId]);
     return maps.map((m) => DebtItem.fromJson(m)).toList();
   }
 
   Future<void> updateDebtItem(
     DebtItem item, {
     String? syncStatus,
+    String profileId = 'default_profile',
   }) async {
     final row = item.toJson();
     if (syncStatus != null) row['syncStatus'] = syncStatus;
 
     if (kIsWeb) {
-      final data = _readWebDebtItems();
+      final data = _readWebDebtItems(profileId);
       final index = data.indexWhere((r) => r['id'] == item.id);
       if (index != -1) {
         data[index] = {...data[index], ...row};
-        await _writeWebDebtItems(data);
+        await _writeWebDebtItems(profileId, data);
       }
       return;
     }
 
     final db = await instance.database;
     await db.update('debt_items', row,
-        where: 'id = ?', whereArgs: [item.id]);
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [item.id, profileId]);
   }
 
-  Future<List<DebtItem>> readPendingDebtSyncs() async {
+  Future<List<DebtItem>> readPendingDebtSyncs({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebDebtItems()
+      final data = _readWebDebtItems(profileId)
           .where((r) =>
               r['isDeleted'] == 0 &&
               (r['syncStatus'] == 'pending_create' ||
@@ -829,14 +901,14 @@ class DatabaseHelper {
 
     final db = await instance.database;
     final maps = await db.query('debt_items',
-        where: 'isDeleted = 0 AND syncStatus IN (?, ?)',
-        whereArgs: ['pending_create', 'pending_update']);
+        where: 'isDeleted = 0 AND profileId = ? AND syncStatus IN (?, ?)',
+        whereArgs: [profileId, 'pending_create', 'pending_update']);
     return maps.map((m) => DebtItem.fromJson(m)).toList();
   }
 
-  Future<List<String>> readPendingDebtDeleteIds() async {
+  Future<List<String>> readPendingDebtDeleteIds({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      return _readWebDebtItems()
+      return _readWebDebtItems(profileId)
           .where((r) => r['isDeleted'] == 1 && r['syncStatus'] == 'pending_delete')
           .map((r) => r['id'] as String)
           .toList();
@@ -845,14 +917,14 @@ class DatabaseHelper {
     final db = await instance.database;
     final maps = await db.query('debt_items',
         columns: ['id'],
-        where: 'isDeleted = 1 AND syncStatus = ?',
-        whereArgs: ['pending_delete']);
+        where: 'isDeleted = 1 AND profileId = ? AND syncStatus = ?',
+        whereArgs: [profileId, 'pending_delete']);
     return maps.map((m) => m['id'] as String).toList();
   }
 
-  Future<Set<String>> readAllPendingDebtIds() async {
+  Future<Set<String>> readAllPendingDebtIds({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      return _readWebDebtItems()
+      return _readWebDebtItems(profileId)
           .where((r) => r['syncStatus'] != 'synced')
           .map((r) => r['id'] as String)
           .toSet();
@@ -861,14 +933,14 @@ class DatabaseHelper {
     final db = await instance.database;
     final maps = await db.query('debt_items',
         columns: ['id'],
-        where: 'syncStatus != ?',
-        whereArgs: ['synced']);
+        where: 'profileId = ? AND syncStatus != ?',
+        whereArgs: [profileId, 'synced']);
     return maps.map((m) => m['id'] as String).toSet();
   }
 
-  Future<void> softDeleteDebtItem(String id) async {
+  Future<void> softDeleteDebtItem(String id, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebDebtItems();
+      final data = _readWebDebtItems(profileId);
       final index = data.indexWhere((r) => r['id'] == id);
       if (index != -1) {
         data[index] = {
@@ -876,7 +948,7 @@ class DatabaseHelper {
           'isDeleted': 1,
           'syncStatus': 'pending_delete',
         };
-        await _writeWebDebtItems(data);
+        await _writeWebDebtItems(profileId, data);
       }
       return;
     }
@@ -884,36 +956,39 @@ class DatabaseHelper {
     final db = await instance.database;
     await db.update('debt_items',
         {'isDeleted': 1, 'syncStatus': 'pending_delete'},
-        where: 'id = ?',
-        whereArgs: [id]);
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [id, profileId]);
   }
 
-  Future<void> hardDeleteDebtItem(String id) async {
+  Future<void> hardDeleteDebtItem(String id, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebDebtItems();
+      final data = _readWebDebtItems(profileId);
       data.removeWhere((r) => r['id'] == id);
-      await _writeWebDebtItems(data);
+      await _writeWebDebtItems(profileId, data);
       return;
     }
 
     final db = await instance.database;
-    await db.delete('debt_items', where: 'id = ?', whereArgs: [id]);
+    await db.delete('debt_items',
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [id, profileId]);
   }
 
-  Future<void> markDebtSynced(String id) async {
+  Future<void> markDebtSynced(String id, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
-      final data = _readWebDebtItems();
+      final data = _readWebDebtItems(profileId);
       final index = data.indexWhere((r) => r['id'] == id);
       if (index != -1) {
         data[index] = {...data[index], 'syncStatus': 'synced'};
-        await _writeWebDebtItems(data);
+        await _writeWebDebtItems(profileId, data);
       }
       return;
     }
 
     final db = await instance.database;
     await db.update('debt_items', {'syncStatus': 'synced'},
-        where: 'id = ?', whereArgs: [id]);
+        where: 'id = ? AND profileId = ?',
+        whereArgs: [id, profileId]);
   }
 
   // Close database connection

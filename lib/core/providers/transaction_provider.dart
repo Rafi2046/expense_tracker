@@ -25,6 +25,8 @@ class TransactionProvider extends ChangeNotifier {
   String? _currentUid;
   bool _isRetrying = false;
 
+  String _activeProfileId = 'default_profile';
+
   final List<CategoryItem> _categoryItems = [];
   final List<TransactionItem> _transactions = [];
 
@@ -67,14 +69,18 @@ class TransactionProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    // 1. Load from SQLite immediately
+    // 1. Load from SQLite first (populates _knownDocIds / _knownCategoryIds)
+    // 2. THEN attach Firestore listeners so known-doc guards prevent duplicates
     _loadFromDatabase().then((_) {
-      _loadCategoriesFromDatabase().then((_) {
-        _retryPendingOperations();
-      });
+      return _loadCategoriesFromDatabase();
+    }).then((_) {
+      _retryPendingOperations();
+      _attachTransactionListener(uid);
+      _attachCategoryListener(uid);
     });
+  }
 
-    // 3. Attach Firestore snapshot for ongoing sync
+  void _attachTransactionListener(String uid) {
     _firestoreSubscription = _firestore
         .collection('users')
         .doc(uid)
@@ -93,7 +99,7 @@ class TransactionProvider extends ChangeNotifier {
                       change.doc.data()!,
                     );
                     _transactions.add(item);
-                    _db.insertTransaction(item, syncStatus: 'synced');
+                    _db.insertTransaction(item, syncStatus: 'synced', profileId: _activeProfileId);
                   }
                   break;
                 case DocumentChangeType.modified:
@@ -110,6 +116,7 @@ class TransactionProvider extends ChangeNotifier {
                     _db.updateTransaction(
                       TransactionItem.fromMap(docId, change.doc.data()!),
                       syncStatus: 'synced',
+                      profileId: _activeProfileId,
                     );
                   }
                   break;
@@ -117,7 +124,7 @@ class TransactionProvider extends ChangeNotifier {
                   _knownDocIds.remove(docId);
                   _pendingIds.remove(docId);
                   _transactions.removeWhere((t) => t.id == docId);
-                  _db.hardDeleteTransaction(docId);
+                  _db.hardDeleteTransaction(docId, profileId: _activeProfileId);
                   break;
               }
             }
@@ -130,7 +137,9 @@ class TransactionProvider extends ChangeNotifier {
             notifyListeners();
           },
         );
-    // 4. Attach Firestore snapshot for categories
+  }
+
+  void _attachCategoryListener(String uid) {
     _categorySubscription = _firestore
         .collection('users')
         .doc(uid)
@@ -149,14 +158,14 @@ class TransactionProvider extends ChangeNotifier {
                       change.doc.data()!,
                     );
                     _categoryItems.add(item);
-                    _db.insertCategory(item, syncStatus: 'synced');
+                    _db.insertCategory(item, syncStatus: 'synced', profileId: _activeProfileId);
                   }
                   break;
                 case DocumentChangeType.removed:
                   _knownCategoryIds.remove(docId);
                   _pendingCategoryIds.remove(docId);
                   _categoryItems.removeWhere((c) => c.id == docId);
-                  _db.hardDeleteCategory(docId);
+                  _db.hardDeleteCategory(docId, profileId: _activeProfileId);
                   break;
                 case DocumentChangeType.modified:
                   break;
@@ -172,13 +181,13 @@ class TransactionProvider extends ChangeNotifier {
 
   Future<void> _loadFromDatabase() async {
     try {
-      final items = await _db.readAllTransactions();
+      final items = await _db.readAllTransactions(profileId: _activeProfileId);
       _transactions.addAll(items);
       for (final item in items) {
         _knownDocIds.add(item.id);
       }
       // Protect pending local changes from snapshot overwrites
-      final pendingIds = await _db.readAllPendingIds();
+      final pendingIds = await _db.readAllPendingIds(profileId: _activeProfileId);
       _pendingIds.addAll(pendingIds);
     } catch (e) {
       debugPrint('Error loading transactions from database: $e');
@@ -189,12 +198,12 @@ class TransactionProvider extends ChangeNotifier {
 
   Future<void> _loadCategoriesFromDatabase() async {
     try {
-      final items = await _db.readAllCategories();
+      final items = await _db.readAllCategories(profileId: _activeProfileId);
       _categoryItems.addAll(items);
       for (final item in items) {
         _knownCategoryIds.add(item.id);
       }
-      final pendingIds = await _db.readAllPendingCategoryIds();
+      final pendingIds = await _db.readAllPendingCategoryIds(profileId: _activeProfileId);
       _pendingCategoryIds.addAll(pendingIds);
     } catch (e) {
       debugPrint('Error loading categories from database: $e');
@@ -208,7 +217,7 @@ class TransactionProvider extends ChangeNotifier {
       final uid = _currentUid;
       if (uid == null) return;
 
-      final pending = await _db.readPendingSyncs();
+      final pending = await _db.readPendingSyncs(profileId: _activeProfileId);
       for (final item in pending) {
         _firestore
             .collection('users')
@@ -217,13 +226,13 @@ class TransactionProvider extends ChangeNotifier {
             .doc(item.id)
             .set(item.toMap())
             .then((_) {
-              _db.markSynced(item.id);
+              _db.markSynced(item.id, profileId: _activeProfileId);
               _pendingIds.remove(item.id);
             })
             .catchError((_) {});
       }
 
-      final deleteIds = await _db.readPendingDeleteIds();
+      final deleteIds = await _db.readPendingDeleteIds(profileId: _activeProfileId);
       for (final id in deleteIds) {
         _firestore
             .collection('users')
@@ -232,14 +241,14 @@ class TransactionProvider extends ChangeNotifier {
             .doc(id)
             .delete()
             .then((_) {
-              _db.hardDeleteTransaction(id);
+_db.hardDeleteTransaction(id, profileId: _activeProfileId);
               _pendingIds.remove(id);
             })
             .catchError((_) {});
       }
 
       // Retry pending category creates
-      final pendingCategories = await _db.readPendingCategorySyncs();
+      final pendingCategories = await _db.readPendingCategorySyncs(profileId: _activeProfileId);
       for (final item in pendingCategories) {
         _firestore
             .collection('users')
@@ -248,14 +257,14 @@ class TransactionProvider extends ChangeNotifier {
             .doc(item.id)
             .set(item.toMap())
             .then((_) {
-              _db.markCategorySynced(item.id);
+_db.markCategorySynced(item.id, profileId: _activeProfileId);
               _pendingCategoryIds.remove(item.id);
             })
             .catchError((_) {});
       }
 
       // Retry pending category deletes
-      final deleteCategoryIds = await _db.readPendingCategoryDeleteIds();
+      final deleteCategoryIds = await _db.readPendingCategoryDeleteIds(profileId: _activeProfileId);
       for (final id in deleteCategoryIds) {
         _firestore
             .collection('users')
@@ -264,7 +273,7 @@ class TransactionProvider extends ChangeNotifier {
             .doc(id)
             .delete()
             .then((_) {
-              _db.hardDeleteCategory(id);
+              _db.hardDeleteCategory(id, profileId: _activeProfileId);
               _pendingCategoryIds.remove(id);
             })
             .catchError((_) {});
@@ -276,7 +285,11 @@ class TransactionProvider extends ChangeNotifier {
     }
   }
 
+  String get activeProfileId => _activeProfileId;
+
   bool get isLoading => _isLoading;
+
+
 
   List<String> get expenseCategories => List.unmodifiable(
     _categoryItems.where((c) => !c.isIncome).map((c) => c.name),
@@ -454,9 +467,10 @@ class TransactionProvider extends ChangeNotifier {
       name: cleanCategory,
       isIncome: false,
       lastModified: now,
+      profileId: _activeProfileId,
     );
 
-    _db.insertCategory(item, syncStatus: 'pending_create');
+    _db.insertCategory(item, syncStatus: 'pending_create', profileId: _activeProfileId);
     _knownCategoryIds.add(item.id);
     _pendingCategoryIds.add(item.id);
     _categoryItems.add(item);
@@ -466,7 +480,7 @@ class TransactionProvider extends ChangeNotifier {
         .set(item.toMap())
         .then((_) async {
           _pendingCategoryIds.remove(item.id);
-          await _db.markCategorySynced(item.id);
+          await _db.markCategorySynced(item.id, profileId: _activeProfileId);
           _retryPendingOperations();
         })
         .catchError((error) {
@@ -485,7 +499,7 @@ class TransactionProvider extends ChangeNotifier {
 
     final item = _categoryItems[idx];
 
-    _db.softDeleteCategory(item.id);
+    _db.softDeleteCategory(item.id, profileId: _activeProfileId);
     _knownCategoryIds.remove(item.id);
     _pendingCategoryIds.add(item.id);
     _categoryItems.removeAt(idx);
@@ -499,7 +513,7 @@ class TransactionProvider extends ChangeNotifier {
         .delete()
         .then((_) async {
           _pendingCategoryIds.remove(item.id);
-          await _db.hardDeleteCategory(item.id);
+          await _db.hardDeleteCategory(item.id, profileId: _activeProfileId);
           _retryPendingOperations();
         })
         .catchError((error) {
@@ -529,9 +543,10 @@ class TransactionProvider extends ChangeNotifier {
       name: cleanCategory,
       isIncome: true,
       lastModified: now,
+      profileId: _activeProfileId,
     );
 
-    _db.insertCategory(item, syncStatus: 'pending_create');
+    _db.insertCategory(item, syncStatus: 'pending_create', profileId: _activeProfileId);
     _knownCategoryIds.add(item.id);
     _pendingCategoryIds.add(item.id);
     _categoryItems.add(item);
@@ -541,7 +556,7 @@ class TransactionProvider extends ChangeNotifier {
         .set(item.toMap())
         .then((_) async {
           _pendingCategoryIds.remove(item.id);
-          await _db.markCategorySynced(item.id);
+          await _db.markCategorySynced(item.id, profileId: _activeProfileId);
           _retryPendingOperations();
         })
         .catchError((error) {
@@ -560,7 +575,7 @@ class TransactionProvider extends ChangeNotifier {
 
     final item = _categoryItems[idx];
 
-    _db.softDeleteCategory(item.id);
+    _db.softDeleteCategory(item.id, profileId: _activeProfileId);
     _knownCategoryIds.remove(item.id);
     _pendingCategoryIds.add(item.id);
     _categoryItems.removeAt(idx);
@@ -574,7 +589,7 @@ class TransactionProvider extends ChangeNotifier {
         .delete()
         .then((_) async {
           _pendingCategoryIds.remove(item.id);
-          await _db.hardDeleteCategory(item.id);
+          await _db.hardDeleteCategory(item.id, profileId: _activeProfileId);
           _retryPendingOperations();
         })
         .catchError((error) {
@@ -595,7 +610,7 @@ class TransactionProvider extends ChangeNotifier {
     if (user == null) return;
 
     // 1. SQLite atomic cascade
-    _db.renameCategory(oldName, cleanNewName, isIncome: isIncome);
+    _db.renameCategory(oldName, cleanNewName, isIncome: isIncome, profileId: _activeProfileId);
 
     // 2. Update local category items
     CategoryItem? renamedCategory;
@@ -607,6 +622,7 @@ class TransactionProvider extends ChangeNotifier {
           name: cleanNewName,
           isIncome: _categoryItems[i].isIncome,
           lastModified: DateTime.now(),
+          profileId: _activeProfileId,
         );
         _categoryItems[i] = renamedCategory;
         _pendingCategoryIds.add(renamedCategory.id);
@@ -628,6 +644,7 @@ class TransactionProvider extends ChangeNotifier {
           incomeMonth: _transactions[i].incomeMonth,
           paymentMethod: _transactions[i].paymentMethod,
           lastModified: DateTime.now(),
+          profileId: _activeProfileId,
         );
         _transactions[i] = updated;
         _pendingIds.add(updated.id);
@@ -665,11 +682,11 @@ class TransactionProvider extends ChangeNotifier {
         .then((_) async {
           if (renamedCategory != null) {
             _pendingCategoryIds.remove(renamedCategory.id);
-            await _db.markCategorySynced(renamedCategory.id);
+            await _db.markCategorySynced(renamedCategory.id, profileId: _activeProfileId);
           }
           for (final id in affectedTxIds) {
             _pendingIds.remove(id);
-            await _db.markSynced(id);
+            await _db.markSynced(id, profileId: _activeProfileId);
           }
           _retryPendingOperations();
         })
@@ -699,10 +716,11 @@ class TransactionProvider extends ChangeNotifier {
       incomeMonth: transaction.incomeMonth,
       paymentMethod: transaction.paymentMethod,
       lastModified: now,
+      profileId: _activeProfileId,
     );
 
     // 1. SQLite first (always succeeds locally)
-    _db.insertTransaction(uniqueTransaction, syncStatus: 'pending_create');
+    _db.insertTransaction(uniqueTransaction, syncStatus: 'pending_create', profileId: _activeProfileId);
 
     // 2. Update local state
     _knownDocIds.add(uniqueTransaction.id);
@@ -715,7 +733,7 @@ class TransactionProvider extends ChangeNotifier {
         .set(uniqueTransaction.toMap())
         .then((_) async {
           _pendingIds.remove(uniqueTransaction.id);
-          await _db.markSynced(uniqueTransaction.id);
+          await _db.markSynced(uniqueTransaction.id, profileId: _activeProfileId);
           _retryPendingOperations();
         })
         .catchError((error) {
@@ -742,6 +760,7 @@ class TransactionProvider extends ChangeNotifier {
       dateTime: now,
       paymentMethod: fromAccount,
       lastModified: now,
+      profileId: _activeProfileId,
     );
 
     final incomeItem = TransactionItem(
@@ -753,11 +772,12 @@ class TransactionProvider extends ChangeNotifier {
       dateTime: now,
       paymentMethod: toAccount,
       lastModified: now,
+      profileId: _activeProfileId,
     );
 
     // 1. SQLite first
-    _db.insertTransaction(expenseItem, syncStatus: 'pending_create');
-    _db.insertTransaction(incomeItem, syncStatus: 'pending_create');
+    _db.insertTransaction(expenseItem, syncStatus: 'pending_create', profileId: _activeProfileId);
+    _db.insertTransaction(incomeItem, syncStatus: 'pending_create', profileId: _activeProfileId);
 
     // 2. Local state
     _knownDocIds.add(expenseItem.id);
@@ -777,8 +797,8 @@ class TransactionProvider extends ChangeNotifier {
         .then((_) async {
           _pendingIds.remove(expenseItem.id);
           _pendingIds.remove(incomeItem.id);
-          await _db.markSynced(expenseItem.id);
-          await _db.markSynced(incomeItem.id);
+          await _db.markSynced(expenseItem.id, profileId: _activeProfileId);
+          await _db.markSynced(incomeItem.id, profileId: _activeProfileId);
           _retryPendingOperations();
         })
         .catchError((error) {
@@ -794,7 +814,7 @@ class TransactionProvider extends ChangeNotifier {
     if (index == -1) return;
 
     // 1. SQLite first
-    _db.softDeleteTransaction(id);
+    _db.softDeleteTransaction(id, profileId: _activeProfileId);
 
     // 2. Local state
     _knownDocIds.remove(id);
@@ -811,7 +831,7 @@ class TransactionProvider extends ChangeNotifier {
         .delete()
         .then((_) async {
           _pendingIds.remove(id);
-          await _db.hardDeleteTransaction(id);
+          await _db.hardDeleteTransaction(id, profileId: _activeProfileId);
           _retryPendingOperations();
         })
         .catchError((error) {
@@ -836,10 +856,11 @@ class TransactionProvider extends ChangeNotifier {
       incomeMonth: transaction.incomeMonth,
       paymentMethod: transaction.paymentMethod,
       lastModified: DateTime.now(),
+      profileId: _activeProfileId,
     );
 
     // 1. SQLite first
-    _db.updateTransaction(updated, syncStatus: 'pending_update');
+    _db.updateTransaction(updated, syncStatus: 'pending_update', profileId: _activeProfileId);
 
     // 2. Local state
     _pendingIds.add(updated.id);
@@ -855,12 +876,29 @@ class TransactionProvider extends ChangeNotifier {
         .update(updated.toMap())
         .then((_) async {
           _pendingIds.remove(updated.id);
-          await _db.markSynced(updated.id);
+          await _db.markSynced(updated.id, profileId: _activeProfileId);
           _retryPendingOperations();
         })
         .catchError((error) {
           debugPrint('Firestore updateTransaction error: $error');
         });
+  }
+
+  void updateProfileId(String id) {
+    debugPrint('TransactionProvider.updateProfileId: switching to $id');
+    _activeProfileId = id;
+    _firestoreSubscription?.cancel();
+    _categorySubscription?.cancel();
+    _knownDocIds.clear();
+    _pendingIds.clear();
+    _knownCategoryIds.clear();
+    _pendingCategoryIds.clear();
+    _transactions.clear();
+    _categoryItems.clear();
+    if (_currentUid != null) {
+      _startListening(_currentUid!);
+    }
+    notifyListeners();
   }
 
   @override

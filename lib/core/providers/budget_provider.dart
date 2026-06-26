@@ -14,6 +14,7 @@ class BudgetProvider extends ChangeNotifier {
   bool _isLoading = true;
   String? _currentUid;
   double _amount = 0;
+  String _activeProfileId = 'default_profile';
 
   BudgetProvider() {
     _authSubscription = _auth.authStateChanges().listen((user) {
@@ -29,6 +30,8 @@ class BudgetProvider extends ChangeNotifier {
     });
   }
 
+  String get activeProfileId => _activeProfileId;
+
   double get amount => _amount;
   bool get isLoading => _isLoading;
   bool get hasBudget => _amount > 0;
@@ -40,8 +43,11 @@ class BudgetProvider extends ChangeNotifier {
 
     _loadFromDatabase().then((_) {
       _retryPendingBudget();
+      _attachBudgetListener(uid);
     });
+  }
 
+  void _attachBudgetListener(String uid) {
     _firestoreSubscription = _firestore
         .collection('users')
         .doc(uid)
@@ -54,7 +60,7 @@ class BudgetProvider extends ChangeNotifier {
           final remoteAmount = (snapshot.data()!['amount'] as num).toDouble();
           if (remoteAmount != _amount) {
             _amount = remoteAmount;
-            _db.insertOrUpdateBudget(_amount, syncStatus: 'synced');
+            _db.insertOrUpdateBudget(_amount, syncStatus: 'synced', profileId: _activeProfileId);
             notifyListeners();
           }
         }
@@ -71,7 +77,7 @@ class BudgetProvider extends ChangeNotifier {
 
   Future<void> _loadFromDatabase() async {
     try {
-      final budgetAmount = await _db.readBudget();
+      final budgetAmount = await _db.readBudget(profileId: _activeProfileId);
       if (budgetAmount != null) {
         _amount = budgetAmount;
       }
@@ -87,7 +93,7 @@ class BudgetProvider extends ChangeNotifier {
     if (uid == null) return;
 
     try {
-      final syncStatus = await _db.getBudgetSyncStatus();
+      final syncStatus = await _db.getBudgetSyncStatus(profileId: _activeProfileId);
       if (syncStatus == null || syncStatus == 'synced') return;
 
       _firestore
@@ -97,7 +103,7 @@ class BudgetProvider extends ChangeNotifier {
           .doc('monthly')
           .set({'amount': _amount, 'lastModified': DateTime.now().toIso8601String()})
           .then((_) async {
-        await _db.markBudgetSynced();
+        await _db.markBudgetSynced(profileId: _activeProfileId);
       }).catchError((error) {
         debugPrint('Retry pending budget error: $error');
       });
@@ -112,7 +118,7 @@ class BudgetProvider extends ChangeNotifier {
 
     _amount = amount;
 
-    _db.insertOrUpdateBudget(_amount, syncStatus: 'pending');
+    _db.insertOrUpdateBudget(_amount, syncStatus: 'pending', profileId: _activeProfileId);
     notifyListeners();
 
     _firestore
@@ -122,10 +128,21 @@ class BudgetProvider extends ChangeNotifier {
         .doc('monthly')
         .set({'amount': _amount, 'lastModified': DateTime.now().toIso8601String()})
         .then((_) async {
-      await _db.markBudgetSynced();
+      await _db.markBudgetSynced(profileId: _activeProfileId);
     }).catchError((error) {
       debugPrint('Firestore setBudget error: $error');
     });
+  }
+
+  void updateProfileId(String id) {
+    debugPrint('BudgetProvider.updateProfileId: switching to $id');
+    _activeProfileId = id;
+    _firestoreSubscription?.cancel();
+    _amount = 0;
+    if (_currentUid != null) {
+      _startListening(_currentUid!);
+    }
+    notifyListeners();
   }
 
   @override
