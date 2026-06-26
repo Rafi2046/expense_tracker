@@ -47,163 +47,160 @@ class PartiesReportScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: ReportBottomActions(
+        reportName: 'Parties Report',
+        title: 'Parties Report',
+        dateSubtitle: dateSubtitle,
+        headers: headers,
+        rows: rows,
+      ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Search bar
-                    TextFormField(
-                      initialValue: reportsProvider.partiesSearchQuery,
-                      onChanged: (val) {
-                        reportsProvider.setPartiesSearch(val);
-                      },
-                      style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
-                      decoration: InputDecoration(
-                        hintText: 'Search parties...',
-                        hintStyle: AppTextStyles.partyFormHint.copyWith(fontSize: 14, color: isDark ? Colors.white30 : null),
-                        prefixIcon: Icon(Symbols.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
-                        filled: true,
-                        fillColor: theme.cardColor,
-                        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            top: 12.0,
+            bottom: 24.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Search bar
+              TextFormField(
+                initialValue: reportsProvider.partiesSearchQuery,
+                onChanged: (val) {
+                  reportsProvider.setPartiesSearch(val);
+                },
+                style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
+                decoration: InputDecoration(
+                  hintText: 'Search parties...',
+                  hintStyle: AppTextStyles.partyFormHint.copyWith(fontSize: 14, color: isDark ? Colors.white30 : null),
+                  prefixIcon: Icon(Symbols.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
+                  filled: true,
+                  fillColor: theme.cardColor,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Parties list
+              filtered.isEmpty
+                  ? Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 60.0),
+                        child: Column(
+                          children: [
+                            Icon(Symbols.people_outline_rounded, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
+                            const SizedBox(height: 12),
+                            Text(
+                              'No parties found',
+                              style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                                fontSize: 14,
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
+                    )
+                  : ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: filtered.length,
+                      separatorBuilder: (context, index) => const SizedBox(height: 10),
+                      itemBuilder: (context, index) {
+                        final item = filtered[index];
+                        final isReceivable = item.netBalance >= 0;
 
-                    // Parties list
-                    filtered.isEmpty
-                        ? Center(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 60.0),
-                              child: Column(
+                        return Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: theme.cardColor,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
                                 children: [
-                                  Icon(Symbols.people_outline_rounded, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
-                                  const SizedBox(height: 12),
+                                  Container(
+                                    width: 44,
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                      color: isDark ? Colors.white10 : const Color(0xFFF1F2F4),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        item.initials,
+                                        style: AppTextStyles.reportTileTitle.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: theme.colorScheme.onSurface,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item.name,
+                                        style: AppTextStyles.reportTransactionTitle.copyWith(
+                                          color: theme.colorScheme.onSurface,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        '${item.phone ?? "No phone"} • ${item.transactionCount} txs',
+                                        style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
                                   Text(
-                                    'No parties found',
-                                    style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                                      fontSize: 14,
-                                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                    isReceivable ? 'To Receive' : 'To Give',
+                                    style: AppTextStyles.reportStatLabel.copyWith(
+                                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '$currencySymbol ${item.netBalance.abs().toStringAsFixed(0)}',
+                                    style: AppTextStyles.reportTransactionTitle.copyWith(
+                                      color: item.netBalance == 0
+                                          ? (isDark ? Colors.white38 : Colors.grey.shade600)
+                                          : (isReceivable ? theme.primaryColor : AppColors.activeRed),
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                          )
-                        : ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: filtered.length,
-                            separatorBuilder: (context, index) => const SizedBox(height: 10),
-                            itemBuilder: (context, index) {
-                              final item = filtered[index];
-                              final isReceivable = item.netBalance >= 0;
-
-                              return Container(
-                                padding: const EdgeInsets.all(14),
-                                decoration: BoxDecoration(
-                                  color: theme.cardColor,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 44,
-                                          height: 44,
-                                          decoration: BoxDecoration(
-                                            color: isDark ? Colors.white10 : const Color(0xFFF1F2F4),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              item.initials,
-                                              style: AppTextStyles.reportTileTitle.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: theme.colorScheme.onSurface,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              item.name,
-                                              style: AppTextStyles.reportTransactionTitle.copyWith(
-                                                color: theme.colorScheme.onSurface,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              '${item.phone ?? "No phone"} • ${item.transactionCount} txs',
-                                              style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          isReceivable ? 'To Receive' : 'To Give',
-                                          style: AppTextStyles.reportStatLabel.copyWith(
-                                            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          '$currencySymbol ${item.netBalance.abs().toStringAsFixed(0)}',
-                                          style: AppTextStyles.reportTransactionTitle.copyWith(
-                                            color: item.netBalance == 0
-                                                ? (isDark ? Colors.white38 : Colors.grey.shade600)
-                                                : (isReceivable ? theme.primaryColor : AppColors.activeRed),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
+                            ],
                           ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Persistent bottom actions
-            ReportBottomActions(
-              reportName: 'Parties Report',
-              title: 'Parties Report',
-              dateSubtitle: dateSubtitle,
-              headers: headers,
-              rows: rows,
-            ),
-          ],
+                        );
+                      },
+                    ),
+            ],
+          ),
         ),
       ),
     );

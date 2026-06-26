@@ -1,8 +1,8 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:printing/printing.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/services/export_service.dart';
+import 'package:expense_tracker/core/services/pdf_export_service.dart';
 import 'package:expense_tracker/features/reports/widgets/share_report_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +13,7 @@ class ReportBottomActions extends StatelessWidget {
   final String dateSubtitle;
   final List<String> headers;
   final List<Map<String, dynamic>> rows;
+  final PdfSummaryData? summaryData;
 
   const ReportBottomActions({
     super.key,
@@ -21,6 +22,7 @@ class ReportBottomActions extends StatelessWidget {
     required this.dateSubtitle,
     required this.headers,
     required this.rows,
+    this.summaryData,
   });
 
   Future<void> _onDownload(BuildContext context) async {
@@ -35,6 +37,7 @@ class ReportBottomActions extends StatelessWidget {
         dateRange: dateSubtitle,
         headers: headers,
         rows: rows,
+        summaryData: summaryData,
       );
       messenger.hideCurrentSnackBar();
       await OpenFilex.open(file.path);
@@ -75,6 +78,7 @@ class ReportBottomActions extends StatelessWidget {
           dateRange: dateSubtitle,
           headers: headers,
           rows: rows,
+          summaryData: summaryData,
         ),
         name: title,
       );
@@ -101,14 +105,19 @@ class ReportBottomActions extends StatelessWidget {
           dateRange: dateSubtitle,
           headers: headers,
           rows: rows,
+          summaryData: summaryData,
         );
         messenger.hideCurrentSnackBar();
         await service.shareFile(file);
       } else if (format == 'image') {
-        messenger.hideCurrentSnackBar();
-        messenger.showSnackBar(
-          _successSnackBar('Image export coming soon'),
+        await service.shareAsImage(
+          title: title,
+          dateRange: dateSubtitle,
+          headers: headers,
+          rows: rows,
+          summaryData: summaryData,
         );
+        messenger.hideCurrentSnackBar();
       }
     } catch (e) {
       messenger.hideCurrentSnackBar();
@@ -143,24 +152,6 @@ class ReportBottomActions extends StatelessWidget {
     );
   }
 
-  SnackBar _successSnackBar(String message) {
-    return SnackBar(
-      content: Row(
-        children: [
-          const Icon(Symbols.check_circle_outline, color: Colors.white, size: 20),
-          const SizedBox(width: 10),
-          Flexible(
-            child: Text(
-              message,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
-            ),
-          ),
-        ],
-      ),
-      backgroundColor: AppColors.activeGreen,
-      behavior: SnackBarBehavior.floating,
-    );
-  }
 
   SnackBar _errorSnackBar(String message) {
     return SnackBar(
@@ -187,55 +178,55 @@ class ReportBottomActions extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      color: Colors.transparent,
-      padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        bottom: MediaQuery.of(context).padding.bottom + 10,
-        top: 6,
-      ),
-      child: Container(
-        height: 58,
-        decoration: BoxDecoration(
-          color: theme.cardColor,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), width: 1.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
-              blurRadius: 16,
-              offset: const Offset(0, 8),
-            ),
-          ],
+      decoration: BoxDecoration(
+        color: isDark ? theme.cardColor : Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: isDark ? Colors.black38 : Colors.black12,
+            blurRadius: 12,
+            offset: const Offset(0, -4),
+          ),
+        ],
+        border: Border(
+          top: BorderSide(
+            color: theme.dividerTheme.color ?? (isDark ? Colors.white10 : const Color(0xFFF1F1F1)),
+            width: 1.0,
+          ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildActionItem(
-              context: context,
-              icon: Symbols.download,
-              label: 'Download',
-              onTap: () => _onDownload(context),
-            ),
-            _buildActionItem(
-              context: context,
-              icon: Symbols.print,
-              label: 'Print PDF',
-              onTap: () => _onPrint(context),
-            ),
-            _buildActionItem(
-              context: context,
-              icon: Symbols.table_chart,
-              label: 'Excel',
-              onTap: () => _onExcel(context),
-            ),
-            _buildActionItem(
-              context: context,
-              icon: Symbols.share,
-              label: 'Share',
-              onTap: () => _onShare(context),
-            ),
-          ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildActionItem(
+                context: context,
+                icon: Symbols.download,
+                label: 'Download',
+                onTap: () => _onDownload(context),
+              ),
+              _buildActionItem(
+                context: context,
+                icon: Symbols.print,
+                label: 'Print PDF',
+                onTap: () => _onPrint(context),
+              ),
+              _buildActionItem(
+                context: context,
+                icon: Symbols.table_chart,
+                label: 'Excel',
+                onTap: () => _onExcel(context),
+              ),
+              _buildActionItem(
+                context: context,
+                icon: Symbols.share,
+                label: 'Share',
+                onTap: () => _onShare(context),
+              ),
+            ],
+          ),
         ),
       ),
     );

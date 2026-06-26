@@ -32,7 +32,6 @@ class CashInHandStatementScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      extendBody: true,
       appBar: AppBar(
         backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
@@ -66,7 +65,7 @@ class CashInHandStatementScreen extends StatelessWidget {
             left: 16.0,
             right: 16.0,
             top: 12.0,
-            bottom: 100.0,
+            bottom: 24.0,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

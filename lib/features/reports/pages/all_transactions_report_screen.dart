@@ -35,7 +35,6 @@ class AllTransactionsReportScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      extendBody: true,
       appBar: AppBar(
         backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
@@ -65,13 +64,12 @@ class AllTransactionsReportScreen extends StatelessWidget {
         rows: rows,
       ),
       body: SafeArea(
-        bottom: false,
         child: SingleChildScrollView(
           padding: const EdgeInsets.only(
             left: AppSpacing.p16,
             right: AppSpacing.p16,
             top: AppSpacing.p20,
-            bottom: 120,
+            bottom: 24,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
