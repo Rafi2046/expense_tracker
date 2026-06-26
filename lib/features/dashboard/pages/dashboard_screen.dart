@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/appbar_widget.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
@@ -36,36 +37,9 @@ class DashboardScreen extends StatelessWidget {
     final currentProfile = profileProvider.currentProfile;
     final debtProvider = context.watch<DebtProvider>();
     final txProvider = context.watch<TransactionProvider>();
+    final balanceProvider = context.watch<BalanceAnalyticsProvider>();
 
-    // Calculate Cash Balance and Bank Balance dynamically
-    double cashBalance = 0.0;
-    double bankBalance = 0.0;
-
-    for (var tx in txProvider.transactions) {
-      if (tx.paymentMethod == 'Cash') {
-        if (tx.isIncome) {
-          cashBalance += tx.amount;
-        } else {
-          cashBalance -= tx.amount;
-        }
-      } else if (tx.paymentMethod == 'Bank') {
-        if (tx.isIncome) {
-          bankBalance += tx.amount;
-        } else {
-          bankBalance -= tx.amount;
-        }
-      }
-    }
-
-    for (var d in debtProvider.items) {
-      if (d.isReceive) {
-        cashBalance += d.amount;
-      } else {
-        cashBalance -= d.amount;
-      }
-    }
-
-    final double totalBalance = cashBalance + bankBalance;
+    final double totalBalance = balanceProvider.allTimeTotalBalance;
     final String currentMonthName = DateFormat('MMMM').format(DateTime.now());
 
     return StreamBuilder<User?>(

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/providers/debt_provider.dart';
-import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/dashboard/widgets/account_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/overall_balance_card.dart';
@@ -29,38 +28,11 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final txProvider = context.watch<TransactionProvider>();
-    final debtProvider = context.watch<DebtProvider>();
+    final balanceProvider = context.watch<BalanceAnalyticsProvider>();
 
-    // Calculate Cash Balance and Bank Balance dynamically
-    double cashBalance = 0.0;
-    double bankBalance = 0.0;
-
-    for (var tx in txProvider.transactions) {
-      if (tx.paymentMethod == 'Cash') {
-        if (tx.isIncome) {
-          cashBalance += tx.amount;
-        } else {
-          cashBalance -= tx.amount;
-        }
-      } else if (tx.paymentMethod == 'Bank') {
-        if (tx.isIncome) {
-          bankBalance += tx.amount;
-        } else {
-          bankBalance -= tx.amount;
-        }
-      }
-    }
-
-    for (var d in debtProvider.items) {
-      if (d.isReceive) {
-        cashBalance += d.amount;
-      } else {
-        cashBalance -= d.amount;
-      }
-    }
-
-    final double totalBalance = cashBalance + bankBalance;
+    final double cashBalance = balanceProvider.allTimeCashBalance;
+    final double bankBalance = balanceProvider.allTimeBankBalance;
+    final double totalBalance = balanceProvider.allTimeTotalBalance;
 
     // Standard localized formatter
     String formatAmount(double val) {
