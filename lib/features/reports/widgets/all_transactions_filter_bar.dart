@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -46,7 +47,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
           decoration: InputDecoration(
             hintText: 'Search Transactions...',
             hintStyle: AppTextStyles.partyFormHint.copyWith(fontSize: 14, color: isDark ? Colors.white30 : null),
-            prefixIcon: Icon(Icons.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
+            prefixIcon: Icon(Symbols.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
             filled: true,
             fillColor: theme.cardColor,
             contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
@@ -94,7 +95,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                         reportsProvider.selectedType,
                         style: AppTextStyles.reportTileTitle.copyWith(fontSize: 11.5, color: theme.colorScheme.onSurface),
                       ),
-                      Icon(Icons.arrow_drop_down, color: theme.colorScheme.onSurface),
+                      Icon(Symbols.arrow_drop_down, color: theme.colorScheme.onSurface),
                     ],
                   ),
                 ),
@@ -129,7 +130,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                         reportsProvider.selectedPartyName ?? 'Select Party',
                         style: AppTextStyles.reportTileTitle.copyWith(fontSize: 11.5, color: theme.colorScheme.onSurface),
                       ),
-                      Icon(Icons.arrow_drop_down, color: theme.colorScheme.onSurface),
+                      Icon(Symbols.arrow_drop_down, color: theme.colorScheme.onSurface),
                     ],
                   ),
                 ),

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -82,7 +83,7 @@ class OverallBalanceCard extends StatelessWidget {
             child: GestureDetector(
               onTap: onToggleBalances,
               child: Icon(
-                showBalances ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                showBalances ? Symbols.visibility : Symbols.visibility_off,
                 color: Colors.white70,
                 size: 18,
               ),

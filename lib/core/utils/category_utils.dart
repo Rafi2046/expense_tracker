@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 
 class CategoryUtils {
@@ -5,25 +6,25 @@ class CategoryUtils {
     switch (category.toLowerCase()) {
       case 'dining':
       case 'food':
-        return Icons.restaurant_rounded;
+        return Symbols.restaurant_rounded;
       case 'transport':
-        return Icons.directions_bus_rounded;
+        return Symbols.directions_bus_rounded;
       case 'medicine':
-        return Icons.medical_services_rounded;
+        return Symbols.medical_services_rounded;
       case 'salary':
-        return Icons.payments_rounded;
+        return Symbols.payments_rounded;
       case 'freelance':
-        return Icons.work_rounded;
+        return Symbols.work_rounded;
       case 'entertainment':
-        return Icons.sports_esports_rounded;
+        return Symbols.sports_esports_rounded;
       case 'shopping':
-        return Icons.shopping_bag_rounded;
+        return Symbols.shopping_bag_rounded;
       case 'investment':
-        return Icons.trending_up_rounded;
+        return Symbols.trending_up_rounded;
       case 'rent':
-        return Icons.home_rounded;
+        return Symbols.home_rounded;
       default:
-        return Icons.category_rounded;
+        return Symbols.category_rounded;
     }
   }
 

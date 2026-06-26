@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,7 @@ class IncomeSummaryCard extends StatelessWidget {
             Row(
               children: [
                 const Icon(
-                  Icons.trending_up,
+                  Symbols.trending_up,
                   color: AppColors.activeGreen,
                   size: 16,
                 ),

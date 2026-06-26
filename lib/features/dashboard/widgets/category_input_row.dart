@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -48,7 +49,7 @@ class CategoryInputRow extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: Icon(Icons.add_circle, color: themeColor, size: 28),
+            icon: Icon(Symbols.add_circle, color: themeColor, size: 28),
             onPressed: onAddPressed,
           ),
         ],

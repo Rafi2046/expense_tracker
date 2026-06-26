@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/settings/widgets/logout_dialog.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
@@ -16,21 +17,21 @@ class SupportGroup extends StatelessWidget {
       title: context.translate('support'),
       children: [
         SettingsOptionRow(
-          icon: Icons.help_rounded,
+          icon: Symbols.help_rounded,
           iconBgColor: const Color(0xFFECEFF1),
           iconColor: const Color(0xFF546E7A),
           title: context.translate('help_center'),
           onTap: () => onSnackBar('Help Center clicked'),
         ),
         SettingsOptionRow(
-          icon: Icons.shield_rounded,
+          icon: Symbols.shield_rounded,
           iconBgColor: const Color(0xFFE8F5E9),
           iconColor: const Color(0xFF43A047),
           title: context.translate('privacy_policy'),
           onTap: () => onSnackBar('Privacy Policy clicked'),
         ),
         SettingsOptionRow(
-          icon: Icons.logout_rounded,
+          icon: Symbols.logout_rounded,
           iconBgColor: const Color(0xFFFFF1F0),
           iconColor: const Color(0xFFE53935),
           title: context.translate('logout'),

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -219,7 +220,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   const Icon(
-                    Icons.arrow_forward_ios_rounded,
+                    Symbols.arrow_forward_ios_rounded,
                     size: 10,
                     color: Colors.grey,
                   ),
@@ -290,7 +291,7 @@ class SyncStatusCard extends StatelessWidget {
       child: Row(
         children: [
           const Icon(
-            Icons.cloud_done_outlined,
+            Symbols.cloud_done,
             color: Colors.grey,
             size: 18,
           ),

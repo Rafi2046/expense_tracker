@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
@@ -56,7 +57,7 @@ class PartiesReportScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         hintText: 'Search parties...',
                         hintStyle: AppTextStyles.partyFormHint.copyWith(fontSize: 14, color: isDark ? Colors.white30 : null),
-                        prefixIcon: Icon(Icons.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
+                        prefixIcon: Icon(Symbols.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
                         filled: true,
                         fillColor: theme.cardColor,
                         contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
@@ -83,7 +84,7 @@ class PartiesReportScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 60.0),
                               child: Column(
                                 children: [
-                                  Icon(Icons.people_outline_rounded, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
+                                  Icon(Symbols.people_outline_rounded, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
                                   const SizedBox(height: 12),
                                   Text(
                                     'No parties found',

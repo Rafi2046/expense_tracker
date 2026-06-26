@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
@@ -102,7 +103,7 @@ class DebtTotalCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Icon(
-                              Icons.lightbulb_outline_rounded,
+                              Symbols.lightbulb_outline_rounded,
                               color: Colors.white,
                               size: 18,
                             ),
@@ -127,7 +128,7 @@ class DebtTotalCard extends StatelessWidget {
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
-                                  Icons.close_rounded,
+                                  Symbols.close_rounded,
                                   color: Colors.white70,
                                   size: 14,
                                 ),

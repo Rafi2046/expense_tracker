@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -68,7 +69,7 @@ class ShareReportSheet extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                Icons.image_outlined,
+                Symbols.image,
                 color: theme.primaryColor,
                 size: 18,
               ),
@@ -94,7 +95,7 @@ class ShareReportSheet extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                Icons.picture_as_pdf_outlined,
+                Symbols.picture_as_pdf,
                 color: theme.primaryColor,
                 size: 18,
               ),

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,13 +27,13 @@ class PartyStatementViewToggle extends StatelessWidget {
           _buildTab(
             context: context,
             isActive: mode == PartyStatementViewMode.card,
-            icon: Icons.layers_outlined,
+            icon: Symbols.layers,
             onTap: () => reportsProvider.setPartyStatementViewMode(PartyStatementViewMode.card),
           ),
           _buildTab(
             context: context,
             isActive: mode == PartyStatementViewMode.table,
-            icon: Icons.insert_chart_outlined_rounded,
+            icon: Symbols.insert_chart_rounded,
             onTap: () => reportsProvider.setPartyStatementViewMode(PartyStatementViewMode.table),
           ),
         ],

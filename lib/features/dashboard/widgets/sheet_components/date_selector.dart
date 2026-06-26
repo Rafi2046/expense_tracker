@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_selector_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -16,12 +17,12 @@ class DateSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TransactionSelectorTile(
-      leadingIcon: Icons.calendar_today_outlined,
+      leadingIcon: Symbols.calendar_today,
       labelText: 'Date',
       valueText: dateText,
       isValueSelected: true,
       themeColor: themeColor,
-      trailingIcon: Icons.edit_calendar_outlined,
+      trailingIcon: Symbols.edit_calendar,
       onTap: onTap,
     );
   }

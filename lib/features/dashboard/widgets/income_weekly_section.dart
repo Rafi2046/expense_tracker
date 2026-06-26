@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
@@ -43,13 +44,13 @@ class IncomeWeeklySection extends StatelessWidget {
                   IconData icon;
                   final categoryLower = tx.category.toLowerCase();
                   if (categoryLower.contains('salary')) {
-                    icon = Icons.account_balance_outlined;
+                    icon = Symbols.account_balance;
                   } else if (categoryLower.contains('freelance') || categoryLower.contains('business') || categoryLower.contains('work')) {
-                    icon = Icons.work_outline;
+                    icon = Symbols.work_outline;
                   } else if (categoryLower.contains('dividend') || categoryLower.contains('invest') || categoryLower.contains('saving')) {
-                    icon = Icons.savings_outlined;
+                    icon = Symbols.savings;
                   } else {
-                    icon = Icons.receipt_long_outlined;
+                    icon = Symbols.receipt_long;
                   }
                   return TransactionContainerRow(
                     icon: icon,

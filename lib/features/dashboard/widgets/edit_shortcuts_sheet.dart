@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/shortcut_provider.dart';
 import 'package:flutter/material.dart';
@@ -47,26 +48,26 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
             Padding(
               padding: EdgeInsets.only(top: 5.0),
               child: Icon(
-                Icons.account_balance_wallet_outlined,
+                Symbols.account_balance_wallet,
                 size: 20,
                 color: activeGreen,
               ),
             ),
             Positioned(
               top: 0,
-              child: Icon(Icons.arrow_upward, size: 10, color: activeGreen),
+              child: Icon(Symbols.arrow_upward, size: 10, color: activeGreen),
             ),
           ],
         );
       case 'income':
         return const Icon(
-          Icons.payments_outlined,
+          Symbols.payments,
           size: 22,
           color: activeGreen,
         );
       case 'expense':
         return const Icon(
-          Icons.account_balance_wallet_outlined,
+          Symbols.account_balance_wallet,
           size: 22,
           color: activeGreen,
         );
@@ -77,25 +78,25 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
             Padding(
               padding: EdgeInsets.only(top: 5.0),
               child: Icon(
-                Icons.account_balance_wallet_outlined,
+                Symbols.account_balance_wallet,
                 size: 20,
                 color: activeGreen,
               ),
             ),
             Positioned(
               top: 0,
-              child: Icon(Icons.arrow_downward, size: 10, color: activeGreen),
+              child: Icon(Symbols.arrow_downward, size: 10, color: activeGreen),
             ),
           ],
         );
       case 'add_party':
         return const Icon(
-          Icons.person_add_outlined,
+          Symbols.person_add,
           size: 22,
           color: activeGreen,
         );
       default:
-        return const Icon(Icons.help_outline, size: 22, color: activeGreen);
+        return const Icon(Symbols.help_outline, size: 22, color: activeGreen);
     }
   }
 
@@ -185,7 +186,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                             vertical: 8,
                           ),
                           child: Icon(
-                            Icons.drag_indicator_rounded,
+                            Symbols.drag_indicator_rounded,
                             color: Colors.grey.shade400,
                             size: 24,
                           ),
@@ -223,7 +224,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 14.0),
                           child: Icon(
-                            Icons.lock_rounded,
+                            Symbols.lock_rounded,
                             color: AppColors.activeGreen,
                             size: 20,
                           ),

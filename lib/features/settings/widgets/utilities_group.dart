@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/notes/pages/notebook_screen.dart';
 import 'package:expense_tracker/features/calculators/pages/emi_calculator_screen.dart';
 import 'package:expense_tracker/features/calculators/pages/interest_calculator_screen.dart';
@@ -24,7 +25,7 @@ class _UtilitiesGroupState extends State<UtilitiesGroup> {
       children: [
         // Notebook
         SettingsOptionRow(
-          icon: Icons.book_rounded,
+          icon: Symbols.book_rounded,
           iconBgColor: const Color(0xFFEFEBE9),
           iconColor: const Color(0xFF6D4C41),
           title: context.translate('notebook'),
@@ -40,13 +41,13 @@ class _UtilitiesGroupState extends State<UtilitiesGroup> {
 
         // Collapsible Calculators Header Row
         SettingsOptionRow(
-          icon: Icons.calculate_rounded,
+          icon: Symbols.calculate_rounded,
           iconBgColor: const Color(0xFFE6F3EE),
           iconColor: const Color(0xFF006C49),
           title: context.translate('calculators'),
           trailingIcon: _isCalculatorsExpanded
-              ? Icons.keyboard_arrow_down_rounded
-              : Icons.keyboard_arrow_right_rounded,
+              ? Symbols.keyboard_arrow_down_rounded
+              : Symbols.keyboard_arrow_right_rounded,
           onTap: () {
             setState(() {
               _isCalculatorsExpanded = !_isCalculatorsExpanded;
@@ -63,7 +64,7 @@ class _UtilitiesGroupState extends State<UtilitiesGroup> {
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
                 child: SettingsOptionRow(
-                  icon: Icons.pie_chart_outline_rounded,
+                  icon: Symbols.pie_chart_outline_rounded,
                   iconBgColor: const Color(0xFFE6F3EE),
                   iconColor: const Color(0xFF006C49),
                   title: context.translate('emi_calculator'),
@@ -82,7 +83,7 @@ class _UtilitiesGroupState extends State<UtilitiesGroup> {
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
                 child: SettingsOptionRow(
-                  icon: Icons.percent_rounded,
+                  icon: Symbols.percent_rounded,
                   iconBgColor: const Color(0xFFF3EFFF),
                   iconColor: const Color(0xFF6A53A1),
                   title: context.translate('interest_calculator'),
@@ -101,7 +102,7 @@ class _UtilitiesGroupState extends State<UtilitiesGroup> {
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
                 child: SettingsOptionRow(
-                  icon: Icons.receipt_long_rounded,
+                  icon: Symbols.receipt_long_rounded,
                   iconBgColor: const Color(0xFFFDECEC),
                   iconColor: const Color(0xFFD9383A),
                   title: context.translate('tax_calculator'),

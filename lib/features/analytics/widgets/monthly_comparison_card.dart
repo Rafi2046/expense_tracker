@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/analytics/widgets/comparison_progress_row.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +106,7 @@ class MonthlyComparisonCard extends StatelessWidget {
               Row(
                 children: [
                   const Icon(
-                    Icons.trending_up,
+                    Symbols.trending_up,
                     color: AppColors.activeRed,
                     size: 14,
                   ),

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -62,7 +63,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
-                    Icons.dark_mode_outlined,
+                    Symbols.dark_mode,
                     color: isDark ? Colors.white70 : const Color(0xFF3F51B5),
                     size: 18,
                   ),
@@ -99,8 +100,8 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
                 // Expand / Collapse Chevron
                 Icon(
                   _isExpanded
-                      ? Icons.keyboard_arrow_up_rounded
-                      : Icons.keyboard_arrow_down_rounded,
+                      ? Symbols.keyboard_arrow_up_rounded
+                      : Symbols.keyboard_arrow_down_rounded,
                   color: isDark ? Colors.white60 : Colors.grey.shade400,
                   size: 18,
                 ),
@@ -186,7 +187,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
               ),
               child: isSelected
                   ? const Icon(
-                      Icons.check,
+                      Symbols.check,
                       color: Colors.white,
                       size: 12,
                     )

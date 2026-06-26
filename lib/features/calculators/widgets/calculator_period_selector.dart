@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +69,7 @@ class CalculatorPeriodSelector extends StatelessWidget {
                     value: unit,
                     isExpanded: true,
                     dropdownColor: theme.cardColor,
-                    icon: Icon(Icons.keyboard_arrow_down_rounded, color: themeColor),
+                    icon: Icon(Symbols.keyboard_arrow_down_rounded, color: themeColor),
                     style: AppTextStyles.calculatorLabel.copyWith(
                       fontWeight: FontWeight.bold,
                       color: themeColor,

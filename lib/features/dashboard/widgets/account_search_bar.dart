@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -33,7 +34,7 @@ class AccountSearchBar extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               children: [
-                const Icon(Icons.search, color: Colors.grey, size: 18),
+                const Icon(Symbols.search, color: Colors.grey, size: 18),
                 const SizedBox(width: 6),
                 Expanded(
                   child: TextField(
@@ -54,7 +55,7 @@ class AccountSearchBar extends StatelessWidget {
                       controller.clear();
                       onSearchChanged('');
                     },
-                    child: const Icon(Icons.clear, color: Colors.grey, size: 16),
+                    child: const Icon(Symbols.clear, color: Colors.grey, size: 16),
                   ),
               ],
             ),
@@ -71,7 +72,7 @@ class AccountSearchBar extends StatelessWidget {
             border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
           ),
           child: IconButton(
-            icon: Icon(Icons.filter_list_rounded, color: theme.colorScheme.onSurface, size: 18),
+            icon: Icon(Symbols.filter_list_rounded, color: theme.colorScheme.onSurface, size: 18),
             padding: EdgeInsets.zero,
             onPressed: () {
               if (hasActiveFilters) {

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
@@ -141,7 +142,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.calendar_today_outlined, color: theme.colorScheme.onSurface),
+                    icon: Icon(Symbols.calendar_today, color: theme.colorScheme.onSurface),
                     onPressed: () {
                       final currentStart = _startDate ?? widget.initialRange.start;
                       final currentEnd = _endDate ?? widget.initialRange.end;

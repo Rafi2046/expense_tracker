@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/select_date_option_sheet.dart';
@@ -30,7 +31,7 @@ class ReportDateSelector extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.calendar_month_outlined, color: isDark ? Colors.white60 : Colors.grey.shade600, size: 16),
+              Icon(Symbols.calendar_month, color: isDark ? Colors.white60 : Colors.grey.shade600, size: 16),
               const SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/shortcut_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -22,26 +23,26 @@ class DashboardShortcutsCard extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: 4.0),
               child: Icon(
-                Icons.account_balance_wallet_outlined,
+                Symbols.account_balance_wallet,
                 size: 18,
                 color: activeGreen,
               ),
             ),
             Positioned(
               top: 0,
-              child: Icon(Icons.arrow_upward, size: 9, color: activeGreen),
+              child: Icon(Symbols.arrow_upward, size: 9, color: activeGreen),
             ),
           ],
         );
       case 'income':
         return const Icon(
-          Icons.payments_outlined,
+          Symbols.payments,
           size: 20,
           color: activeGreen,
         );
       case 'expense':
         return const Icon(
-          Icons.account_balance_wallet_outlined,
+          Symbols.account_balance_wallet,
           size: 20,
           color: activeGreen,
         );
@@ -52,25 +53,25 @@ class DashboardShortcutsCard extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: 4.0),
               child: Icon(
-                Icons.account_balance_wallet_outlined,
+                Symbols.account_balance_wallet,
                 size: 18,
                 color: activeGreen,
               ),
             ),
             Positioned(
               top: 0,
-              child: Icon(Icons.arrow_downward, size: 9, color: activeGreen),
+              child: Icon(Symbols.arrow_downward, size: 9, color: activeGreen),
             ),
           ],
         );
       case 'add_party':
         return const Icon(
-          Icons.person_add_outlined,
+          Symbols.person_add,
           size: 20,
           color: activeGreen,
         );
       default:
-        return const Icon(Icons.help_outline, size: 20, color: activeGreen);
+        return const Icon(Symbols.help_outline, size: 20, color: activeGreen);
     }
   }
 
@@ -103,7 +104,7 @@ class DashboardShortcutsCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(
-                      Icons.edit_square,
+                      Symbols.edit_square,
                       size: 13,
                       color: AppColors.activeGreen,
                     ),

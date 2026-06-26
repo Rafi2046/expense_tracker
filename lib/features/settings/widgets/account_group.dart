@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/dashboard/pages/notifications_screen.dart';
 import 'package:expense_tracker/features/settings/pages/personal_info_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
@@ -40,7 +41,7 @@ class _AccountGroupState extends State<AccountGroup> {
       title: context.translate('account'),
       children: [
         SettingsOptionRow(
-          icon: Icons.person_rounded,
+          icon: Symbols.person_rounded,
           iconBgColor: const Color(0xFFE3F2FD),
           iconColor: const Color(0xFF1E88E5),
           title: context.translate('personal_info'),
@@ -56,13 +57,13 @@ class _AccountGroupState extends State<AccountGroup> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SettingsOptionRow(
-              icon: Icons.lock_rounded,
+              icon: Symbols.lock_rounded,
               iconBgColor: const Color(0xFFFFF3E0),
               iconColor: const Color(0xFFFB8C00),
               title: context.translate('password_change'),
               trailingIcon: _isSecurityExpanded 
-                  ? Icons.keyboard_arrow_down_rounded 
-                  : Icons.chevron_right_rounded,
+                  ? Symbols.keyboard_arrow_down_rounded 
+                  : Symbols.chevron_right_rounded,
               onTap: () {
                 setState(() {
                   _isSecurityExpanded = !_isSecurityExpanded;
@@ -101,7 +102,7 @@ class _AccountGroupState extends State<AccountGroup> {
         ),
 
         SettingsOptionRow(
-          icon: Icons.notifications_rounded,
+          icon: Symbols.notifications_rounded,
           iconBgColor: const Color(0xFFFCE4EC),
           iconColor: const Color(0xFFD81B60),
           title: context.translate('notifications'),

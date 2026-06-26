@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
@@ -65,7 +66,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              isSearching ? Icons.close_rounded : Icons.search_rounded,
+              isSearching ? Symbols.close_rounded : Symbols.search_rounded,
               color: isDark ? Colors.white70 : const Color(0xFF31394D),
             ),
             onPressed: () {
@@ -113,7 +114,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
                       height: 46,
                       child: TextButton.icon(
                         icon: const Icon(
-                          Icons.account_balance_wallet_outlined,
+                          Symbols.account_balance_wallet,
                           size: 16,
                           color: Color(0xFF006C49),
                         ),
@@ -147,7 +148,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
                       height: 46,
                       child: TextButton.icon(
                         icon: const Icon(
-                          Icons.payments_outlined,
+                          Symbols.payments,
                           size: 16,
                           color: Color(0xFFD9383A),
                         ),

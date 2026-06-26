@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +106,7 @@ class SettingsProfileCard extends StatelessWidget {
             child: IconButton(
               onPressed: onEditTap,
               icon: const Icon(
-                Icons.edit_outlined,
+                Symbols.edit,
                 color: Colors.white,
                 size: 16,
               ),

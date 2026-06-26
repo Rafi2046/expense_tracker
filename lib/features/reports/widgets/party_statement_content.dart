@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
@@ -47,7 +48,7 @@ class PartyStatementContent extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.receipt_long_rounded, color: theme.brightness == Brightness.dark ? Colors.white12 : Colors.grey.shade200, size: 72),
+              Icon(Symbols.receipt_long_rounded, color: theme.brightness == Brightness.dark ? Colors.white12 : Colors.grey.shade200, size: 72),
               const SizedBox(height: 16),
               Text(
                 'No Transactions Found',

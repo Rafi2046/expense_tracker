@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
@@ -68,7 +69,7 @@ class DashboardStatCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 4, bottom: 4),
                       child: Icon(
-                        Icons.arrow_forward_ios_rounded,
+                        Symbols.arrow_forward_ios_rounded,
                         size: 8,
                         color: isPositive
                             ? AppColors.activeGreen
@@ -125,8 +126,8 @@ class DashboardStatCard extends StatelessWidget {
                         children: [
                           Icon(
                             isPositive
-                                ? Icons.trending_up
-                                : Icons.trending_down,
+                                ? Symbols.trending_up
+                                : Symbols.trending_down,
                             color: isPositive
                                 ? AppColors.activeGreen
                                 : AppColors.activeRed,

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,7 +43,7 @@ class AccountDateSelector extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.calendar_today, size: 14, color: Color(0xFF565E74)),
+          const Icon(Symbols.calendar_today, size: 14, color: Color(0xFF565E74)),
           const SizedBox(width: 8),
           Expanded(
             child: Column(

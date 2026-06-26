@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
@@ -119,7 +120,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
-            const Icon(Icons.error_outline, color: AppColors.activeRed),
+            const Icon(Symbols.error_outline, color: AppColors.activeRed),
             const SizedBox(width: 8),
             Text(
               'Missing Info',
@@ -255,7 +256,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                       ),
                       trailing: isSelected
                           ? const Icon(
-                              Icons.check_circle,
+                              Symbols.check_circle,
                               color: AppColors.activeGreen,
                             )
                           : null,
@@ -335,7 +336,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         SnackBar(
           content: Row(
             children: [
-              const Icon(Icons.check_circle_outline, color: Colors.white),
+              const Icon(Symbols.check_circle_outline, color: Colors.white),
               const SizedBox(width: 8),
               Text(
                 '${widget.isIncome ? "Income" : "Expense"} $action: ${context.formatAmount(amount, listen: false)}',

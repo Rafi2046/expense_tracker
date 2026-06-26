@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/reports/widgets/select_date_input_dialog.dart';
 import 'package:flutter/material.dart';
@@ -126,7 +127,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: Icon(Icons.close_rounded, color: theme.colorScheme.onSurfaceVariant),
+                  icon: Icon(Symbols.close_rounded, color: theme.colorScheme.onSurfaceVariant),
                   onPressed: () => Navigator.pop(context),
                 ),
                 Text(
@@ -161,7 +162,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                     ),
                     const SizedBox(width: 6),
                     IconButton(
-                      icon: Icon(Icons.edit_outlined, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5), size: 18),
+                      icon: Icon(Symbols.edit, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5), size: 18),
                       onPressed: () async {
                         final result = await SelectDateInputDialog.show(
                           context,

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/settings/pages/currency_selection_screen.dart';
@@ -24,7 +25,7 @@ class PreferencesGroup extends StatelessWidget {
       title: context.translate('preferences'),
       children: [
         SettingsOptionRow(
-          icon: Icons.payments_rounded,
+          icon: Symbols.payments_rounded,
           iconBgColor: const Color(0xFFE0F2F1),
           iconColor: const Color(0xFF00796B),
           title: context.translate('currency'),
@@ -42,12 +43,12 @@ class PreferencesGroup extends StatelessWidget {
           onSnackBar: onSnackBar,
         ),
         SettingsOptionRow(
-          icon: Icons.language_rounded,
+          icon: Symbols.language_rounded,
           iconBgColor: const Color(0xFFFFFDE7),
           iconColor: const Color(0xFFFBC02D),
           title: context.translate('change_language'),
           trailingText: '${currentLanguage.flag} ${currentLanguage.name}',
-          trailingIcon: Icons.keyboard_arrow_down_rounded,
+          trailingIcon: Symbols.keyboard_arrow_down_rounded,
           onTap: () {
             LanguageSelectorSheet.show(context);
           },

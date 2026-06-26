@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -128,7 +129,7 @@ class LedgerTransactionList extends StatelessWidget {
                 color: AppColors.activeRed,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Icon(Icons.delete_outline, color: Colors.white, size: 28),
+              child: const Icon(Symbols.delete_outline, color: Colors.white, size: 28),
             ),
             child: LedgerTransactionRow(
               title: tx.note.isNotEmpty ? tx.note : tx.category,
@@ -136,7 +137,7 @@ class LedgerTransactionList extends StatelessWidget {
               category: tx.category,
               amount: tx.amount,
               isIncome: tx.isIncome,
-              icon: tx.isIncome ? Icons.arrow_downward : Icons.arrow_upward,
+              icon: tx.isIncome ? Symbols.arrow_downward : Symbols.arrow_upward,
               incomeMonth: tx.incomeMonth,
               onTap: () {
                 AddTransactionSheet.show(

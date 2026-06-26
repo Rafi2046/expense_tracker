@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ class CategorySelectionSheetContent extends StatelessWidget {
             ),
             decoration: InputDecoration(
               hintText: 'Search Category',
-              prefixIcon: const Icon(Icons.search, color: Colors.grey),
+              prefixIcon: const Icon(Symbols.search, color: Colors.grey),
               contentPadding: const EdgeInsets.symmetric(vertical: 12),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -104,8 +105,8 @@ class CategorySelectionSheetContent extends StatelessWidget {
                   ),
                   trailing: Icon(
                     isSelected
-                        ? Icons.radio_button_checked
-                        : Icons.radio_button_unchecked,
+                        ? Symbols.radio_button_checked
+                        : Symbols.radio_button_unchecked,
                     color: isSelected
                         ? AppColors.activeGreen
                         : Colors.grey.shade300,

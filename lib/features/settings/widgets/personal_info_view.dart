@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -205,7 +206,7 @@ class PersonalInfoView extends StatelessWidget {
             children: [
               _buildInfoRow(
                 context,
-                icon: Icons.phone_outlined,
+                icon: Symbols.phone,
                 label: 'Phone Number',
                 value: phone,
                 iconColor: const Color(0xFF1E88E5),
@@ -214,7 +215,7 @@ class PersonalInfoView extends StatelessWidget {
               Divider(height: 1, color: borderColor),
               _buildInfoRow(
                 context,
-                icon: Icons.cake_outlined,
+                icon: Symbols.cake,
                 label: 'Date of Birth',
                 value: dob,
                 iconColor: const Color(0xFFD81B60),
@@ -223,7 +224,7 @@ class PersonalInfoView extends StatelessWidget {
               Divider(height: 1, color: borderColor),
               _buildInfoRow(
                 context,
-                icon: gender == 'Male' ? Icons.male : Icons.female,
+                icon: gender == 'Male' ? Symbols.male : Symbols.female,
                 label: 'Gender',
                 value: gender,
                 iconColor: gender == 'Male' ? const Color(0xFF1E88E5) : const Color(0xFFD81B60),
@@ -232,7 +233,7 @@ class PersonalInfoView extends StatelessWidget {
               Divider(height: 1, color: borderColor),
               _buildInfoRow(
                 context,
-                icon: Icons.mail_outline_rounded,
+                icon: Symbols.mail_outline_rounded,
                 label: 'Email Address',
                 value: user.email ?? '',
                 iconColor: const Color(0xFF43A047),

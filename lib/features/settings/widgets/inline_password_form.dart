@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -145,7 +146,7 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
               suffixIcon: IconButton(
                 onPressed: onToggleObscure,
                 icon: Icon(
-                  obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                  obscureText ? Symbols.visibility_off : Symbols.visibility,
                   color: theme.colorScheme.onSurfaceVariant,
                   size: 20,
                 ),

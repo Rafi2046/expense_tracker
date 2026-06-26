@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -301,7 +302,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                     color: Colors.grey.shade400,
                   ),
                   prefixIcon: Icon(
-                    Icons.search_rounded,
+                    Symbols.search_rounded,
                     color: Colors.grey.shade400,
                     size: 20,
                   ),
@@ -405,7 +406,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                 width: double.infinity,
                 height: 48,
                 child: OutlinedButton.icon(
-                  icon: const Icon(Icons.add, size: 18),
+                  icon: const Icon(Symbols.add, size: 18),
                   label: const Text('Add New Category'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.black87,

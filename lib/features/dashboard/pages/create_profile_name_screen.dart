@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
@@ -57,7 +58,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Symbols.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
         backgroundColor: Colors.white,

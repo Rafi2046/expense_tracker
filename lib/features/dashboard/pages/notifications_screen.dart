@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -100,13 +101,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   IconData _getTypeIcon(NotificationType type) {
     switch (type) {
       case NotificationType.alert:
-        return Icons.warning_amber_rounded;
+        return Symbols.warning_amber_rounded;
       case NotificationType.credit:
-        return Icons.account_balance_wallet_outlined;
+        return Symbols.account_balance_wallet;
       case NotificationType.update:
-        return Icons.auto_awesome_outlined;
+        return Symbols.auto_awesome;
       case NotificationType.system:
-        return Icons.info_outline;
+        return Symbols.info;
     }
   }
 
@@ -125,7 +126,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
+          icon: Icon(Symbols.arrow_back, color: theme.colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -201,7 +202,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: const Icon(
-                            Icons.delete_outline,
+                            Symbols.delete_outline,
                             color: AppColors.activeRed,
                           ),
                         ),

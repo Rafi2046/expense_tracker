@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
@@ -31,7 +32,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
         scrolledUnderElevation: 0,
         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back,
+            Symbols.arrow_back,
             color: theme.appBarTheme.iconTheme?.color,
           ),
           onPressed: () => Navigator.pop(context),
@@ -55,7 +56,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
         ),
         backgroundColor: theme.primaryColor,
         elevation: 2,
-        child: const Icon(Icons.add, color: Colors.white, size: 28),
+        child: const Icon(Symbols.add, color: Colors.white, size: 28),
       ),
       body: SafeArea(
         child: Column(
@@ -74,7 +75,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                     _showGuide = false;
                   });
                 },
-                cardIcon: Icons.arrow_downward_rounded,
+                cardIcon: Symbols.arrow_downward_rounded,
               ),
             ),
             if (items.isNotEmpty)
@@ -122,7 +123,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                         constraints: const BoxConstraints(),
                         padding: EdgeInsets.zero,
                         icon: Icon(
-                          Icons.info_outline_rounded,
+                          Symbols.info_rounded,
                           color: Colors.grey.shade400,
                           size: 20,
                         ),

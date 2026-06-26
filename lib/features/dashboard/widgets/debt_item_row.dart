@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
@@ -109,7 +110,7 @@ class DebtItemRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Icon(Icons.check_circle_outline, color: themeColor, size: 24),
+            Icon(Symbols.check_circle_outline, color: themeColor, size: 24),
           ],
         ),
       ),
@@ -228,7 +229,7 @@ class DebtItemRow extends StatelessWidget {
                           border: Border.all(color: theme.dividerTheme.color ?? Colors.grey.shade200),
                         ),
                         child: Icon(
-                          Icons.edit_outlined,
+                          Symbols.edit,
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                           size: 16,
                         ),

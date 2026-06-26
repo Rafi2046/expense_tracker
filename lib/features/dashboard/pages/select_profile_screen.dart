@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
@@ -20,7 +21,7 @@ class SelectProfileScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Symbols.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
         backgroundColor: Colors.white,
@@ -43,7 +44,7 @@ class SelectProfileScreen extends StatelessWidget {
 
               // Business Management Card
               ProfileTypeCard(
-                icon: Icons.storefront,
+                icon: Symbols.storefront,
                 title: 'Business Management',
                 subtitle:
                     'Manage your business accounting and inventory easily.',
@@ -57,7 +58,7 @@ class SelectProfileScreen extends StatelessWidget {
 
               // Personal Finance Card
               ProfileTypeCard(
-                icon: Icons.person,
+                icon: Symbols.person,
                 title: 'Personal Finance',
                 subtitle:
                     'Track your expenses and maintain your credits with friends.',

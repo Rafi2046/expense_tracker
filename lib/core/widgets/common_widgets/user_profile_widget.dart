@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
@@ -134,11 +135,11 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                   ),
                   trailing: isSelected
                       ? const Icon(
-                          Icons.radio_button_checked,
+                          Symbols.radio_button_checked,
                           color: AppColors.selectedColor,
                         )
                       : const Icon(
-                          Icons.radio_button_unchecked,
+                          Symbols.radio_button_unchecked,
                           color: Colors.grey,
                         ),
                   onTap: () {
@@ -167,7 +168,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                   Navigator.pop(context);
                   widget.onCreateNewTap();
                 },
-                icon: const Icon(Icons.add, color: Color(0xFF00BFA5)),
+                icon: const Icon(Symbols.add, color: Color(0xFF00BFA5)),
                 label: Text(
                   'Create New Profile',
                   style: AppTextStyles.createProfile,

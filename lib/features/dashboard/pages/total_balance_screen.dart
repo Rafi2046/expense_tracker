@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -84,7 +85,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color, size: 20),
+          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -133,7 +134,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                   TextButton.icon(
                     onPressed: () => showNewAccountDialog(context),
                     icon: Icon(
-                      Icons.add,
+                      Symbols.add,
                       size: 14,
                       color: theme.primaryColor,
                     ),
@@ -163,7 +164,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                       title: 'Cash',
                       subtitle: 'Cash in Hand',
                       balance: _showBalances ? formatAmount(cashBalance) : 'Tk. ••••',
-                      icon: Icons.payments_outlined,
+                      icon: Symbols.payments,
                       iconBg: isDark ? Colors.white10 : const Color(0xFFE6F3EE),
                       iconColor: isDark ? theme.primaryColor : const Color(0xFF006C49),
                       onTap: () {
@@ -180,7 +181,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                       title: 'Bank Account',
                       subtitle: 'Electronic Transfer',
                       balance: _showBalances ? formatAmount(bankBalance) : 'Tk. ••••',
-                      icon: Icons.account_balance_outlined,
+                      icon: Symbols.account_balance,
                       iconBg: isDark ? Colors.white10 : const Color(0xFFEBF3F9),
                       iconColor: const Color(0xFF2980B9),
                       onTap: () {

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,7 +21,7 @@ class InlineGoogleNotice extends StatelessWidget {
           child: Column(
             children: [
               Icon(
-                Icons.g_mobiledata_rounded,
+                Symbols.g_mobiledata_rounded,
                 color: theme.primaryColor,
                 size: 36,
               ),

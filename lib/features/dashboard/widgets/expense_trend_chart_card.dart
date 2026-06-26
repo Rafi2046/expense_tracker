@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -112,7 +113,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                   Row(
                     children: [
                       const Icon(
-                        Icons.arrow_downward,
+                        Symbols.arrow_downward,
                         color: AppColors.expensePink,
                         size: 16,
                       ),

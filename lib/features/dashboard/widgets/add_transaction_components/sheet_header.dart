@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -53,7 +54,7 @@ class SheetHeader extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.close,
+                  Symbols.close,
                   size: 20,
                   color: isDark ? Colors.white60 : Colors.grey.shade600,
                 ),

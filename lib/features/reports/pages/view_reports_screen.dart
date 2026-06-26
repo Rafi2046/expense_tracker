@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:expense_tracker/features/reports/pages/all_transactions_report_screen.dart';
 import 'package:expense_tracker/features/reports/pages/bank_statement_screen.dart';
@@ -86,7 +87,7 @@ class ViewReportsScreen extends StatelessWidget {
                       color: Colors.white.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Icons.bar_chart_rounded, color: Colors.white, size: 22),
+                    child: const Icon(Symbols.bar_chart_rounded, color: Colors.white, size: 22),
                   ),
                 ],
               ),
@@ -98,25 +99,25 @@ class ViewReportsScreen extends StatelessWidget {
 
             _buildReportCard(context, items: [
               const ReportItem(
-                icon: Icons.receipt_long_rounded,
+                icon: Symbols.receipt_long_rounded,
                 title: 'All Transactions',
                 subtitle: 'Complete transaction history',
                 destination: AllTransactionsReportScreen(),
               ),
               const ReportItem(
-                icon: Icons.people_alt_outlined,
+                icon: Symbols.people_alt,
                 title: 'Party Statement',
                 subtitle: 'View per-party ledger',
                 destination: PartyStatementScreen(),
               ),
               const ReportItem(
-                icon: Icons.account_balance_wallet_outlined,
+                icon: Symbols.account_balance_wallet,
                 title: 'Cash In Hand',
                 subtitle: 'Track your cash balance',
                 destination: CashInHandStatementScreen(),
               ),
               const ReportItem(
-                icon: Icons.account_balance_outlined,
+                icon: Symbols.account_balance,
                 title: 'Bank Statement',
                 subtitle: 'Bank account summary',
                 destination: BankStatementScreen(),
@@ -129,13 +130,13 @@ class ViewReportsScreen extends StatelessWidget {
 
             _buildReportCard(context, items: [
               const ReportItem(
-                icon: Icons.people_outline_rounded,
+                icon: Symbols.people_outline_rounded,
                 title: 'Parties Report',
                 subtitle: 'Payable & receivable overview',
                 destination: PartiesReportScreen(),
               ),
               const ReportItem(
-                icon: Icons.trending_up_rounded,
+                icon: Symbols.trending_up_rounded,
                 title: 'Income & Expense',
                 subtitle: 'Profit/loss breakdown',
                 destination: IncomeExpenseReportScreen(),

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/reports/widgets/share_report_sheet.dart';
@@ -17,7 +18,7 @@ class ReportBottomActions extends StatelessWidget {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle_outline, color: Colors.white),
+            const Icon(Symbols.check_circle_outline, color: Colors.white),
             const SizedBox(width: 8),
             Text(
               'Report exported to $format successfully!',
@@ -63,25 +64,25 @@ class ReportBottomActions extends StatelessWidget {
           children: [
             _buildActionItem(
               context: context,
-              icon: Icons.download_outlined,
+              icon: Symbols.download,
               label: 'Download',
               onTap: () => _showExportSuccess(context, 'PDF/Excel'),
             ),
             _buildActionItem(
               context: context,
-              icon: Icons.print_outlined,
+              icon: Symbols.print,
               label: 'Print PDF',
               onTap: () => _showExportSuccess(context, 'Printer Output'),
             ),
             _buildActionItem(
               context: context,
-              icon: Icons.table_chart_outlined,
+              icon: Symbols.table_chart,
               label: 'Excel',
               onTap: () => _showExportSuccess(context, 'Excel File'),
             ),
             _buildActionItem(
               context: context,
-              icon: Icons.share_outlined,
+              icon: Symbols.share,
               label: 'Share',
               onTap: () async {
                 final format = await ShareReportSheet.show(context);

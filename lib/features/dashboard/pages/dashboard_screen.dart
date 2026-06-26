@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
@@ -278,7 +279,7 @@ class DashboardScreen extends StatelessWidget {
                         timeText: 'Today',
                         amount: 199.00,
                         isIncome: false,
-                        icon: Icons.shopping_bag_outlined,
+                        icon: Symbols.shopping_bag,
                       ),
                       RecentActivityItem(
                         title: 'Wild Ginger',
@@ -286,7 +287,7 @@ class DashboardScreen extends StatelessWidget {
                         timeText: 'Yesterday',
                         amount: 42.50,
                         isIncome: false,
-                        icon: Icons.restaurant,
+                        icon: Symbols.restaurant,
                       ),
                       RecentActivityItem(
                         title: 'Monthly Salary',
@@ -294,7 +295,7 @@ class DashboardScreen extends StatelessWidget {
                         timeText: '2 days ago',
                         amount: 4200.00,
                         isIncome: true,
-                        icon: Icons.payments_outlined,
+                        icon: Symbols.payments,
                       ),
                     ],
                     onViewAllTap: () {

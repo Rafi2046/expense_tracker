@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -72,7 +73,7 @@ class ReportTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                Icons.arrow_forward_ios_rounded,
+                Symbols.arrow_forward_ios_rounded,
                 size: 11,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),

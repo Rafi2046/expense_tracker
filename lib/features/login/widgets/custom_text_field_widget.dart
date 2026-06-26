@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                       });
                     },
                     icon: Icon(
-                      _obscureText ? Icons.visibility_off : Icons.visibility,
+                      _obscureText ? Symbols.visibility_off : Symbols.visibility,
                     ),
                   )
                 : null,

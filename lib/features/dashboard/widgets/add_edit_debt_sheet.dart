@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
@@ -123,7 +124,7 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.close, color: theme.colorScheme.onSurface),
+                  icon: Icon(Symbols.close, color: theme.colorScheme.onSurface),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],

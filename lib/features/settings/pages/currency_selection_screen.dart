@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -84,7 +85,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface, size: 20),
+          icon: Icon(Symbols.arrow_back, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () {
             if (_isSearching) {
               setState(() {
@@ -107,7 +108,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Row(
                   children: [
-                    Icon(Icons.search, color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF), size: 18),
+                    Icon(Symbols.search, color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF), size: 18),
                     const SizedBox(width: 8),
                     Expanded(
                       child: TextField(
@@ -145,7 +146,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(_isSearching ? Icons.close : Icons.search, color: theme.colorScheme.onSurface, size: 20),
+            icon: Icon(_isSearching ? Symbols.close : Symbols.search, color: theme.colorScheme.onSurface, size: 20),
             onPressed: () {
               setState(() {
                 if (_isSearching) {
@@ -233,7 +234,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                           ),
                           const SizedBox(width: 14),
                           Icon(
-                            Icons.check_circle_rounded,
+                            Symbols.check_circle_rounded,
                             color: activeGreenColor,
                             size: 22,
                           ),
@@ -331,7 +332,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                             if (isCurrent) ...[
                               const SizedBox(width: 14),
                               Icon(
-                                Icons.check_circle_rounded,
+                                Symbols.check_circle_rounded,
                                 color: activeGreenColor,
                                 size: 22,
                               ),

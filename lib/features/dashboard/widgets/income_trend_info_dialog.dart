@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class IncomeTrendInfoDialog extends StatelessWidget {
             Row(
               children: [
                 const Icon(
-                  Icons.info_rounded,
+                  Symbols.info_rounded,
                   color: AppColors.buttonColor,
                   size: 24,
                 ),

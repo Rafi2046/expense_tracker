@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
@@ -187,7 +188,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
-                          Icons.camera_alt,
+                          Symbols.camera_alt,
                           color: Colors.white,
                           size: 16,
                         ),

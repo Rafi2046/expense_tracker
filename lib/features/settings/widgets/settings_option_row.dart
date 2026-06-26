@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -86,7 +87,7 @@ class SettingsOptionRow extends StatelessWidget {
 
             // Chevron Arrow
             Icon(
-              trailingIcon ?? Icons.chevron_right_rounded,
+              trailingIcon ?? Symbols.chevron_right_rounded,
               color: color ?? (isDark ? Colors.white60 : Colors.grey.shade400),
               size: 18,
             ),

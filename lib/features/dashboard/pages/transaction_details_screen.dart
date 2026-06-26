@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -21,7 +22,7 @@ class TransactionDetailsScreen extends StatelessWidget {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87, size: 20),
+          icon: const Icon(Symbols.arrow_back, color: Colors.black87, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -32,7 +33,7 @@ class TransactionDetailsScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.edit_outlined,
+              Symbols.edit,
               color: Colors.black87,
               size: 20,
             ),
@@ -40,7 +41,7 @@ class TransactionDetailsScreen extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(
-              Icons.delete_outline_rounded,
+              Symbols.delete_outline_rounded,
               color: Colors.redAccent,
               size: 20,
             ),

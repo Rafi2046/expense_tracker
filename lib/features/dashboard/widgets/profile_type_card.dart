@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,7 @@ class ProfileTypeCard extends StatelessWidget {
               ),
             ),
             if (isSelected)
-              const Icon(Icons.check_circle, color: AppColors.activeGreen),
+              const Icon(Symbols.check_circle, color: AppColors.activeGreen),
           ],
         ),
       ),

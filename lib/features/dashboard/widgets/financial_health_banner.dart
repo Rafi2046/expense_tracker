@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,7 +20,7 @@ class FinancialHealthBanner extends StatelessWidget {
             bottom: -20,
             right: -20,
             child: Icon(
-              Icons.trending_up_rounded,
+              Symbols.trending_up_rounded,
               color: Colors.white.withValues(alpha: 0.08),
               size: 140,
             ),

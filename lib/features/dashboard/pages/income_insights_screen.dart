@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
@@ -50,7 +51,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
               Row(
                 children: [
                   Icon(
-                    isPositive ? Icons.trending_up : Icons.trending_down,
+                    isPositive ? Symbols.trending_up : Symbols.trending_down,
                     color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
                     size: 16,
                   ),
@@ -121,7 +122,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                   Row(
                     children: [
                       Icon(
-                        isPositive ? Icons.trending_up : Icons.trending_down,
+                        isPositive ? Symbols.trending_up : Symbols.trending_down,
                         color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
                         size: 16,
                       ),
@@ -237,7 +238,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color),
+          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(

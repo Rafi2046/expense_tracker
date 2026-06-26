@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_selector_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -16,12 +17,12 @@ class PaymentModeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TransactionSelectorTile(
-      leadingIcon: Icons.account_balance_wallet_outlined,
+      leadingIcon: Symbols.account_balance_wallet,
       labelText: 'Payment Mode',
       valueText: paymentMethod,
       isValueSelected: true,
       themeColor: themeColor,
-      trailingIcon: Icons.swap_horiz_rounded,
+      trailingIcon: Symbols.swap_horiz_rounded,
       onTap: onTap,
     );
   }

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:flutter/material.dart';
@@ -63,25 +64,25 @@ class SortBySheet extends StatelessWidget {
             context: context,
             title: 'Latest',
             option: ReportSortOption.latest,
-            icon: Icons.swap_vert_rounded,
+            icon: Symbols.swap_vert_rounded,
           ),
           _buildOption(
             context: context,
             title: 'Oldest',
             option: ReportSortOption.oldest,
-            icon: Icons.swap_vert_rounded,
+            icon: Symbols.swap_vert_rounded,
           ),
           _buildOption(
             context: context,
             title: 'Amount: High to Low',
             option: ReportSortOption.amountHighToLow,
-            icon: Icons.sort_rounded,
+            icon: Symbols.sort_rounded,
           ),
           _buildOption(
             context: context,
             title: 'Amount: Low to High',
             option: ReportSortOption.amountLowToHigh,
-            icon: Icons.sort_rounded,
+            icon: Symbols.sort_rounded,
           ),
         ],
       ),

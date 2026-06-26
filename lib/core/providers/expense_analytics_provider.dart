@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/expense_trend_chart_card.dart' show ExpenseChartData;
@@ -388,7 +389,7 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
         title: 'Cash',
         subtitle: '$cashCount transactions',
         amount: cashAmount.toStringAsFixed(0),
-        icon: Icons.payments_outlined,
+        icon: Symbols.payments,
       ));
     }
 
@@ -397,7 +398,7 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
         title: 'Bank',
         subtitle: '$bankCount transactions',
         amount: bankAmount.toStringAsFixed(0),
-        icon: Icons.account_balance_outlined,
+        icon: Symbols.account_balance,
       ));
     }
 

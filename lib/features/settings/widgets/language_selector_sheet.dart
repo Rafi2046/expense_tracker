@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.translate_rounded,
+                    Symbols.translate_rounded,
                     color: iconColor,
                     size: 22,
                   ),
@@ -207,7 +208,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                 top: 0,
                 right: 0,
                 child: Icon(
-                  Icons.check_circle_rounded,
+                  Symbols.check_circle_rounded,
                   color: activeGreenColor,
                   size: 20,
                 ),

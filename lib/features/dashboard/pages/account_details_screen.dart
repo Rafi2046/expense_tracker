@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -173,7 +174,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color, size: 20),
+          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(

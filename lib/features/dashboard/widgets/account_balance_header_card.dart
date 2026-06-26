@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
@@ -70,7 +71,7 @@ class AccountBalanceHeaderCard extends StatelessWidget {
                   GestureDetector(
                     onTap: onToggleBalances,
                     child: Icon(
-                      showBalances ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                      showBalances ? Symbols.visibility : Symbols.visibility_off,
                       size: 14,
                       color: AppColors.textMuted,
                     ),
@@ -99,7 +100,7 @@ class AccountBalanceHeaderCard extends StatelessWidget {
                 ),
               );
             },
-            icon: Icon(Icons.description_outlined, size: 14, color: primaryColor),
+            icon: Icon(Symbols.description, size: 14, color: primaryColor),
             label: Text(
               'View Report',
               style: GoogleFonts.workSans(

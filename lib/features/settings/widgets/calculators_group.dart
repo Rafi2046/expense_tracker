@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/calculators/pages/emi_calculator_screen.dart';
 import 'package:expense_tracker/features/calculators/pages/interest_calculator_screen.dart';
 import 'package:expense_tracker/features/calculators/pages/tax_calculator_screen.dart';
@@ -16,7 +17,7 @@ class CalculatorsGroup extends StatelessWidget {
       children: [
         // EMI Calculator
         SettingsOptionRow(
-          icon: Icons.calculate_rounded,
+          icon: Symbols.calculate_rounded,
           iconBgColor: const Color(0xFFE6F3EE),
           iconColor: const Color(0xFF006C49),
           title: context.translate('emi_calculator'),
@@ -32,7 +33,7 @@ class CalculatorsGroup extends StatelessWidget {
 
         // Interest Calculator
         SettingsOptionRow(
-          icon: Icons.percent_rounded,
+          icon: Symbols.percent_rounded,
           iconBgColor: const Color(0xFFF3EFFF),
           iconColor: const Color(0xFF6A53A1),
           title: context.translate('interest_calculator'),
@@ -48,7 +49,7 @@ class CalculatorsGroup extends StatelessWidget {
 
         // Tax Calculator
         SettingsOptionRow(
-          icon: Icons.receipt_long_rounded,
+          icon: Symbols.receipt_long_rounded,
           iconBgColor: const Color(0xFFFDECEC),
           iconColor: const Color(0xFFD9383A),
           title: context.translate('tax_calculator'),

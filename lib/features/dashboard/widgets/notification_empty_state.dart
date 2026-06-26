@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class NotificationEmptyState extends StatelessWidget {
               errorBuilder: (context, error, stackTrace) {
                 // Fail-safe icon fallback if image file is not physically on disk yet
                 return Icon(
-                  Icons.notifications_off_outlined,
+                  Symbols.notifications_off,
                   size: 80,
                   color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                 );

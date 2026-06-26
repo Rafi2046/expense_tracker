@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
@@ -53,7 +54,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
               context: context,
               title: 'Add/Reduce Money',
               subtitle: 'Add or reduce money from your account',
-              icon: Icons.add,
+              icon: Symbols.add,
               iconBg: isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFDECEC),
               iconColor: AppColors.activeRed,
               onTap: () {
@@ -68,7 +69,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
               context: context,
               title: 'Transfer Balance',
               subtitle: 'Easily transfer your balance to another account',
-              icon: Icons.swap_horiz_rounded,
+              icon: Symbols.swap_horiz_rounded,
               iconBg: isDark ? const Color(0xFF2980B9).withValues(alpha: 0.15) : const Color(0xFFEBF3F9),
               iconColor: const Color(0xFF2980B9),
               onTap: () {
@@ -197,7 +198,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                     height: 46,
                     child: TextButton.icon(
                       icon: Icon(
-                        Icons.arrow_downward,
+                        Symbols.arrow_downward,
                         size: 16,
                         color: isDark ? theme.primaryColor : const Color(0xFF006C49),
                       ),
@@ -233,7 +234,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                     height: 46,
                     child: TextButton.icon(
                       icon: Icon(
-                        Icons.arrow_upward,
+                        Symbols.arrow_upward,
                         size: 16,
                         color: isDark ? AppColors.activeRed : const Color(0xFFD9383A),
                       ),

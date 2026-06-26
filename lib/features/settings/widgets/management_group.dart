@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/settings/pages/manage_categories_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_option_row.dart';
@@ -15,7 +16,7 @@ class ManagementGroup extends StatelessWidget {
       title: context.translate('management'),
       children: [
         SettingsOptionRow(
-          icon: Icons.category_rounded,
+          icon: Symbols.category_rounded,
           iconBgColor: const Color(0xFFF3E5F5),
           iconColor: const Color(0xFF8E24AA),
           title: context.translate('manage_categories'),
@@ -29,7 +30,7 @@ class ManagementGroup extends StatelessWidget {
           },
         ),
         SettingsOptionRow(
-          icon: Icons.bar_chart_rounded,
+          icon: Symbols.bar_chart_rounded,
           iconBgColor: const Color(0xFFE8F8F5),
           iconColor: const Color(0xFF16A085),
           title: context.translate('view_reports'),

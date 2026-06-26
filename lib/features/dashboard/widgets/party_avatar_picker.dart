@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -92,7 +93,7 @@ class _PartyAvatarPickerState extends State<PartyAvatarPicker> {
                     ],
                   ),
                   child: const Icon(
-                    Icons.camera_alt_rounded,
+                    Symbols.camera_alt_rounded,
                     color: Colors.white,
                     size: 12,
                   ),
@@ -121,7 +122,7 @@ class _PartyAvatarPickerState extends State<PartyAvatarPicker> {
         height: 80,
       );
     } else {
-      return const Icon(Icons.person_rounded, color: Colors.white, size: 44);
+      return const Icon(Symbols.person_rounded, color: Colors.white, size: 44);
     }
   }
 }

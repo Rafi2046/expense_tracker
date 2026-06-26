@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -108,7 +109,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                       ),
                       if (isSelected)
                         Icon(
-                          Icons.check_circle_rounded,
+                          Symbols.check_circle_rounded,
                           color: accentColor,
                           size: 18,
                         ),
@@ -166,7 +167,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            Icons.close,
+                            Symbols.close,
                             size: 18,
                             color: isDarkSheet ? Colors.white70 : Colors.grey.shade600,
                           ),
@@ -177,11 +178,11 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                   const SizedBox(height: 20),
 
                   // Options list
-                  buildSortItem(context.translate('sort_latest'), TransactionSortOption.latest, Icons.calendar_today_rounded),
+                  buildSortItem(context.translate('sort_latest'), TransactionSortOption.latest, Symbols.calendar_today_rounded),
                   const SizedBox(height: 12),
-                  buildSortItem(context.translate('sort_amount_high_low'), TransactionSortOption.amountHighToLow, Icons.trending_down_rounded),
+                  buildSortItem(context.translate('sort_amount_high_low'), TransactionSortOption.amountHighToLow, Symbols.trending_down_rounded),
                   const SizedBox(height: 12),
-                  buildSortItem(context.translate('sort_amount_low_high'), TransactionSortOption.amountLowToHigh, Icons.trending_up_rounded),
+                  buildSortItem(context.translate('sort_amount_low_high'), TransactionSortOption.amountLowToHigh, Symbols.trending_up_rounded),
                   const SizedBox(height: 12),
                 ],
               ),
@@ -315,7 +316,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
             ],
           ),
           child: IconButton(
-            icon: const Icon(Icons.tune_rounded, size: 18),
+            icon: const Icon(Symbols.tune_rounded, size: 18),
             color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : const Color(0xFF31394D),
             onPressed: () => _showSortBottomSheet(context),
           ),

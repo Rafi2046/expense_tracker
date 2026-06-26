@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -39,16 +40,16 @@ class AnalyticsScreen extends StatelessWidget {
   };
 
   static const _namedCategoryIcons = <String, IconData>{
-    'housing': Icons.home_outlined,
-    'food': Icons.restaurant,
-    'transport': Icons.directions_car_outlined,
-    'utilities': Icons.flash_on_outlined,
-    'entertainment': Icons.movie_outlined,
-    'shopping': Icons.shopping_bag_outlined,
-    'health': Icons.health_and_safety_outlined,
-    'education': Icons.school_outlined,
-    'salary': Icons.payments_outlined,
-    'investment': Icons.trending_up_outlined,
+    'housing': Symbols.home,
+    'food': Symbols.restaurant,
+    'transport': Symbols.directions_car,
+    'utilities': Symbols.flash_on,
+    'entertainment': Symbols.movie,
+    'shopping': Symbols.shopping_bag,
+    'health': Symbols.health_and_safety,
+    'education': Symbols.school,
+    'salary': Symbols.payments,
+    'investment': Symbols.trending_up,
   };
 
   Color _categoryColor(String category, int index) {
@@ -57,7 +58,7 @@ class AnalyticsScreen extends StatelessWidget {
   }
 
   IconData _categoryIcon(String category) {
-    return _namedCategoryIcons[category.toLowerCase()] ?? Icons.receipt_long_outlined;
+    return _namedCategoryIcons[category.toLowerCase()] ?? Symbols.receipt_long;
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -106,7 +107,7 @@ class LedgerStatsCards extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Icons.arrow_downward_rounded,
+                        Symbols.arrow_downward_rounded,
                         color: Color(0xFF2ECC71), // soft green
                         size: 14,
                       ),
@@ -160,7 +161,7 @@ class LedgerStatsCards extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Icons.arrow_upward_rounded,
+                        Symbols.arrow_upward_rounded,
                         color: Color(0xFFF1948A), // soft light red
                         size: 14,
                       ),

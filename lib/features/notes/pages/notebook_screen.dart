@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/note_provider.dart';
@@ -113,7 +114,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
+          icon: Icon(Symbols.arrow_back, color: theme.colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -134,7 +135,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
         },
         backgroundColor: AppColors.activeGreen,
         elevation: 2,
-        child: const Icon(Icons.add, color: Colors.white, size: 28),
+        child: const Icon(Symbols.add, color: Colors.white, size: 28),
       ),
       body: Column(
         children: [
@@ -161,10 +162,10 @@ class _NotebookScreenState extends State<NotebookScreen> {
                   fontSize: 15,
                   fontFamily: GoogleFonts.workSans().fontFamily,
                 ),
-                prefixIcon: Icon(Icons.search, color: isDark ? Colors.grey.shade500 : Colors.grey.shade400, size: 20),
+                prefixIcon: Icon(Symbols.search, color: isDark ? Colors.grey.shade500 : Colors.grey.shade400, size: 20),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear, size: 18),
+                        icon: const Icon(Symbols.clear, size: 18),
                         onPressed: () {
                           _searchController.clear();
                           setState(() {
@@ -199,7 +200,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.note_alt_outlined, size: 64, color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
+                              Icon(Symbols.note_alt, size: 64, color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
                               const SizedBox(height: 16),
                               Text(
                                 _searchQuery.isEmpty ? 'No notes yet' : 'No matching notes found',
@@ -257,7 +258,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                               ),
                               const SizedBox(width: 8),
                               Icon(
-                                Icons.delete_outline_rounded,
+                                Symbols.delete_outline_rounded,
                                 color: isDark ? Colors.red.shade400 : const Color(0xFFB91C1C), // Tailwind red-700
                                 size: 24,
                               ),
@@ -353,7 +354,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                           }
                                         },
                                         child: Icon(
-                                          Icons.delete_outline_rounded,
+                                          Symbols.delete_outline_rounded,
                                           color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                                           size: 20,
                                         ),

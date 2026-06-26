@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -42,7 +43,7 @@ class CategoryListRow extends StatelessWidget {
               child: Row(
                 children: [
                   if (showLeadingIcon) ...[
-                    Icon(Icons.label_outline_rounded, color: themeColor),
+                    Icon(Symbols.label_outline_rounded, color: themeColor),
                     const SizedBox(width: 12),
                   ],
                   Expanded(
@@ -81,7 +82,7 @@ class CategoryListRow extends StatelessWidget {
         if (onEdit != null)
           IconButton(
             icon: Icon(
-              Icons.edit_outlined,
+              Symbols.edit,
               color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
               size: 20,
             ),
@@ -89,7 +90,7 @@ class CategoryListRow extends StatelessWidget {
           ),
         IconButton(
           icon: Icon(
-            Icons.delete_outline_rounded,
+            Symbols.delete_outline_rounded,
             color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
             size: 20,
           ),

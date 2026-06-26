@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/dashboard/widgets/select_category_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_selector_tile.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +20,12 @@ class CategorySelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TransactionSelectorTile(
-      leadingIcon: Icons.category_outlined,
+      leadingIcon: Symbols.category,
       labelText: 'Category',
       valueText: selectedCategory ?? 'Select Category',
       isValueSelected: selectedCategory != null,
       themeColor: themeColor,
-      trailingIcon: Icons.arrow_forward_ios_rounded,
+      trailingIcon: Symbols.arrow_forward_ios_rounded,
       onTap: () {
         SelectCategorySheet.show(
           context: context,

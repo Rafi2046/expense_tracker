@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
@@ -225,7 +226,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded, color: theme.colorScheme.onSurface, size: 20),
+          icon: Icon(Symbols.arrow_back_ios_new_rounded, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -240,7 +241,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           if (!_isEditing)
             TextButton.icon(
               onPressed: () => setState(() => _isEditing = true),
-              icon: Icon(Icons.edit_rounded, size: 16, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1)),
+              icon: Icon(Symbols.edit_rounded, size: 16, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1)),
               label: Text(
                 'Edit',
                 style: GoogleFonts.workSans(

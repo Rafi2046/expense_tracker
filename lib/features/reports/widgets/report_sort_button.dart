@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/sort_by_sheet.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class ReportSortButton extends StatelessWidget {
     final theme = Theme.of(context);
 
     return IconButton(
-      icon: Icon(Icons.filter_list_rounded, color: theme.appBarTheme.iconTheme?.color ?? theme.colorScheme.onSurface),
+      icon: Icon(Symbols.filter_list_rounded, color: theme.appBarTheme.iconTheme?.color ?? theme.colorScheme.onSurface),
       onPressed: () async {
         final selected = await SortBySheet.show(
           context,

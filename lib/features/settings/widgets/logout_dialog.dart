@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/features/login/pages/login_screen.dart';
@@ -35,7 +36,7 @@ class LogoutDialog extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: const Icon(
-                Icons.logout,
+                Symbols.logout,
                 color: AppColors.activeRed, // Red exit arrow
                 size: 32,
               ),

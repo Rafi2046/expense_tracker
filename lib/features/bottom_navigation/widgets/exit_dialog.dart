@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class ExitDialog extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: const Icon(
-                Icons.exit_to_app_rounded,
+                Symbols.exit_to_app_rounded,
                 color: AppColors.activeGreen,
                 size: 32,
               ),

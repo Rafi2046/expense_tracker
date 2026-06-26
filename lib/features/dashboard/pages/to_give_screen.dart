@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart' show AppImages;
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -31,7 +32,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color),
+          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -53,7 +54,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
         ),
         backgroundColor: theme.primaryColor,
         elevation: 2,
-        child: const Icon(Icons.add, color: Colors.white, size: 28),
+        child: const Icon(Symbols.add, color: Colors.white, size: 28),
       ),
       body: SafeArea(
         child: Column(
@@ -72,7 +73,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                     _showGuide = false;
                   });
                 },
-                cardIcon: Icons.arrow_upward_rounded,
+                cardIcon: Symbols.arrow_upward_rounded,
               ),
             ),
             if (items.isNotEmpty)
@@ -120,7 +121,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                         constraints: const BoxConstraints(),
                         padding: EdgeInsets.zero,
                         icon: Icon(
-                          Icons.info_outline_rounded,
+                          Symbols.info_rounded,
                           color: Colors.grey.shade400,
                           size: 20,
                         ),

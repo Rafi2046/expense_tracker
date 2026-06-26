@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +77,7 @@ class HomepageAppbarWidget extends StatelessWidget
                   ),
                   const SizedBox(width: 4),
                   Icon(
-                    Icons.keyboard_arrow_down,
+                    Symbols.keyboard_arrow_down,
                     color: onSurface,
                     size: 20,
                   ),
@@ -88,7 +89,7 @@ class HomepageAppbarWidget extends StatelessWidget
           IconButton(
             onPressed: notificationOnTap,
             icon: const Icon(
-              Icons.notifications_none_outlined,
+              Symbols.notifications_none,
               color: AppColors.notificationIcon,
               size: 26,
             ),

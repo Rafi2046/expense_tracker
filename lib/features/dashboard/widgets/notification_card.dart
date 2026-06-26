@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
@@ -25,13 +26,13 @@ class NotificationCard extends StatelessWidget {
   IconData _getTypeIcon(NotificationType type) {
     switch (type) {
       case NotificationType.alert:
-        return Icons.warning_amber_rounded;
+        return Symbols.warning_amber_rounded;
       case NotificationType.credit:
-        return Icons.account_balance_wallet_outlined;
+        return Symbols.account_balance_wallet;
       case NotificationType.update:
-        return Icons.auto_awesome_outlined;
+        return Symbols.auto_awesome;
       case NotificationType.system:
-        return Icons.info_outline;
+        return Symbols.info;
     }
   }
 

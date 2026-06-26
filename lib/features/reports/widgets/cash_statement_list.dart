@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +24,7 @@ class CashStatementList extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 40.0),
           child: Column(
             children: [
-              Icon(Icons.wallet_rounded, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
+              Icon(Symbols.wallet_rounded, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
               const SizedBox(height: 12),
               Text(
                 'No cash transactions found',

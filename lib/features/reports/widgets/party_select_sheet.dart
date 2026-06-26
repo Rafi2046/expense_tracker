@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:flutter/material.dart';
@@ -151,7 +152,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
               decoration: InputDecoration(
                 hintText: 'Search parties...',
                 hintStyle: GoogleFonts.workSans(fontSize: 14, color: isDark ? Colors.white30 : Colors.grey.shade400),
-                prefixIcon: Icon(Icons.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
+                prefixIcon: Icon(Symbols.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
                 filled: true,
                 fillColor: isDark ? Colors.white10 : const Color(0xFFF8FAFC),
                 contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
@@ -178,7 +179,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.people_outline_rounded, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
+                        Icon(Symbols.people_outline_rounded, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
                         const SizedBox(height: 12),
                         Text(
                           'No parties found',
@@ -243,7 +244,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                         ),
                         trailing: isSelected
                             ? Icon(
-                                Icons.check_circle_rounded,
+                                Symbols.check_circle_rounded,
                                 color: theme.primaryColor,
                                 size: 18,
                               )

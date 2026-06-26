@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -74,7 +75,7 @@ class _TransferDialogState extends State<TransferDialog> {
                   },
                 ),
                 const Icon(
-                  Icons.arrow_forward_rounded,
+                  Symbols.arrow_forward_rounded,
                   color: Colors.grey,
                   size: 18,
                 ),

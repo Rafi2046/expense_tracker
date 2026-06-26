@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_select_sheet.dart';
@@ -49,7 +50,7 @@ class PartyStatementSelector extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Icon(
-                Icons.keyboard_arrow_down,
+                Symbols.keyboard_arrow_down,
                 color: isSelected ? Colors.white : theme.colorScheme.onSurface,
                 size: 18,
               ),

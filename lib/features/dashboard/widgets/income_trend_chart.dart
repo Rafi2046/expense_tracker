@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_trend_info_dialog.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,7 @@ class IncomeTrendChart extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 icon: const Icon(
-                  Icons.info_outline,
+                  Symbols.info,
                   color: Colors.grey,
                   size: 20,
                 ),

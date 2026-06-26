@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -79,7 +80,7 @@ class SettingsDropdownOptionRow<T> extends StatelessWidget {
               items: items,
               onChanged: onChanged,
               icon: Icon(
-                Icons.keyboard_arrow_down_rounded,
+                Symbols.keyboard_arrow_down_rounded,
                 color: theme.brightness == Brightness.dark
                     ? Colors.white60
                     : Colors.grey.shade400,

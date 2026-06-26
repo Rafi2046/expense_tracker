@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
@@ -39,7 +40,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.iconTheme?.color),
+          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(

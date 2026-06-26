@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
@@ -164,7 +165,7 @@ class PersonalInfoEdit extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
-                      Icons.camera_alt,
+                      Symbols.camera_alt,
                       color: Colors.white,
                       size: 16,
                     ),
@@ -185,7 +186,7 @@ class PersonalInfoEdit extends StatelessWidget {
                 label: 'First Name',
                 hintText: 'First Name',
                 controller: firstNameController,
-                prefixIcon: Icons.person_outline_rounded,
+                prefixIcon: Symbols.person_outline_rounded,
               ),
             ),
             const SizedBox(width: 16),
@@ -195,7 +196,7 @@ class PersonalInfoEdit extends StatelessWidget {
                 label: 'Last Name',
                 hintText: 'Last Name',
                 controller: lastNameController,
-                prefixIcon: Icons.person_outline_rounded,
+                prefixIcon: Symbols.person_outline_rounded,
               ),
             ),
           ],
@@ -208,7 +209,7 @@ class PersonalInfoEdit extends StatelessWidget {
           label: 'Phone Number',
           hintText: 'Enter phone number',
           controller: phoneController,
-          prefixIcon: Icons.phone_outlined,
+          prefixIcon: Symbols.phone,
           keyboardType: TextInputType.phone,
         ),
         const SizedBox(height: 20),
@@ -235,7 +236,7 @@ class PersonalInfoEdit extends StatelessWidget {
                 filled: true,
                 fillColor: inputBg,
                 prefixIcon: Icon(
-                  Icons.cake_outlined,
+                  Symbols.cake,
                   color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                   size: 18,
                 ),
@@ -255,7 +256,7 @@ class PersonalInfoEdit extends StatelessWidget {
                   borderSide: BorderSide(color: primaryColor, width: 1.5),
                 ),
                 suffixIcon: Icon(
-                  Icons.calendar_today_rounded,
+                  Symbols.calendar_today_rounded,
                   color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                   size: 18,
                 ),
@@ -281,7 +282,7 @@ class PersonalInfoEdit extends StatelessWidget {
             Row(
               children: ['Male', 'Female'].map((gender) {
                 final isSelected = selectedGender == gender;
-                final genderIcon = gender == 'Male' ? Icons.male_rounded : Icons.female_rounded;
+                final genderIcon = gender == 'Male' ? Symbols.male_rounded : Symbols.female_rounded;
                 final activeColor = gender == 'Male' ? const Color(0xFF1E88E5) : const Color(0xFFD81B60);
 
                 return Expanded(
@@ -338,7 +339,7 @@ class PersonalInfoEdit extends StatelessWidget {
           label: 'Occupation',
           hintText: 'e.g. Software Engineer',
           controller: occupationController,
-          prefixIcon: Icons.work_outline_rounded,
+          prefixIcon: Symbols.work_outline_rounded,
         ),
         const SizedBox(height: 20),
 

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
@@ -165,7 +166,7 @@ class PartyStatementCardView extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Icons.arrow_downward_rounded,
+                        Symbols.arrow_downward_rounded,
                         color: AppColors.activeGreen,
                         size: 18,
                       ),
@@ -218,7 +219,7 @@ class PartyStatementCardView extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Icons.arrow_upward_rounded,
+                        Symbols.arrow_upward_rounded,
                         color: AppColors.activeRed,
                         size: 18,
                       ),
@@ -301,7 +302,7 @@ class PartyStatementCardView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
-                      tx.isReceive ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
+                      tx.isReceive ? Symbols.arrow_downward_rounded : Symbols.arrow_upward_rounded,
                       color: tx.isReceive ? AppColors.activeGreen : AppColors.activeRed,
                       size: 18,
                     ),

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -30,7 +31,7 @@ class TransactionNoteInput extends StatelessWidget {
           color: isDark ? Colors.white30 : Colors.grey.shade400,
         ),
         prefixIcon: Icon(
-          Icons.notes_rounded,
+          Symbols.notes_rounded,
           color: isDark ? Colors.white30 : Colors.grey.shade400,
           size: 22,
         ),

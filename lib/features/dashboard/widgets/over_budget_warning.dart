@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -26,7 +27,7 @@ class OverBudgetWarning extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            Icons.warning_amber_rounded,
+            Symbols.warning_amber_rounded,
             color: AppColors.activeRed,
             size: 20,
           ),
