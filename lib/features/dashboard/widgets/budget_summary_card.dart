@@ -66,19 +66,23 @@ class BudgetSummaryCard extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.s12),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _SummaryLabel(
-                      label: 'Spent',
-                      value: context.formatAmount(monthlyExpense),
-                      color: isOver ? AppColors.activeRed : AppColors.activeGreen,
+                    Expanded(
+                      child: _SummaryLabel(
+                        label: 'Spent',
+                        value: context.formatAmount(monthlyExpense),
+                        color: isOver ? AppColors.activeRed : AppColors.activeGreen,
+                      ),
                     ),
-                    _SummaryLabel(
-                      label: 'Remaining',
-                      value: isOver
-                          ? '-${context.formatAmount(remaining.abs())}'
-                          : context.formatAmount(remaining),
-                      color: isOver ? AppColors.activeRed : AppColors.buttonColor,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _SummaryLabel(
+                        label: 'Remaining',
+                        value: isOver
+                            ? '-${context.formatAmount(remaining.abs())}'
+                            : context.formatAmount(remaining),
+                        color: isOver ? AppColors.activeRed : AppColors.buttonColor,
+                      ),
                     ),
                   ],
                 ),
@@ -124,7 +128,11 @@ class _SummaryLabel extends StatelessWidget {
       children: [
         Text(label, style: AppTextStyles.cardTitle),
         const SizedBox(height: AppSpacing.s4),
-        Text(value, style: AppTextStyles.cardValueGreen.copyWith(color: color)),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(value, style: AppTextStyles.cardValueGreen.copyWith(color: color)),
+        ),
       ],
     );
   }
