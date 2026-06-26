@@ -717,6 +717,7 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
       paymentMethod: transaction.paymentMethod,
       lastModified: now,
       profileId: _activeProfileId,
+      partyName: transaction.partyName,
     );
 
     // 1. SQLite first (always succeeds locally)
@@ -857,6 +858,7 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
       paymentMethod: transaction.paymentMethod,
       lastModified: DateTime.now(),
       profileId: _activeProfileId,
+      partyName: transaction.partyName,
     );
 
     // 1. SQLite first
