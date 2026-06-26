@@ -11,6 +11,7 @@ import 'package:expense_tracker/core/providers/theme_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/providers/budget_provider.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
+import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -52,6 +53,11 @@ void main() async {
           create: (_) => IncomeAnalyticsProvider(),
           update: (_, txProvider, analyticsProvider) =>
               (analyticsProvider ?? IncomeAnalyticsProvider())..updateTransactions(txProvider.transactions),
+        ),
+        ChangeNotifierProxyProvider<TransactionProvider, ExpenseAnalyticsProvider>(
+          create: (_) => ExpenseAnalyticsProvider(),
+          update: (_, txProvider, analyticsProvider) =>
+              (analyticsProvider ?? ExpenseAnalyticsProvider())..updateTransactions(txProvider.transactions),
         ),
       ],
       child: const MyApp(),
