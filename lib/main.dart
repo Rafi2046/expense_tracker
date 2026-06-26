@@ -27,9 +27,7 @@ void main() async {
   await SharedPrefsHelper.init();
   await initializeDateFormatting(); // Enable local date names (Bangla, Hindi, Urdu)
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
     MultiProvider(
@@ -44,27 +42,38 @@ void main() async {
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => BudgetProvider()),
-        ChangeNotifierProxyProvider2<TransactionProvider, DebtProvider, ReportsProvider>(
+        ChangeNotifierProxyProvider2<
+          TransactionProvider,
+          DebtProvider,
+          ReportsProvider
+        >(
           create: (_) => ReportsProvider(),
           update: (_, txProvider, debtProvider, reportsProvider) =>
               reportsProvider!..updateProviders(txProvider, debtProvider),
         ),
-        ChangeNotifierProxyProvider<TransactionProvider, IncomeAnalyticsProvider>(
+        ChangeNotifierProxyProvider<
+          TransactionProvider,
+          IncomeAnalyticsProvider
+        >(
           create: (_) => IncomeAnalyticsProvider(),
           update: (_, txProvider, analyticsProvider) =>
-              (analyticsProvider ?? IncomeAnalyticsProvider())..updateTransactions(txProvider.transactions),
+              (analyticsProvider ?? IncomeAnalyticsProvider())
+                ..updateTransactions(txProvider.transactions),
         ),
-        ChangeNotifierProxyProvider<TransactionProvider, ExpenseAnalyticsProvider>(
+        ChangeNotifierProxyProvider<
+          TransactionProvider,
+          ExpenseAnalyticsProvider
+        >(
           create: (_) => ExpenseAnalyticsProvider(),
           update: (_, txProvider, analyticsProvider) =>
-              (analyticsProvider ?? ExpenseAnalyticsProvider())..updateTransactions(txProvider.transactions),
+              (analyticsProvider ?? ExpenseAnalyticsProvider())
+                ..updateTransactions(txProvider.transactions),
         ),
       ],
       child: const MyApp(),
     ),
   );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
