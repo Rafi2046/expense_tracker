@@ -1,4 +1,4 @@
-import '../../core/models/transaction_models.dart';
+import 'package:expense_tracker/core/models/transaction_models.dart';
 
 abstract class TransactionRepository {
   Future<List<TransactionItem>> getTransactions();
@@ -10,7 +10,6 @@ abstract class TransactionRepository {
   Future<Set<String>> getAllPendingTransactionIds();
   Future<void> markTransactionSynced(String id);
 
-  // Categories
   Future<List<CategoryItem>> getCategories();
   Future<void> addCategory(CategoryItem item, {String syncStatus = 'pending_create'});
   Future<void> deleteCategory(String id, {bool hardDelete = false});

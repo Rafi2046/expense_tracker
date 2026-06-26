@@ -1,7 +1,8 @@
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/budget_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -10,6 +11,7 @@ import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/appbar_widget.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
 import 'package:expense_tracker/features/dashboard/pages/expense_insights_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/recent_activity_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/income_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/notifications_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
@@ -38,6 +40,8 @@ class DashboardScreen extends StatelessWidget {
     final debtProvider = context.watch<DebtProvider>();
     final txProvider = context.watch<TransactionProvider>();
     final balanceProvider = context.watch<BalanceAnalyticsProvider>();
+    final expenseAnalytics = context.watch<ExpenseAnalyticsProvider>();
+    final budgetProvider = context.watch<BudgetProvider>();
 
     final double totalBalance = balanceProvider.allTimeTotalBalance;
     final String currentMonthName = DateFormat('MMMM').format(DateTime.now());
@@ -246,36 +250,21 @@ class DashboardScreen extends StatelessWidget {
                   const DashboardShortcutsCard(),
                   const SizedBox(height: 24),
                   DashboardRecentActivity(
-                    items: [
-                      RecentActivityItem(
-                        title: 'Apple Store',
-                        category: 'Electronics',
-                        timeText: 'Today',
-                        amount: 199.00,
-                        isIncome: false,
-                        icon: Symbols.shopping_bag,
-                      ),
-                      RecentActivityItem(
-                        title: 'Wild Ginger',
-                        category: 'Food',
-                        timeText: 'Yesterday',
-                        amount: 42.50,
-                        isIncome: false,
-                        icon: Symbols.restaurant,
-                      ),
-                      RecentActivityItem(
-                        title: 'Monthly Salary',
-                        category: 'Income',
-                        timeText: '2 days ago',
-                        amount: 4200.00,
-                        isIncome: true,
-                        icon: Symbols.payments,
-                      ),
-                    ],
+                    items: txProvider.transactions.take(5).map((tx) {
+                      return RecentActivityItem(
+                        title: tx.note.isEmpty ? tx.category : tx.note,
+                        category: tx.category,
+                        timeText: _getRelativeTime(tx.dateTime),
+                        amount: tx.amount,
+                        isIncome: tx.isIncome,
+                        icon: _getCategoryIcon(tx.category),
+                      );
+                    }).toList(),
                     onViewAllTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Recent Activity View All clicked'),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RecentActivityScreen(),
                         ),
                       );
                     },
@@ -288,24 +277,30 @@ class DashboardScreen extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 20),
-                  const DashboardSpendingCategories(
-                    categoryName: 'Food',
-                    percentage: 42,
+                  DashboardSpendingCategories(
+                    categoryName: expenseAnalytics.monthlyCategories.isNotEmpty
+                        ? expenseAnalytics.monthlyCategories.first.name
+                        : 'No Expenses',
+                    percentage: expenseAnalytics.monthlyCategories.isNotEmpty
+                        ? ((expenseAnalytics.monthlyCategories.first.amount /
+                                    expenseAnalytics.currentMonthExpense) *
+                                100)
+                            .clamp(0, 100)
+                            .toDouble()
+                        : 0,
                   ),
                   const SizedBox(height: 20),
                   DashboardBudgetStatus(
-                    items: [
-                      BudgetStatusItem(
-                        categoryName: 'Entertainment',
-                        percentage: 80,
-                        color: AppColors.expensePink,
-                      ),
-                      BudgetStatusItem(
-                        categoryName: 'Utilities',
-                        percentage: 45,
-                        color: AppColors.activeGreen,
-                      ),
-                    ],
+                    items: expenseAnalytics.monthlyCategories.take(3).map((cat) {
+                      final pct = budgetProvider.hasBudget
+                          ? ((cat.amount / budgetProvider.amount) * 100).clamp(0, 100).toDouble()
+                          : ((cat.amount / expenseAnalytics.currentMonthExpense) * 100).clamp(0, 100).toDouble();
+                      return BudgetStatusItem(
+                        categoryName: cat.name,
+                        percentage: pct,
+                        color: cat.color,
+                      );
+                    }).toList(),
                   ),
                   const SizedBox(height: 80),
                 ],
@@ -315,5 +310,50 @@ class DashboardScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  static String _getRelativeTime(DateTime dateTime) {
+    final now = DateTime.now();
+    final diff = now.difference(dateTime);
+    if (diff.inDays == 0) return 'Today';
+    if (diff.inDays == 1) return 'Yesterday';
+    return '${diff.inDays} days ago';
+  }
+
+  static IconData _getCategoryIcon(String category) {
+    switch (category.toLowerCase()) {
+      case 'food':
+      case 'dining':
+      case 'restaurant':
+        return Symbols.restaurant;
+      case 'income':
+      case 'salary':
+        return Symbols.payments;
+      case 'transport':
+      case 'fuel':
+      case 'travel':
+        return Symbols.directions_car;
+      case 'shopping':
+      case 'clothing':
+      case 'electronics':
+        return Symbols.shopping_bag;
+      case 'entertainment':
+      case 'movie':
+        return Symbols.movie;
+      case 'utilities':
+      case 'bills':
+      case 'rent':
+        return Symbols.receipt_long;
+      case 'health':
+      case 'medical':
+        return Symbols.local_hospital;
+      case 'education':
+      case 'school':
+        return Symbols.school;
+      case 'transfer':
+        return Symbols.swap_horiz;
+      default:
+        return Symbols.receipt_long;
+    }
   }
 }
