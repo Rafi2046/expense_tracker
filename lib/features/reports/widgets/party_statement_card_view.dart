@@ -24,29 +24,27 @@ class PartyStatementCardView extends StatelessWidget {
 
     final double netBalance = totals['netBalance'] ?? 0.0;
 
-    // Calculate Money In and Money Out (excluding Opening Balances)
     double moneyIn = 0.0;
     double moneyOut = 0.0;
-    for (var tx in transactions) {
-      if (tx.detail.toLowerCase().contains('opening balance')) continue;
-      if (tx.isReceive) {
-        moneyIn += tx.amount;
+    for (var entry in transactions) {
+      if (entry.isOpeningBalance) continue;
+      if (entry.isInflow) {
+        moneyIn += entry.amount;
       } else {
-        moneyOut += tx.amount;
+        moneyOut += entry.amount;
       }
     }
 
-    // Calculate chronological running balances
     final chronological = transactions.reversed.toList();
     double balance = 0.0;
     final Map<String, double> runningBalances = {};
-    for (var tx in chronological) {
-      if (tx.isReceive) {
-        balance += tx.amount;
+    for (var entry in chronological) {
+      if (entry.isInflow) {
+        balance += entry.amount;
       } else {
-        balance -= tx.amount;
+        balance -= entry.amount;
       }
-      runningBalances[tx.id] = balance;
+      runningBalances[entry.id] = balance;
     }
 
     final theme = Theme.of(context);
@@ -273,9 +271,9 @@ class PartyStatementCardView extends StatelessWidget {
           itemCount: transactions.length,
           separatorBuilder: (context, index) => const SizedBox(height: 10),
           itemBuilder: (context, index) {
-            final tx = transactions[index];
-            final txBal = runningBalances[tx.id] ?? 0.0;
-            final isTxBalPositive = txBal >= 0;
+            final entry = transactions[index];
+            final entryBal = runningBalances[entry.id] ?? 0.0;
+            final isEntryBalPositive = entryBal >= 0;
 
             return Container(
               padding: const EdgeInsets.all(12),
@@ -293,7 +291,6 @@ class PartyStatementCardView extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  // Receipt/direction icon inside a circular container
                   Container(
                     width: 36,
                     height: 36,
@@ -302,8 +299,8 @@ class PartyStatementCardView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
-                      tx.isReceive ? Symbols.arrow_downward_rounded : Symbols.arrow_upward_rounded,
-                      color: tx.isReceive ? AppColors.activeGreen : AppColors.activeRed,
+                      entry.isInflow ? Symbols.arrow_downward_rounded : Symbols.arrow_upward_rounded,
+                      color: entry.isInflow ? AppColors.activeGreen : AppColors.activeRed,
                       size: 18,
                     ),
                   ),
@@ -313,7 +310,7 @@ class PartyStatementCardView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          tx.detail,
+                          entry.description,
                           style: AppTextStyles.reportTransactionTitle.copyWith(
                             fontSize: 13.5,
                             fontWeight: FontWeight.w600,
@@ -327,7 +324,7 @@ class PartyStatementCardView extends StatelessWidget {
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             Text(
-                              DateFormat('dd MMM yyyy • h:mm a').format(tx.createdAt),
+                              DateFormat('dd MMM yyyy • h:mm a').format(entry.dateTime),
                               style: AppTextStyles.reportTransactionSubtitle.copyWith(
                                 fontSize: 10.5,
                                 color: theme.colorScheme.onSurfaceVariant,
@@ -336,15 +333,15 @@ class PartyStatementCardView extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
-                                color: isTxBalPositive
+                                color: isEntryBalPositive
                                     ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.15) : const Color(0xFFE8F8F5))
                                     : (isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFDE8E8)),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(
-                                'Bal: $currencySymbol${txBal.abs().toStringAsFixed(0)}',
+                                'Bal: $currencySymbol${entryBal.abs().toStringAsFixed(0)}',
                                 style: AppTextStyles.reportStatLabel.copyWith(
-                                  color: isTxBalPositive ? AppColors.activeGreen : AppColors.activeRed,
+                                  color: isEntryBalPositive ? AppColors.activeGreen : AppColors.activeRed,
                                   fontSize: 9.5,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -357,11 +354,11 @@ class PartyStatementCardView extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '$currencySymbol${tx.amount.toStringAsFixed(0)}',
+                    '$currencySymbol${entry.amount.toStringAsFixed(0)}',
                     style: AppTextStyles.reportTransactionTitle.copyWith(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: tx.isReceive ? AppColors.activeGreen : AppColors.activeRed,
+                      color: entry.isInflow ? AppColors.activeGreen : AppColors.activeRed,
                     ),
                   ),
                 ],

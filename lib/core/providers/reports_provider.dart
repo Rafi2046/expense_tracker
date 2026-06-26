@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/model/unified_transaction.dart';
 import 'package:expense_tracker/core/model/ledger_item.dart';
 import 'package:expense_tracker/core/model/category_summary.dart';
 import 'package:expense_tracker/core/model/party_report_summary.dart';
+import 'package:expense_tracker/core/model/party_statement_entry.dart';
 
 enum ReportSortOption {
   latest,
@@ -329,34 +330,62 @@ class ReportsProvider extends ChangeNotifier {
   }
 
   // 2. Party Statement Calculations
-  List<DebtItem> get partyStatementTransactions {
-    if (_debtProvider == null || _selectedPartyNameForStatement == null) return [];
+  List<PartyStatementEntry> get partyStatementTransactions {
+    if (_selectedPartyNameForStatement == null) return [];
+    final List<PartyStatementEntry> entries = [];
 
-    final filtered = _debtProvider!.items.where((item) {
-      if (item.name != _selectedPartyNameForStatement) return false;
+    final partyName = _selectedPartyNameForStatement!;
 
-      if (_selectedDateRange != null) {
-        final start = DateTime(_selectedDateRange!.start.year, _selectedDateRange!.start.month, _selectedDateRange!.start.day);
-        final end = DateTime(_selectedDateRange!.end.year, _selectedDateRange!.end.month, _selectedDateRange!.end.day, 23, 59, 59);
-        if (item.createdAt.isBefore(start) || item.createdAt.isAfter(end)) {
-          return false;
-        }
+    bool inDateRange(DateTime dt) {
+      if (_selectedDateRange == null) return true;
+      final start = DateTime(_selectedDateRange!.start.year, _selectedDateRange!.start.month, _selectedDateRange!.start.day);
+      final end = DateTime(_selectedDateRange!.end.year, _selectedDateRange!.end.month, _selectedDateRange!.end.day, 23, 59, 59);
+      return !dt.isBefore(start) && !dt.isAfter(end);
+    }
+
+    if (_debtProvider != null) {
+      for (var item in _debtProvider!.items) {
+        if (item.name != partyName) continue;
+        if (!inDateRange(item.createdAt)) continue;
+        entries.add(PartyStatementEntry(
+          id: 'debt_${item.id}',
+          partyName: item.name,
+          description: item.detail,
+          amount: item.amount,
+          isInflow: item.isReceive,
+          dateTime: item.createdAt,
+          isOpeningBalance: item.detail.toLowerCase().contains('opening balance'),
+        ));
       }
-      return true;
-    }).toList();
+    }
 
-    filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    return filtered;
+    if (_txProvider != null) {
+      for (var item in _txProvider!.transactions) {
+        if (item.partyName != partyName) continue;
+        if (!inDateRange(item.dateTime)) continue;
+        entries.add(PartyStatementEntry(
+          id: 'tx_${item.id}',
+          partyName: item.partyName!,
+          description: item.note.isNotEmpty ? item.note : item.category,
+          amount: item.amount,
+          isInflow: item.isIncome,
+          dateTime: item.dateTime,
+        ));
+      }
+    }
+
+    entries.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    return entries;
   }
 
   Map<String, dynamic> get partyStatementTotals {
     double receiveTotal = 0.0;
     double giveTotal = 0.0;
-    for (var tx in partyStatementTransactions) {
-      if (tx.isReceive) {
-        receiveTotal += tx.amount;
+    for (var entry in partyStatementTransactions) {
+      if (entry.isInflow) {
+        receiveTotal += entry.amount;
       } else {
-        giveTotal += tx.amount;
+        giveTotal += entry.amount;
       }
     }
     final netBalance = receiveTotal - giveTotal;

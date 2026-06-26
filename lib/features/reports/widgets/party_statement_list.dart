@@ -71,7 +71,7 @@ class PartyStatementList extends StatelessWidget {
           itemCount: transactions.length,
           separatorBuilder: (context, index) => const SizedBox(height: 10),
           itemBuilder: (context, index) {
-            final tx = transactions[index];
+            final entry = transactions[index];
 
             return Container(
               padding: const EdgeInsets.all(14),
@@ -87,14 +87,14 @@ class PartyStatementList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        tx.detail,
+                        entry.description,
                         style: AppTextStyles.reportTransactionTitle.copyWith(
                           color: theme.colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        DateFormat('dd MMM yyyy').format(tx.createdAt),
+                        DateFormat('dd MMM yyyy').format(entry.dateTime),
                         style: AppTextStyles.reportTransactionSubtitle.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -102,9 +102,9 @@ class PartyStatementList extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    '$currencySymbol ${tx.amount.toStringAsFixed(0)}',
+                    '$currencySymbol ${entry.amount.toStringAsFixed(0)}',
                     style: AppTextStyles.reportTransactionTitle.copyWith(
-                      color: tx.isReceive
+                      color: entry.isInflow
                           ? AppColors.activeGreen
                           : AppColors.activeRed,
                     ),

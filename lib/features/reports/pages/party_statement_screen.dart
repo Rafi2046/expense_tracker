@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_selector.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_view_toggle.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_content.dart';
+import 'package:expense_tracker/features/reports/widgets/party_statement_profile_header.dart';
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
 import 'package:expense_tracker/features/reports/widgets/report_date_selector.dart';
 import 'package:flutter/material.dart';
@@ -23,10 +24,10 @@ class PartyStatementScreen extends StatelessWidget {
 
     final headers = ['Date', 'Detail', 'Amount', 'Type'];
     final rows = reportsProvider.partyStatementTransactions.map((item) => {
-      'Date': dateFormat.format(item.createdAt),
-      'Detail': '${item.name} • ${item.detail}',
+      'Date': dateFormat.format(item.dateTime),
+      'Detail': '${item.partyName} • ${item.description}',
       'Amount': '$currencySymbol ${item.amount.toStringAsFixed(0)}',
-      'Type': item.isReceive ? 'Receive' : 'Give',
+      'Type': item.isInflow ? 'Receive' : 'Give',
     }).toList();
     final dateSubtitle = reportsProvider.getDateRangeSubtitle(reportsProvider.selectedOption, reportsProvider.selectedDateRange);
 
@@ -77,7 +78,9 @@ class PartyStatementScreen extends StatelessWidget {
                   ReportDateSelector(),
                   SizedBox(height: 12),
                   PartyStatementSelector(),
-                  SizedBox(height: 24),
+                  SizedBox(height: 16),
+                  PartyStatementProfileHeader(),
+                  SizedBox(height: 20),
                   PartyStatementContent(),
                 ],
               ),

@@ -25,17 +25,16 @@ class PartyStatementTableView extends StatelessWidget {
     final double receiveTotal = totals['receiveTotal'] ?? 0.0;
     final double giveTotal = totals['giveTotal'] ?? 0.0;
 
-    // Calculate chronological running balances
     final chronological = transactions.reversed.toList();
     double balance = 0.0;
     final Map<String, double> runningBalances = {};
-    for (var tx in chronological) {
-      if (tx.isReceive) {
-        balance += tx.amount;
+    for (var entry in chronological) {
+      if (entry.isInflow) {
+        balance += entry.amount;
       } else {
-        balance -= tx.amount;
+        balance -= entry.amount;
       }
-      runningBalances[tx.id] = balance;
+      runningBalances[entry.id] = balance;
     }
 
     final theme = Theme.of(context);
@@ -227,9 +226,9 @@ class PartyStatementTableView extends StatelessWidget {
           itemCount: transactions.length,
           separatorBuilder: (context, index) => const SizedBox(height: 10),
           itemBuilder: (context, index) {
-            final tx = transactions[index];
-            final txBal = runningBalances[tx.id] ?? 0.0;
-            final isTxBalPositive = txBal >= 0;
+            final entry = transactions[index];
+            final entryBal = runningBalances[entry.id] ?? 0.0;
+            final isEntryBalPositive = entryBal >= 0;
 
             return Container(
               decoration: BoxDecoration(
@@ -246,7 +245,6 @@ class PartyStatementTableView extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  // Col 1: Details
                   Expanded(
                     flex: 2,
                     child: Padding(
@@ -256,7 +254,7 @@ class PartyStatementTableView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            tx.detail,
+                            entry.description,
                             style: AppTextStyles.reportTransactionTitle.copyWith(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
@@ -270,7 +268,7 @@ class PartyStatementTableView extends StatelessWidget {
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
                               Text(
-                                DateFormat('dd MMM yyyy • h:mm a').format(tx.createdAt),
+                                DateFormat('dd MMM yyyy • h:mm a').format(entry.dateTime),
                                 style: AppTextStyles.reportTransactionSubtitle.copyWith(
                                   fontSize: 10.5,
                                   color: theme.colorScheme.onSurfaceVariant,
@@ -279,15 +277,15 @@ class PartyStatementTableView extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
-                                  color: isTxBalPositive
+                                  color: isEntryBalPositive
                                       ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.15) : const Color(0xFFE8F8F5))
                                       : (isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFDE8E8)),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
-                                  'Bal: $currencySymbol${txBal.abs().toStringAsFixed(0)}',
+                                  'Bal: $currencySymbol${entryBal.abs().toStringAsFixed(0)}',
                                   style: AppTextStyles.reportStatLabel.copyWith(
-                                    color: isTxBalPositive ? AppColors.activeGreen : AppColors.activeRed,
+                                    color: isEntryBalPositive ? AppColors.activeGreen : AppColors.activeRed,
                                     fontSize: 9.5,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -300,13 +298,12 @@ class PartyStatementTableView extends StatelessWidget {
                     ),
                   ),
 
-                  // Col 2: Debit (Receive)
                   Expanded(
                     flex: 1,
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 4),
                       alignment: Alignment.center,
-                      child: tx.isReceive
+                      child: entry.isInflow
                           ? Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                               decoration: BoxDecoration(
@@ -315,7 +312,7 @@ class PartyStatementTableView extends StatelessWidget {
                                 border: Border.all(color: isDark ? AppColors.activeGreen.withValues(alpha: 0.3) : const Color(0xFFD1F2E5)),
                               ),
                               child: Text(
-                                tx.amount.toStringAsFixed(0),
+                                entry.amount.toStringAsFixed(0),
                                 textAlign: TextAlign.center,
                                 style: AppTextStyles.reportTransactionTitle.copyWith(
                                   fontSize: 12.5,
@@ -328,13 +325,12 @@ class PartyStatementTableView extends StatelessWidget {
                     ),
                   ),
 
-                  // Col 3: Credit (Give)
                   Expanded(
                     flex: 1,
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 4),
                       alignment: Alignment.center,
-                      child: !tx.isReceive
+                      child: !entry.isInflow
                           ? Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                               decoration: BoxDecoration(
@@ -343,7 +339,7 @@ class PartyStatementTableView extends StatelessWidget {
                                 border: Border.all(color: isDark ? AppColors.activeRed.withValues(alpha: 0.3) : const Color(0xFFFAD1D1)),
                               ),
                               child: Text(
-                                tx.amount.toStringAsFixed(0),
+                                entry.amount.toStringAsFixed(0),
                                 textAlign: TextAlign.center,
                                 style: AppTextStyles.reportTransactionTitle.copyWith(
                                   fontSize: 12.5,
