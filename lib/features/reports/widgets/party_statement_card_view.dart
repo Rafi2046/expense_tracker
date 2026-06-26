@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -82,7 +83,7 @@ class PartyStatementCardView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Total Receivables/Payables Card
+        // ── Total Receivables/Payables Card ──
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -143,7 +144,7 @@ class PartyStatementCardView extends StatelessWidget {
         ),
         const SizedBox(height: 12),
 
-        // Money In & Money Out Cards
+        // ── Money In & Money Out Cards ──
         Row(
           children: [
             Expanded(
@@ -253,18 +254,21 @@ class PartyStatementCardView extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 28),
 
-        // Transactions Lists
+        // ── Section Header ──
         Text(
-          'Transactions Lists',
-          style: AppTextStyles.reportTransactionTitle.copyWith(
-            fontWeight: FontWeight.bold,
+          'Transactions',
+          style: GoogleFonts.workSans(
+            fontWeight: FontWeight.w700,
             fontSize: 15,
             color: theme.colorScheme.onSurface,
+            letterSpacing: -0.2,
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 14),
+
+        // ── Transaction Tiles ──
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -275,98 +279,208 @@ class PartyStatementCardView extends StatelessWidget {
             final entryBal = runningBalances[entry.id] ?? 0.0;
             final isEntryBalPositive = entryBal >= 0;
 
-            return Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: theme.cardColor,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: theme.dividerColor),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: isDark ? 0.05 : 0.005),
-                    blurRadius: 5,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: isDark ? Colors.white10 : const Color(0xFFF5F6F8),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(
-                      entry.isInflow ? Symbols.arrow_downward_rounded : Symbols.arrow_upward_rounded,
-                      color: entry.isInflow ? AppColors.activeGreen : AppColors.activeRed,
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          entry.description,
-                          style: AppTextStyles.reportTransactionTitle.copyWith(
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 4,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            Text(
-                              DateFormat('dd MMM yyyy • h:mm a').format(entry.dateTime),
-                              style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                                fontSize: 10.5,
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: isEntryBalPositive
-                                    ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.15) : const Color(0xFFE8F8F5))
-                                    : (isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFDE8E8)),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                'Bal: $currencySymbol${entryBal.abs().toStringAsFixed(0)}',
-                                style: AppTextStyles.reportStatLabel.copyWith(
-                                  color: isEntryBalPositive ? AppColors.activeGreen : AppColors.activeRed,
-                                  fontSize: 9.5,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '$currencySymbol${entry.amount.toStringAsFixed(0)}',
-                    style: AppTextStyles.reportTransactionTitle.copyWith(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: entry.isInflow ? AppColors.activeGreen : AppColors.activeRed,
-                    ),
-                  ),
-                ],
-              ),
+            final isInflow = entry.isInflow;
+            final typeColor = isInflow ? AppColors.activeGreen : AppColors.activeRed;
+
+            return _PremiumTransactionTile(
+              description: entry.description,
+              dateTime: entry.dateTime,
+              amount: entry.amount,
+              isInflow: isInflow,
+              isOpeningBalance: entry.isOpeningBalance,
+              entryBalance: entryBal,
+              isEntryBalPositive: isEntryBalPositive,
+              typeColor: typeColor,
+              currencySymbol: currencySymbol,
+              theme: theme,
+              isDark: isDark,
             );
           },
         ),
       ],
+    );
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Premium Transaction Tile
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+class _PremiumTransactionTile extends StatelessWidget {
+  final String description;
+  final DateTime dateTime;
+  final double amount;
+  final bool isInflow;
+  final bool isOpeningBalance;
+  final double entryBalance;
+  final bool isEntryBalPositive;
+  final Color typeColor;
+  final String currencySymbol;
+  final ThemeData theme;
+  final bool isDark;
+
+  const _PremiumTransactionTile({
+    required this.description,
+    required this.dateTime,
+    required this.amount,
+    required this.isInflow,
+    required this.isOpeningBalance,
+    required this.entryBalance,
+    required this.isEntryBalPositive,
+    required this.typeColor,
+    required this.currencySymbol,
+    required this.theme,
+    required this.isDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Determine the icon for the leading badge
+    final IconData leadingIcon;
+    final Color iconBgColor;
+    final Color iconFgColor;
+
+    if (isOpeningBalance) {
+      leadingIcon = Symbols.account_balance_wallet_rounded;
+      iconBgColor = isDark
+          ? theme.colorScheme.primary.withValues(alpha: 0.12)
+          : theme.colorScheme.primary.withValues(alpha: 0.08);
+      iconFgColor = theme.colorScheme.primary;
+    } else if (isInflow) {
+      leadingIcon = Symbols.south_west_rounded;
+      iconBgColor = isDark
+          ? AppColors.activeGreen.withValues(alpha: 0.14)
+          : const Color(0xFFE6F9F0);
+      iconFgColor = AppColors.activeGreen;
+    } else {
+      leadingIcon = Symbols.north_east_rounded;
+      iconBgColor = isDark
+          ? AppColors.activeRed.withValues(alpha: 0.14)
+          : const Color(0xFFFDE9EB);
+      iconFgColor = AppColors.activeRed;
+    }
+
+    // Balance pill colors
+    final balPillBg = isEntryBalPositive
+        ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.10) : const Color(0xFFEBF9F3))
+        : (isDark ? AppColors.activeRed.withValues(alpha: 0.10) : const Color(0xFFFCECEE));
+    final balPillBorder = isEntryBalPositive
+        ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.18) : const Color(0xFFCFF0DF))
+        : (isDark ? AppColors.activeRed.withValues(alpha: 0.18) : const Color(0xFFF8D4D8));
+    final balPillTextColor = isEntryBalPositive ? AppColors.activeGreen : AppColors.activeRed;
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.22)
+                : Colors.black.withValues(alpha: 0.04),
+            blurRadius: 12,
+            spreadRadius: 0,
+            offset: const Offset(0, 4),
+          ),
+          if (!isDark)
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.015),
+              blurRadius: 3,
+              spreadRadius: 0,
+              offset: const Offset(0, 1),
+            ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // ── Leading Icon Badge ──
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: iconBgColor,
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: Icon(
+              leadingIcon,
+              color: iconFgColor,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+
+          // ── Center Column: Title + Date ──
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  description,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.workSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurface,
+                    letterSpacing: -0.15,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  DateFormat('dd MMM yyyy • h:mm a').format(dateTime),
+                  style: GoogleFonts.workSans(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w400,
+                    color: isDark ? Colors.white38 : Colors.grey.shade500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+
+          // ── Trailing: Amount + Balance Pill ──
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              // Amount — bold, color-coded
+              Text(
+                '${isInflow ? '+' : '−'} $currencySymbol${amount.toStringAsFixed(0)}',
+                style: GoogleFonts.workSans(
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w700,
+                  color: typeColor,
+                  letterSpacing: -0.2,
+                ),
+              ),
+              const SizedBox(height: 5),
+
+              // Balance pill
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: balPillBg,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: balPillBorder,
+                    width: 0.8,
+                  ),
+                ),
+                child: Text(
+                  'Bal: $currencySymbol${entryBalance.abs().toStringAsFixed(0)}',
+                  style: GoogleFonts.workSans(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: balPillTextColor,
+                    letterSpacing: 0.1,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

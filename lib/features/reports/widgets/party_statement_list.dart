@@ -1,11 +1,13 @@
-import 'package:expense_tracker/core/constants/app_images.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class PartyStatementList extends StatelessWidget {
   const PartyStatementList({super.key});
@@ -18,6 +20,7 @@ class PartyStatementList extends StatelessWidget {
     final currencySymbol = context.currencySymbol;
 
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     if (partyName == null) {
       return Center(
@@ -60,11 +63,14 @@ class PartyStatementList extends StatelessWidget {
       children: [
         Text(
           'Transaction Lists',
-          style: AppTextStyles.reportTransactionTitle.copyWith(
+          style: GoogleFonts.workSans(
+            fontWeight: FontWeight.w700,
+            fontSize: 15,
             color: theme.colorScheme.onSurface,
+            letterSpacing: -0.2,
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 14),
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -73,40 +79,107 @@ class PartyStatementList extends StatelessWidget {
           itemBuilder: (context, index) {
             final entry = transactions[index];
 
+            final isInflow = entry.isInflow;
+            final typeColor = isInflow ? AppColors.activeGreen : AppColors.activeRed;
+
+            // Leading icon badge
+            final IconData leadingIcon;
+            final Color iconBgColor;
+            final Color iconFgColor;
+
+            if (isInflow) {
+              leadingIcon = Symbols.south_west_rounded;
+              iconBgColor = isDark
+                  ? AppColors.activeGreen.withValues(alpha: 0.14)
+                  : const Color(0xFFE6F9F0);
+              iconFgColor = AppColors.activeGreen;
+            } else {
+              leadingIcon = Symbols.north_east_rounded;
+              iconBgColor = isDark
+                  ? AppColors.activeRed.withValues(alpha: 0.14)
+                  : const Color(0xFFFDE9EB);
+              iconFgColor = AppColors.activeRed;
+            }
+
             return Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: theme.cardColor,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: theme.dividerColor),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: isDark
+                        ? Colors.black.withValues(alpha: 0.22)
+                        : Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 12,
+                    spreadRadius: 0,
+                    offset: const Offset(0, 4),
+                  ),
+                  if (!isDark)
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.015),
+                      blurRadius: 3,
+                      spreadRadius: 0,
+                      offset: const Offset(0, 1),
+                    ),
+                ],
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        entry.description,
-                        style: AppTextStyles.reportTransactionTitle.copyWith(
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        DateFormat('dd MMM yyyy').format(entry.dateTime),
-                        style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+                  // ── Leading Icon Badge ──
+                  Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: iconBgColor,
+                      borderRadius: BorderRadius.circular(13),
+                    ),
+                    child: Icon(
+                      leadingIcon,
+                      color: iconFgColor,
+                      size: 20,
+                    ),
                   ),
+                  const SizedBox(width: 12),
+
+                  // ── Center Column: Title + Date ──
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          entry.description,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.workSans(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.onSurface,
+                            letterSpacing: -0.15,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          DateFormat('dd MMM yyyy').format(entry.dateTime),
+                          style: GoogleFonts.workSans(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w400,
+                            color: isDark ? Colors.white38 : Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+
+                  // ── Trailing: Amount ──
                   Text(
-                    '$currencySymbol ${entry.amount.toStringAsFixed(0)}',
-                    style: AppTextStyles.reportTransactionTitle.copyWith(
-                      color: entry.isInflow
-                          ? AppColors.activeGreen
-                          : AppColors.activeRed,
+                    '${isInflow ? '+' : '−'} $currencySymbol ${entry.amount.toStringAsFixed(0)}',
+                    style: GoogleFonts.workSans(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w700,
+                      color: typeColor,
+                      letterSpacing: -0.2,
                     ),
                   ),
                 ],
