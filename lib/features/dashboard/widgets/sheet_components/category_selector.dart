@@ -1,0 +1,38 @@
+import 'package:expense_tracker/features/dashboard/widgets/select_category_sheet.dart';
+import 'package:expense_tracker/features/dashboard/widgets/transaction_selector_tile.dart';
+import 'package:flutter/material.dart';
+
+class CategorySelector extends StatelessWidget {
+  final String? selectedCategory;
+  final Color themeColor;
+  final bool isIncome;
+  final ValueChanged<String> onCategorySelected;
+
+  const CategorySelector({
+    super.key,
+    required this.selectedCategory,
+    required this.themeColor,
+    required this.isIncome,
+    required this.onCategorySelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TransactionSelectorTile(
+      leadingIcon: Icons.category_outlined,
+      labelText: 'Category',
+      valueText: selectedCategory ?? 'Select Category',
+      isValueSelected: selectedCategory != null,
+      themeColor: themeColor,
+      trailingIcon: Icons.arrow_forward_ios_rounded,
+      onTap: () {
+        SelectCategorySheet.show(
+          context: context,
+          isIncome: isIncome,
+          selectedCategory: selectedCategory,
+          onCategorySelected: onCategorySelected,
+        );
+      },
+    );
+  }
+}

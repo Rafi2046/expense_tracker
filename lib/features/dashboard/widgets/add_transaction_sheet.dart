@@ -1,12 +1,14 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
-import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/amount_input_field.dart';
-import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/note_input_field.dart';
-import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/save_transaction_button.dart';
-import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/sheet_header.dart';
-import 'package:expense_tracker/features/dashboard/widgets/select_category_sheet.dart';
-import 'package:expense_tracker/features/dashboard/widgets/transaction_selector_tile.dart';
+import 'package:expense_tracker/features/dashboard/widgets/sheet_components/category_selector.dart';
+import 'package:expense_tracker/features/dashboard/widgets/sheet_components/date_selector.dart';
+import 'package:expense_tracker/features/dashboard/widgets/sheet_components/income_month_selector.dart';
+import 'package:expense_tracker/features/dashboard/widgets/sheet_components/payment_mode_selector.dart';
+import 'package:expense_tracker/features/dashboard/widgets/sheet_components/transaction_amount_input.dart';
+import 'package:expense_tracker/features/dashboard/widgets/sheet_components/transaction_note_input.dart';
+import 'package:expense_tracker/features/dashboard/widgets/sheet_components/transaction_save_button.dart';
+import 'package:expense_tracker/features/dashboard/widgets/sheet_components/transaction_sheet_header.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -356,7 +358,6 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     final themeColor = widget.isIncome
         ? theme.primaryColor
@@ -385,17 +386,16 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SheetHeader(
+                TransactionSheetHeader(
                   isEditing: widget.isEditing,
                   isIncome: widget.isIncome,
                   onClose: () => Navigator.pop(context),
                 ),
                 const SizedBox(height: 24),
-                AmountInputField(
+                TransactionAmountInput(
                   controller: _amountController,
                   themeColor: themeColor,
                   currencySymbol: context.currencySymbol,
-                  isDark: isDark,
                 ),
                 const SizedBox(height: 16),
                 Divider(
@@ -403,58 +403,36 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   height: 1,
                 ),
                 const SizedBox(height: 20),
-                TransactionSelectorTile(
-                  leadingIcon: Icons.category_outlined,
-                  labelText: 'Category',
-                  valueText: _selectedCategory ?? 'Select Category',
-                  isValueSelected: _selectedCategory != null,
+                CategorySelector(
+                  selectedCategory: _selectedCategory,
                   themeColor: secondaryThemeColor,
-                  trailingIcon: Icons.arrow_forward_ios_rounded,
-                  onTap: () {
-                    SelectCategorySheet.show(
-                      context: context,
-                      isIncome: widget.isIncome,
-                      selectedCategory: _selectedCategory,
-                      onCategorySelected: (cat) {
-                        setState(() {
-                          _selectedCategory = cat;
-                        });
-                      },
-                    );
+                  isIncome: widget.isIncome,
+                  onCategorySelected: (cat) {
+                    setState(() {
+                      _selectedCategory = cat;
+                    });
                   },
                 ),
                 const SizedBox(height: 16),
-                TransactionSelectorTile(
-                  leadingIcon: Icons.calendar_today_outlined,
-                  labelText: 'Date',
-                  valueText: DateFormat(
+                DateSelector(
+                  dateText: DateFormat(
                     'EEEE, MMM d, yyyy',
                   ).format(_selectedDate),
-                  isValueSelected: true,
                   themeColor: secondaryThemeColor,
-                  trailingIcon: Icons.edit_calendar_outlined,
                   onTap: () => _selectDate(context),
                 ),
                 const SizedBox(height: 16),
                 if (widget.isIncome) ...[
-                  TransactionSelectorTile(
-                    leadingIcon: Icons.calendar_month_outlined,
-                    labelText: 'Income Month',
-                    valueText: _selectedIncomeMonth ?? 'Select Month',
-                    isValueSelected: _selectedIncomeMonth != null,
+                  IncomeMonthSelector(
+                    selectedIncomeMonth: _selectedIncomeMonth,
                     themeColor: secondaryThemeColor,
-                    trailingIcon: Icons.arrow_forward_ios_rounded,
                     onTap: () => _showMonthSelector(context),
                   ),
                   const SizedBox(height: 16),
                 ],
-                TransactionSelectorTile(
-                  leadingIcon: Icons.account_balance_wallet_outlined,
-                  labelText: 'Payment Mode',
-                  valueText: _paymentMethod,
-                  isValueSelected: true,
+                PaymentModeSelector(
+                  paymentMethod: _paymentMethod,
                   themeColor: secondaryThemeColor,
-                  trailingIcon: Icons.swap_horiz_rounded,
                   onTap: () {
                     setState(() {
                       _paymentMethod = _paymentMethod == 'Cash'
@@ -464,17 +442,17 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   },
                 ),
                 const SizedBox(height: 16),
-                NoteInputField(
+                TransactionNoteInput(
                   controller: _noteController,
-                  focusColor: secondaryThemeColor,
-                  isDark: isDark,
+                  themeColor: secondaryThemeColor,
                 ),
                 const SizedBox(height: 24),
-                SaveTransactionButton(
+                TransactionSaveButton(
                   onPressed: () => _save(context),
-                  isEditing: widget.isEditing,
-                  isIncome: widget.isIncome,
-                  backgroundColor: themeColor,
+                  themeColor: themeColor,
+                  title: widget.isEditing
+                      ? (widget.isIncome ? 'Update Income' : 'Update Expense')
+                      : (widget.isIncome ? 'Save Income' : 'Save Expense'),
                 ),
                 const SizedBox(height: 8),
               ],
