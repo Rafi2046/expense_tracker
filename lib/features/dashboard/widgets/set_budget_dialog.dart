@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -48,11 +49,11 @@ class _SetBudgetDialogState extends State<SetBudgetDialog> {
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           decoration: InputDecoration(
-            labelText: 'Budget Amount',
+            labelText: 'Budget Amount (${context.currencySymbol})',
             hintText: 'Enter amount',
             labelStyle: AppTextStyles.textFieldLabel,
             hintStyle: AppTextStyles.textFieldHint,
-            prefixText: '\$ ',
+            prefixText: '${context.currencySymbol} ',
             prefixStyle: AppTextStyles.calculatorInputText,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSpacing.br8),

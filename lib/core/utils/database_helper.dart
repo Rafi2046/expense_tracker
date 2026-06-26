@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
@@ -10,6 +11,7 @@ import 'shared_prefs_helper.dart';
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
+  static Completer<void>? _initCompleter;
   static const String _webNotesKey = 'web_notes';
   DatabaseHelper._init();
 
@@ -18,8 +20,21 @@ class DatabaseHelper {
       throw UnsupportedError('SQLite is not supported on Web.');
     }
     if (_database != null) return _database!;
-    _database = await _initDB('notes.db');
-    return _database!;
+    if (_initCompleter != null) {
+      await _initCompleter!.future;
+      if (_database != null) return _database!;
+    }
+    _initCompleter = Completer<void>();
+    try {
+      _database = await _initDB('notes.db');
+      _initCompleter!.complete();
+      return _database!;
+    } catch (e) {
+      _initCompleter!.completeError(e);
+      rethrow;
+    } finally {
+      _initCompleter = null;
+    }
   }
 
   Future<Database> _initDB(String filePath) async {
@@ -28,7 +43,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 6,
+      version: 7,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -58,7 +73,8 @@ class DatabaseHelper {
         syncStatus TEXT NOT NULL DEFAULT 'synced',
         isDeleted INTEGER NOT NULL DEFAULT 0,
         lastModified TEXT NOT NULL,
-        profileId TEXT NOT NULL DEFAULT 'default_profile'
+        profileId TEXT NOT NULL DEFAULT 'default_profile',
+        partyName TEXT
       )
     ''');
     await db.execute('''
@@ -200,6 +216,13 @@ class DatabaseHelper {
         'type': 'Personal',
         'createdAt': DateTime.now().toIso8601String(),
       });
+    }
+    if (oldVersion < 7) {
+      final columns = await db.rawQuery('PRAGMA table_info(transactions)');
+      final hasPartyName = columns.any((col) => col['name'] == 'partyName');
+      if (!hasPartyName) {
+        await db.execute('ALTER TABLE transactions ADD COLUMN partyName TEXT');
+      }
     }
   }
 

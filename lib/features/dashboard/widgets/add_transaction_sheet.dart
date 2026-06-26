@@ -1,6 +1,7 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/sheet_components/category_selector.dart';
 import 'package:expense_tracker/features/dashboard/widgets/sheet_components/date_selector.dart';
@@ -53,6 +54,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   late DateTime _selectedDate;
   String? _selectedIncomeMonth;
   String _paymentMethod = 'Cash';
+  String? _selectedPartyName;
 
   @override
   void initState() {
@@ -66,6 +68,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
       _selectedCategory = tx.category;
       _selectedIncomeMonth = tx.incomeMonth;
       _paymentMethod = tx.paymentMethod;
+      _selectedPartyName = tx.partyName;
     } else {
       // Set the month dynamically when opening
       if (widget.isIncome) {
@@ -103,6 +106,66 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         });
       }
     }
+  }
+
+  Widget _buildPartySelector({required Color themeColor}) {
+    final theme = Theme.of(context);
+    return GestureDetector(
+      onTap: () => _showPartySelector(context),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: theme.dividerTheme.color ?? Colors.grey.shade200,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Symbols.group,
+              size: 20,
+              color: _selectedPartyName != null
+                  ? themeColor
+                  : (theme.brightness == Brightness.dark
+                      ? Colors.white38
+                      : Colors.grey),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                _selectedPartyName ?? 'Link to Party (Optional)',
+                style: GoogleFonts.workSans(
+                  fontSize: 14,
+                  fontWeight: _selectedPartyName != null
+                      ? FontWeight.w500
+                      : FontWeight.w400,
+                  color: _selectedPartyName != null
+                      ? theme.colorScheme.onSurface
+                      : (theme.brightness == Brightness.dark
+                          ? Colors.white38
+                          : Colors.grey),
+                ),
+              ),
+            ),
+            if (_selectedPartyName != null)
+              GestureDetector(
+                onTap: () {
+                  setState(() => _selectedPartyName = null);
+                },
+                child: Icon(
+                  Symbols.close,
+                  size: 18,
+                  color: theme.brightness == Brightness.dark
+                      ? Colors.white38
+                      : Colors.grey,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -278,6 +341,163 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
     );
   }
 
+  void _showPartySelector(BuildContext context) {
+    final debtProvider = context.read<DebtProvider>();
+
+    // Build unique party list
+    final Map<String, DebtItem> uniqueParties = {};
+    for (var item in debtProvider.items) {
+      if (!uniqueParties.containsKey(item.name) ||
+          (uniqueParties[item.name]?.phone == null && item.phone != null)) {
+        uniqueParties[item.name] = item;
+      }
+    }
+    final partyNames = uniqueParties.keys.toList()..sort();
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        final innerTheme = Theme.of(ctx);
+        final innerIsDark = innerTheme.brightness == Brightness.dark;
+
+        return Container(
+          decoration: BoxDecoration(
+            color: innerTheme.cardColor,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: innerIsDark ? Colors.white24 : Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Link to Party (Optional)',
+                    style: GoogleFonts.workSans(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: innerTheme.colorScheme.onSurface,
+                    ),
+                  ),
+                  if (_selectedPartyName != null)
+                    TextButton(
+                      onPressed: () {
+                        setState(() => _selectedPartyName = null);
+                        Navigator.pop(ctx);
+                      },
+                      child: Text(
+                        'Clear',
+                        style: GoogleFonts.workSans(
+                          color: AppColors.activeRed,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.40,
+                ),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: partyNames.length,
+                  separatorBuilder: (context, index) => Divider(
+                    color: innerTheme.dividerTheme.color ?? const Color(0xFFF5F5F5),
+                    height: 1,
+                  ),
+                  itemBuilder: (context, index) {
+                    final name = partyNames[index];
+                    final party = uniqueParties[name]!;
+                    final initials = _getInitials(name);
+                    final isSelected = _selectedPartyName == name;
+
+                    return ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: CircleAvatar(
+                        radius: 18,
+                        backgroundColor: isSelected
+                            ? (widget.isIncome
+                                ? innerTheme.primaryColor
+                                : AppColors.activeRed)
+                            : (innerIsDark ? Colors.white12 : Colors.grey.shade100),
+                        child: Text(
+                          initials,
+                          style: GoogleFonts.workSans(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: isSelected
+                                ? Colors.white
+                                : (innerIsDark ? Colors.white60 : Colors.black54),
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        name,
+                        style: GoogleFonts.workSans(
+                          fontSize: 15,
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                          color: innerTheme.colorScheme.onSurface,
+                        ),
+                      ),
+                      subtitle: party.phone != null
+                          ? Text(
+                              party.phone!,
+                              style: GoogleFonts.workSans(
+                                fontSize: 12,
+                                color: innerIsDark ? Colors.white38 : Colors.grey,
+                              ),
+                            )
+                          : null,
+                      trailing: isSelected
+                          ? Icon(
+                              Symbols.check_circle,
+                              color: widget.isIncome
+                                  ? innerTheme.primaryColor
+                                  : AppColors.activeRed,
+                            )
+                          : null,
+                      onTap: () {
+                        setState(() => _selectedPartyName = name);
+                        Navigator.pop(ctx);
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  String _getInitials(String name) {
+    if (name.trim().isEmpty) return '?';
+    final parts = name.trim().split(RegExp(r'\s+'));
+    if (parts.length == 1) return parts[0][0].toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
   void _save(BuildContext context) {
     try {
       final amount = double.tryParse(_amountController.text) ?? 0.0;
@@ -312,6 +532,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
           dateTime: _selectedDate,
           incomeMonth: widget.isIncome ? _selectedIncomeMonth : null,
           paymentMethod: _paymentMethod,
+          partyName: _selectedPartyName,
         );
         provider.updateTransaction(updatedItem);
       } else {
@@ -325,6 +546,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
             dateTime: _selectedDate,
             incomeMonth: widget.isIncome ? _selectedIncomeMonth : null,
             paymentMethod: _paymentMethod,
+            partyName: _selectedPartyName,
           ),
         );
       }
@@ -442,6 +664,8 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                     });
                   },
                 ),
+                const SizedBox(height: 16),
+                _buildPartySelector(themeColor: secondaryThemeColor),
                 const SizedBox(height: 16),
                 TransactionNoteInput(
                   controller: _noteController,

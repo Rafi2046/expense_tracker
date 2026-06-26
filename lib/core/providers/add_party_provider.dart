@@ -88,7 +88,54 @@ class AddPartyProvider extends ChangeNotifier {
     final name = nameController.text.trim();
     final balanceText = balanceController.text.trim();
     final double balance = balanceText.isEmpty ? 0.0 : (double.tryParse(balanceText) ?? 0.0);
+    final phone = phoneController.text.trim();
 
+    // Phone: at least 10 digits if not empty
+    if (phone.isNotEmpty && phone.length < 10) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Phone number must be at least 10 digits'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    // Zero-balance confirmation
+    if (balance == 0) {
+      showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Zero Balance'),
+          content: const Text(
+            'Are you sure you want to add a party with zero balance?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('Yes, Add Party'),
+            ),
+          ],
+        ),
+      ).then((confirmed) {
+        if (confirmed == true) {
+          // ignore: use_build_context_synchronously
+          _commitSave(context, debtProvider, name, balance, phone);
+        }
+      });
+      return;
+    }
+
+    _commitSave(context, debtProvider, name, balance, phone);
+  }
+
+  void _commitSave(BuildContext context, DebtProvider debtProvider, String name,
+      double balance, String phone) {
     final newDebt = DebtItem(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: name,
@@ -97,7 +144,7 @@ class AddPartyProvider extends ChangeNotifier {
       isReceive: _isReceive,
       isSettled: false,
       createdAt: _asOfDate,
-      phone: phoneController.text.trim().isEmpty ? null : phoneController.text.trim(),
+      phone: phone.isEmpty ? null : phone,
       email: emailController.text.trim().isEmpty ? null : emailController.text.trim(),
       address: addressController.text.trim().isEmpty ? null : addressController.text.trim(),
       vat: vatController.text.trim().isEmpty ? null : vatController.text.trim(),

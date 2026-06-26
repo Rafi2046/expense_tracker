@@ -9,6 +9,7 @@ class TransactionItem {
   final String paymentMethod; // 'Cash' or 'Bank'
   final DateTime lastModified;
   final String profileId;
+  final String? partyName;
 
   TransactionItem({
     required this.id,
@@ -21,6 +22,7 @@ class TransactionItem {
     this.paymentMethod = 'Cash',
     DateTime? lastModified,
     this.profileId = 'default_profile',
+    this.partyName,
   }) : lastModified = lastModified ?? dateTime;
 
   Map<String, dynamic> toMap() => {
@@ -33,6 +35,7 @@ class TransactionItem {
     'paymentMethod': paymentMethod,
     'lastModified': lastModified.toIso8601String(),
     'profileId': profileId,
+    'partyName': partyName,
   };
 
   factory TransactionItem.fromMap(String id, Map<String, dynamic> map) =>
@@ -49,6 +52,7 @@ class TransactionItem {
             ? DateTime.parse(map['lastModified'] as String)
             : null,
         profileId: map['profileId'] as String? ?? 'default_profile',
+        partyName: map['partyName'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -62,6 +66,7 @@ class TransactionItem {
     'paymentMethod': paymentMethod,
     'lastModified': lastModified.toIso8601String(),
     'profileId': profileId,
+    'partyName': partyName,
   };
 
   factory TransactionItem.fromJson(Map<String, dynamic> json) =>
@@ -78,6 +83,7 @@ class TransactionItem {
             ? DateTime.parse(json['lastModified'] as String)
             : null,
         profileId: json['profileId'] as String? ?? 'default_profile',
+        partyName: json['partyName'] as String?,
       );
 }
 

@@ -146,6 +146,14 @@ class _AddPartyFormState extends State<AddPartyForm> {
                                     controller: provider.phoneController,
                                     style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
                                     keyboardType: TextInputType.phone,
+                                    validator: (value) {
+                                      if (value != null &&
+                                          value.trim().isNotEmpty &&
+                                          value.trim().length < 10) {
+                                        return 'Enter at least 10 digits';
+                                      }
+                                      return null;
+                                    },
                                     decoration: InputDecoration(
                                       hintText: 'Phone Number',
                                       hintStyle: AppTextStyles.partyFormHint,
