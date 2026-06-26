@@ -88,9 +88,11 @@ class _LedgerScreenState extends State<LedgerScreen> {
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.p16,
-            vertical: AppSpacing.p20,
+          padding: const EdgeInsets.only(
+            left: AppSpacing.p16,
+            right: AppSpacing.p16,
+            top: AppSpacing.p20,
+            bottom: 120,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

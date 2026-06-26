@@ -1,6 +1,10 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/amount_input_field.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/note_input_field.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/save_transaction_button.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/sheet_header.dart';
 import 'package:expense_tracker/features/dashboard/widgets/select_category_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_selector_tile.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +33,8 @@ class AddTransactionSheet extends StatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => AddTransactionSheet(
-        isIncome: isIncome,
-        transaction: transaction,
-      ),
+      builder: (context) =>
+          AddTransactionSheet(isIncome: isIncome, transaction: transaction),
     );
   }
 
@@ -45,7 +47,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
   String? _selectedCategory;
-  DateTime _selectedDate = DateTime.now();
+  late DateTime _selectedDate;
   String? _selectedIncomeMonth;
   String _paymentMethod = 'Cash';
 
@@ -53,28 +55,49 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   void initState() {
     super.initState();
     final tx = widget.transaction;
+    _selectedDate = tx?.dateTime ?? DateTime.now();
+
     if (tx != null) {
       _amountController.text = tx.amount.toString();
       _noteController.text = tx.note;
       _selectedCategory = tx.category;
-      _selectedDate = tx.dateTime;
       _selectedIncomeMonth = tx.incomeMonth;
       _paymentMethod = tx.paymentMethod;
     } else {
-      final provider = context.read<TransactionProvider>();
+      // Set the month dynamically when opening
       if (widget.isIncome) {
-        _selectedIncomeMonth = DateFormat('MMMM yyyy').format(DateTime.now());
-        final categories = provider.incomeCategories;
-        if (categories.isNotEmpty) {
-          final idx = categories.indexWhere((c) => c.toLowerCase().contains('salary'));
-          _selectedCategory = idx != -1 ? categories[idx] : categories.first;
-        }
-      } else {
-        final categories = provider.expenseCategories;
-        if (categories.isNotEmpty) {
-          final idx = categories.indexWhere((c) => c.toLowerCase().contains('misc') || c.toLowerCase().contains('other'));
-          _selectedCategory = idx != -1 ? categories[idx] : categories.first;
-        }
+        _selectedIncomeMonth = DateFormat('MMMM yyyy').format(_selectedDate);
+      }
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // This safely waits for the Provider to have data and updates the UI instantly
+    if (_selectedCategory == null && widget.transaction == null) {
+      final provider = Provider.of<TransactionProvider>(
+        context,
+      ); // Automatically listens
+      final cats = widget.isIncome
+          ? provider.incomeCategories
+          : provider.expenseCategories;
+
+      if (cats.isNotEmpty) {
+        final targetSearch = widget.isIncome ? 'salary' : 'misc';
+        final defaultCat = cats.firstWhere(
+          (c) => c.toLowerCase().contains(targetSearch),
+          orElse: () => cats.first,
+        );
+
+        // Use Future.microtask to avoid build-phase collisions
+        Future.microtask(() {
+          if (mounted && _selectedCategory == null) {
+            setState(() {
+              _selectedCategory = defaultCat;
+            });
+          }
+        });
       }
     }
   }
@@ -84,6 +107,42 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
     _amountController.dispose();
     _noteController.dispose();
     super.dispose();
+  }
+
+  // Uses Dialog instead of SnackBar to guarantee it shows ABOVE the BottomSheet
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            const Icon(Icons.error_outline, color: AppColors.activeRed),
+            const SizedBox(width: 8),
+            Text(
+              'Missing Info',
+              style: GoogleFonts.workSans(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ],
+        ),
+        content: Text(message, style: GoogleFonts.workSans(fontSize: 16)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              'OK',
+              style: GoogleFonts.workSans(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -169,8 +228,12 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 child: ListView.separated(
                   shrinkWrap: true,
                   itemCount: months.length,
-                  separatorBuilder: (context, index) =>
-                      Divider(color: innerTheme.dividerTheme.color ?? const Color(0xFFF5F5F5), height: 1),
+                  separatorBuilder: (context, index) => Divider(
+                    color:
+                        innerTheme.dividerTheme.color ??
+                        const Color(0xFFF5F5F5),
+                    height: 1,
+                  ),
                   itemBuilder: (context, index) {
                     final monthDate = months[index];
                     final label = DateFormat('MMMM yyyy').format(monthDate);
@@ -213,52 +276,32 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   }
 
   void _save(BuildContext context) {
-    if (!_formKey.currentState!.validate()) return;
+    try {
+      final amount = double.tryParse(_amountController.text) ?? 0.0;
 
-    if (_selectedCategory == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select a category'),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
-      return;
-    }
+      if (amount <= 0) {
+        _showErrorDialog('Please enter a valid amount greater than 0.');
+        return;
+      }
 
-    final amount = double.tryParse(_amountController.text) ?? 0.0;
-    if (amount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Amount must be greater than zero'),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
-      return;
-    }
+      if (_selectedCategory == null || _selectedCategory!.isEmpty) {
+        _showErrorDialog('Please select a category before saving.');
+        return;
+      }
 
-    final provider = context.read<TransactionProvider>();
-    final existing = widget.transaction;
-    final noteText = _noteController.text.trim();
-    final finalNote = noteText.isEmpty && widget.isIncome && _selectedCategory != null
-        ? '$_selectedCategory for $_selectedIncomeMonth'
-        : noteText;
+      if (!_formKey.currentState!.validate()) return;
 
-    if (existing != null) {
-      final updatedItem = TransactionItem(
-        id: existing.id,
-        amount: amount,
-        category: _selectedCategory!,
-        note: finalNote,
-        isIncome: widget.isIncome,
-        dateTime: _selectedDate,
-        incomeMonth: widget.isIncome ? _selectedIncomeMonth : null,
-        paymentMethod: _paymentMethod,
-      );
-      provider.updateTransaction(updatedItem);
-    } else {
-      provider.addTransaction(
-        TransactionItem(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
+      final provider = context.read<TransactionProvider>();
+      final existing = widget.transaction;
+      final noteText = _noteController.text.trim();
+
+      final finalNote = noteText.isEmpty && widget.isIncome
+          ? 'Income for $_selectedIncomeMonth'
+          : noteText;
+
+      if (existing != null) {
+        final updatedItem = TransactionItem(
+          id: existing.id,
           amount: amount,
           category: _selectedCategory!,
           note: finalNote,
@@ -266,31 +309,48 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
           dateTime: _selectedDate,
           incomeMonth: widget.isIncome ? _selectedIncomeMonth : null,
           paymentMethod: _paymentMethod,
+        );
+        provider.updateTransaction(updatedItem);
+      } else {
+        provider.addTransaction(
+          TransactionItem(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            amount: amount,
+            category: _selectedCategory!,
+            note: finalNote,
+            isIncome: widget.isIncome,
+            dateTime: _selectedDate,
+            incomeMonth: widget.isIncome ? _selectedIncomeMonth : null,
+            paymentMethod: _paymentMethod,
+          ),
+        );
+      }
+
+      Navigator.pop(context);
+
+      final action = existing != null ? 'updated' : 'added';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle_outline, color: Colors.white),
+              const SizedBox(width: 8),
+              Text(
+                '${widget.isIncome ? "Income" : "Expense"} $action: ${context.formatAmount(amount, listen: false)}',
+                style: GoogleFonts.workSans(fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          backgroundColor: widget.isIncome
+              ? AppColors.activeGreen
+              : AppColors.activeRed,
+          duration: const Duration(seconds: 3),
         ),
       );
+    } catch (e) {
+      _showErrorDialog('Something went wrong. Please check your inputs.');
+      debugPrint('Save error: $e');
     }
-
-    Navigator.pop(context); // Close bottom sheet
-
-    final action = existing != null ? 'updated' : 'added';
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle_outline, color: Colors.white),
-            const SizedBox(width: 8),
-            Text(
-              '${widget.isIncome ? "Income" : "Expense"} $action: ${context.formatAmount(amount, listen: false)}',
-              style: GoogleFonts.workSans(fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-        backgroundColor: widget.isIncome
-            ? AppColors.activeGreen
-            : AppColors.activeRed,
-        duration: const Duration(seconds: 3),
-      ),
-    );
   }
 
   @override
@@ -325,101 +385,24 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Drag handle
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: isDark ? Colors.white24 : Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Title Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      widget.isEditing
-                          ? (widget.isIncome ? 'Edit Income' : 'Edit Expense')
-                          : (widget.isIncome ? 'Add Income' : 'Add Expense'),
-                      style: GoogleFonts.workSans(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: isDark ? Colors.white10 : Colors.grey.shade100,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.close,
-                          size: 20,
-                          color: isDark ? Colors.white60 : Colors.grey.shade600,
-                        ),
-                      ),
-                    ),
-                  ],
+                SheetHeader(
+                  isEditing: widget.isEditing,
+                  isIncome: widget.isIncome,
+                  onClose: () => Navigator.pop(context),
                 ),
                 const SizedBox(height: 24),
-
-                // Large Amount Input
-                Center(
-                  child: SizedBox(
-                    width: 260,
-                    child: TextFormField(
-                      controller: _amountController,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.workSans(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: themeColor,
-                      ),
-                      decoration: InputDecoration(
-                        prefixText: '${context.currencySymbol} ',
-                        prefixStyle: GoogleFonts.workSans(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: themeColor.withValues(alpha: 0.6),
-                        ),
-                        hintText: '0.00',
-                        hintStyle: GoogleFonts.workSans(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white12 : Colors.grey.shade300,
-                        ),
-                        border: InputBorder.none,
-                      ),
-                      validator: (val) {
-                        if (val == null || val.trim().isEmpty) {
-                          return 'Enter an amount';
-                        }
-                        if (double.tryParse(val) == null) {
-                          return 'Enter a valid number';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
+                AmountInputField(
+                  controller: _amountController,
+                  themeColor: themeColor,
+                  currencySymbol: context.currencySymbol,
+                  isDark: isDark,
                 ),
                 const SizedBox(height: 16),
-
-                // Divider
-                Divider(color: theme.dividerTheme.color ?? Colors.grey.shade100, height: 1),
+                Divider(
+                  color: theme.dividerTheme.color ?? Colors.grey.shade100,
+                  height: 1,
+                ),
                 const SizedBox(height: 20),
-
-                // Category Selector Tile
                 TransactionSelectorTile(
                   leadingIcon: Icons.category_outlined,
                   labelText: 'Category',
@@ -441,8 +424,6 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   },
                 ),
                 const SizedBox(height: 16),
-
-                // Date Selector Tile
                 TransactionSelectorTile(
                   leadingIcon: Icons.calendar_today_outlined,
                   labelText: 'Date',
@@ -455,8 +436,6 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   onTap: () => _selectDate(context),
                 ),
                 const SizedBox(height: 16),
-
-                // Income Month Selector Tile (Only for income)
                 if (widget.isIncome) ...[
                   TransactionSelectorTile(
                     leadingIcon: Icons.calendar_month_outlined,
@@ -469,8 +448,6 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   ),
                   const SizedBox(height: 16),
                 ],
-
-                // Payment Mode Selector Tile
                 TransactionSelectorTile(
                   leadingIcon: Icons.account_balance_wallet_outlined,
                   labelText: 'Payment Mode',
@@ -480,86 +457,24 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   trailingIcon: Icons.swap_horiz_rounded,
                   onTap: () {
                     setState(() {
-                      _paymentMethod = _paymentMethod == 'Cash' ? 'Bank' : 'Cash';
+                      _paymentMethod = _paymentMethod == 'Cash'
+                          ? 'Bank'
+                          : 'Cash';
                     });
                   },
                 ),
                 const SizedBox(height: 16),
-
-                // Note/Memo Input Field
-                TextFormField(
+                NoteInputField(
                   controller: _noteController,
-                  maxLines: 2,
-                  style: GoogleFonts.workSans(
-                    fontSize: 15,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Add a note/detail (optional)...',
-                    hintStyle: GoogleFonts.workSans(
-                      fontSize: 15,
-                      color: isDark ? Colors.white30 : Colors.grey.shade400,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.notes_rounded,
-                      color: isDark ? Colors.white30 : Colors.grey.shade400,
-                      size: 22,
-                    ),
-                    filled: true,
-                    fillColor: isDark ? Colors.white10 : Colors.grey.shade50,
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 14,
-                      horizontal: 16,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: theme.dividerTheme.color ?? Colors.grey.shade100,
-                        width: 1,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: theme.dividerTheme.color ?? Colors.grey.shade100,
-                        width: 1,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: secondaryThemeColor,
-                        width: 1.5,
-                      ),
-                    ),
-                  ),
+                  focusColor: secondaryThemeColor,
+                  isDark: isDark,
                 ),
                 const SizedBox(height: 24),
-
-                // Solid Save Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: themeColor,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      elevation: 1,
-                    ),
-                    onPressed: () => _save(context),
-                    child: Text(
-                      widget.isEditing
-                          ? (widget.isIncome ? 'Update Income' : 'Update Expense')
-                          : (widget.isIncome ? 'Save Income' : 'Save Expense'),
-                      style: GoogleFonts.workSans(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                SaveTransactionButton(
+                  onPressed: () => _save(context),
+                  isEditing: widget.isEditing,
+                  isIncome: widget.isIncome,
+                  backgroundColor: themeColor,
                 ),
                 const SizedBox(height: 8),
               ],

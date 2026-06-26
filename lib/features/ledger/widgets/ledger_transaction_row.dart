@@ -1,6 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
-import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/utils/category_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,6 +27,11 @@ class LedgerTransactionRow extends StatelessWidget {
     this.onDelete,
     this.incomeMonth,
   });
+
+  String _toTitleCase(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,13 +92,13 @@ class LedgerTransactionRow extends StatelessWidget {
               ),
               const SizedBox(width: 12),
 
-              // Middle Section: Title & Subtitle (Time + Category Name)
+              // Middle Section: Category Title & Note Subtitle
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      _toTitleCase(category),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.workSans(
@@ -105,7 +109,7 @@ class LedgerTransactionRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '$dateText  •  $category${incomeMonth != null ? '  •  ${context.translate('for')} $incomeMonth' : ''}',
+                      title.isNotEmpty ? '$title  •  $dateText' : dateText,
                       style: GoogleFonts.workSans(
                         fontSize: 12,
                         color: AppColors.textMuted,
