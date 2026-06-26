@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/reports/widgets/all_transactions_filter_bar.dart';
 import 'package:expense_tracker/features/reports/widgets/all_transactions_list.dart';
@@ -42,12 +43,13 @@ class AllTransactionsReportScreen extends StatelessWidget {
         reportName: 'All Transactions',
       ),
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 12.0,
-            bottom: 100.0,
+            left: AppSpacing.p16,
+            right: AppSpacing.p16,
+            top: AppSpacing.p20,
+            bottom: 120,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

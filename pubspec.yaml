@@ -52,6 +52,7 @@ dependencies:
   sign_in_with_apple: ^8.1.0
   image_picker: ^1.2.2
   firebase_storage: ^13.4.2
+  material_symbols_icons: ^4.2951.0
 
 dev_dependencies:
   flutter_test:
