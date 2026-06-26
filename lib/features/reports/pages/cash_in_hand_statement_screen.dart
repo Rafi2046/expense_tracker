@@ -1,11 +1,13 @@
+import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/cash_statement_balance_card.dart';
 import 'package:expense_tracker/features/reports/widgets/cash_statement_list.dart';
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
 import 'package:expense_tracker/features/reports/widgets/report_date_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/providers/reports_provider.dart';
 
 class CashInHandStatementScreen extends StatelessWidget {
   const CashInHandStatementScreen({super.key});
@@ -15,6 +17,18 @@ class CashInHandStatementScreen extends StatelessWidget {
     final reportsProvider = context.watch<ReportsProvider>();
     final isNotEmpty = reportsProvider.cashStatementTransactions.isNotEmpty;
     final theme = Theme.of(context);
+    final currencySymbol = context.currencySymbol;
+    final dateFormat = DateFormat('dd MMM yyyy');
+
+    final headers = ['Date', 'Description', 'Amount', 'Type', 'Balance'];
+    final rows = reportsProvider.cashStatementTransactions.map((item) => {
+      'Date': dateFormat.format(item.dateTime),
+      'Description': item.subtitle,
+      'Amount': '$currencySymbol ${item.amount.toStringAsFixed(0)}',
+      'Type': item.isCredit ? 'Credit' : 'Debit',
+      'Balance': '$currencySymbol ${item.runningBalance.toStringAsFixed(0)}',
+    }).toList();
+    final dateSubtitle = reportsProvider.getDateRangeSubtitle(reportsProvider.selectedOption, reportsProvider.selectedDateRange);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -38,8 +52,12 @@ class CashInHandStatementScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: isNotEmpty
-          ? const ReportBottomActions(
+          ? ReportBottomActions(
               reportName: 'Cash In Hand',
+              title: 'Cash Statement',
+              dateSubtitle: dateSubtitle,
+              headers: headers,
+              rows: rows,
             )
           : null,
       body: SafeArea(

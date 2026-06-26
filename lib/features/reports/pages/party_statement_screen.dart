@@ -1,4 +1,7 @@
+import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_selector.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_view_toggle.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_content.dart';
@@ -6,7 +9,6 @@ import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.d
 import 'package:expense_tracker/features/reports/widgets/report_date_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/providers/reports_provider.dart';
 
 class PartyStatementScreen extends StatelessWidget {
   const PartyStatementScreen({super.key});
@@ -16,6 +18,17 @@ class PartyStatementScreen extends StatelessWidget {
     final reportsProvider = context.watch<ReportsProvider>();
     final partyName = reportsProvider.selectedPartyNameForStatement;
     final theme = Theme.of(context);
+    final currencySymbol = context.currencySymbol;
+    final dateFormat = DateFormat('dd MMM yyyy');
+
+    final headers = ['Date', 'Detail', 'Amount', 'Type'];
+    final rows = reportsProvider.partyStatementTransactions.map((item) => {
+      'Date': dateFormat.format(item.createdAt),
+      'Detail': '${item.name} • ${item.detail}',
+      'Amount': '$currencySymbol ${item.amount.toStringAsFixed(0)}',
+      'Type': item.isReceive ? 'Receive' : 'Give',
+    }).toList();
+    final dateSubtitle = reportsProvider.getDateRangeSubtitle(reportsProvider.selectedOption, reportsProvider.selectedDateRange);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -50,8 +63,12 @@ class PartyStatementScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: partyName != null
-          ? const ReportBottomActions(
+          ? ReportBottomActions(
               reportName: 'Party Statement',
+              title: 'Party Statement - $partyName',
+              dateSubtitle: dateSubtitle,
+              headers: headers,
+              rows: rows,
             )
           : null,
       body: const SafeArea(

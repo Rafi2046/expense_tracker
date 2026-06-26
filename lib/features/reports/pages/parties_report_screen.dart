@@ -18,6 +18,15 @@ class PartiesReportScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    final headers = ['Name', 'Phone', 'Net Balance', 'Transactions'];
+    final rows = filtered.map((item) => {
+      'Name': item.name,
+      'Phone': item.phone ?? '-',
+      'Net Balance': '$currencySymbol ${item.netBalance.toStringAsFixed(0)}',
+      'Transactions': item.transactionCount.toString(),
+    }).toList();
+    final dateSubtitle = reportsProvider.getDateRangeSubtitle(reportsProvider.selectedOption, reportsProvider.selectedDateRange);
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -187,8 +196,12 @@ class PartiesReportScreen extends StatelessWidget {
             ),
 
             // Persistent bottom actions
-            const ReportBottomActions(
+            ReportBottomActions(
               reportName: 'Parties Report',
+              title: 'Parties Report',
+              dateSubtitle: dateSubtitle,
+              headers: headers,
+              rows: rows,
             ),
           ],
         ),

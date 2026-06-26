@@ -1,9 +1,13 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/model/category_summary.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/income_expense_summary_card.dart';
 import 'package:expense_tracker/features/reports/widgets/income_expense_category_lists.dart';
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
 import 'package:expense_tracker/features/reports/widgets/report_date_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class IncomeExpenseReportScreen extends StatelessWidget {
   const IncomeExpenseReportScreen({super.key});
@@ -11,6 +15,28 @@ class IncomeExpenseReportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final provider = context.watch<ReportsProvider>();
+    final currencySymbol = context.currencySymbol;
+    final data = provider.incomeExpenseData;
+
+    final expenseSummaries = (data['expenseSummaries'] as List<CategorySummary>);
+    final incomeSummaries = (data['incomeSummaries'] as List<CategorySummary>);
+    final headers = ['Category', 'Amount', 'Type', 'Count'];
+    final rows = [
+      ...expenseSummaries.map((s) => {
+        'Category': s.categoryName,
+        'Amount': '$currencySymbol ${s.totalAmount.toStringAsFixed(0)}',
+        'Type': 'Expense',
+        'Count': s.transactionCount.toString(),
+      }),
+      ...incomeSummaries.map((s) => {
+        'Category': s.categoryName,
+        'Amount': '$currencySymbol ${s.totalAmount.toStringAsFixed(0)}',
+        'Type': 'Income',
+        'Count': s.transactionCount.toString(),
+      }),
+    ];
+    final dateSubtitle = provider.getDateRangeSubtitle(provider.selectedOption, provider.selectedDateRange);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -33,8 +59,12 @@ class IncomeExpenseReportScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const ReportBottomActions(
+      bottomNavigationBar: ReportBottomActions(
         reportName: 'Income Expense',
+        title: 'Income Expense Report',
+        dateSubtitle: dateSubtitle,
+        headers: headers,
+        rows: rows,
       ),
       body: SafeArea(
         child: SingleChildScrollView(

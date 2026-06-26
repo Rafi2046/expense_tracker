@@ -1,34 +1,183 @@
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:printing/printing.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/services/export_service.dart';
 import 'package:expense_tracker/features/reports/widgets/share_report_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ReportBottomActions extends StatelessWidget {
   final String reportName;
+  final String title;
+  final String dateSubtitle;
+  final List<String> headers;
+  final List<Map<String, dynamic>> rows;
 
   const ReportBottomActions({
     super.key,
     required this.reportName,
+    required this.title,
+    required this.dateSubtitle,
+    required this.headers,
+    required this.rows,
   });
 
-  void _showExportSuccess(BuildContext context, String format) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Symbols.check_circle_outline, color: Colors.white),
-            const SizedBox(width: 8),
-            Text(
-              'Report exported to $format successfully!',
-              style: AppTextStyles.partySubmitButtonText.copyWith(fontSize: 14),
-            ),
-          ],
+  Future<void> _onDownload(BuildContext context) async {
+    final theme = Theme.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.showSnackBar(_loadingSnackBar(theme));
+
+    try {
+      final service = ExportService();
+      final file = await service.exportPdf(
+        title: title,
+        dateRange: dateSubtitle,
+        headers: headers,
+        rows: rows,
+      );
+      messenger.hideCurrentSnackBar();
+      await OpenFilex.open(file.path);
+    } catch (e) {
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(_errorSnackBar('Failed to download PDF: $e'));
+    }
+  }
+
+  Future<void> _onExcel(BuildContext context) async {
+    final theme = Theme.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.showSnackBar(_loadingSnackBar(theme));
+
+    try {
+      final service = ExportService();
+      final file = await service.exportExcel(
+        title: title,
+        dateRange: dateSubtitle,
+        headers: headers,
+        rows: rows,
+      );
+      messenger.hideCurrentSnackBar();
+      await OpenFilex.open(file.path);
+    } catch (e) {
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(_errorSnackBar('Failed to export Excel: $e'));
+    }
+  }
+
+  Future<void> _onPrint(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final service = ExportService();
+      await Printing.layoutPdf(
+        onLayout: service.buildPdfLayoutCallback(
+          title: title,
+          dateRange: dateSubtitle,
+          headers: headers,
+          rows: rows,
         ),
-        backgroundColor: AppColors.activeGreen,
-        behavior: SnackBarBehavior.floating,
+        name: title,
+      );
+    } catch (e) {
+      messenger.showSnackBar(
+        _errorSnackBar('Failed to print: $e'),
+      );
+    }
+  }
+
+  Future<void> _onShare(BuildContext context) async {
+    final theme = Theme.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final format = await ShareReportSheet.show(context);
+    if (format == null || !context.mounted) return;
+    messenger.showSnackBar(_loadingSnackBar(theme));
+
+    try {
+      final service = ExportService();
+
+      if (format == 'pdf') {
+        final file = await service.exportPdf(
+          title: title,
+          dateRange: dateSubtitle,
+          headers: headers,
+          rows: rows,
+        );
+        messenger.hideCurrentSnackBar();
+        await service.shareFile(file);
+      } else if (format == 'image') {
+        messenger.hideCurrentSnackBar();
+        messenger.showSnackBar(
+          _successSnackBar('Image export coming soon'),
+        );
+      }
+    } catch (e) {
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(_errorSnackBar('Failed to share: $e'));
+    }
+  }
+
+  SnackBar _loadingSnackBar(ThemeData theme) {
+    return SnackBar(
+      content: Row(
+        children: [
+          const SizedBox(
+            width: 18,
+            height: 18,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 12),
+          const Flexible(
+            child: Text(
+              'Generating report...',
+              style: TextStyle(color: Colors.white, fontSize: 14),
+            ),
+          ),
+        ],
       ),
+      backgroundColor: theme.primaryColor,
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 30),
+    );
+  }
+
+  SnackBar _successSnackBar(String message) {
+    return SnackBar(
+      content: Row(
+        children: [
+          const Icon(Symbols.check_circle_outline, color: Colors.white, size: 20),
+          const SizedBox(width: 10),
+          Flexible(
+            child: Text(
+              message,
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: AppColors.activeGreen,
+      behavior: SnackBarBehavior.floating,
+    );
+  }
+
+  SnackBar _errorSnackBar(String message) {
+    return SnackBar(
+      content: Row(
+        children: [
+          const Icon(Symbols.error_outline, color: Colors.white, size: 20),
+          const SizedBox(width: 10),
+          Flexible(
+            child: Text(
+              message,
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.redAccent,
+      behavior: SnackBarBehavior.floating,
     );
   }
 
@@ -66,30 +215,25 @@ class ReportBottomActions extends StatelessWidget {
               context: context,
               icon: Symbols.download,
               label: 'Download',
-              onTap: () => _showExportSuccess(context, 'PDF/Excel'),
+              onTap: () => _onDownload(context),
             ),
             _buildActionItem(
               context: context,
               icon: Symbols.print,
               label: 'Print PDF',
-              onTap: () => _showExportSuccess(context, 'Printer Output'),
+              onTap: () => _onPrint(context),
             ),
             _buildActionItem(
               context: context,
               icon: Symbols.table_chart,
               label: 'Excel',
-              onTap: () => _showExportSuccess(context, 'Excel File'),
+              onTap: () => _onExcel(context),
             ),
             _buildActionItem(
               context: context,
               icon: Symbols.share,
               label: 'Share',
-              onTap: () async {
-                final format = await ShareReportSheet.show(context);
-                if (format != null && context.mounted) {
-                  _showExportSuccess(context, format.toUpperCase());
-                }
-              },
+              onTap: () => _onShare(context),
             ),
           ],
         ),
