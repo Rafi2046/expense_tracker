@@ -56,39 +56,46 @@ class AllTransactionsReportScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: ReportBottomActions(
-        reportName: 'All Transactions',
-        title: 'All Transactions Report',
-        dateSubtitle: dateSubtitle,
-        headers: headers,
-        rows: rows,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.only(
-            left: AppSpacing.p16,
-            right: AppSpacing.p16,
-            top: AppSpacing.p20,
-            bottom: 24,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const ReportDateSelector(),
-              const SizedBox(height: 12),
-              const AllTransactionsFilterBar(),
-              const SizedBox(height: 16),
-              const AllTransactionsSummaryGrid(),
-              const SizedBox(height: 24),
-              Text(
-                'Transaction Lists',
-                style: AppTextStyles.reportSectionHeader.copyWith(color: theme.colorScheme.onSurface),
+      body: Stack(
+        children: [
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(
+                left: AppSpacing.p16,
+                right: AppSpacing.p16,
+                top: AppSpacing.p20,
+                bottom: 120,
               ),
-              const SizedBox(height: 12),
-              const AllTransactionsList(),
-            ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const ReportDateSelector(),
+                  const SizedBox(height: 12),
+                  const AllTransactionsFilterBar(),
+                  const SizedBox(height: 16),
+                  const AllTransactionsSummaryGrid(),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Transaction Lists',
+                    style: AppTextStyles.reportSectionHeader.copyWith(color: theme.colorScheme.onSurface),
+                  ),
+                  const SizedBox(height: 12),
+                  const AllTransactionsList(),
+                ],
+              ),
+            ),
           ),
-        ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ReportBottomActions(
+              reportName: 'All Transactions',
+              title: 'All Transactions Report',
+              dateSubtitle: dateSubtitle,
+              headers: headers,
+              rows: rows,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -58,32 +58,39 @@ class IncomeExpenseReportScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: ReportBottomActions(
-        reportName: 'Income Expense',
-        title: 'Income Expense Report',
-        dateSubtitle: dateSubtitle,
-        headers: headers,
-        rows: rows,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 12.0,
-            bottom: 24.0,
+      body: Stack(
+        children: [
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                top: 12.0,
+                bottom: 120.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const ReportDateSelector(),
+                  const SizedBox(height: 16),
+                  const IncomeExpenseSummaryCard(),
+                  const SizedBox(height: 24),
+                  const IncomeExpenseCategoryLists(),
+                ],
+              ),
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const ReportDateSelector(),
-              const SizedBox(height: 16),
-              const IncomeExpenseSummaryCard(),
-              const SizedBox(height: 24),
-              const IncomeExpenseCategoryLists(),
-            ],
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ReportBottomActions(
+              reportName: 'Income Expense',
+              title: 'Income Expense Report',
+              dateSubtitle: dateSubtitle,
+              headers: headers,
+              rows: rows,
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

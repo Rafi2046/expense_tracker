@@ -50,36 +50,42 @@ class CashInHandStatementScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: isNotEmpty
-          ? ReportBottomActions(
-              reportName: 'Cash In Hand',
-              title: 'Cash Statement',
-              dateSubtitle: dateSubtitle,
-              headers: headers,
-              rows: rows,
-            )
-          : null,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 12.0,
-            bottom: 24.0,
+      body: Stack(
+        children: [
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                top: 12.0,
+                bottom: 120.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const ReportDateSelector(),
+                  const SizedBox(height: 12),
+                  if (isNotEmpty) ...[
+                    const CashStatementBalanceCard(),
+                    const SizedBox(height: 16),
+                  ],
+                  const CashStatementList(),
+                ],
+              ),
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const ReportDateSelector(),
-              const SizedBox(height: 12),
-              if (isNotEmpty) ...[
-                const CashStatementBalanceCard(),
-                const SizedBox(height: 16),
-              ],
-              const CashStatementList(),
-            ],
-          ),
-        ),
+          if (isNotEmpty)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: ReportBottomActions(
+                reportName: 'Cash In Hand',
+                title: 'Cash Statement',
+                dateSubtitle: dateSubtitle,
+                headers: headers,
+                rows: rows,
+              ),
+            ),
+        ],
       ),
     );
   }

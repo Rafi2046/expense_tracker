@@ -177,55 +177,57 @@ class ReportBottomActions extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark ? theme.cardColor : Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: isDark ? Colors.black38 : Colors.black12,
-            blurRadius: 12,
-            offset: const Offset(0, -4),
-          ),
-        ],
-        border: Border(
-          top: BorderSide(
-            color: theme.dividerTheme.color ?? (isDark ? Colors.white10 : const Color(0xFFF1F1F1)),
-            width: 1.0,
-          ),
-        ),
-      ),
-      child: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildActionItem(
-                context: context,
-                icon: Symbols.download,
-                label: 'Download',
-                onTap: () => _onDownload(context),
-              ),
-              _buildActionItem(
-                context: context,
-                icon: Symbols.print,
-                label: 'Print PDF',
-                onTap: () => _onPrint(context),
-              ),
-              _buildActionItem(
-                context: context,
-                icon: Symbols.table_chart,
-                label: 'Excel',
-                onTap: () => _onExcel(context),
-              ),
-              _buildActionItem(
-                context: context,
-                icon: Symbols.share,
-                label: 'Share',
-                onTap: () => _onShare(context),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
+        child: Container(
+          height: 58,
+          decoration: BoxDecoration(
+            color: theme.cardColor,
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(
+              color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1),
+              width: 1.0,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
+                blurRadius: 16,
+                offset: const Offset(0, 8),
               ),
             ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildActionItem(
+                  context: context,
+                  icon: Symbols.download,
+                  label: 'Download',
+                  onTap: () => _onDownload(context),
+                ),
+                _buildActionItem(
+                  context: context,
+                  icon: Symbols.print,
+                  label: 'Print PDF',
+                  onTap: () => _onPrint(context),
+                ),
+                _buildActionItem(
+                  context: context,
+                  icon: Symbols.table_chart,
+                  label: 'Excel',
+                  onTap: () => _onExcel(context),
+                ),
+                _buildActionItem(
+                  context: context,
+                  icon: Symbols.share,
+                  label: 'Share',
+                  onTap: () => _onShare(context),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -245,12 +247,10 @@ class ReportBottomActions extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
         width: 70,
-        height: 58,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: theme.primaryColor, size: 22),
-            const SizedBox(height: 4),
+            Icon(icon, color: theme.primaryColor, size: 16),
             Text(
               label,
               style: TextStyle(

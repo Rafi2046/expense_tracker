@@ -61,34 +61,40 @@ class PartyStatementScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: partyName != null
-          ? ReportBottomActions(
-              reportName: 'Party Statement',
-              title: 'Party Statement - $partyName',
-              dateSubtitle: dateSubtitle,
-              headers: headers,
-              rows: rows,
-            )
-          : null,
-      body: const SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 12.0,
-            bottom: 24.0,
+      body: Stack(
+        children: [
+          const SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                top: 12.0,
+                bottom: 120.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ReportDateSelector(),
+                  SizedBox(height: 12),
+                  PartyStatementSelector(),
+                  SizedBox(height: 24),
+                  PartyStatementContent(),
+                ],
+              ),
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ReportDateSelector(),
-              SizedBox(height: 12),
-              PartyStatementSelector(),
-              SizedBox(height: 24),
-              PartyStatementContent(),
-            ],
-          ),
-        ),
+          if (partyName != null)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: ReportBottomActions(
+                reportName: 'Party Statement',
+                title: 'Party Statement - $partyName',
+                dateSubtitle: dateSubtitle,
+                headers: headers,
+                rows: rows,
+              ),
+            ),
+        ],
       ),
     );
   }
