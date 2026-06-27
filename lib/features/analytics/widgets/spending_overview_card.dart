@@ -27,31 +27,6 @@ class SpendingOverviewCard extends StatelessWidget {
     required this.items,
   });
 
-  Widget _buildLegendItem(BuildContext context, String category, double percentage, Color color) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
-        ),
-        const SizedBox(width: 6),
-        Text(
-          '$category ${percentage.toStringAsFixed(0)}%',
-          style: GoogleFonts.workSans(
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
-            color: Theme.of(context).brightness == Brightness.dark ? Colors.white60 : const Color(0xFF4A5568),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) return const SizedBox.shrink();
@@ -61,109 +36,185 @@ class SpendingOverviewCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14.0),
+      padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(14),
+        color: isDark
+            ? const Color(0xFF1E1E2E)
+            : Colors.white,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
-        border: Border.all(
-          color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF0F0F0),
-          width: 1,
-        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
-          Text(
-            context.translate('distribution'),
-            style: GoogleFonts.workSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: onSurface,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            context.translate('current_month_distribution'),
-            style: GoogleFonts.workSans(
-              fontSize: 11,
-              color: Colors.grey.shade400,
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // Donut Chart
-          Center(
-            child: SizedBox(
-              height: 160,
-              width: 160,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  SfCircularChart(
-                    margin: EdgeInsets.zero,
-                    series: <CircularSeries<SpendingDistributionItem, String>>[
-                      DoughnutSeries<SpendingDistributionItem, String>(
-                        dataSource: items,
-                        xValueMapper: (SpendingDistributionItem item, _) => item.category,
-                        yValueMapper: (SpendingDistributionItem item, _) => item.amount,
-                        pointColorMapper: (SpendingDistributionItem item, _) => item.color,
-                        innerRadius: '75%',
-                        startAngle: 270,
-                        endAngle: 270,
-                        dataLabelSettings: const DataLabelSettings(isVisible: false),
-                      ),
-                    ],
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF6A53A1), Color(0xFF32235B)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
-                  Container(
-                    width: 100,
-                    height: 80,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Column(
-
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            context.translate('total'),
-                            style: GoogleFonts.workSans(
-                              fontSize: 10.5,
-                              color: Colors.grey.shade400,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          totalAmount,
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                context.translate('distribution'),
+                style: GoogleFonts.workSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: onSurface,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.only(left: 14),
+            child: Text(
+              context.translate('current_month_distribution'),
+              style: GoogleFonts.workSans(
+                fontSize: 12,
+                color: Colors.grey.shade500,
               ),
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
 
-          // Centered 2-Column Legend
-          Center(
-            child: Wrap(
-              alignment: WrapAlignment.start,
-              spacing: 24.0,
-              runSpacing: 12.0,
-              children: items.map((item) => SizedBox(
-                width: 130,
-                child: _buildLegendItem(context, item.category, item.percentage, item.color),
-              )).toList(),
-            ),
+          Row(
+            children: [
+              Expanded(
+                flex: 11,
+                child: SizedBox(
+                  height: 190,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SfCircularChart(
+                        margin: EdgeInsets.zero,
+                        series: <CircularSeries<SpendingDistributionItem, String>>[
+                          DoughnutSeries<SpendingDistributionItem, String>(
+                            dataSource: items,
+                            xValueMapper: (SpendingDistributionItem item, _) => item.category,
+                            yValueMapper: (SpendingDistributionItem item, _) => item.amount,
+                            pointColorMapper: (SpendingDistributionItem item, _) => item.color,
+                            innerRadius: '70%',
+                            startAngle: 270,
+                            endAngle: 270,
+                            dataLabelSettings: const DataLabelSettings(isVisible: false),
+                            animationDuration: 1000,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 84,
+                        height: 84,
+                        child: Center(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    context.translate('total'),
+                                    style: GoogleFonts.workSans(
+                                      fontSize: 11,
+                                      color: Colors.grey.shade500,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  totalAmount,
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                flex: 10,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 190),
+                  child: ListView(
+                    children: items.map((item) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                color: item.color,
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.category,
+                                    style: GoogleFonts.workSans(
+                                      fontSize: 11.5,
+                                      fontWeight: FontWeight.w600,
+                                      color: onSurface,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 2),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(2),
+                                    child: LinearProgressIndicator(
+                                      value: item.percentage / 100,
+                                      backgroundColor: isDark
+                                          ? Colors.white.withValues(alpha: 0.08)
+                                          : const Color(0xFFF0F0F0),
+                                      valueColor: AlwaysStoppedAnimation<Color>(item.color),
+                                      minHeight: 4,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              item.percentage < 1
+                                  ? '${item.percentage.toStringAsFixed(1)}%'
+                                  : '${item.percentage.toStringAsFixed(0)}%',
+                              style: GoogleFonts.workSans(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: onSurface.withValues(alpha: 0.7),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

@@ -39,6 +39,7 @@ class PrivacyMaskedText extends StatelessWidget {
         displayText,
         key: ValueKey<bool>(effectiveMasked),
         style: style,
+        softWrap: false,
       ),
     );
   }

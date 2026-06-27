@@ -1,6 +1,6 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/features/analytics/widgets/comparison_progress_row.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,28 +20,167 @@ class MonthlyComparisonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final maxAmount = currentAmount > previousAmount ? currentAmount : previousAmount;
-    final currentProgress = maxAmount > 0 ? currentAmount / maxAmount : 0.0;
-    final previousProgress = maxAmount > 0 ? previousAmount / maxAmount : 0.0;
-
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final onSurface = Theme.of(context).colorScheme.onSurface;
+    final maxAmount = currentAmount > previousAmount ? currentAmount : previousAmount;
+    final currentPct = maxAmount > 0 ? currentAmount / maxAmount : 0.0;
+    final previousPct = maxAmount > 0 ? previousAmount / maxAmount : 0.0;
+
+    final isUp = currentAmount >= previousAmount;
+    final changeColor = isUp ? AppColors.activeRed : AppColors.activeGreen;
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14.0),
+      padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(14),
+        color: isDark
+            ? const Color(0xFF1E1E2E)
+            : Colors.white,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFE24361), Color(0xFFF59E0B)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Monthly Comparison',
+                style: GoogleFonts.workSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: onSurface,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          Row(
+            children: [
+              Expanded(
+                child: _MonthCard(
+                  label: 'This Month',
+                  amount: currentAmount,
+                  progress: currentPct,
+                  color: const Color(0xFF2EBD85),
+                  isMasked: isMasked,
+                  isDark: isDark,
+                  onSurface: onSurface,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _MonthCard(
+                  label: 'Last Month',
+                  amount: previousAmount,
+                  progress: previousPct,
+                  color: isDark ? Colors.grey.shade600 : const Color(0xFFB3C5B9),
+                  isMasked: isMasked,
+                  isDark: isDark,
+                  onSurface: onSurface,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: changeColor.withValues(alpha: isDark ? 0.15 : 0.08),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Net Change',
+                  style: GoogleFonts.workSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: changeColor,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      isUp ? Symbols.trending_up : Symbols.trending_down,
+                      color: changeColor,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      netChangeText,
+                      style: GoogleFonts.workSans(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                        color: changeColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MonthCard extends StatelessWidget {
+  final String label;
+  final double amount;
+  final double progress;
+  final Color color;
+  final bool isMasked;
+  final bool isDark;
+  final Color onSurface;
+
+  const _MonthCard({
+    required this.label,
+    required this.amount,
+    required this.progress,
+    required this.color,
+    required this.isMasked,
+    required this.isDark,
+    required this.onSurface,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: isDark
+            ? Colors.white.withValues(alpha: 0.05)
+            : const Color(0xFFF8F9FA),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF0F0F0),
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.08)
+              : const Color(0xFFE8EAED),
           width: 1,
         ),
       ),
@@ -49,77 +188,38 @@ class MonthlyComparisonCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Monthly Comparison',
-            style: GoogleFonts.workSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: onSurface,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            'This Month vs Last Month',
+            label,
             style: GoogleFonts.workSans(
               fontSize: 11,
-              color: Colors.grey.shade400,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.shade500,
             ),
           ),
-          const SizedBox(height: 16),
-
-          ComparisonProgressRow(
-            label: 'Current Month',
-            amount: currentAmount,
-            progress: currentProgress,
-            progressColor: AppColors.activeGreen,
-            isMasked: isMasked,
-          ),
-          const SizedBox(height: 14),
-
-          ComparisonProgressRow(
-            label: 'Previous Month',
-            amount: previousAmount,
-            progress: previousProgress,
-            progressColor: isDark ? Colors.grey.shade700 : const Color(0xFFB3C5B9),
-            isMasked: isMasked,
-          ),
-          const SizedBox(height: 16),
-
-          Divider(
-            color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF1F1F1),
-            height: 1,
-          ),
-          const SizedBox(height: 12),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Net Change',
-                style: GoogleFonts.workSans(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: isDark ? Colors.white60 : const Color(0xFF4A5568),
-                ),
+          const SizedBox(height: 6),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: PrivacyMaskedText(
+              amount: amount,
+              isMasked: isMasked,
+              style: GoogleFonts.workSans(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: onSurface,
               ),
-              Row(
-                children: [
-                  const Icon(
-                    Symbols.trending_up,
-                    color: AppColors.activeRed,
-                    size: 14,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    netChangeText,
-                    style: GoogleFonts.workSans(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.activeRed,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: isDark
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : const Color(0xFFE8EAED),
+              valueColor: AlwaysStoppedAnimation<Color>(color),
+              minHeight: 6,
+            ),
           ),
         ],
       ),

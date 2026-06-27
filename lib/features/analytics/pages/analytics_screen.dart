@@ -176,7 +176,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     amount: totalExpense,
                     isMasked: _localMasked,
                     style: GoogleFonts.workSans(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: onSurface,
                     ),

@@ -357,7 +357,6 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                       )
                     : ListView.separated(
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: filteredCategories.length,
                         separatorBuilder: (context, index) =>
                             const Divider(color: Color(0xFFF5F5F5), height: 1),

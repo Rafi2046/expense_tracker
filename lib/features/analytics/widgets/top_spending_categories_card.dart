@@ -19,58 +19,73 @@ class TopSpendingCategoriesCard extends StatelessWidget {
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final onSurface = Theme.of(context).colorScheme.onSurface;
+    final maxAmount = items.fold(0.0, (max, item) => item.amount > max ? item.amount : max);
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14.0),
+      padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(14),
+        color: isDark
+            ? const Color(0xFF1E1E2E)
+            : Colors.white,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
-        border: Border.all(
-          color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF0F0F0),
-          width: 1,
-        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            context.translate('top_spending_categories'),
-            style: GoogleFonts.workSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: onSurface,
-            ),
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFF59E0B), Color(0xFFE24361)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                context.translate('top_spending_categories'),
+                style: GoogleFonts.workSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: onSurface,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 2),
-          Text(
-            context.translate('highest_expenditure_areas'),
-            style: GoogleFonts.workSans(
-              fontSize: 11,
-              color: Colors.grey.shade400,
-            ),
-          ),
-
+          const SizedBox(height: 12),
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
             separatorBuilder: (context, index) => Divider(
-              color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF1F1F1),
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.06)
+                  : const Color(0xFFF0F0F0),
               height: 1,
-              indent: 48,
+              indent: 50,
               endIndent: 0,
             ),
-            itemBuilder: (context, index) {
-              final item = items[index];
-              return TopSpendingCategoryRow(item: item, isMasked: isMasked);
+            itemBuilder: (context, i) {
+              final item = items[i];
+              return TopSpendingCategoryRow(
+                item: item,
+                isMasked: isMasked,
+                maxAmount: maxAmount,
+                index: i,
+              );
             },
           ),
         ],
