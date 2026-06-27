@@ -77,31 +77,39 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   Future<void> _autoTriggerBiometric() async {
     HapticFeedback.lightImpact();
-    final success = await context.read<BiometricAuthProvider>().authenticate();
-    if (!mounted) return;
-    if (success) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const BottomNavScreen()),
-      );
-    } else {
-      HapticFeedback.heavyImpact();
-      setState(() => _biometricFailed = true);
+    try {
+      final success = await context.read<BiometricAuthProvider>().authenticate();
+      if (!mounted) return;
+      if (success) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const BottomNavScreen()),
+        );
+      } else {
+        HapticFeedback.heavyImpact();
+        setState(() => _biometricFailed = true);
+      }
+    } catch (_) {
+      if (mounted) setState(() => _biometricFailed = true);
     }
   }
 
   Future<void> _handleBiometricTap() async {
     HapticFeedback.lightImpact();
-    final success = await context.read<BiometricAuthProvider>().authenticate();
-    if (!mounted) return;
-    if (success) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const BottomNavScreen()),
-      );
-    } else {
-      HapticFeedback.heavyImpact();
-      setState(() => _biometricFailed = true);
+    try {
+      final success = await context.read<BiometricAuthProvider>().authenticate();
+      if (!mounted) return;
+      if (success) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const BottomNavScreen()),
+        );
+      } else {
+        HapticFeedback.heavyImpact();
+        setState(() => _biometricFailed = true);
+      }
+    } catch (_) {
+      if (mounted) setState(() => _biometricFailed = true);
     }
   }
 

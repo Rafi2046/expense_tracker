@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BiometricSettingsTile extends StatefulWidget {
   const BiometricSettingsTile({super.key});
@@ -14,6 +15,7 @@ class BiometricSettingsTile extends StatefulWidget {
 class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
   bool _canCheckBiometrics = false;
   bool _checkedCapability = false;
+  bool _isProcessing = false;
 
   @override
   void initState() {
@@ -29,6 +31,42 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
       _canCheckBiometrics = canCheck;
       _checkedCapability = true;
     });
+  }
+
+  Future<void> _onToggle(bool value) async {
+    if (_isProcessing) return;
+
+    final provider = context.read<BiometricAuthProvider>();
+    final messenger = ScaffoldMessenger.of(context);
+
+    if (value) {
+      setState(() => _isProcessing = true);
+      try {
+        final verified = await provider.authenticate(
+          localizedReason: 'Scan your fingerprint or Face ID to register and enable biometric login.',
+        );
+        if (!verified) {
+          messenger.showSnackBar(
+            const SnackBar(content: Text('Authentication failed or cancelled.')),
+          );
+          return;
+        }
+        final userEmail = FirebaseAuth.instance.currentUser?.email;
+        await provider.setEnabled(true, email: userEmail);
+      } on PlatformException catch (e) {
+        messenger.showSnackBar(
+          SnackBar(content: Text('Error: ${e.message ?? e.code}')),
+        );
+      } catch (e) {
+        messenger.showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      } finally {
+        if (mounted) setState(() => _isProcessing = false);
+      }
+    } else {
+      await provider.setEnabled(false);
+    }
   }
 
   @override
@@ -80,14 +118,18 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  isAvailable
-                      ? 'Use Face ID / Fingerprint on app restart'
-                      : 'Not available on this device',
+                  _isProcessing
+                      ? 'Authenticating...'
+                      : (isAvailable
+                          ? 'Use Face ID / Fingerprint on app restart'
+                          : 'Not available on this device'),
                   style: GoogleFonts.workSans(
                     fontSize: 11.5,
-                    color: isAvailable
-                        ? theme.colorScheme.onSurfaceVariant
-                        : const Color(0xFFE53935).withValues(alpha: 0.7),
+                    color: _isProcessing
+                        ? theme.primaryColor
+                        : (isAvailable
+                            ? theme.colorScheme.onSurfaceVariant
+                            : const Color(0xFFE53935).withValues(alpha: 0.7)),
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -97,20 +139,7 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
           if (_checkedCapability)
             Switch(
               value: provider.isEnabled && isAvailable,
-              onChanged: isAvailable
-                  ? (value) async {
-                      if (value) {
-                        final verified = await provider.authenticate(
-                          localizedReason: 'Scan your fingerprint or Face ID to register and enable biometric login.',
-                        );
-                        if (!verified) return;
-                        final userEmail = FirebaseAuth.instance.currentUser?.email;
-                        await provider.setEnabled(true, email: userEmail);
-                      } else {
-                        await provider.setEnabled(false);
-                      }
-                    }
-                  : null,
+              onChanged: isAvailable && !_isProcessing ? _onToggle : null,
               activeColor: theme.primaryColor,
             )
           else
