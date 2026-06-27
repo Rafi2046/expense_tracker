@@ -9,6 +9,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'biometric_settings_tile.dart';
+
 class AccountGroup extends StatefulWidget {
   final Function(String) onSnackBar;
 
@@ -100,7 +102,7 @@ class _AccountGroupState extends State<AccountGroup> {
             ),
           ],
         ),
-
+        BiometricSettingsTile(),
         SettingsOptionRow(
           icon: Symbols.notifications_rounded,
           iconBgColor: const Color(0xFFFCE4EC),

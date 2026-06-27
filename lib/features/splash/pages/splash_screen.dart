@@ -1,10 +1,11 @@
-import 'package:expense_tracker/features/login/pages/login_screen.dart';
-import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-
+import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
+import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
+import 'package:expense_tracker/features/login/pages/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,7 +15,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -23,12 +23,22 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!mounted) return;
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const BottomNavScreen(),
-          ),
-        );
+        final biometricEnabled = context.read<BiometricAuthProvider>().isEnabled;
+        if (biometricEnabled) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LoginScreen(biometricMode: true),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const BottomNavScreen(),
+            ),
+          );
+        }
       } else {
         Navigator.pushReplacement(
           context,

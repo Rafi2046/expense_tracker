@@ -59,6 +59,7 @@ dependencies:
   excel: ^4.0.0
   share_plus: ^13.1.0
   open_filex: ^4.5.0
+  local_auth: ^3.0.1
 
 dev_dependencies:
   flutter_test:
