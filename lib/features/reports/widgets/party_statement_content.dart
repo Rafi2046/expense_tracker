@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PartyStatementContent extends StatelessWidget {
-  const PartyStatementContent({super.key});
+  final bool isMasked;
+
+  const PartyStatementContent({super.key, this.isMasked = false});
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +67,9 @@ class PartyStatementContent extends StatelessWidget {
     }
 
     if (reportsProvider.partyStatementViewMode == PartyStatementViewMode.card) {
-      return const PartyStatementCardView();
+      return PartyStatementCardView(isMasked: isMasked);
     } else {
-      return const PartyStatementTableView();
+      return PartyStatementTableView(isMasked: isMasked);
     }
   }
 }

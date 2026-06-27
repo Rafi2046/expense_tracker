@@ -1,13 +1,15 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PartyStatementTableView extends StatelessWidget {
-  const PartyStatementTableView({super.key});
+  final bool isMasked;
+
+  const PartyStatementTableView({super.key, this.isMasked = false});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,6 @@ class PartyStatementTableView extends StatelessWidget {
     final partyName = reportsProvider.selectedPartyNameForStatement;
     final transactions = reportsProvider.partyStatementTransactions;
     final totals = reportsProvider.partyStatementTotals;
-    final currencySymbol = context.currencySymbol;
 
     if (partyName == null || transactions.isEmpty) {
       return const SizedBox.shrink();
@@ -114,8 +115,9 @@ class PartyStatementTableView extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 6),
-                          Text(
-                            '$currencySymbol ${netBalance.abs().toStringAsFixed(0)}',
+                          PrivacyMaskedText(
+                            amount: netBalance.abs(),
+                            isMasked: isMasked,
                             style: AppTextStyles.reportLargeValue.copyWith(
                               color: cardAccentColor,
                               fontSize: 24,
@@ -168,7 +170,7 @@ class PartyStatementTableView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Debit ($currencySymbol)',
+                      'Debit',
                       style: AppTextStyles.reportStatLabel.copyWith(
                         color: AppColors.activeGreen,
                         fontSize: 11,
@@ -176,8 +178,9 @@ class PartyStatementTableView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      '$currencySymbol ${receiveTotal.toStringAsFixed(0)}',
+                    PrivacyMaskedText(
+                      amount: receiveTotal,
+                      isMasked: isMasked,
                       style: AppTextStyles.reportTransactionSubtitle.copyWith(
                         color: AppColors.activeGreen,
                         fontSize: 11,
@@ -193,7 +196,7 @@ class PartyStatementTableView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Credit ($currencySymbol)',
+                      'Credit',
                       style: AppTextStyles.reportStatLabel.copyWith(
                         color: AppColors.activeRed,
                         fontSize: 11,
@@ -201,8 +204,9 @@ class PartyStatementTableView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      '$currencySymbol ${giveTotal.toStringAsFixed(0)}',
+                    PrivacyMaskedText(
+                      amount: giveTotal,
+                      isMasked: isMasked,
                       style: AppTextStyles.reportTransactionSubtitle.copyWith(
                         color: AppColors.activeRed,
                         fontSize: 11,
@@ -282,8 +286,9 @@ class PartyStatementTableView extends StatelessWidget {
                                       : (isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFDE8E8)),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
-                                child: Text(
-                                  'Bal: $currencySymbol${entryBal.abs().toStringAsFixed(0)}',
+                                child: PrivacyMaskedText(
+                                  amount: entryBal.abs(),
+                                  isMasked: isMasked,
                                   style: AppTextStyles.reportStatLabel.copyWith(
                                     color: isEntryBalPositive ? AppColors.activeGreen : AppColors.activeRed,
                                     fontSize: 9.5,
@@ -311,9 +316,9 @@ class PartyStatementTableView extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(color: isDark ? AppColors.activeGreen.withValues(alpha: 0.3) : const Color(0xFFD1F2E5)),
                               ),
-                              child: Text(
-                                entry.amount.toStringAsFixed(0),
-                                textAlign: TextAlign.center,
+                              child: PrivacyMaskedText(
+                                amount: entry.amount,
+                                isMasked: isMasked,
                                 style: AppTextStyles.reportTransactionTitle.copyWith(
                                   fontSize: 12.5,
                                   fontWeight: FontWeight.bold,
@@ -338,9 +343,9 @@ class PartyStatementTableView extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(color: isDark ? AppColors.activeRed.withValues(alpha: 0.3) : const Color(0xFFFAD1D1)),
                               ),
-                              child: Text(
-                                entry.amount.toStringAsFixed(0),
-                                textAlign: TextAlign.center,
+                              child: PrivacyMaskedText(
+                                amount: entry.amount,
+                                isMasked: isMasked,
                                 style: AppTextStyles.reportTransactionTitle.copyWith(
                                   fontSize: 12.5,
                                   fontWeight: FontWeight.bold,

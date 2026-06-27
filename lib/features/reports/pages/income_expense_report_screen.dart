@@ -4,13 +4,21 @@ import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/income_expense_summary_card.dart';
 import 'package:expense_tracker/features/reports/widgets/income_expense_category_lists.dart';
+import 'package:expense_tracker/features/reports/widgets/privacy_toggle_section.dart';
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
 import 'package:expense_tracker/features/reports/widgets/report_date_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class IncomeExpenseReportScreen extends StatelessWidget {
+class IncomeExpenseReportScreen extends StatefulWidget {
   const IncomeExpenseReportScreen({super.key});
+
+  @override
+  State<IncomeExpenseReportScreen> createState() => _IncomeExpenseReportScreenState();
+}
+
+class _IncomeExpenseReportScreenState extends State<IncomeExpenseReportScreen> {
+  static bool _localMasked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -71,11 +79,16 @@ class IncomeExpenseReportScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  PrivacyToggleSection(
+                    isMasked: _localMasked,
+                    onToggle: () => setState(() => _localMasked = !_localMasked),
+                  ),
+                  const SizedBox(height: 14),
                   const ReportDateSelector(),
                   const SizedBox(height: 16),
-                  const IncomeExpenseSummaryCard(),
+                  IncomeExpenseSummaryCard(isMasked: _localMasked),
                   const SizedBox(height: 24),
-                  const IncomeExpenseCategoryLists(),
+                  IncomeExpenseCategoryLists(isMasked: _localMasked),
                 ],
               ),
             ),

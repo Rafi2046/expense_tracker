@@ -5,16 +5,17 @@ import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 
 class AllTransactionsList extends StatelessWidget {
-  const AllTransactionsList({super.key});
+  final bool isMasked;
+
+  const AllTransactionsList({super.key, this.isMasked = false});
 
   @override
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
     final filtered = reportsProvider.filteredTransactions;
-    final currencySymbol = context.currencySymbol;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -82,8 +83,9 @@ class AllTransactionsList extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(
-                '$currencySymbol ${tx.amount.toStringAsFixed(0)}',
+              PrivacyMaskedText(
+                amount: tx.amount,
+                isMasked: isMasked,
                 style: AppTextStyles.reportTransactionTitle.copyWith(
                   color: isCredit ? theme.primaryColor : AppColors.activeRed,
                 ),

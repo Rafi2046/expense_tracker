@@ -5,16 +5,17 @@ import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 
 class CashStatementList extends StatelessWidget {
-  const CashStatementList({super.key});
+  final bool isMasked;
+
+  const CashStatementList({super.key, this.isMasked = false});
 
   @override
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
     final filtered = reportsProvider.cashStatementTransactions;
-    final currencySymbol = context.currencySymbol;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -83,30 +84,43 @@ class CashStatementList extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 6),
-                        // Running Balance pill
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                           decoration: BoxDecoration(
                             color: isDark ? Colors.white10 : const Color(0xFFE8F8F5),
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: Text(
-                            'Bal: $currencySymbol ${tx.runningBalance.toStringAsFixed(0)}',
-                            style: AppTextStyles.reportStatLabel.copyWith(
-                              color: theme.primaryColor,
-                              fontSize: 10,
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Bal: ',
+                                style: AppTextStyles.reportStatLabel.copyWith(
+                                  color: theme.primaryColor,
+                                  fontSize: 10,
+                                ),
+                              ),
+                              PrivacyMaskedText(
+                                amount: tx.runningBalance,
+                                style: AppTextStyles.reportStatLabel.copyWith(
+                                  color: theme.primaryColor,
+                                  fontSize: 10,
+                                ),
+                                isMasked: isMasked,
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Text(
-                    '$currencySymbol ${tx.amount.toStringAsFixed(0)}',
+                  PrivacyMaskedText(
+                    amount: tx.amount,
                     style: AppTextStyles.reportTransactionTitle.copyWith(
                       fontSize: 14,
                       color: tx.isCredit ? theme.primaryColor : AppColors.activeRed,
                     ),
+                    isMasked: isMasked,
                   ),
                 ],
               ),

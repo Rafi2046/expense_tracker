@@ -3,17 +3,18 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/model/category_summary.dart';
 
 class IncomeExpenseCategoryLists extends StatelessWidget {
-  const IncomeExpenseCategoryLists({super.key});
+  final bool isMasked;
+
+  const IncomeExpenseCategoryLists({super.key, this.isMasked = false});
 
   @override
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
     final data = reportsProvider.incomeExpenseData;
-    final currencySymbol = context.currencySymbol;
     final theme = Theme.of(context);
 
     final List<CategorySummary> incomeSummaries = List<CategorySummary>.from(data['incomeSummaries'] ?? []);
@@ -22,7 +23,6 @@ class IncomeExpenseCategoryLists extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Incomes by Category
         if (incomeSummaries.isNotEmpty) ...[
           Text(
             'Incomes by Category',
@@ -54,8 +54,9 @@ class IncomeExpenseCategoryLists extends StatelessWidget {
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
-                  trailing: Text(
-                    '$currencySymbol ${s.totalAmount.toStringAsFixed(0)}',
+                  trailing: PrivacyMaskedText(
+                    amount: s.totalAmount,
+                    isMasked: isMasked,
                     style: AppTextStyles.reportTransactionTitle.copyWith(
                       color: theme.primaryColor,
                     ),
@@ -67,7 +68,6 @@ class IncomeExpenseCategoryLists extends StatelessWidget {
           const SizedBox(height: 24),
         ],
 
-        // Expenses by Category
         if (expenseSummaries.isNotEmpty) ...[
           Text(
             'Expenses by Category',
@@ -99,8 +99,9 @@ class IncomeExpenseCategoryLists extends StatelessWidget {
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
-                  trailing: Text(
-                    '$currencySymbol ${s.totalAmount.toStringAsFixed(0)}',
+                  trailing: PrivacyMaskedText(
+                    amount: s.totalAmount,
+                    isMasked: isMasked,
                     style: AppTextStyles.reportTransactionTitle.copyWith(
                       color: AppColors.activeRed,
                     ),

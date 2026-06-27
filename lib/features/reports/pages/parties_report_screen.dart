@@ -3,17 +3,25 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
+import 'package:expense_tracker/features/reports/widgets/privacy_toggle_section.dart';
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PartiesReportScreen extends StatelessWidget {
+class PartiesReportScreen extends StatefulWidget {
   const PartiesReportScreen({super.key});
+
+  @override
+  State<PartiesReportScreen> createState() => _PartiesReportScreenState();
+}
+
+class _PartiesReportScreenState extends State<PartiesReportScreen> {
+  static bool _localMasked = false;
 
   @override
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
-    final currencySymbol = context.currencySymbol;
     final filtered = reportsProvider.partyReportSummaries;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
@@ -22,7 +30,7 @@ class PartiesReportScreen extends StatelessWidget {
     final rows = filtered.map((item) => {
       'Name': item.name,
       'Phone': item.phone ?? '-',
-      'Net Balance': '$currencySymbol ${item.netBalance.toStringAsFixed(0)}',
+      'Net Balance': '${context.currencySymbol} ${item.netBalance.toStringAsFixed(0)}',
       'Transactions': item.transactionCount.toString(),
     }).toList();
     final dateSubtitle = reportsProvider.getDateRangeSubtitle(reportsProvider.selectedOption, reportsProvider.selectedDateRange);
@@ -60,6 +68,11 @@ class PartiesReportScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  PrivacyToggleSection(
+                    isMasked: _localMasked,
+                    onToggle: () => setState(() => _localMasked = !_localMasked),
+                  ),
+                  const SizedBox(height: 14),
                   // Search bar
                   TextFormField(
                     initialValue: reportsProvider.partiesSearchQuery,
@@ -179,8 +192,9 @@ class PartiesReportScreen extends StatelessWidget {
                                         ),
                                       ),
                                       const SizedBox(height: 4),
-                                      Text(
-                                        '$currencySymbol ${item.netBalance.abs().toStringAsFixed(0)}',
+                                      PrivacyMaskedText(
+                                        amount: item.netBalance.abs(),
+                                        isMasked: _localMasked,
                                         style: AppTextStyles.reportTransactionTitle.copyWith(
                                           color: item.netBalance == 0
                                               ? (isDark ? Colors.white38 : Colors.grey.shade600)

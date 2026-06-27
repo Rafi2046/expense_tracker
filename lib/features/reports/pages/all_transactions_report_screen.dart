@@ -6,14 +6,22 @@ import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/all_transactions_filter_bar.dart';
 import 'package:expense_tracker/features/reports/widgets/all_transactions_list.dart';
 import 'package:expense_tracker/features/reports/widgets/all_transactions_summary_grid.dart';
+import 'package:expense_tracker/features/reports/widgets/privacy_toggle_section.dart';
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
 import 'package:expense_tracker/features/reports/widgets/report_date_selector.dart';
 import 'package:expense_tracker/features/reports/widgets/report_sort_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AllTransactionsReportScreen extends StatelessWidget {
+class AllTransactionsReportScreen extends StatefulWidget {
   const AllTransactionsReportScreen({super.key});
+
+  @override
+  State<AllTransactionsReportScreen> createState() => _AllTransactionsReportScreenState();
+}
+
+class _AllTransactionsReportScreenState extends State<AllTransactionsReportScreen> {
+  static bool _localMasked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,18 +77,23 @@ class AllTransactionsReportScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  PrivacyToggleSection(
+                    isMasked: _localMasked,
+                    onToggle: () => setState(() => _localMasked = !_localMasked),
+                  ),
+                  const SizedBox(height: 14),
                   const ReportDateSelector(),
                   const SizedBox(height: 12),
                   const AllTransactionsFilterBar(),
                   const SizedBox(height: 16),
-                  const AllTransactionsSummaryGrid(),
+                  AllTransactionsSummaryGrid(isMasked: _localMasked),
                   const SizedBox(height: 24),
                   Text(
                     'Transaction Lists',
                     style: AppTextStyles.reportSectionHeader.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   const SizedBox(height: 12),
-                  const AllTransactionsList(),
+                  AllTransactionsList(isMasked: _localMasked),
                 ],
               ),
             ),

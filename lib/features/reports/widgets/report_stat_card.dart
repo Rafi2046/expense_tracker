@@ -1,19 +1,20 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 
 class ReportStatCard extends StatelessWidget {
   final String title;
   final double amount;
-  final String currencySymbol;
   final bool isPositive;
+  final bool isMasked;
 
   const ReportStatCard({
     super.key,
     required this.title,
     required this.amount,
-    required this.currencySymbol,
     required this.isPositive,
+    this.isMasked = false,
   });
 
   @override
@@ -38,8 +39,9 @@ class ReportStatCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            '$currencySymbol ${amount.toStringAsFixed(0)}',
+          PrivacyMaskedText(
+            amount: amount,
+            isMasked: isMasked,
             style: AppTextStyles.reportStatValue.copyWith(
               color: isPositive ? theme.primaryColor : AppColors.activeRed,
             ),

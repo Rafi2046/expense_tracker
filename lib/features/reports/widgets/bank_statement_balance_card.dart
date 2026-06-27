@@ -3,16 +3,17 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 
 class BankStatementBalanceCard extends StatelessWidget {
-  const BankStatementBalanceCard({super.key});
+  final bool isMasked;
+
+  const BankStatementBalanceCard({super.key, this.isMasked = false});
 
   @override
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
     final closingBalance = reportsProvider.bankClosingBalance;
-    final currencySymbol = context.currencySymbol;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -42,12 +43,13 @@ class BankStatementBalanceCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            '$currencySymbol ${closingBalance.toStringAsFixed(0)}',
+          PrivacyMaskedText(
+            amount: closingBalance,
             style: AppTextStyles.reportLargeValue.copyWith(
               fontSize: 20,
               color: closingBalance >= 0 ? theme.primaryColor : AppColors.activeRed,
             ),
+            isMasked: isMasked,
           ),
         ],
       ),

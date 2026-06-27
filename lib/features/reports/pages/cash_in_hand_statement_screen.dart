@@ -4,13 +4,21 @@ import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/cash_statement_balance_card.dart';
 import 'package:expense_tracker/features/reports/widgets/cash_statement_list.dart';
+import 'package:expense_tracker/features/reports/widgets/privacy_toggle_section.dart';
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
 import 'package:expense_tracker/features/reports/widgets/report_date_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CashInHandStatementScreen extends StatelessWidget {
+class CashInHandStatementScreen extends StatefulWidget {
   const CashInHandStatementScreen({super.key});
+
+  @override
+  State<CashInHandStatementScreen> createState() => _CashInHandStatementScreenState();
+}
+
+class _CashInHandStatementScreenState extends State<CashInHandStatementScreen> {
+  static bool _localMasked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,13 +71,18 @@ class CashInHandStatementScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  PrivacyToggleSection(
+                    isMasked: _localMasked,
+                    onToggle: () => setState(() => _localMasked = !_localMasked),
+                  ),
+                  const SizedBox(height: 14),
                   const ReportDateSelector(),
                   const SizedBox(height: 12),
                   if (isNotEmpty) ...[
-                    const CashStatementBalanceCard(),
+                    CashStatementBalanceCard(isMasked: _localMasked),
                     const SizedBox(height: 16),
                   ],
-                  const CashStatementList(),
+                  CashStatementList(isMasked: _localMasked),
                 ],
               ),
             ),

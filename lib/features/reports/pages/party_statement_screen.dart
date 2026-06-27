@@ -6,27 +6,34 @@ import 'package:expense_tracker/features/reports/widgets/party_statement_selecto
 import 'package:expense_tracker/features/reports/widgets/party_statement_view_toggle.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_content.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_profile_header.dart';
+import 'package:expense_tracker/features/reports/widgets/privacy_toggle_section.dart';
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
 import 'package:expense_tracker/features/reports/widgets/report_date_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PartyStatementScreen extends StatelessWidget {
+class PartyStatementScreen extends StatefulWidget {
   const PartyStatementScreen({super.key});
+
+  @override
+  State<PartyStatementScreen> createState() => _PartyStatementScreenState();
+}
+
+class _PartyStatementScreenState extends State<PartyStatementScreen> {
+  static bool _localMasked = false;
 
   @override
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
     final partyName = reportsProvider.selectedPartyNameForStatement;
     final theme = Theme.of(context);
-    final currencySymbol = context.currencySymbol;
     final dateFormat = DateFormat('dd MMM yyyy');
 
     final headers = ['Date', 'Detail', 'Amount', 'Type'];
     final rows = reportsProvider.partyStatementTransactions.map((item) => {
       'Date': dateFormat.format(item.dateTime),
       'Detail': '${item.partyName} • ${item.description}',
-      'Amount': '$currencySymbol ${item.amount.toStringAsFixed(0)}',
+      'Amount': '${context.currencySymbol} ${item.amount.toStringAsFixed(0)}',
       'Type': item.isInflow ? 'Receive' : 'Give',
     }).toList();
     final dateSubtitle = reportsProvider.getDateRangeSubtitle(reportsProvider.selectedOption, reportsProvider.selectedDateRange);
@@ -64,9 +71,9 @@ class PartyStatementScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          const SafeArea(
+          SafeArea(
             child: SingleChildScrollView(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 left: 16.0,
                 right: 16.0,
                 top: 12.0,
@@ -75,13 +82,18 @@ class PartyStatementScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ReportDateSelector(),
-                  SizedBox(height: 12),
-                  PartyStatementSelector(),
-                  SizedBox(height: 16),
-                  PartyStatementProfileHeader(),
-                  SizedBox(height: 20),
-                  PartyStatementContent(),
+                  PrivacyToggleSection(
+                    isMasked: _localMasked,
+                    onToggle: () => setState(() => _localMasked = !_localMasked),
+                  ),
+                  const SizedBox(height: 14),
+                  const ReportDateSelector(),
+                  const SizedBox(height: 12),
+                  const PartyStatementSelector(),
+                  const SizedBox(height: 16),
+                  const PartyStatementProfileHeader(),
+                  const SizedBox(height: 20),
+                  PartyStatementContent(isMasked: _localMasked),
                 ],
               ),
             ),

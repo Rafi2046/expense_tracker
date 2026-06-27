@@ -1,15 +1,17 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PartyStatementCardView extends StatelessWidget {
-  const PartyStatementCardView({super.key});
+  final bool isMasked;
+
+  const PartyStatementCardView({super.key, this.isMasked = false});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,6 @@ class PartyStatementCardView extends StatelessWidget {
     final partyName = reportsProvider.selectedPartyNameForStatement;
     final transactions = reportsProvider.partyStatementTransactions;
     final totals = reportsProvider.partyStatementTotals;
-    final currencySymbol = context.currencySymbol;
 
     if (partyName == null || transactions.isEmpty) {
       return const SizedBox.shrink();
@@ -125,8 +126,9 @@ class PartyStatementCardView extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 6),
-                          Text(
-                            '$currencySymbol ${netBalance.abs().toStringAsFixed(0)}',
+                          PrivacyMaskedText(
+                            amount: netBalance.abs(),
+                            isMasked: isMasked,
                             style: AppTextStyles.reportLargeValue.copyWith(
                               color: cardAccentColor,
                               fontSize: 24,
@@ -184,8 +186,9 @@ class PartyStatementCardView extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 3),
-                          Text(
-                            '$currencySymbol ${moneyIn.toStringAsFixed(0)}',
+                          PrivacyMaskedText(
+                            amount: moneyIn,
+                            isMasked: isMasked,
                             style: AppTextStyles.reportTransactionTitle.copyWith(
                               fontSize: 14.5,
                               fontWeight: FontWeight.bold,
@@ -237,8 +240,9 @@ class PartyStatementCardView extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 3),
-                          Text(
-                            '$currencySymbol ${moneyOut.toStringAsFixed(0)}',
+                          PrivacyMaskedText(
+                            amount: moneyOut,
+                            isMasked: isMasked,
                             style: AppTextStyles.reportTransactionTitle.copyWith(
                               fontSize: 14.5,
                               fontWeight: FontWeight.bold,
@@ -291,9 +295,9 @@ class PartyStatementCardView extends StatelessWidget {
               entryBalance: entryBal,
               isEntryBalPositive: isEntryBalPositive,
               typeColor: typeColor,
-              currencySymbol: currencySymbol,
               theme: theme,
               isDark: isDark,
+              isMasked: isMasked,
             );
           },
         ),
@@ -301,10 +305,6 @@ class PartyStatementCardView extends StatelessWidget {
     );
   }
 }
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Premium Transaction Tile
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 class _PremiumTransactionTile extends StatelessWidget {
   final String description;
@@ -315,9 +315,9 @@ class _PremiumTransactionTile extends StatelessWidget {
   final double entryBalance;
   final bool isEntryBalPositive;
   final Color typeColor;
-  final String currencySymbol;
   final ThemeData theme;
   final bool isDark;
+  final bool isMasked;
 
   const _PremiumTransactionTile({
     required this.description,
@@ -328,14 +328,13 @@ class _PremiumTransactionTile extends StatelessWidget {
     required this.entryBalance,
     required this.isEntryBalPositive,
     required this.typeColor,
-    required this.currencySymbol,
     required this.theme,
     required this.isDark,
+    required this.isMasked,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Determine the icon for the leading badge
     final IconData leadingIcon;
     final Color iconBgColor;
     final Color iconFgColor;
@@ -360,7 +359,6 @@ class _PremiumTransactionTile extends StatelessWidget {
       iconFgColor = AppColors.activeRed;
     }
 
-    // Balance pill colors
     final balPillBg = isEntryBalPositive
         ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.10) : const Color(0xFFEBF9F3))
         : (isDark ? AppColors.activeRed.withValues(alpha: 0.10) : const Color(0xFFFCECEE));
@@ -394,7 +392,6 @@ class _PremiumTransactionTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // ── Leading Icon Badge ──
           Container(
             width: 42,
             height: 42,
@@ -410,7 +407,6 @@ class _PremiumTransactionTile extends StatelessWidget {
           ),
           const SizedBox(width: 12),
 
-          // ── Center Column: Title + Date ──
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -440,23 +436,35 @@ class _PremiumTransactionTile extends StatelessWidget {
           ),
           const SizedBox(width: 10),
 
-          // ── Trailing: Amount + Balance Pill ──
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              // Amount — bold, color-coded
-              Text(
-                '${isInflow ? '+' : '−'} $currencySymbol${amount.toStringAsFixed(0)}',
-                style: GoogleFonts.workSans(
-                  fontSize: 14.5,
-                  fontWeight: FontWeight.w700,
-                  color: typeColor,
-                  letterSpacing: -0.2,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    isInflow ? '+ ' : '− ',
+                    style: GoogleFonts.workSans(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w700,
+                      color: typeColor,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                  PrivacyMaskedText(
+                    amount: amount,
+                    isMasked: isMasked,
+                    style: GoogleFonts.workSans(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w700,
+                      color: typeColor,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 5),
 
-              // Balance pill
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
@@ -467,8 +475,9 @@ class _PremiumTransactionTile extends StatelessWidget {
                     width: 0.8,
                   ),
                 ),
-                child: Text(
-                  'Bal: $currencySymbol${entryBalance.abs().toStringAsFixed(0)}',
+                child: PrivacyMaskedText(
+                  amount: entryBalance.abs(),
+                  isMasked: isMasked,
                   style: GoogleFonts.workSans(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
