@@ -2,7 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 
 class OverBudgetWarning extends StatelessWidget {
@@ -33,10 +33,23 @@ class OverBudgetWarning extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.s8),
           Expanded(
-            child: Text(
-              'You\'ve exceeded your monthly budget by ${context.formatAmount(excessAmount)}',
-              style: AppTextStyles.cardStatusText.copyWith(
-                color: AppColors.activeRed,
+            child: RichText(
+              text: TextSpan(
+                style: AppTextStyles.cardStatusText.copyWith(
+                  color: AppColors.activeRed,
+                ),
+                children: [
+                  const TextSpan(text: 'You\'ve exceeded your monthly budget by '),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle,
+                    child: PrivacyMaskedText(
+                      amount: excessAmount,
+                      style: AppTextStyles.cardStatusText.copyWith(
+                        color: AppColors.activeRed,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

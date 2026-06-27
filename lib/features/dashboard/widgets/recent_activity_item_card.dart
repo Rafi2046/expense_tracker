@@ -1,7 +1,7 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/models/transaction_models.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -66,13 +66,26 @@ class RecentActivityItemCard extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-            '${isInc ? '+' : '-'}${context.formatAmount(tx.amount)}',
-            style: GoogleFonts.workSans(
-              fontSize: 12.5,
-              fontWeight: FontWeight.w700,
-              color: isInc ? AppColors.activeGreen : AppColors.expensePink,
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                isInc ? '+' : '-',
+                style: GoogleFonts.workSans(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w700,
+                  color: isInc ? AppColors.activeGreen : AppColors.expensePink,
+                ),
+              ),
+              PrivacyMaskedText(
+                amount: tx.amount,
+                style: GoogleFonts.workSans(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w700,
+                  color: isInc ? AppColors.activeGreen : AppColors.expensePink,
+                ),
+              ),
+            ],
           ),
         ],
       ),

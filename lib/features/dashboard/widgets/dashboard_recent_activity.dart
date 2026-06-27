@@ -1,6 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -169,15 +169,30 @@ class DashboardRecentActivity extends StatelessWidget {
                 ),
 
                 // Amount
-                Text(
-                  '${isInc ? '+' : '-'}${context.formatAmount(item.amount)}',
-                  style: GoogleFonts.workSans(
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w700,
-                    color: isInc
-                        ? AppColors.activeGreen
-                        : AppColors.expensePink,
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      isInc ? '+' : '-',
+                      style: GoogleFonts.workSans(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w700,
+                        color: isInc
+                            ? AppColors.activeGreen
+                            : AppColors.expensePink,
+                      ),
+                    ),
+                    PrivacyMaskedText(
+                      amount: item.amount,
+                      style: GoogleFonts.workSans(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w700,
+                        color: isInc
+                            ? AppColors.activeGreen
+                            : AppColors.expensePink,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

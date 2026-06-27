@@ -2,7 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/budget_provider.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/budget_progress_section.dart';
 import 'package:expense_tracker/features/dashboard/widgets/over_budget_warning.dart';
 import 'package:expense_tracker/features/dashboard/widgets/set_budget_dialog.dart';
@@ -49,12 +49,12 @@ class BudgetSummaryCard extends StatelessWidget {
                     'Monthly Budget',
                     style: AppTextStyles.cardTitle,
                   ),
-                  Text(
-                    budgetProvider.hasBudget
-                        ? context.formatAmount(budgetProvider.amount)
-                        : 'Tap to set',
-                    style: AppTextStyles.cardStatusText,
-                  ),
+                  budgetProvider.hasBudget
+                      ? PrivacyMaskedText(
+                          amount: budgetProvider.amount,
+                          style: AppTextStyles.cardStatusText,
+                        )
+                      : Text('Tap to set', style: AppTextStyles.cardStatusText),
                 ],
               ),
               if (budgetProvider.hasBudget) ...[
@@ -70,7 +70,12 @@ class BudgetSummaryCard extends StatelessWidget {
                     Expanded(
                       child: _SummaryLabel(
                         label: 'Spent',
-                        value: context.formatAmount(monthlyExpense),
+                        value: PrivacyMaskedText(
+                          amount: monthlyExpense,
+                          style: AppTextStyles.cardValueGreen.copyWith(
+                            color: isOver ? AppColors.activeRed : AppColors.activeGreen,
+                          ),
+                        ),
                         color: isOver ? AppColors.activeRed : AppColors.activeGreen,
                       ),
                     ),
@@ -78,9 +83,12 @@ class BudgetSummaryCard extends StatelessWidget {
                     Expanded(
                       child: _SummaryLabel(
                         label: 'Remaining',
-                        value: isOver
-                            ? '-${context.formatAmount(remaining.abs())}'
-                            : context.formatAmount(remaining),
+                        value: PrivacyMaskedText(
+                          amount: remaining,
+                          style: AppTextStyles.cardValueGreen.copyWith(
+                            color: isOver ? AppColors.activeRed : AppColors.buttonColor,
+                          ),
+                        ),
                         color: isOver ? AppColors.activeRed : AppColors.buttonColor,
                       ),
                     ),
@@ -112,7 +120,7 @@ class BudgetSummaryCard extends StatelessWidget {
 
 class _SummaryLabel extends StatelessWidget {
   final String label;
-  final String value;
+  final Widget value;
   final Color color;
 
   const _SummaryLabel({
@@ -131,7 +139,7 @@ class _SummaryLabel extends StatelessWidget {
         FittedBox(
           fit: BoxFit.scaleDown,
           alignment: Alignment.centerLeft,
-          child: Text(value, style: AppTextStyles.cardValueGreen.copyWith(color: color)),
+          child: value,
         ),
       ],
     );
