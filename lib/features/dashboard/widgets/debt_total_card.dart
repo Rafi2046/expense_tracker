@@ -1,8 +1,9 @@
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
 
 class DebtTotalCard extends StatelessWidget {
   final String title;
@@ -12,6 +13,8 @@ class DebtTotalCard extends StatelessWidget {
   final bool showGuide;
   final VoidCallback onDismissGuide;
   final IconData cardIcon;
+  final bool isMasked;
+  final VoidCallback onToggleMask;
 
   const DebtTotalCard({
     super.key,
@@ -22,6 +25,8 @@ class DebtTotalCard extends StatelessWidget {
     required this.showGuide,
     required this.onDismissGuide,
     required this.cardIcon,
+    required this.isMasked,
+    required this.onToggleMask,
   });
 
   @override
@@ -50,7 +55,6 @@ class DebtTotalCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: Column(
@@ -66,8 +70,9 @@ class DebtTotalCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        context.formatAmount(amount),
+                      PrivacyMaskedText(
+                        amount: amount,
+                        isMasked: isMasked,
                         style: GoogleFonts.workSans(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -77,10 +82,28 @@ class DebtTotalCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Icon(
-                  cardIcon,
-                  color: Colors.white.withValues(alpha: 0.15),
-                  size: 48,
+                const SizedBox(width: 12),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        onToggleMask();
+                      },
+                      child: Icon(
+                        isMasked ? Symbols.visibility_off : Symbols.visibility,
+                        size: 22,
+                        color: Colors.white60,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Icon(
+                      cardIcon,
+                      color: Colors.white.withValues(alpha: 0.15),
+                      size: 42,
+                    ),
+                  ],
                 ),
               ],
             ),

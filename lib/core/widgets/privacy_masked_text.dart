@@ -7,18 +7,20 @@ import 'package:expense_tracker/core/providers/privacy_provider.dart';
 class PrivacyMaskedText extends StatelessWidget {
   final double amount;
   final TextStyle? style;
+  final bool? isMasked;
 
   const PrivacyMaskedText({
     super.key,
     required this.amount,
     this.style,
+    this.isMasked,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isMasked = context.watch<PrivacyProvider>().isMasked;
+    final effectiveMasked = isMasked ?? context.watch<PrivacyProvider>().isMasked;
     final formatted = context.formatAmount(amount, listen: false);
-    final displayText = isMasked ? formatted.masked : formatted;
+    final displayText = effectiveMasked ? formatted.masked : formatted;
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
@@ -35,7 +37,7 @@ class PrivacyMaskedText extends StatelessWidget {
       },
       child: Text(
         displayText,
-        key: ValueKey<bool>(isMasked),
+        key: ValueKey<bool>(effectiveMasked),
         style: style,
       ),
     );

@@ -17,6 +17,7 @@ class ToReceiveScreen extends StatefulWidget {
 }
 
 class _ToReceiveScreenState extends State<ToReceiveScreen> {
+  static bool _localMasked = false;
   bool _showGuide = true;
 
   @override
@@ -76,6 +77,8 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                   });
                 },
                 cardIcon: Symbols.arrow_downward_rounded,
+                isMasked: _localMasked,
+                onToggleMask: () => setState(() => _localMasked = !_localMasked),
               ),
             ),
             if (items.isNotEmpty)
@@ -172,6 +175,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                         return DebtItemRow(
                           item: item,
                           themeColor: theme.primaryColor,
+                          isMasked: _localMasked,
                           onEditTap: () => AddEditDebtSheet.show(
                             context: context,
                             item: item,

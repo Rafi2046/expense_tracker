@@ -1,17 +1,25 @@
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/analytics/widgets/monthly_comparison_card.dart';
 import 'package:expense_tracker/features/analytics/widgets/spending_overview_card.dart';
 import 'package:expense_tracker/features/analytics/widgets/top_spending_categories_card.dart';
 import 'package:expense_tracker/features/analytics/widgets/top_spending_category_row.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class AnalyticsScreen extends StatelessWidget {
+class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
+
+  @override
+  State<AnalyticsScreen> createState() => _AnalyticsScreenState();
+}
+
+class _AnalyticsScreenState extends State<AnalyticsScreen> {
+  static bool _localMasked = false;
 
   static const _colorPalette = [
     Color(0xFF1EA97C),
@@ -135,6 +143,18 @@ class AnalyticsScreen extends StatelessWidget {
             letterSpacing: -0.3,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              _localMasked ? Symbols.visibility_off : Symbols.visibility,
+              size: 20,
+            ),
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              setState(() => _localMasked = !_localMasked);
+            },
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
@@ -152,7 +172,15 @@ class AnalyticsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SpendingOverviewCard(
-                  totalAmount: context.formatAmount(totalExpense),
+                  totalAmount: PrivacyMaskedText(
+                    amount: totalExpense,
+                    isMasked: _localMasked,
+                    style: GoogleFonts.workSans(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: onSurface,
+                    ),
+                  ),
                   items: spendingItems,
                 ),
                 const SizedBox(height: 18),
@@ -160,10 +188,12 @@ class AnalyticsScreen extends StatelessWidget {
                   currentAmount: totalExpense,
                   previousAmount: prevExpense,
                   netChangeText: changeText,
+                  isMasked: _localMasked,
                 ),
                 const SizedBox(height: 18),
                 TopSpendingCategoriesCard(
                   items: topItems,
+                  isMasked: _localMasked,
                 ),
                 const SizedBox(height: 100),
               ],

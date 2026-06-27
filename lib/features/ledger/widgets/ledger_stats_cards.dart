@@ -1,18 +1,25 @@
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class LedgerStatsCards extends StatelessWidget {
-  const LedgerStatsCards({super.key});
+  final bool isMasked;
+  final VoidCallback onToggleMask;
+
+  const LedgerStatsCards({
+    super.key,
+    required this.isMasked,
+    required this.onToggleMask,
+  });
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TransactionProvider>();
-    final currencySymbol = context.currencySymbol;
 
     final totalIncome = provider.monthlyIncome;
     final totalExpense = provider.monthlyExpense;
@@ -23,8 +30,8 @@ class LedgerStatsCards extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [
-            Color(0xFF32235B), // Deep royal purple
-            Color(0xFF6A53A1), // Soft premium violet
+            Color(0xFF32235B),
+            Color(0xFF6A53A1),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -42,17 +49,17 @@ class LedgerStatsCards extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Net Balance Label
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                context.translate('total_balance').toUpperCase(),
-                style: GoogleFonts.workSans(
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white70,
-                  letterSpacing: 1.0,
+              Expanded(
+                child: Text(
+                  context.translate('total_balance').toUpperCase(),
+                  style: GoogleFonts.workSans(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white70,
+                    letterSpacing: 1.0,
+                  ),
                 ),
               ),
               Container(
@@ -73,13 +80,26 @@ class LedgerStatsCards extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  onToggleMask();
+                },
+                child: Icon(
+                  isMasked ? Symbols.visibility_off : Symbols.visibility,
+                  size: 20,
+                  color: Colors.white60,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 6),
 
           // Net Balance Value
-          Text(
-            '${netBalance >= 0 ? '' : '- '}$currencySymbol ${context.formatValueWithoutSymbol(netBalance.abs())}',
+          PrivacyMaskedText(
+            amount: netBalance,
+            isMasked: isMasked,
             style: GoogleFonts.workSans(
               fontSize: 26,
               fontWeight: FontWeight.bold,
@@ -96,7 +116,6 @@ class LedgerStatsCards extends StatelessWidget {
           // Income vs Expense row
           Row(
             children: [
-              // Income Column
               Expanded(
                 child: Row(
                   children: [
@@ -108,7 +127,7 @@ class LedgerStatsCards extends StatelessWidget {
                       ),
                       child: const Icon(
                         Symbols.arrow_downward_rounded,
-                        color: Color(0xFF2ECC71), // soft green
+                        color: Color(0xFF2ECC71),
                         size: 14,
                       ),
                     ),
@@ -126,9 +145,9 @@ class LedgerStatsCards extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 2),
-                          Text(
-                            '$currencySymbol ${context.formatValueWithoutSymbol(totalIncome)}',
-                            overflow: TextOverflow.ellipsis,
+                          PrivacyMaskedText(
+                            amount: totalIncome,
+                            isMasked: isMasked,
                             style: GoogleFonts.workSans(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
@@ -142,7 +161,6 @@ class LedgerStatsCards extends StatelessWidget {
                 ),
               ),
 
-              // Vertial Divider line
               Container(
                 width: 1,
                 height: 28,
@@ -150,7 +168,6 @@ class LedgerStatsCards extends StatelessWidget {
               ),
               const SizedBox(width: 12),
 
-              // Expense Column
               Expanded(
                 child: Row(
                   children: [
@@ -162,7 +179,7 @@ class LedgerStatsCards extends StatelessWidget {
                       ),
                       child: const Icon(
                         Symbols.arrow_upward_rounded,
-                        color: Color(0xFFF1948A), // soft light red
+                        color: Color(0xFFF1948A),
                         size: 14,
                       ),
                     ),
@@ -180,9 +197,9 @@ class LedgerStatsCards extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 2),
-                          Text(
-                            '$currencySymbol ${context.formatValueWithoutSymbol(totalExpense)}',
-                            overflow: TextOverflow.ellipsis,
+                          PrivacyMaskedText(
+                            amount: totalExpense,
+                            isMasked: isMasked,
                             style: GoogleFonts.workSans(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,

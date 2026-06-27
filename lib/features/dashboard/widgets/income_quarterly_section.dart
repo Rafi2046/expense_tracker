@@ -1,16 +1,26 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/quarterly_trend_chart.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_container_row.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_list_container.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class IncomeQuarterlySection extends StatelessWidget {
-  const IncomeQuarterlySection({super.key});
+  final bool isMasked;
+
+  const IncomeQuarterlySection({super.key, required this.isMasked});
+
+  TextStyle get _amountStyle => TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.bold,
+    color: const Color(0xFF2EBD85),
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +74,11 @@ class IncomeQuarterlySection extends StatelessWidget {
                     icon: icon,
                     title: tx.note.isNotEmpty ? tx.note : tx.category,
                     subtitle: '${DateFormat('MMM dd, yyyy').format(tx.dateTime)} • ${tx.category}',
-                    amount: '${context.currencySymbol}${tx.amount.toStringAsFixed(2)}',
+                    amount: PrivacyMaskedText(
+                      amount: tx.amount,
+                      isMasked: isMasked,
+                      style: _amountStyle,
+                    ),
                     subAmountLabel: tx.note.isNotEmpty ? tx.category : 'Income',
                   );
                 }).toList(),

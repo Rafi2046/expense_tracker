@@ -18,6 +18,8 @@ class TotalBalanceScreen extends StatefulWidget {
 }
 
 class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
+  static bool _localMasked = false;
+
   @override
   Widget build(BuildContext context) {
     final balanceProvider = context.watch<BalanceAnalyticsProvider>();
@@ -59,6 +61,8 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
             children: [
               OverallBalanceCard(
                 totalBalance: totalBalance,
+                isMasked: _localMasked,
+                onToggleMask: () => setState(() => _localMasked = !_localMasked),
               ),
               const SizedBox(height: 20),
 
@@ -108,6 +112,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                       subtitle: 'Cash in Hand',
                       balance: PrivacyMaskedText(
                         amount: cashBalance,
+                        isMasked: _localMasked,
                         style: GoogleFonts.workSans(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -132,6 +137,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                       subtitle: 'Electronic Transfer',
                       balance: PrivacyMaskedText(
                         amount: bankBalance,
+                        isMasked: _localMasked,
                         style: GoogleFonts.workSans(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,

@@ -1,5 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -21,10 +21,12 @@ class TopSpendingCategoryItem {
 
 class TopSpendingCategoryRow extends StatelessWidget {
   final TopSpendingCategoryItem item;
+  final bool isMasked;
 
   const TopSpendingCategoryRow({
     super.key,
     required this.item,
+    this.isMasked = false,
   });
 
   @override
@@ -36,7 +38,6 @@ class TopSpendingCategoryRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(
         children: [
-          // Icon in rounded square
           Container(
             width: 36,
             height: 36,
@@ -52,7 +53,6 @@ class TopSpendingCategoryRow extends StatelessWidget {
           ),
           const SizedBox(width: 12),
 
-          // Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,15 +77,12 @@ class TopSpendingCategoryRow extends StatelessWidget {
             ),
           ),
 
-          // Trailing (Amount & Percentage)
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                '${context.currencySymbol}${item.amount.toStringAsFixed(0).replaceAllMapped(
-                      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                      (Match m) => '${m[1]},',
-                    )}',
+              PrivacyMaskedText(
+                amount: item.amount,
+                isMasked: isMasked,
                 style: GoogleFonts.workSans(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w700,

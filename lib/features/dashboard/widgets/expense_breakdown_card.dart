@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -23,11 +24,13 @@ class ExpenseBreakdownItem {
 class ExpenseBreakdownCard extends StatelessWidget {
   final String suffixText;
   final List<ExpenseBreakdownItem> items;
+  final bool isMasked;
 
   const ExpenseBreakdownCard({
     super.key,
     required this.suffixText,
     required this.items,
+    required this.isMasked,
   });
 
   @override
@@ -90,6 +93,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
             separatorBuilder: (context, index) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
               final item = items[index];
+              final rawAmount = double.tryParse(item.amount) ?? 0.0;
               return Row(
                 children: [
                   // Icon
@@ -136,8 +140,9 @@ class ExpenseBreakdownCard extends StatelessWidget {
                   ),
 
                   // Amount
-                  Text(
-                    item.amount,
+                  PrivacyMaskedText(
+                    amount: rawAmount,
+                    isMasked: isMasked,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,

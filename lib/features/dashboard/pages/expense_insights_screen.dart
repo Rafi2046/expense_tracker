@@ -1,12 +1,15 @@
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/expense_breakdown_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/expense_categories_breakdown_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/expense_time_frame_selector.dart';
 import 'package:expense_tracker/features/dashboard/widgets/expense_trend_chart_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -19,18 +22,8 @@ class ExpenseInsightsScreen extends StatefulWidget {
 
 class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
   String _selectedTimeFrame = 'Daily';
+  static bool _localMasked = false;
   final List<String> _timeFrames = ['Daily', 'Weekly', 'Monthly', 'Quarterly'];
-
-  String _formatAmount(double value) {
-    final s = (value % 1 == 0)
-        ? value.toStringAsFixed(0)
-        : value.toStringAsFixed(2);
-    final withCommas = s.replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]},',
-    );
-    return '${context.currencySymbol} $withCommas';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +46,19 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
         backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              setState(() => _localMasked = !_localMasked);
+            },
+            icon: Icon(
+              _localMasked ? Symbols.visibility_off : Symbols.visibility,
+              color: AppColors.notificationIcon,
+              size: 26,
+            ),
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(color: theme.dividerTheme.color, height: 1.0),
@@ -79,14 +85,32 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                 ExpenseTrendChartCard(
                   timeFrame: 'Daily',
                   title: 'Expense (Today)',
-                  amount: _formatAmount(provider.todayExpense),
+                  amount: PrivacyMaskedText(
+                    amount: provider.todayExpense,
+                    isMasked: _localMasked,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                      fontFamily: GoogleFonts.workSans().fontFamily,
+                    ),
+                  ),
                   chartData: provider.dailyChartData,
                 )
               else if (_selectedTimeFrame == 'Weekly')
                 ExpenseTrendChartCard(
                   timeFrame: 'Weekly',
                   title: 'Expense (This Week)',
-                  amount: _formatAmount(provider.currentWeekExpense),
+                  amount: PrivacyMaskedText(
+                    amount: provider.currentWeekExpense,
+                    isMasked: _localMasked,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                      fontFamily: GoogleFonts.workSans().fontFamily,
+                    ),
+                  ),
                   trendPercentage:
                       '${provider.weeklyPercentageChange.toStringAsFixed(2)}% This Week',
                   chartData: provider.weeklyChartData,
@@ -95,7 +119,16 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                 ExpenseTrendChartCard(
                   timeFrame: 'Monthly',
                   title: 'Expense (${DateFormat('MMMM').format(DateTime.now())})',
-                  amount: _formatAmount(provider.currentMonthExpense),
+                  amount: PrivacyMaskedText(
+                    amount: provider.currentMonthExpense,
+                    isMasked: _localMasked,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                      fontFamily: GoogleFonts.workSans().fontFamily,
+                    ),
+                  ),
                   trendPercentage:
                       '${provider.monthlyPercentageChange.toStringAsFixed(2)}% This Month',
                   chartData: provider.monthlyChartData,
@@ -103,6 +136,19 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
               else if (_selectedTimeFrame == 'Quarterly')
                 ExpenseTrendChartCard(
                   timeFrame: 'Quarterly',
+                  title: 'Expense (This Quarter)',
+                  amount: PrivacyMaskedText(
+                    amount: provider.currentQuarterExpense,
+                    isMasked: _localMasked,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                      fontFamily: GoogleFonts.workSans().fontFamily,
+                    ),
+                  ),
+                  trendPercentage:
+                      '${provider.quarterlyPercentageChange.toStringAsFixed(2)}% This Quarter',
                   chartData: provider.quarterlyChartData,
                 ),
 
@@ -110,15 +156,35 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                 const SizedBox(height: 20),
                 ExpenseCategoriesBreakdownCard(
                   suffixText: '(This Month)',
-                  totalAmount: _formatAmount(provider.currentMonthExpense),
+                  totalAmount: PrivacyMaskedText(
+                    amount: provider.currentMonthExpense,
+                    isMasked: _localMasked,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                      fontFamily: GoogleFonts.workSans().fontFamily,
+                    ),
+                  ),
                   categories: provider.monthlyCategories,
+                  isMasked: _localMasked,
                 ),
               ] else if (_selectedTimeFrame == 'Quarterly') ...[
                 const SizedBox(height: 20),
                 ExpenseCategoriesBreakdownCard(
                   suffixText: '(This Quarter)',
-                  totalAmount: _formatAmount(provider.currentQuarterExpense),
+                  totalAmount: PrivacyMaskedText(
+                    amount: provider.currentQuarterExpense,
+                    isMasked: _localMasked,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                      fontFamily: GoogleFonts.workSans().fontFamily,
+                    ),
+                  ),
                   categories: provider.quarterlyCategories,
+                  isMasked: _localMasked,
                 ),
               ],
 
@@ -126,15 +192,8 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                 const SizedBox(height: 20),
                 ExpenseBreakdownCard(
                   suffixText: '(This Quarter)',
-                  items: provider.quarterlyBreakdowns.map((item) {
-                    final rawAmount = double.tryParse(item.amount) ?? 0.0;
-                    return ExpenseBreakdownItem(
-                      title: item.title,
-                      subtitle: item.subtitle,
-                      amount: context.formatAmount(rawAmount, listen: false),
-                      icon: item.icon,
-                    );
-                  }).toList(),
+                  items: provider.quarterlyBreakdowns,
+                  isMasked: _localMasked,
                 ),
               ],
               const SizedBox(height: 20),

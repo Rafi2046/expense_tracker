@@ -6,7 +6,7 @@ class TransactionContainerRow extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-  final String amount;
+  final Widget amount;
   final String? subAmountLabel;
 
   const TransactionContainerRow({
@@ -63,15 +63,7 @@ class TransactionContainerRow extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                amount,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.activeGreen,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
-                ),
-              ),
+              amount,
               if (subAmountLabel != null) ...[
                 const SizedBox(height: 4),
                 Text(

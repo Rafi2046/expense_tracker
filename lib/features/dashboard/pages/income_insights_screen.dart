@@ -1,8 +1,8 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/financial_health_banner.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_daily_section.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_weekly_section.dart';
@@ -23,6 +23,7 @@ class IncomeInsightsScreen extends StatefulWidget {
 
 class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
   String _selectedTimeFrame = 'Monthly';
+  static bool _localMasked = false;
   final List<String> _timeFrames = ['Daily', 'Weekly', 'Monthly', 'Quarterly'];
 
   Widget _buildSummaryCard(IncomeAnalyticsProvider analytics) {
@@ -33,7 +34,13 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
         final sign = isPositive ? '+' : '';
         return IncomeSummaryCard(
           label: 'Total Daily Income',
-          amount: '${context.currencySymbol}${analytics.todayIncome.toStringAsFixed(2)}',
+          amount: PrivacyMaskedText(
+            amount: analytics.todayIncome,
+            style: AppTextStyles.summaryCardValue,
+            isMasked: _localMasked,
+          ),
+          isMasked: _localMasked,
+          onToggleMask: () => setState(() => _localMasked = !_localMasked),
           showDivider: true,
           bottomContent: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -77,7 +84,13 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
         final sign = isPositive ? '+' : '';
         return IncomeSummaryCard(
           label: 'Total Weekly Income',
-          amount: '${context.currencySymbol}${analytics.currentWeekIncome.toStringAsFixed(2)}',
+          amount: PrivacyMaskedText(
+            amount: analytics.currentWeekIncome,
+            style: AppTextStyles.summaryCardValue,
+            isMasked: _localMasked,
+          ),
+          isMasked: _localMasked,
+          onToggleMask: () => setState(() => _localMasked = !_localMasked),
           showDivider: true,
           bottomContent: Column(
             children: [
@@ -94,8 +107,9 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
-                  Text(
-                    '${context.currencySymbol}${avgDaily.toStringAsFixed(2)}',
+                  PrivacyMaskedText(
+                    amount: avgDaily,
+                    isMasked: _localMasked,
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
@@ -156,7 +170,13 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
         final progress = (monthOfQuarter - 1) / 3.0 + (dayOfMonth / 90.0);
         return IncomeSummaryCard(
           label: 'Total Quarterly Income',
-          amount: '${context.currencySymbol}${quarterlyIncome.toStringAsFixed(2)}',
+          amount: PrivacyMaskedText(
+            amount: quarterlyIncome,
+            style: AppTextStyles.summaryCardValue,
+            isMasked: _localMasked,
+          ),
+          isMasked: _localMasked,
+          onToggleMask: () => setState(() => _localMasked = !_localMasked),
           percentageText: '$sign${change.toStringAsFixed(1)}% vs $prevQStr',
           showDivider: true,
           bottomContent: Column(
@@ -175,8 +195,9 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
-                  Text(
-                    '${context.currencySymbol}${projectedYearEnd.toStringAsFixed(2)}',
+                  PrivacyMaskedText(
+                    amount: projectedYearEnd,
+                    isMasked: _localMasked,
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
@@ -210,7 +231,13 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
         final sign = isPositive ? '+' : '';
         return IncomeSummaryCard(
           label: 'Total Monthly Income',
-          amount: '${isPositive ? '+' : ''}${context.currencySymbol}${analytics.currentMonthIncome.toStringAsFixed(2)}',
+          amount: PrivacyMaskedText(
+            amount: analytics.currentMonthIncome,
+            style: AppTextStyles.summaryCardValue,
+            isMasked: _localMasked,
+          ),
+          isMasked: _localMasked,
+          onToggleMask: () => setState(() => _localMasked = !_localMasked),
           percentageText: '$sign${change.toStringAsFixed(1)}%',
           compareText: 'vs. last month',
         );
@@ -220,14 +247,14 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
   Widget _buildTimeFrameContent() {
     switch (_selectedTimeFrame) {
       case 'Daily':
-        return const IncomeDailySection();
+        return IncomeDailySection(isMasked: _localMasked);
       case 'Weekly':
-        return const IncomeWeeklySection();
+        return IncomeWeeklySection(isMasked: _localMasked);
       case 'Quarterly':
-        return const IncomeQuarterlySection();
+        return IncomeQuarterlySection(isMasked: _localMasked);
       case 'Monthly':
       default:
-        return const IncomeMonthlySection();
+        return IncomeMonthlySection(isMasked: _localMasked);
     }
   }
 

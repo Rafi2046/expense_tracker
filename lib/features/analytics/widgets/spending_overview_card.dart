@@ -18,7 +18,7 @@ class SpendingDistributionItem {
 }
 
 class SpendingOverviewCard extends StatelessWidget {
-  final String totalAmount;
+  final Widget totalAmount;
   final List<SpendingDistributionItem> items;
 
   const SpendingOverviewCard({
@@ -142,14 +142,7 @@ class SpendingOverviewCard extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 2),
-                          Text(
-                            totalAmount,
-                            style: GoogleFonts.workSans(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: onSurface,
-                            ),
-                          ),
+                          totalAmount,
                         ],
                       ),
                     ),

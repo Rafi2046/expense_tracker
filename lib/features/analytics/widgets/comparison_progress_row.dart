@@ -1,4 +1,4 @@
-import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -7,6 +7,7 @@ class ComparisonProgressRow extends StatelessWidget {
   final double amount;
   final double progress;
   final Color progressColor;
+  final bool isMasked;
 
   const ComparisonProgressRow({
     super.key,
@@ -14,6 +15,7 @@ class ComparisonProgressRow extends StatelessWidget {
     required this.amount,
     required this.progress,
     required this.progressColor,
+    this.isMasked = false,
   });
 
   @override
@@ -35,11 +37,9 @@ class ComparisonProgressRow extends StatelessWidget {
                 color: isDark ? Colors.white60 : const Color(0xFF4A5568),
               ),
             ),
-            Text(
-              '${context.currencySymbol}${amount.toStringAsFixed(0).replaceAllMapped(
-                    RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                    (Match m) => '${m[1]},',
-                  )}',
+            PrivacyMaskedText(
+              amount: amount,
+              isMasked: isMasked,
               style: GoogleFonts.workSans(
                 fontSize: 12.5,
                 fontWeight: FontWeight.w700,

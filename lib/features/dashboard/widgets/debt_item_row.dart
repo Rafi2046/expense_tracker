@@ -2,7 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -11,12 +11,14 @@ class DebtItemRow extends StatelessWidget {
   final DebtItem item;
   final Color themeColor;
   final VoidCallback onEditTap;
+  final bool isMasked;
 
   const DebtItemRow({
     super.key,
     required this.item,
     required this.themeColor,
     required this.onEditTap,
+    this.isMasked = false,
   });
 
   Color _getAvatarBg(BuildContext context, String name) {
@@ -210,8 +212,9 @@ class DebtItemRow extends StatelessWidget {
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      context.formatAmount(item.amount),
+                    PrivacyMaskedText(
+                      amount: item.amount,
+                      isMasked: isMasked,
                       style: GoogleFonts.workSans(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,

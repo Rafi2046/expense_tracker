@@ -11,7 +11,9 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class LedgerTransactionList extends StatelessWidget {
-  const LedgerTransactionList({super.key});
+  final bool isMasked;
+
+  const LedgerTransactionList({super.key, this.isMasked = false});
 
   String _getGroupHeader(BuildContext context, DateTime dateTime, String locale) {
     final now = DateTime.now();
@@ -139,6 +141,7 @@ class LedgerTransactionList extends StatelessWidget {
               isIncome: tx.isIncome,
               icon: tx.isIncome ? Symbols.arrow_downward : Symbols.arrow_upward,
               incomeMonth: tx.incomeMonth,
+              isMasked: isMasked,
               onTap: () {
                 AddTransactionSheet.show(
                   context: context,

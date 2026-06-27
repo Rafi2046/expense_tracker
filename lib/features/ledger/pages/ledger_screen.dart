@@ -18,6 +18,7 @@ class LedgerScreen extends StatefulWidget {
 }
 
 class _LedgerScreenState extends State<LedgerScreen> {
+  static bool _localMasked = false;
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -99,7 +100,10 @@ class _LedgerScreenState extends State<LedgerScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Stats Summary Cards (Income vs Expense + Net Balance)
-              const LedgerStatsCards(),
+              LedgerStatsCards(
+                isMasked: _localMasked,
+                onToggleMask: () => setState(() => _localMasked = !_localMasked),
+              ),
               const SizedBox(height: AppSpacing.s20),
 
               // Month Selector Slider
@@ -179,7 +183,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
                 ],
               ),
 
-              LedgerTransactionList(),
+              LedgerTransactionList(isMasked: _localMasked),
             ],
           ),
         ),

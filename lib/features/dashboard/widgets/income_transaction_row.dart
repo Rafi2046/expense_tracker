@@ -6,7 +6,7 @@ class IncomeTransactionRow extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-  final String amount;
+  final Widget amount;
   final String status;
 
   const IncomeTransactionRow({
@@ -69,15 +69,7 @@ class IncomeTransactionRow extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                amount,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.activeGreen,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
-                ),
-              ),
+              amount,
               const SizedBox(height: 4),
               Text(
                 status.toUpperCase(),

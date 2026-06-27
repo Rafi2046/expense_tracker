@@ -8,17 +8,18 @@ class MonthlyComparisonCard extends StatelessWidget {
   final double currentAmount;
   final double previousAmount;
   final String netChangeText;
+  final bool isMasked;
 
   const MonthlyComparisonCard({
     super.key,
     required this.currentAmount,
     required this.previousAmount,
     required this.netChangeText,
+    this.isMasked = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Calculate progress values relative to the maximum of the two amounts to prevent overflow.
     final maxAmount = currentAmount > previousAmount ? currentAmount : previousAmount;
     final currentProgress = maxAmount > 0 ? currentAmount / maxAmount : 0.0;
     final previousProgress = maxAmount > 0 ? previousAmount / maxAmount : 0.0;
@@ -47,7 +48,6 @@ class MonthlyComparisonCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
           Text(
             'Monthly Comparison',
             style: GoogleFonts.workSans(
@@ -66,32 +66,30 @@ class MonthlyComparisonCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          // Current Month Row Info
           ComparisonProgressRow(
             label: 'Current Month',
             amount: currentAmount,
             progress: currentProgress,
             progressColor: AppColors.activeGreen,
+            isMasked: isMasked,
           ),
           const SizedBox(height: 14),
 
-          // Previous Month Row Info
           ComparisonProgressRow(
             label: 'Previous Month',
             amount: previousAmount,
             progress: previousProgress,
             progressColor: isDark ? Colors.grey.shade700 : const Color(0xFFB3C5B9),
+            isMasked: isMasked,
           ),
           const SizedBox(height: 16),
 
-          // Divider
           Divider(
             color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF1F1F1),
             height: 1,
           ),
           const SizedBox(height: 12),
 
-          // Net Change Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

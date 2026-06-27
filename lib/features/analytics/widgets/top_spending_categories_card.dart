@@ -5,10 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 
 class TopSpendingCategoriesCard extends StatelessWidget {
   final List<TopSpendingCategoryItem> items;
+  final bool isMasked;
 
   const TopSpendingCategoriesCard({
     super.key,
     required this.items,
+    this.isMasked = false,
   });
 
   @override
@@ -39,7 +41,6 @@ class TopSpendingCategoriesCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
           Text(
             context.translate('top_spending_categories'),
             style: GoogleFonts.workSans(
@@ -57,7 +58,6 @@ class TopSpendingCategoriesCard extends StatelessWidget {
             ),
           ),
 
-          // Categories List
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -70,7 +70,7 @@ class TopSpendingCategoriesCard extends StatelessWidget {
             ),
             itemBuilder: (context, index) {
               final item = items[index];
-              return TopSpendingCategoryRow(item: item);
+              return TopSpendingCategoryRow(item: item, isMasked: isMasked);
             },
           ),
         ],

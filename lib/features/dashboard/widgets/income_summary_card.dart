@@ -2,15 +2,18 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class IncomeSummaryCard extends StatelessWidget {
   final String label;
-  final String amount;
+  final Widget amount;
   final String? percentageText;
   final String? compareText;
   final Widget? bottomContent;
   final bool showDivider;
+  final bool isMasked;
+  final VoidCallback onToggleMask;
 
   const IncomeSummaryCard({
     super.key,
@@ -20,6 +23,8 @@ class IncomeSummaryCard extends StatelessWidget {
     this.compareText,
     this.bottomContent,
     this.showDivider = false,
+    required this.isMasked,
+    required this.onToggleMask,
   });
 
   @override
@@ -37,9 +42,26 @@ class IncomeSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label.toUpperCase(), style: AppTextStyles.summaryCardLabel),
+          Row(
+            children: [
+              Expanded(
+                child: Text(label.toUpperCase(), style: AppTextStyles.summaryCardLabel),
+              ),
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  onToggleMask();
+                },
+                child: Icon(
+                  isMasked ? Symbols.visibility_off : Symbols.visibility,
+                  size: 18,
+                  color: isDark ? Colors.white38 : AppColors.textMuted,
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 8),
-          Text(amount, style: AppTextStyles.summaryCardValue),
+          amount,
           if (percentageText != null && compareText != null) ...[
             const SizedBox(height: 12),
             Row(

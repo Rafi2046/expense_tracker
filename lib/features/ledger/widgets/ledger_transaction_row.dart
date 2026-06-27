@@ -1,6 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/utils/category_utils.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,6 +14,7 @@ class LedgerTransactionRow extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback? onDelete;
   final String? incomeMonth;
+  final bool isMasked;
 
   const LedgerTransactionRow({
     super.key,
@@ -26,6 +27,7 @@ class LedgerTransactionRow extends StatelessWidget {
     required this.onTap,
     this.onDelete,
     this.incomeMonth,
+    this.isMasked = false,
   });
 
   String _toTitleCase(String text) {
@@ -39,16 +41,6 @@ class LedgerTransactionRow extends StatelessWidget {
     final amountPrefix = isIncome ? '+ ' : '- ';
     final catColor = CategoryUtils.getColor(category);
     final catIcon = CategoryUtils.getIcon(category);
-    
-    final formattedAmount = (amount % 1 == 0)
-        ? amount.toStringAsFixed(0).replaceAllMapped(
-              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-              (Match m) => '${m[1]},',
-            )
-        : amount.toStringAsFixed(2).replaceAllMapped(
-              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-              (Match m) => '${m[1]},',
-            );
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
@@ -75,7 +67,6 @@ class LedgerTransactionRow extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              // Left Section: Category icon circle
               Container(
                 width: 40,
                 height: 40,
@@ -92,7 +83,6 @@ class LedgerTransactionRow extends StatelessWidget {
               ),
               const SizedBox(width: 12),
 
-              // Middle Section: Category Title & Note Subtitle
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,9 +111,17 @@ class LedgerTransactionRow extends StatelessWidget {
               ),
               const SizedBox(width: 8),
 
-              // Right Section: Amount
               Text(
-                '$amountPrefix${context.currencySymbol}$formattedAmount',
+                amountPrefix,
+                style: GoogleFonts.workSans(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: amountColor,
+                ),
+              ),
+              PrivacyMaskedText(
+                amount: amount,
+                isMasked: isMasked,
                 style: GoogleFonts.workSans(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,

@@ -15,7 +15,7 @@ class ExpenseChartData {
 class ExpenseTrendChartCard extends StatelessWidget {
   final String timeFrame;
   final String? title;
-  final String? amount;
+  final Widget? amount;
   final String? trendPercentage;
   final List<ExpenseChartData> chartData;
 
@@ -31,7 +31,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final showHeader = timeFrame != 'Quarterly';
+    final showHeader = title != null || amount != null || trendPercentage != null;
 
     // Configure Y-Axis based on selected timeframe
     double minimum = 0;
@@ -80,37 +80,36 @@ class ExpenseTrendChartCard extends StatelessWidget {
         children: [
           if (showHeader) ...[
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (title != null)
-                      Text(
-                        title!,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.textMuted,
-                          fontFamily: GoogleFonts.workSans().fontFamily,
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (title != null)
+                        Text(
+                          title!,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.textMuted,
+                            fontFamily: GoogleFonts.workSans().fontFamily,
+                          ),
                         ),
-                      ),
-                    const SizedBox(height: 4),
-                    if (amount != null)
-                      Text(
-                        amount!,
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onSurface,
-                          fontFamily: GoogleFonts.workSans().fontFamily,
+                      const SizedBox(height: 4),
+                      if (amount != null)
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: amount!,
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
-                if (trendPercentage != null)
+                if (trendPercentage != null) ...[
+                  const SizedBox(width: 12),
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(
                         Symbols.arrow_downward,
@@ -129,6 +128,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                ],
               ],
             ),
             const SizedBox(height: 24),
@@ -141,7 +141,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
               primaryXAxis: CategoryAxis(
                 majorGridLines: const MajorGridLines(width: 0),
                 axisLine: const AxisLine(width: 0),
-                labelRotation: -45, // Tilted labels as in the screenshots
+                labelRotation: -45,
                 labelStyle: TextStyle(
                   fontSize: 10,
                   color: AppColors.textMuted,
@@ -153,10 +153,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                 majorGridLines: MajorGridLines(
                   width: 1,
                   color: theme.dividerTheme.color ?? const Color(0xFFEEEEEE),
-                  dashArray: const <double>[
-                    4,
-                    4,
-                  ], // Dashed grid lines as in screenshots
+                  dashArray: const <double>[4, 4],
                 ),
                 axisLine: const AxisLine(width: 0),
                 majorTickLines: const MajorTickLines(width: 0),
@@ -201,7 +198,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                     topLeft: Radius.circular(2),
                     topRight: Radius.circular(2),
                   ),
-                  width: 0.15, // Thin bars to match screenshot design
+                  width: 0.15,
                 ),
               ],
             ),

@@ -1,5 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -18,14 +18,16 @@ class CategoryBreakdownItem {
 
 class ExpenseCategoriesBreakdownCard extends StatefulWidget {
   final String suffixText;
-  final String totalAmount;
+  final Widget totalAmount;
   final List<CategoryBreakdownItem> categories;
+  final bool isMasked;
 
   const ExpenseCategoriesBreakdownCard({
     super.key,
     required this.suffixText,
     required this.totalAmount,
     required this.categories,
+    required this.isMasked,
   });
 
   @override
@@ -135,15 +137,7 @@ class _ExpenseCategoriesBreakdownCardState
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        widget.totalAmount,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onSurface,
-                          fontFamily: GoogleFonts.workSans().fontFamily,
-                        ),
-                      ),
+                      widget.totalAmount,
                     ],
                   ),
                 ],
@@ -182,8 +176,9 @@ class _ExpenseCategoriesBreakdownCardState
                       ),
                     ),
                   ),
-                  Text(
-                    '${context.currencySymbol} ${item.amount.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
+                  PrivacyMaskedText(
+                    amount: item.amount,
+                    isMasked: widget.isMasked,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
