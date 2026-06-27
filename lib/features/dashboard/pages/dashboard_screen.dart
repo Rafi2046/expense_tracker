@@ -28,8 +28,10 @@ import 'package:expense_tracker/features/reports/pages/view_reports_screen.dart'
 import 'package:expense_tracker/features/dashboard/pages/total_balance_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -46,6 +48,7 @@ class DashboardScreen extends StatelessWidget {
 
     final double totalBalance = balanceProvider.allTimeTotalBalance;
     final String currentMonthName = DateFormat('MMMM').format(DateTime.now());
+    final isLoading = txProvider.isLoading;
 
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.userChanges(),
@@ -98,202 +101,217 @@ class DashboardScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Row 1: Income and Expense Card
-                  IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: DashboardStatCard(
-                            title:
-                                '${context.translate('income')} ($currentMonthName)',
-                            value: PrivacyMaskedText(
-                              amount: txProvider.monthlyIncome,
-                              style: AppTextStyles.cardValueGreen.copyWith(fontSize: 17),
+                  Skeletonizer(
+                    enabled: isLoading,
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: DashboardStatCard(
+                              title:
+                                  '${context.translate('income')} ($currentMonthName)',
+                              value: PrivacyMaskedText(
+                                amount: txProvider.monthlyIncome,
+                                style: AppTextStyles.cardValueGreen.copyWith(fontSize: 17),
+                              ),
+                              percentageText: '+12%',
+                              isPositive: true,
+                              isTrend: true,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const IncomeInsightsScreen(),
+                                  ),
+                                );
+                              },
                             ),
-                            percentageText: '+12%',
-                            isPositive: true,
-                            isTrend: true,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const IncomeInsightsScreen(),
-                                ),
-                              );
-                            },
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: DashboardStatCard(
-                            title:
-                                '${context.translate('expense')} ($currentMonthName)',
-                            value: PrivacyMaskedText(
-                              amount: txProvider.monthlyExpense,
-                              style: AppTextStyles.cardValueRed.copyWith(fontSize: 17),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: DashboardStatCard(
+                              title:
+                                  '${context.translate('expense')} ($currentMonthName)',
+                              value: PrivacyMaskedText(
+                                amount: txProvider.monthlyExpense,
+                                style: AppTextStyles.cardValueRed.copyWith(fontSize: 17),
+                              ),
+                              percentageText: '-5%',
+                              isPositive: false,
+                              isTrend: true,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ExpenseInsightsScreen(),
+                                  ),
+                                );
+                              },
                             ),
-                            percentageText: '-5%',
-                            isPositive: false,
-                            isTrend: true,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ExpenseInsightsScreen(),
-                                ),
-                              );
-                            },
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
 
                   // Row 2: To Receive and To Give Card
-                  IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: DashboardStatCard(
-                            title: context.translate('to_receive'),
-                            value: PrivacyMaskedText(
-                              amount: debtProvider.totalToReceive,
-                              style: AppTextStyles.cardValueGreen.copyWith(fontSize: 17),
+                  Skeletonizer(
+                    enabled: isLoading,
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: DashboardStatCard(
+                              title: context.translate('to_receive'),
+                              value: PrivacyMaskedText(
+                                amount: debtProvider.totalToReceive,
+                                style: AppTextStyles.cardValueGreen.copyWith(fontSize: 17),
+                              ),
+                              statusText: Text(
+                                '${debtProvider.toReceiveUnpaid.length} ${context.translate('pending')}',
+                                style: AppTextStyles.cardStatusText.copyWith(fontSize: 10.5),
+                              ),
+                              isPositive: true,
+                              isTrend: false,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ToReceiveScreen(),
+                                  ),
+                                );
+                              },
                             ),
-                            statusText: Text(
-                              '${debtProvider.toReceiveUnpaid.length} ${context.translate('pending')}',
-                              style: AppTextStyles.cardStatusText.copyWith(fontSize: 10.5),
-                            ),
-                            isPositive: true,
-                            isTrend: false,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ToReceiveScreen(),
-                                ),
-                              );
-                            },
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: DashboardStatCard(
-                            title: context.translate('to_give'),
-                            value: PrivacyMaskedText(
-                              amount: debtProvider.totalToGive,
-                              style: AppTextStyles.cardValueRed.copyWith(fontSize: 17),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: DashboardStatCard(
+                              title: context.translate('to_give'),
+                              value: PrivacyMaskedText(
+                                amount: debtProvider.totalToGive,
+                                style: AppTextStyles.cardValueRed.copyWith(fontSize: 17),
+                              ),
+                              statusText: Text(
+                                '${debtProvider.toGiveUnpaid.length} ${context.translate('pending')}',
+                                style: AppTextStyles.cardStatusText.copyWith(fontSize: 10.5),
+                              ),
+                              isPositive: false,
+                              isTrend: false,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ToGiveScreen(),
+                                  ),
+                                );
+                              },
                             ),
-                            statusText: Text(
-                              '${debtProvider.toGiveUnpaid.length} ${context.translate('pending')}',
-                              style: AppTextStyles.cardStatusText.copyWith(fontSize: 10.5),
-                            ),
-                            isPositive: false,
-                            isTrend: false,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ToGiveScreen(),
-                                ),
-                              );
-                            },
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
 
                   // Row 3: Total Balance and Reports Card
-                  IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: DashboardStatCard(
-                            title:
-                                '${context.translate('cash')} & ${context.translate('bank')}',
-                            value: Text(
-                              context.translate('total_balance'),
-                              style: AppTextStyles.cardValueGreen.copyWith(fontSize: 17),
+                  Skeletonizer(
+                    enabled: isLoading,
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: DashboardStatCard(
+                              title:
+                                  '${context.translate('cash')} & ${context.translate('bank')}',
+                              value: Text(
+                                context.translate('total_balance'),
+                                style: AppTextStyles.cardValueGreen.copyWith(fontSize: 17),
+                              ),
+                              statusText: PrivacyMaskedText(
+                                amount: totalBalance,
+                                style: AppTextStyles.cardStatusText.copyWith(fontSize: 10.5),
+                              ),
+                              isPositive: true,
+                              isTrend: false,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const TotalBalanceScreen(),
+                                  ),
+                                );
+                              },
                             ),
-                            statusText: PrivacyMaskedText(
-                              amount: totalBalance,
-                              style: AppTextStyles.cardStatusText.copyWith(fontSize: 10.5),
-                            ),
-                            isPositive: true,
-                            isTrend: false,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const TotalBalanceScreen(),
-                                ),
-                              );
-                            },
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: DashboardStatCard(
-                            title: 'Transactions, Parties, In...',
-                            value: Text(
-                              context.translate('reports'),
-                              style: AppTextStyles.cardValueGreen.copyWith(fontSize: 17),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: DashboardStatCard(
+                              title: 'Transactions, Parties, In...',
+                              value: Text(
+                                context.translate('reports'),
+                                style: AppTextStyles.cardValueGreen.copyWith(fontSize: 17),
+                              ),
+                              isPositive: true,
+                              isTrend: false,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ViewReportsScreen(),
+                                  ),
+                                );
+                              },
                             ),
-                            isPositive: true,
-                            isTrend: false,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ViewReportsScreen(),
-                                ),
-                              );
-                            },
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
-                  BudgetSummaryCard(monthlyExpense: txProvider.monthlyExpense),
+                  Skeletonizer(
+                    enabled: isLoading,
+                    child: BudgetSummaryCard(monthlyExpense: txProvider.monthlyExpense),
+                  ),
                   const SizedBox(height: 24),
                   const DashboardShortcutsCard(),
                   const SizedBox(height: 24),
-                  DashboardRecentActivity(
-                    items: txProvider.transactions.take(5).map((tx) {
-                      return RecentActivityItem(
-                        title: tx.note.isEmpty ? tx.category : tx.note,
-                        category: tx.category,
-                        timeText: _getRelativeTime(tx.dateTime),
-                        amount: tx.amount,
-                        isIncome: tx.isIncome,
-                        icon: _getCategoryIcon(tx.category),
-                      );
-                    }).toList(),
-                    onViewAllTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RecentActivityScreen(),
-                        ),
-                      );
-                    },
-                    onItemTap: (item) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Tapped activity: ${item.title}'),
-                        ),
-                      );
-                    },
-                  ),
+                  if (isLoading)
+                    _recentActivitySkeleton()
+                  else
+                    DashboardRecentActivity(
+                      items: txProvider.transactions.take(5).map((tx) {
+                        return RecentActivityItem(
+                          title: tx.note.isEmpty ? tx.category : tx.note,
+                          category: tx.category,
+                          timeText: _getRelativeTime(tx.dateTime),
+                          amount: tx.amount,
+                          isIncome: tx.isIncome,
+                          icon: _getCategoryIcon(tx.category),
+                        );
+                      }).toList(),
+                      onViewAllTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RecentActivityScreen(),
+                          ),
+                        );
+                      },
+                      onItemTap: (item) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Tapped activity: ${item.title}'),
+                          ),
+                        );
+                      },
+                    ),
                   const SizedBox(height: 20),
                   DashboardSpendingCategories(
                     categoryName: expenseAnalytics.monthlyCategories.isNotEmpty
@@ -374,4 +392,97 @@ class DashboardScreen extends StatelessWidget {
         return Symbols.receipt_long;
     }
   }
+}
+
+Widget _recentActivitySkeleton() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Recent Activity',
+              style: GoogleFonts.workSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            Text(
+              'View All',
+              style: GoogleFonts.workSans(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 10),
+      Skeletonizer(
+        enabled: true,
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Column(
+            children: List.generate(5, (i) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14.0,
+                  vertical: 11.0,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Transaction Title',
+                            style: GoogleFonts.workSans(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Category  •  Today',
+                            style: GoogleFonts.workSans(
+                              fontSize: 10.5,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      '+৳0,000',
+                      style: GoogleFonts.workSans(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
+        ),
+      ),
+    ],
+  );
 }
