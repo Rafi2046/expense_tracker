@@ -126,7 +126,9 @@ class TopSpendingCategoryRow extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      '${item.percentage.toStringAsFixed(0)}%',
+                      item.percentage < 1
+                          ? '${item.percentage.toStringAsFixed(1)}%'
+                          : '${item.percentage.toStringAsFixed(0)}%',
                       style: GoogleFonts.workSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
