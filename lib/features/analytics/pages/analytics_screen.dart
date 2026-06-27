@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -20,6 +21,17 @@ class AnalyticsScreen extends StatefulWidget {
 
 class _AnalyticsScreenState extends State<AnalyticsScreen> {
   static bool _localMasked = false;
+  bool _isScreenLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (mounted) {
+        setState(() { _isScreenLoading = false; });
+      }
+    });
+  }
 
   static const _colorPalette = [
     Color(0xFF1EA97C),
@@ -72,59 +84,72 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   @override
   Widget build(BuildContext context) {
     final txProvider = context.watch<TransactionProvider>();
-    final totalExpense = txProvider.monthlyExpense;
-    final breakdown = txProvider.categoryExpenseBreakdown;
-    final prevExpense = txProvider.previousMonthExpense;
-    final changePct = txProvider.expenseChangePercent;
+    final isLoading = txProvider.isLoading || _isScreenLoading;
 
-    const int maxSlices = 11;
-    final sorted = breakdown.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
+    final double totalExpense = isLoading ? 0.0 : txProvider.monthlyExpense;
+    final double prevExpense = isLoading ? 0.0 : txProvider.previousMonthExpense;
+    final String changeText = isLoading ? '+0.0%' : () {
+      final pct = txProvider.expenseChangePercent;
+      return '${pct >= 0 ? '+' : ''}${pct.toStringAsFixed(1)}%';
+    }();
 
-    final List<MapEntry<String, double>> top;
-    final double othersTotal;
-    if (sorted.length <= maxSlices) {
-      top = sorted;
-      othersTotal = 0;
-    } else {
-      top = sorted.take(maxSlices - 1).toList();
-      othersTotal = sorted.skip(maxSlices - 1).fold(0.0, (s, e) => s + e.value);
-    }
+    final List<SpendingDistributionItem> spendingItems = isLoading
+        ? List.generate(4, (i) => SpendingDistributionItem(
+            category: ['Food', 'Transport', 'Shopping', 'Entertainment'][i],
+            percentage: 0.0,
+            amount: 0.0,
+            color: _colorPalette[i],
+          ))
+        : () {
+      const int maxSlices = 11;
+      final sorted = txProvider.categoryExpenseBreakdown.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
 
-    final spendingItems = <SpendingDistributionItem>[];
-    for (int i = 0; i < top.length; i++) {
-      final e = top[i];
-      final pct = totalExpense > 0 ? (e.value / totalExpense) * 100 : 0.0;
-      spendingItems.add(SpendingDistributionItem(
-        category: e.key,
-        percentage: pct,
-        amount: e.value,
-        color: _categoryColor(e.key, i),
-      ));
-    }
-    if (othersTotal > 0) {
-      final othersPct = totalExpense > 0 ? (othersTotal / totalExpense) * 100 : 0.0;
-      spendingItems.add(SpendingDistributionItem(
-        category: 'Others',
-        percentage: othersPct,
-        amount: othersTotal,
-        color: _colorPalette.last,
-      ));
-    }
+      final List<MapEntry<String, double>> top;
+      final double othersTotal;
+      if (sorted.length <= maxSlices) {
+        top = sorted;
+        othersTotal = 0;
+      } else {
+        top = sorted.take(maxSlices - 1).toList();
+        othersTotal = sorted.skip(maxSlices - 1).fold(0.0, (s, e) => s + e.value);
+      }
 
-    final changeSign = changePct >= 0 ? '+' : '';
-    final changeText = '$changeSign${changePct.toStringAsFixed(1)}%';
+      final items = <SpendingDistributionItem>[];
+      for (int i = 0; i < top.length; i++) {
+        final e = top[i];
+        items.add(SpendingDistributionItem(
+          category: e.key,
+          percentage: txProvider.monthlyExpense > 0 ? (e.value / txProvider.monthlyExpense) * 100 : 0.0,
+          amount: e.value,
+          color: _categoryColor(e.key, i),
+        ));
+      }
+      if (othersTotal > 0) {
+        items.add(SpendingDistributionItem(
+          category: 'Others',
+          percentage: txProvider.monthlyExpense > 0 ? (othersTotal / txProvider.monthlyExpense) * 100 : 0.0,
+          amount: othersTotal,
+          color: _colorPalette.last,
+        ));
+      }
+      return items;
+    }();
 
-    final topItems = txProvider.topSpendingCategories(5).map((t) {
-      final (name, amount, pct) = t;
-      return TopSpendingCategoryItem(
-        title: name,
-        subtitle: '',
-        amount: amount,
-        percentage: pct,
-        icon: _categoryIcon(name),
-      );
-    }).toList();
+    final List<TopSpendingCategoryItem> topItems = isLoading
+        ? List.generate(4, (i) => TopSpendingCategoryItem(
+            title: ['Food', 'Transport', 'Shopping', 'Entertainment'][i],
+            subtitle: '',
+            amount: 0.0,
+            percentage: 0.0,
+            icon: _categoryIcon(['Food', 'Transport', 'Shopping', 'Entertainment'][i]),
+          ))
+        : txProvider.topSpendingCategories(5).map((t) {
+            final (name, amount, pct) = t;
+            return TopSpendingCategoryItem(
+              title: name, subtitle: '', amount: amount, percentage: pct, icon: _categoryIcon(name),
+            );
+          }).toList();
 
     final onSurface = Theme.of(context).colorScheme.onSurface;
 
@@ -168,35 +193,38 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 18.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SpendingOverviewCard(
-                  totalAmount: PrivacyMaskedText(
-                    amount: totalExpense,
-                    isMasked: _localMasked,
-                    style: GoogleFonts.workSans(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: onSurface,
+            child: Skeletonizer(
+              enabled: isLoading,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SpendingOverviewCard(
+                    totalAmount: PrivacyMaskedText(
+                      amount: totalExpense,
+                      isMasked: _localMasked,
+                      style: GoogleFonts.workSans(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: onSurface,
+                      ),
                     ),
+                    items: spendingItems,
                   ),
-                  items: spendingItems,
-                ),
-                const SizedBox(height: 18),
-                MonthlyComparisonCard(
-                  currentAmount: totalExpense,
-                  previousAmount: prevExpense,
-                  netChangeText: changeText,
-                  isMasked: _localMasked,
-                ),
-                const SizedBox(height: 18),
-                TopSpendingCategoriesCard(
-                  items: topItems,
-                  isMasked: _localMasked,
-                ),
-                const SizedBox(height: 100),
-              ],
+                  const SizedBox(height: 18),
+                  MonthlyComparisonCard(
+                    currentAmount: totalExpense,
+                    previousAmount: prevExpense,
+                    netChangeText: changeText,
+                    isMasked: _localMasked,
+                  ),
+                  const SizedBox(height: 18),
+                  TopSpendingCategoriesCard(
+                    items: topItems,
+                    isMasked: _localMasked,
+                  ),
+                  const SizedBox(height: 100),
+                ],
+              ),
             ),
           ),
         ),

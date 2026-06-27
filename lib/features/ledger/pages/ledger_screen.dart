@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class LedgerScreen extends StatefulWidget {
   const LedgerScreen({super.key});
@@ -19,7 +20,16 @@ class LedgerScreen extends StatefulWidget {
 
 class _LedgerScreenState extends State<LedgerScreen> {
   static bool _localMasked = false;
+  bool _isScreenLoading = true;
   final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (mounted) setState(() => _isScreenLoading = false);
+    });
+  }
 
   @override
   void dispose() {
@@ -31,6 +41,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
   Widget build(BuildContext context) {
     final provider = context.watch<TransactionProvider>();
     final isSearching = provider.isSearching;
+    final isLoading = provider.isLoading || _isScreenLoading;
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final onSurface = Theme.of(context).colorScheme.onSurface;
@@ -96,95 +107,98 @@ class _LedgerScreenState extends State<LedgerScreen> {
             top: AppSpacing.p20,
             bottom: 120,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Stats Summary Cards (Income vs Expense + Net Balance)
-              LedgerStatsCards(
-                isMasked: _localMasked,
-                onToggleMask: () => setState(() => _localMasked = !_localMasked),
-              ),
-              const SizedBox(height: AppSpacing.s20),
+          child: Skeletonizer(
+            enabled: isLoading,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Stats Summary Cards (Income vs Expense + Net Balance)
+                LedgerStatsCards(
+                  isMasked: _localMasked,
+                  onToggleMask: () => setState(() => _localMasked = !_localMasked),
+                ),
+                const SizedBox(height: AppSpacing.s20),
 
-              // Month Selector Slider
-              const LedgerMonthSelector(),
-              const SizedBox(height: 12),
+                // Month Selector Slider
+                const LedgerMonthSelector(),
+                const SizedBox(height: 12),
 
-              // Inline Add Income & Add Expense Buttons Row
-              Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 46,
-                      child: TextButton.icon(
-                        icon: const Icon(
-                          Symbols.account_balance_wallet,
-                          size: 16,
-                          color: Color(0xFF006C49),
-                        ),
-                        label: Text(
-                          context.translate('add_income'),
-                          style: GoogleFonts.workSans(
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF006C49),
+                // Inline Add Income & Add Expense Buttons Row
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 46,
+                        child: TextButton.icon(
+                          icon: const Icon(
+                            Symbols.account_balance_wallet,
+                            size: 16,
+                            color: Color(0xFF006C49),
                           ),
-                        ),
-                        style: TextButton.styleFrom(
-                          backgroundColor: const Color(0xFFE6F3EE),
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                          label: Text(
+                            context.translate('add_income'),
+                            style: GoogleFonts.workSans(
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF006C49),
+                            ),
                           ),
+                          style: TextButton.styleFrom(
+                            backgroundColor: const Color(0xFFE6F3EE),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: () {
+                            AddTransactionSheet.show(
+                              context: context,
+                              isIncome: true,
+                            );
+                          },
                         ),
-                        onPressed: () {
-                          AddTransactionSheet.show(
-                            context: context,
-                            isIncome: true,
-                          );
-                        },
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: SizedBox(
-                      height: 46,
-                      child: TextButton.icon(
-                        icon: const Icon(
-                          Symbols.payments,
-                          size: 16,
-                          color: Color(0xFFD9383A),
-                        ),
-                        label: Text(
-                          context.translate('add_expense'),
-                          style: GoogleFonts.workSans(
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFD9383A),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: SizedBox(
+                        height: 46,
+                        child: TextButton.icon(
+                          icon: const Icon(
+                            Symbols.payments,
+                            size: 16,
+                            color: Color(0xFFD9383A),
                           ),
-                        ),
-                        style: TextButton.styleFrom(
-                          backgroundColor: const Color(0xFFFDECEC),
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                          label: Text(
+                            context.translate('add_expense'),
+                            style: GoogleFonts.workSans(
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFFD9383A),
+                            ),
                           ),
+                          style: TextButton.styleFrom(
+                            backgroundColor: const Color(0xFFFDECEC),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: () {
+                            AddTransactionSheet.show(
+                              context: context,
+                              isIncome: false,
+                            );
+                          },
                         ),
-                        onPressed: () {
-                          AddTransactionSheet.show(
-                            context: context,
-                            isIncome: false,
-                          );
-                        },
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
 
-              LedgerTransactionList(isMasked: _localMasked),
-            ],
+                LedgerTransactionList(isMasked: _localMasked, isLoading: isLoading),
+              ],
+            ),
           ),
         ),
       ),

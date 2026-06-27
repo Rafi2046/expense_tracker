@@ -12,8 +12,9 @@ import 'package:provider/provider.dart';
 
 class LedgerTransactionList extends StatelessWidget {
   final bool isMasked;
+  final bool isLoading;
 
-  const LedgerTransactionList({super.key, this.isMasked = false});
+  const LedgerTransactionList({super.key, this.isMasked = false, this.isLoading = false});
 
   String _getGroupHeader(BuildContext context, DateTime dateTime, String locale) {
     final now = DateTime.now();
@@ -35,6 +36,21 @@ class LedgerTransactionList extends StatelessWidget {
     final provider = context.watch<TransactionProvider>();
     final locale = context.watch<LanguageProvider>().currentLanguageCode;
     final filteredTransactions = provider.filteredTransactions;
+
+    if (isLoading) {
+      return Column(
+        children: List.generate(6, (i) => LedgerTransactionRow(
+          title: 'Loading transaction',
+          dateText: '12:00 PM',
+          category: 'Category',
+          amount: 0.0,
+          isIncome: i.isEven,
+          icon: i.isEven ? Symbols.arrow_downward : Symbols.arrow_upward,
+          isMasked: isMasked,
+          onTap: () {},
+        )),
+      );
+    }
 
     if (filteredTransactions.isEmpty) {
       return Center(

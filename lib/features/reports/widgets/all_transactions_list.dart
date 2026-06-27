@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
@@ -9,8 +10,9 @@ import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 
 class AllTransactionsList extends StatelessWidget {
   final bool isMasked;
+  final bool isLoading;
 
-  const AllTransactionsList({super.key, this.isMasked = false});
+  const AllTransactionsList({super.key, this.isMasked = false, this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +20,53 @@ class AllTransactionsList extends StatelessWidget {
     final filtered = reportsProvider.filteredTransactions;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
+    if (isLoading) {
+      return Skeletonizer(
+        enabled: true,
+        child: ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: 6,
+          separatorBuilder: (context, index) => const SizedBox(height: 10),
+          itemBuilder: (context, index) {
+            return Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: theme.cardColor,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Dummy Title Here',
+                        style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Category  •  01 Jan 2024',
+                        style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '৳0,000',
+                    style: AppTextStyles.reportTransactionTitle,
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+    }
 
     if (filtered.isEmpty) {
       return Center(

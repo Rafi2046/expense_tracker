@@ -85,6 +85,27 @@ class TransactionItem {
         profileId: json['profileId'] as String? ?? 'default_profile',
         partyName: json['partyName'] as String?,
       );
+
+  static List<TransactionItem> dummyList() {
+    final now = DateTime.now();
+    final categories = ['Food', 'Transport', 'Shopping', 'Entertainment', 'Bills', 'Income'];
+    final amounts = [250.0, 1200.0, 850.0, 450.0, 3000.0, 1500.0];
+    final notes = ['Lunch', 'Bus fare', 'New shoes', 'Movie night', 'Electricity bill', 'Monthly Salary'];
+    final incomes = [false, false, false, false, false, true];
+
+    return List.generate(6, (i) {
+      return TransactionItem(
+        id: 'skeleton_$i',
+        amount: amounts[i],
+        category: categories[i],
+        note: notes[i],
+        isIncome: incomes[i],
+        dateTime: now.subtract(Duration(days: i)),
+        paymentMethod: i.isEven ? 'Cash' : 'Bank',
+        partyName: i == 4 ? 'Rafi' : null,
+      );
+    });
+  }
 }
 
 class CategoryItem {

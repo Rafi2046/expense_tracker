@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
+import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/all_transactions_filter_bar.dart';
 import 'package:expense_tracker/features/reports/widgets/all_transactions_list.dart';
 import 'package:expense_tracker/features/reports/widgets/all_transactions_summary_grid.dart';
@@ -22,11 +23,21 @@ class AllTransactionsReportScreen extends StatefulWidget {
 
 class _AllTransactionsReportScreenState extends State<AllTransactionsReportScreen> {
   static bool _localMasked = false;
+  bool _isScreenLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (mounted) setState(() => _isScreenLoading = false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final provider = context.watch<ReportsProvider>();
+    final txProvider = context.watch<TransactionProvider>();
     final currencySymbol = context.currencySymbol;
     final dateFormat = DateFormat('dd MMM yyyy');
 
@@ -93,7 +104,10 @@ class _AllTransactionsReportScreenState extends State<AllTransactionsReportScree
                     style: AppTextStyles.reportSectionHeader.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   const SizedBox(height: 12),
-                  AllTransactionsList(isMasked: _localMasked),
+                  AllTransactionsList(
+                    isMasked: _localMasked,
+                    isLoading: txProvider.isLoading || _isScreenLoading,
+                  ),
                 ],
               ),
             ),

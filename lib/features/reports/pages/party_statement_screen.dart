@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
+import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_selector.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_view_toggle.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_content.dart';
@@ -21,10 +22,20 @@ class PartyStatementScreen extends StatefulWidget {
 
 class _PartyStatementScreenState extends State<PartyStatementScreen> {
   static bool _localMasked = false;
+  bool _isScreenLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (mounted) setState(() => _isScreenLoading = false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
+    final txProvider = context.watch<TransactionProvider>();
     final partyName = reportsProvider.selectedPartyNameForStatement;
     final theme = Theme.of(context);
     final dateFormat = DateFormat('dd MMM yyyy');
@@ -93,7 +104,10 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
                   const SizedBox(height: 16),
                   const PartyStatementProfileHeader(),
                   const SizedBox(height: 20),
-                  PartyStatementContent(isMasked: _localMasked),
+                  PartyStatementContent(
+                    isMasked: _localMasked,
+                    isLoading: txProvider.isLoading || (_isScreenLoading && partyName != null),
+                  ),
                 ],
               ),
             ),
