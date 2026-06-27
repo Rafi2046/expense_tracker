@@ -1,31 +1,14 @@
-import 'package:material_symbols_icons/symbols.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class OverallBalanceCard extends StatelessWidget {
   final double totalBalance;
-  final bool showBalances;
-  final VoidCallback onToggleBalances;
 
   const OverallBalanceCard({
     super.key,
     required this.totalBalance,
-    required this.showBalances,
-    required this.onToggleBalances,
   });
-
-  String _formatAmount(double val) {
-    final formatted = (val % 1 == 0)
-        ? val.toStringAsFixed(0).replaceAllMapped(
-              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-              (Match m) => '${m[1]},',
-            )
-        : val.toStringAsFixed(2).replaceAllMapped(
-              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-              (Match m) => '${m[1]},',
-            );
-    return 'Tk. $formatted';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,46 +30,25 @@ class OverallBalanceCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Overall Account Balance',
-                style: GoogleFonts.workSans(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white70,
-                  letterSpacing: 0.3,
-                ),
-              ),
-              const SizedBox(height: 6),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                child: Text(
-                  showBalances ? _formatAmount(totalBalance) : 'Tk. ••••',
-                  key: ValueKey<bool>(showBalances),
-                  style: GoogleFonts.workSans(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: showBalances ? 0.3 : 1.5,
-                  ),
-                ),
-              ),
-            ],
+          Text(
+            'Overall Account Balance',
+            style: GoogleFonts.workSans(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: Colors.white70,
+              letterSpacing: 0.3,
+            ),
           ),
-          Positioned(
-            right: 0,
-            top: 0,
-            child: GestureDetector(
-              onTap: onToggleBalances,
-              child: Icon(
-                showBalances ? Symbols.visibility : Symbols.visibility_off,
-                color: Colors.white70,
-                size: 18,
-              ),
+          const SizedBox(height: 6),
+          PrivacyMaskedText(
+            amount: totalBalance,
+            style: GoogleFonts.workSans(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         ],

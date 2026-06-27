@@ -2,35 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/pages/transaction_details_screen.dart';
 
 class AccountTransactionRow extends StatelessWidget {
   final Map<String, dynamic> item;
-  final bool showBalances;
 
   const AccountTransactionRow({
     super.key,
     required this.item,
-    required this.showBalances,
   });
-
-  String _formatAmount(double val) {
-    final formatted = (val % 1 == 0)
-        ? val
-              .toStringAsFixed(0)
-              .replaceAllMapped(
-                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                (Match m) => '${m[1]},',
-              )
-        : val
-              .toStringAsFixed(2)
-              .replaceAllMapped(
-                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                (Match m) => '${m[1]},',
-              );
-    return 'Tk. $formatted';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +53,7 @@ class AccountTransactionRow extends StatelessWidget {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Debt detail: $title - ${_formatAmount(amount)}'),
+                content: Text('Debt detail: $title - ${context.formatAmount(amount, listen: false)}'),
               ),
             );
           }
@@ -95,13 +78,26 @@ class AccountTransactionRow extends StatelessWidget {
                           : const Color(0xFFDC3545),
                     ),
                   ),
-                  Text(
-                    '$amountPrefix${_formatAmount(amount)}',
-                    style: GoogleFonts.workSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: amountColor,
-                    ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        amountPrefix,
+                        style: GoogleFonts.workSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: amountColor,
+                        ),
+                      ),
+                      PrivacyMaskedText(
+                        amount: amount,
+                        style: GoogleFonts.workSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: amountColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -131,13 +127,26 @@ class AccountTransactionRow extends StatelessWidget {
                       color: isDark ? Colors.white10 : const Color(0xFFE6F3EE),
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: Text(
-                      'Bal: ${showBalances ? _formatAmount(runningBal) : "Tk. ••••"}',
-                      style: GoogleFonts.workSans(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: isDark ? theme.primaryColor : const Color(0xFF006C49),
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Bal: ',
+                          style: GoogleFonts.workSans(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? theme.primaryColor : const Color(0xFF006C49),
+                          ),
+                        ),
+                        PrivacyMaskedText(
+                          amount: runningBal,
+                          style: GoogleFonts.workSans(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? theme.primaryColor : const Color(0xFF006C49),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

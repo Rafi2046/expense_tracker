@@ -1,9 +1,10 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/budget_provider.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
@@ -105,8 +106,9 @@ class DashboardScreen extends StatelessWidget {
                           child: DashboardStatCard(
                             title:
                                 '${context.translate('income')} ($currentMonthName)',
-                            value: context.formatAmount(
-                              txProvider.monthlyIncome,
+                            value: PrivacyMaskedText(
+                              amount: txProvider.monthlyIncome,
+                              style: AppTextStyles.cardValueGreen.copyWith(fontSize: 17),
                             ),
                             percentageText: '+12%',
                             isPositive: true,
@@ -127,8 +129,9 @@ class DashboardScreen extends StatelessWidget {
                           child: DashboardStatCard(
                             title:
                                 '${context.translate('expense')} ($currentMonthName)',
-                            value: context.formatAmount(
-                              txProvider.monthlyExpense,
+                            value: PrivacyMaskedText(
+                              amount: txProvider.monthlyExpense,
+                              style: AppTextStyles.cardValueRed.copyWith(fontSize: 17),
                             ),
                             percentageText: '-5%',
                             isPositive: false,
@@ -157,11 +160,14 @@ class DashboardScreen extends StatelessWidget {
                         Expanded(
                           child: DashboardStatCard(
                             title: context.translate('to_receive'),
-                            value: context.formatAmount(
-                              debtProvider.totalToReceive,
+                            value: PrivacyMaskedText(
+                              amount: debtProvider.totalToReceive,
+                              style: AppTextStyles.cardValueGreen.copyWith(fontSize: 17),
                             ),
-                            statusText:
-                                '${debtProvider.toReceiveUnpaid.length} ${context.translate('pending')}',
+                            statusText: Text(
+                              '${debtProvider.toReceiveUnpaid.length} ${context.translate('pending')}',
+                              style: AppTextStyles.cardStatusText.copyWith(fontSize: 10.5),
+                            ),
                             isPositive: true,
                             isTrend: false,
                             onTap: () {
@@ -178,11 +184,14 @@ class DashboardScreen extends StatelessWidget {
                         Expanded(
                           child: DashboardStatCard(
                             title: context.translate('to_give'),
-                            value: context.formatAmount(
-                              debtProvider.totalToGive,
+                            value: PrivacyMaskedText(
+                              amount: debtProvider.totalToGive,
+                              style: AppTextStyles.cardValueRed.copyWith(fontSize: 17),
                             ),
-                            statusText:
-                                '${debtProvider.toGiveUnpaid.length} ${context.translate('pending')}',
+                            statusText: Text(
+                              '${debtProvider.toGiveUnpaid.length} ${context.translate('pending')}',
+                              style: AppTextStyles.cardStatusText.copyWith(fontSize: 10.5),
+                            ),
                             isPositive: false,
                             isTrend: false,
                             onTap: () {
@@ -209,8 +218,14 @@ class DashboardScreen extends StatelessWidget {
                           child: DashboardStatCard(
                             title:
                                 '${context.translate('cash')} & ${context.translate('bank')}',
-                            value: context.translate('total_balance'),
-                            statusText: context.formatAmount(totalBalance),
+                            value: Text(
+                              context.translate('total_balance'),
+                              style: AppTextStyles.cardValueGreen.copyWith(fontSize: 17),
+                            ),
+                            statusText: PrivacyMaskedText(
+                              amount: totalBalance,
+                              style: AppTextStyles.cardStatusText.copyWith(fontSize: 10.5),
+                            ),
                             isPositive: true,
                             isTrend: false,
                             onTap: () {
@@ -227,7 +242,10 @@ class DashboardScreen extends StatelessWidget {
                         Expanded(
                           child: DashboardStatCard(
                             title: 'Transactions, Parties, In...',
-                            value: context.translate('reports'),
+                            value: Text(
+                              context.translate('reports'),
+                              style: AppTextStyles.cardValueGreen.copyWith(fontSize: 17),
+                            ),
                             isPositive: true,
                             isTrend: false,
                             onTap: () {

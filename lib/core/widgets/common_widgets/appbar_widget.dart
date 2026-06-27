@@ -1,8 +1,11 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/privacy_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class HomepageAppbarWidget extends StatelessWidget
     implements PreferredSizeWidget {
@@ -25,6 +28,7 @@ class HomepageAppbarWidget extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     final onSurface = Theme.of(context).colorScheme.onSurface;
+    final isMasked = context.watch<PrivacyProvider>().isMasked;
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
@@ -86,13 +90,29 @@ class HomepageAppbarWidget extends StatelessWidget
             ),
           ),
 
-          IconButton(
-            onPressed: notificationOnTap,
-            icon: const Icon(
-              Symbols.notifications_none,
-              color: AppColors.notificationIcon,
-              size: 26,
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  context.read<PrivacyProvider>().toggle();
+                },
+                icon: Icon(
+                  isMasked ? Symbols.visibility_off : Symbols.visibility,
+                  color: AppColors.notificationIcon,
+                  size: 26,
+                ),
+              ),
+              IconButton(
+                onPressed: notificationOnTap,
+                icon: const Icon(
+                  Symbols.notifications_none,
+                  color: AppColors.notificationIcon,
+                  size: 26,
+                ),
+              ),
+            ],
           ),
         ],
       ),

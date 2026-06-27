@@ -5,7 +5,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 class AccountCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  final String balance;
+  final Widget balance;
   final IconData icon;
   final Color iconBg;
   final Color iconColor;
@@ -84,14 +84,7 @@ class AccountCard extends StatelessWidget {
               ),
 
               // Balance
-              Text(
-                balance,
-                style: GoogleFonts.workSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: theme.primaryColor,
-                ),
-              ),
+              balance,
             ],
           ),
         ),

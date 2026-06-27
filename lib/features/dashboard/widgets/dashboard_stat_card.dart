@@ -1,13 +1,12 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class DashboardStatCard extends StatelessWidget {
   final String title;
-  final String value;
-  final String? statusText;
+  final Widget value;
+  final Widget? statusText;
   final String? percentageText;
   final bool isPositive;
   final bool isTrend;
@@ -32,9 +31,6 @@ class DashboardStatCard extends StatelessWidget {
     final cornerColor = isPositive
         ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.15) : AppColors.selectionGreenBg)
         : (isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFFECEE));
-    final valueColor = isPositive
-        ? (isDark ? AppTheme.brandPrimaryDark : AppTheme.brandPrimaryLight)
-        : AppColors.activeRed;
 
     return InkWell(
       onTap: onTap,
@@ -88,18 +84,11 @@ class DashboardStatCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Value (Large Text) on Top
+                    // Value (Large Widget) on Top
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        value,
-                        style:
-                            (isPositive
-                                    ? AppTextStyles.cardValueGreen
-                                    : AppTextStyles.cardValueRed)
-                                .copyWith(fontSize: 17, color: textColor ?? valueColor),
-                      ),
+                      child: value,
                     ),
                     const SizedBox(height: 2),
 
@@ -149,14 +138,7 @@ class DashboardStatCard extends StatelessWidget {
                         ],
                       )
                     else if (!isTrend && statusText != null)
-                      Text(
-                        statusText!,
-                        style: AppTextStyles.cardStatusText.copyWith(
-                          fontSize: 10.5,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      statusText!,
                   ],
                 ),
               ),

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
-import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/account_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/overall_balance_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/adjust_balance_actions.dart';
@@ -18,14 +18,6 @@ class TotalBalanceScreen extends StatefulWidget {
 }
 
 class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
-  bool _showBalances = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _showBalances = SharedPrefsHelper.getBool('show_balances') ?? true;
-  }
-
   @override
   Widget build(BuildContext context) {
     final balanceProvider = context.watch<BalanceAnalyticsProvider>();
@@ -33,20 +25,6 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
     final double cashBalance = balanceProvider.allTimeCashBalance;
     final double bankBalance = balanceProvider.allTimeBankBalance;
     final double totalBalance = balanceProvider.allTimeTotalBalance;
-
-    // Standard localized formatter
-    String formatAmount(double val) {
-      final formatted = (val % 1 == 0)
-          ? val.toStringAsFixed(0).replaceAllMapped(
-                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                (Match m) => '${m[1]},',
-              )
-          : val.toStringAsFixed(2).replaceAllMapped(
-                RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                (Match m) => '${m[1]},',
-              );
-      return 'Tk. $formatted';
-    }
 
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
@@ -81,13 +59,6 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
             children: [
               OverallBalanceCard(
                 totalBalance: totalBalance,
-                showBalances: _showBalances,
-                onToggleBalances: () {
-                  setState(() {
-                    _showBalances = !_showBalances;
-                    SharedPrefsHelper.setBool('show_balances', _showBalances);
-                  });
-                },
               ),
               const SizedBox(height: 20),
 
@@ -135,7 +106,14 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                     AccountCard(
                       title: 'Cash',
                       subtitle: 'Cash in Hand',
-                      balance: _showBalances ? formatAmount(cashBalance) : 'Tk. ••••',
+                      balance: PrivacyMaskedText(
+                        amount: cashBalance,
+                        style: GoogleFonts.workSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: theme.primaryColor,
+                        ),
+                      ),
                       icon: Symbols.payments,
                       iconBg: isDark ? Colors.white10 : const Color(0xFFE6F3EE),
                       iconColor: isDark ? theme.primaryColor : const Color(0xFF006C49),
@@ -152,7 +130,14 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                     AccountCard(
                       title: 'Bank Account',
                       subtitle: 'Electronic Transfer',
-                      balance: _showBalances ? formatAmount(bankBalance) : 'Tk. ••••',
+                      balance: PrivacyMaskedText(
+                        amount: bankBalance,
+                        style: GoogleFonts.workSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: theme.primaryColor,
+                        ),
+                      ),
                       icon: Symbols.account_balance,
                       iconBg: isDark ? Colors.white10 : const Color(0xFFEBF3F9),
                       iconColor: const Color(0xFF2980B9),

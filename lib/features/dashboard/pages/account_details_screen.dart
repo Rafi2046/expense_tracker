@@ -6,7 +6,6 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
-import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/dashboard/widgets/account_transaction_row.dart';
 import 'package:expense_tracker/features/dashboard/widgets/account_balance_header_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/account_date_selector.dart';
@@ -27,13 +26,6 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   String _searchQuery = '';
   DateTimeRange? _selectedDateRange;
   DateRangeOption _selectedOption = DateRangeOption.allTime;
-  bool _showBalances = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _showBalances = SharedPrefsHelper.getBool('show_balances') ?? true;
-  }
 
   @override
   void dispose() {
@@ -201,13 +193,6 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
               AccountBalanceHeaderCard(
                 accountType: widget.accountType,
                 balance: accountBalance,
-                showBalances: _showBalances,
-                onToggleBalances: () {
-                  setState(() {
-                    _showBalances = !_showBalances;
-                    SharedPrefsHelper.setBool('show_balances', _showBalances);
-                  });
-                },
               ),
               const SizedBox(height: 12),
               AccountDateSelector(
@@ -256,7 +241,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                         itemCount: processedTransactions.length,
                         itemBuilder: (context, index) {
                           final item = processedTransactions[index];
-                          return AccountTransactionRow(item: item, showBalances: _showBalances);
+                          return AccountTransactionRow(item: item);
                         },
                       ),
               ),

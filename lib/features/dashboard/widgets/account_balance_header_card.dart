@@ -1,4 +1,5 @@
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
@@ -8,29 +9,12 @@ import 'package:expense_tracker/features/reports/pages/cash_in_hand_statement_sc
 class AccountBalanceHeaderCard extends StatelessWidget {
   final String accountType;
   final double balance;
-  final bool showBalances;
-  final VoidCallback onToggleBalances;
 
   const AccountBalanceHeaderCard({
     super.key,
     required this.accountType,
     required this.balance,
-    required this.showBalances,
-    required this.onToggleBalances,
   });
-
-  String _formatAmount(double val) {
-    final formatted = (val % 1 == 0)
-        ? val.toStringAsFixed(0).replaceAllMapped(
-              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-              (Match m) => '${m[1]},',
-            )
-        : val.toStringAsFixed(2).replaceAllMapped(
-              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-              (Match m) => '${m[1]},',
-            );
-    return 'Tk. $formatted';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,30 +41,17 @@ class AccountBalanceHeaderCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Text(
-                    'Current Balance',
-                    style: GoogleFonts.workSans(
-                      fontSize: 12,
-                      color: AppColors.textMuted,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  GestureDetector(
-                    onTap: onToggleBalances,
-                    child: Icon(
-                      showBalances ? Symbols.visibility : Symbols.visibility_off,
-                      size: 14,
-                      color: AppColors.textMuted,
-                    ),
-                  ),
-                ],
+              Text(
+                'Current Balance',
+                style: GoogleFonts.workSans(
+                  fontSize: 12,
+                  color: AppColors.textMuted,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               const SizedBox(height: 4),
-              Text(
-                showBalances ? _formatAmount(balance) : 'Tk. ••••',
+              PrivacyMaskedText(
+                amount: balance,
                 style: GoogleFonts.workSans(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
