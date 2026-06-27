@@ -43,7 +43,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 7,
+      version: 8,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -82,7 +82,8 @@ class DatabaseHelper {
         id TEXT PRIMARY KEY,
         amount REAL NOT NULL,
         syncStatus TEXT NOT NULL DEFAULT 'synced',
-        lastModified TEXT NOT NULL
+        lastModified TEXT NOT NULL,
+        profileId TEXT NOT NULL DEFAULT 'default_profile'
       )
     ''');
     await db.execute('''
@@ -154,7 +155,8 @@ class DatabaseHelper {
           id TEXT PRIMARY KEY,
           amount REAL NOT NULL,
           syncStatus TEXT NOT NULL DEFAULT 'synced',
-          lastModified TEXT NOT NULL
+          lastModified TEXT NOT NULL,
+          profileId TEXT NOT NULL DEFAULT 'default_profile'
         )
       ''');
     }
@@ -222,6 +224,13 @@ class DatabaseHelper {
       final hasPartyName = columns.any((col) => col['name'] == 'partyName');
       if (!hasPartyName) {
         await db.execute('ALTER TABLE transactions ADD COLUMN partyName TEXT');
+      }
+    }
+    if (oldVersion < 8) {
+      final columns = await db.rawQuery('PRAGMA table_info(budget)');
+      final hasProfileId = columns.any((col) => col['name'] == 'profileId');
+      if (!hasProfileId) {
+        await db.execute('ALTER TABLE budget ADD COLUMN profileId TEXT NOT NULL DEFAULT \'default_profile\'');
       }
     }
   }
