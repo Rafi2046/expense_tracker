@@ -1,8 +1,13 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/error_dialog.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/month_selector_sheet.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/party_selector_sheet.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/party_selector_tile.dart';
 import 'package:expense_tracker/features/dashboard/widgets/sheet_components/category_selector.dart';
 import 'package:expense_tracker/features/dashboard/widgets/sheet_components/date_selector.dart';
 import 'package:expense_tracker/features/dashboard/widgets/sheet_components/income_month_selector.dart';
@@ -70,7 +75,6 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
       _paymentMethod = tx.paymentMethod;
       _selectedPartyName = tx.partyName;
     } else {
-      // Set the month dynamically when opening
       if (widget.isIncome) {
         _selectedIncomeMonth = DateFormat('MMMM yyyy').format(_selectedDate);
       }
@@ -80,11 +84,8 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // This safely waits for the Provider to have data and updates the UI instantly
     if (_selectedCategory == null && widget.transaction == null) {
-      final provider = Provider.of<TransactionProvider>(
-        context,
-      ); // Automatically listens
+      final provider = Provider.of<TransactionProvider>(context);
       final cats = widget.isIncome
           ? provider.incomeCategories
           : provider.expenseCategories;
@@ -96,76 +97,13 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
           orElse: () => cats.first,
         );
 
-        // Use Future.microtask to avoid build-phase collisions
         Future.microtask(() {
           if (mounted && _selectedCategory == null) {
-            setState(() {
-              _selectedCategory = defaultCat;
-            });
+            setState(() => _selectedCategory = defaultCat);
           }
         });
       }
     }
-  }
-
-  Widget _buildPartySelector({required Color themeColor}) {
-    final theme = Theme.of(context);
-    return GestureDetector(
-      onTap: () => _showPartySelector(context),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: theme.cardColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: theme.dividerTheme.color ?? Colors.grey.shade200,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              Symbols.group,
-              size: 20,
-              color: _selectedPartyName != null
-                  ? themeColor
-                  : (theme.brightness == Brightness.dark
-                      ? Colors.white38
-                      : Colors.grey),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                _selectedPartyName ?? 'Link to Party (Optional)',
-                style: GoogleFonts.workSans(
-                  fontSize: 14,
-                  fontWeight: _selectedPartyName != null
-                      ? FontWeight.w500
-                      : FontWeight.w400,
-                  color: _selectedPartyName != null
-                      ? theme.colorScheme.onSurface
-                      : (theme.brightness == Brightness.dark
-                          ? Colors.white38
-                          : Colors.grey),
-                ),
-              ),
-            ),
-            if (_selectedPartyName != null)
-              GestureDetector(
-                onTap: () {
-                  setState(() => _selectedPartyName = null);
-                },
-                child: Icon(
-                  Symbols.close,
-                  size: 18,
-                  color: theme.brightness == Brightness.dark
-                      ? Colors.white38
-                      : Colors.grey,
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
   }
 
   @override
@@ -175,340 +113,27 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
     super.dispose();
   }
 
-  // Uses Dialog instead of SnackBar to guarantee it shows ABOVE the BottomSheet
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            const Icon(Symbols.error_outline, color: AppColors.activeRed),
-            const SizedBox(width: 8),
-            Text(
-              'Missing Info',
-              style: GoogleFonts.workSans(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-          ],
-        ),
-        content: Text(message, style: GoogleFonts.workSans(fontSize: 16)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(
-              'OK',
-              style: GoogleFonts.workSans(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final theme = Theme.of(context);
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2101),
-      builder: (context, child) {
-        return Theme(
-          data: theme.copyWith(
-            colorScheme: theme.colorScheme.copyWith(
-              primary: widget.isIncome
-                  ? theme.primaryColor
-                  : AppColors.activeRed,
-              onPrimary: Colors.white,
-              onSurface: theme.colorScheme.onSurface,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-        if (widget.isIncome) {
-          _selectedIncomeMonth = DateFormat('MMMM yyyy').format(picked);
-        }
-      });
-    }
-  }
-
-  void _showMonthSelector(BuildContext context) {
-    final provider = context.read<TransactionProvider>();
-    final months = provider.availableMonths;
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) {
-        final innerTheme = Theme.of(ctx);
-        final innerIsDark = innerTheme.brightness == Brightness.dark;
-
-        return Container(
-          decoration: BoxDecoration(
-            color: innerTheme.cardColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
-            ),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: innerIsDark ? Colors.white24 : Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Select Income Month',
-                style: GoogleFonts.workSans(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: innerTheme.colorScheme.onSurface,
-                ),
-              ),
-              const SizedBox(height: 16),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.40,
-                ),
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: months.length,
-                  separatorBuilder: (context, index) => Divider(
-                    color:
-                        innerTheme.dividerTheme.color ??
-                        const Color(0xFFF5F5F5),
-                    height: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    final monthDate = months[index];
-                    final label = DateFormat('MMMM yyyy').format(monthDate);
-                    final isSelected = _selectedIncomeMonth == label;
-
-                    return ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                        label,
-                        style: GoogleFonts.workSans(
-                          fontSize: 15,
-                          fontWeight: isSelected
-                              ? FontWeight.w600
-                              : FontWeight.w400,
-                          color: innerTheme.colorScheme.onSurface,
-                        ),
-                      ),
-                      trailing: isSelected
-                          ? const Icon(
-                              Symbols.check_circle,
-                              color: AppColors.activeGreen,
-                            )
-                          : null,
-                      onTap: () {
-                        setState(() {
-                          _selectedIncomeMonth = label;
-                        });
-                        Navigator.pop(ctx);
-                      },
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 8),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void _showPartySelector(BuildContext context) {
-    final debtProvider = context.read<DebtProvider>();
-
-    // Build unique party list
-    final Map<String, DebtItem> uniqueParties = {};
-    for (var item in debtProvider.items) {
-      if (!uniqueParties.containsKey(item.name) ||
-          (uniqueParties[item.name]?.phone == null && item.phone != null)) {
-        uniqueParties[item.name] = item;
-      }
-    }
-    final partyNames = uniqueParties.keys.toList()..sort();
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) {
-        final innerTheme = Theme.of(ctx);
-        final innerIsDark = innerTheme.brightness == Brightness.dark;
-
-        return Container(
-          decoration: BoxDecoration(
-            color: innerTheme.cardColor,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
-            ),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: innerIsDark ? Colors.white24 : Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Link to Party (Optional)',
-                    style: GoogleFonts.workSans(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: innerTheme.colorScheme.onSurface,
-                    ),
-                  ),
-                  if (_selectedPartyName != null)
-                    TextButton(
-                      onPressed: () {
-                        setState(() => _selectedPartyName = null);
-                        Navigator.pop(ctx);
-                      },
-                      child: Text(
-                        'Clear',
-                        style: GoogleFonts.workSans(
-                          color: AppColors.activeRed,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.40,
-                ),
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: partyNames.length,
-                  separatorBuilder: (context, index) => Divider(
-                    color: innerTheme.dividerTheme.color ?? const Color(0xFFF5F5F5),
-                    height: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    final name = partyNames[index];
-                    final party = uniqueParties[name]!;
-                    final initials = _getInitials(name);
-                    final isSelected = _selectedPartyName == name;
-
-                    return ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: CircleAvatar(
-                        radius: 18,
-                        backgroundColor: isSelected
-                            ? (widget.isIncome
-                                ? innerTheme.primaryColor
-                                : AppColors.activeRed)
-                            : (innerIsDark ? Colors.white12 : Colors.grey.shade100),
-                        child: Text(
-                          initials,
-                          style: GoogleFonts.workSans(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: isSelected
-                                ? Colors.white
-                                : (innerIsDark ? Colors.white60 : Colors.black54),
-                          ),
-                        ),
-                      ),
-                      title: Text(
-                        name,
-                        style: GoogleFonts.workSans(
-                          fontSize: 15,
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                          color: innerTheme.colorScheme.onSurface,
-                        ),
-                      ),
-                      subtitle: party.phone != null
-                          ? Text(
-                              party.phone!,
-                              style: GoogleFonts.workSans(
-                                fontSize: 12,
-                                color: innerIsDark ? Colors.white38 : Colors.grey,
-                              ),
-                            )
-                          : null,
-                      trailing: isSelected
-                          ? Icon(
-                              Symbols.check_circle,
-                              color: widget.isIncome
-                                  ? innerTheme.primaryColor
-                                  : AppColors.activeRed,
-                            )
-                          : null,
-                      onTap: () {
-                        setState(() => _selectedPartyName = name);
-                        Navigator.pop(ctx);
-                      },
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 8),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  String _getInitials(String name) {
-    if (name.trim().isEmpty) return '?';
-    final parts = name.trim().split(RegExp(r'\s+'));
-    if (parts.length == 1) return parts[0][0].toUpperCase();
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  }
-
   void _save(BuildContext context) {
     try {
       final amount = double.tryParse(_amountController.text) ?? 0.0;
 
       if (amount <= 0) {
-        _showErrorDialog('Please enter a valid amount greater than 0.');
+        showDialog(
+          context: context,
+          builder: (_) => const ErrorDialog(
+            message: 'Please enter a valid amount greater than 0.',
+          ),
+        );
         return;
       }
 
       if (_selectedCategory == null || _selectedCategory!.isEmpty) {
-        _showErrorDialog('Please select a category before saving.');
+        showDialog(
+          context: context,
+          builder: (_) => const ErrorDialog(
+            message: 'Please select a category before saving.',
+          ),
+        );
         return;
       }
 
@@ -559,7 +184,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
           content: Row(
             children: [
               const Icon(Symbols.check_circle_outline, color: Colors.white),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.w8),
               Text(
                 '${widget.isIncome ? "Income" : "Expense"} $action: ${context.formatAmount(amount, listen: false)}',
                 style: GoogleFonts.workSans(fontWeight: FontWeight.w600),
@@ -573,7 +198,12 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         ),
       );
     } catch (e) {
-      _showErrorDialog('Something went wrong. Please check your inputs.');
+      showDialog(
+        context: context,
+        builder: (_) => const ErrorDialog(
+          message: 'Something went wrong. Please check your inputs.',
+        ),
+      );
       debugPrint('Save error: $e');
     }
   }
@@ -581,11 +211,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     final themeColor = widget.isIncome
-        ? theme.primaryColor
-        : AppColors.activeRed;
-    final secondaryThemeColor = widget.isIncome
         ? theme.primaryColor
         : AppColors.activeRed;
 
@@ -594,14 +220,17 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
-        decoration: BoxDecoration(
-          color: theme.cardColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(AppSpacing.br20),
+            topRight: Radius.circular(AppSpacing.br20),
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.p24,
+          vertical: AppSpacing.p20,
+        ),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -614,64 +243,57 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   isIncome: widget.isIncome,
                   onClose: () => Navigator.pop(context),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
                 TransactionAmountInput(
                   controller: _amountController,
                   themeColor: themeColor,
                   currencySymbol: context.currencySymbol,
                 ),
-                const SizedBox(height: 16),
-                Divider(
-                  color: theme.dividerTheme.color ?? Colors.grey.shade100,
-                  height: 1,
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 28),
                 CategorySelector(
                   selectedCategory: _selectedCategory,
-                  themeColor: secondaryThemeColor,
+                  themeColor: themeColor,
                   isIncome: widget.isIncome,
-                  onCategorySelected: (cat) {
-                    setState(() {
-                      _selectedCategory = cat;
-                    });
-                  },
+                  onCategorySelected: (cat) =>
+                      setState(() => _selectedCategory = cat),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.h12),
                 DateSelector(
                   dateText: DateFormat(
                     'EEEE, MMM d, yyyy',
                   ).format(_selectedDate),
-                  themeColor: secondaryThemeColor,
+                  themeColor: themeColor,
                   onTap: () => _selectDate(context),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.h12),
                 if (widget.isIncome) ...[
                   IncomeMonthSelector(
                     selectedIncomeMonth: _selectedIncomeMonth,
-                    themeColor: secondaryThemeColor,
-                    onTap: () => _showMonthSelector(context),
+                    themeColor: themeColor,
+                    onTap: () => _showMonthSheet(context),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.h12),
                 ],
                 PaymentModeSelector(
                   paymentMethod: _paymentMethod,
-                  themeColor: secondaryThemeColor,
-                  onTap: () {
-                    setState(() {
-                      _paymentMethod = _paymentMethod == 'Cash'
-                          ? 'Bank'
-                          : 'Cash';
-                    });
-                  },
+                  themeColor: themeColor,
+                  onTap: () => setState(() {
+                    _paymentMethod = _paymentMethod == 'Cash' ? 'Bank' : 'Cash';
+                  }),
                 ),
-                const SizedBox(height: 16),
-                _buildPartySelector(themeColor: secondaryThemeColor),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.h12),
+                PartySelectorTile(
+                  selectedPartyName: _selectedPartyName,
+                  themeColor: themeColor,
+                  onClear: () => setState(() => _selectedPartyName = null),
+                  onTap: () => _showPartySheet(context),
+                ),
+                const SizedBox(height: AppSpacing.h12),
                 TransactionNoteInput(
                   controller: _noteController,
-                  themeColor: secondaryThemeColor,
+                  themeColor: themeColor,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
                 TransactionSaveButton(
                   onPressed: () => _save(context),
                   themeColor: themeColor,
@@ -679,11 +301,88 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                       ? (widget.isIncome ? 'Update Income' : 'Update Expense')
                       : (widget.isIncome ? 'Save Income' : 'Save Expense'),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.h12),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final theme = Theme.of(context);
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(
+          data: theme.copyWith(
+            colorScheme: theme.colorScheme.copyWith(
+              primary: widget.isIncome
+                  ? theme.primaryColor
+                  : AppColors.activeRed,
+              onPrimary: Colors.white,
+              onSurface: theme.colorScheme.onSurface,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+        if (widget.isIncome) {
+          _selectedIncomeMonth = DateFormat('MMMM yyyy').format(picked);
+        }
+      });
+    }
+  }
+
+  void _showMonthSheet(BuildContext context) {
+    final provider = context.read<TransactionProvider>();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => MonthSelectorSheet(
+        months: provider.availableMonths,
+        selectedMonth: _selectedIncomeMonth,
+        onSelect: (label) {
+          setState(() => _selectedIncomeMonth = label);
+          Navigator.pop(ctx);
+        },
+      ),
+    );
+  }
+
+  void _showPartySheet(BuildContext context) {
+    final debtProvider = context.read<DebtProvider>();
+    final Map<String, DebtItem> uniqueParties = {};
+    for (var item in debtProvider.items) {
+      if (!uniqueParties.containsKey(item.name) ||
+          (uniqueParties[item.name]?.phone == null && item.phone != null)) {
+        uniqueParties[item.name] = item;
+      }
+    }
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => PartySelectorSheet(
+        uniqueParties: uniqueParties,
+        selectedPartyName: _selectedPartyName,
+        isIncome: widget.isIncome,
+        onSelect: (name) {
+          setState(() => _selectedPartyName = name);
+          Navigator.pop(ctx);
+        },
+        onClear: () {
+          setState(() => _selectedPartyName = null);
+          Navigator.pop(ctx);
+        },
       ),
     );
   }

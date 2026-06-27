@@ -21,41 +21,59 @@ class TransactionNoteInput extends StatelessWidget {
       controller: controller,
       maxLines: 2,
       style: GoogleFonts.workSans(
-        fontSize: 15,
+        fontSize: 14.5,
         color: theme.colorScheme.onSurface,
       ),
       decoration: InputDecoration(
-        hintText: 'Add a note/detail (optional)...',
+        hintText: 'Add a note or description...',
         hintStyle: GoogleFonts.workSans(
-          fontSize: 15,
-          color: isDark ? Colors.white30 : Colors.grey.shade400,
+          fontSize: 14,
+          color: isDark ? Colors.white24 : Colors.grey.shade400,
         ),
-        prefixIcon: Icon(
-          Symbols.notes_rounded,
-          color: isDark ? Colors.white30 : Colors.grey.shade400,
-          size: 22,
+        prefixIcon: Padding(
+          padding: const EdgeInsets.only(left: 14, right: 10, bottom: 14),
+          child: Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: themeColor.withValues(alpha: isDark ? 0.15 : 0.08),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              Symbols.notes_rounded,
+              color: themeColor.withValues(alpha: 0.6),
+              size: 18,
+            ),
+          ),
         ),
+        prefixIconConstraints: const BoxConstraints(minWidth: 60, minHeight: 38),
         filled: true,
-        fillColor: isDark ? Colors.white10 : Colors.grey.shade50,
-        contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        fillColor: isDark
+            ? theme.colorScheme.onSurface.withValues(alpha: 0.04)
+            : Colors.grey.shade50,
+        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(
-            color: theme.dividerTheme.color ?? Colors.grey.shade100,
+            color: isDark
+                ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
+                : Colors.grey.shade200,
             width: 1,
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(
-            color: theme.dividerTheme.color ?? Colors.grey.shade100,
+            color: isDark
+                ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
+                : Colors.grey.shade200,
             width: 1,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(
-            color: themeColor,
+            color: themeColor.withValues(alpha: 0.5),
             width: 1.5,
           ),
         ),
