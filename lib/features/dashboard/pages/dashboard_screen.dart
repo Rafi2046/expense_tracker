@@ -283,7 +283,7 @@ class DashboardScreen extends StatelessWidget {
                   const DashboardShortcutsCard(),
                   const SizedBox(height: 24),
                   if (isLoading)
-                    _recentActivitySkeleton()
+                    _recentActivitySkeleton(context)
                   else
                     DashboardRecentActivity(
                       items: txProvider.transactions.take(5).map((tx) {
@@ -394,7 +394,8 @@ class DashboardScreen extends StatelessWidget {
   }
 }
 
-Widget _recentActivitySkeleton() {
+Widget _recentActivitySkeleton(BuildContext context) {
+  final theme = Theme.of(context);
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -408,6 +409,7 @@ Widget _recentActivitySkeleton() {
               style: GoogleFonts.workSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             Text(
@@ -426,7 +428,7 @@ Widget _recentActivitySkeleton() {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(14),
           ),
           child: Column(
@@ -442,7 +444,7 @@ Widget _recentActivitySkeleton() {
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -456,6 +458,7 @@ Widget _recentActivitySkeleton() {
                             style: GoogleFonts.workSans(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -464,6 +467,7 @@ Widget _recentActivitySkeleton() {
                             style: GoogleFonts.workSans(
                               fontSize: 10.5,
                               fontWeight: FontWeight.w400,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
                           ),
                         ],
@@ -474,6 +478,7 @@ Widget _recentActivitySkeleton() {
                       style: GoogleFonts.workSans(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                       ),
                     ),
                   ],
