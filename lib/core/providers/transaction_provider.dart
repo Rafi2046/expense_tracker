@@ -372,37 +372,153 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
   }
 
   List<TransactionItem> get previousMonthTransactions {
-    final month = selectedMonth;
-    final prev = DateTime(month.year, month.month - 1, 1);
-    return _transactions
-        .where(
-          (tx) =>
-              tx.dateTime.year == prev.year && tx.dateTime.month == prev.month,
-        )
+    final current = selectedMonth;
+    final prevYear = current.month == 1 ? current.year - 1 : current.year;
+    final prevMonth = current.month == 1 ? 12 : current.month - 1;
+    final result = _transactions
+        .where((tx) =>
+            tx.dateTime.year == prevYear && tx.dateTime.month == prevMonth)
         .toList();
+    debugPrint(
+        'DEBUG MoM [prevMonthTxns]: prev=$prevMonth/$prevYear, count=${result.length}');
+    for (final tx in result) {
+      debugPrint(
+          '  tx: id=${tx.id}, amt=${tx.amount}, isIncome=${tx.isIncome}, date=${tx.dateTime}');
+    }
+    return result;
   }
 
   double get previousMonthExpense {
-    return previousMonthTransactions
-        .where((tx) => !tx.isIncome)
-        .fold(0.0, (sum, tx) => sum + tx.amount);
+    double sum = 0;
+    for (final tx in _transactions) {
+      if (tx.dateTime.year == _prevYear &&
+          tx.dateTime.month == _prevMonth &&
+          !tx.isIncome) {
+        sum += tx.amount;
+      }
+    }
+    debugPrint(
+        'DEBUG MoM [prevExpense]: prev=$_prevMonth/$_prevYear, sum=$sum');
+    return sum;
   }
 
   double get previousMonthIncome {
-    return previousMonthTransactions
-        .where((tx) => tx.isIncome)
-        .fold(0.0, (sum, tx) => sum + tx.amount);
+    double sum = 0;
+    for (final tx in _transactions) {
+      if (tx.dateTime.year == _prevYear &&
+          tx.dateTime.month == _prevMonth &&
+          tx.isIncome) {
+        sum += tx.amount;
+      }
+    }
+    debugPrint(
+        'DEBUG MoM [prevIncome]: prev=$_prevMonth/$_prevYear, sum=$sum');
+    return sum;
   }
 
+  int get _prevYear =>
+      selectedMonth.month == 1 ? selectedMonth.year - 1 : selectedMonth.year;
+  int get _prevMonth =>
+      selectedMonth.month == 1 ? 12 : selectedMonth.month - 1;
+
   double get expenseChangePercent {
-    if (previousMonthExpense == 0) return monthlyExpense > 0 ? 100 : 0;
-    return ((monthlyExpense - previousMonthExpense) / previousMonthExpense) *
-        100;
+    final prev = previousMonthExpense;
+    final curr = monthlyExpense;
+    debugPrint(
+        'DEBUG MoM [expense%]: prev=$prev, curr=$curr, result=${prev == 0 ? (curr > 0 ? 100 : 0) : ((curr - prev) / prev) * 100}');
+    if (prev == 0) return curr > 0 ? 100 : 0;
+    return ((curr - prev) / prev) * 100;
+  }
+
+  bool get isExpenseTrendGood => expenseChangePercent <= 0;
+
+  String get expenseTrendDisplay {
+    final prefix = expenseChangePercent >= 0 ? '+' : '';
+    return '$prefix${expenseChangePercent.toStringAsFixed(1)}%';
   }
 
   double get incomeChangePercent {
-    if (previousMonthIncome == 0) return monthlyIncome > 0 ? 100 : 0;
-    return ((monthlyIncome - previousMonthIncome) / previousMonthIncome) * 100;
+    final prev = previousMonthIncome;
+    final curr = monthlyIncome;
+    debugPrint(
+        'DEBUG MoM [income%]: prev=$prev, curr=$curr, result=${prev == 0 ? (curr > 0 ? 100 : 0) : ((curr - prev) / prev) * 100}');
+    if (prev == 0) return curr > 0 ? 100 : 0;
+    return ((curr - prev) / prev) * 100;
+  }
+
+  bool get isIncomeTrendGood => incomeChangePercent >= 0;
+
+  String get incomeTrendDisplay {
+    final prefix = incomeChangePercent >= 0 ? '+' : '';
+    return '$prefix${incomeChangePercent.toStringAsFixed(1)}%';
+  }
+
+  // ─── Calendar-Anchored Getters (always DateTime.now(), ignores selectedMonth) ───
+
+  List<TransactionItem> get _calendarCurrentTransactions {
+    final now = DateTime.now();
+    return _transactions
+        .where((tx) =>
+            tx.dateTime.year == now.year && tx.dateTime.month == now.month)
+        .toList();
+  }
+
+  List<TransactionItem> get _calendarPreviousTransactions {
+    final now = DateTime.now();
+    final prevYear = now.month == 1 ? now.year - 1 : now.year;
+    final prevMonth = now.month == 1 ? 12 : now.month - 1;
+    return _transactions
+        .where((tx) =>
+            tx.dateTime.year == prevYear && tx.dateTime.month == prevMonth)
+        .toList();
+  }
+
+  double get calendarMonthIncome =>
+      _calendarCurrentTransactions
+          .where((tx) => tx.isIncome)
+          .fold(0.0, (s, t) => s + t.amount);
+
+  double get calendarMonthExpense =>
+      _calendarCurrentTransactions
+          .where((tx) => !tx.isIncome)
+          .fold(0.0, (s, t) => s + t.amount);
+
+  double get calendarPrevMonthIncome =>
+      _calendarPreviousTransactions
+          .where((tx) => tx.isIncome)
+          .fold(0.0, (s, t) => s + t.amount);
+
+  double get calendarPrevMonthExpense =>
+      _calendarPreviousTransactions
+          .where((tx) => !tx.isIncome)
+          .fold(0.0, (s, t) => s + t.amount);
+
+  double get calendarExpenseChangePercent {
+    final prev = calendarPrevMonthExpense;
+    if (prev == 0) return calendarMonthExpense > 0 ? 100 : 0;
+    return ((calendarMonthExpense - prev) / prev) * 100;
+  }
+
+  bool get isCalendarExpenseTrendGood => calendarExpenseChangePercent <= 0;
+
+  String get calendarExpenseTrendDisplay {
+    final pct = calendarExpenseChangePercent;
+    final prefix = pct >= 0 ? '+' : '';
+    return '$prefix${pct.toStringAsFixed(1)}%';
+  }
+
+  double get calendarIncomeChangePercent {
+    final prev = calendarPrevMonthIncome;
+    if (prev == 0) return calendarMonthIncome > 0 ? 100 : 0;
+    return ((calendarMonthIncome - prev) / prev) * 100;
+  }
+
+  bool get isCalendarIncomeTrendGood => calendarIncomeChangePercent >= 0;
+
+  String get calendarIncomeTrendDisplay {
+    final pct = calendarIncomeChangePercent;
+    final prefix = pct >= 0 ? '+' : '';
+    return '$prefix${pct.toStringAsFixed(1)}%';
   }
 
   List<(String, double, double)> topSpendingCategories([int limit = 5]) {
@@ -696,6 +812,7 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
   }
 
   void addTransaction(TransactionItem transaction) {
+    debugPrint('DIAG PROVIDER ENTER: transaction.dateTime=${transaction.dateTime} month=${transaction.dateTime.month} day=${transaction.dateTime.day}');
     final user = _auth.currentUser;
     if (user == null) return;
 
@@ -726,6 +843,7 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
     // 2. Update local state
     _knownDocIds.add(uniqueTransaction.id);
     _pendingIds.add(uniqueTransaction.id);
+    debugPrint('DIAG PROVIDER STORE: uniqueTransaction.dateTime=${uniqueTransaction.dateTime} month=${uniqueTransaction.dateTime.month}');
     _transactions.insert(0, uniqueTransaction);
     notifyListeners();
 

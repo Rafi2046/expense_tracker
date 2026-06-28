@@ -16,11 +16,19 @@ class TransactionListContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: AppColors.dividerColor, width: 1.0),
+        color: theme.cardColor,
+        border: Border.all(
+          color: isDark
+              ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
+              : AppColors.dividerColor,
+          width: 1.0,
+        ),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -34,7 +42,12 @@ class TransactionListContainer extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 3,
-                  child: Text(title, style: AppTextStyles.sectionHeaderTitle),
+                  child: Text(
+                    title,
+                    style: AppTextStyles.sectionHeaderTitle.copyWith(
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Flexible(
@@ -46,7 +59,9 @@ class TransactionListContainer extends StatelessWidget {
           ),
           Container(
             height: 1,
-            color: AppColors.dividerColor.withValues(alpha: 0.5),
+            color: isDark
+                ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
+                : AppColors.dividerColor.withValues(alpha: 0.5),
           ),
           ListView.separated(
             shrinkWrap: true,
@@ -54,7 +69,9 @@ class TransactionListContainer extends StatelessWidget {
             itemCount: children.length,
             separatorBuilder: (context, index) => Container(
               height: 1,
-              color: AppColors.dividerColor.withValues(alpha: 0.5),
+              color: isDark
+                  ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
+                  : AppColors.dividerColor.withValues(alpha: 0.5),
             ),
             itemBuilder: (context, index) => children[index],
           ),

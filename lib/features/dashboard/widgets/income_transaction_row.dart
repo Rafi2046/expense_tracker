@@ -20,20 +20,30 @@ class IncomeTransactionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.dividerColor, width: 1.0),
+        border: Border.all(
+          color: isDark
+              ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
+              : AppColors.dividerColor,
+          width: 1.0,
+        ),
       ),
       child: Row(
         children: [
           Container(
             width: 44,
             height: 44,
-            decoration: const BoxDecoration(
-              color: Color(0xFFF3F5F4),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
+                  : const Color(0xFFF3F5F4),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: AppColors.buttonColor, size: 22),
@@ -49,7 +59,7 @@ class IncomeTransactionRow extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: theme.colorScheme.onSurface,
                     fontFamily: GoogleFonts.workSans().fontFamily,
                   ),
                 ),
@@ -58,7 +68,7 @@ class IncomeTransactionRow extends StatelessWidget {
                   subtitle,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey.shade600,
+                    color: isDark ? Colors.white60 : Colors.grey.shade600,
                     fontFamily: GoogleFonts.workSans().fontFamily,
                   ),
                 ),
@@ -76,7 +86,7 @@ class IncomeTransactionRow extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
-                  color: Colors.grey.shade500,
+                  color: isDark ? Colors.white38 : Colors.grey.shade500,
                   fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
                   letterSpacing: 0.5,
                 ),

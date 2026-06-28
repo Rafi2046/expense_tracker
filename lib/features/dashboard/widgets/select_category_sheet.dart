@@ -245,14 +245,17 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
         ? AppColors.activeGreen
         : AppColors.activeRed;
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),
           ),
@@ -269,7 +272,9 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                   width: 40,
                   height: 5,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.16)
+                        : Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -283,44 +288,52 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                 style: GoogleFonts.workSans(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 16),
 
-              // Search input field matching mockup exactly
+              // Search input field
               TextField(
                 controller: _searchController,
                 style: GoogleFonts.workSans(
                   fontSize: 15,
-                  color: Colors.black87,
+                  color: theme.colorScheme.onSurface,
                 ),
                 decoration: InputDecoration(
                   hintText: 'Search Category...',
                   hintStyle: GoogleFonts.workSans(
                     fontSize: 15,
-                    color: Colors.grey.shade400,
+                    color: isDark ? Colors.white38 : Colors.grey.shade400,
                   ),
                   prefixIcon: Icon(
                     Symbols.search_rounded,
-                    color: Colors.grey.shade400,
+                    color: isDark ? Colors.white38 : Colors.grey.shade400,
                     size: 20,
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 12,
                     horizontal: 16,
                   ),
+                  filled: true,
+                  fillColor: isDark
+                      ? theme.colorScheme.onSurface.withValues(alpha: 0.04)
+                      : Colors.transparent,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
-                      color: Colors.grey.shade200,
+                      color: isDark
+                          ? theme.colorScheme.onSurface.withValues(alpha: 0.15)
+                          : Colors.grey.shade200,
                       width: 1,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
-                      color: Colors.grey.shade200,
+                      color: isDark
+                          ? theme.colorScheme.onSurface.withValues(alpha: 0.15)
+                          : Colors.grey.shade200,
                       width: 1,
                     ),
                   ),
@@ -349,7 +362,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                           child: Text(
                             'No categories found.',
                             style: GoogleFonts.workSans(
-                              color: Colors.grey.shade400,
+                              color: isDark ? Colors.white38 : Colors.grey.shade400,
                               fontSize: 14,
                             ),
                           ),
@@ -358,8 +371,12 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                     : ListView.separated(
                         shrinkWrap: true,
                         itemCount: filteredCategories.length,
-                        separatorBuilder: (context, index) =>
-                            const Divider(color: Color(0xFFF5F5F5), height: 1),
+                        separatorBuilder: (context, index) => Divider(
+                          color: isDark
+                              ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
+                              : const Color(0xFFF5F5F5),
+                          height: 1,
+                        ),
                         itemBuilder: (context, index) {
                           final cat = filteredCategories[index];
                           final isSelected = cat == widget.selectedCategory;
@@ -408,8 +425,13 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                   icon: const Icon(Symbols.add, size: 18),
                   label: const Text('Add New Category'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.black87,
-                    side: BorderSide(color: Colors.grey.shade200, width: 1.5),
+                    foregroundColor: theme.colorScheme.onSurface,
+                    side: BorderSide(
+                      color: isDark
+                          ? theme.colorScheme.onSurface.withValues(alpha: 0.2)
+                          : Colors.grey.shade200,
+                      width: 1.5,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

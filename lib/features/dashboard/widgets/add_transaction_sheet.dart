@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/error_dialog.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/month_selector_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/party_selector_sheet.dart';
@@ -24,11 +25,13 @@ import 'package:provider/provider.dart';
 class AddTransactionSheet extends StatefulWidget {
   final bool isIncome;
   final TransactionItem? transaction;
+  final bool enableBalanceWarning;
 
   const AddTransactionSheet({
     super.key,
     required this.isIncome,
     this.transaction,
+    this.enableBalanceWarning = false,
   });
 
   bool get isEditing => transaction != null;
@@ -37,13 +40,17 @@ class AddTransactionSheet extends StatefulWidget {
     required BuildContext context,
     required bool isIncome,
     TransactionItem? transaction,
+    bool enableBalanceWarning = false,
   }) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) =>
-          AddTransactionSheet(isIncome: isIncome, transaction: transaction),
+      builder: (context) => AddTransactionSheet(
+        isIncome: isIncome,
+        transaction: transaction,
+        enableBalanceWarning: enableBalanceWarning,
+      ),
     );
   }
 
@@ -113,7 +120,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
     super.dispose();
   }
 
-  void _save(BuildContext context) {
+  Future<void> _save(BuildContext context) async {
     try {
       final amount = double.tryParse(_amountController.text) ?? 0.0;
 
@@ -139,6 +146,71 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
 
       if (!_formKey.currentState!.validate()) return;
 
+      if (widget.enableBalanceWarning && widget.transaction == null) {
+        final balanceProvider = context.read<BalanceAnalyticsProvider>();
+        final projected = balanceProvider.projectedBalance(
+          _paymentMethod,
+          amount: amount,
+          isIncome: widget.isIncome,
+        );
+        if (projected < 0) {
+          final theme = Theme.of(context);
+          final proceed = await showDialog<bool>(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Text(
+                'Balance Will Go Negative',
+                style: GoogleFonts.workSans(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+              content: Text(
+                'This will bring your $_paymentMethod balance to '
+                '${context.formatAmount(projected, listen: false)}.\n\n'
+                'Are you sure you want to proceed?',
+                style: GoogleFonts.workSans(
+                  fontSize: 14,
+                  color: theme.colorScheme.onSurfaceVariant,
+                  height: 1.45,
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx, false),
+                  child: Text('Cancel',
+                    style: GoogleFonts.workSans(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () => Navigator.pop(ctx, true),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.activeRed,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text('Proceed',
+                    style: GoogleFonts.workSans(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+          if (proceed != true) return;
+        }
+      }
+
       final provider = context.read<TransactionProvider>();
       final existing = widget.transaction;
       final noteText = _noteController.text.trim();
@@ -161,6 +233,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         );
         provider.updateTransaction(updatedItem);
       } else {
+        debugPrint('DIAG SAVE: _selectedDate=$_selectedDate month=${_selectedDate.month} day=${_selectedDate.day}');
         provider.addTransaction(
           TransactionItem(
             id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -220,9 +293,9 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(AppSpacing.br20),
             topRight: Radius.circular(AppSpacing.br20),
           ),
@@ -295,7 +368,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 ),
                 const SizedBox(height: 28),
                 TransactionSaveButton(
-                  onPressed: () => _save(context),
+                  onPressed: () async { await _save(context); },
                   themeColor: themeColor,
                   title: widget.isEditing
                       ? (widget.isIncome ? 'Update Income' : 'Update Expense')
@@ -311,6 +384,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    debugPrint('DIAG PICKER ENTERED: _selectedDate=$_selectedDate month=${_selectedDate.month}');
     final theme = Theme.of(context);
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -332,9 +406,12 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         );
       },
     );
+    debugPrint('DIAG PICKER RETURNED: picked=$picked');
     if (picked != null && picked != _selectedDate) {
+      debugPrint('DIAG PICKER SELECTED: picked=$picked month=${picked.month} day=${picked.day}');
       setState(() {
         _selectedDate = picked;
+        debugPrint('DIAG PICKER SETSTATE: _selectedDate=$_selectedDate month=${_selectedDate.month}');
         if (widget.isIncome) {
           _selectedIncomeMonth = DateFormat('MMMM yyyy').format(picked);
         }

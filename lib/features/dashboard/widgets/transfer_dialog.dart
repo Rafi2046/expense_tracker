@@ -2,7 +2,10 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 
 class TransferDialog extends StatefulWidget {
   final String? initialFromAccount;
@@ -146,9 +149,72 @@ class _TransferDialogState extends State<TransferDialog> {
           ),
         ),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             if (_formKey.currentState!.validate()) {
               final amount = double.parse(_amountController.text);
+              final balanceProvider = context.read<BalanceAnalyticsProvider>();
+              final projected = balanceProvider.projectedBalance(
+                _fromAccount,
+                amount: amount,
+                isIncome: false,
+              );
+              if (projected < 0) {
+                final theme = Theme.of(context);
+                final formattedProjected = context.formatAmount(projected, listen: false);
+                final proceed = await showDialog<bool>(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    title: Text(
+                      'Balance Will Go Negative',
+                      style: GoogleFonts.workSans(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                    content: Text(
+                      'This will bring your $_fromAccount balance to '
+                      '$formattedProjected.\n\n'
+                      'Are you sure you want to proceed?',
+                      style: GoogleFonts.workSans(
+                        fontSize: 14,
+                        color: theme.colorScheme.onSurfaceVariant,
+                        height: 1.45,
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(ctx, false),
+                        child: Text('Cancel',
+                          style: GoogleFonts.workSans(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(ctx, true),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.activeRed,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text('Proceed',
+                          style: GoogleFonts.workSans(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+                if (proceed != true) return;
+              }
               context.read<TransactionProvider>().transferBalance(
                     amount,
                     _fromAccount,
@@ -158,7 +224,7 @@ class _TransferDialogState extends State<TransferDialog> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    'Successfully transferred Tk. $amount from $_fromAccount to $_toAccount',
+                    'Successfully transferred ${context.formatAmount(amount, listen: false)} from $_fromAccount to $_toAccount',
                   ),
                   backgroundColor: Theme.of(context).primaryColor,
                 ),

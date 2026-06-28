@@ -32,18 +32,28 @@ class AccountDateSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final reportsProvider = context.read<ReportsProvider>();
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFF3F4F6)),
+        border: Border.all(
+          color: isDark
+              ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
+              : const Color(0xFFF3F4F6),
+        ),
       ),
       child: Row(
         children: [
-          const Icon(Symbols.calendar_today, size: 14, color: Color(0xFF565E74)),
+          Icon(
+            Symbols.calendar_today,
+            size: 14,
+            color: isDark ? Colors.white60 : const Color(0xFF565E74),
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -54,14 +64,14 @@ class AccountDateSelector extends StatelessWidget {
                   style: GoogleFonts.workSans(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF1F2937),
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 Text(
                   reportsProvider.getDateRangeSubtitle(selectedOption, selectedDateRange),
                   style: GoogleFonts.workSans(
                     fontSize: 10.5,
-                    color: Colors.grey.shade500,
+                    color: isDark ? Colors.white60 : Colors.grey.shade500,
                   ),
                 ),
               ],

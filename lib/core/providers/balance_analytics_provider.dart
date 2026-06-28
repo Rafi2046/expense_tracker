@@ -44,6 +44,24 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
     allTimeTotalBalance = cash + bank;
   }
 
+  double projectedBalance(String paymentMethod, {double? amount, bool? isIncome}) {
+    double bal = 0.0;
+    for (final tx in _transactions) {
+      if (tx.paymentMethod == paymentMethod) {
+        bal += tx.isIncome ? tx.amount : -tx.amount;
+      }
+    }
+    if (paymentMethod == 'Cash') {
+      for (final d in _debts) {
+        bal += d.isReceive ? d.amount : -d.amount;
+      }
+    }
+    if (amount != null) {
+      bal += isIncome == true ? amount : -amount;
+    }
+    return bal;
+  }
+
   // ─── equality guards ────────────────────────────────────────────
 
   bool _isListEqual(List<TransactionItem> a, List<TransactionItem> b) {

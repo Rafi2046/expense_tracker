@@ -112,11 +112,11 @@ class DashboardScreen extends StatelessWidget {
                               title:
                                   '${context.translate('income')} ($currentMonthName)',
                               value: PrivacyMaskedText(
-                                amount: txProvider.monthlyIncome,
+                                amount: txProvider.calendarMonthIncome,
                                 style: AppTextStyles.cardValueGreen.copyWith(fontSize: 17),
                               ),
-                              percentageText: '+12%',
-                              isPositive: true,
+                              percentageText: txProvider.calendarIncomeTrendDisplay,
+                              isPositive: txProvider.isCalendarIncomeTrendGood,
                               isTrend: true,
                               onTap: () {
                                 Navigator.push(
@@ -135,11 +135,11 @@ class DashboardScreen extends StatelessWidget {
                               title:
                                   '${context.translate('expense')} ($currentMonthName)',
                               value: PrivacyMaskedText(
-                                amount: txProvider.monthlyExpense,
+                                amount: txProvider.calendarMonthExpense,
                                 style: AppTextStyles.cardValueRed.copyWith(fontSize: 17),
                               ),
-                              percentageText: '-5%',
-                              isPositive: false,
+                              percentageText: txProvider.calendarExpenseTrendDisplay,
+                              isPositive: txProvider.isCalendarExpenseTrendGood,
                               isTrend: true,
                               onTap: () {
                                 Navigator.push(

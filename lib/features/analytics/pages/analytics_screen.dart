@@ -88,10 +88,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
     final double totalExpense = isLoading ? 0.0 : txProvider.monthlyExpense;
     final double prevExpense = isLoading ? 0.0 : txProvider.previousMonthExpense;
-    final String changeText = isLoading ? '+0.0%' : () {
-      final pct = txProvider.expenseChangePercent;
-      return '${pct >= 0 ? '+' : ''}${pct.toStringAsFixed(1)}%';
-    }();
+    final String changeText = isLoading
+        ? '+0.0%'
+        : txProvider.expenseTrendDisplay;
 
     final List<SpendingDistributionItem> spendingItems = isLoading
         ? List.generate(4, (i) => SpendingDistributionItem(

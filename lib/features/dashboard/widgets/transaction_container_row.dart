@@ -20,6 +20,9 @@ class TransactionContainerRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
       child: Row(
@@ -27,8 +30,10 @@ class TransactionContainerRow extends StatelessWidget {
           Container(
             width: 44,
             height: 44,
-            decoration: const BoxDecoration(
-              color: Color(0xFFF3F5F4),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
+                  : const Color(0xFFF3F5F4),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: AppColors.buttonColor, size: 22),
@@ -43,7 +48,7 @@ class TransactionContainerRow extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: theme.colorScheme.onSurface,
                     fontFamily: GoogleFonts.workSans().fontFamily,
                   ),
                 ),
@@ -52,7 +57,7 @@ class TransactionContainerRow extends StatelessWidget {
                   subtitle,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey.shade600,
+                    color: isDark ? Colors.white60 : Colors.grey.shade600,
                     fontFamily: GoogleFonts.workSans().fontFamily,
                   ),
                 ),
@@ -71,7 +76,7 @@ class TransactionContainerRow extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
-                    color: Colors.grey.shade500,
+                    color: isDark ? Colors.white38 : Colors.grey.shade500,
                     fontFamily: GoogleFonts.workSans().fontFamily,
                   ),
                 ),

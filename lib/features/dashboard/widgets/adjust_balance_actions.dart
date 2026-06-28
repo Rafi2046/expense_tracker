@@ -53,7 +53,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
             _buildAdjustOptionTile(
               context: context,
               title: 'Add/Reduce Money',
-              subtitle: 'Add or reduce money from your account',
+              subtitle: 'Record income or expense to adjust a single account\'s balance',
               icon: Symbols.add,
               iconBg: isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFDECEC),
               iconColor: AppColors.activeRed,
@@ -68,7 +68,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
             _buildAdjustOptionTile(
               context: context,
               title: 'Transfer Balance',
-              subtitle: 'Easily transfer your balance to another account',
+              subtitle: 'Move money between Cash and Bank accounts',
               icon: Symbols.swap_horiz_rounded,
               iconBg: isDark ? const Color(0xFF2980B9).withValues(alpha: 0.15) : const Color(0xFFEBF3F9),
               iconColor: const Color(0xFF2980B9),
@@ -223,6 +223,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                         AddTransactionSheet.show(
                           context: context,
                           isIncome: true,
+                          enableBalanceWarning: true,
                         );
                       },
                     ),
@@ -259,6 +260,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                         AddTransactionSheet.show(
                           context: context,
                           isIncome: false,
+                          enableBalanceWarning: true,
                         );
                       },
                     ),

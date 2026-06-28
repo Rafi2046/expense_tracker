@@ -13,28 +13,32 @@ class TransactionDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final bool isIncome = transaction.isIncome;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.cardColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: const Icon(Symbols.arrow_back, color: Colors.black87, size: 20),
+          icon: Icon(Symbols.arrow_back, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           isIncome ? 'Income Details' : 'Expense Details',
-          style: AppTextStyles.reportAppBarTitle.copyWith(fontSize: 16.5),
+          style: AppTextStyles.reportAppBarTitle.copyWith(
+            fontSize: 16.5,
+            color: theme.colorScheme.onSurface,
+          ),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Symbols.edit,
-              color: Colors.black87,
+              color: theme.colorScheme.onSurface,
               size: 20,
             ),
             onPressed: () => _showEditDialog(context),
@@ -50,7 +54,10 @@ class TransactionDetailsScreen extends StatelessWidget {
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
-          child: Container(color: const Color(0xFFF1F1F1), height: 1.0),
+          child: Container(
+            color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1),
+            height: 1.0,
+          ),
         ),
       ),
       body: SafeArea(

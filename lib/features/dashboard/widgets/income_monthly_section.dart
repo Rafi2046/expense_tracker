@@ -23,6 +23,7 @@ class IncomeMonthlySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final analytics = context.watch<IncomeAnalyticsProvider>();
     final monthlyTransactions = analytics.monthlyTransactions;
 
@@ -34,7 +35,12 @@ class IncomeMonthlySection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Recent Income', style: AppTextStyles.sectionHeaderTitle),
+            Text(
+              'Recent Income',
+              style: AppTextStyles.sectionHeaderTitle.copyWith(
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
             TextButton(
               onPressed: () {},
               style: TextButton.styleFrom(
