@@ -65,7 +65,7 @@ class ShareReportSheet extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: isDark ? Colors.white10 : const Color(0xFFF8FAFC),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -91,7 +91,7 @@ class ShareReportSheet extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: isDark ? Colors.white10 : const Color(0xFFF8FAFC),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(

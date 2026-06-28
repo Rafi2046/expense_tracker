@@ -154,7 +154,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                 hintStyle: GoogleFonts.workSans(fontSize: 14, color: isDark ? Colors.white30 : Colors.grey.shade400),
                 prefixIcon: Icon(Symbols.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
                 filled: true,
-                fillColor: isDark ? Colors.white10 : const Color(0xFFF8FAFC),
+                fillColor: isDark ? theme.colorScheme.onSurface.withValues(alpha: 0.05) : const Color(0xFFF8FAFC),
                 contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -210,7 +210,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                           width: 36,
                           height: 36,
                           decoration: BoxDecoration(
-                            color: isDark ? Colors.white10 : const Color(0xFFF1F2F4),
+                            color: isDark ? theme.colorScheme.onSurface.withValues(alpha: 0.08) : const Color(0xFFF1F2F4),
                             shape: BoxShape.circle,
                             border: isSelected
                                 ? Border.all(color: theme.primaryColor, width: 1.5)

@@ -131,7 +131,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                 Row(
                   children: _categories.map((cat) {
                     final isSelected = _selectedCategory == cat;
-                    Color chipColor = isDark ? const Color(0xFF1E1E1E) : AppColors.chipBackground;
+                    Color chipColor = isDark ? theme.cardColor : AppColors.chipBackground;
                     Color textColor = isDark ? Colors.grey.shade400 : Colors.black87;
 
                     if (isSelected) {
@@ -169,7 +169,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                         },
                         elevation: 0,
                         pressElevation: 0,
-                        backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppColors.chipBackground,
+                        backgroundColor: isDark ? theme.cardColor : AppColors.chipBackground,
                         selectedColor: chipColor,
                         shadowColor: Colors.transparent,
                         surfaceTintColor: Colors.transparent,

@@ -8,7 +8,6 @@ import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
-import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/appbar_widget.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
 import 'package:expense_tracker/features/dashboard/pages/expense_insights_screen.dart';
@@ -26,7 +25,6 @@ import 'package:expense_tracker/features/dashboard/widgets/dashboard_spending_ca
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_stat_card.dart';
 import 'package:expense_tracker/features/reports/pages/view_reports_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/total_balance_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -50,50 +48,39 @@ class DashboardScreen extends StatelessWidget {
     final String currentMonthName = DateFormat('MMMM').format(DateTime.now());
     final isLoading = txProvider.isLoading;
 
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.userChanges(),
-      builder: (context, snapshot) {
-        final user = snapshot.data;
-        final localPhoto = user != null
-            ? SharedPrefsHelper.getString('local_profile_photo_${user.uid}')
-            : null;
-        final photoUrl = localPhoto ?? user?.photoURL;
-
-        return Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: HomepageAppbarWidget(
-            name: currentProfile.name,
-            profilePhoto: photoUrl,
-            onProfileTap: () {
-              ProfileSwitchSheet.show(
-                context: context,
-                currentProfileId: currentProfile.id,
-                profiles: profileProvider.profiles,
-                onProfileSelected: (selectedProfile) {
-                  profileProvider.selectProfile(selectedProfile);
-                },
-                onCreateNewTap: () async {
-                  final newProfile = await Navigator.push<UserProfile>(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SelectProfileScreen(),
-                    ),
-                  );
-                  if (newProfile != null) {
-                    profileProvider.addProfile(newProfile);
-                  }
-                },
-              );
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: HomepageAppbarWidget(
+        onProfileTap: () {
+          ProfileSwitchSheet.show(
+            context: context,
+            currentProfileId: currentProfile.id,
+            profiles: profileProvider.profiles,
+            onProfileSelected: (selectedProfile) {
+              profileProvider.selectProfile(selectedProfile);
             },
-            notificationOnTap: () {
-              Navigator.push(
+            onCreateNewTap: () async {
+              final newProfile = await Navigator.push<UserProfile>(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const NotificationsScreen(),
+                  builder: (context) => const SelectProfileScreen(),
                 ),
               );
+              if (newProfile != null) {
+                profileProvider.addProfile(newProfile);
+              }
             },
-          ),
+          );
+        },
+        notificationOnTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NotificationsScreen(),
+            ),
+          );
+        },
+      ),
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -344,8 +331,6 @@ class DashboardScreen extends StatelessWidget {
             ),
           ),
         );
-      },
-    );
   }
 
   static String _getRelativeTime(DateTime dateTime) {

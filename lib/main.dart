@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/providers/shortcut_provider.dart';
+import 'package:expense_tracker/core/providers/session_provider.dart';
 import 'package:expense_tracker/core/providers/note_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
@@ -60,6 +61,7 @@ void main() async {
             return budgetProvider;
           },
         ),
+        ChangeNotifierProvider(create: (_) => SessionProvider()),
         ChangeNotifierProvider(create: (_) => ShortcutProvider()),
         ChangeNotifierProvider(create: (_) => NoteProvider()),
         ChangeNotifierProvider(create: (_) => BiometricAuthProvider()),

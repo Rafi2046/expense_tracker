@@ -34,7 +34,7 @@ class PartyStatementSelector extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected ? theme.primaryColor : (isDark ? Colors.white10 : const Color(0xFFF1F2F4)),
+            color: isSelected ? theme.primaryColor : (isDark ? theme.cardColor : const Color(0xFFF1F2F4)),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(

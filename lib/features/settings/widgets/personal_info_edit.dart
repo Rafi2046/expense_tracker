@@ -72,7 +72,7 @@ class PersonalInfoEdit extends StatelessWidget {
           style: GoogleFonts.workSans(fontSize: 14.5, color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
             filled: true,
-            fillColor: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF5F6F8),
+            fillColor: isDark ? theme.cardColor : const Color(0xFFF5F6F8),
             prefixIcon: Icon(
               prefixIcon,
               color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
@@ -106,7 +106,7 @@ class PersonalInfoEdit extends StatelessWidget {
     final cardBg = theme.cardColor;
     final borderColor = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1);
     final primaryColor = isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1);
-    final inputBg = isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF5F6F8);
+    final inputBg = isDark ? theme.cardColor : const Color(0xFFF5F6F8);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -361,7 +361,7 @@ class PersonalInfoEdit extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF9F9FB),
+                color: isDark ? theme.cardColor : const Color(0xFFF9F9FB),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: borderColor, width: 1.0),
               ),
@@ -393,7 +393,7 @@ class PersonalInfoEdit extends StatelessWidget {
               child: CustomButton(
                 text: 'Cancel',
                 onPressed: isLoading ? () {} : onCancel,
-                backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                backgroundColor: isDark ? theme.cardColor : Colors.white,
                 textColor: theme.colorScheme.onSurface,
                 showBorder: true,
                 borderColor: borderColor,

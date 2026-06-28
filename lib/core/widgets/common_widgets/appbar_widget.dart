@@ -1,7 +1,9 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
+
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/privacy_provider.dart';
+import 'package:expense_tracker/core/providers/session_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,15 +11,11 @@ import 'package:provider/provider.dart';
 
 class HomepageAppbarWidget extends StatelessWidget
     implements PreferredSizeWidget {
-  final String name;
-  final String? profilePhoto;
   final VoidCallback onProfileTap;
   final VoidCallback notificationOnTap;
 
   const HomepageAppbarWidget({
     super.key,
-    required this.name,
-    this.profilePhoto,
     required this.onProfileTap,
     required this.notificationOnTap,
   });
@@ -27,69 +25,77 @@ class HomepageAppbarWidget extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final onSurface = Theme.of(context).colorScheme.onSurface;
+    final theme = Theme.of(context);
+    final session = context.watch<SessionProvider>();
     final isMasked = context.watch<PrivacyProvider>().isMasked;
+    final displayName = session.firstName;
+    final photoUrl = session.photoUrl;
+    final initials = session.initials;
+
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+      backgroundColor: theme.appBarTheme.backgroundColor,
       elevation: 0,
       scrolledUnderElevation: 0,
       titleSpacing: 16,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          InkWell(
-            onTap: onProfileTap,
-            borderRadius: BorderRadius.circular(8),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 4.0,
-                horizontal: 8.0,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircleAvatar(
-                    radius: 18,
-                    backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey.shade200,
-                    backgroundImage: (profilePhoto != null && profilePhoto!.startsWith('http'))
-                        ? NetworkImage(profilePhoto!) as ImageProvider
-                        : (profilePhoto != null && profilePhoto!.isNotEmpty && File(profilePhoto!).existsSync()
-                            ? FileImage(File(profilePhoto!)) as ImageProvider
-                            : null),
-                    child: (profilePhoto != null && (profilePhoto!.startsWith('http') || (profilePhoto!.isNotEmpty && File(profilePhoto!).existsSync())))
-                        ? null
-                        : Text(
-                            name.isNotEmpty ? name[0].toUpperCase() : 'U',
-                            style: TextStyle(
-                              color: onSurface,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              fontFamily: GoogleFonts.workSans().fontFamily,
-                            ),
-                          ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    name,
-                    style: TextStyle(
-                      color: onSurface,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
+          Flexible(
+            child: InkWell(
+              onTap: onProfileTap,
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 4.0,
+                  horizontal: 8.0,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircleAvatar(
+                      radius: 18,
+                      backgroundColor: theme.brightness == Brightness.dark
+                          ? Colors.grey.shade800
+                          : Colors.grey.shade200,
+                      backgroundImage: _resolveImage(photoUrl),
+                      child: _resolveImage(photoUrl) == null
+                          ? Text(
+                              initials,
+                              style: TextStyle(
+                                color: theme.colorScheme.onSurface,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                fontFamily: GoogleFonts.workSans().fontFamily,
+                              ),
+                            )
+                          : null,
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    Symbols.keyboard_arrow_down,
-                    color: onSurface,
-                    size: 20,
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        displayName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurface,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          fontFamily: GoogleFonts.workSans().fontFamily,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(
+                      Symbols.keyboard_arrow_down,
+                      color: theme.colorScheme.onSurface,
+                      size: 20,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -119,10 +125,17 @@ class HomepageAppbarWidget extends StatelessWidget
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(2.0),
         child: Container(
-          color: Theme.of(context).dividerTheme.color ?? AppColors.dividerColor,
+          color: theme.dividerTheme.color ?? AppColors.dividerColor,
           height: 2.0,
         ),
       ),
     );
+  }
+
+  ImageProvider? _resolveImage(String? photoUrl) {
+    if (photoUrl == null || photoUrl.isEmpty) return null;
+    if (photoUrl.startsWith('http')) return NetworkImage(photoUrl);
+    if (File(photoUrl).existsSync()) return FileImage(File(photoUrl));
+    return null;
   }
 }

@@ -29,7 +29,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
       height: 40,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF9FAFB),
+        color: isDark ? Theme.of(context).cardColor : const Color(0xFFF9FAFB),
         border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF3F4F6), width: 1.5),
       ),
       alignment: Alignment.center,
@@ -102,7 +102,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
             ? Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF3F4F6),
+                  color: isDark ? theme.cardColor : const Color(0xFFF3F4F6),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 12),

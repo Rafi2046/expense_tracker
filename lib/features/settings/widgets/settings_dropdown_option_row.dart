@@ -87,7 +87,7 @@ class SettingsDropdownOptionRow<T> extends StatelessWidget {
                 size: 18,
               ),
               dropdownColor: theme.brightness == Brightness.dark
-                  ? const Color(0xFF1E1E1E)
+                  ? theme.cardColor
                   : Colors.white,
               style: dropdownStyle,
             ),
