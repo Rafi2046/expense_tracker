@@ -21,7 +21,7 @@ class CalculatorTypeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final trackBg = isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade200;
+    final trackBg = isDark ? theme.cardColor : Colors.grey.shade200;
     final pillBg = isDark ? const Color(0xFF2D2D2D) : Colors.white;
 
     return Container(

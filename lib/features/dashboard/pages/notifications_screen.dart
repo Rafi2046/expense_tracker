@@ -253,7 +253,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         }
       },
       selectedColor: primaryColor.withValues(alpha: 0.15),
-      backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade100,
+      backgroundColor: isDark ? theme.cardColor : Colors.grey.shade100,
       labelStyle: GoogleFonts.workSans(
         color: isSelected ? primaryColor : (isDark ? Colors.grey.shade400 : Colors.grey.shade600),
         fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,

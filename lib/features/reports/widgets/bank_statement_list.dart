@@ -30,7 +30,7 @@ class BankStatementList extends StatelessWidget {
                 width: 150,
                 height: 150,
                 decoration: BoxDecoration(
-                  color: isDark ? Colors.white10 : Colors.grey.shade50,
+                  color: theme.cardColor,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -97,7 +97,7 @@ class BankStatementList extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                           decoration: BoxDecoration(
-                            color: isDark ? Colors.white10 : const Color(0xFFE8F8F5),
+                            color: isDark ? theme.cardColor : const Color(0xFFE8F8F5),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Row(

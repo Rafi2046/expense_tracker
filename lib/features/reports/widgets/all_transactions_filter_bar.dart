@@ -85,8 +85,9 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
-                    color: isDark ? Colors.white10 : const Color(0xFFF1F2F4),
+                    color: theme.cardColor,
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: theme.dividerTheme.color ?? Colors.transparent, width: 1),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -120,8 +121,9 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
-                    color: isDark ? Colors.white10 : const Color(0xFFF1F2F4),
+                    color: theme.cardColor,
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: theme.dividerTheme.color ?? Colors.transparent, width: 1),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

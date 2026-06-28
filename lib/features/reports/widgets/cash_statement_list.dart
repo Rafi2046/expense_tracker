@@ -87,7 +87,7 @@ class CashStatementList extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                           decoration: BoxDecoration(
-                            color: isDark ? Colors.white10 : const Color(0xFFE8F8F5),
+                            color: isDark ? theme.cardColor : const Color(0xFFE8F8F5),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Row(

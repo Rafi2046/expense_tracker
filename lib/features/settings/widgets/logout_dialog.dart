@@ -76,7 +76,7 @@ class LogoutDialog extends StatelessWidget {
                   child: CustomButton(
                     text: 'Cancel',
                     onPressed: () => Navigator.pop(context),
-                    backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                    backgroundColor: isDark ? theme.cardColor : Colors.white,
                     textColor: theme.colorScheme.onSurface,
                     showBorder: true,
                     borderColor: borderColor,

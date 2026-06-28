@@ -175,7 +175,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                       )
                     : null,
                 filled: true,
-                fillColor: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF5F5F5),
+                fillColor: isDark ? theme.cardColor : const Color(0xFFF5F5F5),
                 contentPadding: const EdgeInsets.symmetric(vertical: 10),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),

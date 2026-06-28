@@ -223,7 +223,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                     child: CustomButton(
                       text: 'Cancel',
                       onPressed: _isLoading ? () {} : () => Navigator.pop(context),
-                      backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                      backgroundColor: isDark ? theme.cardColor : Colors.white,
                       textColor: theme.colorScheme.onSurface,
                       showBorder: true,
                       borderColor: borderColor,

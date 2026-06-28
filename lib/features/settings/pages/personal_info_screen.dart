@@ -130,7 +130,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                 ? const ColorScheme.dark(
                     primary: Color(0xFF8E75C8),
                     onPrimary: Colors.white,
-                    surface: Color(0xFF1E1E1E),
+                    surface: Color(0xFF1E1E2E),
                     onSurface: Colors.white,
                   )
                 : const ColorScheme.light(
