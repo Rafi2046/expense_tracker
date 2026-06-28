@@ -19,7 +19,8 @@ class ManageCategoriesScreen extends StatefulWidget {
 class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final TextEditingController _inputController = TextEditingController();
+  final TextEditingController _expenseInputController = TextEditingController();
+  final TextEditingController _incomeInputController = TextEditingController();
 
   @override
   void initState() {
@@ -30,30 +31,42 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
   @override
   void dispose() {
     _tabController.dispose();
-    _inputController.dispose();
+    _expenseInputController.dispose();
+    _incomeInputController.dispose();
     super.dispose();
   }
 
-  void _addCategory(TransactionProvider provider, bool isIncome) {
-    final name = _inputController.text.trim();
+  void _addCategory(bool isIncome) {
+    final provider = context.read<TransactionProvider>();
+    final controller = isIncome ? _incomeInputController : _expenseInputController;
+    final name = controller.text.trim();
     if (name.isEmpty) return;
 
-    if (isIncome) {
-      provider.addIncomeCategory(name);
+    final bool added = isIncome
+        ? provider.addIncomeCategory(name)
+        : provider.addExpenseCategory(name);
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    if (added) {
+      controller.clear();
+      FocusScope.of(context).unfocus();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Category "$name" added successfully!'),
+          duration: const Duration(seconds: 1),
+          backgroundColor: isIncome ? AppColors.activeGreen : AppColors.activeRed,
+        ),
+      );
     } else {
-      provider.addExpenseCategory(name);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Category "$name" already exists.'),
+          duration: const Duration(seconds: 2),
+          backgroundColor: Colors.orange.shade800,
+        ),
+      );
     }
-
-    _inputController.clear();
-    FocusScope.of(context).unfocus();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Category "$name" added successfully!'),
-        duration: const Duration(seconds: 1),
-        backgroundColor: isIncome ? AppColors.activeGreen : AppColors.activeRed,
-      ),
-    );
   }
 
   void _showRenameDialog(
@@ -204,6 +217,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
         ? provider.incomeCategories
         : provider.expenseCategories;
     final themeColor = isIncome ? AppColors.activeGreen : AppColors.activeRed;
+    final controller = isIncome ? _incomeInputController : _expenseInputController;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -213,10 +227,10 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
         children: [
           // Inline Input Row
           CategoryInputRow(
-            controller: _inputController,
+            controller: controller,
             themeColor: themeColor,
-            onSubmitted: (_) => _addCategory(provider, isIncome),
-            onAddPressed: () => _addCategory(provider, isIncome),
+            onSubmitted: (_) => _addCategory(isIncome),
+            onAddPressed: () => _addCategory(isIncome),
           ),
           const SizedBox(height: 16),
 

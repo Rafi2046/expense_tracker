@@ -22,7 +22,7 @@ class CategoryInputRow extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.only(left: 14, right: 6, top: 4, bottom: 4),
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
@@ -33,24 +33,31 @@ class CategoryInputRow extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: controller,
+              textInputAction: TextInputAction.done,
               style: GoogleFonts.workSans(
                 color: theme.colorScheme.onSurface,
                 fontSize: 14.5,
               ),
               decoration: InputDecoration(
-                hintText: 'Add new category...',
+                hintText: 'Enter category name, then tap +',
                 hintStyle: GoogleFonts.workSans(
                   color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                   fontSize: 14,
                 ),
                 border: InputBorder.none,
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(vertical: 12),
               ),
               onSubmitted: onSubmitted,
+              onEditingComplete: onAddPressed,
             ),
           ),
           IconButton(
-            icon: Icon(Symbols.add_circle, color: themeColor, size: 28),
             onPressed: onAddPressed,
+            icon: Icon(Symbols.add_circle, color: themeColor, size: 30),
+            padding: const EdgeInsets.all(8),
+            constraints: const BoxConstraints(),
+            splashRadius: 24,
           ),
         ],
       ),

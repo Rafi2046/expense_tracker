@@ -58,8 +58,12 @@ class TransactionProvider extends ChangeNotifier {
         _currentUid = null;
         _transactions.clear();
         _categoryItems.clear();
-        _isLoading = false;
+        _isLoading = true;
         notifyListeners();
+        _loadFromDatabase().then((_) => _loadCategoriesFromDatabase()).then((_) {
+          _isLoading = false;
+          notifyListeners();
+        });
       }
     });
   }
@@ -561,53 +565,62 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
     notifyListeners();
   }
 
-  void addExpenseCategory(String category) {
+  bool addExpenseCategory(String category) {
     final cleanCategory = category.trim();
-    if (cleanCategory.isEmpty) return;
+    if (cleanCategory.isEmpty) return false;
     if (_categoryItems.any(
       (c) => c.name.toLowerCase() == cleanCategory.toLowerCase() && !c.isIncome,
-    ))
-      return;
+    )) {
+      return false;
+    }
 
     final user = _auth.currentUser;
-    if (user == null) return;
+    final String docId;
+    DocumentReference? docRef;
+    if (user != null) {
+      docRef = _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('categories')
+          .doc();
+      docId = docRef.id;
+    } else {
+      docId = DateTime.now().microsecondsSinceEpoch.toString();
+    }
 
-    final docRef = _firestore
-        .collection('users')
-        .doc(user.uid)
-        .collection('categories')
-        .doc();
     final now = DateTime.now();
     final item = CategoryItem(
-      id: docRef.id,
+      id: docId,
       name: cleanCategory,
       isIncome: false,
       lastModified: now,
       profileId: _activeProfileId,
     );
 
-    _db.insertCategory(item, syncStatus: 'pending_create', profileId: _activeProfileId);
+    _db.insertCategory(item, syncStatus: user != null ? 'pending_create' : 'synced', profileId: _activeProfileId);
     _knownCategoryIds.add(item.id);
-    _pendingCategoryIds.add(item.id);
+    if (user != null) {
+      _pendingCategoryIds.add(item.id);
+    }
     _categoryItems.add(item);
     notifyListeners();
 
-    docRef
-        .set(item.toMap())
-        .then((_) async {
-          _pendingCategoryIds.remove(item.id);
-          await _db.markCategorySynced(item.id, profileId: _activeProfileId);
-          _retryPendingOperations();
-        })
-        .catchError((error) {
-          debugPrint('Firestore addExpenseCategory error: $error');
-        });
+    if (docRef != null) {
+      docRef
+          .set(item.toMap())
+          .then((_) async {
+            _pendingCategoryIds.remove(item.id);
+            await _db.markCategorySynced(item.id, profileId: _activeProfileId);
+            _retryPendingOperations();
+          })
+          .catchError((error) {
+            debugPrint('Firestore addExpenseCategory error: $error');
+          });
+    }
+    return true;
   }
 
   void deleteExpenseCategory(String category) {
-    final user = _auth.currentUser;
-    if (user == null) return;
-
     final idx = _categoryItems.indexWhere(
       (c) => c.name == category && !c.isIncome,
     );
@@ -617,73 +630,85 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
 
     _db.softDeleteCategory(item.id, profileId: _activeProfileId);
     _knownCategoryIds.remove(item.id);
-    _pendingCategoryIds.add(item.id);
     _categoryItems.removeAt(idx);
     notifyListeners();
 
-    _firestore
-        .collection('users')
-        .doc(user.uid)
-        .collection('categories')
-        .doc(item.id)
-        .delete()
-        .then((_) async {
-          _pendingCategoryIds.remove(item.id);
-          await _db.hardDeleteCategory(item.id, profileId: _activeProfileId);
-          _retryPendingOperations();
-        })
-        .catchError((error) {
-          debugPrint('Firestore deleteExpenseCategory error: $error');
-        });
+    final user = _auth.currentUser;
+    if (user != null) {
+      _pendingCategoryIds.add(item.id);
+      _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('categories')
+          .doc(item.id)
+          .delete()
+          .then((_) async {
+            _pendingCategoryIds.remove(item.id);
+            await _db.hardDeleteCategory(item.id, profileId: _activeProfileId);
+            _retryPendingOperations();
+          })
+          .catchError((error) {
+            debugPrint('Firestore deleteExpenseCategory error: $error');
+          });
+    }
   }
 
-  void addIncomeCategory(String category) {
+  bool addIncomeCategory(String category) {
     final cleanCategory = category.trim();
-    if (cleanCategory.isEmpty) return;
+    if (cleanCategory.isEmpty) return false;
     if (_categoryItems.any(
       (c) => c.name.toLowerCase() == cleanCategory.toLowerCase() && c.isIncome,
-    ))
-      return;
+    )) {
+      return false;
+    }
 
     final user = _auth.currentUser;
-    if (user == null) return;
+    final String docId;
+    DocumentReference? docRef;
+    if (user != null) {
+      docRef = _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('categories')
+          .doc();
+      docId = docRef.id;
+    } else {
+      docId = DateTime.now().microsecondsSinceEpoch.toString();
+    }
 
-    final docRef = _firestore
-        .collection('users')
-        .doc(user.uid)
-        .collection('categories')
-        .doc();
     final now = DateTime.now();
     final item = CategoryItem(
-      id: docRef.id,
+      id: docId,
       name: cleanCategory,
       isIncome: true,
       lastModified: now,
       profileId: _activeProfileId,
     );
 
-    _db.insertCategory(item, syncStatus: 'pending_create', profileId: _activeProfileId);
+    _db.insertCategory(item, syncStatus: user != null ? 'pending_create' : 'synced', profileId: _activeProfileId);
     _knownCategoryIds.add(item.id);
-    _pendingCategoryIds.add(item.id);
+    if (user != null) {
+      _pendingCategoryIds.add(item.id);
+    }
     _categoryItems.add(item);
     notifyListeners();
 
-    docRef
-        .set(item.toMap())
-        .then((_) async {
-          _pendingCategoryIds.remove(item.id);
-          await _db.markCategorySynced(item.id, profileId: _activeProfileId);
-          _retryPendingOperations();
-        })
-        .catchError((error) {
-          debugPrint('Firestore addIncomeCategory error: $error');
-        });
+    if (docRef != null) {
+      docRef
+          .set(item.toMap())
+          .then((_) async {
+            _pendingCategoryIds.remove(item.id);
+            await _db.markCategorySynced(item.id, profileId: _activeProfileId);
+            _retryPendingOperations();
+          })
+          .catchError((error) {
+            debugPrint('Firestore addIncomeCategory error: $error');
+          });
+    }
+    return true;
   }
 
   void deleteIncomeCategory(String category) {
-    final user = _auth.currentUser;
-    if (user == null) return;
-
     final idx = _categoryItems.indexWhere(
       (c) => c.name == category && c.isIncome,
     );
@@ -693,24 +718,27 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
 
     _db.softDeleteCategory(item.id, profileId: _activeProfileId);
     _knownCategoryIds.remove(item.id);
-    _pendingCategoryIds.add(item.id);
     _categoryItems.removeAt(idx);
     notifyListeners();
 
-    _firestore
-        .collection('users')
-        .doc(user.uid)
-        .collection('categories')
-        .doc(item.id)
-        .delete()
-        .then((_) async {
-          _pendingCategoryIds.remove(item.id);
-          await _db.hardDeleteCategory(item.id, profileId: _activeProfileId);
-          _retryPendingOperations();
-        })
-        .catchError((error) {
-          debugPrint('Firestore deleteIncomeCategory error: $error');
-        });
+    final user = _auth.currentUser;
+    if (user != null) {
+      _pendingCategoryIds.add(item.id);
+      _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('categories')
+          .doc(item.id)
+          .delete()
+          .then((_) async {
+            _pendingCategoryIds.remove(item.id);
+            await _db.hardDeleteCategory(item.id, profileId: _activeProfileId);
+            _retryPendingOperations();
+          })
+          .catchError((error) {
+            debugPrint('Firestore deleteIncomeCategory error: $error');
+          });
+    }
   }
 
   void renameCategory(
@@ -721,9 +749,6 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
     final cleanNewName = newName.trim();
     if (cleanNewName.isEmpty) return;
     if (oldName.trim().toLowerCase() == cleanNewName.toLowerCase()) return;
-
-    final user = _auth.currentUser;
-    if (user == null) return;
 
     // 1. SQLite atomic cascade
     _db.renameCategory(oldName, cleanNewName, isIncome: isIncome, profileId: _activeProfileId);
@@ -770,45 +795,48 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
     notifyListeners();
 
     // 4. Firestore batch
-    final batch = _firestore.batch();
-    if (renamedCategory != null) {
-      batch.update(
-        _firestore
-            .collection('users')
-            .doc(user.uid)
-            .collection('categories')
-            .doc(renamedCategory.id),
-        renamedCategory.toMap(),
-      );
-    }
-    for (final id in affectedTxIds) {
-      final tx = _transactions.firstWhere((t) => t.id == id);
-      batch.update(
-        _firestore
-            .collection('users')
-            .doc(user.uid)
-            .collection('transactions')
-            .doc(id),
-        tx.toMap(),
-      );
-    }
+    final user = _auth.currentUser;
+    if (user != null) {
+      final batch = _firestore.batch();
+      if (renamedCategory != null) {
+        batch.update(
+          _firestore
+              .collection('users')
+              .doc(user.uid)
+              .collection('categories')
+              .doc(renamedCategory.id),
+          renamedCategory.toMap(),
+        );
+      }
+      for (final id in affectedTxIds) {
+        final tx = _transactions.firstWhere((t) => t.id == id);
+        batch.update(
+          _firestore
+              .collection('users')
+              .doc(user.uid)
+              .collection('transactions')
+              .doc(id),
+          tx.toMap(),
+        );
+      }
 
-    batch
-        .commit()
-        .then((_) async {
-          if (renamedCategory != null) {
-            _pendingCategoryIds.remove(renamedCategory.id);
-            await _db.markCategorySynced(renamedCategory.id, profileId: _activeProfileId);
-          }
-          for (final id in affectedTxIds) {
-            _pendingIds.remove(id);
-            await _db.markSynced(id, profileId: _activeProfileId);
-          }
-          _retryPendingOperations();
-        })
-        .catchError((error) {
-          debugPrint('Firestore renameCategory batch error: $error');
-        });
+      batch
+          .commit()
+          .then((_) async {
+            if (renamedCategory != null) {
+              _pendingCategoryIds.remove(renamedCategory.id);
+              await _db.markCategorySynced(renamedCategory.id, profileId: _activeProfileId);
+            }
+            for (final id in affectedTxIds) {
+              _pendingIds.remove(id);
+              await _db.markSynced(id, profileId: _activeProfileId);
+            }
+            _retryPendingOperations();
+          })
+          .catchError((error) {
+            debugPrint('Firestore renameCategory batch error: $error');
+          });
+    }
   }
 
   void addTransaction(TransactionItem transaction) {
