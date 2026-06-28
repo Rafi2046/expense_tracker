@@ -85,11 +85,7 @@ class DashboardStatCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Value (Large Widget) on Top
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: value,
-                    ),
+                    value,
                     const SizedBox(height: 2),
 
                     // Title (Small Mixed Case Text) on Bottom

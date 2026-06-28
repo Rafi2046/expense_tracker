@@ -22,25 +22,10 @@ class PrivacyMaskedText extends StatelessWidget {
     final formatted = context.formatAmount(amount, listen: false);
     final displayText = effectiveMasked ? formatted.masked : formatted;
 
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
-      switchInCurve: Curves.easeOut,
-      switchOutCurve: Curves.easeIn,
-      transitionBuilder: (Widget child, Animation<double> animation) {
-        return FadeTransition(
-          opacity: animation,
-          child: ScaleTransition(
-            scale: Tween<double>(begin: 0.92, end: 1.0).animate(animation),
-            child: child,
-          ),
-        );
-      },
-      child: Text(
-        displayText,
-        key: ValueKey<bool>(effectiveMasked),
-        style: style,
-        softWrap: false,
-      ),
+    return Text(
+      displayText,
+      style: style,
+      softWrap: false,
     );
   }
 }

@@ -114,7 +114,7 @@ class AppTextStyles {
   static TextStyle cardValueGreen = TextStyle(
     fontSize: 22,
     fontWeight: FontWeight.bold,
-    color: AppColors.buttonColor,
+    color: AppColors.activeGreen,
     fontFamily: GoogleFonts.workSans().fontFamily,
   );
 

@@ -38,9 +38,7 @@ class SpendingOverviewCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: isDark
-            ? const Color(0xFF1E1E2E)
-            : Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
