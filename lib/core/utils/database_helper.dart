@@ -1023,6 +1023,19 @@ class DatabaseHelper {
         whereArgs: [id, profileId]);
   }
 
+  /// Wipes all user-specific data from SQLite (transactions, categories,
+  /// debt_items, budget). Leaves profile definitions intact.
+  Future<void> clearUserData() async {
+    if (kIsWeb) return;
+    final db = await instance.database;
+    await db.transaction((txn) async {
+      await txn.delete('transactions');
+      await txn.delete('categories');
+      await txn.delete('debt_items');
+      await txn.delete('budget');
+    });
+  }
+
   // Close database connection
   Future close() async {
     if (kIsWeb) return;

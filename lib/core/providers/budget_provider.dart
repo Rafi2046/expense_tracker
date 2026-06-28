@@ -8,26 +8,36 @@ class BudgetProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DatabaseHelper _db = DatabaseHelper.instance;
+
+  User? _firebaseUser;
   StreamSubscription<User?>? _authSubscription;
   StreamSubscription<DocumentSnapshot>? _firestoreSubscription;
 
   bool _isLoading = true;
-  String? _currentUid;
   double _amount = 0;
   String _activeProfileId = 'default_profile';
 
   BudgetProvider() {
-    _authSubscription = _auth.authStateChanges().listen((user) {
-      _firestoreSubscription?.cancel();
-      if (user != null) {
-        _startListening(user.uid);
-      } else {
-        _currentUid = null;
-        _amount = 0;
-        _isLoading = false;
-        notifyListeners();
-      }
+    _authSubscription = _auth.userChanges().listen((user) {
+      _onAuthChanged(user);
     });
+  }
+
+  void _onAuthChanged(User? newUser) {
+    _firebaseUser = newUser;
+
+    _firestoreSubscription?.cancel();
+    _firestoreSubscription = null;
+
+    if (newUser == null) {
+      _amount = 0;
+      _isLoading = true;
+      _db.clearUserData();
+      notifyListeners();
+      return;
+    }
+
+    _startListening(newUser.uid);
   }
 
   String get activeProfileId => _activeProfileId;
@@ -37,7 +47,6 @@ class BudgetProvider extends ChangeNotifier {
   bool get hasBudget => _amount > 0;
 
   void _startListening(String uid) {
-    _currentUid = uid;
     _isLoading = true;
     notifyListeners();
 
@@ -89,7 +98,7 @@ class BudgetProvider extends ChangeNotifier {
   }
 
   Future<void> _retryPendingBudget() async {
-    final uid = _currentUid;
+    final uid = _firebaseUser?.uid;
     if (uid == null) return;
 
     try {
@@ -112,8 +121,17 @@ class BudgetProvider extends ChangeNotifier {
     }
   }
 
+  void clear() {
+    _firestoreSubscription?.cancel();
+    _firestoreSubscription = null;
+    _amount = 0;
+    _isLoading = true;
+    _firebaseUser = null;
+    notifyListeners();
+  }
+
   void setBudget(double amount) {
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user == null) return;
 
     _amount = amount;
@@ -139,8 +157,9 @@ class BudgetProvider extends ChangeNotifier {
     _activeProfileId = id;
     _firestoreSubscription?.cancel();
     _amount = 0;
-    if (_currentUid != null) {
-      _startListening(_currentUid!);
+    final uid = _firebaseUser?.uid;
+    if (uid != null) {
+      _startListening(uid);
     }
     notifyListeners();
   }

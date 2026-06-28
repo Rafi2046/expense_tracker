@@ -13,6 +13,8 @@ class TransactionProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DatabaseHelper _db = DatabaseHelper.instance;
+
+  User? _firebaseUser;
   StreamSubscription<User?>? _authSubscription;
   StreamSubscription<QuerySnapshot>? _firestoreSubscription;
   StreamSubscription<QuerySnapshot>? _categorySubscription;
@@ -22,7 +24,6 @@ class TransactionProvider extends ChangeNotifier {
   final Set<String> _pendingCategoryIds = {};
 
   bool _isLoading = true;
-  String? _currentUid;
   bool _isRetrying = false;
 
   String _activeProfileId = 'default_profile';
@@ -32,49 +33,58 @@ class TransactionProvider extends ChangeNotifier {
 
   // Month, Search, and Sort states
   late final List<DateTime> availableMonths;
-  int selectedMonthIndex = 6; // Center (current month)
+  int selectedMonthIndex = 6;
   bool isSearching = false;
   String searchQuery = '';
   TransactionSortOption sortOption = TransactionSortOption.latest;
 
   TransactionProvider() {
-    // Generate 12 months centered around the current month (index 6 is current)
     final now = DateTime.now();
     availableMonths = List.generate(12, (index) {
       return DateTime(now.year, now.month - 6 + index);
     });
 
-    // Listen to auth changes
-    _authSubscription = _auth.authStateChanges().listen((user) {
-      _firestoreSubscription?.cancel();
-      _categorySubscription?.cancel();
-      _knownDocIds.clear();
-      _pendingIds.clear();
-      _knownCategoryIds.clear();
-      _pendingCategoryIds.clear();
-      if (user != null) {
-        _startListening(user.uid);
-      } else {
-        _currentUid = null;
-        _transactions.clear();
-        _categoryItems.clear();
-        _isLoading = true;
-        notifyListeners();
-        _loadFromDatabase().then((_) => _loadCategoriesFromDatabase()).then((_) {
-          _isLoading = false;
-          notifyListeners();
-        });
-      }
+    _authSubscription = _auth.userChanges().listen((user) {
+      _onAuthChanged(user);
     });
   }
 
+  void _onAuthChanged(User? newUser) {
+    final uidChanged = newUser?.uid != _firebaseUser?.uid;
+
+    _firebaseUser = newUser;
+
+    _firestoreSubscription?.cancel();
+    _firestoreSubscription = null;
+    _categorySubscription?.cancel();
+    _categorySubscription = null;
+    _knownDocIds.clear();
+    _pendingIds.clear();
+    _knownCategoryIds.clear();
+    _pendingCategoryIds.clear();
+
+    if (newUser == null) {
+      _transactions.clear();
+      _categoryItems.clear();
+      _isLoading = true;
+      _db.clearUserData();
+      notifyListeners();
+      return;
+    }
+
+    if (uidChanged) {
+      _transactions.clear();
+      _categoryItems.clear();
+      _db.clearUserData();
+    }
+
+    _startListening(newUser.uid);
+  }
+
   void _startListening(String uid) {
-    _currentUid = uid;
     _isLoading = true;
     notifyListeners();
 
-    // 1. Load from SQLite first (populates _knownDocIds / _knownCategoryIds)
-    // 2. THEN attach Firestore listeners so known-doc guards prevent duplicates
     _loadFromDatabase().then((_) {
       return _loadCategoriesFromDatabase();
     }).then((_) {
@@ -190,7 +200,6 @@ class TransactionProvider extends ChangeNotifier {
       for (final item in items) {
         _knownDocIds.add(item.id);
       }
-      // Protect pending local changes from snapshot overwrites
       final pendingIds = await _db.readAllPendingIds(profileId: _activeProfileId);
       _pendingIds.addAll(pendingIds);
     } catch (e) {
@@ -218,7 +227,7 @@ class TransactionProvider extends ChangeNotifier {
     if (_isRetrying) return;
     _isRetrying = true;
     try {
-      final uid = _currentUid;
+      final uid = _firebaseUser?.uid;
       if (uid == null) return;
 
       final pending = await _db.readPendingSyncs(profileId: _activeProfileId);
@@ -245,13 +254,12 @@ class TransactionProvider extends ChangeNotifier {
             .doc(id)
             .delete()
             .then((_) {
-_db.hardDeleteTransaction(id, profileId: _activeProfileId);
+              _db.hardDeleteTransaction(id, profileId: _activeProfileId);
               _pendingIds.remove(id);
             })
             .catchError((_) {});
       }
 
-      // Retry pending category creates
       final pendingCategories = await _db.readPendingCategorySyncs(profileId: _activeProfileId);
       for (final item in pendingCategories) {
         _firestore
@@ -261,13 +269,12 @@ _db.hardDeleteTransaction(id, profileId: _activeProfileId);
             .doc(item.id)
             .set(item.toMap())
             .then((_) {
-_db.markCategorySynced(item.id, profileId: _activeProfileId);
+              _db.markCategorySynced(item.id, profileId: _activeProfileId);
               _pendingCategoryIds.remove(item.id);
             })
             .catchError((_) {});
       }
 
-      // Retry pending category deletes
       final deleteCategoryIds = await _db.readPendingCategoryDeleteIds(profileId: _activeProfileId);
       for (final id in deleteCategoryIds) {
         _firestore
@@ -293,8 +300,6 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
 
   bool get isLoading => _isLoading;
 
-
-
   List<String> get expenseCategories => List.unmodifiable(
     _categoryItems.where((c) => !c.isIncome).map((c) => c.name),
   );
@@ -305,7 +310,6 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
 
   List<TransactionItem> get transactions => List.unmodifiable(_transactions);
 
-  // Getters for selected month and active transactions
   DateTime get selectedMonth => availableMonths[selectedMonthIndex];
 
   List<TransactionItem> get monthlyTransactions {
@@ -328,7 +332,6 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
       }).toList();
     }
 
-    // Apply sorting
     switch (sortOption) {
       case TransactionSortOption.latest:
         results.sort((a, b) => b.dateTime.compareTo(a.dateTime));
@@ -343,7 +346,6 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
     return results;
   }
 
-  // Monthly stats calculations (based on month transactions before search query filter)
   double get monthlyIncome {
     return monthlyTransactions
         .where((tx) => tx.isIncome)
@@ -457,7 +459,7 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
     return '$prefix${incomeChangePercent.toStringAsFixed(1)}%';
   }
 
-  // ─── Calendar-Anchored Getters (always DateTime.now(), ignores selectedMonth) ───
+  // ─── Calendar-Anchored Getters ────────────────────────────────
 
   List<TransactionItem> get _calendarCurrentTransactions {
     final now = DateTime.now();
@@ -539,7 +541,24 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
         .toList();
   }
 
-  // Actions
+  // ─── Public API ───────────────────────────────────────────────
+
+  void clear() {
+    _firestoreSubscription?.cancel();
+    _firestoreSubscription = null;
+    _categorySubscription?.cancel();
+    _categorySubscription = null;
+    _knownDocIds.clear();
+    _pendingIds.clear();
+    _knownCategoryIds.clear();
+    _pendingCategoryIds.clear();
+    _transactions.clear();
+    _categoryItems.clear();
+    _isLoading = true;
+    _firebaseUser = null;
+    notifyListeners();
+  }
+
   void selectMonthIndex(int index) {
     if (index >= 0 && index < availableMonths.length) {
       selectedMonthIndex = index;
@@ -574,7 +593,7 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
       return false;
     }
 
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     final String docId;
     DocumentReference? docRef;
     if (user != null) {
@@ -633,7 +652,7 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
     _categoryItems.removeAt(idx);
     notifyListeners();
 
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user != null) {
       _pendingCategoryIds.add(item.id);
       _firestore
@@ -662,7 +681,7 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
       return false;
     }
 
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     final String docId;
     DocumentReference? docRef;
     if (user != null) {
@@ -721,7 +740,7 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
     _categoryItems.removeAt(idx);
     notifyListeners();
 
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user != null) {
       _pendingCategoryIds.add(item.id);
       _firestore
@@ -750,10 +769,8 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
     if (cleanNewName.isEmpty) return;
     if (oldName.trim().toLowerCase() == cleanNewName.toLowerCase()) return;
 
-    // 1. SQLite atomic cascade
     _db.renameCategory(oldName, cleanNewName, isIncome: isIncome, profileId: _activeProfileId);
 
-    // 2. Update local category items
     CategoryItem? renamedCategory;
     for (int i = 0; i < _categoryItems.length; i++) {
       if (_categoryItems[i].name == oldName &&
@@ -771,7 +788,6 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
       }
     }
 
-    // 3. Update local transactions
     final affectedTxIds = <String>[];
     for (int i = 0; i < _transactions.length; i++) {
       if (_transactions[i].category == oldName) {
@@ -794,8 +810,7 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
     }
     notifyListeners();
 
-    // 4. Firestore batch
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user != null) {
       final batch = _firestore.batch();
       if (renamedCategory != null) {
@@ -841,7 +856,7 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
 
   void addTransaction(TransactionItem transaction) {
     debugPrint('DIAG PROVIDER ENTER: transaction.dateTime=${transaction.dateTime} month=${transaction.dateTime.month} day=${transaction.dateTime.day}');
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user == null) return;
 
     final docRef = _firestore
@@ -865,17 +880,14 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
       partyName: transaction.partyName,
     );
 
-    // 1. SQLite first (always succeeds locally)
     _db.insertTransaction(uniqueTransaction, syncStatus: 'pending_create', profileId: _activeProfileId);
 
-    // 2. Update local state
     _knownDocIds.add(uniqueTransaction.id);
     _pendingIds.add(uniqueTransaction.id);
     debugPrint('DIAG PROVIDER STORE: uniqueTransaction.dateTime=${uniqueTransaction.dateTime} month=${uniqueTransaction.dateTime.month}');
     _transactions.insert(0, uniqueTransaction);
     notifyListeners();
 
-    // 3. Try Firestore — never rollback SQLite on failure
     docRef
         .set(uniqueTransaction.toMap())
         .then((_) async {
@@ -889,7 +901,7 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
   }
 
   void transferBalance(double amount, String fromAccount, String toAccount) {
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user == null) return;
 
     final txRef = _firestore
@@ -922,11 +934,9 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
       profileId: _activeProfileId,
     );
 
-    // 1. SQLite first
     _db.insertTransaction(expenseItem, syncStatus: 'pending_create', profileId: _activeProfileId);
     _db.insertTransaction(incomeItem, syncStatus: 'pending_create', profileId: _activeProfileId);
 
-    // 2. Local state
     _knownDocIds.add(expenseItem.id);
     _knownDocIds.add(incomeItem.id);
     _pendingIds.add(expenseItem.id);
@@ -935,7 +945,6 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
     _transactions.insert(0, incomeItem);
     notifyListeners();
 
-    // 3. Try Firestore
     final batch = _firestore.batch();
     batch.set(txRef.doc(expenseItem.id), expenseItem.toMap());
     batch.set(txRef.doc(incomeItem.id), incomeItem.toMap());
@@ -954,22 +963,19 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
   }
 
   void deleteTransaction(String id) {
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user == null) return;
 
     final index = _transactions.indexWhere((t) => t.id == id);
     if (index == -1) return;
 
-    // 1. SQLite first
     _db.softDeleteTransaction(id, profileId: _activeProfileId);
 
-    // 2. Local state
     _knownDocIds.remove(id);
     _pendingIds.add(id);
     _transactions.removeAt(index);
     notifyListeners();
 
-    // 3. Try Firestore
     _firestore
         .collection('users')
         .doc(user.uid)
@@ -987,7 +993,7 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
   }
 
   void updateTransaction(TransactionItem transaction) {
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user == null) return;
 
     final index = _transactions.indexWhere((t) => t.id == transaction.id);
@@ -1007,15 +1013,12 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
       partyName: transaction.partyName,
     );
 
-    // 1. SQLite first
     _db.updateTransaction(updated, syncStatus: 'pending_update', profileId: _activeProfileId);
 
-    // 2. Local state
     _pendingIds.add(updated.id);
     _transactions[index] = updated;
     notifyListeners();
 
-    // 3. Try Firestore
     _firestore
         .collection('users')
         .doc(user.uid)
@@ -1043,8 +1046,9 @@ _db.markCategorySynced(item.id, profileId: _activeProfileId);
     _pendingCategoryIds.clear();
     _transactions.clear();
     _categoryItems.clear();
-    if (_currentUid != null) {
-      _startListening(_currentUid!);
+    final uid = _firebaseUser?.uid;
+    if (uid != null) {
+      _startListening(uid);
     }
     notifyListeners();
   }

@@ -40,6 +40,7 @@ class LedgerTransactionList extends StatelessWidget {
     if (isLoading) {
       return Column(
         children: List.generate(6, (i) => LedgerTransactionRow(
+          key: ValueKey('ledger_skeleton_$i'),
           title: 'Loading transaction',
           dateText: '12:00 PM',
           category: 'Category',

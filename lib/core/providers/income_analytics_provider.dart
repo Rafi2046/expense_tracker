@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/daily_distribution_chart.dart' show DailyChartData;
 import 'package:expense_tracker/features/dashboard/widgets/weekly_trend_chart.dart' show WeeklyChartData;
@@ -8,10 +10,26 @@ import 'package:expense_tracker/features/dashboard/widgets/quarterly_trend_chart
 class IncomeAnalyticsProvider extends ChangeNotifier {
   List<TransactionItem> _incomeTransactions = [];
 
+  User? _firebaseUser;
+  StreamSubscription<User?>? _authSubscription;
+
+  IncomeAnalyticsProvider() {
+    _authSubscription = FirebaseAuth.instance.userChanges().listen((user) {
+      _onAuthChanged(user);
+    });
+  }
+
+  void _onAuthChanged(User? newUser) {
+    _firebaseUser = newUser;
+    if (newUser == null) {
+      _incomeTransactions = [];
+      notifyListeners();
+    }
+  }
+
   void updateTransactions(List<TransactionItem> transactions) {
     final newIncomes = transactions.where((tx) => tx.isIncome).toList();
 
-    // Prevent redundant rebuilds if the income data hasn't changed
     if (_isListEqual(newIncomes, _incomeTransactions)) {
       return;
     }
@@ -94,7 +112,6 @@ class IncomeAnalyticsProvider extends ChangeNotifier {
 
   DateTime get _startOfCurrentWeek {
     final now = DateTime.now();
-    // Monday of this week
     return DateTime(now.year, now.month, now.day).subtract(Duration(days: now.weekday - 1));
   }
 
@@ -283,5 +300,17 @@ class IncomeAnalyticsProvider extends ChangeNotifier {
         isHighlighted: monthNum == now.month,
       );
     });
+  }
+
+  void clear() {
+    _incomeTransactions = [];
+    _firebaseUser = null;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    super.dispose();
   }
 }

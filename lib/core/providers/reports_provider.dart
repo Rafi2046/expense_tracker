@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/model/unified_transaction.dart';
@@ -36,27 +38,46 @@ class ReportsProvider extends ChangeNotifier {
   TransactionProvider? _txProvider;
   DebtProvider? _debtProvider;
 
-  // Shared Date Range for all reports (defaults to current month)
+  User? _firebaseUser;
+  StreamSubscription<User?>? _authSubscription;
+
   DateTimeRange? _selectedDateRange;
   DateRangeOption _selectedOption = DateRangeOption.thisMonth;
 
-  // All Transactions filtering & sorting
   String _searchQuery = '';
   String _selectedType = 'All Transactions';
   String? _selectedPartyName;
   ReportSortOption _sortOption = ReportSortOption.latest;
 
-  // Party Statement filtering
   String? _selectedPartyNameForStatement;
 
-  // Parties Report filtering
   String _partiesSearchQuery = '';
 
-  // Party Statement view mode
   PartyStatementViewMode _partyStatementViewMode = PartyStatementViewMode.card;
 
   ReportsProvider() {
     _selectedDateRange = getDateTimeRangeForOption(DateRangeOption.thisMonth);
+    _authSubscription = FirebaseAuth.instance.userChanges().listen((user) {
+      _onAuthChanged(user);
+    });
+  }
+
+  void _onAuthChanged(User? newUser) {
+    _firebaseUser = newUser;
+    if (newUser == null) {
+      _txProvider = null;
+      _debtProvider = null;
+      _selectedDateRange = null;
+      _selectedOption = DateRangeOption.allTime;
+      _searchQuery = '';
+      _selectedType = 'All Transactions';
+      _selectedPartyName = null;
+      _sortOption = ReportSortOption.latest;
+      _selectedPartyNameForStatement = null;
+      _partiesSearchQuery = '';
+      _partyStatementViewMode = PartyStatementViewMode.card;
+      notifyListeners();
+    }
   }
 
   void updateProviders(TransactionProvider tx, DebtProvider debt) {
@@ -65,7 +86,6 @@ class ReportsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Getters
   DateTimeRange? get selectedDateRange => _selectedDateRange;
   DateRangeOption get selectedOption => _selectedOption;
   String get searchQuery => _searchQuery;
@@ -76,7 +96,6 @@ class ReportsProvider extends ChangeNotifier {
   String get partiesSearchQuery => _partiesSearchQuery;
   PartyStatementViewMode get partyStatementViewMode => _partyStatementViewMode;
 
-  // Setters/actions
   void setDateRange(DateTimeRange? range, {DateRangeOption option = DateRangeOption.custom}) {
     _selectedDateRange = range;
     _selectedOption = option;
@@ -128,7 +147,6 @@ class ReportsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Helper: Get DateTimeRange for an option
   DateTimeRange? getDateTimeRangeForOption(DateRangeOption option) {
     final now = DateTime.now();
     switch (option) {
@@ -144,7 +162,6 @@ class ReportsProvider extends ChangeNotifier {
           end: DateTime(yesterday.year, yesterday.month, yesterday.day),
         );
       case DateRangeOption.thisWeek:
-        // Sunday of current week
         final sunday = now.subtract(Duration(days: now.weekday % 7));
         final saturday = sunday.add(const Duration(days: 6));
         return DateTimeRange(
@@ -162,7 +179,6 @@ class ReportsProvider extends ChangeNotifier {
           end: DateTime(now.year, now.month, 0),
         );
       case DateRangeOption.thisFiscalYear:
-        // Bangladesh/India: July 1 to June 30
         int startYear = now.month >= 7 ? now.year : now.year - 1;
         return DateTimeRange(
           start: DateTime(startYear, 7, 1),
@@ -180,7 +196,6 @@ class ReportsProvider extends ChangeNotifier {
     }
   }
 
-  // Helper: Get Title string for Option
   String getDateRangeOptionTitle(DateRangeOption option) {
     switch (option) {
       case DateRangeOption.today:
@@ -204,7 +219,6 @@ class ReportsProvider extends ChangeNotifier {
     }
   }
 
-  // Helper: Get Formatted Subtitle for Option
   String getDateRangeSubtitle(DateRangeOption option, DateTimeRange? range) {
     if (option == DateRangeOption.allTime) {
       return 'See Transactions of all time';
@@ -222,13 +236,11 @@ class ReportsProvider extends ChangeNotifier {
     return '${formatter.format(targetRange.start)} - ${formatter.format(targetRange.end)}';
   }
 
-  // 1. All Transactions Screen Calculations
   List<UnifiedTransaction> get filteredTransactions {
     if (_txProvider == null || _debtProvider == null) return [];
 
     final List<UnifiedTransaction> all = [];
 
-    // Add Incomes & Expenses
     for (var tx in _txProvider!.transactions) {
       all.add(UnifiedTransaction(
         id: tx.id,
@@ -241,7 +253,6 @@ class ReportsProvider extends ChangeNotifier {
       ));
     }
 
-    // Add Payments from debts
     for (var d in _debtProvider!.items) {
       all.add(UnifiedTransaction(
         id: d.id,
@@ -255,7 +266,6 @@ class ReportsProvider extends ChangeNotifier {
       ));
     }
 
-    // Apply sorting
     switch (_sortOption) {
       case ReportSortOption.latest:
         all.sort((a, b) => b.dateTime.compareTo(a.dateTime));
@@ -271,9 +281,7 @@ class ReportsProvider extends ChangeNotifier {
         break;
     }
 
-    // Filter
     return all.where((tx) {
-      // Date filter
       if (_selectedDateRange != null) {
         final start = DateTime(_selectedDateRange!.start.year, _selectedDateRange!.start.month, _selectedDateRange!.start.day);
         final end = DateTime(_selectedDateRange!.end.year, _selectedDateRange!.end.month, _selectedDateRange!.end.day, 23, 59, 59);
@@ -282,7 +290,6 @@ class ReportsProvider extends ChangeNotifier {
         }
       }
 
-      // Search filter
       if (_searchQuery.trim().isNotEmpty) {
         final q = _searchQuery.toLowerCase().trim();
         final matchTitle = tx.title.toLowerCase().contains(q);
@@ -293,12 +300,10 @@ class ReportsProvider extends ChangeNotifier {
         }
       }
 
-      // Type filter
       if (_selectedType != 'All Transactions') {
         if (tx.type != _selectedType) return false;
       }
 
-      // Party filter
       if (_selectedPartyName != null) {
         if (tx.partyName != _selectedPartyName) return false;
       }
@@ -307,7 +312,6 @@ class ReportsProvider extends ChangeNotifier {
     }).toList();
   }
 
-  // All Transactions Screen Totals
   Map<String, double> get allTransactionsTotals {
     double totalPaymentsIn = 0.0;
     double totalPaymentsOut = 0.0;
@@ -329,7 +333,6 @@ class ReportsProvider extends ChangeNotifier {
     };
   }
 
-  // 2. Party Statement Calculations
   List<PartyStatementEntry> get partyStatementTransactions {
     if (_selectedPartyNameForStatement == null) return [];
     final List<PartyStatementEntry> entries = [];
@@ -396,7 +399,6 @@ class ReportsProvider extends ChangeNotifier {
     };
   }
 
-  // 3. Bank Statement Calculations
   List<LedgerItem> get bankStatementTransactions {
     if (_txProvider == null) return [];
 
@@ -449,13 +451,11 @@ class ReportsProvider extends ChangeNotifier {
     return transactions.first.runningBalance;
   }
 
-  // Cash Statement Calculations
   List<LedgerItem> get cashStatementTransactions {
     if (_txProvider == null || _debtProvider == null) return [];
 
     final List<LedgerItem> ledger = [];
 
-    // Incomes/Expenses matching Cash
     for (var tx in _txProvider!.transactions) {
       if (tx.paymentMethod == 'Cash') {
         ledger.add(LedgerItem(
@@ -469,7 +469,6 @@ class ReportsProvider extends ChangeNotifier {
       }
     }
 
-    // Debts (all treated as Cash by default)
     for (var d in _debtProvider!.items) {
       ledger.add(LedgerItem(
         id: d.id,
@@ -515,7 +514,6 @@ class ReportsProvider extends ChangeNotifier {
     return transactions.first.runningBalance;
   }
 
-  // 4. Income Expense Calculations
   List<TransactionItem> get filteredIncomeExpenseTransactions {
     if (_txProvider == null) return [];
 
@@ -576,11 +574,9 @@ class ReportsProvider extends ChangeNotifier {
     };
   }
 
-  // 5. Parties Report Calculations
   List<PartyReportSummary> get partyReportSummaries {
     if (_debtProvider == null) return [];
 
-    // Group debt items by party name
     final Map<String, List<DebtItem>> grouped = {};
     for (var item in _debtProvider!.items) {
       grouped.putIfAbsent(item.name, () => []).add(item);
@@ -608,7 +604,6 @@ class ReportsProvider extends ChangeNotifier {
       ));
     });
 
-    // Filter by search query
     return summaries.where((item) {
       if (_partiesSearchQuery.trim().isEmpty) return true;
       final q = _partiesSearchQuery.toLowerCase().trim();
@@ -616,5 +611,27 @@ class ReportsProvider extends ChangeNotifier {
       final matchPhone = item.phone?.toLowerCase().contains(q) ?? false;
       return matchName || matchPhone;
     }).toList();
+  }
+
+  void clear() {
+    _txProvider = null;
+    _debtProvider = null;
+    _selectedDateRange = null;
+    _selectedOption = DateRangeOption.allTime;
+    _searchQuery = '';
+    _selectedType = 'All Transactions';
+    _selectedPartyName = null;
+    _sortOption = ReportSortOption.latest;
+    _selectedPartyNameForStatement = null;
+    _partiesSearchQuery = '';
+    _partyStatementViewMode = PartyStatementViewMode.card;
+    _firebaseUser = null;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    super.dispose();
   }
 }

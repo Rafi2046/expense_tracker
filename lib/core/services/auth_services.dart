@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:expense_tracker/core/utils/database_helper.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -114,16 +115,18 @@ class AuthService {
   }
 
   Future<void> signOut() async {
+    // Wipe local SQLite cache before auth state changes — this ensures
+    // _loadFromDatabase() finds no stale rows when the next user signs in.
+    try {
+      await DatabaseHelper.instance.clearUserData();
+    } catch (_) {}
+
     try {
       await _auth.signOut();
-    } catch (e) {
-      // Ignore or log error
-    }
+    } catch (_) {}
     try {
       await _googleSignIn.signOut();
-    } catch (e) {
-      // Ignore error since user might have logged in via email/password
-    }
+    } catch (_) {}
   }
 
   Stream<User?> get userStateChanges => _auth.authStateChanges();

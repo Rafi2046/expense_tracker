@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 
@@ -6,11 +8,30 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
   List<TransactionItem> _transactions = [];
   List<DebtItem> _debts = [];
 
-  // ─── computed totals ────────────────────────────────────────────
+  User? _firebaseUser;
+  StreamSubscription<User?>? _authSubscription;
 
   double allTimeCashBalance = 0.0;
   double allTimeBankBalance = 0.0;
   double allTimeTotalBalance = 0.0;
+
+  BalanceAnalyticsProvider() {
+    _authSubscription = FirebaseAuth.instance.userChanges().listen((user) {
+      _onAuthChanged(user);
+    });
+  }
+
+  void _onAuthChanged(User? newUser) {
+    _firebaseUser = newUser;
+    if (newUser == null) {
+      _transactions = [];
+      _debts = [];
+      allTimeCashBalance = 0.0;
+      allTimeBankBalance = 0.0;
+      allTimeTotalBalance = 0.0;
+      notifyListeners();
+    }
+  }
 
   void updateData(List<TransactionItem> transactions, List<DebtItem> debts) {
     if (_isListEqual(transactions, _transactions) && _isDebtListEqual(debts, _debts)) {
@@ -62,7 +83,15 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
     return bal;
   }
 
-  // ─── equality guards ────────────────────────────────────────────
+  void clear() {
+    _transactions = [];
+    _debts = [];
+    allTimeCashBalance = 0.0;
+    allTimeBankBalance = 0.0;
+    allTimeTotalBalance = 0.0;
+    _firebaseUser = null;
+    notifyListeners();
+  }
 
   bool _isListEqual(List<TransactionItem> a, List<TransactionItem> b) {
     if (a.length != b.length) return false;
@@ -89,5 +118,11 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
       }
     }
     return true;
+  }
+
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    super.dispose();
   }
 }

@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/expense_trend_chart_card.dart' show ExpenseChartData;
 import 'package:expense_tracker/features/dashboard/widgets/expense_categories_breakdown_card.dart' show CategoryBreakdownItem;
@@ -7,6 +9,9 @@ import 'package:expense_tracker/features/dashboard/widgets/expense_breakdown_car
 
 class ExpenseAnalyticsProvider extends ChangeNotifier {
   List<TransactionItem> _expenseTransactions = [];
+
+  User? _firebaseUser;
+  StreamSubscription<User?>? _authSubscription;
 
   static const _categoryColors = [
     Color(0xFF2EBD85),
@@ -20,6 +25,20 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
     Color(0xFF42A5F5),
     Color(0xFF26A69A),
   ];
+
+  ExpenseAnalyticsProvider() {
+    _authSubscription = FirebaseAuth.instance.userChanges().listen((user) {
+      _onAuthChanged(user);
+    });
+  }
+
+  void _onAuthChanged(User? newUser) {
+    _firebaseUser = newUser;
+    if (newUser == null) {
+      _expenseTransactions = [];
+      notifyListeners();
+    }
+  }
 
   void updateTransactions(List<TransactionItem> transactions) {
     final newExpenses = transactions.where((tx) => !tx.isIncome).toList();
@@ -403,5 +422,17 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
     }
 
     return items;
+  }
+
+  void clear() {
+    _expenseTransactions = [];
+    _firebaseUser = null;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    super.dispose();
   }
 }

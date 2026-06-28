@@ -9,7 +9,7 @@ class DebtItem {
   final String name;
   final String detail;
   final double amount;
-  final bool isReceive; // true = To Receive, false = To Give
+  final bool isReceive;
   final bool isSettled;
   final DateTime createdAt;
   final String? phone;
@@ -119,12 +119,13 @@ class DebtProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DatabaseHelper _db = DatabaseHelper.instance;
+
+  User? _firebaseUser;
   StreamSubscription<User?>? _authSubscription;
   StreamSubscription<QuerySnapshot>? _firestoreSubscription;
   final Set<String> _knownDocIds = {};
   final Set<String> _pendingIds = {};
 
-  String? _currentUid;
   bool _isRetrying = false;
 
   String _activeProfileId = 'default_profile';
@@ -132,22 +133,37 @@ class DebtProvider extends ChangeNotifier {
   final List<DebtItem> _items = [];
 
   DebtProvider() {
-    _authSubscription = _auth.authStateChanges().listen((user) {
-      _firestoreSubscription?.cancel();
-      _knownDocIds.clear();
-      _pendingIds.clear();
-      if (user != null) {
-        _startListening(user.uid);
-      } else {
-        _currentUid = null;
-        _items.clear();
-        notifyListeners();
-      }
+    _authSubscription = _auth.userChanges().listen((user) {
+      _onAuthChanged(user);
     });
   }
 
+  void _onAuthChanged(User? newUser) {
+    final uidChanged = newUser?.uid != _firebaseUser?.uid;
+
+    _firebaseUser = newUser;
+
+    _firestoreSubscription?.cancel();
+    _firestoreSubscription = null;
+    _knownDocIds.clear();
+    _pendingIds.clear();
+
+    if (newUser == null) {
+      _items.clear();
+      _db.clearUserData();
+      notifyListeners();
+      return;
+    }
+
+    if (uidChanged) {
+      _items.clear();
+      _db.clearUserData();
+    }
+
+    _startListening(newUser.uid);
+  }
+
   void _startListening(String uid) {
-    _currentUid = uid;
     notifyListeners();
 
     _loadFromDatabase().then((_) {
@@ -224,7 +240,7 @@ class DebtProvider extends ChangeNotifier {
     if (_isRetrying) return;
     _isRetrying = true;
     try {
-      final uid = _currentUid;
+      final uid = _firebaseUser?.uid;
       if (uid == null) return;
 
       final pending = await _db.readPendingDebtSyncs(profileId: _activeProfileId);
@@ -267,7 +283,6 @@ class DebtProvider extends ChangeNotifier {
 
   List<DebtItem> get items => List.unmodifiable(_items);
 
-  // Getters for To Receive
   List<DebtItem> get toReceiveUnpaid =>
       _items.where((i) => i.isReceive && !i.isSettled).toList();
   List<DebtItem> get toReceiveSettled =>
@@ -275,7 +290,6 @@ class DebtProvider extends ChangeNotifier {
   double get totalToReceive =>
       toReceiveUnpaid.fold(0.0, (sum, i) => sum + i.amount);
 
-  // Getters for To Give
   List<DebtItem> get toGiveUnpaid =>
       _items.where((i) => !i.isReceive && !i.isSettled).toList();
   List<DebtItem> get toGiveSettled =>
@@ -283,8 +297,18 @@ class DebtProvider extends ChangeNotifier {
   double get totalToGive =>
       toGiveUnpaid.fold(0.0, (sum, i) => sum + i.amount);
 
+  void clear() {
+    _firestoreSubscription?.cancel();
+    _firestoreSubscription = null;
+    _knownDocIds.clear();
+    _pendingIds.clear();
+    _items.clear();
+    _firebaseUser = null;
+    notifyListeners();
+  }
+
   void addDebtItem(DebtItem item) {
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user == null) return;
 
     _db.insertDebtItem(item, syncStatus: 'pending_create', profileId: _activeProfileId);
@@ -310,7 +334,7 @@ class DebtProvider extends ChangeNotifier {
   }
 
   void settleDebtItem(String id) {
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user == null) return;
 
     final index = _items.indexWhere((i) => i.id == id);
@@ -321,7 +345,7 @@ class DebtProvider extends ChangeNotifier {
   }
 
   void toggleSettledStatus(String id) {
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user == null) return;
 
     final index = _items.indexWhere((i) => i.id == id);
@@ -332,7 +356,7 @@ class DebtProvider extends ChangeNotifier {
   }
 
   void deleteDebtItem(String id) {
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user == null) return;
 
     final index = _items.indexWhere((i) => i.id == id);
@@ -361,7 +385,7 @@ class DebtProvider extends ChangeNotifier {
   }
 
   void updateDebtItem(DebtItem updatedItem) {
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user == null) return;
 
     final index = _items.indexWhere((i) => i.id == updatedItem.id);
@@ -371,7 +395,7 @@ class DebtProvider extends ChangeNotifier {
   }
 
   void _updateLocalAndFirestore(DebtItem updated, int index) {
-    final user = _auth.currentUser;
+    final user = _firebaseUser;
     if (user == null) return;
 
     _db.updateDebtItem(updated, syncStatus: 'pending_update', profileId: _activeProfileId);
@@ -402,8 +426,9 @@ class DebtProvider extends ChangeNotifier {
     _knownDocIds.clear();
     _pendingIds.clear();
     _items.clear();
-    if (_currentUid != null) {
-      _startListening(_currentUid!);
+    final uid = _firebaseUser?.uid;
+    if (uid != null) {
+      _startListening(uid);
     }
     notifyListeners();
   }
