@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/app_lock_provider.dart';
+import 'package:expense_tracker/core/widgets/lock_screen_overlay.dart';
 
 class AppLockManager extends StatefulWidget {
   final Widget child;
@@ -14,6 +16,7 @@ class AppLockManager extends StatefulWidget {
 
 class _AppLockManagerState extends State<AppLockManager> with WidgetsBindingObserver {
   bool _showBlur = false;
+  bool _isPushingLockScreen = false;
 
   @override
   void initState() {
@@ -29,6 +32,8 @@ class _AppLockManagerState extends State<AppLockManager> with WidgetsBindingObse
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (FirebaseAuth.instance.currentUser == null) return;
+
     final provider = context.read<AppLockProvider>();
 
     switch (state) {
@@ -38,49 +43,68 @@ class _AppLockManagerState extends State<AppLockManager> with WidgetsBindingObse
         provider.lock();
       case AppLifecycleState.resumed:
         setState(() => _showBlur = false);
+        if (provider.isLocked) {
+          _pushLockScreen();
+        }
       case AppLifecycleState.hidden:
       case AppLifecycleState.detached:
         break;
     }
   }
 
+  void _pushLockScreen() {
+    if (_isPushingLockScreen) return;
+    _isPushingLockScreen = true;
+
+    Navigator.of(context, rootNavigator: true)
+        .push<void>(
+          MaterialPageRoute(
+            builder: (_) => const LockScreenOverlay(),
+            fullscreenDialog: true,
+          ),
+        )
+        .whenComplete(() {
+      _isPushingLockScreen = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
+    return Material(
+      type: MaterialType.transparency,
       child: Stack(
-        children: [
-          widget.child,
-          if (_showBlur)
-            Positioned.fill(
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Container(
-                    color: Colors.black.withValues(alpha: 0.15),
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.lock_outline_rounded, color: Colors.white, size: 48),
-                        const SizedBox(height: 16),
-                        Text(
-                          'App Locked',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.5,
-                          ),
+      children: [
+        widget.child,
+        if (_showBlur)
+          Positioned.fill(
+            child: ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.lock_outline_rounded, color: Colors.white, size: 48),
+                      const SizedBox(height: 16),
+                      Text(
+                        'App Locked',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-        ],
-      ),
+          ),
+      ],
+    ),
     );
   }
 }

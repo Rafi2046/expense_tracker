@@ -9,6 +9,7 @@ class AppLockProvider extends ChangeNotifier {
   bool _isEnabled = false;
   bool _isLocked = false;
   bool _isAuthenticating = false;
+  bool _suppressNextResume = false;
 
   bool get isEnabled => _isEnabled;
   bool get isLocked => _isLocked;
@@ -37,8 +38,19 @@ class AppLockProvider extends ChangeNotifier {
     }
   }
 
+  void suppressNextLock() {
+    _suppressNextResume = true;
+  }
+
   void lock() {
     if (!_isEnabled) return;
+    if (_isAuthenticating) return;
+
+    if (_suppressNextResume) {
+      _suppressNextResume = false;
+      return;
+    }
+
     _isLocked = true;
     notifyListeners();
   }

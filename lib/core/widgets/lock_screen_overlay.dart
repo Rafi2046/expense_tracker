@@ -65,7 +65,9 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
     final success = await provider.authenticate();
     if (!mounted) return;
 
-    if (!success) {
+    if (success) {
+      Navigator.of(context).pop();
+    } else {
       setState(() {
         _hasError = true;
         _errorMessage = 'Authentication failed. Try again.';

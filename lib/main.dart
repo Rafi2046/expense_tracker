@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/app_lock_provider.dart';
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
@@ -26,6 +27,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/core/widgets/app_lock_manager.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -64,6 +66,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => SessionProvider()),
         ChangeNotifierProvider(create: (_) => ShortcutProvider()),
         ChangeNotifierProvider(create: (_) => NoteProvider()),
+        ChangeNotifierProvider(create: (_) => AppLockProvider()),
         ChangeNotifierProvider(create: (_) => BiometricAuthProvider()),
         ChangeNotifierProvider(create: (_) => CurrencyProvider()),
         ChangeNotifierProvider(create: (_) => PrivacyProvider()),
@@ -156,6 +159,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       home: SplashScreen(),
+      builder: (context, child) => AppLockManager(child: child!),
     );
   }
 }
