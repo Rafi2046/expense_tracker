@@ -114,7 +114,7 @@ class _TransferDialogState extends State<TransferDialog> {
               style: GoogleFonts.workSans(fontSize: 14),
               decoration: InputDecoration(
                 labelText: 'Transfer Amount',
-                prefixText: 'Tk. ',
+                prefixText: '${context.currencySymbol} ',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),

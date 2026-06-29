@@ -19,7 +19,7 @@ class PrivacyMaskedText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final effectiveMasked = isMasked ?? context.watch<PrivacyProvider>().isMasked;
-    final formatted = context.formatAmount(amount, listen: false);
+    final formatted = context.formatAmount(amount);
     final displayText = effectiveMasked ? formatted.masked : formatted;
 
     return Text(

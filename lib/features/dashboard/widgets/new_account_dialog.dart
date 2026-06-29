@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 
 class NewAccountDialog extends StatefulWidget {
   const NewAccountDialog({super.key});
@@ -66,7 +67,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
               style: GoogleFonts.workSans(fontSize: 14),
               decoration: InputDecoration(
                 labelText: 'Initial Balance',
-                prefixText: 'Tk. ',
+                prefixText: '${context.currencySymbol} ',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),

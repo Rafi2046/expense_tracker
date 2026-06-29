@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/utils/category_utils.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 
 class TransactionInfoRow extends StatelessWidget {
   final TransactionItem transaction;
@@ -155,19 +156,6 @@ class AmountPaymentDetailCard extends StatelessWidget {
 
   const AmountPaymentDetailCard({super.key, required this.transaction});
 
-  String _formatAmount(double val) {
-    final formatted = (val % 1 == 0)
-        ? val.toStringAsFixed(0).replaceAllMapped(
-              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-              (Match m) => '${m[1]},',
-            )
-        : val.toStringAsFixed(2).replaceAllMapped(
-              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-              (Match m) => '${m[1]},',
-            );
-    return 'Tk. $formatted';
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -207,7 +195,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
                 ),
               ),
               Text(
-                _formatAmount(transaction.amount),
+                context.formatAmount(transaction.amount),
                 style: GoogleFonts.workSans(
                   fontSize: 16.5,
                   fontWeight: FontWeight.bold,

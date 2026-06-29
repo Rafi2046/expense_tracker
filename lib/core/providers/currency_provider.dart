@@ -20,6 +20,18 @@ class CurrencyInfo {
 
 class CurrencyProvider extends ChangeNotifier {
   static const String _prefsKey = 'selected_currency_code';
+  static const String _basePrefsKey = 'base_currency_code';
+
+  static const Map<String, double> _ratesToBdt = {
+    'BDT': 1.0,
+    'USD': 119.72,
+    'EUR': 130.09,
+    'GBP': 154.70,
+    'INR': 1.43,
+    'JPY': 0.83,
+    'AED': 32.60,
+    'CAD': 88.45,
+  };
 
   final List<CurrencyInfo> _currencies = const [
     CurrencyInfo(
@@ -81,18 +93,29 @@ class CurrencyProvider extends ChangeNotifier {
   ];
 
   late CurrencyInfo _selectedCurrency;
+  late String _baseCurrencyCode;
 
   CurrencyProvider() {
     final savedCode = SharedPrefsHelper.getString(_prefsKey);
-    // Locate saved currency or default to BDT (as requested by user)
     _selectedCurrency = _currencies.firstWhere(
       (c) => c.code == savedCode,
-      orElse: () => _currencies.first, // Defaults to BDT
+      orElse: () => _currencies.first,
     );
+    _baseCurrencyCode =
+        SharedPrefsHelper.getString(_basePrefsKey) ?? _currencies.first.code;
   }
 
   List<CurrencyInfo> get currencies => _currencies;
   CurrencyInfo get selectedCurrency => _selectedCurrency;
+  String get baseCurrencyCode => _baseCurrencyCode;
+
+  double get rateToBdt => _ratesToBdt[_selectedCurrency.code] ?? 1.0;
+  double get baseRateToBdt => _ratesToBdt[_baseCurrencyCode] ?? 1.0;
+
+  double convertToDisplay(double amount) {
+    final amountInBdt = amount * baseRateToBdt;
+    return amountInBdt / rateToBdt;
+  }
 
   Future<void> selectCurrency(String code) async {
     final found = _currencies.firstWhere(
@@ -100,17 +123,25 @@ class CurrencyProvider extends ChangeNotifier {
       orElse: () => _currencies.first,
     );
     _selectedCurrency = found;
-    await SharedPrefsHelper.setString(_prefsKey, code);
     notifyListeners();
+    await SharedPrefsHelper.setString(_prefsKey, code);
+  }
+
+  Future<void> setBaseCurrency(String code) async {
+    _baseCurrencyCode = code;
+    notifyListeners();
+    await SharedPrefsHelper.setString(_basePrefsKey, code);
   }
 }
 
 extension CurrencyFormatter on BuildContext {
   String formatAmount(double amount, {bool listen = true}) {
-    final currency = listen
-        ? watch<CurrencyProvider>().selectedCurrency
-        : read<CurrencyProvider>().selectedCurrency;
-    return '${currency.symbol}${amount.toStringAsFixed(2).replaceAllMapped(
+    final provider = listen
+        ? watch<CurrencyProvider>()
+        : read<CurrencyProvider>();
+    final converted = provider.convertToDisplay(amount);
+    final currency = provider.selectedCurrency;
+    return '${currency.symbol}${converted.toStringAsFixed(2).replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
       (Match m) => '${m[1]},',
     )}';
