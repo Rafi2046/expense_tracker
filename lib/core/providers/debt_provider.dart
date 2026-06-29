@@ -16,6 +16,7 @@ class DebtItem {
   final String? email;
   final String? address;
   final String? vat;
+  final String profileId;
 
   DebtItem({
     required this.id,
@@ -29,6 +30,7 @@ class DebtItem {
     this.email,
     this.address,
     this.vat,
+    this.profileId = 'default_profile',
   });
 
   DebtItem copyWith({
@@ -43,6 +45,7 @@ class DebtItem {
     String? email,
     String? address,
     String? vat,
+    String? profileId,
   }) {
     return DebtItem(
       id: id ?? this.id,
@@ -56,6 +59,7 @@ class DebtItem {
       email: email ?? this.email,
       address: address ?? this.address,
       vat: vat ?? this.vat,
+      profileId: profileId ?? this.profileId,
     );
   }
 
@@ -70,6 +74,7 @@ class DebtItem {
     'address': address,
     'vat': vat,
     'createdAt': createdAt.toIso8601String(),
+    'profileId': profileId,
   };
 
   factory DebtItem.fromMap(String id, Map<String, dynamic> map) => DebtItem(
@@ -84,6 +89,7 @@ class DebtItem {
     email: map['email'] as String?,
     address: map['address'] as String?,
     vat: map['vat'] as String?,
+    profileId: map['profileId'] as String? ?? 'default_profile',
   );
 
   Map<String, dynamic> toJson() => {
@@ -98,6 +104,7 @@ class DebtItem {
     'address': address,
     'vat': vat,
     'createdAt': createdAt.toIso8601String(),
+    'profileId': profileId,
   };
 
   factory DebtItem.fromJson(Map<String, dynamic> json) => DebtItem(
@@ -112,6 +119,7 @@ class DebtItem {
     email: json['email'] as String?,
     address: json['address'] as String?,
     vat: json['vat'] as String?,
+    profileId: json['profileId'] as String? ?? 'default_profile',
   );
 }
 
@@ -187,21 +195,30 @@ class DebtProvider extends ChangeNotifier {
                   if (!_knownDocIds.contains(docId)) {
                     _knownDocIds.add(docId);
                     final item = DebtItem.fromMap(docId, change.doc.data()!);
-                    _items.add(item);
-                    _db.insertDebtItem(item, syncStatus: 'synced', profileId: _activeProfileId);
+                    _db.insertDebtItem(item, syncStatus: 'synced', profileId: item.profileId);
+                    if (item.profileId == _activeProfileId) {
+                      _items.add(item);
+                    }
                   }
                   break;
                 case DocumentChangeType.modified:
                   if (!_pendingIds.contains(docId)) {
-                    final index = _items.indexWhere((d) => d.id == docId);
-                    if (index != -1) {
-                      _items[index] = DebtItem.fromMap(docId, change.doc.data()!);
-                    }
+                    final item = DebtItem.fromMap(docId, change.doc.data()!);
                     _db.updateDebtItem(
-                      DebtItem.fromMap(docId, change.doc.data()!),
+                      item,
                       syncStatus: 'synced',
-                      profileId: _activeProfileId,
+                      profileId: item.profileId,
                     );
+                    final index = _items.indexWhere((d) => d.id == docId);
+                    if (item.profileId == _activeProfileId) {
+                      if (index != -1) {
+                        _items[index] = item;
+                      } else {
+                        _items.add(item);
+                      }
+                    } else if (index != -1) {
+                      _items.removeAt(index);
+                    }
                   }
                   break;
                 case DocumentChangeType.removed:
@@ -311,18 +328,19 @@ class DebtProvider extends ChangeNotifier {
     final user = _firebaseUser;
     if (user == null) return;
 
-    _db.insertDebtItem(item, syncStatus: 'pending_create', profileId: _activeProfileId);
-    _knownDocIds.add(item.id);
-    _pendingIds.add(item.id);
-    _items.insert(0, item);
+    final profileStampedItem = item.copyWith(profileId: _activeProfileId);
+    _db.insertDebtItem(profileStampedItem, syncStatus: 'pending_create', profileId: _activeProfileId);
+    _knownDocIds.add(profileStampedItem.id);
+    _pendingIds.add(profileStampedItem.id);
+    _items.insert(0, profileStampedItem);
     notifyListeners();
 
     _firestore
         .collection('users')
         .doc(user.uid)
         .collection('debt_items')
-        .doc(item.id)
-        .set(item.toMap())
+        .doc(profileStampedItem.id)
+        .set(profileStampedItem.toMap())
         .then((_) async {
           _pendingIds.remove(item.id);
           await _db.markDebtSynced(item.id, profileId: _activeProfileId);

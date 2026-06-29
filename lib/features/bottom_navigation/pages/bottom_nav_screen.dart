@@ -60,13 +60,13 @@ class _AppBottomNavState extends State<BottomNavScreen> {
         bottomNavigationBar: Container(
           color: Colors.transparent,
           padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
+            left: 16,
+            right: 16,
             bottom: MediaQuery.of(context).padding.bottom + 10,
             top: 6,
           ),
           child: Container(
-            height: 53,
+            height: 56,
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(24),
@@ -83,7 +83,6 @@ class _AppBottomNavState extends State<BottomNavScreen> {
               ],
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: List.generate(
                 _navItems.length,
                 (index) => _buildNavItem(
@@ -109,53 +108,59 @@ class _AppBottomNavState extends State<BottomNavScreen> {
     final inactiveColor = isDark ? Colors.white54 : const Color(0xFF31394D);
     final indicatorColor = Theme.of(context).primaryColor;
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _currentIndex = index;
-        });
-      },
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 70,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (isSelected) ...[
-              // Top active indicator bar
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                height: 3,
-                width: 18,
-                decoration: BoxDecoration(
-                  color: indicatorColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              const SizedBox(height: 6),
-            ],
+    return Expanded(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: () {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          child: Container(
+            height: double.infinity,
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (isSelected) ...[
+                  // Top active indicator bar
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    height: 3,
+                    width: 18,
+                    decoration: BoxDecoration(
+                      color: indicatorColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                ],
 
-            Image.asset(
-              item.icon,
-              width: 15, // Reduced icon size from 22 to 18
-              height: 15,
-              color: isSelected ? activeColor : inactiveColor,
+                Image.asset(
+                  item.icon,
+                  width: 22,
+                  height: 22,
+                  color: isSelected ? activeColor : inactiveColor,
+                ),
+
+                if (isSelected) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    context.translate(item.title.toLowerCase()),
+                    style: TextStyle(
+                      fontSize: 10.5,
+                      fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                      fontWeight: FontWeight.w600,
+                      color: activeColor,
+                    ),
+                  ),
+                ],
+              ],
             ),
-
-            if (isSelected) ...[
-              const SizedBox(height: 4),
-              Text(
-                context.translate(item.title.toLowerCase()),
-                style: TextStyle(
-                  fontSize: 10, // Reduced text size from 11 to 10
-                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                  fontWeight: FontWeight.w600,
-                  color: activeColor,
-                ),
-              ),
-            ],
-          ],
+          ),
         ),
       ),
     );

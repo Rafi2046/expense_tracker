@@ -4,6 +4,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/privacy_provider.dart';
 import 'package:expense_tracker/core/providers/session_provider.dart';
+import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,10 +28,12 @@ class HomepageAppbarWidget extends StatelessWidget
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final session = context.watch<SessionProvider>();
+    final profileProvider = context.watch<ProfileProvider>();
     final isMasked = context.watch<PrivacyProvider>().isMasked;
-    final displayName = session.firstName;
-    final photoUrl = session.photoUrl;
-    final initials = session.initials;
+    final currentProfile = profileProvider.currentProfile;
+    final displayName = currentProfile.name;
+    final photoUrl = currentProfile.id == 'default_profile' ? session.photoUrl : null;
+    final initials = displayName.isNotEmpty ? displayName.substring(0, 1).toUpperCase() : 'P';
 
     return AppBar(
       automaticallyImplyLeading: false,

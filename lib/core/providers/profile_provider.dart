@@ -1,12 +1,9 @@
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfileProvider extends ChangeNotifier {
-  final List<UserProfile> _profiles = [
-    UserProfile(id: '1', name: 'Rafi', type: 'Personal'),
-    UserProfile(id: '2', name: 'Office', type: 'Business'),
-  ];
-
+  final List<UserProfile> _profiles = [];
   late UserProfile _currentProfile;
 
   // Profile Creation Flow State
@@ -57,7 +54,40 @@ class ProfileProvider extends ChangeNotifier {
   ];
 
   ProfileProvider() {
+    _initProfiles();
+    FirebaseAuth.instance.userChanges().listen((user) {
+      if (user != null) {
+        final name = (user.displayName != null && user.displayName!.trim().isNotEmpty)
+            ? user.displayName!.trim()
+            : (user.email != null && user.email!.contains('@') ? user.email!.split('@').first : 'Personal Account');
+        syncDefaultProfileName(name);
+      }
+    });
+  }
+
+  void _initProfiles() {
+    final user = FirebaseAuth.instance.currentUser;
+    final name = (user?.displayName != null && user!.displayName!.trim().isNotEmpty)
+        ? user.displayName!.trim()
+        : (user?.email != null && user!.email!.contains('@') ? user.email!.split('@').first : 'Personal Account');
+
+    _profiles.clear();
+    _profiles.add(UserProfile(id: 'default_profile', name: name, type: 'Personal'));
     _currentProfile = _profiles.first;
+  }
+
+  void syncDefaultProfileName(String name) {
+    final idx = _profiles.indexWhere((p) => p.id == 'default_profile');
+    if (idx != -1) {
+      final old = _profiles[idx];
+      if (old.name != name) {
+        _profiles[idx] = UserProfile(id: old.id, name: name, type: old.type);
+        if (_currentProfile.id == 'default_profile') {
+          _currentProfile = _profiles[idx];
+        }
+        notifyListeners();
+      }
+    }
   }
 
   // Getters
@@ -87,10 +117,13 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   void selectProfile(UserProfile profile) {
-    if (_profiles.contains(profile)) {
+    final index = _profiles.indexWhere((p) => p.id == profile.id);
+    if (index != -1) {
+      _currentProfile = _profiles[index];
+    } else {
       _currentProfile = profile;
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   void setCreationProfileType(String type) {

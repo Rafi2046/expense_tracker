@@ -61,7 +61,7 @@ class BudgetProvider extends ChangeNotifier {
         .collection('users')
         .doc(uid)
         .collection('budget')
-        .doc('monthly')
+        .doc('monthly_$_activeProfileId')
         .snapshots()
         .listen(
       (snapshot) {
@@ -109,7 +109,7 @@ class BudgetProvider extends ChangeNotifier {
           .collection('users')
           .doc(uid)
           .collection('budget')
-          .doc('monthly')
+          .doc('monthly_$_activeProfileId')
           .set({'amount': _amount, 'lastModified': DateTime.now().toIso8601String()})
           .then((_) async {
         await _db.markBudgetSynced(profileId: _activeProfileId);
@@ -143,7 +143,7 @@ class BudgetProvider extends ChangeNotifier {
         .collection('users')
         .doc(user.uid)
         .collection('budget')
-        .doc('monthly')
+        .doc('monthly_$_activeProfileId')
         .set({'amount': _amount, 'lastModified': DateTime.now().toIso8601String()})
         .then((_) async {
       await _db.markBudgetSynced(profileId: _activeProfileId);

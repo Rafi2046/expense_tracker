@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
+import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/appbar_widget.dart';
@@ -58,6 +59,7 @@ class DashboardScreen extends StatelessWidget {
             profiles: profileProvider.profiles,
             onProfileSelected: (selectedProfile) {
               profileProvider.selectProfile(selectedProfile);
+              context.read<ProfileManagerProvider>().switchProfile(selectedProfile.id);
             },
             onCreateNewTap: () async {
               final newProfile = await Navigator.push<UserProfile>(
@@ -68,6 +70,9 @@ class DashboardScreen extends StatelessWidget {
               );
               if (newProfile != null) {
                 profileProvider.addProfile(newProfile);
+                if (context.mounted) {
+                  context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
+                }
               }
             },
           );
