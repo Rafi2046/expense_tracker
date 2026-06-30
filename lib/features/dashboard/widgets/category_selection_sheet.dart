@@ -17,6 +17,8 @@ class CategorySelectionSheetContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.watch<ProfileProvider>();
     final filteredCategories = provider.filteredCategories;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.all(20.0),
@@ -24,13 +26,14 @@ class CategorySelectionSheetContent extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Drag handle indicator
           Center(
             child: Container(
               width: 40,
               height: 5,
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.3)
+                    : Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -39,33 +42,34 @@ class CategorySelectionSheetContent extends StatelessWidget {
 
           Text(
             'Select Business Category',
-            style: TextStyle(
+            style: GoogleFonts.workSans(
               fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontFamily: GoogleFonts.workSans().fontFamily,
+              fontWeight: FontWeight.w800,
+              color: theme.textTheme.titleLarge?.color,
             ),
           ),
           const SizedBox(height: 16),
 
-          // Search Bar
           TextField(
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontFamily: GoogleFonts.workSans().fontFamily,
+            style: GoogleFonts.workSans(
+              fontSize: 15,
+              color: theme.textTheme.bodyLarge?.color,
             ),
             decoration: InputDecoration(
               hintText: 'Search Category',
-              prefixIcon: const Icon(Symbols.search, color: Colors.grey),
+              hintStyle: TextStyle(color: theme.textTheme.bodySmall?.color),
+              prefixIcon: Icon(
+                Symbols.search,
+                color: theme.textTheme.bodySmall?.color,
+              ),
               contentPadding: const EdgeInsets.symmetric(vertical: 12),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey.shade300),
+                borderSide: BorderSide(color: theme.dividerColor),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey.shade300),
+                borderSide: BorderSide(color: theme.dividerColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -74,6 +78,8 @@ class CategorySelectionSheetContent extends StatelessWidget {
                   width: 2,
                 ),
               ),
+              fillColor: theme.cardColor,
+              filled: true,
             ),
             onChanged: (val) {
               provider.setCategorySearchQuery(val);
@@ -81,7 +87,6 @@ class CategorySelectionSheetContent extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          // Scrollable Category List
           ConstrainedBox(
             constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height * 0.45,
@@ -97,10 +102,9 @@ class CategorySelectionSheetContent extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   title: Text(
                     cat,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black87,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
+                    style: GoogleFonts.workSans(
+                      fontSize: 15,
+                      color: theme.textTheme.bodyLarge?.color,
                     ),
                   ),
                   trailing: Icon(
@@ -109,12 +113,13 @@ class CategorySelectionSheetContent extends StatelessWidget {
                         : Symbols.radio_button_unchecked,
                     color: isSelected
                         ? AppColors.activeGreen
-                        : Colors.grey.shade300,
+                        : (isDark
+                            ? Colors.white.withValues(alpha: 0.3)
+                            : Colors.grey.shade300),
                   ),
                   onTap: () {
                     provider.setSelectedCategory(cat);
 
-                    // Delayed selection notification to let the user see selection
                     Future.delayed(const Duration(milliseconds: 200), () {
                       onCategorySelected(cat);
                     });

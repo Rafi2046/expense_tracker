@@ -1056,6 +1056,28 @@ class DatabaseHelper {
     await db.delete('profiles', where: 'id = ?', whereArgs: [id]);
   }
 
+  /// Deletes a profile and ALL associated data (transactions, categories,
+  /// debt_items, budget, notes) in a single transaction.
+  Future<void> deleteProfileAndData(String profileId) async {
+    if (kIsWeb) {
+      for (final key in [
+        'web_transactions_', 'web_categories_', 'web_debt_items_', 'web_budget_', 'web_notes_'
+      ]) {
+        await SharedPrefsHelper.remove('$key$profileId');
+      }
+      return;
+    }
+    final db = await instance.database;
+    await db.transaction((txn) async {
+      await txn.delete('transactions', where: 'profileId = ?', whereArgs: [profileId]);
+      await txn.delete('categories', where: 'profileId = ?', whereArgs: [profileId]);
+      await txn.delete('debt_items', where: 'profileId = ?', whereArgs: [profileId]);
+      await txn.delete('budget', where: 'profileId = ?', whereArgs: [profileId]);
+      await txn.delete('notes', where: 'profileId = ?', whereArgs: [profileId]);
+      await txn.delete('profiles', where: 'id = ?', whereArgs: [profileId]);
+    });
+  }
+
   Future<void> clearUserData() async {
     if (kIsWeb) return;
     final db = await instance.database;

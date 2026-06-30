@@ -1,6 +1,5 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -35,19 +34,14 @@ class ProfileSwitchSheet extends StatefulWidget {
   }) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      builder: (_) => ProfileSwitchSheet(
+        currentProfileId: currentProfileId,
+        profiles: profiles,
+        onProfileSelected: onProfileSelected,
+        onCreateNewTap: onCreateNewTap,
       ),
-      builder: (context) {
-        return ProfileSwitchSheet(
-          currentProfileId: currentProfileId,
-          profiles: profiles,
-          onProfileSelected: onProfileSelected,
-          onCreateNewTap: onCreateNewTap,
-        );
-      },
     );
   }
 
@@ -66,30 +60,38 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Container(
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        child: Container(
+          color: theme.colorScheme.surface,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
             Text(
               'Switch Profile',
-              style: TextStyle(
+              style: GoogleFonts.workSans(
                 fontSize: 20,
-                fontWeight: FontWeight.bold,
-                fontFamily: GoogleFonts.workSans().fontFamily,
-                color: Colors.black,
+                fontWeight: FontWeight.w800,
+                color: theme.textTheme.titleLarge?.color,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               'Choose a profile to manage',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade600,
-                fontFamily: GoogleFonts.workSans().fontFamily,
+              style: GoogleFonts.workSans(
+                fontSize: 13,
+                color: theme.textTheme.bodySmall?.color,
               ),
             ),
             const SizedBox(height: 20),
@@ -105,12 +107,14 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: CircleAvatar(
-                    backgroundColor: Colors.grey.shade100,
+                    backgroundColor: isDark
+                        ? theme.colorScheme.onSurface.withValues(alpha: 0.1)
+                        : Colors.grey.shade100,
                     radius: 24,
                     child: Text(
                       profile.name.substring(0, 1).toUpperCase(),
-                      style: const TextStyle(
-                        color: Colors.black,
+                      style: TextStyle(
+                        color: theme.textTheme.titleLarge?.color,
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
@@ -118,35 +122,22 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                   ),
                   title: Text(
                     profile.name,
-                    style: TextStyle(
-                      fontWeight: isSelected
-                          ? FontWeight.bold
-                          : FontWeight.w500,
-                      color: Colors.black,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
+                    style: GoogleFonts.workSans(
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: theme.textTheme.titleMedium?.color,
                     ),
                   ),
                   subtitle: Text(
                     profile.type,
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
+                    style: GoogleFonts.workSans(
+                      color: theme.textTheme.bodySmall?.color,
                     ),
                   ),
                   trailing: isSelected
-                      ? const Icon(
-                          Symbols.radio_button_checked,
-                          color: AppColors.selectedColor,
-                        )
-                      : const Icon(
-                          Symbols.radio_button_unchecked,
-                          color: Colors.grey,
-                        ),
+                      ? const Icon(Symbols.radio_button_checked, color: AppColors.selectedColor)
+                      : Icon(Symbols.radio_button_unchecked, color: theme.textTheme.bodySmall?.color),
                   onTap: () {
-                    setState(() {
-                      _selectedId = profile.id;
-                    });
-
+                    setState(() { _selectedId = profile.id; });
                     Future.delayed(const Duration(milliseconds: 150), () {
                       if (context.mounted) {
                         Navigator.pop(context);
@@ -171,7 +162,11 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                 icon: const Icon(Symbols.add, color: Color(0xFF00BFA5)),
                 label: Text(
                   'Create New Profile',
-                  style: AppTextStyles.createProfile,
+                  style: GoogleFonts.workSans(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF00BFA5),
+                  ),
                 ),
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Color(0xFF00BFA5)),
@@ -182,6 +177,9 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
               ),
             ),
           ],
+        ),
+            ),
+          ),
         ),
       ),
     );

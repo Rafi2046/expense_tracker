@@ -1,6 +1,4 @@
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_info_banner.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_type_card.dart';
@@ -8,6 +6,7 @@ import 'package:expense_tracker/features/dashboard/widgets/coming_soon_sheet.dar
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/dashboard/pages/create_profile_name_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class SelectProfileScreen extends StatelessWidget {
@@ -17,67 +16,70 @@ class SelectProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.watch<ProfileProvider>();
     final isBusiness = provider.creationProfileType == 'business';
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Symbols.arrow_back, color: Colors.black),
+          icon: Icon(Symbols.arrow_back, color: theme.iconTheme.color),
           onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface,
         elevation: 0,
         scrolledUnderElevation: 0,
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Select Your Profile', style: AppTextStyles.profileTitle),
-              const SizedBox(height: 6),
+              Text(
+                'Select Your Profile',
+                style: GoogleFonts.workSans(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: theme.textTheme.titleLarge?.color,
+                ),
+              ),
+              const SizedBox(height: 4),
               Text(
                 'What will you use the app mostly for?',
-                style: AppTextStyles.profileSubtitle,
+                style: GoogleFonts.workSans(
+                  fontSize: 13,
+                  color: theme.textTheme.bodySmall?.color,
+                ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
-              // Business Management Card
               ProfileTypeCard(
                 icon: Symbols.storefront,
                 title: 'Business Management',
-                subtitle:
-                    'Manage your business accounting and inventory easily.',
+                subtitle: 'Manage your business accounting and inventory easily.',
                 isSelected: false,
                 onTap: () => ComingSoonSheet.show(context),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
 
-              // Personal Finance Card
               ProfileTypeCard(
                 icon: Symbols.person,
                 title: 'Personal Finance',
-                subtitle:
-                    'Track your expenses and maintain your credits with friends.',
+                subtitle: 'Track your expenses and maintain your credits with friends.',
                 isSelected: !isBusiness,
-                onTap: () {
-                  provider.setCreationProfileType('personal');
-                },
+                onTap: () => provider.setCreationProfileType('personal'),
               ),
 
               const Spacer(),
 
-              // Info Banner
               const ProfileInfoBanner(),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
 
-              // Continue Button
               CustomButton(
                 text: 'Continue',
-                backgroundColor: AppColors.activeGreen,
+                backgroundColor: const Color(0xFF2EBD85),
                 onPressed: () async {
                   final result = await Navigator.push(
                     context,
