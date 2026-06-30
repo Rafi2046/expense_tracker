@@ -82,7 +82,7 @@ class SyncService {
 
           _progressController.add(
             SyncProgress(
-              currentTable: 'Restoring $table ($docs.length records)…',
+              currentTable: 'Restoring $table (${docs.length} records)…',
               documentsFetched: docs.length,
             ),
           );

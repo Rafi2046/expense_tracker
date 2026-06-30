@@ -166,13 +166,13 @@ class _LoginScreenState extends State<LoginScreen>
     setState(() => _isLoading = true);
 
     try {
-      final user = await _authService.loginWithEmail(
+      final cred = await _authService.loginWithEmail(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
 
-      if (user != null && mounted) {
-        _navigateWithSync();
+      if (cred != null && mounted) {
+        _navigateAfterAuth(cred);
       }
     } catch (e) {
       if (mounted) {
@@ -189,10 +189,10 @@ class _LoginScreenState extends State<LoginScreen>
     setState(() => _isLoading = true);
 
     try {
-      final user = await _authService.signInWithGoogle();
+      final cred = await _authService.signInWithGoogle();
 
-      if (user != null && mounted) {
-        _navigateWithSync();
+      if (cred != null && mounted) {
+        _navigateAfterAuth(cred);
       }
     } catch (e) {
       if (mounted) {
@@ -214,15 +214,18 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Future<void> _navigateWithSync() async {
+  Future<void> _navigateAfterAuth(UserCredential cred) async {
+    final isNewUser = cred.additionalUserInfo?.isNewUser ?? false;
     final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) {
+
+    if (isNewUser || uid == null) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const BottomNavScreen()),
       );
       return;
     }
+
     final syncService = SyncService();
     Navigator.pushReplacement(
       context,

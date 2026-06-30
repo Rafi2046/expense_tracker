@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/services/sync_service.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SyncLoadingOverlay extends StatefulWidget {
@@ -91,13 +92,19 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.cloud_sync_rounded,
-                  size: 64,
-                  color: _hasError
-                      ? const Color(0xFFE53935)
-                      : theme.primaryColor,
-                ),
+                if (!_hasError)
+                  Icon(Icons.cloud_sync, size: 80, color: Colors.greenAccent)
+                    .animate(onPlay: (controller) => controller.repeat())
+                    .shimmer(duration: 1200.ms, color: Colors.white)
+                    .scaleXY(end: 1.1, duration: 600.ms)
+                    .then()
+                    .scaleXY(end: 1.0 / 1.1)
+                else
+                  Icon(
+                    Icons.cloud_off_rounded,
+                    size: 64,
+                    color: const Color(0xFFE53935),
+                  ),
                 const SizedBox(height: 24),
                 Text(
                   _hasError ? 'Sync Failed' : 'Restoring Your Data',
@@ -119,9 +126,7 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
                   ),
                 ),
                 const SizedBox(height: 32),
-                if (!_hasError)
-                  const CircularProgressIndicator()
-                else ...[
+                if (_hasError) ...[
                   Row(
                     children: [
                       Expanded(
