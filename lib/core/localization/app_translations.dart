@@ -147,6 +147,7 @@ class AppTranslations {
       'frequency_quarterly': 'Quarterly',
       'frequency_half_yearly': 'Half-Yearly',
       'frequency_yearly': 'Yearly',
+      'tours': 'Tours',
     },
     'bn': {
       'cash': 'নগদ',

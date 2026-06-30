@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/features/analytics/pages/analytics_screen.dart';
 import 'package:expense_tracker/features/bottom_navigation/widgets/exit_dialog.dart';
 import 'package:expense_tracker/features/dashboard/pages/dashboard_screen.dart';
 import 'package:expense_tracker/features/ledger/pages/ledger_screen.dart';
 import 'package:expense_tracker/features/settings/pages/settings_screen.dart';
+import 'package:expense_tracker/features/tours/pages/tour_list_screen.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,6 +22,7 @@ class _AppBottomNavState extends State<BottomNavScreen> {
 
   final List<Widget> _screens = const [
     DashboardScreen(),
+    TourListScreen(),
     LedgerScreen(),
     AnalyticsScreen(),
     SettingsScreen(),
@@ -27,6 +30,7 @@ class _AppBottomNavState extends State<BottomNavScreen> {
 
   final List<NavItem> _navItems = const [
     NavItem(title: 'Home', icon: AppImages.homeIcon),
+    NavItem(title: 'Tours', icon: null, iconData: Symbols.groups),
     NavItem(title: 'Ledger', icon: AppImages.ledgerIcon),
     NavItem(title: 'Analytics', icon: AppImages.analyticsIcon),
     NavItem(title: 'Settings', icon: AppImages.settingsIcon),
@@ -139,12 +143,18 @@ class _AppBottomNavState extends State<BottomNavScreen> {
                   const SizedBox(height: 3),
                 ],
 
-                Image.asset(
-                  item.icon,
-                  width: 22,
-                  height: 22,
-                  color: isSelected ? activeColor : inactiveColor,
-                ),
+                item.iconData != null
+                    ? Icon(
+                        item.iconData,
+                        size: 22,
+                        color: isSelected ? activeColor : inactiveColor,
+                      )
+                    : Image.asset(
+                        item.icon!,
+                        width: 22,
+                        height: 22,
+                        color: isSelected ? activeColor : inactiveColor,
+                      ),
 
                 if (isSelected) ...[
                   const SizedBox(height: 2),
@@ -169,7 +179,8 @@ class _AppBottomNavState extends State<BottomNavScreen> {
 
 class NavItem {
   final String title;
-  final String icon;
+  final String? icon;
+  final IconData? iconData;
 
-  const NavItem({required this.title, required this.icon});
+  const NavItem({required this.title, this.icon, this.iconData});
 }

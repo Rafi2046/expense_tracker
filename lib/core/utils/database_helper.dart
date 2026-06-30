@@ -43,7 +43,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 8,
+      version: 10,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -129,6 +129,79 @@ class DatabaseHelper {
       'type': 'Personal',
       'createdAt': DateTime.now().toIso8601String(),
     });
+
+    await db.execute('''
+      CREATE TABLE tours (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        coverPhoto TEXT,
+        currency TEXT NOT NULL DEFAULT 'BDT',
+        createdAt TEXT NOT NULL,
+        profileId TEXT NOT NULL DEFAULT 'default_profile',
+        syncStatus TEXT NOT NULL DEFAULT 'synced',
+        isDeleted INTEGER NOT NULL DEFAULT 0,
+        lastModified TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE tour_participants (
+        id TEXT PRIMARY KEY,
+        tourId TEXT NOT NULL,
+        name TEXT NOT NULL,
+        avatarColor INTEGER NOT NULL DEFAULT 0,
+        joinedAt TEXT NOT NULL,
+        joinedExpenseId TEXT,
+        isActive INTEGER NOT NULL DEFAULT 1,
+        syncStatus TEXT NOT NULL DEFAULT 'synced',
+        isDeleted INTEGER NOT NULL DEFAULT 0,
+        lastModified TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE tour_expenses (
+        id TEXT PRIMARY KEY,
+        tourId TEXT NOT NULL,
+        title TEXT NOT NULL,
+        amount REAL NOT NULL,
+        paidBy TEXT NOT NULL,
+        splitType TEXT NOT NULL DEFAULT 'equal',
+        category TEXT,
+        note TEXT,
+        date TEXT NOT NULL,
+        receiptPath TEXT,
+        createdAt TEXT NOT NULL,
+        syncStatus TEXT NOT NULL DEFAULT 'synced',
+        isDeleted INTEGER NOT NULL DEFAULT 0,
+        lastModified TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE tour_expense_shares (
+        id TEXT PRIMARY KEY,
+        expenseId TEXT NOT NULL,
+        participantId TEXT NOT NULL,
+        shareAmount REAL NOT NULL,
+        customValue REAL,
+        isExcluded INTEGER NOT NULL DEFAULT 0,
+        syncStatus TEXT NOT NULL DEFAULT 'synced',
+        isDeleted INTEGER NOT NULL DEFAULT 0,
+        lastModified TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE tour_settlements (
+        id TEXT PRIMARY KEY,
+        tourId TEXT NOT NULL,
+        fromParticipant TEXT NOT NULL,
+        toParticipant TEXT NOT NULL,
+        amount REAL NOT NULL,
+        date TEXT NOT NULL,
+        note TEXT,
+        syncStatus TEXT NOT NULL DEFAULT 'synced',
+        isDeleted INTEGER NOT NULL DEFAULT 0,
+        lastModified TEXT NOT NULL
+      )
+    ''');
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -232,6 +305,154 @@ class DatabaseHelper {
       if (!hasProfileId) {
         await db.execute('ALTER TABLE budget ADD COLUMN profileId TEXT NOT NULL DEFAULT \'default_profile\'');
       }
+    }
+    if (oldVersion < 9) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS tours (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          coverPhoto TEXT,
+          currency TEXT NOT NULL DEFAULT 'BDT',
+          createdAt TEXT NOT NULL,
+          profileId TEXT NOT NULL DEFAULT 'default_profile',
+          syncStatus TEXT NOT NULL DEFAULT 'synced',
+          isDeleted INTEGER NOT NULL DEFAULT 0,
+          lastModified TEXT NOT NULL
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS tour_participants (
+          id TEXT PRIMARY KEY,
+          tourId TEXT NOT NULL,
+          name TEXT NOT NULL,
+          avatarColor INTEGER NOT NULL DEFAULT 0,
+          joinedAt TEXT NOT NULL,
+          joinedExpenseId TEXT,
+          isActive INTEGER NOT NULL DEFAULT 1,
+          syncStatus TEXT NOT NULL DEFAULT 'synced',
+          isDeleted INTEGER NOT NULL DEFAULT 0,
+          lastModified TEXT NOT NULL
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS tour_expenses (
+          id TEXT PRIMARY KEY,
+          tourId TEXT NOT NULL,
+          title TEXT NOT NULL,
+          amount REAL NOT NULL,
+          paidBy TEXT NOT NULL,
+          splitType TEXT NOT NULL DEFAULT 'equal',
+          category TEXT,
+          note TEXT,
+          date TEXT NOT NULL,
+          receiptPath TEXT,
+          createdAt TEXT NOT NULL,
+          syncStatus TEXT NOT NULL DEFAULT 'synced',
+          isDeleted INTEGER NOT NULL DEFAULT 0,
+          lastModified TEXT NOT NULL
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS tour_expense_shares (
+          id TEXT PRIMARY KEY,
+          expenseId TEXT NOT NULL,
+          participantId TEXT NOT NULL,
+          shareAmount REAL NOT NULL,
+          customValue REAL,
+          isExcluded INTEGER NOT NULL DEFAULT 0,
+          syncStatus TEXT NOT NULL DEFAULT 'synced',
+          isDeleted INTEGER NOT NULL DEFAULT 0,
+          lastModified TEXT NOT NULL
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS tour_settlements (
+          id TEXT PRIMARY KEY,
+          tourId TEXT NOT NULL,
+          fromParticipant TEXT NOT NULL,
+          toParticipant TEXT NOT NULL,
+          amount REAL NOT NULL,
+          date TEXT NOT NULL,
+          note TEXT,
+          syncStatus TEXT NOT NULL DEFAULT 'synced',
+          isDeleted INTEGER NOT NULL DEFAULT 0,
+          lastModified TEXT NOT NULL
+        )
+      ''');
+    }
+    if (oldVersion < 10) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS tours (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          coverPhoto TEXT,
+          currency TEXT NOT NULL DEFAULT 'BDT',
+          createdAt TEXT NOT NULL,
+          profileId TEXT NOT NULL DEFAULT 'default_profile',
+          syncStatus TEXT NOT NULL DEFAULT 'synced',
+          isDeleted INTEGER NOT NULL DEFAULT 0,
+          lastModified TEXT NOT NULL
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS tour_participants (
+          id TEXT PRIMARY KEY,
+          tourId TEXT NOT NULL,
+          name TEXT NOT NULL,
+          avatarColor INTEGER NOT NULL DEFAULT 0,
+          joinedAt TEXT NOT NULL,
+          joinedExpenseId TEXT,
+          isActive INTEGER NOT NULL DEFAULT 1,
+          syncStatus TEXT NOT NULL DEFAULT 'synced',
+          isDeleted INTEGER NOT NULL DEFAULT 0,
+          lastModified TEXT NOT NULL
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS tour_expenses (
+          id TEXT PRIMARY KEY,
+          tourId TEXT NOT NULL,
+          title TEXT NOT NULL,
+          amount REAL NOT NULL,
+          paidBy TEXT NOT NULL,
+          splitType TEXT NOT NULL DEFAULT 'equal',
+          category TEXT,
+          note TEXT,
+          date TEXT NOT NULL,
+          receiptPath TEXT,
+          createdAt TEXT NOT NULL,
+          syncStatus TEXT NOT NULL DEFAULT 'synced',
+          isDeleted INTEGER NOT NULL DEFAULT 0,
+          lastModified TEXT NOT NULL
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS tour_expense_shares (
+          id TEXT PRIMARY KEY,
+          expenseId TEXT NOT NULL,
+          participantId TEXT NOT NULL,
+          shareAmount REAL NOT NULL,
+          customValue REAL,
+          isExcluded INTEGER NOT NULL DEFAULT 0,
+          syncStatus TEXT NOT NULL DEFAULT 'synced',
+          isDeleted INTEGER NOT NULL DEFAULT 0,
+          lastModified TEXT NOT NULL
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS tour_settlements (
+          id TEXT PRIMARY KEY,
+          tourId TEXT NOT NULL,
+          fromParticipant TEXT NOT NULL,
+          toParticipant TEXT NOT NULL,
+          amount REAL NOT NULL,
+          date TEXT NOT NULL,
+          note TEXT,
+          syncStatus TEXT NOT NULL DEFAULT 'synced',
+          isDeleted INTEGER NOT NULL DEFAULT 0,
+          lastModified TEXT NOT NULL
+        )
+      ''');
     }
   }
 

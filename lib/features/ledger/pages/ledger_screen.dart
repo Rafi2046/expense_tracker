@@ -190,6 +190,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 60),
         child: FloatingActionButton(
+          heroTag: 'ledger_fab',
           onPressed: () => _showAddOptions(context),
           child: const Icon(Symbols.add_rounded),
         ),

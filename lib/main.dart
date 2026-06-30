@@ -15,6 +15,7 @@ import 'package:expense_tracker/core/providers/theme_provider.dart';
 import 'package:expense_tracker/core/providers/privacy_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/providers/budget_provider.dart';
+import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
@@ -93,6 +94,13 @@ void main() async {
           update: (_, pm, noteProvider) {
             noteProvider!.updateProfileId(pm.activeProfileId);
             return noteProvider;
+          },
+        ),
+        ChangeNotifierProxyProvider<ProfileManagerProvider, TourProvider>(
+          create: (_) => TourProvider(initialProfileId: initialProfileId),
+          update: (_, pm, tourProvider) {
+            tourProvider!.updateProfileId(pm.activeProfileId);
+            return tourProvider;
           },
         ),
         ChangeNotifierProvider(create: (_) => AppLockProvider()),
