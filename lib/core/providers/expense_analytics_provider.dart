@@ -272,10 +272,12 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
       }
     }
 
+    final total = grouped.values.fold(0.0, (a, b) => a + b);
     return grouped.entries.map((e) {
       return CategoryBreakdownItem(
         name: e.key,
         amount: e.value,
+        percentage: total > 0 ? (e.value / total) * 100 : 0,
         color: _categoryColor(e.key),
       );
     }).toList()
@@ -371,10 +373,12 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
       }
     }
 
+    final total = grouped.values.fold(0.0, (a, b) => a + b);
     return grouped.entries.map((e) {
       return CategoryBreakdownItem(
         name: e.key,
         amount: e.value,
+        percentage: total > 0 ? (e.value / total) * 100 : 0,
         color: _categoryColor(e.key),
       );
     }).toList()

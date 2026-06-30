@@ -115,28 +115,25 @@ class SpendingOverviewCard extends StatelessWidget {
                         ],
                       ),
                       SizedBox(
-                        width: 84,
-                        height: 84,
+                        width: 120,
+                        height: 120,
                         child: Center(
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    context.translate('total'),
-                                    style: GoogleFonts.workSans(
-                                      fontSize: 11,
-                                      color: Colors.grey.shade500,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  context.translate('total'),
+                                  style: GoogleFonts.workSans(
+                                    fontSize: 11,
+                                    color: Colors.grey.shade500,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  const SizedBox(height: 2),
-                                  totalAmount,
-                                ],
-                              ),
+                                ),
+                                const SizedBox(height: 4),
+                                totalAmount,
+                              ],
                             ),
                           ),
                         ),

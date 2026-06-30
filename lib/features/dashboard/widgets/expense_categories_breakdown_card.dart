@@ -1,5 +1,4 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -7,11 +6,13 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class CategoryBreakdownItem {
   final String name;
   final double amount;
+  final double percentage;
   final Color color;
 
   CategoryBreakdownItem({
     required this.name,
     required this.amount,
+    required this.percentage,
     required this.color,
   });
 }
@@ -44,8 +45,9 @@ class _ExpenseCategoriesBreakdownCardState
     if (widget.categories.isEmpty) return const SizedBox.shrink();
 
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
 
-    // Determine how many items to show
     final showExpandButton = widget.categories.length > 3;
     final displayList = (_isExpanded || !showExpandButton)
         ? widget.categories
@@ -53,142 +55,182 @@ class _ExpenseCategoriesBreakdownCardState
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        border: Border.all(
-          color: (theme.dividerTheme.color ?? AppColors.dividerColor).withValues(alpha: 0.5),
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header title
-          RichText(
-            text: TextSpan(
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-                fontFamily: GoogleFonts.workSans().fontFamily,
-              ),
-              children: [
-                const TextSpan(text: 'Categories Breakdown '),
-                TextSpan(
-                  text: widget.suffixText,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.textMuted,
+          // Header with gradient accent bar
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF6A53A1), Color(0xFF32235B)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
+                  borderRadius: BorderRadius.circular(2),
                 ),
-              ],
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'Categories Breakdown',
+                style: GoogleFonts.workSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: onSurface,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.only(left: 14),
+            child: Text(
+              widget.suffixText,
+              style: GoogleFonts.workSans(
+                fontSize: 12,
+                color: Colors.grey.shade500,
+              ),
             ),
           ),
           const SizedBox(height: 16),
 
-          // Donut chart with total amount in the center
-          Center(
-            child: SizedBox(
-              height: 200,
-              width: 200,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  SfCircularChart(
-                    margin: EdgeInsets.zero,
-                    series: <CircularSeries<CategoryBreakdownItem, String>>[
-                      DoughnutSeries<CategoryBreakdownItem, String>(
-                        dataSource: widget.categories,
-                        xValueMapper: (CategoryBreakdownItem item, _) =>
-                            item.name,
-                        yValueMapper: (CategoryBreakdownItem item, _) =>
-                            item.amount,
-                        pointColorMapper: (CategoryBreakdownItem item, _) =>
-                            item.color,
-                        innerRadius: '75%',
-                        startAngle: 270,
-                        endAngle: 270,
-                        dataLabelSettings: const DataLabelSettings(
-                          isVisible: false,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
+          // Horizontal: chart left, list right
+          Row(
+            children: [
+              Expanded(
+                flex: 11,
+                child: SizedBox(
+                  height: 190,
+                  child: Stack(
+                    alignment: Alignment.center,
                     children: [
-                      Text(
-                        'Total',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textMuted,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: GoogleFonts.workSans().fontFamily,
+                      SfCircularChart(
+                        margin: EdgeInsets.zero,
+                        series: <CircularSeries<CategoryBreakdownItem, String>>[
+                          DoughnutSeries<CategoryBreakdownItem, String>(
+                            dataSource: widget.categories,
+                            xValueMapper: (CategoryBreakdownItem item, _) => item.name,
+                            yValueMapper: (CategoryBreakdownItem item, _) => item.amount,
+                            pointColorMapper: (CategoryBreakdownItem item, _) => item.color,
+                            innerRadius: '70%',
+                            startAngle: 270,
+                            endAngle: 270,
+                            dataLabelSettings: const DataLabelSettings(isVisible: false),
+                            animationDuration: 1000,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: Center(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Total',
+                                  style: GoogleFonts.workSans(
+                                    fontSize: 11,
+                                    color: Colors.grey.shade500,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                widget.totalAmount,
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      widget.totalAmount,
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Category list
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: displayList.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 16),
-            itemBuilder: (context, index) {
-              final item = displayList[index];
-              return Row(
-                children: [
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: item.color,
-                      shape: BoxShape.circle,
-                    ),
+              const SizedBox(width: 14),
+              Expanded(
+                flex: 10,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 190),
+                  child: ListView(
+                    children: displayList.map((item) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                color: item.color,
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.name,
+                                    style: GoogleFonts.workSans(
+                                      fontSize: 11.5,
+                                      fontWeight: FontWeight.w600,
+                                      color: onSurface,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 2),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(2),
+                                    child: LinearProgressIndicator(
+                                      value: item.percentage / 100,
+                                      backgroundColor: isDark
+                                          ? Colors.white.withValues(alpha: 0.08)
+                                          : const Color(0xFFF0F0F0),
+                                      valueColor: AlwaysStoppedAnimation<Color>(item.color),
+                                      minHeight: 4,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              item.percentage < 1
+                                  ? '${item.percentage.toStringAsFixed(1)}%'
+                                  : '${item.percentage.toStringAsFixed(0)}%',
+                              style: GoogleFonts.workSans(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: onSurface.withValues(alpha: 0.7),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      item.name,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.onSurface,
-                        fontFamily: GoogleFonts.workSans().fontFamily,
-                      ),
-                    ),
-                  ),
-                  PrivacyMaskedText(
-                    amount: item.amount,
-                    isMasked: widget.isMasked,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
-                    ),
-                  ),
-                ],
-              );
-            },
+                ),
+              ),
+            ],
           ),
 
           // Expand / Collapse button
@@ -197,11 +239,7 @@ class _ExpenseCategoriesBreakdownCardState
             Align(
               alignment: Alignment.centerLeft,
               child: TextButton(
-                onPressed: () {
-                  setState(() {
-                    _isExpanded = !_isExpanded;
-                  });
-                },
+                onPressed: () => setState(() => _isExpanded = !_isExpanded),
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   minimumSize: Size.zero,
@@ -209,11 +247,10 @@ class _ExpenseCategoriesBreakdownCardState
                 ),
                 child: Text(
                   _isExpanded ? 'View Less' : 'View All Category',
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: GoogleFonts.workSans(
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: AppColors.activeGreen,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
                   ),
                 ),
               ),
