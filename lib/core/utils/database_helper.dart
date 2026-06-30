@@ -1035,7 +1035,7 @@ class DatabaseHelper {
   Future<void> insertProfile(Map<String, dynamic> profile) async {
     if (kIsWeb) return;
     final db = await instance.database;
-    await db.insert('profiles', profile);
+    await db.insert('profiles', profile, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<List<Map<String, dynamic>>> readAllProfiles() async {

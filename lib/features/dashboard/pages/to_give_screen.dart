@@ -141,25 +141,27 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
 
             Expanded(
               child: items.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            AppImages.pendingPayments,
-                            height: 150,
-                            width: 150,
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            'No pending debts!',
-                            style: GoogleFonts.workSans(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey.shade500,
+                  ? SingleChildScrollView(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              AppImages.pendingPayments,
+                              height: 150,
+                              width: 150,
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 12),
+                            Text(
+                              'No pending debts!',
+                              style: GoogleFonts.workSans(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey.shade500,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   : ListView.builder(

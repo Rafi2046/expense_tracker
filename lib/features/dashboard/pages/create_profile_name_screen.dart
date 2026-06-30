@@ -45,9 +45,9 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
       ),
       builder: (ctx) {
         return CategorySelectionSheetContent(
-          onCategorySelected: (cat) {
+          onCategorySelected: (cat) async {
             Navigator.pop(ctx);
-            final newProfile = provider.finalizeProfileCreation();
+            final newProfile = await provider.finalizeProfileCreation();
             if (newProfile == null) {
               _showPremiumUpgrade(context);
               return;
@@ -107,7 +107,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
               CustomButton(
                 text: 'Continue',
                 backgroundColor: const Color(0xFF2EBD85),
-                onPressed: () {
+                onPressed: () async {
                   final name = _nameController.text.trim();
                   if (name.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -121,7 +121,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
                   if (widget.isBusiness) {
                     _showCategoryBottomSheet(context, provider);
                   } else {
-                    final newProfile = provider.finalizeProfileCreation();
+                    final newProfile = await provider.finalizeProfileCreation();
                     if (newProfile == null) {
                       _showPremiumUpgrade(context);
                       return;

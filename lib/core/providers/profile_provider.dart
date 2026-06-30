@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -83,10 +84,16 @@ class ProfileProvider extends ChangeNotifier {
 
   Future<void> _loadFromDb() async {
     final dbProfiles = await DatabaseHelper.instance.readAllProfiles();
-    if (dbProfiles.isEmpty) {
+    if (dbProfiles.isEmpty || !dbProfiles.any((p) => p['id'] == 'default_profile')) {
+      final name = _profiles.isNotEmpty ? _profiles[0].name : 'Personal';
       await DatabaseHelper.instance.insertProfile({
         'id': 'default_profile',
-        'name': _profiles[0].name,
+        'name': name,
+        'type': 'Personal',
+        'createdAt': DateTime.now().toIso8601String(),
+      });
+      await _profileDoc('default_profile')?.set({
+        'name': name,
         'type': 'Personal',
         'createdAt': DateTime.now().toIso8601String(),
       });
@@ -116,12 +123,27 @@ class ProfileProvider extends ChangeNotifier {
       if (old.name != name) {
         _profiles[idx] = UserProfile(id: old.id, name: name, type: old.type);
         DatabaseHelper.instance.updateProfile('default_profile', {'name': name});
+        _profileDoc('default_profile')?.set({'name': name}, SetOptions(merge: true));
         if (_currentProfile.id == 'default_profile') {
           _currentProfile = _profiles[idx];
         }
         notifyListeners();
       }
     }
+  }
+
+  DocumentReference? _profileDoc(String profileId) {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return null;
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('profiles')
+        .doc(profileId);
+  }
+
+  Future<void> reload() async {
+    await _loadFromDb();
   }
 
   // Getters
@@ -178,6 +200,7 @@ class ProfileProvider extends ChangeNotifier {
     }
 
     await DatabaseHelper.instance.updateProfile(profileId, {'name': newName});
+    await _profileDoc(profileId)?.set({'name': newName}, SetOptions(merge: true));
     notifyListeners();
   }
 
@@ -209,7 +232,7 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  UserProfile? finalizeProfileCreation() {
+  Future<UserProfile?> finalizeProfileCreation() async {
     if (_profiles.length >= 3 && !_isPremium) {
       return null;
     }
@@ -222,8 +245,14 @@ class ProfileProvider extends ChangeNotifier {
           : 'Personal',
     );
 
-    DatabaseHelper.instance.insertProfile({
+    await DatabaseHelper.instance.insertProfile({
       'id': newProfile.id,
+      'name': newProfile.name,
+      'type': newProfile.type,
+      'createdAt': DateTime.now().toIso8601String(),
+    });
+
+    await _profileDoc(newProfile.id)?.set({
       'name': newProfile.name,
       'type': newProfile.type,
       'createdAt': DateTime.now().toIso8601String(),
@@ -243,6 +272,7 @@ class ProfileProvider extends ChangeNotifier {
     if (profileId == 'default_profile') return;
 
     await DatabaseHelper.instance.deleteProfileAndData(profileId);
+    await _profileDoc(profileId)?.delete();
 
     _profiles.removeWhere((p) => p.id == profileId);
 
