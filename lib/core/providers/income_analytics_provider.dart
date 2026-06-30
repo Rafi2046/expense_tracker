@@ -302,6 +302,11 @@ class IncomeAnalyticsProvider extends ChangeNotifier {
     });
   }
 
+  void updateProfileId(String newProfileId) {
+    _incomeTransactions = [];
+    notifyListeners();
+  }
+
   void clear() {
     _incomeTransactions = [];
     _firebaseUser = null;

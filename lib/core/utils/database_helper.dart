@@ -257,7 +257,7 @@ class DatabaseHelper {
   }
 
   // Insert a note
-  Future<void> insertNote(NoteItem note) async {
+  Future<void> insertNote(NoteItem note, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
       final notes = _readWebNotes();
       notes.removeWhere((item) => item.id == note.id);
@@ -266,16 +266,17 @@ class DatabaseHelper {
       return;
     }
 
+    final data = note.toJson()..['profileId'] = profileId;
     final db = await instance.database;
     await db.insert(
       'notes',
-      note.toJson(),
+      data,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
   // Get all notes
-  Future<List<NoteItem>> readAllNotes() async {
+  Future<List<NoteItem>> readAllNotes({String profileId = 'default_profile'}) async {
     if (kIsWeb) {
       final notes = _readWebNotes();
       notes.sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -283,13 +284,17 @@ class DatabaseHelper {
     }
 
     final db = await instance.database;
-    final maps = await db.query('notes', orderBy: 'createdAt DESC');
+    final maps = await db.query('notes',
+      where: 'profileId = ?',
+      whereArgs: [profileId],
+      orderBy: 'createdAt DESC',
+    );
 
     return maps.map((map) => NoteItem.fromJson(map)).toList();
   }
 
   // Update a note
-  Future<int> updateNote(NoteItem note) async {
+  Future<int> updateNote(NoteItem note, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
       final notes = _readWebNotes();
       final index = notes.indexWhere((item) => item.id == note.id);
@@ -305,13 +310,13 @@ class DatabaseHelper {
     return await db.update(
       'notes',
       note.toJson(),
-      where: 'id = ?',
-      whereArgs: [note.id],
+      where: 'id = ? AND profileId = ?',
+      whereArgs: [note.id, profileId],
     );
   }
 
   // Delete a note
-  Future<int> deleteNote(String id) async {
+  Future<int> deleteNote(String id, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
       final notes = _readWebNotes();
       final lengthBefore = notes.length;
@@ -327,8 +332,8 @@ class DatabaseHelper {
     final db = await instance.database;
     return await db.delete(
       'notes',
-      where: 'id = ?',
-      whereArgs: [id],
+      where: 'id = ? AND profileId = ?',
+      whereArgs: [id, profileId],
     );
   }
 
@@ -1025,6 +1030,32 @@ class DatabaseHelper {
 
   /// Wipes all user-specific data from SQLite (transactions, categories,
   /// debt_items, budget). Leaves profile definitions intact.
+  // ─── PROFILES ──────────────────────────────────────────────────
+
+  Future<void> insertProfile(Map<String, dynamic> profile) async {
+    if (kIsWeb) return;
+    final db = await instance.database;
+    await db.insert('profiles', profile);
+  }
+
+  Future<List<Map<String, dynamic>>> readAllProfiles() async {
+    if (kIsWeb) return [];
+    final db = await instance.database;
+    return db.query('profiles', orderBy: 'createdAt ASC');
+  }
+
+  Future<void> updateProfile(String id, Map<String, dynamic> updates) async {
+    if (kIsWeb) return;
+    final db = await instance.database;
+    await db.update('profiles', updates, where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<void> deleteProfile(String id) async {
+    if (kIsWeb) return;
+    final db = await instance.database;
+    await db.delete('profiles', where: 'id = ?', whereArgs: [id]);
+  }
+
   Future<void> clearUserData() async {
     if (kIsWeb) return;
     final db = await instance.database;
@@ -1033,6 +1064,7 @@ class DatabaseHelper {
       await txn.delete('categories');
       await txn.delete('debt_items');
       await txn.delete('budget');
+      await txn.delete('notes');
     });
   }
 

@@ -69,11 +69,8 @@ class DashboardScreen extends StatelessWidget {
                   builder: (context) => const SelectProfileScreen(),
                 ),
               );
-              if (newProfile != null) {
-                profileProvider.addProfile(newProfile);
-                if (context.mounted) {
-                  context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
-                }
+              if (newProfile != null && context.mounted) {
+                context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
               }
             },
           );

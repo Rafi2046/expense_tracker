@@ -613,6 +613,21 @@ class ReportsProvider extends ChangeNotifier {
     }).toList();
   }
 
+  void updateProfileId(String newProfileId) {
+    _txProvider = null;
+    _debtProvider = null;
+    _selectedDateRange = getDateTimeRangeForOption(DateRangeOption.thisMonth);
+    _selectedOption = DateRangeOption.thisMonth;
+    _searchQuery = '';
+    _selectedType = 'All Transactions';
+    _selectedPartyName = null;
+    _sortOption = ReportSortOption.latest;
+    _selectedPartyNameForStatement = null;
+    _partiesSearchQuery = '';
+    _partyStatementViewMode = PartyStatementViewMode.card;
+    notifyListeners();
+  }
+
   void clear() {
     _txProvider = null;
     _debtProvider = null;

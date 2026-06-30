@@ -1,6 +1,7 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_selection_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_name_input_field.dart';
@@ -27,6 +28,25 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
     super.dispose();
   }
 
+  void _showLimitWarning(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Profile Limit Reached'),
+        content: const Text(
+          'You can create up to 3 profiles on the Free plan. '
+          'Upgrade to Premium to create more profiles.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showCategoryBottomSheet(
     BuildContext context,
     ProfileProvider provider,
@@ -38,11 +58,16 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) {
+      builder: (ctx) {
         return CategorySelectionSheetContent(
           onCategorySelected: (cat) {
-            Navigator.pop(context); // Close bottom sheet
+            Navigator.pop(ctx); // Close bottom sheet
             final newProfile = provider.finalizeProfileCreation();
+            if (newProfile == null) {
+              _showLimitWarning(context);
+              return;
+            }
+            context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
             Navigator.pop(context, newProfile); // Return from name screen
           },
         );
@@ -102,6 +127,11 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
                     _showCategoryBottomSheet(context, provider);
                   } else {
                     final newProfile = provider.finalizeProfileCreation();
+                    if (newProfile == null) {
+                      _showLimitWarning(context);
+                      return;
+                    }
+                    context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
                     Navigator.pop(context, newProfile);
                   }
                 },

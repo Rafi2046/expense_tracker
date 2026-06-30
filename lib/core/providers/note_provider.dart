@@ -56,6 +56,7 @@ class NoteItem {
 class NoteProvider extends ChangeNotifier {
   List<NoteItem> _notes = [];
   bool _isLoading = true;
+  String _activeProfileId = 'default_profile';
 
   NoteProvider() {
     _loadNotes();
@@ -66,7 +67,7 @@ class NoteProvider extends ChangeNotifier {
 
   Future<void> _loadNotes() async {
     try {
-      _notes = await DatabaseHelper.instance.readAllNotes();
+      _notes = await DatabaseHelper.instance.readAllNotes(profileId: _activeProfileId);
     } catch (e) {
       debugPrint('Error loading notes from SQLite: $e');
     } finally {
@@ -75,10 +76,19 @@ class NoteProvider extends ChangeNotifier {
     }
   }
 
+  void updateProfileId(String newProfileId) {
+    if (newProfileId == _activeProfileId) return;
+    _activeProfileId = newProfileId;
+    _notes.clear();
+    _isLoading = true;
+    notifyListeners();
+    _loadNotes();
+  }
+
   Future<void> addNote(NoteItem note) async {
     _notes.insert(0, note);
     notifyListeners();
-    await DatabaseHelper.instance.insertNote(note);
+    await DatabaseHelper.instance.insertNote(note, profileId: _activeProfileId);
   }
 
   Future<void> insertNote(int index, NoteItem note) async {
@@ -88,7 +98,7 @@ class NoteProvider extends ChangeNotifier {
       _notes.add(note);
     }
     notifyListeners();
-    await DatabaseHelper.instance.insertNote(note);
+    await DatabaseHelper.instance.insertNote(note, profileId: _activeProfileId);
   }
 
   Future<void> updateNote(NoteItem updatedNote) async {
@@ -96,14 +106,14 @@ class NoteProvider extends ChangeNotifier {
     if (index != -1) {
       _notes[index] = updatedNote;
       notifyListeners();
-      await DatabaseHelper.instance.updateNote(updatedNote);
+      await DatabaseHelper.instance.updateNote(updatedNote, profileId: _activeProfileId);
     }
   }
 
   Future<void> deleteNote(String id) async {
     _notes.removeWhere((n) => n.id == id);
     notifyListeners();
-    await DatabaseHelper.instance.deleteNote(id);
+    await DatabaseHelper.instance.deleteNote(id, profileId: _activeProfileId);
   }
 
   List<NoteItem> searchNotes(String query) {

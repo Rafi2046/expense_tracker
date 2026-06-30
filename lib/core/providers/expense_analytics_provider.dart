@@ -428,6 +428,11 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
     return items;
   }
 
+  void updateProfileId(String newProfileId) {
+    _expenseTransactions = [];
+    notifyListeners();
+  }
+
   void clear() {
     _expenseTransactions = [];
     _firebaseUser = null;

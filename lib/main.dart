@@ -65,7 +65,13 @@ void main() async {
         ),
         ChangeNotifierProvider(create: (_) => SessionProvider()),
         ChangeNotifierProvider(create: (_) => ShortcutProvider()),
-        ChangeNotifierProvider(create: (_) => NoteProvider()),
+        ChangeNotifierProxyProvider<ProfileManagerProvider, NoteProvider>(
+          create: (_) => NoteProvider(),
+          update: (_, profileManager, noteProvider) {
+            noteProvider!.updateProfileId(profileManager.activeProfileId);
+            return noteProvider;
+          },
+        ),
         ChangeNotifierProvider(create: (_) => AppLockProvider()),
         ChangeNotifierProvider(create: (_) => BiometricAuthProvider()),
         ChangeNotifierProvider(create: (_) => CurrencyProvider()),
@@ -73,42 +79,55 @@ void main() async {
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProxyProvider2<
+        ChangeNotifierProxyProvider3<
+          ProfileManagerProvider,
           TransactionProvider,
           DebtProvider,
           ReportsProvider
         >(
           create: (_) => ReportsProvider(),
-          update: (_, txProvider, debtProvider, reportsProvider) =>
-              reportsProvider!..updateProviders(txProvider, debtProvider),
+          update: (_, profileManager, txProvider, debtProvider, reportsProvider) {
+            reportsProvider!.updateProfileId(profileManager.activeProfileId);
+            reportsProvider.updateProviders(txProvider, debtProvider);
+            return reportsProvider;
+          },
         ),
-        ChangeNotifierProxyProvider<
+        ChangeNotifierProxyProvider2<
+          ProfileManagerProvider,
           TransactionProvider,
           IncomeAnalyticsProvider
         >(
           create: (_) => IncomeAnalyticsProvider(),
-          update: (_, txProvider, analyticsProvider) =>
-              (analyticsProvider ?? IncomeAnalyticsProvider())
-                ..updateTransactions(txProvider.transactions),
+          update: (_, profileManager, txProvider, analyticsProvider) {
+            analyticsProvider!.updateProfileId(profileManager.activeProfileId);
+            analyticsProvider.updateTransactions(txProvider.transactions);
+            return analyticsProvider;
+          },
         ),
-        ChangeNotifierProxyProvider<
+        ChangeNotifierProxyProvider2<
+          ProfileManagerProvider,
           TransactionProvider,
           ExpenseAnalyticsProvider
         >(
           create: (_) => ExpenseAnalyticsProvider(),
-          update: (_, txProvider, analyticsProvider) =>
-              (analyticsProvider ?? ExpenseAnalyticsProvider())
-                ..updateTransactions(txProvider.transactions),
+          update: (_, profileManager, txProvider, analyticsProvider) {
+            analyticsProvider!.updateProfileId(profileManager.activeProfileId);
+            analyticsProvider.updateTransactions(txProvider.transactions);
+            return analyticsProvider;
+          },
         ),
-        ChangeNotifierProxyProvider2<
+        ChangeNotifierProxyProvider3<
+          ProfileManagerProvider,
           TransactionProvider,
           DebtProvider,
           BalanceAnalyticsProvider
         >(
           create: (_) => BalanceAnalyticsProvider(),
-          update: (_, txProvider, debtProvider, balanceProvider) =>
-              (balanceProvider ?? BalanceAnalyticsProvider())
-                ..updateData(txProvider.transactions, debtProvider.items),
+          update: (_, profileManager, txProvider, debtProvider, balanceProvider) {
+            balanceProvider!.updateProfileId(profileManager.activeProfileId);
+            balanceProvider.updateData(txProvider.transactions, debtProvider.items);
+            return balanceProvider;
+          },
         ),
       ],
       child: const MyApp(),

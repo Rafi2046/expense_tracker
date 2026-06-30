@@ -83,6 +83,15 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
     return bal;
   }
 
+  void updateProfileId(String newProfileId) {
+    _transactions = [];
+    _debts = [];
+    allTimeCashBalance = 0.0;
+    allTimeBankBalance = 0.0;
+    allTimeTotalBalance = 0.0;
+    notifyListeners();
+  }
+
   void clear() {
     _transactions = [];
     _debts = [];

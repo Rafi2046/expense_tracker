@@ -122,8 +122,10 @@ class TransactionProvider extends ChangeNotifier {
                       docId,
                       change.doc.data()!,
                     );
-                    _transactions.add(item);
-                    _db.insertTransaction(item, syncStatus: 'synced', profileId: _activeProfileId);
+                    _db.insertTransaction(item, syncStatus: 'synced', profileId: item.profileId);
+                    if (item.profileId == _activeProfileId) {
+                      _transactions.add(item);
+                    }
                   }
                   break;
                 case DocumentChangeType.modified:
