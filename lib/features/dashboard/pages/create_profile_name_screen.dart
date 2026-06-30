@@ -1,9 +1,10 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
+import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_selection_sheet.dart';
+import 'package:expense_tracker/features/dashboard/widgets/premium_upgrade_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_name_input_field.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -28,23 +29,8 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
     super.dispose();
   }
 
-  void _showLimitWarning(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Profile Limit Reached'),
-        content: const Text(
-          'You can create up to 3 profiles on the Free plan. '
-          'Upgrade to Premium to create more profiles.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
+  void _showPremiumUpgrade(BuildContext context) {
+    PremiumUpgradeSheet.show(context);
   }
 
   void _showCategoryBottomSheet(
@@ -64,7 +50,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
             Navigator.pop(ctx); // Close bottom sheet
             final newProfile = provider.finalizeProfileCreation();
             if (newProfile == null) {
-              _showLimitWarning(context);
+              _showPremiumUpgrade(context);
               return;
             }
             context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
@@ -128,7 +114,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
                   } else {
                     final newProfile = provider.finalizeProfileCreation();
                     if (newProfile == null) {
-                      _showLimitWarning(context);
+                      _showPremiumUpgrade(context);
                       return;
                     }
                     context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
