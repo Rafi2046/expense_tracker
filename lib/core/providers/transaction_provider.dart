@@ -9,6 +9,8 @@ export '../models/transaction_models.dart';
 
 enum TransactionSortOption { latest, amountHighToLow, amountLowToHigh }
 
+enum TransactionTypeFilter { all, income, expense }
+
 class TransactionProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -37,6 +39,14 @@ class TransactionProvider extends ChangeNotifier {
   bool isSearching = false;
   String searchQuery = '';
   TransactionSortOption sortOption = TransactionSortOption.latest;
+  TransactionTypeFilter _transactionTypeFilter = TransactionTypeFilter.all;
+
+  TransactionTypeFilter get transactionTypeFilter => _transactionTypeFilter;
+
+  set transactionTypeFilter(TransactionTypeFilter value) {
+    _transactionTypeFilter = value;
+    notifyListeners();
+  }
 
   TransactionProvider() {
     final now = DateTime.now();
@@ -339,6 +349,12 @@ class TransactionProvider extends ChangeNotifier {
         return tx.note.toLowerCase().contains(query) ||
             tx.category.toLowerCase().contains(query);
       }).toList();
+    }
+
+    if (_transactionTypeFilter == TransactionTypeFilter.income) {
+      results = results.where((tx) => tx.isIncome).toList();
+    } else if (_transactionTypeFilter == TransactionTypeFilter.expense) {
+      results = results.where((tx) => !tx.isIncome).toList();
     }
 
     switch (sortOption) {

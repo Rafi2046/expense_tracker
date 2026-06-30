@@ -1,4 +1,5 @@
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
@@ -35,6 +36,94 @@ class _LedgerScreenState extends State<LedgerScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Widget _buildSegment(BuildContext context, TransactionProvider provider, String label, TransactionTypeFilter filter, bool isDark) {
+    final isSelected = provider.transactionTypeFilter == filter;
+    Color selectedColor;
+    switch (filter) {
+      case TransactionTypeFilter.income:
+        selectedColor = AppColors.activeGreen;
+      case TransactionTypeFilter.expense:
+        selectedColor = AppColors.expensePink;
+      case TransactionTypeFilter.all:
+        selectedColor = isDark ? Colors.white.withValues(alpha: 0.25) : Colors.grey.shade500;
+    }
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => provider.transactionTypeFilter = filter,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected ? selectedColor : Colors.transparent,
+            borderRadius: BorderRadius.circular(11),
+          ),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.workSans(
+              fontSize: 13,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              color: isSelected ? Colors.white : (isDark ? Colors.white60 : const Color(0xFF6B7280)),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showAddOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 24),
+            _AddOptionTile(
+              icon: Symbols.account_balance_wallet,
+              label: 'Add Income',
+              subtitle: 'Record money received',
+              color: AppColors.activeGreen,
+              bgColor: AppColors.activeGreen.withValues(alpha: 0.08),
+              onTap: () {
+                Navigator.pop(ctx);
+                AddTransactionSheet.show(context: context, isIncome: true);
+              },
+            ),
+            const SizedBox(height: 12),
+            _AddOptionTile(
+              icon: Symbols.payments,
+              label: 'Add Expense',
+              subtitle: 'Record money spent',
+              color: AppColors.expensePink,
+              bgColor: AppColors.expensePink.withValues(alpha: 0.08),
+              onTap: () {
+                Navigator.pop(ctx);
+                AddTransactionSheet.show(context: context, isIncome: false);
+              },
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -98,6 +187,13 @@ class _LedgerScreenState extends State<LedgerScreen> {
           ),
         ),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 60),
+        child: FloatingActionButton(
+          onPressed: () => _showAddOptions(context),
+          child: const Icon(Symbols.add_rounded),
+        ),
+      ),
       body: SafeArea(
         bottom: false,
         child: SingleChildScrollView(
@@ -123,82 +219,101 @@ class _LedgerScreenState extends State<LedgerScreen> {
                 const LedgerMonthSelector(),
                 const SizedBox(height: 12),
 
-                // Inline Add Income & Add Expense Buttons Row
-                Row(
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        height: 46,
-                        child: TextButton.icon(
-                          icon: const Icon(
-                            Symbols.account_balance_wallet,
-                            size: 16,
-                            color: Color(0xFF006C49),
-                          ),
-                          label: Text(
-                            context.translate('add_income'),
-                            style: GoogleFonts.workSans(
-                              fontSize: 12.5,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF006C49),
-                            ),
-                          ),
-                          style: TextButton.styleFrom(
-                            backgroundColor: const Color(0xFFE6F3EE),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          onPressed: () {
-                            AddTransactionSheet.show(
-                              context: context,
-                              isIncome: true,
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: SizedBox(
-                        height: 46,
-                        child: TextButton.icon(
-                          icon: const Icon(
-                            Symbols.payments,
-                            size: 16,
-                            color: Color(0xFFD9383A),
-                          ),
-                          label: Text(
-                            context.translate('add_expense'),
-                            style: GoogleFonts.workSans(
-                              fontSize: 12.5,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFFD9383A),
-                            ),
-                          ),
-                          style: TextButton.styleFrom(
-                            backgroundColor: const Color(0xFFFDECEC),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          onPressed: () {
-                            AddTransactionSheet.show(
-                              context: context,
-                              isIncome: false,
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
+                // Filter: All / Income / Expense
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFF0F1F3),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Row(
+                    children: [
+                      _buildSegment(context, provider, 'All', TransactionTypeFilter.all, isDark),
+                      const SizedBox(width: 4),
+                      _buildSegment(context, provider, 'Income', TransactionTypeFilter.income, isDark),
+                      const SizedBox(width: 4),
+                      _buildSegment(context, provider, 'Expense', TransactionTypeFilter.expense, isDark),
+                    ],
+                  ),
                 ),
 
                 LedgerTransactionList(isMasked: _localMasked, isLoading: isLoading),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AddOptionTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String subtitle;
+  final Color color;
+  final Color bgColor;
+  final VoidCallback onTap;
+
+  const _AddOptionTile({
+    required this.icon,
+    required this.label,
+    required this.subtitle,
+    required this.color,
+    required this.bgColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: color, size: 22),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: GoogleFonts.workSans(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: GoogleFonts.workSans(
+                        fontSize: 12,
+                        color: Colors.grey.shade500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Symbols.chevron_right_rounded, color: Colors.grey.shade400, size: 20),
+            ],
           ),
         ),
       ),
