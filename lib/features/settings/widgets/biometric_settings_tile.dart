@@ -82,7 +82,7 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               color: isDark
                   ? (isAvailable
@@ -91,17 +91,17 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
                   : (isAvailable
                       ? const Color(0xFFE8EAF6)
                       : const Color(0xFFF3F4F6)),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               Icons.fingerprint,
               color: isAvailable
                   ? (isDark ? Colors.white70 : const Color(0xFF3949AB))
                   : (isDark ? Colors.white30 : const Color(0xFF9CA3AF)),
-              size: 18,
+              size: 14,
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +109,7 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
                 Text(
                   'Biometric Login',
                   style: GoogleFonts.workSans(
-                    fontSize: 14.5,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: isAvailable
                         ? theme.colorScheme.onSurface
@@ -124,7 +124,7 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
                           ? 'Use Face ID / Fingerprint on app restart'
                           : 'Not available on this device'),
                   style: GoogleFonts.workSans(
-                    fontSize: 11.5,
+                    fontSize: 9,
                     color: _isProcessing
                         ? theme.primaryColor
                         : (isAvailable

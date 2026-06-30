@@ -1,8 +1,6 @@
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/settings/pages/help_center_screen.dart';
 import 'package:expense_tracker/features/settings/pages/privacy_policy_screen.dart';
-import 'package:expense_tracker/features/settings/widgets/logout_dialog.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_option_row.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -42,19 +40,7 @@ class SupportGroup extends StatelessWidget {
             ),
           ),
         ),
-        SettingsOptionRow(
-          icon: Symbols.logout_rounded,
-          iconBgColor: const Color(0xFFFFF1F0),
-          iconColor: const Color(0xFFE53935),
-          title: context.translate('logout'),
-          color: AppColors.activeRed,
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) => const LogoutDialog(),
-            );
-          },
-        ),
+
       ],
     );
   }

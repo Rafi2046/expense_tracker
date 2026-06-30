@@ -47,25 +47,25 @@ class SettingsOptionRow extends StatelessWidget {
           children: [
             // Squircle leading icon container
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color: resolvedIconBg,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 icon,
                 color: resolvedIconColor,
-                size: 18,
+                size: 14,
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 10),
 
             // Title
             Expanded(
               child: Text(
                 title,
                 style: GoogleFonts.workSans(
-                  fontSize: 14.5,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: defaultColor,
                 ),
@@ -77,7 +77,7 @@ class SettingsOptionRow extends StatelessWidget {
               Text(
                 trailingText!,
                 style: GoogleFonts.workSans(
-                  fontSize: 13,
+                  fontSize: 11,
                   color: theme.colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
@@ -89,7 +89,7 @@ class SettingsOptionRow extends StatelessWidget {
             Icon(
               trailingIcon ?? Symbols.chevron_right_rounded,
               color: color ?? (isDark ? Colors.white60 : Colors.grey.shade400),
-              size: 18,
+              size: 14,
             ),
           ],
         ),

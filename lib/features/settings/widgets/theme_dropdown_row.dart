@@ -57,27 +57,27 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
               children: [
                 // Squircle moon icon
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFE8EAF6),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     Symbols.dark_mode,
                     color: isDark ? Colors.white70 : const Color(0xFF3F51B5),
-                    size: 18,
+                    size: 14,
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 10),
                 
                 // Title
                 Expanded(
                   child: Text(
                     context.translate('Change Theme'),
                     style: GoogleFonts.workSans(
-                      fontSize: 14.5,
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -87,7 +87,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
                   Text(
                     currentThemeLabel,
                     style: GoogleFonts.workSans(
-                      fontSize: 13,
+                      fontSize: 11,
                       color: isDark
                           ? theme.colorScheme.onSurface.withValues(alpha: 0.6)
                           : const Color(0xFF888888),
@@ -103,7 +103,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
                       ? Symbols.keyboard_arrow_up_rounded
                       : Symbols.keyboard_arrow_down_rounded,
                   color: isDark ? Colors.white60 : Colors.grey.shade400,
-                  size: 18,
+                  size: 14,
                 ),
               ],
             ),
@@ -166,7 +166,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
               child: Text(
                 label,
                 style: GoogleFonts.workSans(
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   color: theme.colorScheme.onSurface,
                 ),

@@ -1,3 +1,4 @@
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/features/reports/pages/view_reports_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/account_group.dart';
@@ -7,6 +8,8 @@ import 'package:expense_tracker/features/settings/widgets/utilities_group.dart';
 import 'package:expense_tracker/features/settings/widgets/support_group.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_profile_card.dart';
 import 'package:expense_tracker/features/settings/widgets/edit_profile_dialog.dart';
+import 'package:expense_tracker/features/settings/widgets/delete_account_dialog.dart';
+import 'package:expense_tracker/features/settings/widgets/logout_dialog.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -116,6 +119,129 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 SupportGroup(onSnackBar: (msg) => _showSnackBar(context, msg)),
+                const SizedBox(height: 24),
+                // Delete Account Danger Zone
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: theme.cardColor,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: const Color(0xFFDC3545).withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFDC3545).withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Symbols.delete_forever_rounded,
+                          color: Color(0xFFDC3545),
+                          size: 14,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Delete Account',
+                            style: GoogleFonts.workSans(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFFDC3545),
+                            ),
+                          ),
+                          Text(
+                            'Permanently remove your account and data',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.workSans(
+                              fontSize: 9,
+                              color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        borderRadius: BorderRadius.circular(6),
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (_) => const DeleteAccountDialog(),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(4),
+                          child: Icon(
+                            Symbols.chevron_right_rounded,
+                            color: Color(0xFFDC3545),
+                            size: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Logout button
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: theme.cardColor,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: const Color(0xFFE53935).withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE53935).withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Symbols.logout_rounded,
+                          color: Color(0xFFE53935),
+                          size: 14,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        context.translate('logout'),
+                        style: GoogleFonts.workSans(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFFE53935),
+                        ),
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        borderRadius: BorderRadius.circular(6),
+                        onTap: () => showDialog(
+                          context: context,
+                          builder: (_) => const LogoutDialog(),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(4),
+                          child: Icon(
+                            Symbols.chevron_right_rounded,
+                            color: Color(0xFFE53935),
+                            size: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 150), // Spacer to scroll past floating bottom nav
               ],
             ),
