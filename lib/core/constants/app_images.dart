@@ -23,6 +23,7 @@ class AppImages {
   static const String bellIcon= 'assets/app_icons/bell_icon.webp';
   static const String notifications = 'assets/app_icons/notifications.png';
   static const String pendingPayments = 'assets/app_icons/pending_payments.png';
+  static const String editIcon= 'assets/app_icons/edit_icon.webp';
 
 
 

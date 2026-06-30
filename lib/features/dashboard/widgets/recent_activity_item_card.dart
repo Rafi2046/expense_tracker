@@ -7,8 +7,13 @@ import 'package:google_fonts/google_fonts.dart';
 
 class RecentActivityItemCard extends StatelessWidget {
   final TransactionItem transaction;
+  final void Function(TransactionItem)? onTap;
 
-  const RecentActivityItemCard({super.key, required this.transaction});
+  const RecentActivityItemCard({
+    super.key,
+    required this.transaction,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,76 +23,79 @@ class RecentActivityItemCard extends StatelessWidget {
     final isInc = tx.isIncome;
     final icon = _iconForCategory(tx.category);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: isInc
-                  ? AppColors.activeGreen.withValues(alpha: 0.08)
-                  : (isDark
-                      ? Colors.white.withValues(alpha: 0.08)
-                      : const Color(0xFFF3F4F6)),
-              borderRadius: BorderRadius.circular(10),
+    return InkWell(
+      onTap: onTap != null ? () => onTap!(tx) : null,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: isInc
+                    ? AppColors.activeGreen.withValues(alpha: 0.08)
+                    : (isDark
+                        ? Colors.white.withValues(alpha: 0.08)
+                        : const Color(0xFFF3F4F6)),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                icon,
+                color: isInc
+                    ? AppColors.activeGreen
+                    : (isDark ? Colors.white70 : const Color(0xFF4A5568)),
+                size: 17,
+              ),
             ),
-            child: Icon(
-              icon,
-              color: isInc
-                  ? AppColors.activeGreen
-                  : (isDark ? Colors.white70 : const Color(0xFF4A5568)),
-              size: 17,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tx.note.isEmpty ? tx.category : tx.note,
+                    style: GoogleFonts.workSans(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${tx.category}  •  ${_formatTime(tx.dateTime)}',
+                    style: GoogleFonts.workSans(
+                      fontSize: 10.5,
+                      color: Colors.grey.shade400,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  tx.note.isEmpty ? tx.category : tx.note,
+                  isInc ? '+' : '-',
                   style: GoogleFonts.workSans(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface,
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                    color: isInc ? AppColors.activeGreen : AppColors.expensePink,
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  '${tx.category}  •  ${_formatTime(tx.dateTime)}',
+                PrivacyMaskedText(
+                  amount: tx.amount,
                   style: GoogleFonts.workSans(
-                    fontSize: 10.5,
-                    color: Colors.grey.shade400,
-                    fontWeight: FontWeight.w400,
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w700,
+                    color: isInc ? AppColors.activeGreen : AppColors.expensePink,
                   ),
                 ),
               ],
             ),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                isInc ? '+' : '-',
-                style: GoogleFonts.workSans(
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w700,
-                  color: isInc ? AppColors.activeGreen : AppColors.expensePink,
-                ),
-              ),
-              PrivacyMaskedText(
-                amount: tx.amount,
-                style: GoogleFonts.workSans(
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w700,
-                  color: isInc ? AppColors.activeGreen : AppColors.expensePink,
-                ),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

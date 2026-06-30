@@ -18,6 +18,7 @@ import 'package:expense_tracker/features/dashboard/pages/notifications_screen.da
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/to_give_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/to_receive_screen.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/budget_summary_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_budget_status.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_recent_activity.dart';
@@ -286,6 +287,7 @@ class DashboardScreen extends StatelessWidget {
                           amount: tx.amount,
                           isIncome: tx.isIncome,
                           icon: _getCategoryIcon(tx.category),
+                          transaction: tx,
                         );
                       }).toList(),
                       onViewAllTap: () {
@@ -297,11 +299,14 @@ class DashboardScreen extends StatelessWidget {
                         );
                       },
                       onItemTap: (item) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Tapped activity: ${item.title}'),
-                          ),
-                        );
+                        final tx = item.transaction;
+                        if (tx != null) {
+                          AddTransactionSheet.show(
+                            context: context,
+                            isIncome: tx.isIncome,
+                            transaction: tx,
+                          );
+                        }
                       },
                     ),
                   const SizedBox(height: 20),

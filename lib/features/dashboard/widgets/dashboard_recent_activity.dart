@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/models/transaction_models.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,6 +12,7 @@ class RecentActivityItem {
   final double amount;
   final bool isIncome;
   final IconData icon;
+  final TransactionItem? transaction;
 
   RecentActivityItem({
     required this.title,
@@ -19,6 +21,7 @@ class RecentActivityItem {
     required this.amount,
     required this.isIncome,
     required this.icon,
+    this.transaction,
   });
 }
 

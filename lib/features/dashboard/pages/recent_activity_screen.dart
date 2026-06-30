@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/recent_activity_date_header.dart';
 import 'package:expense_tracker/features/dashboard/widgets/recent_activity_item_card.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,11 @@ class RecentActivityScreen extends StatelessWidget {
           child: Column(
             children: List.generate(g.transactions.length * 2 - 1, (i) {
               if (i.isOdd) return Divider(color: t.dividerTheme.color ?? const Color(0xFFF1F1F1), height: 1, indent: 62, endIndent: 14);
-              return RecentActivityItemCard(transaction: g.transactions[i ~/ 2]);
+              final tx = g.transactions[i ~/ 2];
+              return RecentActivityItemCard(
+                transaction: tx,
+                onTap: (t) => AddTransactionSheet.show(context: context, isIncome: t.isIncome, transaction: t),
+              );
             }),
           ),
         ),
