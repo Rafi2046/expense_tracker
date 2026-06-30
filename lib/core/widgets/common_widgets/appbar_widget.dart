@@ -31,9 +31,9 @@ class HomepageAppbarWidget extends StatelessWidget
     final profileProvider = context.watch<ProfileProvider>();
     final isMasked = context.watch<PrivacyProvider>().isMasked;
     final currentProfile = profileProvider.currentProfile;
-    final displayName = currentProfile.name;
+    final displayName = currentProfile.id == 'default_profile' ? session.firstName : currentProfile.name;
     final photoUrl = currentProfile.id == 'default_profile' ? session.photoUrl : null;
-    final initials = displayName.isNotEmpty ? displayName.substring(0, 1).toUpperCase() : 'P';
+    final initials = currentProfile.id == 'default_profile' ? session.initials : (currentProfile.name.isNotEmpty ? currentProfile.name.substring(0, 1).toUpperCase() : 'P');
 
     return AppBar(
       automaticallyImplyLeading: false,

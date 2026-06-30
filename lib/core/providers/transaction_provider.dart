@@ -106,16 +106,14 @@ class TransactionProvider extends ChangeNotifier {
               final docId = change.doc.id;
               switch (change.type) {
                 case DocumentChangeType.added:
-                  if (!_knownDocIds.contains(docId)) {
+                  if (!_knownDocIds.contains(docId) && !_transactions.any((t) => t.id == docId)) {
                     _knownDocIds.add(docId);
                     final item = TransactionItem.fromMap(
                       docId,
                       change.doc.data()!,
                     );
-                    _db.insertTransaction(item, syncStatus: 'synced', profileId: item.profileId);
-                    if (item.profileId == _activeProfileId) {
-                      _transactions.add(item);
-                    }
+                    _transactions.add(item);
+                    _db.insertTransaction(item, syncStatus: 'synced', profileId: _activeProfileId);
                   }
                   break;
                 case DocumentChangeType.modified:
