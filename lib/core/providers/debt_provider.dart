@@ -136,11 +136,12 @@ class DebtProvider extends ChangeNotifier {
 
   bool _isRetrying = false;
 
-  String _activeProfileId = 'default_profile';
+  String _activeProfileId;
 
   final List<DebtItem> _items = [];
 
-  DebtProvider() {
+  DebtProvider({required String initialProfileId})
+      : _activeProfileId = initialProfileId {
     _authSubscription = _auth.userChanges().listen((user) {
       _onAuthChanged(user);
     });

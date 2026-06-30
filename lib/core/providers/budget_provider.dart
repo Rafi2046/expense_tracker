@@ -15,9 +15,10 @@ class BudgetProvider extends ChangeNotifier {
 
   bool _isLoading = true;
   double _amount = 0;
-  String _activeProfileId = 'default_profile';
+  String _activeProfileId;
 
-  BudgetProvider() {
+  BudgetProvider({required String initialProfileId})
+      : _activeProfileId = initialProfileId {
     _authSubscription = _auth.userChanges().listen((user) {
       _onAuthChanged(user);
     });

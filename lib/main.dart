@@ -37,38 +37,61 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  // Read saved profile ID ONCE, before any provider is created.
+  // Every data provider receives it directly as a constructor argument,
+  // eliminating any reliance on ProxyProvider update timing.
+  final initialProfileId =
+      SharedPrefsHelper.getString(SharedPrefsHelper.activeProfileKey) ?? 'default_profile';
+  debugPrint('main: initial active profile = $initialProfileId');
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ProfileProvider()),
-        ChangeNotifierProvider(create: (_) => ProfileManagerProvider()),
+        ChangeNotifierProvider(
+          create: (_) => ProfileProvider(
+            initialProfileId: initialProfileId,
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ProfileManagerProvider(
+            initialProfileId: initialProfileId,
+          ),
+        ),
         ChangeNotifierProxyProvider<ProfileManagerProvider, TransactionProvider>(
-          create: (_) => TransactionProvider(),
-          update: (_, profileManager, txProvider) {
-            txProvider!.updateProfileId(profileManager.activeProfileId);
+          create: (_) => TransactionProvider(
+            initialProfileId: initialProfileId,
+          ),
+          update: (_, pm, txProvider) {
+            txProvider!.updateProfileId(pm.activeProfileId);
             return txProvider;
           },
         ),
         ChangeNotifierProxyProvider<ProfileManagerProvider, DebtProvider>(
-          create: (_) => DebtProvider(),
-          update: (_, profileManager, debtProvider) {
-            debtProvider!.updateProfileId(profileManager.activeProfileId);
+          create: (_) => DebtProvider(
+            initialProfileId: initialProfileId,
+          ),
+          update: (_, pm, debtProvider) {
+            debtProvider!.updateProfileId(pm.activeProfileId);
             return debtProvider;
           },
         ),
         ChangeNotifierProxyProvider<ProfileManagerProvider, BudgetProvider>(
-          create: (_) => BudgetProvider(),
-          update: (_, profileManager, budgetProvider) {
-            budgetProvider!.updateProfileId(profileManager.activeProfileId);
+          create: (_) => BudgetProvider(
+            initialProfileId: initialProfileId,
+          ),
+          update: (_, pm, budgetProvider) {
+            budgetProvider!.updateProfileId(pm.activeProfileId);
             return budgetProvider;
           },
         ),
         ChangeNotifierProvider(create: (_) => SessionProvider()),
         ChangeNotifierProvider(create: (_) => ShortcutProvider()),
         ChangeNotifierProxyProvider<ProfileManagerProvider, NoteProvider>(
-          create: (_) => NoteProvider(),
-          update: (_, profileManager, noteProvider) {
-            noteProvider!.updateProfileId(profileManager.activeProfileId);
+          create: (_) => NoteProvider(
+            initialProfileId: initialProfileId,
+          ),
+          update: (_, pm, noteProvider) {
+            noteProvider!.updateProfileId(pm.activeProfileId);
             return noteProvider;
           },
         ),
@@ -85,9 +108,10 @@ void main() async {
           DebtProvider,
           ReportsProvider
         >(
-          create: (_) => ReportsProvider(),
-          update: (_, profileManager, txProvider, debtProvider, reportsProvider) {
-            reportsProvider!.updateProfileId(profileManager.activeProfileId);
+          create: (_) => ReportsProvider()
+            ..updateProfileId(initialProfileId),
+          update: (_, pm, txProvider, debtProvider, reportsProvider) {
+            reportsProvider!.updateProfileId(pm.activeProfileId);
             reportsProvider.updateProviders(txProvider, debtProvider);
             return reportsProvider;
           },
@@ -97,9 +121,10 @@ void main() async {
           TransactionProvider,
           IncomeAnalyticsProvider
         >(
-          create: (_) => IncomeAnalyticsProvider(),
-          update: (_, profileManager, txProvider, analyticsProvider) {
-            analyticsProvider!.updateProfileId(profileManager.activeProfileId);
+          create: (_) => IncomeAnalyticsProvider()
+            ..updateProfileId(initialProfileId),
+          update: (_, pm, txProvider, analyticsProvider) {
+            analyticsProvider!.updateProfileId(pm.activeProfileId);
             analyticsProvider.updateTransactions(txProvider.transactions);
             return analyticsProvider;
           },
@@ -109,9 +134,10 @@ void main() async {
           TransactionProvider,
           ExpenseAnalyticsProvider
         >(
-          create: (_) => ExpenseAnalyticsProvider(),
-          update: (_, profileManager, txProvider, analyticsProvider) {
-            analyticsProvider!.updateProfileId(profileManager.activeProfileId);
+          create: (_) => ExpenseAnalyticsProvider()
+            ..updateProfileId(initialProfileId),
+          update: (_, pm, txProvider, analyticsProvider) {
+            analyticsProvider!.updateProfileId(pm.activeProfileId);
             analyticsProvider.updateTransactions(txProvider.transactions);
             return analyticsProvider;
           },
@@ -122,9 +148,10 @@ void main() async {
           DebtProvider,
           BalanceAnalyticsProvider
         >(
-          create: (_) => BalanceAnalyticsProvider(),
-          update: (_, profileManager, txProvider, debtProvider, balanceProvider) {
-            balanceProvider!.updateProfileId(profileManager.activeProfileId);
+          create: (_) => BalanceAnalyticsProvider()
+            ..updateProfileId(initialProfileId),
+          update: (_, pm, txProvider, debtProvider, balanceProvider) {
+            balanceProvider!.updateProfileId(pm.activeProfileId);
             balanceProvider.updateData(txProvider.transactions, debtProvider.items);
             return balanceProvider;
           },
@@ -138,9 +165,8 @@ void main() async {
 }
 
 Future<void> verifyFirestoreSchema() async {
-  final prefsKey = 'active_profile_id';
   final activeProfileId =
-      SharedPrefsHelper.getString(prefsKey) ?? 'default_profile';
+      SharedPrefsHelper.getString(SharedPrefsHelper.activeProfileKey) ?? 'default_profile';
   debugPrint('Firestore Active Profile: $activeProfileId');
 
   try {

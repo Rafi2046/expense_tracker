@@ -135,29 +135,41 @@ class _ExpenseCategoriesBreakdownCardState
                           ),
                         ],
                       ),
-                      SizedBox(
-                        width: 120,
-                        height: 120,
-                        child: Center(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'Total',
-                                  style: GoogleFonts.workSans(
-                                    fontSize: 11,
-                                    color: Colors.grey.shade500,
-                                    fontWeight: FontWeight.w500,
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final chartSize =
+                              constraints.maxWidth < constraints.maxHeight
+                                  ? constraints.maxWidth
+                                  : constraints.maxHeight;
+                          final innerDiameter = chartSize * 0.55;
+                          return SizedBox(
+                            width: innerDiameter,
+                            height: innerDiameter,
+                            child: Padding(
+                              padding: const EdgeInsets.all(6),
+                              child: Center(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        'Total',
+                                        style: GoogleFonts.workSans(
+                                          fontSize: 11,
+                                          color: Colors.grey.shade500,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      widget.totalAmount,
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                widget.totalAmount,
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
                     ],
                   ),

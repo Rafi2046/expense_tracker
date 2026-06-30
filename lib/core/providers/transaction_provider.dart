@@ -28,7 +28,7 @@ class TransactionProvider extends ChangeNotifier {
   bool _isLoading = true;
   bool _isRetrying = false;
 
-  String _activeProfileId = 'default_profile';
+  String _activeProfileId;
 
   final List<CategoryItem> _categoryItems = [];
   final List<TransactionItem> _transactions = [];
@@ -48,7 +48,8 @@ class TransactionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  TransactionProvider() {
+  TransactionProvider({required String initialProfileId})
+      : _activeProfileId = initialProfileId {
     final now = DateTime.now();
     availableMonths = List.generate(12, (index) {
       return DateTime(now.year, now.month - 6 + index);

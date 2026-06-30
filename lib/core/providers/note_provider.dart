@@ -56,9 +56,10 @@ class NoteItem {
 class NoteProvider extends ChangeNotifier {
   List<NoteItem> _notes = [];
   bool _isLoading = true;
-  String _activeProfileId = 'default_profile';
+  String _activeProfileId;
 
-  NoteProvider() {
+  NoteProvider({required String initialProfileId})
+      : _activeProfileId = initialProfileId {
     _loadNotes();
   }
 

@@ -160,7 +160,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                     amount: provider.currentMonthExpense,
                     isMasked: _localMasked,
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,
@@ -177,7 +177,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                     amount: provider.currentQuarterExpense,
                     isMasked: _localMasked,
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,

@@ -1,6 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsHelper {
+  /// Key used to persist the last active profile ID across restarts.
+  static const String activeProfileKey = 'active_profile_id';
+
   static SharedPreferences? _prefs;
 
   // Initialize the SharedPreferences instance.

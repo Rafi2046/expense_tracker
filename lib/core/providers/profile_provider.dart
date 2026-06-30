@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfileProvider extends ChangeNotifier {
+  final String _initialProfileId;
   final List<UserProfile> _profiles = [];
   late UserProfile _currentProfile;
   bool _isPremium = false;
@@ -55,7 +56,8 @@ class ProfileProvider extends ChangeNotifier {
     'Travel & Tourism',
   ];
 
-  ProfileProvider() {
+  ProfileProvider({required String initialProfileId})
+      : _initialProfileId = initialProfileId {
     _initSync();
     _loadFromDb();
     FirebaseAuth.instance.userChanges().listen((user) {
@@ -101,7 +103,8 @@ class ProfileProvider extends ChangeNotifier {
     }
 
     if (_profiles.isNotEmpty) {
-      _currentProfile = _profiles.first;
+      final match = _profiles.where((p) => p.id == _initialProfileId);
+      _currentProfile = match.isNotEmpty ? match.first : _profiles.first;
     }
     notifyListeners();
   }
