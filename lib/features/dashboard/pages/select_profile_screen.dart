@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_info_banner.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_type_card.dart';
+import 'package:expense_tracker/features/dashboard/widgets/coming_soon_sheet.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/dashboard/pages/create_profile_name_screen.dart';
 import 'package:flutter/material.dart';
@@ -48,10 +49,8 @@ class SelectProfileScreen extends StatelessWidget {
                 title: 'Business Management',
                 subtitle:
                     'Manage your business accounting and inventory easily.',
-                isSelected: isBusiness,
-                onTap: () {
-                  provider.setCreationProfileType('business');
-                },
+                isSelected: false,
+                onTap: () => ComingSoonSheet.show(context),
               ),
 
               const SizedBox(height: 16),
