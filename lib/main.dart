@@ -108,6 +108,7 @@ void main() async {
           DebtProvider,
           ReportsProvider
         >(
+
           create: (_) => ReportsProvider()
             ..updateProfileId(initialProfileId),
           update: (_, pm, txProvider, debtProvider, reportsProvider) {

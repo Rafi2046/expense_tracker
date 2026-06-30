@@ -1,7 +1,11 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
+import 'package:expense_tracker/core/providers/profile_provider.dart';
+import 'package:expense_tracker/features/dashboard/widgets/edit_profile_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class UserProfile {
   final String id;
@@ -50,18 +54,13 @@ class ProfileSwitchSheet extends StatefulWidget {
 }
 
 class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
-  late String _selectedId;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedId = widget.currentProfileId;
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final profileProvider = context.watch<ProfileProvider>();
+    final profiles = profileProvider.profiles;
+    final selectedId = profileProvider.currentProfile.id;
 
     return Container(
       decoration: const BoxDecoration(
@@ -99,10 +98,10 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: widget.profiles.length,
+              itemCount: profiles.length,
               itemBuilder: (context, index) {
-                final profile = widget.profiles[index];
-                final isSelected = profile.id == _selectedId;
+                final profile = profiles[index];
+                final isSelected = profile.id == selectedId;
 
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
@@ -133,11 +132,39 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                       color: theme.textTheme.bodySmall?.color,
                     ),
                   ),
-                  trailing: isSelected
-                      ? const Icon(Symbols.radio_button_checked, color: AppColors.selectedColor)
-                      : Icon(Symbols.radio_button_unchecked, color: theme.textTheme.bodySmall?.color),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (profile.id != 'default_profile')
+                        IconButton(
+                          icon: Icon(
+                            Symbols.edit_rounded,
+                            color: theme.textTheme.bodySmall?.color,
+                            size: 20,
+                          ),
+                          onPressed: () async {
+                            await EditProfileSheet.show(context, profile);
+                            if (context.mounted) {
+                              final provider = context.read<ProfileProvider>();
+                              final stillExists = provider.profiles.any((p) => p.id == profile.id);
+                              if (!stillExists) {
+                                context.read<ProfileManagerProvider>().switchProfile(
+                                  provider.currentProfile.id,
+                                );
+                                Navigator.pop(context);
+                              }
+                            }
+                          },
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                      const SizedBox(width: 8),
+                      isSelected
+                          ? const Icon(Symbols.radio_button_checked, color: AppColors.selectedColor)
+                          : Icon(Symbols.radio_button_unchecked, color: theme.textTheme.bodySmall?.color),
+                    ],
+                  ),
                   onTap: () {
-                    setState(() { _selectedId = profile.id; });
                     Future.delayed(const Duration(milliseconds: 150), () {
                       if (context.mounted) {
                         Navigator.pop(context);

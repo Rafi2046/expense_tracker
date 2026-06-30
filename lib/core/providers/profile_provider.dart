@@ -166,6 +166,21 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateProfileName(String profileId, String newName) async {
+    final index = _profiles.indexWhere((p) => p.id == profileId);
+    if (index == -1) return;
+
+    final old = _profiles[index];
+    _profiles[index] = UserProfile(id: old.id, name: newName, type: old.type);
+
+    if (_currentProfile.id == profileId) {
+      _currentProfile = _profiles[index];
+    }
+
+    await DatabaseHelper.instance.updateProfile(profileId, {'name': newName});
+    notifyListeners();
+  }
+
   void setCreationProfileType(String type) {
     _creationProfileType = type;
     notifyListeners();
@@ -219,5 +234,29 @@ class ProfileProvider extends ChangeNotifier {
     resetCreationState();
     notifyListeners();
     return newProfile;
+  }
+
+  /// Deletes a profile and all its associated data. The default profile
+  /// cannot be deleted. If the deleted profile was the active one, the
+  /// app auto-switches to the default profile.
+  Future<void> deleteProfile(String profileId) async {
+    if (profileId == 'default_profile') return;
+
+    await DatabaseHelper.instance.deleteProfileAndData(profileId);
+
+    _profiles.removeWhere((p) => p.id == profileId);
+
+    if (_currentProfile.id == profileId) {
+      final defaultProfile = _profiles.firstWhere(
+        (p) => p.id == 'default_profile',
+        orElse: () => _profiles.isNotEmpty ? _profiles.first : UserProfile(
+          id: 'default_profile', name: 'Personal', type: 'Personal',
+        ),
+      );
+      _currentProfile = defaultProfile;
+    }
+
+    resetCreationState();
+    notifyListeners();
   }
 }
