@@ -1087,7 +1087,20 @@ class DatabaseHelper {
       await txn.delete('debt_items');
       await txn.delete('budget');
       await txn.delete('notes');
+      await txn.delete('profiles');
     });
+  }
+
+  Future<void> checkDatabaseEmptyStatus() async {
+    if (kIsWeb) return;
+    final db = await instance.database;
+    final tables = ['transactions', 'categories', 'debt_items', 'budget', 'notes', 'profiles'];
+    for (final table in tables) {
+      final count = Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM $table'),
+      );
+      debugPrint('$table remaining: $count');
+    }
   }
 
   // Close database connection

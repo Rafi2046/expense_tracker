@@ -39,6 +39,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
 
     try {
       await DatabaseHelper.instance.clearUserData();
+      await DatabaseHelper.instance.checkDatabaseEmptyStatus();
 
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
