@@ -34,7 +34,12 @@ class TourExportService {
     );
 
     final imageBytes = await controller.captureFromWidget(
-      Material(child: receiptWidget),
+      Material(
+        child: SizedBox(
+          width: 420,
+          child: receiptWidget,
+        ),
+      ),
       pixelRatio: 3.0,
     );
 
@@ -63,7 +68,6 @@ class TourExportService {
     final isAllSettled = totalOutstanding == 0;
 
     return Container(
-      width: 420,
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -340,7 +344,8 @@ class TourExportService {
           ),
         ),
         const SizedBox(width: AppSpacing.s8),
-        Flexible(
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 120),
           child: Text(
             name,
             maxLines: 1,
