@@ -1,19 +1,19 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_expense_share.dart';
+import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/features/tours/widgets/add_expense_sheet.dart';
-import 'package:expense_tracker/features/tours/widgets/member_avatar_stack.dart';
 import 'package:expense_tracker/features/tours/pages/settle_up_screen.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
+import 'package:expense_tracker/features/tours/utils/tour_export_service.dart';
+
+const Color _bgColor = Color(0xFFF7F9FA);
 
 class TourDashboardScreen extends StatefulWidget {
   final String tourId;
+
   const TourDashboardScreen({super.key, required this.tourId});
 
   @override
@@ -31,22 +31,18 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
 
   String _currencySymbol(String code) {
     const symbols = {
-      'BDT': '৳',
-      'USD': '\$',
-      'EUR': '€',
-      'GBP': '£',
-      'INR': '₹',
-      'JPY': '¥',
-      'AED': 'د.إ',
-      'CAD': '\$',
+      'BDT': '৳', 'USD': r'$', 'EUR': '€', 'GBP': '£',
+      'INR': '₹', 'JPY': '¥', 'AED': 'د.إ', 'CAD': r'$',
     };
-    return symbols[code] ?? '\$';
+    return symbols[code] ?? r'$';
   }
 
   String _formatAmount(double amount, String currency) {
     final symbol = _currencySymbol(currency);
-    final formatted = amount.toStringAsFixed(amount % 1 == 0 ? 0 : 2);
-    return '$symbol$formatted';
+    if (amount == amount.roundToDouble()) {
+      return '$symbol${amount.toStringAsFixed(0)}';
+    }
+    return '$symbol${amount.toStringAsFixed(2)}';
   }
 
   bool _ensureMinimumMembers() {
@@ -62,29 +58,29 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.br20)),
-        backgroundColor: AppColors.white,
-        title: Text('Members Required', style: AppTextStyles.dialogTitle),
-        content: Text('You need at least 2 members in the tour to add expenses or settle up.', style: AppTextStyles.dialogBody),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        backgroundColor: Colors.white,
+        title: const Text('Members Required', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17)),
+        content: const Text(
+          'You need at least 2 members in the tour to add expenses or settle up.',
+          style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.loginSubTitle)),
+            child: const Text('Cancel', style: TextStyle(color: Color(0xFF6B7280))),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.activeGreen,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.br8)),
-              elevation: 0,
-            ),
+          TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => TourMemberManagementScreen(tourId: widget.tourId)),
+                MaterialPageRoute(
+                  builder: (_) => TourMemberManagementScreen(tourId: widget.tourId),
+                ),
               );
             },
-            child: const Text('Add Members', style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
+            child: const Text('Add Members', style: TextStyle(color: Color(0xFF2EBD85), fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -93,29 +89,21 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final provider = context.watch<TourProvider>();
     final tour = provider.selectedTour;
 
     if (tour == null && provider.isLoading) {
-      return Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        body: const Center(child: CircularProgressIndicator()),
+      return const Scaffold(
+        backgroundColor: _bgColor,
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
     if (tour == null) {
       return Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        appBar: AppBar(
-          backgroundColor: theme.scaffoldBackgroundColor,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_rounded,
-                color: theme.colorScheme.onSurface),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
-        body: const Center(child: Text('Tour not found')),
+        backgroundColor: _bgColor,
+        appBar: AppBar(backgroundColor: Colors.white, elevation: 0, leading: const BackButton()),
+        body: const Center(child: Text('Tour not found', style: TextStyle(color: Color(0xFF6B7280)))),
       );
     }
 
@@ -123,46 +111,59 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     final expenses = provider.expenses;
     final shares = provider.shares;
     final netBalances = provider.netBalances(tour.id);
-    final totalFund = provider.totalFundCollected(tour.id);
-    final cashInHand = provider.cashInHand(tour.id, participants.isNotEmpty
-        ? participants.first.id
-        : '');
+    final totalSpent = provider.totalSpent(tour.id);
+    final totalOutstanding = provider.totalOutstanding(tour.id);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      body: CustomScrollView(
-        slivers: [
-          _buildHeroHeader(theme, tour.name, tour.currency),
-          SliverToBoxAdapter(child: _buildFundSummary(theme, totalFund, cashInHand, tour.currency)),
-          SliverToBoxAdapter(
-            child: GestureDetector(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => TourMemberManagementScreen(tourId: widget.tourId))),
-              child: _buildMemberSection(theme, participants, netBalances),
-            ),
+      backgroundColor: _bgColor,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: const BackButton(color: Color(0xFF1F2937)),
+        title: Text(
+          tour.name,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18, color: Color(0xFF1F2937)),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () => TourExportService.shareReport(context, widget.tourId),
+            icon: const Icon(Icons.ios_share_rounded, size: 20, color: Color(0xFF6B7280)),
+            tooltip: 'Share Report',
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-              child: Text(
-                'Expenses',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
-            ),
+          TextButton.icon(
+            onPressed: () {
+              if (_ensureMinimumMembers()) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => TourMemberManagementScreen(tourId: widget.tourId),
+                  ),
+                );
+              }
+            },
+            icon: const Icon(Icons.people_outline_rounded, size: 18, color: Color(0xFF6B7280)),
+            label: const Text('Members', style: TextStyle(fontSize: 13, color: Color(0xFF6B7280))),
           ),
-          expenses.isEmpty
-              ? SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: _buildEmptyExpenses(theme),
-                )
-              : _buildExpenseList(theme, expenses, shares, participants, tour.currency),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
+        children: [
+          _buildSummaryRow(totalSpent, totalOutstanding, tour.currency),
+          if (participants.isNotEmpty) ...[
+            const SizedBox(height: 24),
+            _buildMemberBalances(participants, netBalances, tour.currency, totalOutstanding),
+          ],
+          const SizedBox(height: 24),
+          _buildExpensesHeader(expenses.length),
+          if (expenses.isEmpty)
+            _buildEmptyState()
+          else
+            _buildExpenseList(expenses, shares, participants, tour.currency),
         ],
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: AppSpacing.h48),
+        padding: const EdgeInsets.only(bottom: 32),
         child: FloatingActionButton.extended(
           heroTag: 'tour_dashboard_fab',
           onPressed: () {
@@ -175,340 +176,249 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               );
             }
           },
-          backgroundColor: AppColors.activeGreen,
-          icon: const Icon(Icons.add_rounded, color: AppColors.white),
-          label: const Text('Add Expense', style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold, fontFamily: 'WorkSans')),
-          elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.br30)),
+          backgroundColor: const Color(0xFF2EBD85),
+          icon: const Icon(Icons.add_rounded, color: Colors.white, size: 20),
+          label: const Text('Add Expense', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)),
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         ),
       ),
     );
   }
 
-  // ─── Hero Header ──────────────────────────────────────────────────
+  // ─── Summary Row ─────────────────────────────────────────────────────
 
-  Widget _buildHeroHeader(ThemeData theme, String name, String currency) {
-    return SliverAppBar(
-      expandedHeight: 200,
-      pinned: true,
-      stretch: true,
-      backgroundColor: theme.scaffoldBackgroundColor,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                const Color(0xFF667eea),
-                const Color(0xFF764ba2),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Stack(
-            children: [
-              Positioned(
-                right: -30,
-                top: -30,
-                child: Container(
-                  width: 160,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.06),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-              Positioned(
-                left: -20,
-                bottom: -20,
-                child: Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.04),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 60,
-                left: 16,
-                child: Text(
-                  name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 32,
-                left: 16,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    _currencySymbol(currency),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+  Widget _buildSummaryRow(double totalSpent, double totalOutstanding, String currency) {
+    final isSettled = totalOutstanding == 0;
+    return Row(
+      children: [
+        Expanded(child: _buildSummaryCard('Total spent', _formatAmount(totalSpent, currency), const Color(0xFF1F2937))),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildSummaryCard(
+            isSettled ? 'All settled' : 'Outstanding',
+            isSettled ? '✓' : _formatAmount(totalOutstanding, currency),
+            isSettled ? const Color(0xFF2EBD85) : const Color(0xFFDC3545),
           ),
         ),
-      ),
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
-      ),
+      ],
     );
   }
 
-  // ─── Fund Summary ─────────────────────────────────────────────────
-
-  Widget _buildFundSummary(
-      ThemeData theme, double totalFund, double cashInHand, String currency) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-          child: Container(
-            decoration: BoxDecoration(
-              color: theme.brightness == Brightness.dark
-                  ? Colors.white.withValues(alpha: 0.06)
-                  : Colors.white.withValues(alpha: 0.7),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: theme.brightness == Brightness.dark
-                    ? Colors.white.withValues(alpha: 0.1)
-                    : Colors.white.withValues(alpha: 0.8),
-              ),
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Total Fund',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: theme.colorScheme.onSurfaceVariant,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              _formatAmount(totalFund, currency),
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF2EBD85),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 1,
-                        height: 40,
-                        color: theme.dividerColor.withValues(alpha: 0.3),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Cash in Hand',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: theme.colorScheme.onSurfaceVariant,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              _formatAmount(cashInHand, currency),
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w700,
-                                color: cashInHand >= 0
-                                    ? const Color(0xFF2EBD85)
-                                    : const Color(0xFFDC3545),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        if (_ensureMinimumMembers()) {
-                          _openSettleUp();
-                        }
-                      },
-                      icon: const Icon(Icons.balance_rounded, size: 18),
-                      label: const Text('Settle Up'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onSurface,
-                        side: BorderSide(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+  Widget _buildSummaryCard(String label, String value, Color valueColor) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+            BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10, offset: const Offset(0, 2)),
+        ],
       ),
-    );
-  }
-
-  void _openSettleUp() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => SettleUpScreen(tourId: widget.tourId),
-      ),
-    );
-  }
-
-  // ─── Member Section ───────────────────────────────────────────────
-
-  Widget _buildMemberSection(
-      ThemeData theme, List participants, Map<String, double> balances) {
-    if (participants.isEmpty) return const SizedBox.shrink();
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Members',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
-              Text(
-                '${participants.length} ${participants.length == 1 ? 'person' : 'people'}',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          MemberAvatarStack(
-            participants: participants.cast(),
-            balances: balances,
+          Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF9CA3AF), fontWeight: FontWeight.w500)),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: valueColor),
           ),
         ],
       ),
     );
   }
 
-  // ─── Expense Feed ─────────────────────────────────────────────────
+  // ─── Member Balances ─────────────────────────────────────────────────
 
-  Widget _buildExpenseList(
-      ThemeData theme,
-      List<TourExpense> expenses,
-      List<TourExpenseShare> shares,
-      List participants,
-      String currency) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final expense = expenses[index];
-          final payer = participants.cast().firstWhere(
-            (p) => p.id == expense.paidBy,
-            orElse: () => null,
-          );
-          final expenseShares =
-              shares.where((s) => s.expenseId == expense.id).toList();
-          final includedCount =
-              expenseShares.where((s) => !s.isExcluded).length;
+  Widget _buildMemberBalances(List participants, Map<String, double> balances, String currency, double outstanding) {
+    final allParticipants = participants.cast<TourParticipant>();
+    final hasDebts = outstanding > 0;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 2, bottom: 12),
+          child: Text('Balances', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF1F2937))),
+        ),
+        ...allParticipants.asMap().entries.map(
+          (entry) => _buildMemberBalanceRow(entry.value, entry.key, allParticipants, balances, currency),
+        ),
+        if (hasDebts) ...[
+          const SizedBox(height: 8),
+          Center(
+            child: TextButton(
+              onPressed: () {
+                if (_ensureMinimumMembers()) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => SettleUpScreen(tourId: widget.tourId),
+                    ),
+                  );
+                }
+              },
+              child: const Text(
+                'Settle Up',
+                style: TextStyle(color: Color(0xFF2EBD85), fontWeight: FontWeight.w600, fontSize: 14),
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
 
-          return _ExpenseTile(
-            theme: theme,
-            expense: expense,
-            payerName: payer?.name ?? 'Unknown',
-            payerInitials: payer != null
-                ? (payer.name.isNotEmpty ? payer.name[0].toUpperCase() : '?')
-                : '?',
-            includedCount: includedCount,
-            formatAmount: (v) => _formatAmount(v, currency),
-          );
-        },
-        childCount: expenses.length,
+  Widget _buildMemberBalanceRow(
+    TourParticipant p,
+    int index,
+    List<TourParticipant> allParticipants,
+    Map<String, double> balances,
+    String currency,
+  ) {
+    final balance = balances[p.id] ?? 0;
+    final isOwed = balance > 0;
+    final isSettled = balance == 0;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 6, offset: const Offset(0, 1)),
+          ],
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: _avatarColor(index),
+              child: Text(
+                p.name.isNotEmpty ? p.name[0].toUpperCase() : '?',
+                style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(p.name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Color(0xFF1F2937))),
+            ),
+            if (isSettled)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F4F6),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text('Settled', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color(0xFF9CA3AF))),
+              )
+            else if (isOwed)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE8F8F5),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'Gets back ${_formatAmount(balance, currency)}',
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF2EBD85)),
+                ),
+              )
+            else
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFEF2F2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'Owes ${_formatAmount(balance.abs(), currency)}',
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFFDC3545)),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildEmptyExpenses(ThemeData theme) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 40),
+  // ─── Expenses ────────────────────────────────────────────────────────
+
+  Widget _buildExpensesHeader(int count) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 2, bottom: 12),
+      child: Row(
+        children: [
+          const Text('Expenses', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF1F2937))),
+          const SizedBox(width: 8),
+          Text(
+            '$count ${count == 1 ? 'entry' : 'entries'}',
+            style: const TextStyle(fontSize: 13, color: Color(0xFF9CA3AF)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExpenseList(
+    List<TourExpense> expenses,
+    List<TourExpenseShare> shares,
+    List participants,
+    String currency,
+  ) {
+    final allParticipants = participants.cast<TourParticipant>();
+    return Column(
+      children: expenses.map((expense) {
+        final payer = allParticipants.firstWhere(
+          (p) => p.id == expense.paidBy,
+          orElse: () => TourParticipant(
+            id: expense.paidBy,
+            tourId: expense.tourId,
+            name: 'Unknown',
+            joinedAt: expense.date,
+          ),
+        );
+        final expenseShares = shares.where((s) => s.expenseId == expense.id).toList();
+        final includedCount = expenseShares.where((s) => !s.isExcluded).length;
+        final payerIdx = allParticipants.indexWhere((p) => p.id == expense.paidBy);
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: _ExpenseTile(
+            expense: expense,
+            payerName: payer.name,
+            avatarColor: _avatarColor(payerIdx),
+            includedCount: includedCount,
+            formatAmount: (v) => _formatAmount(v, currency),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Color _avatarColor(int index) {
+    if (index < 0) return const Color(0xFF6366F1);
+    const colors = [
+      Color(0xFF6366F1), Color(0xFFEC4899), Color(0xFF10B981),
+      Color(0xFFF59E0B), Color(0xFF06B6D4), Color(0xFF8B5CF6),
+      Color(0xFFEF4444), Color(0xFF14B8A6),
+    ];
+    return colors[index % colors.length];
+  }
+
+  Widget _buildEmptyState() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 40),
+      child: Center(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.receipt_long_outlined,
-              size: 48,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'No expenses yet',
-              style: TextStyle(
-                fontSize: 15,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
+            Icon(Icons.receipt_long_outlined, size: 48, color: Colors.grey.shade300),
+            const SizedBox(height: 14),
+            const Text('No expenses yet', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1F2937))),
             const SizedBox(height: 4),
-            Text(
-              'Tap + to add the first expense',
-              style: TextStyle(
-                fontSize: 13,
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-              ),
-            ),
+            const Text('Tap + to add the first expense', style: TextStyle(fontSize: 13, color: Color(0xFF9CA3AF))),
           ],
         ),
       ),
@@ -516,101 +426,81 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
   }
 }
 
-// ─── Expense Tile ─────────────────────────────────────────────────────
+// ─── Expense Tile ───────────────────────────────────────────────────────
 
 class _ExpenseTile extends StatelessWidget {
-  final ThemeData theme;
   final TourExpense expense;
   final String payerName;
-  final String payerInitials;
+  final Color avatarColor;
   final int includedCount;
   final String Function(double) formatAmount;
 
   const _ExpenseTile({
-    required this.theme,
     required this.expense,
     required this.payerName,
-    required this.payerInitials,
+    required this.avatarColor,
     required this.includedCount,
     required this.formatAmount,
   });
 
   String _splitLabel() {
     switch (expense.splitType) {
-      case 'equal':
-        return 'Split equally among $includedCount';
-      case 'exact':
-        return 'Split by exact amounts';
-      case 'percentage':
-        return 'Split by percentages';
-      case 'exclusion':
-        return 'Split among $includedCount (exclusions)';
-      default:
-        return 'Split equally among $includedCount';
+      case 'equal': return 'Split equally among $includedCount';
+      case 'exact': return 'Split by exact amounts';
+      case 'percentage': return 'Split by percentages';
+      case 'exclusion': return 'Split among $includedCount (exclusions)';
+      default: return 'Split equally among $includedCount';
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: theme.cardColor.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundColor: const Color(0xFF667eea),
-              child: Text(
-                payerInitials,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 6, offset: const Offset(0, 1)),
+        ],
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 18,
+            backgroundColor: avatarColor,
+            child: Text(
+              payerName.isNotEmpty ? payerName[0].toUpperCase() : '?',
+              style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  expense.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Color(0xFF1F2937)),
                 ),
-              ),
+                const SizedBox(height: 2),
+                Text(
+                  '${payerName.split(' ').first} · ${_splitLabel()}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 12, color: Color(0xFF9CA3AF)),
+                ),
+              ],
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    expense.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    _splitLabel(),
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              formatAmount(expense.amount),
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            formatAmount(expense.amount),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF1F2937)),
+          ),
+        ],
       ),
     );
   }

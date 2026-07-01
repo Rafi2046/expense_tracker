@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class MemberAvatarStack extends StatelessWidget {
   final List<TourParticipant> participants;
@@ -34,13 +36,13 @@ class MemberAvatarStack extends StatelessWidget {
     final overflow = participants.length - maxDisplay;
 
     return SizedBox(
-      height: 44,
+      height: AppSpacing.h40,
       child: Stack(
         children: [
           for (var i = 0; i < display.length; i++)
             Positioned(
               left: i * 28.0,
-              top: 2,
+              top: AppSpacing.s2,
               child: _SingleAvatar(
                 participant: display[i],
                 balance: balances[display[i].id] ?? 0,
@@ -50,20 +52,20 @@ class MemberAvatarStack extends StatelessWidget {
           if (overflow > 0)
             Positioned(
               left: display.length * 28.0,
-              top: 2,
+              top: AppSpacing.s2,
               child: Container(
-                width: 40,
-                height: 40,
+                width: AppSpacing.h40,
+                height: AppSpacing.h40,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade700.withValues(alpha: 0.3),
+                  color: AppColors.textMuted.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
+                  border: Border.all(color: AppColors.white, width: AppSpacing.w2),
                 ),
                 child: Center(
                   child: Text(
                     '+$overflow',
                     style: TextStyle(
-                      color: Colors.grey.shade300,
+                      color: AppColors.textMuted.withValues(alpha: 0.7),
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                     ),
@@ -101,23 +103,23 @@ class _SingleAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 40,
-      height: 40,
+      width: AppSpacing.h40,
+      height: AppSpacing.h40,
       child: Stack(
         children: [
           Container(
-            width: 40,
-            height: 40,
+            width: AppSpacing.h40,
+            height: AppSpacing.h40,
             decoration: BoxDecoration(
               color: color,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
+              border: Border.all(color: AppColors.white, width: AppSpacing.w2),
             ),
             child: Center(
               child: Text(
                 _initials,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
@@ -125,17 +127,17 @@ class _SingleAvatar extends StatelessWidget {
             ),
           ),
           Positioned(
-            right: 1,
-            bottom: 1,
+            right: AppSpacing.w1,
+            bottom: AppSpacing.w1,
             child: Container(
-              width: 12,
-              height: 12,
+              width: AppSpacing.w12,
+              height: AppSpacing.w12,
               decoration: BoxDecoration(
                 color: balance >= 0
-                    ? const Color(0xFF2EBD85)
-                    : const Color(0xFFDC3545),
+                    ? AppColors.activeGreen
+                    : AppColors.activeRed,
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 1.5),
+                border: Border.all(color: AppColors.white, width: 1.5),
               ),
             ),
           ),

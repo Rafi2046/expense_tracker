@@ -5,6 +5,9 @@ import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/models/tour_settlement.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/utils/debt_simplifier.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class SettleUpScreen extends StatefulWidget {
   final String tourId;
@@ -71,12 +74,12 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
 
   String _currencySymbol() {
     const symbols = {
-      'BDT': '৳', 'USD': '\$', 'EUR': '€', 'GBP': '£',
-      'INR': '₹', 'JPY': '¥', 'AED': 'د.إ', 'CAD': '\$',
+      'BDT': '\u09F3', 'USD': r'$', 'EUR': '\u20AC', 'GBP': '\u00A3',
+      'INR': '\u20B9', 'JPY': '\u00A5', 'AED': '\u062F.\u0625', 'CAD': r'$',
     };
     final tour = context.read<TourProvider>().selectedTour;
     final code = tour?.currency ?? 'USD';
-    return symbols[code] ?? '\$';
+    return symbols[code] ?? r'$';
   }
 
   String _formatAmount(double amount) {
@@ -103,51 +106,43 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
     return colors[idx >= 0 ? idx % colors.length : id.hashCode % colors.length];
   }
 
+  String _initials(String name) {
+    final parts = name.trim().split(' ');
+    if (parts.length >= 2) return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
+    return name.isNotEmpty ? name[0].toUpperCase() : '?';
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final provider = context.watch<TourProvider>();
     final balances = provider.netBalances(widget.tourId);
     final settlements = simplifyDebts(balances);
+    final totalOutstanding = provider.totalOutstanding(widget.tourId);
 
     if (_checking) {
       return Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
-        appBar: AppBar(
-          backgroundColor: theme.scaffoldBackgroundColor,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_rounded, color: theme.colorScheme.onSurface),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: Text('Settle Up', style: TextStyle(color: theme.colorScheme.onSurface, fontWeight: FontWeight.w600)),
-        ),
+        appBar: _buildAppBar(theme),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded, color: theme.colorScheme.onSurface),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text('Settle Up', style: TextStyle(color: theme.colorScheme.onSurface, fontWeight: FontWeight.w600)),
-      ),
+      appBar: _buildAppBar(theme),
       body: Stack(
         children: [
-          _allSettled ? _buildAllSettled(theme) : _buildSettlementList(theme, settlements, provider.participants),
+          _allSettled
+              ? _buildAllSettled(theme)
+              : _buildContent(theme, settlements, provider.participants, totalOutstanding),
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
               confettiController: _confettiController,
               blastDirectionality: BlastDirectionality.explosive,
               colors: const [
-                Color(0xFF2EBD85), Color(0xFF667eea), Color(0xFFf5576c),
+                AppColors.activeGreen, Color(0xFF667eea), Color(0xFFf5576c),
                 Color(0xFF43e97b), Color(0xFFfa709a), Color(0xFF4facfe),
                 Color(0xFFfccb90), Color(0xFF38f9d7),
               ],
@@ -163,57 +158,129 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
     );
   }
 
-  Widget _buildSettlementList(
-      ThemeData theme, List<SimplifiedSettlement> settlements, List<TourParticipant> participants) {
-    return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-      itemCount: settlements.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 8),
-      itemBuilder: (context, index) {
-        final s = settlements[index];
-        return _SettlementCard(
-          theme: theme,
-          fromName: _participantName(s.fromParticipantId),
-          toName: _participantName(s.toParticipantId),
-          fromColor: _avatarColor(s.fromParticipantId),
-          toColor: _avatarColor(s.toParticipantId),
-          amount: _formatAmount(s.amount),
-          onMarkSettled: () => _markSettled(s),
-        );
-      },
+  PreferredSizeWidget _buildAppBar(ThemeData theme) {
+    return AppBar(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back_rounded, color: theme.colorScheme.onSurface),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: Text('Settle Up', style: AppTextStyles.dialogTitle),
+    );
+  }
+
+  Widget _buildContent(
+    ThemeData theme,
+    List<SimplifiedSettlement> settlements,
+    List<TourParticipant> participants,
+    double totalOutstanding,
+  ) {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.s8, AppSpacing.p16, 100),
+      children: [
+        _buildSummaryHeader(totalOutstanding),
+        const SizedBox(height: AppSpacing.h24),
+        ...settlements.asMap().entries.map(
+          (entry) => Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.s16),
+            child: _SettlementCard(
+              theme: theme,
+              fromName: _participantName(entry.value.fromParticipantId),
+              toName: _participantName(entry.value.toParticipantId),
+              fromColor: _avatarColor(entry.value.fromParticipantId),
+              toColor: _avatarColor(entry.value.toParticipantId),
+              fromInitials: _initials(_participantName(entry.value.fromParticipantId)),
+              toInitials: _initials(_participantName(entry.value.toParticipantId)),
+              amount: _formatAmount(entry.value.amount),
+              onMarkSettled: () => _markSettled(entry.value),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSummaryHeader(double totalOutstanding) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.h24, horizontal: AppSpacing.p20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF0F766E), Color(0xFF059669)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(AppSpacing.br20),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF059669).withValues(alpha: 0.3),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const Text(
+            'Total Outstanding',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Colors.white70,
+              letterSpacing: 1.2,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.s8),
+          Text(
+            _formatAmount(totalOutstanding),
+            style: const TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
+              fontFamily: 'JetBrainsMono',
+            ),
+          ),
+          const SizedBox(height: AppSpacing.s12),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p6),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(AppSpacing.br30),
+            ),
+            child: const Text(
+              'Outstanding balances to settle',
+              style: TextStyle(fontSize: 11, color: Colors.white70, fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildAllSettled(ThemeData theme) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.h32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 80, height: 80,
+              width: AppSpacing.h80, height: AppSpacing.h80,
               decoration: BoxDecoration(
-                color: const Color(0xFF2EBD85).withValues(alpha: 0.15),
+                color: AppColors.activeGreen.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.check_circle_rounded, size: 44, color: Color(0xFF2EBD85)),
+              child: const Icon(Icons.check_circle_rounded, size: 44, color: AppColors.activeGreen),
             ),
-            const SizedBox(height: 20),
-            Text(
-              'All Settled Up!',
-              style: TextStyle(
-                fontSize: 26, fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.h20),
+            Text('All Settled Up!', style: AppTextStyles.cardValueGreen),
+            const SizedBox(height: AppSpacing.s8),
             Text(
               'Everyone is even. No outstanding debts.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14, color: theme.colorScheme.onSurfaceVariant,
-              ),
+              style: AppTextStyles.cardStatusText,
             ),
           ],
         ),
@@ -222,7 +289,7 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
   }
 }
 
-// ─── Settlement Card ──────────────────────────────────────────────────
+// ─── Premium Settlement Card ──────────────────────────────────────────────
 
 class _SettlementCard extends StatelessWidget {
   final ThemeData theme;
@@ -230,6 +297,8 @@ class _SettlementCard extends StatelessWidget {
   final String toName;
   final Color fromColor;
   final Color toColor;
+  final String fromInitials;
+  final String toInitials;
   final String amount;
   final VoidCallback onMarkSettled;
 
@@ -239,65 +308,100 @@ class _SettlementCard extends StatelessWidget {
     required this.toName,
     required this.fromColor,
     required this.toColor,
+    required this.fromInitials,
+    required this.toInitials,
     required this.amount,
     required this.onMarkSettled,
   });
 
-  String _initials(String name) {
-    final parts = name.trim().split(' ');
-    if (parts.length >= 2) return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
-    return name.isNotEmpty ? name[0].toUpperCase() : '?';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p16, AppSpacing.p14, AppSpacing.p16),
       decoration: BoxDecoration(
-        color: theme.cardColor.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(14),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(AppSpacing.br20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          CircleAvatar(radius: 20, backgroundColor: fromColor,
-            child: Text(_initials(fromName), style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
+          // ── From Avatar ──
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(radius: 24, backgroundColor: fromColor,
+                child: Text(fromInitials, style: const TextStyle(color: AppColors.white, fontSize: 13, fontWeight: FontWeight.w700)),
+              ),
+              const SizedBox(height: AppSpacing.s4),
+              SizedBox(
+                width: AppSpacing.w48,
+                child: Text(
+                  fromName,
+                  maxLines: 1, overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: Color(0xFFDC3545)),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 8),
-          Icon(Icons.arrow_forward_rounded, color: theme.colorScheme.onSurfaceVariant, size: 18),
-          const SizedBox(width: 8),
-          CircleAvatar(radius: 20, backgroundColor: toColor,
-            child: Text(_initials(toName), style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
-          ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.w12),
+          // ── Transfer Flow ──
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Icon(Icons.swap_horiz_rounded, size: 22, color: Color(0xFF9CA3AF)),
+                const SizedBox(height: AppSpacing.s4),
                 Text(
-                  '$fromName owes $toName',
-                  maxLines: 1, overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
+                  amount,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.activeGreen,
+                    fontFamily: 'JetBrainsMono',
+                  ),
                 ),
-                const SizedBox(height: 2),
-                Text(amount, style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.w700,
-                  color: const Color(0xFF2EBD85),
-                  fontFamily: 'JetBrainsMono',
-                )),
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.w12),
+          // ── To Avatar ──
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(radius: 24, backgroundColor: toColor,
+                child: Text(toInitials, style: const TextStyle(color: AppColors.white, fontSize: 13, fontWeight: FontWeight.w700)),
+              ),
+              const SizedBox(height: AppSpacing.s4),
+              SizedBox(
+                width: AppSpacing.w48,
+                child: Text(
+                  toName,
+                  maxLines: 1, overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: AppColors.activeGreen),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: AppSpacing.w8),
+          // ── Settle Button ──
           SizedBox(
-            height: 36,
+            height: 40,
             child: FilledButton(
               onPressed: onMarkSettled,
               style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFF2EBD85),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                padding: const EdgeInsets.symmetric(horizontal: 14),
+                backgroundColor: AppColors.activeGreen,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.br30)),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
+                elevation: 0,
               ),
-              child: const Text('Settle', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
+              child: const Text('Settle', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.white)),
             ),
           ),
         ],

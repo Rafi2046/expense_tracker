@@ -17,12 +17,14 @@ class TourMemberManagementScreen extends StatefulWidget {
   });
 
   @override
-  State<TourMemberManagementScreen> createState() => _TourMemberManagementScreenState();
+  State<TourMemberManagementScreen> createState() =>
+      _TourMemberManagementScreenState();
 }
 
-class _TourMemberManagementScreenState extends State<TourMemberManagementScreen> {
+class _TourMemberManagementScreenState
+    extends State<TourMemberManagementScreen> {
   final TextEditingController _nameController = TextEditingController();
-  
+
   // Apple-style preset colors for avatars
   final List<Color> _presetColors = [
     const Color(0xFF007AFF), // iOS Blue
@@ -45,24 +47,29 @@ class _TourMemberManagementScreenState extends State<TourMemberManagementScreen>
         backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
         centerTitle: true,
-        title: Text(
-          'Manage Members',
-          style: AppTextStyles.appbarTitle,
-        ),
+        title: Text('Manage Members', style: AppTextStyles.appbarTitle),
         leading: widget.isInitialSetup
             ? const SizedBox.shrink()
             : IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.black, size: 20),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: AppColors.black,
+                  size: 20,
+                ),
                 onPressed: () => Navigator.pop(context),
               ),
         actions: [
           if (widget.isInitialSetup)
             TextButton(
-              onPressed: participants.length >= 2 ? () => Navigator.pop(context) : null,
+              onPressed: participants.length >= 2
+                  ? () => Navigator.pop(context)
+                  : null,
               child: Text(
                 'Done',
                 style: TextStyle(
-                  color: participants.length >= 2 ? AppColors.activeGreen : AppColors.textMuted,
+                  color: participants.length >= 2
+                      ? AppColors.activeGreen
+                      : AppColors.textMuted,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -98,14 +105,20 @@ class _TourMemberManagementScreenState extends State<TourMemberManagementScreen>
                     border: InputBorder.none,
                     filled: true,
                     fillColor: AppColors.containerColorGrey,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p14),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.p16,
+                      vertical: AppSpacing.p14,
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.br12),
                       borderSide: BorderSide.none,
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.br12),
-                      borderSide: BorderSide(color: AppColors.activeGreen.withValues(alpha: 0.5), width: 1.5),
+                      borderSide: BorderSide(
+                        color: AppColors.activeGreen.withValues(alpha: 0.5),
+                        width: 1.5,
+                      ),
                     ),
                   ),
                 ),
@@ -116,7 +129,8 @@ class _TourMemberManagementScreenState extends State<TourMemberManagementScreen>
                     Row(
                       children: List.generate(_presetColors.length, (index) {
                         return GestureDetector(
-                          onTap: () => setState(() => _selectedColorIndex = index),
+                          onTap: () =>
+                              setState(() => _selectedColorIndex = index),
                           child: Container(
                             margin: const EdgeInsets.only(right: AppSpacing.m8),
                             width: 32,
@@ -125,7 +139,10 @@ class _TourMemberManagementScreenState extends State<TourMemberManagementScreen>
                               color: _presetColors[index],
                               shape: BoxShape.circle,
                               border: _selectedColorIndex == index
-                                  ? Border.all(color: AppColors.black, width: 2.5)
+                                  ? Border.all(
+                                      color: AppColors.black,
+                                      width: 2.5,
+                                    )
                                   : null,
                             ),
                           ),
@@ -136,36 +153,57 @@ class _TourMemberManagementScreenState extends State<TourMemberManagementScreen>
                       onPressed: _addMember,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.activeGreen,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.br12)),
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p20, vertical: AppSpacing.p12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppSpacing.br12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.p20,
+                          vertical: AppSpacing.p12,
+                        ),
                         elevation: 0,
                       ),
-                      child: const Text('Add', style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
+                      child: const Text(
+                        'Add',
+                        style: TextStyle(
+                          color: AppColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          
+
           // Data Integrity Warning
           if (participants.length < 2)
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: AppSpacing.p16),
               child: Row(
                 children: [
-                  Icon(Icons.info_outline_rounded, color: AppColors.activeRed, size: 16),
+                  Icon(
+                    Icons.info_outline_rounded,
+                    color: AppColors.activeRed,
+                    size: 16,
+                  ),
                   SizedBox(width: AppSpacing.w8),
-                  Text(
-                    'At least 2 members are required to split expenses.',
-                    style: TextStyle(color: AppColors.activeRed, fontSize: 13, fontWeight: FontWeight.w500),
+                  Flexible(
+                    child: Text(
+                      'At least 2 members are required to split expenses.',
+                      style: TextStyle(
+                        color: AppColors.activeRed,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-            
+
           const SizedBox(height: AppSpacing.h16),
-          
+
           // Members List
           Expanded(
             child: ListView.builder(
@@ -178,24 +216,44 @@ class _TourMemberManagementScreenState extends State<TourMemberManagementScreen>
                   padding: const EdgeInsets.all(AppSpacing.p12),
                   decoration: BoxDecoration(
                     color: AppColors.white,
-                    borderRadius: BorderRadius.circular(AppSpacing.br12), // Using br12 instead of br16
-                    border: Border.all(color: AppColors.dividerColor.withValues(alpha: 0.3)),
+                    borderRadius: BorderRadius.circular(AppSpacing.br12),
+                    // Using br12 instead of br16
+                    border: Border.all(
+                      color: AppColors.dividerColor.withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Row(
                     children: [
                       CircleAvatar(
-                        backgroundColor: member.avatarColor != 0 ? Color(member.avatarColor) : _presetColors[index % _presetColors.length], 
+                        backgroundColor: member.avatarColor != 0
+                            ? Color(member.avatarColor)
+                            : _presetColors[index % _presetColors.length],
                         child: Text(
-                          member.name.isNotEmpty ? member.name[0].toUpperCase() : '?',
-                          style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+                          member.name.isNotEmpty
+                              ? member.name[0].toUpperCase()
+                              : '?',
+                          style: const TextStyle(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       const SizedBox(width: AppSpacing.w16),
                       Expanded(
-                        child: Text(member.name, style: AppTextStyles.cardTitle.copyWith(color: AppColors.black, fontSize: 16, letterSpacing: 0)),
+                        child: Text(
+                          member.name,
+                          style: AppTextStyles.cardTitle.copyWith(
+                            color: AppColors.black,
+                            fontSize: 16,
+                            letterSpacing: 0,
+                          ),
+                        ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.remove_circle_outline_rounded, color: AppColors.activeRed.withValues(alpha: 0.8)),
+                        icon: Icon(
+                          Icons.remove_circle_outline_rounded,
+                          color: AppColors.activeRed.withValues(alpha: 0.8),
+                        ),
                         onPressed: () => _removeMember(member.id),
                       ),
                     ],
@@ -212,7 +270,7 @@ class _TourMemberManagementScreenState extends State<TourMemberManagementScreen>
   void _addMember() {
     if (_nameController.text.trim().isEmpty) return;
     final int memberColor = _presetColors[_selectedColorIndex].toARGB32();
-    
+
     final member = TourParticipant(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       tourId: widget.tourId,
@@ -220,12 +278,106 @@ class _TourMemberManagementScreenState extends State<TourMemberManagementScreen>
       avatarColor: memberColor,
       joinedAt: DateTime.now(),
     );
-    
+
     context.read<TourProvider>().addParticipant(member);
     _nameController.clear();
   }
 
   void _removeMember(String memberId) {
-    context.read<TourProvider>().removeParticipant(memberId);
+    final provider = context.read<TourProvider>();
+    final member = provider.participants.firstWhere((p) => p.id == memberId);
+    final balances = provider.netBalances(widget.tourId);
+    final balance = balances[memberId] ?? 0;
+
+    if (balance.abs() >= 0.01) {
+      _showOutstandingBalanceDialog(member.name, balance, memberId);
+      return;
+    }
+
+    _showConfirmRemoveDialog(member.name, memberId);
+  }
+
+  void _showOutstandingBalanceDialog(
+    String name,
+    double balance,
+    String memberId,
+  ) {
+    final owesOrOwed = balance > 0 ? 'is owed' : 'owes';
+    final amount = balance.abs().toStringAsFixed(2);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.br20),
+        ),
+        backgroundColor: AppColors.white,
+        title: Text('Outstanding Balance', style: AppTextStyles.dialogTitle),
+        content: Text(
+          '$name $owesOrOwed $amount in this tour. Removing them now will make this amount disappear from everyone\'s calculation — it won\'t be settled.\n\nSettle up first, or remove anyway?',
+          style: AppTextStyles.dialogBody,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.loginSubTitle),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<TourProvider>().removeParticipant(memberId);
+            },
+            child: const Text(
+              'Remove Anyway',
+              style: TextStyle(
+                color: AppColors.activeRed,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showConfirmRemoveDialog(String name, String memberId) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.br20),
+        ),
+        backgroundColor: AppColors.white,
+        title: Text('Remove Member', style: AppTextStyles.dialogTitle),
+        content: Text(
+          'Remove $name from this tour?',
+          style: AppTextStyles.dialogBody,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.loginSubTitle),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<TourProvider>().removeParticipant(memberId);
+            },
+            child: const Text(
+              'Remove',
+              style: TextStyle(
+                color: AppColors.activeRed,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
