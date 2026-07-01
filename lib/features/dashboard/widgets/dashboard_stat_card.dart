@@ -90,7 +90,7 @@ class DashboardStatCard extends StatelessWidget {
                 ),
                 child: Column(
                   crossAxisAlignment: centerText
-                      ? CrossAxisAlignment.center
+                      ? CrossAxisAlignment.start
                       : CrossAxisAlignment.start,
                   children: [
                     if (centerText &&
