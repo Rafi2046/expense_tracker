@@ -315,77 +315,84 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         ),
         child: Form(
           key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TransactionSheetHeader(
-                  isEditing: widget.isEditing,
-                  isIncome: widget.isIncome,
-                  onClose: () => Navigator.pop(context),
-                ),
-                const SizedBox(height: 28),
-                TransactionAmountInput(
-                  controller: _amountController,
-                  themeColor: themeColor,
-                  currencySymbol: context.currencySymbol,
-                ),
-                const SizedBox(height: 28),
-                CategorySelector(
-                  selectedCategory: _selectedCategory,
-                  themeColor: themeColor,
-                  isIncome: widget.isIncome,
-                  onCategorySelected: (cat) =>
-                      setState(() => _selectedCategory = cat),
-                ),
-                const SizedBox(height: AppSpacing.h12),
-                DateSelector(
-                  dateText: DateFormat(
-                    'EEEE, MMM d, yyyy',
-                  ).format(_selectedDate),
-                  themeColor: themeColor,
-                  onTap: () => _selectDate(context),
-                ),
-                const SizedBox(height: AppSpacing.h12),
-                if (widget.isIncome) ...[
-                  IncomeMonthSelector(
-                    selectedIncomeMonth: _selectedIncomeMonth,
-                    themeColor: themeColor,
-                    onTap: () => _showMonthSheet(context),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TransactionSheetHeader(
+                isEditing: widget.isEditing,
+                isIncome: widget.isIncome,
+                onClose: () => Navigator.pop(context),
+              ),
+              const SizedBox(height: 20),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TransactionAmountInput(
+                        controller: _amountController,
+                        themeColor: themeColor,
+                        currencySymbol: context.currencySymbol,
+                      ),
+                      const SizedBox(height: 20),
+                      CategorySelector(
+                        selectedCategory: _selectedCategory,
+                        themeColor: themeColor,
+                        isIncome: widget.isIncome,
+                        onCategorySelected: (cat) =>
+                            setState(() => _selectedCategory = cat),
+                      ),
+                      const SizedBox(height: AppSpacing.h12),
+                      DateSelector(
+                        dateText: DateFormat(
+                          'EEEE, MMM d, yyyy',
+                        ).format(_selectedDate),
+                        themeColor: themeColor,
+                        onTap: () => _selectDate(context),
+                      ),
+                      const SizedBox(height: AppSpacing.h12),
+                      if (widget.isIncome) ...[
+                        IncomeMonthSelector(
+                          selectedIncomeMonth: _selectedIncomeMonth,
+                          themeColor: themeColor,
+                          onTap: () => _showMonthSheet(context),
+                        ),
+                        const SizedBox(height: AppSpacing.h12),
+                      ],
+                      PaymentModeSelector(
+                        paymentMethod: _paymentMethod,
+                        themeColor: themeColor,
+                        onTap: () => setState(() {
+                          _paymentMethod = _paymentMethod == 'Cash' ? 'Bank' : 'Cash';
+                        }),
+                      ),
+                      const SizedBox(height: AppSpacing.h12),
+                      PartySelectorTile(
+                        selectedPartyName: _selectedPartyName,
+                        themeColor: themeColor,
+                        onClear: () => setState(() => _selectedPartyName = null),
+                        onTap: () => _showPartySheet(context),
+                      ),
+                      const SizedBox(height: AppSpacing.h12),
+                      TransactionNoteInput(
+                        controller: _noteController,
+                        themeColor: themeColor,
+                      ),
+                      const SizedBox(height: 12),
+                    ],
                   ),
-                  const SizedBox(height: AppSpacing.h12),
-                ],
-                PaymentModeSelector(
-                  paymentMethod: _paymentMethod,
-                  themeColor: themeColor,
-                  onTap: () => setState(() {
-                    _paymentMethod = _paymentMethod == 'Cash' ? 'Bank' : 'Cash';
-                  }),
                 ),
-                const SizedBox(height: AppSpacing.h12),
-                PartySelectorTile(
-                  selectedPartyName: _selectedPartyName,
-                  themeColor: themeColor,
-                  onClear: () => setState(() => _selectedPartyName = null),
-                  onTap: () => _showPartySheet(context),
-                ),
-                const SizedBox(height: AppSpacing.h12),
-                TransactionNoteInput(
-                  controller: _noteController,
-                  themeColor: themeColor,
-                ),
-                const SizedBox(height: 28),
-                TransactionSaveButton(
-                  onPressed: () async { await _save(context); },
-                  themeColor: themeColor,
-                  title: widget.isEditing
-                      ? (widget.isIncome ? 'Update Income' : 'Update Expense')
-                      : (widget.isIncome ? 'Save Income' : 'Save Expense'),
-                ),
-                const SizedBox(height: AppSpacing.h12),
-              ],
-            ),
+              ),
+              const SizedBox(height: 16),
+              TransactionSaveButton(
+                onPressed: () async { await _save(context); },
+                themeColor: themeColor,
+                title: widget.isEditing
+                    ? (widget.isIncome ? 'Update Income' : 'Update Expense')
+                    : (widget.isIncome ? 'Save Income' : 'Save Expense'),
+              ),
+            ],
           ),
         ),
       ),
