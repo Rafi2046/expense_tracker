@@ -1,5 +1,4 @@
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:expense_tracker/core/providers/budget_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -44,8 +43,6 @@ class DashboardScreen extends StatelessWidget {
     final txProvider = context.watch<TransactionProvider>();
     final balanceProvider = context.watch<BalanceAnalyticsProvider>();
     final expenseAnalytics = context.watch<ExpenseAnalyticsProvider>();
-    final budgetProvider = context.watch<BudgetProvider>();
-
     final double totalBalance = balanceProvider.allTimeTotalBalance;
     final String currentMonthName = DateFormat('MMMM').format(DateTime.now());
     final isLoading = txProvider.isLoading;
@@ -91,7 +88,7 @@ class DashboardScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + MediaQuery.of(context).padding.bottom + 80),
+          padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + MediaQuery.of(context).padding.bottom + 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
