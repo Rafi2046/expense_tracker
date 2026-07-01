@@ -29,8 +29,12 @@ class DashboardStatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cornerColor = isPositive
-        ? (isDark ? AppColors.activeGreen.withValues(alpha: 0.15) : AppColors.selectionGreenBg)
-        : (isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFFECEE));
+        ? (isDark
+              ? AppColors.activeGreen.withValues(alpha: 0.15)
+              : AppColors.selectionGreenBg)
+        : (isDark
+              ? AppColors.activeRed.withValues(alpha: 0.15)
+              : const Color(0xFFFFECEE));
 
     return InkWell(
       onTap: onTap,
@@ -39,7 +43,8 @@ class DashboardStatCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           border: Border.all(
-            color: Theme.of(context).dividerTheme.color ?? AppColors.dividerColor,
+            color:
+                Theme.of(context).dividerTheme.color ?? AppColors.dividerColor,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(8),
@@ -84,11 +89,10 @@ class DashboardStatCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Value (Large Widget) on Top
+
                     value,
                     const SizedBox(height: 2),
 
-                    // Title (Small Mixed Case Text) on Bottom
                     Text(
                       title,
                       style: AppTextStyles.cardTitle.copyWith(
