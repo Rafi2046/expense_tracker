@@ -91,7 +91,7 @@ class DashboardScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + MediaQuery.of(context).padding.bottom + 80),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -294,14 +294,14 @@ class DashboardScreen extends StatelessWidget {
                   monthlyExpense: txProvider.monthlyExpense,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               const DashboardShortcutsCard(),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               if (isLoading)
                 _recentActivitySkeleton(context)
               else
                 DashboardRecentActivity(
-                  items: txProvider.transactions.take(5).map((tx) {
+                  items: txProvider.transactions.take(3).map((tx) {
                     return RecentActivityItem(
                       title: tx.note.isEmpty ? tx.category : tx.note,
                       category: tx.category,
@@ -331,7 +331,7 @@ class DashboardScreen extends StatelessWidget {
                     }
                   },
                 ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               DashboardSpendingCategories(
                 categoryName: expenseAnalytics.monthlyCategories.isNotEmpty
                     ? expenseAnalytics.monthlyCategories.first.name
@@ -340,29 +340,28 @@ class DashboardScreen extends StatelessWidget {
                     ? ((expenseAnalytics.monthlyCategories.first.amount /
                                   expenseAnalytics.currentMonthExpense) *
                               100)
-                          .clamp(0, 100)
-                          .toDouble()
-                    : 0,
-              ),
-              const SizedBox(height: 12),
-              DashboardBudgetStatus(
-                items: expenseAnalytics.monthlyCategories.take(3).map((cat) {
-                  final pct = budgetProvider.hasBudget
-                      ? ((cat.amount / budgetProvider.amount) * 100)
                             .clamp(0, 100)
                             .toDouble()
-                      : ((cat.amount / expenseAnalytics.currentMonthExpense) *
-                                100)
+                    : 0,
+              ),
+              const SizedBox(height: 8),
+              DashboardBudgetStatus(
+                items: expenseAnalytics.monthlyCategories.take(3).map((cat) {
+                  final totalExpense = expenseAnalytics.currentMonthExpense;
+                  final pct = totalExpense > 0
+                      ? ((cat.amount / totalExpense) * 100)
                             .clamp(0, 100)
-                            .toDouble();
+                            .toDouble()
+                      : cat.percentage;
                   return BudgetStatusItem(
                     categoryName: cat.name,
                     percentage: pct,
                     color: cat.color,
+                    amount: cat.amount,
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 16),
             ],
           ),
         ),

@@ -7,11 +7,13 @@ class BudgetStatusItem {
   final String categoryName;
   final double percentage;
   final Color color;
+  final double amount;
 
   BudgetStatusItem({
     required this.categoryName,
     required this.percentage,
     required this.color,
+    this.amount = 0,
   });
 }
 
@@ -88,14 +90,28 @@ class DashboardBudgetStatus extends StatelessWidget {
                             fontFamily: GoogleFonts.workSans().fontFamily,
                           ),
                         ),
-                        Text(
-                          '${item.percentage.toStringAsFixed(0)}%',
-                          style: TextStyle(
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.bold,
-                            color: labelColor,
-                            fontFamily: GoogleFonts.workSans().fontFamily,
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              '৳${item.amount.toStringAsFixed(0)}',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w400,
+                                color: labelColor.withValues(alpha: 0.6),
+                                fontFamily: GoogleFonts.workSans().fontFamily,
+                              ),
+                            ),
+                            Text(
+                              '${item.percentage.toStringAsFixed(0)}%',
+                              style: TextStyle(
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.bold,
+                                color: labelColor,
+                                fontFamily: GoogleFonts.workSans().fontFamily,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
