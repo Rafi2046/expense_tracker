@@ -10,6 +10,7 @@ import 'package:expense_tracker/features/dashboard/widgets/budget_management_hea
 import 'package:expense_tracker/features/dashboard/widgets/set_budget_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class BudgetManagementScreen extends StatelessWidget {
   const BudgetManagementScreen({super.key});
@@ -21,6 +22,7 @@ class BudgetManagementScreen extends StatelessWidget {
     final txProvider = context.watch<TransactionProvider>();
     final theme = Theme.of(context);
 
+    final isLoading = txProvider.isLoading || budgetProvider.isLoading;
     final categories = expenseAnalytics.monthlyCategories;
     final totalExpense = expenseAnalytics.currentMonthExpense;
     final hasBudget = budgetProvider.hasBudget;
@@ -45,32 +47,34 @@ class BudgetManagementScreen extends StatelessWidget {
           AppSpacing.p16,
           AppSpacing.p24,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            BudgetManagementHeader(
-              monthlyExpense: totalExpense,
-              budgetAmount: budgetAmount,
-              hasBudget: hasBudget,
-              onEditBudget: () => _showSetBudgetDialog(context),
-            ),
-            const SizedBox(height: AppSpacing.s24),
-            BudgetCategoryProgressList(
-              items: categories
-                  .map(
-                    (cat) => BudgetCategoryItem(
-                      name: cat.name,
-                      amount: cat.amount,
-                      percentage: cat.percentage,
-                      color: cat.color,
-                    ),
-                  )
-                  .toList(),
-              totalExpense: totalExpense,
-              hasBudget: hasBudget,
-              budgetAmount: budgetAmount,
-            ),
-            if (!txProvider.isLoading && categories.isEmpty)
+        child: Skeletonizer(
+          enabled: isLoading,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BudgetManagementHeader(
+                monthlyExpense: totalExpense,
+                budgetAmount: budgetAmount,
+                hasBudget: hasBudget,
+                onEditBudget: () => _showSetBudgetDialog(context),
+              ),
+              const SizedBox(height: AppSpacing.s24),
+              BudgetCategoryProgressList(
+                items: categories
+                    .map(
+                      (cat) => BudgetCategoryItem(
+                        name: cat.name,
+                        amount: cat.amount,
+                        percentage: cat.percentage,
+                        color: cat.color,
+                      ),
+                    )
+                    .toList(),
+                totalExpense: totalExpense,
+                hasBudget: hasBudget,
+                budgetAmount: budgetAmount,
+              ),
+              if (!isLoading && categories.isEmpty)
               Padding(
                 padding: EdgeInsets.only(top: AppSpacing.h48),
                 child: Center(
@@ -91,7 +95,8 @@ class BudgetManagementScreen extends StatelessWidget {
                   ),
                 ),
               ),
-          ],
+            ],
+          ),
         ),
       ),
     );
