@@ -295,11 +295,17 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         ? 20
         : systemBottomPadding + 84;
 
+    final double availableHeight = MediaQuery.of(context).size.height - keyboardPadding;
+    final double maxHeight = availableHeight * 0.82;
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: keyboardPadding,
       ),
       child: Container(
+        constraints: BoxConstraints(
+          maxHeight: maxHeight,
+        ),
         decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: const BorderRadius.only(
