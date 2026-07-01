@@ -29,50 +29,14 @@ class BudgetManagementScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        toolbarHeight: kToolbarHeight + 8,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: AppSpacing.p4),
-          child: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: Colors.white.withValues(alpha: 0.2),
-              child: const Icon(Symbols.arrow_back, color: Colors.white, size: 20),
-            ),
-          ),
-        ),
-        leadingWidth: 56,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Budget',
-              style: AppTextStyles.insightsHeaderTitle.copyWith(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            Text(
-              'Monthly overview',
-              style: AppTextStyles.cardStatusText.copyWith(
-                color: Colors.white60,
-                fontSize: 11,
-              ),
-            ),
-          ],
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF0C4E3C), Color(0xFF146C48)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
+        backgroundColor: theme.cardColor,
         elevation: 0,
         scrolledUnderElevation: 0,
+        leading: const BackButton(),
+        title: Text(
+          'Budget Management',
+          style: AppTextStyles.reportAppBarTitle,
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(
