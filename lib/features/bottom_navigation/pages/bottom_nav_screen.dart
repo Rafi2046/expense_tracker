@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
-import 'package:expense_tracker/features/analytics/pages/analytics_screen.dart';
 import 'package:expense_tracker/features/bottom_navigation/widgets/exit_dialog.dart';
 import 'package:expense_tracker/features/dashboard/pages/dashboard_screen.dart';
 import 'package:expense_tracker/features/ledger/pages/ledger_screen.dart';
@@ -24,7 +23,6 @@ class _AppBottomNavState extends State<BottomNavScreen> {
     DashboardScreen(),
     TourListScreen(),
     LedgerScreen(),
-    AnalyticsScreen(),
     SettingsScreen(),
   ];
 
@@ -32,7 +30,6 @@ class _AppBottomNavState extends State<BottomNavScreen> {
     NavItem(title: 'Home', icon: AppImages.homeIcon),
     NavItem(title: 'Tours', icon: null, iconData: Symbols.groups),
     NavItem(title: 'Ledger', icon: AppImages.ledgerIcon),
-    NavItem(title: 'Analytics', icon: AppImages.analyticsIcon),
     NavItem(title: 'Settings', icon: AppImages.settingsIcon),
   ];
 
@@ -64,38 +61,42 @@ class _AppBottomNavState extends State<BottomNavScreen> {
         bottomNavigationBar: Container(
           color: Colors.transparent,
           padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
             bottom: MediaQuery.of(context).padding.bottom + 10,
             top: 6,
           ),
-          child: Container(
-            height: 56,
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF1F1F1),
-                width: 1.0,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.2 : 0.05),
-                  blurRadius: 16,
-                  offset: const Offset(0, 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 300,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF1F1F1),
+                    width: 1.0,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.2 : 0.05),
+                      blurRadius: 16,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Row(
-              children: List.generate(
-                _navItems.length,
-                (index) => _buildNavItem(
-                  item: _navItems[index],
-                  index: index,
-                  isSelected: _currentIndex == index,
+                child: Row(
+                  children: List.generate(
+                    _navItems.length,
+                    (index) => _buildNavItem(
+                      item: _navItems[index],
+                      index: index,
+                      isSelected: _currentIndex == index,
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),
@@ -146,13 +147,13 @@ class _AppBottomNavState extends State<BottomNavScreen> {
                 item.iconData != null
                     ? Icon(
                         item.iconData,
-                        size: 22,
+                        size: 28,
                         color: isSelected ? activeColor : inactiveColor,
                       )
                     : Image.asset(
                         item.icon!,
-                        width: 22,
-                        height: 22,
+                        width: 18,
+                        height: 18,
                         color: isSelected ? activeColor : inactiveColor,
                       ),
 

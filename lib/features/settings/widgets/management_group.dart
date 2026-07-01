@@ -1,4 +1,5 @@
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:expense_tracker/features/analytics/pages/analytics_screen.dart';
 import 'package:expense_tracker/features/settings/pages/manage_categories_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_option_row.dart';
@@ -25,6 +26,20 @@ class ManagementGroup extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => const ManageCategoriesScreen(),
+              ),
+            );
+          },
+        ),
+        SettingsOptionRow(
+          icon: Symbols.analytics_rounded,
+          iconBgColor: const Color(0xFFE3F2FD),
+          iconColor: const Color(0xFF1E88E5),
+          title: context.translate('analytics'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AnalyticsScreen(),
               ),
             );
           },
