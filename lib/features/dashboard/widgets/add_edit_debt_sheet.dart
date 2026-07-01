@@ -29,6 +29,7 @@ class AddEditDebtSheet extends StatefulWidget {
   }) {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: false,
       isScrollControlled: true,
       backgroundColor: Theme.of(context).cardColor,
       shape: const RoundedRectangleBorder(
@@ -99,13 +100,14 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
       width: 1.5,
     );
 
+    final double keyboardPadding = MediaQuery.of(context).viewInsets.bottom;
+    final double systemBottomPadding = MediaQueryData.fromView(View.of(context)).padding.bottom;
+    final double bottomPadding = keyboardPadding > 0
+        ? keyboardPadding + 20
+        : systemBottomPadding + 84;
+
     return Padding(
-      padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 20,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-      ),
+      padding: EdgeInsets.fromLTRB(20, 20, 20, bottomPadding),
       child: Form(
         key: _formKey,
         child: Column(

@@ -44,6 +44,7 @@ class AddTransactionSheet extends StatefulWidget {
   }) {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: false,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => AddTransactionSheet(
@@ -288,9 +289,15 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         ? theme.primaryColor
         : AppColors.activeRed;
 
+    final double keyboardPadding = MediaQuery.of(context).viewInsets.bottom;
+    final double systemBottomPadding = MediaQueryData.fromView(View.of(context)).padding.bottom;
+    final double bottomPadding = keyboardPadding > 0
+        ? 20
+        : systemBottomPadding + 84;
+
     return Padding(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
+        bottom: keyboardPadding,
       ),
       child: Container(
         decoration: BoxDecoration(
@@ -300,9 +307,11 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
             topRight: Radius.circular(AppSpacing.br20),
           ),
         ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.p24,
-          vertical: AppSpacing.p20,
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.p24,
+          AppSpacing.p20,
+          AppSpacing.p24,
+          bottomPadding,
         ),
         child: Form(
           key: _formKey,
