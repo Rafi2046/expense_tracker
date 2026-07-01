@@ -11,6 +11,7 @@ class DashboardStatCard extends StatelessWidget {
   final bool isPositive;
   final bool isTrend;
   final Color? textColor;
+  final bool centerText;
   final VoidCallback? onTap;
 
   const DashboardStatCard({
@@ -22,6 +23,7 @@ class DashboardStatCard extends StatelessWidget {
     required this.isPositive,
     required this.isTrend,
     this.textColor,
+    this.centerText = false,
     this.onTap,
   });
 
@@ -87,14 +89,22 @@ class DashboardStatCard extends StatelessWidget {
                   vertical: 10.0,
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: centerText
+                      ? CrossAxisAlignment.center
+                      : CrossAxisAlignment.start,
                   children: [
+                    if (centerText &&
+                        ((isTrend && percentageText == null) ||
+                            (!isTrend && statusText == null)))
+                      const SizedBox(height: 9),
 
                     value,
                     const SizedBox(height: 2),
 
                     Text(
                       title,
+                      textAlign:
+                          centerText ? TextAlign.center : TextAlign.start,
                       style: AppTextStyles.cardTitle.copyWith(
                         fontSize: 10.5,
                         color: AppColors.textMuted,
@@ -112,6 +122,9 @@ class DashboardStatCard extends StatelessWidget {
                       if (isTrend && percentageText != null)
                         Row(
                           mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: centerText
+                              ? MainAxisAlignment.center
+                              : MainAxisAlignment.start,
                           children: [
                             Icon(
                               isPositive
@@ -140,7 +153,7 @@ class DashboardStatCard extends StatelessWidget {
                       else if (!isTrend && statusText != null)
                         statusText!,
                     ] else
-                      const SizedBox(height: 19),
+                      SizedBox(height: centerText ? 10 : 19),
                   ],
                 ),
               ),

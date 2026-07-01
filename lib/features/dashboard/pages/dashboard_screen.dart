@@ -114,6 +114,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                           isPositive: txProvider.isCalendarIncomeTrendGood,
                           isTrend: false,
+                          centerText: true,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -138,6 +139,7 @@ class DashboardScreen extends StatelessWidget {
                           ),
                           isPositive: txProvider.isCalendarExpenseTrendGood,
                           isTrend: false,
+                          centerText: true,
                           onTap: () {
                             Navigator.push(
                               context,
