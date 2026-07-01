@@ -26,6 +26,7 @@ import 'package:expense_tracker/features/dashboard/widgets/dashboard_spending_ca
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_stat_card.dart';
 import 'package:expense_tracker/features/reports/pages/view_reports_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/total_balance_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/budget_management_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -46,7 +47,6 @@ class DashboardScreen extends StatelessWidget {
     final double totalBalance = balanceProvider.allTimeTotalBalance;
     final String currentMonthName = DateFormat('MMMM').format(DateTime.now());
     final isLoading = txProvider.isLoading;
-
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -88,7 +88,12 @@ class DashboardScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + MediaQuery.of(context).padding.bottom + 10),
+          padding: EdgeInsets.fromLTRB(
+            16,
+            16,
+            16,
+            16 + MediaQuery.of(context).padding.bottom + 10,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -337,12 +342,18 @@ class DashboardScreen extends StatelessWidget {
                     ? ((expenseAnalytics.monthlyCategories.first.amount /
                                   expenseAnalytics.currentMonthExpense) *
                               100)
-                            .clamp(0, 100)
-                            .toDouble()
+                          .clamp(0, 100)
+                          .toDouble()
                     : 0,
               ),
               const SizedBox(height: 8),
               DashboardBudgetStatus(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const BudgetManagementScreen(),
+                  ),
+                ),
                 items: expenseAnalytics.monthlyCategories.take(3).map((cat) {
                   final totalExpense = expenseAnalytics.currentMonthExpense;
                   final pct = totalExpense > 0
@@ -354,7 +365,6 @@ class DashboardScreen extends StatelessWidget {
                     categoryName: cat.name,
                     percentage: pct,
                     color: cat.color,
-                    amount: cat.amount,
                   );
                 }).toList(),
               ),
