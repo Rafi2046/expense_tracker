@@ -33,11 +33,15 @@ class TourExportService {
       totalOutstanding,
     );
 
+    final mediaQueryData = MediaQuery.of(context);
     final imageBytes = await controller.captureFromWidget(
-      Material(
-        child: SizedBox(
-          width: 420,
-          child: receiptWidget,
+      MediaQuery(
+        data: mediaQueryData,
+        child: Material(
+          child: SizedBox(
+            width: 420,
+            child: receiptWidget,
+          ),
         ),
       ),
       pixelRatio: 3.0,
@@ -368,13 +372,15 @@ class TourExportService {
         Icon(Icons.account_balance_wallet_rounded,
             size: 14, color: Colors.grey.shade400),
         const SizedBox(width: AppSpacing.s6),
-        Text(
-          'Generated via Expense Tracker  \u2022  Shared Expenses Simplified',
-          style: GoogleFonts.workSans(
-            fontSize: 9.5,
-            color: Colors.grey.shade400,
-            fontWeight: FontWeight.w500,
-            letterSpacing: 0.3,
+        Flexible(
+          child: Text(
+            'Generated via Expense Tracker  \u2022  Shared Expenses Simplified',
+            style: GoogleFonts.workSans(
+              fontSize: 9.5,
+              color: Colors.grey.shade400,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.3,
+            ),
           ),
         ),
       ],
