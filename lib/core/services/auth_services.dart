@@ -6,9 +6,62 @@ import 'package:expense_tracker/core/utils/database_helper.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  // 1. Use the singleton instance instead of a constructor
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+
+  String _friendlyMessage(dynamic error) {
+    if (error is SocketException) {
+      return 'No internet connection. Please check your network and try again.';
+    }
+    if (error is FirebaseAuthException) {
+      switch (error.code) {
+        case 'ERROR_NETWORK_REQUEST_FAILED':
+        case 'network-request-failed':
+          return 'No internet connection. Please check your network and try again.';
+        case 'ERROR_USER_NOT_FOUND':
+        case 'user-not-found':
+          return 'No account found with this email address.';
+        case 'ERROR_WRONG_PASSWORD':
+        case 'wrong-password':
+          return 'Incorrect password. Please try again.';
+        case 'ERROR_EMAIL_ALREADY_IN_USE':
+        case 'email-already-in-use':
+          return 'An account with this email already exists.';
+        case 'ERROR_WEAK_PASSWORD':
+        case 'weak-password':
+          return 'Password is too weak. Use at least 6 characters.';
+        case 'ERROR_INVALID_EMAIL':
+        case 'invalid-email':
+          return 'Invalid email address format.';
+        case 'ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL':
+        case 'account-exists-with-different-credential':
+          return 'An account already exists with the same email but a different sign-in method.';
+        case 'ERROR_TOO_MANY_REQUESTS':
+        case 'too-many-requests':
+          return 'Too many attempts. Please try again later.';
+        case 'ERROR_USER_DISABLED':
+        case 'user-disabled':
+          return 'This account has been disabled.';
+        case 'ERROR_INVALID_CREDENTIAL':
+        case 'invalid-credential':
+          return 'Invalid credentials. Please check your email and password.';
+        default:
+          return error.message ?? 'An unexpected error occurred.';
+      }
+    }
+    if (error is GoogleSignInException) {
+      if (error.code == GoogleSignInExceptionCode.canceled) {
+        return '';
+      }
+      if (error.code == GoogleSignInExceptionCode.clientConfigurationError) {
+        return 'Google Sign-In is not configured properly. Please contact support.';
+      }
+      if (error.code == GoogleSignInExceptionCode.providerConfigurationError) {
+        return 'Google Play Services needs to be updated.';
+      }
+      return error.description ?? 'Google Sign-In failed. Please try again.';
+    }
+    return error.toString();
+  }
 
   Future<UserCredential?> signUpWithEmail(String email, String password) async {
     try {
@@ -16,8 +69,12 @@ class AuthService {
         email: email,
         password: password,
       );
+    } on SocketException {
+      throw Exception(_friendlyMessage(SocketException('')));
     } on FirebaseAuthException catch (e) {
-      throw Exception(e.message);
+      throw Exception(_friendlyMessage(e));
+    } catch (e) {
+      throw Exception(_friendlyMessage(e));
     }
   }
 
@@ -27,40 +84,53 @@ class AuthService {
         email: email,
         password: password,
       );
+    } on SocketException {
+      throw Exception(_friendlyMessage(SocketException('')));
     } on FirebaseAuthException catch (e) {
-      throw Exception(e.message);
+      throw Exception(_friendlyMessage(e));
+    } catch (e) {
+      throw Exception(_friendlyMessage(e));
     }
   }
 
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      // 2. Mandatory initialization step for v7+
       await _googleSignIn.initialize();
 
-      // 3. Trigger the new authentication flow (replaces signIn)
       final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
 
-      // 4. Get the ID token (synchronous property in v7)
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
-      // 5. Build the Firebase credential using the ID token
       final OAuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
       );
 
-      // 6. Sign in to Firebase
       return await _auth.signInWithCredential(credential);
+    } on GoogleSignInException catch (e) {
+      if (e.code == GoogleSignInExceptionCode.canceled) {
+        return null;
+      }
+      throw Exception(_friendlyMessage(e));
+    } on SocketException {
+      throw Exception(
+        'No internet connection. Please check your network and try again.',
+      );
+    } on FirebaseAuthException catch (e) {
+      throw Exception(_friendlyMessage(e));
     } catch (e) {
-      // Catches user cancellations or network errors
-      throw Exception(e.toString());
+      throw Exception(_friendlyMessage(e));
     }
   }
 
   Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
+    } on SocketException {
+      throw Exception(_friendlyMessage(SocketException('')));
     } on FirebaseAuthException catch (e) {
-      throw Exception(e.message);
+      throw Exception(_friendlyMessage(e));
+    } catch (e) {
+      throw Exception(_friendlyMessage(e));
     }
   }
 
@@ -78,6 +148,10 @@ class AuthService {
       final UploadTask uploadTask = storageRef.putFile(file);
       final TaskSnapshot snapshot = await uploadTask;
       return await snapshot.ref.getDownloadURL();
+    } on SocketException {
+      throw Exception(
+        'No internet connection. Please check your network and try again.',
+      );
     } catch (e) {
       throw Exception('Failed to upload image: $e');
     }
@@ -89,8 +163,14 @@ class AuthService {
     try {
       await user.updateDisplayName(displayName);
       await user.reload();
+    } on SocketException {
+      throw Exception(
+        'No internet connection. Please check your network and try again.',
+      );
     } on FirebaseAuthException catch (e) {
-      throw Exception(e.message);
+      throw Exception(_friendlyMessage(e));
+    } catch (e) {
+      throw Exception(_friendlyMessage(e));
     }
   }
 
@@ -109,14 +189,18 @@ class AuthService {
       );
       await user.reauthenticateWithCredential(credential);
       await user.updatePassword(newPassword);
+    } on SocketException {
+      throw Exception(
+        'No internet connection. Please check your network and try again.',
+      );
     } on FirebaseAuthException catch (e) {
-      throw Exception(e.message);
+      throw Exception(_friendlyMessage(e));
+    } catch (e) {
+      throw Exception(_friendlyMessage(e));
     }
   }
 
   Future<void> signOut() async {
-    // Wipe local SQLite cache before auth state changes — this ensures
-    // _loadFromDatabase() finds no stale rows when the next user signs in.
     try {
       await DatabaseHelper.instance.clearUserData();
     } catch (_) {}
