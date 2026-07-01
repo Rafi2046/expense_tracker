@@ -1,5 +1,6 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
+import 'package:expense_tracker/features/dashboard/widgets/premium_upgrade_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_info_banner.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_type_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/coming_soon_sheet.dart';
@@ -81,6 +82,10 @@ class SelectProfileScreen extends StatelessWidget {
                 text: 'Continue',
                 backgroundColor: const Color(0xFF2EBD85),
                 onPressed: () async {
+                  if (provider.profiles.length >= 3 && !provider.isPremium) {
+                    PremiumUpgradeSheet.show(context);
+                    return;
+                  }
                   final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
