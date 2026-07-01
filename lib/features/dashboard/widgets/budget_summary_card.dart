@@ -30,12 +30,13 @@ class BudgetSummaryCard extends StatelessWidget {
 
     return Card(
       elevation: 0,
+      margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSpacing.br12),
+        borderRadius: BorderRadius.circular(AppSpacing.br8),
         side: BorderSide(color: AppColors.borderColor.withValues(alpha: 0.2)),
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(AppSpacing.br12),
+        borderRadius: BorderRadius.circular(AppSpacing.br8),
         onTap: () => _showSetBudgetDialog(context),
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.p16),

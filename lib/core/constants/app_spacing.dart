@@ -14,6 +14,7 @@ class AppSpacing {
   //radius
   static const double r4 = 4.0;
   static const double r8 = 8.0;
+  static const double r10 = 10.0;
   static const double r16 = 16.0;
   static const double r25 = 25.0;
   static const double r40 = 40.0;
@@ -88,6 +89,7 @@ class AppSpacing {
   //border radius
   static const double br4 = 4.0;
   static const double br8 = 8.0;
+  static const double br10 = 10.0;
   static const double br12 = 12.0;
   static const double br6 = 16.0;
   static const double br20 = 20.0;

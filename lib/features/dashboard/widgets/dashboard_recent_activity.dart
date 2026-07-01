@@ -80,7 +80,7 @@ class DashboardRecentActivity extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.2 : 0.03),
@@ -109,9 +109,9 @@ class DashboardRecentActivity extends StatelessWidget {
         InkWell(
           onTap: () => onItemTap(item),
           borderRadius: BorderRadius.vertical(
-            top: i == 0 ? const Radius.circular(14) : Radius.zero,
+            top: i == 0 ? const Radius.circular(8) : Radius.zero,
             bottom: i == items.length - 1
-                ? const Radius.circular(14)
+                ? const Radius.circular(8)
                 : Radius.zero,
           ),
           child: Padding(

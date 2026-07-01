@@ -34,7 +34,7 @@ class DashboardStatCard extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(8),
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
@@ -42,10 +42,10 @@ class DashboardStatCard extends StatelessWidget {
             color: Theme.of(context).dividerTheme.color ?? AppColors.dividerColor,
             width: 1.0,
           ),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(8),
           child: Stack(
             children: [
               // Top-right corner color block with arrow icon, clipped by parent ClipRRect
@@ -79,7 +79,7 @@ class DashboardStatCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12.0,
-                  vertical: 10.0,
+                  vertical: 6.0,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +104,7 @@ class DashboardStatCard extends StatelessWidget {
                     // Trend / Status indicator if present
                     if ((isTrend && percentageText != null) ||
                         (!isTrend && statusText != null))
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 2),
                     if (isTrend && percentageText != null)
                       Row(
                         mainAxisSize: MainAxisSize.min,
