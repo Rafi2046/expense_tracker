@@ -2,10 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_card.dart';
 import 'package:expense_tracker/features/tours/pages/tour_dashboard_screen.dart';
@@ -21,6 +23,8 @@ class TourListScreen extends StatefulWidget {
 class _TourListScreenState extends State<TourListScreen> {
   final Map<String, int> _memberCounts = {};
   final Map<String, double> _totalSpent = {};
+  int _currentCarouselIndex = 0;
+  int _completedToursCount = 0;
 
   @override
   void initState() {
@@ -55,9 +59,20 @@ class _TourListScreenState extends State<TourListScreen> {
         _totalSpent[row['tourId'] as String] =
             (row['total'] as num).toDouble();
       }
+
+      final settlementResult = await db.rawQuery(
+        'SELECT tourId, COUNT(*) as cnt FROM tour_settlements '
+        'WHERE tourId IN ($placeholders) AND isDeleted = 0 GROUP BY tourId',
+        tourIds,
+      );
+      final settledTourIds =
+          settlementResult.map((r) => r['tourId'] as String).toSet();
+      _completedToursCount = tourIds.where((id) =>
+          (_totalSpent[id] ?? 0) > 0 && settledTourIds.contains(id)).length;
     } catch (e) {
       debugPrint('TourListScreen._loadCounts error: $e');
     }
+    if (mounted) setState(() {});
   }
 
   void _openCreateTourSheet() {
@@ -271,25 +286,55 @@ class _TourListScreenState extends State<TourListScreen> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        title: const Text('Tours', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700, fontFamily: 'WorkSans')),
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 48),
-        child: FloatingActionButton(
-          heroTag: 'tour_list_fab',
-          onPressed: _openCreateTourSheet,
-          backgroundColor: AppColors.activeGreen,
-          elevation: 4,
-          child: const Icon(Icons.add_rounded, color: AppColors.white, size: 28),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(AppSpacing.p20, AppSpacing.p16, AppSpacing.p20, 0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Where to next?',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.textMuted,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.s2),
+                        Text(
+                          'Your Tours',
+                          style: AppTextStyles.sectionHeaderTitle.copyWith(
+                            fontSize: 32,
+                            letterSpacing: -1.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  CircleAvatar(
+                    radius: 22,
+                    backgroundColor: Colors.grey.shade200,
+                    child: Icon(Icons.person, size: 24, color: Colors.grey.shade500),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppSpacing.s8),
+            Expanded(
+              child: tours.isEmpty
+                  ? _buildEmptyState(theme)
+                  : _buildTourCarousel(theme, tours),
+            ),
+          ],
         ),
       ),
-      body: tours.isEmpty
-          ? _buildEmptyState(theme)
-          : _buildTourGrid(theme, tours),
     );
   }
 
@@ -321,21 +366,16 @@ class _TourListScreenState extends State<TourListScreen> {
             const SizedBox(height: 28),
             Text(
               'Your journey starts here',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
+              style: AppTextStyles.sectionHeaderTitle.copyWith(
                 color: theme.colorScheme.onSurface,
-                fontFamily: 'WorkSans',
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSpacing.s8),
             Text(
               'Create a tour to split group expenses\nseamlessly with your travel buddies.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
+              style: AppTextStyles.dialogBody.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
-                height: 1.5,
               ),
             ),
             const SizedBox(height: 32),
@@ -356,42 +396,47 @@ class _TourListScreenState extends State<TourListScreen> {
     );
   }
 
-  Widget _buildTourGrid(ThemeData theme, List<Tour> tours) {
+  Widget _buildTourCarousel(ThemeData theme, List<Tour> tours) {
     return RefreshIndicator(
       onRefresh: () async {
         context.read<TourProvider>().clearSelection();
         await _loadCounts();
       },
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 4, 16, 100),
-        child: CustomScrollView(
-          slivers: [
-            SliverLayoutBuilder(
-              builder: (context, constraints) {
-                return SliverPadding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  sliver: SliverToBoxAdapter(
-                    child: Text(
-                      '${tours.length} ${tours.length == 1 ? 'Tour' : 'Tours'}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 16, bottom: 120),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  '${tours.length} ${tours.length == 1 ? 'ACTIVE TOUR' : 'ACTIVE TOURS'}',
+                  style: AppTextStyles.reportStatLabel.copyWith(
+                    letterSpacing: 1.5,
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                   ),
-                );
-              },
-            ),
-            SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.85,
-                crossAxisSpacing: 14,
-                mainAxisSpacing: 14,
+                ),
               ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
+              const SizedBox(height: AppSpacing.s20),
+              CarouselSlider.builder(
+                itemCount: tours.length,
+                options: CarouselOptions(
+                  scrollDirection: Axis.horizontal,
+                  height: MediaQuery.of(context).size.height * 0.30,
+                  enlargeCenterPage: true,
+                  viewportFraction: 0.80,
+                  enableInfiniteScroll: false,
+                  autoPlay: true,
+                  autoPlayInterval: const Duration(seconds: 4),
+                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  onPageChanged: (index, reason) {
+                    setState(() => _currentCarouselIndex = index);
+                  },
+                ),
+                itemBuilder: (context, index, realIndex) {
                   final tour = tours[index];
                   return TourCard(
                     tour: tour,
@@ -411,10 +456,175 @@ class _TourListScreenState extends State<TourListScreen> {
                     },
                   );
                 },
-                childCount: tours.length,
               ),
+              const SizedBox(height: AppSpacing.s20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: tours.asMap().entries.map((entry) {
+                  final i = entry.key;
+                  final isActive = i == _currentCarouselIndex;
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: isActive ? 28 : 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: isActive
+                          ? AppColors.activeGreen
+                          : AppColors.activeGreen.withValues(alpha: 0.25),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: AppSpacing.s24),
+              _buildJourneySection(theme, tours),
+              const SizedBox(height: AppSpacing.s16),
+              _buildPlanBanner(theme),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildJourneySection(ThemeData theme, List<Tour> tours) {
+    final totalBuddies = tours.fold<int>(
+      0,
+      (sum, t) => sum + (_memberCounts[t.id] ?? 0),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Your Journey', style: AppTextStyles.sectionHeaderTitle),
+          const SizedBox(height: AppSpacing.s14),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.p20, horizontal: AppSpacing.p24),
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.grey.withOpacity(0.2), width: 1.5),
             ),
-          ],
+            child: Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(Icons.map_outlined, size: 26, color: AppColors.activeGreen),
+                      const SizedBox(width: AppSpacing.s8),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text('Tours Completed', style: AppTextStyles.reportStatLabel.copyWith(color: AppColors.textMuted)),
+                            ),
+                            const SizedBox(height: AppSpacing.s4),
+                            Text(
+                              '$_completedToursCount',
+                              style: AppTextStyles.cardValueGreen.copyWith(fontSize: 26),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 1,
+                  height: 48,
+                  color: AppColors.dividerColor.withValues(alpha: 0.3),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text('Active Buddies', style: AppTextStyles.reportStatLabel.copyWith(color: AppColors.textMuted)),
+                            ),
+                            const SizedBox(height: AppSpacing.s4),
+                            Text(
+                              '$totalBuddies',
+                              style: AppTextStyles.cardValueGreen.copyWith(fontSize: 26),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.s8),
+                      Icon(Icons.people_outline, size: 26, color: AppColors.activeGreen),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPlanBanner(ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p20),
+      child: GestureDetector(
+        onTap: _openCreateTourSheet,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.p16, horizontal: AppSpacing.p20),
+          decoration: BoxDecoration(
+            color: AppColors.activeGreen.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.grey.withOpacity(0.2), width: 1.5),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.activeGreen.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(Icons.flight_takeoff, size: 22, color: AppColors.buttonColor),
+              ),
+              const SizedBox(width: AppSpacing.s14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Plan your next adventure',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.s2),
+                    Text(
+                      'Start tracking expenses for your new trip.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.buttonColor),
+            ],
+          ),
         ),
       ),
     );

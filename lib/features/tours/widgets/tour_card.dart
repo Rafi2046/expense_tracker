@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/models/tour.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class TourCard extends StatelessWidget {
   final Tour tour;
@@ -10,14 +12,14 @@ class TourCard extends StatelessWidget {
   final int index;
 
   static const _gradientPalette = [
-    [Color(0xFF1E1B4B), Color(0xFF3730A3), Color(0xFF4338CA)],
-    [Color(0xFF064E3B), Color(0xFF047857), Color(0xFF059669)],
-    [Color(0xFF7C2D12), Color(0xFF9A3412), Color(0xFFC2410C)],
-    [Color(0xFF1E3A5F), Color(0xFF1E40AF), Color(0xFF2563EB)],
-    [Color(0xFF4C1D95), Color(0xFF6D28D9), Color(0xFF7C3AED)],
-    [Color(0xFF5F0F40), Color(0xFF831843), Color(0xFFBE185D)],
-    [Color(0xFF164E63), Color(0xFF155E75), Color(0xFF0891B2)],
-    [Color(0xFF451A03), Color(0xFF78350F), Color(0xFFB45309)],
+    [Color(0xFF0F0C29), Color(0xFF302B63), Color(0xFF24243E)],
+    [Color(0xFF0D2B1D), Color(0xFF1A6B47), Color(0xFF064E3B)],
+    [Color(0xFF2D0A0A), Color(0xFF7F1D1D), Color(0xFF450A0A)],
+    [Color(0xFF0C1F3F), Color(0xFF1E3A8A), Color(0xFF1E1B4B)],
+    [Color(0xFF2D0A4E), Color(0xFF581C87), Color(0xFF3B0764)],
+    [Color(0xFF2D0A1C), Color(0xFF831843), Color(0xFF4C0519)],
+    [Color(0xFF0A2E3F), Color(0xFF0E7490), Color(0xFF164E63)],
+    [Color(0xFF2D1A0A), Color(0xFF92400E), Color(0xFF451A03)],
   ];
 
   const TourCard({
@@ -33,8 +35,8 @@ class TourCard extends StatelessWidget {
 
   String _currencySymbol(String code) {
     const symbols = {
-      'BDT': '৳', 'USD': r'$', 'EUR': '€', 'GBP': '£',
-      'INR': '₹', 'JPY': '¥', 'AED': 'د.إ', 'CAD': r'$',
+      'BDT': '\u09F3', 'USD': r'$', 'EUR': '\u20AC', 'GBP': '\u00A3',
+      'INR': '\u20B9', 'JPY': '\u00A5', 'AED': '\u062F.\u0625', 'CAD': r'$',
     };
     return symbols[code] ?? r'$';
   }
@@ -50,23 +52,22 @@ class TourCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasCoverPhoto = tour.coverPhoto != null && tour.coverPhoto!.isNotEmpty;
-    final gradient = _gradient;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(32),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 28,
+              offset: const Offset(0, 14),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(32),
           child: Stack(
             children: [
               if (hasCoverPhoto)
@@ -75,19 +76,26 @@ class TourCard extends StatelessWidget {
                   width: double.infinity,
                   height: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => _buildGradientBg(gradient),
+                  errorBuilder: (context, error, stackTrace) =>
+                      _buildGradientFallback(),
                 )
               else
-                _buildGradientBg(gradient),
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withValues(alpha: 0.75),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                _buildGradientFallback(),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: 200,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.95),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -96,7 +104,7 @@ class TourCard extends StatelessWidget {
                 left: 0,
                 right: 0,
                 child: Padding(
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(AppSpacing.p20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -104,33 +112,44 @@ class TourCard extends StatelessWidget {
                         tour.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: GoogleFonts.workSans(
                           color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          height: 1.2,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
+                          height: 1.1,
+                          letterSpacing: -0.5,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.s12),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Icon(Icons.person_outline_rounded, color: Colors.white.withValues(alpha: 0.7), size: 13),
-                          const SizedBox(width: 4),
-                          Text(
-                            '$memberCount',
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.8),
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.people_alt_rounded,
+                                color: Colors.white70,
+                                size: 18,
+                              ),
+                              const SizedBox(width: AppSpacing.s6),
+                              Text(
+                                '$memberCount ${memberCount == 1 ? 'member' : 'members'}',
+                                style: GoogleFonts.workSans(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
-                          const Spacer(),
                           Text(
                             _formatAmount(totalSpent, tour.currency),
-                            style: const TextStyle(
+                            style: GoogleFonts.workSans(
                               color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: -0.3,
                             ),
                           ),
                         ],
@@ -146,13 +165,13 @@ class TourCard extends StatelessWidget {
     );
   }
 
-  Widget _buildGradientBg(List<Color> gradient) {
+  Widget _buildGradientFallback() {
     return Container(
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: gradient,
+          colors: _gradient,
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

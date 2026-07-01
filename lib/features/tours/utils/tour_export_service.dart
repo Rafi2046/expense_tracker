@@ -5,10 +5,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/utils/debt_simplifier.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class TourExportService {
   static Future<void> shareReport(BuildContext context, String tourId) async {
@@ -21,7 +25,13 @@ class TourExportService {
     final settlements = simplifyDebts(netBalances);
 
     final controller = ScreenshotController();
-    final receiptWidget = _buildReceipt(tour, participants, settlements, totalSpent, totalOutstanding);
+    final receiptWidget = _buildReceipt(
+      tour,
+      participants,
+      settlements,
+      totalSpent,
+      totalOutstanding,
+    );
 
     final imageBytes = await controller.captureFromWidget(
       Material(child: receiptWidget),
@@ -37,7 +47,7 @@ class TourExportService {
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(file.path)],
-        text: '${tour.name} — Settlement Report',
+        text: '${tour.name} \u2014 Settlement Report',
       ),
     );
   }
@@ -50,18 +60,19 @@ class TourExportService {
     double totalOutstanding,
   ) {
     final pById = {for (final p in participants) p.id: p.name};
+    final isAllSettled = totalOutstanding == 0;
 
     return Container(
       width: 420,
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 24,
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 32,
             offset: const Offset(0, 8),
           ),
         ],
@@ -70,263 +81,299 @@ class TourExportService {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // ── Header Badge ──
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF0F766E), Color(0xFF059669)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: const Text(
-              'SETTLEMENT REPORT',
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
-                letterSpacing: 2.5,
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          // ── Tour Name ──
-          Text(
-            tour.name,
-            style: const TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.w800,
-              color: Color(0xFF1F2937),
-              fontFamily: 'WorkSans',
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // ── Total Spent Highlight Box ──
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF0FDF9),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF2EBD85).withValues(alpha: 0.2)),
-            ),
-            child: Column(
-              children: [
-                const Text(
-                  'TOTAL SPENT',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF6B7280),
-                    letterSpacing: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  _formatAmount(totalSpent, tour.currency),
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF059669),
-                    fontFamily: 'JetBrainsMono',
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // ── Outstanding ──
-          if (settlements.isNotEmpty) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'OUTSTANDING',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF6B7280),
-                    letterSpacing: 1.5,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFEF2F2),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    _formatAmount(totalOutstanding, tour.currency),
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFFDC3545),
-                      fontFamily: 'JetBrainsMono',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Container(height: 1, color: const Color(0xFFE5E7EB)),
-            const SizedBox(height: 20),
-          ],
-
-          // ── Settlement List ──
-          if (settlements.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 24),
-              child: Column(
-                children: [
-                  Icon(Icons.check_circle_rounded, color: Color(0xFF2EBD85), size: 36),
-                  SizedBox(height: 12),
-                  Text(
-                    'All settled up — no payments needed',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF6B7280),
-                    ),
-                  ),
-                ],
-              ),
-            )
+          _buildHeader(tour),
+          const SizedBox(height: AppSpacing.s24),
+          _buildTotalSpentBadge(totalSpent, tour.currency),
+          const SizedBox(height: AppSpacing.s24),
+          _buildDivider(),
+          const SizedBox(height: AppSpacing.s20),
+          _buildSectionLabel(isAllSettled ? 'SETTLEMENT STATUS' : 'PAYMENTS REQUIRED'),
+          const SizedBox(height: AppSpacing.s16),
+          if (isAllSettled)
+            _buildAllSettled()
           else
-            ...settlements.asMap().entries.map((entry) {
-              final i = entry.key;
-              final s = entry.value;
-              final from = pById[s.fromParticipantId] ?? 'Unknown';
-              final to = pById[s.toParticipantId] ?? 'Unknown';
-              final isLast = i == settlements.length - 1;
+            ..._buildSettlementList(settlements, pById, tour.currency),
+          const SizedBox(height: AppSpacing.s24),
+          _buildDivider(),
+          const SizedBox(height: AppSpacing.s20),
+          _buildFooter(),
+        ],
+      ),
+    );
+  }
 
-              return Column(
-                children: [
-                  Row(
-                    children: [
-                      // ── From ──
-                      Expanded(
-                        flex: 3,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              radius: 14,
-                              backgroundColor: _avatarColor(i),
-                              child: Text(
-                                from.isNotEmpty ? from[0].toUpperCase() : '?',
-                                style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Flexible(
-                              child: Text(
-                                from,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFFDC3545)),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // ── Arrow + Amount ──
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          children: [
-                            const Icon(Icons.arrow_forward_rounded, size: 14, color: Color(0xFF9CA3AF)),
-                            const SizedBox(height: 2),
-                            Text(
-                              _formatAmount(s.amount, tour.currency),
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w800,
-                                color: Color(0xFF059669),
-                                fontFamily: 'JetBrainsMono',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // ── To ──
-                      Expanded(
-                        flex: 3,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Flexible(
-                              child: Text(
-                                to,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF2EBD85)),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            CircleAvatar(
-                              radius: 14,
-                              backgroundColor: _avatarColor(i + settlements.length),
-                              child: Text(
-                                to.isNotEmpty ? to[0].toUpperCase() : '?',
-                                style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (!isLast) ...[
-                    const SizedBox(height: 14),
-                    Container(height: 1, color: const Color(0xFFF3F4F6)),
-                    const SizedBox(height: 14),
-                  ],
-                ],
-              );
-            }),
-
-          // ── Divider ──
-          if (settlements.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            Container(height: 1.5, color: const Color(0xFFE5E7EB)),
-            const SizedBox(height: 20),
-          ],
-
-          // ── Footer Watermark ──
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+  static Widget _buildHeader(Tour tour) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.p20,
+            vertical: AppSpacing.p10,
+          ),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF0F766E), Color(0xFF059669)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(AppSpacing.r25),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF059669).withValues(alpha: 0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.account_balance_wallet_rounded, size: 14, color: Colors.grey.shade400),
-              const SizedBox(width: 6),
+              Icon(Icons.receipt_long_rounded,
+                  size: 16, color: AppColors.white),
+              const SizedBox(width: AppSpacing.s8),
               Text(
-                'Generated via Expense Tracker  \u2022  Shared Expenses Simplified',
-                style: TextStyle(
-                  fontSize: 9.5,
-                  color: Colors.grey.shade400,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.3,
+                'SETTLEMENT REPORT',
+                style: GoogleFonts.jetBrainsMono(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.white,
+                  letterSpacing: 3.0,
                 ),
               ),
             ],
+          ),
+        ),
+        const SizedBox(height: AppSpacing.s20),
+        Text(
+          tour.name,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.workSans(
+            fontSize: 28,
+            fontWeight: FontWeight.w800,
+            color: const Color(0xFF111827),
+            letterSpacing: -0.5,
+          ),
+        ),
+      ],
+    );
+  }
+
+  static Widget _buildTotalSpentBadge(double totalSpent, String currency) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        vertical: AppSpacing.p20,
+        horizontal: AppSpacing.p24,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0FDF9),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
+        border: Border.all(
+          color: AppColors.activeGreen.withValues(alpha: 0.15),
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        children: [
+          Text(
+            'TOTAL SPENT',
+            style: AppTextStyles.summaryCardLabel.copyWith(
+              color: const Color(0xFF6B7280),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.s6),
+          Text(
+            _formatAmount(totalSpent, currency),
+            style: GoogleFonts.jetBrainsMono(
+              fontSize: 32,
+              fontWeight: FontWeight.w800,
+              color: const Color(0xFF059669),
+              letterSpacing: -1.0,
+            ),
           ),
         ],
       ),
     );
   }
 
-  static Color _avatarColor(int index) {
-    const colors = [
-      Color(0xFF667eea), Color(0xFFf5576c), Color(0xFF43e97b),
-      Color(0xFFfa709a), Color(0xFF4facfe), Color(0xFFa18cd1),
-      Color(0xFFfccb90), Color(0xFF38f9d7),
-    ];
-    return colors[index % colors.length];
+  static Widget _buildDivider() {
+    return Container(
+      height: 1,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.transparent,
+            const Color(0xFFE5E7EB),
+            Colors.transparent,
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget _buildSectionLabel(String label) {
+    return Text(
+      label,
+      style: GoogleFonts.jetBrainsMono(
+        fontSize: 10,
+        fontWeight: FontWeight.w700,
+        color: const Color(0xFF9CA3AF),
+        letterSpacing: 2.0,
+      ),
+    );
+  }
+
+  static Widget _buildAllSettled() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        vertical: AppSpacing.p24,
+        horizontal: AppSpacing.p20,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0FDF9),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
+        border: Border.all(
+          color: AppColors.activeGreen.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.check_circle_rounded,
+              color: AppColors.activeGreen, size: 40),
+          const SizedBox(height: AppSpacing.s12),
+          Text(
+            'All settled up',
+            style: GoogleFonts.workSans(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFF065F46),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.s4),
+          Text(
+            'No payments needed \u2014 everyone is even',
+            style: GoogleFonts.workSans(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF6B7280),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static List<Widget> _buildSettlementList(
+    List<SimplifiedSettlement> settlements,
+    Map<String, String> pById,
+    String currency,
+  ) {
+    return settlements.asMap().entries.map((entry) {
+      final s = entry.value;
+      final from = pById[s.fromParticipantId] ?? 'Unknown';
+      final to = pById[s.toParticipantId] ?? 'Unknown';
+
+      return Container(
+        margin: const EdgeInsets.only(bottom: AppSpacing.s12),
+        padding: const EdgeInsets.all(AppSpacing.p16),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFF3F4F6)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                _buildPersonBadge(from, true),
+                const Spacer(),
+                Column(
+                  children: [
+                    Icon(Icons.arrow_downward_rounded,
+                        size: 18, color: AppColors.activeGreen),
+                    Text(
+                      _formatAmount(s.amount, currency),
+                      style: GoogleFonts.jetBrainsMono(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.activeGreen,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                _buildPersonBadge(to, false),
+              ],
+            ),
+          ],
+        ),
+      );
+    }).toList();
+  }
+
+  static Widget _buildPersonBadge(String name, bool isPayer) {
+    final bgColor = isPayer
+        ? AppColors.activeRed.withValues(alpha: 0.08)
+        : AppColors.activeGreen.withValues(alpha: 0.08);
+    final textColor = isPayer ? AppColors.activeRed : AppColors.activeGreen;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CircleAvatar(
+          radius: 16,
+          backgroundColor: bgColor,
+          child: Text(
+            name.isNotEmpty ? name[0].toUpperCase() : '?',
+            style: GoogleFonts.workSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: textColor,
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.s8),
+        Flexible(
+          child: Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.workSans(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF374151),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  static Widget _buildFooter() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.account_balance_wallet_rounded,
+            size: 14, color: Colors.grey.shade400),
+        const SizedBox(width: AppSpacing.s6),
+        Text(
+          'Generated via Expense Tracker  \u2022  Shared Expenses Simplified',
+          style: GoogleFonts.workSans(
+            fontSize: 9.5,
+            color: Colors.grey.shade400,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.3,
+          ),
+        ),
+      ],
+    );
   }
 
   static String _formatAmount(double amount, String currency) {

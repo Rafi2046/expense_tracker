@@ -8,6 +8,9 @@ import 'package:expense_tracker/features/tours/widgets/add_expense_sheet.dart';
 import 'package:expense_tracker/features/tours/pages/settle_up_screen.dart';
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
 import 'package:expense_tracker/features/tours/utils/tour_export_service.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 const Color _bgColor = Color(0xFFF7F9FA);
 
@@ -58,9 +61,11 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        backgroundColor: Colors.white,
-        title: const Text('Members Required', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.r16)),
+        backgroundColor: AppColors.white,
+        title: const Text('Members Required',
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17)),
         content: const Text(
           'You need at least 2 members in the tour to add expenses or settle up.',
           style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
@@ -68,7 +73,8 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(color: Color(0xFF6B7280))),
+            child: const Text('Cancel',
+                style: TextStyle(color: Color(0xFF6B7280))),
           ),
           TextButton(
             onPressed: () {
@@ -76,11 +82,14 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => TourMemberManagementScreen(tourId: widget.tourId),
+                  builder: (_) =>
+                      TourMemberManagementScreen(tourId: widget.tourId),
                 ),
               );
             },
-            child: const Text('Add Members', style: TextStyle(color: Color(0xFF2EBD85), fontWeight: FontWeight.w600)),
+            child: const Text('Add Members',
+                style: TextStyle(
+                    color: AppColors.activeGreen, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -102,8 +111,13 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     if (tour == null) {
       return Scaffold(
         backgroundColor: _bgColor,
-        appBar: AppBar(backgroundColor: Colors.white, elevation: 0, leading: const BackButton()),
-        body: const Center(child: Text('Tour not found', style: TextStyle(color: Color(0xFF6B7280)))),
+        appBar: AppBar(
+            backgroundColor: AppColors.white,
+            elevation: 0,
+            leading: const BackButton()),
+        body: const Center(
+            child: Text('Tour not found',
+                style: TextStyle(color: Color(0xFF6B7280)))),
       );
     }
 
@@ -117,32 +131,48 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     return Scaffold(
       backgroundColor: _bgColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         elevation: 0,
+        scrolledUnderElevation: 0,
         leading: const BackButton(color: Color(0xFF1F2937)),
         title: Text(
           tour.name,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18, color: Color(0xFF1F2937)),
+          style: AppTextStyles.reportAppBarTitle,
         ),
         actions: [
           IconButton(
             onPressed: () => TourExportService.shareReport(context, widget.tourId),
-            icon: const Icon(Icons.ios_share_rounded, size: 20, color: Color(0xFF6B7280)),
+            icon: Container(
+              padding: const EdgeInsets.all(AppSpacing.p8),
+              decoration: BoxDecoration(
+                color: AppColors.selectionGreenBg,
+                borderRadius: BorderRadius.circular(AppSpacing.r10),
+              ),
+              child: const Icon(
+                Icons.ios_share_rounded,
+                size: 20,
+                color: AppColors.activeGreen,
+              ),
+            ),
             tooltip: 'Share Report',
           ),
+          const SizedBox(width: AppSpacing.s4),
           TextButton.icon(
             onPressed: () {
               if (_ensureMinimumMembers()) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => TourMemberManagementScreen(tourId: widget.tourId),
+                    builder: (_) =>
+                        TourMemberManagementScreen(tourId: widget.tourId),
                   ),
                 );
               }
             },
-            icon: const Icon(Icons.people_outline_rounded, size: 18, color: Color(0xFF6B7280)),
-            label: const Text('Members', style: TextStyle(fontSize: 13, color: Color(0xFF6B7280))),
+            icon: const Icon(Icons.people_outline_rounded,
+                size: 18, color: Color(0xFF6B7280)),
+            label: const Text('Members',
+                style: TextStyle(fontSize: 13, color: Color(0xFF6B7280))),
           ),
         ],
       ),
@@ -152,7 +182,8 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           _buildSummaryRow(totalSpent, totalOutstanding, tour.currency),
           if (participants.isNotEmpty) ...[
             const SizedBox(height: 24),
-            _buildMemberBalances(participants, netBalances, tour.currency, totalOutstanding),
+            _buildMemberBalances(
+                participants, netBalances, tour.currency, totalOutstanding),
           ],
           const SizedBox(height: 24),
           _buildExpensesHeader(expenses.length),
@@ -176,29 +207,38 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               );
             }
           },
-          backgroundColor: const Color(0xFF2EBD85),
-          icon: const Icon(Icons.add_rounded, color: Colors.white, size: 20),
-          label: const Text('Add Expense', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 14)),
+          backgroundColor: AppColors.activeGreen,
+          icon: const Icon(Icons.add_rounded,
+              color: AppColors.white, size: 20),
+          label: const Text('Add Expense',
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.white,
+                  fontSize: 14)),
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.r16)),
         ),
       ),
     );
   }
 
-  // ─── Summary Row ─────────────────────────────────────────────────────
-
-  Widget _buildSummaryRow(double totalSpent, double totalOutstanding, String currency) {
+  Widget _buildSummaryRow(
+      double totalSpent, double totalOutstanding, String currency) {
     final isSettled = totalOutstanding == 0;
     return Row(
       children: [
-        Expanded(child: _buildSummaryCard('Total spent', _formatAmount(totalSpent, currency), const Color(0xFF1F2937))),
+        Expanded(
+            child: _buildSummaryCard(
+                'Total spent',
+                _formatAmount(totalSpent, currency),
+                const Color(0xFF1F2937))),
         const SizedBox(width: 12),
         Expanded(
           child: _buildSummaryCard(
             isSettled ? 'All settled' : 'Outstanding',
             isSettled ? '✓' : _formatAmount(totalOutstanding, currency),
-            isSettled ? const Color(0xFF2EBD85) : const Color(0xFFDC3545),
+            isSettled ? AppColors.activeGreen : AppColors.activeRed,
           ),
         ),
       ],
@@ -207,45 +247,56 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
 
   Widget _buildSummaryCard(String label, String value, Color valueColor) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10, offset: const Offset(0, 2)),
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 10,
+              offset: const Offset(0, 2)),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF9CA3AF), fontWeight: FontWeight.w500)),
-          const SizedBox(height: 6),
+          Text(label,
+              style: AppTextStyles.summaryCardLabel
+                  .copyWith(color: const Color(0xFF9CA3AF))),
+          const SizedBox(height: AppSpacing.s6),
           Text(
             value,
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: valueColor),
+            style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                color: valueColor),
           ),
         ],
       ),
     );
   }
 
-  // ─── Member Balances ─────────────────────────────────────────────────
-
-  Widget _buildMemberBalances(List participants, Map<String, double> balances, String currency, double outstanding) {
+  Widget _buildMemberBalances(List participants, Map<String, double> balances,
+      String currency, double outstanding) {
     final allParticipants = participants.cast<TourParticipant>();
     final hasDebts = outstanding > 0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 2, bottom: 12),
-          child: Text('Balances', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF1F2937))),
+        Padding(
+          padding: const EdgeInsets.only(left: 2, bottom: 12),
+          child: Text('Balances',
+              style: AppTextStyles.reportTransactionTitle.copyWith(
+                color: const Color(0xFF1F2937),
+              )),
         ),
         ...allParticipants.asMap().entries.map(
-          (entry) => _buildMemberBalanceRow(entry.value, entry.key, allParticipants, balances, currency),
-        ),
+              (entry) => _buildMemberBalanceRow(
+                  entry.value, entry.key, allParticipants, balances, currency),
+            ),
         if (hasDebts) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           Center(
             child: TextButton(
               onPressed: () {
@@ -258,10 +309,8 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                   );
                 }
               },
-              child: const Text(
-                'Settle Up',
-                style: TextStyle(color: Color(0xFF2EBD85), fontWeight: FontWeight.w600, fontSize: 14),
-              ),
+              child: Text('Settle Up',
+                  style: AppTextStyles.viewAllText),
             ),
           ),
         ],
@@ -281,14 +330,18 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     final isSettled = balance == 0;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: AppSpacing.s8),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.p14, vertical: AppSpacing.p12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 6, offset: const Offset(0, 1)),
+            BoxShadow(
+                color: Colors.black.withValues(alpha: 0.06),
+                blurRadius: 6,
+                offset: const Offset(0, 1)),
           ],
         ),
         child: Row(
@@ -298,44 +351,61 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               backgroundColor: _avatarColor(index),
               child: Text(
                 p.name.isNotEmpty ? p.name[0].toUpperCase() : '?',
-                style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                    color: AppColors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSpacing.s12),
             Expanded(
-              child: Text(p.name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Color(0xFF1F2937))),
+              child: Text(p.name,
+                  style: AppTextStyles.reportTileTitle),
             ),
             if (isSettled)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.p10, vertical: AppSpacing.p4),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3F4F6),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
-                child: const Text('Settled', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color(0xFF9CA3AF))),
+                child: const Text('Settled',
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF9CA3AF))),
               )
             else if (isOwed)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.p10, vertical: AppSpacing.p4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE8F8F5),
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.selectionGreenBg,
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
                 child: Text(
                   'Gets back ${_formatAmount(balance, currency)}',
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF2EBD85)),
+                  style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.activeGreen),
                 ),
               )
             else
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.p10, vertical: AppSpacing.p4),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFEF2F2),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
                 child: Text(
                   'Owes ${_formatAmount(balance.abs(), currency)}',
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFFDC3545)),
+                  style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.activeRed),
                 ),
               ),
           ],
@@ -344,18 +414,19 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     );
   }
 
-  // ─── Expenses ────────────────────────────────────────────────────────
-
   Widget _buildExpensesHeader(int count) {
     return Padding(
       padding: const EdgeInsets.only(left: 2, bottom: 12),
       child: Row(
         children: [
-          const Text('Expenses', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF1F2937))),
-          const SizedBox(width: 8),
+          Text('Expenses',
+              style: AppTextStyles.reportTransactionTitle.copyWith(
+                color: const Color(0xFF1F2937),
+              )),
+          const SizedBox(width: AppSpacing.s8),
           Text(
             '$count ${count == 1 ? 'entry' : 'entries'}',
-            style: const TextStyle(fontSize: 13, color: Color(0xFF9CA3AF)),
+            style: AppTextStyles.reportTransactionSubtitle,
           ),
         ],
       ),
@@ -385,7 +456,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         final payerIdx = allParticipants.indexWhere((p) => p.id == expense.paidBy);
 
         return Padding(
-          padding: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.only(bottom: AppSpacing.s8),
           child: _ExpenseTile(
             expense: expense,
             payerName: payer.name,
@@ -414,19 +485,23 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
       child: Center(
         child: Column(
           children: [
-            Icon(Icons.receipt_long_outlined, size: 48, color: Colors.grey.shade300),
+            Icon(Icons.receipt_long_outlined,
+                size: 48, color: Colors.grey.shade300),
             const SizedBox(height: 14),
-            const Text('No expenses yet', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1F2937))),
+            const Text('No expenses yet',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF1F2937))),
             const SizedBox(height: 4),
-            const Text('Tap + to add the first expense', style: TextStyle(fontSize: 13, color: Color(0xFF9CA3AF))),
+            const Text('Tap + to add the first expense',
+                style: TextStyle(fontSize: 13, color: Color(0xFF9CA3AF))),
           ],
         ),
       ),
     );
   }
 }
-
-// ─── Expense Tile ───────────────────────────────────────────────────────
 
 class _ExpenseTile extends StatelessWidget {
   final TourExpense expense;
@@ -445,23 +520,31 @@ class _ExpenseTile extends StatelessWidget {
 
   String _splitLabel() {
     switch (expense.splitType) {
-      case 'equal': return 'Split equally among $includedCount';
-      case 'exact': return 'Split by exact amounts';
-      case 'percentage': return 'Split by percentages';
-      case 'exclusion': return 'Split among $includedCount (exclusions)';
-      default: return 'Split equally among $includedCount';
+      case 'equal':
+        return 'Split equally among $includedCount';
+      case 'exact':
+        return 'Split by exact amounts';
+      case 'percentage':
+        return 'Split by percentages';
+      case 'exclusion':
+        return 'Split among $includedCount (exclusions)';
+      default:
+        return 'Split equally among $includedCount';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(AppSpacing.p14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 6, offset: const Offset(0, 1)),
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 6,
+              offset: const Offset(0, 1)),
         ],
       ),
       child: Row(
@@ -471,10 +554,13 @@ class _ExpenseTile extends StatelessWidget {
             backgroundColor: avatarColor,
             child: Text(
               payerName.isNotEmpty ? payerName[0].toUpperCase() : '?',
-              style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                  color: AppColors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -483,22 +569,24 @@ class _ExpenseTile extends StatelessWidget {
                   expense.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Color(0xFF1F2937)),
+                  style: AppTextStyles.reportTileTitle,
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSpacing.s2),
                 Text(
-                  '${payerName.split(' ').first} · ${_splitLabel()}',
+                  '${payerName.split(' ').first} \u00B7 ${_splitLabel()}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12, color: Color(0xFF9CA3AF)),
+                  style: AppTextStyles.reportTransactionSubtitle,
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.s8),
           Text(
             formatAmount(expense.amount),
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Color(0xFF1F2937)),
+            style: AppTextStyles.cardValueGreen.copyWith(
+              color: const Color(0xFF1F2937),
+            ),
           ),
         ],
       ),
