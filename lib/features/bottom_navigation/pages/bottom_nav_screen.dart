@@ -19,6 +19,13 @@ class BottomNavScreen extends StatefulWidget {
 class _AppBottomNavState extends State<BottomNavScreen> {
   int _currentIndex = 0;
 
+  final List<GlobalKey<NavigatorState>> _navigatorKeys = [
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+  ];
+
   final List<Widget> _screens = const [
     DashboardScreen(),
     TourListScreen(),
@@ -39,7 +46,10 @@ class _AppBottomNavState extends State<BottomNavScreen> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        if (_currentIndex != 0) {
+        final currentNavigatorState = _navigatorKeys[_currentIndex].currentState;
+        if (currentNavigatorState != null && currentNavigatorState.canPop()) {
+          currentNavigatorState.pop();
+        } else if (_currentIndex != 0) {
           setState(() {
             _currentIndex = 0;
           });
@@ -55,7 +65,17 @@ class _AppBottomNavState extends State<BottomNavScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: IndexedStack(
           index: _currentIndex,
-          children: _screens,
+          children: List.generate(
+            _screens.length,
+            (index) => Navigator(
+              key: _navigatorKeys[index],
+              onGenerateRoute: (routeSettings) {
+                return MaterialPageRoute(
+                  builder: (context) => _screens[index],
+                );
+              },
+            ),
+          ),
         ),
 
         bottomNavigationBar: Container(

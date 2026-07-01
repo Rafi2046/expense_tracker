@@ -17,8 +17,7 @@ class ReportTile extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return InkWell(
-      onTap: () => Navigator.push(
-        context,
+      onTap: () => Navigator.of(context, rootNavigator: true).push(
         MaterialPageRoute(builder: (_) => item.destination),
       ),
       borderRadius: BorderRadius.circular(16),
