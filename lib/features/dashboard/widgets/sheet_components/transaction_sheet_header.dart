@@ -44,28 +44,6 @@ class TransactionSheetHeader extends StatelessWidget {
 
         Row(
           children: [
-            // ── Accent icon badge ──
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: accentColor.withValues(alpha: isDark ? 0.15 : 0.08),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: accentColor.withValues(alpha: isDark ? 0.25 : 0.15),
-                  width: 1,
-                ),
-              ),
-              child: Icon(
-                isIncome
-                    ? Symbols.south_west_rounded
-                    : Symbols.north_east_rounded,
-                color: accentColor,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 14),
-
             // ── Title + Subtitle ──
             Expanded(
               child: Column(
