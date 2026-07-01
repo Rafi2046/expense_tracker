@@ -50,6 +50,7 @@ class DashboardScreen extends StatelessWidget {
     final String currentMonthName = DateFormat('MMMM').format(DateTime.now());
     final isLoading = txProvider.isLoading;
 
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: HomepageAppbarWidget(
