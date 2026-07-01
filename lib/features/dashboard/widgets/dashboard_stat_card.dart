@@ -79,7 +79,7 @@ class DashboardStatCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12.0,
-                  vertical: 6.0,
+                  vertical: 10.0,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,38 +103,40 @@ class DashboardStatCard extends StatelessWidget {
 
                     // Trend / Status indicator if present
                     if ((isTrend && percentageText != null) ||
-                        (!isTrend && statusText != null))
-                      const SizedBox(height: 2),
-                    if (isTrend && percentageText != null)
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            isPositive
-                                ? Symbols.trending_up
-                                : Symbols.trending_down,
-                            color: isPositive
-                                ? AppColors.activeGreen
-                                : AppColors.activeRed,
-                            size: 13,
-                          ),
-                          const SizedBox(width: 3),
-                          Flexible(
-                            child: Text(
-                              percentageText!,
-                              style:
-                                  (isPositive
-                                          ? AppTextStyles.cardTrendGreen
-                                          : AppTextStyles.cardTrendRed)
-                                      .copyWith(fontSize: 10.5),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                        (!isTrend && statusText != null)) ...[
+                      const SizedBox(height: 4),
+                      if (isTrend && percentageText != null)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              isPositive
+                                  ? Symbols.trending_up
+                                  : Symbols.trending_down,
+                              color: isPositive
+                                  ? AppColors.activeGreen
+                                  : AppColors.activeRed,
+                              size: 13,
                             ),
-                          ),
-                        ],
-                      )
-                    else if (!isTrend && statusText != null)
-                      statusText!,
+                            const SizedBox(width: 3),
+                            Flexible(
+                              child: Text(
+                                percentageText!,
+                                style:
+                                    (isPositive
+                                            ? AppTextStyles.cardTrendGreen
+                                            : AppTextStyles.cardTrendRed)
+                                        .copyWith(fontSize: 10.5),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        )
+                      else if (!isTrend && statusText != null)
+                        statusText!,
+                    ] else
+                      const SizedBox(height: 19),
                   ],
                 ),
               ),
