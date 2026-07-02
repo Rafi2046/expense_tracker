@@ -105,9 +105,11 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
 
     return Padding(
       padding: EdgeInsets.only(bottom: viewInsets),
-      child: Container(
+      child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: maxHeight),
-        decoration: BoxDecoration(
+        child: Container(
+          clipBehavior: Clip.hardEdge,
+          decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(AppSpacing.br20),
@@ -302,6 +304,7 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

@@ -46,10 +46,16 @@ class AddTransactionSheet extends StatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => AddTransactionSheet(
-        isIncome: isIncome,
-        transaction: transaction,
-        enableBalanceWarning: enableBalanceWarning,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.85,
+        minChildSize: 0.5,
+        maxChildSize: 0.85,
+        expand: true,
+        builder: (context, scrollController) => AddTransactionSheet(
+          isIncome: isIncome,
+          transaction: transaction,
+          enableBalanceWarning: enableBalanceWarning,
+        ),
       ),
     );
   }
@@ -288,65 +294,51 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         ? theme.primaryColor
         : AppColors.activeRed;
 
-    final double keyboardPadding = MediaQuery.of(context).viewInsets.bottom;
-    final double systemBottomPadding = MediaQuery.of(context).padding.bottom;
+    final double bottomInset = MediaQuery.of(context).padding.bottom;
 
-    final double availableHeight = MediaQuery.of(context).size.height - keyboardPadding;
-    final double maxHeight = availableHeight * 0.82;
-
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: keyboardPadding,
+    return Container(
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(AppSpacing.br20),
+          topRight: Radius.circular(AppSpacing.br20),
+        ),
       ),
-      child: Container(
-        constraints: BoxConstraints(
-          maxHeight: maxHeight,
-        ),
-        decoration: BoxDecoration(
-          color: theme.cardColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(AppSpacing.br20),
-            topRight: Radius.circular(AppSpacing.br20),
-          ),
-        ),
-        padding: EdgeInsets.fromLTRB(
-          AppSpacing.p24,
-          AppSpacing.p20,
-          AppSpacing.p24,
-          systemBottomPadding + 20,
-        ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TransactionSheetHeader(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(AppSpacing.p24, AppSpacing.p20, AppSpacing.p24, 0),
+              child: TransactionSheetHeader(
                 isEditing: widget.isEditing,
                 isIncome: widget.isIncome,
                 onClose: () => Navigator.pop(context),
               ),
-              const SizedBox(height: 20),
-              Flexible(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TransactionAmountInput(
-                        controller: _amountController,
-                        themeColor: themeColor,
-                        currencySymbol: context.currencySymbol,
-                      ),
-                      const SizedBox(height: 20),
-                      CategorySelector(
-                        selectedCategory: _selectedCategory,
-                        themeColor: themeColor,
-                        isIncome: widget.isIncome,
-                        onCategorySelected: (cat) =>
-                            setState(() => _selectedCategory = cat),
-                      ),
-                      const SizedBox(height: AppSpacing.h12),
-                      DateSelector(
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TransactionAmountInput(
+                      controller: _amountController,
+                      themeColor: themeColor,
+                      currencySymbol: context.currencySymbol,
+                    ),
+                    const SizedBox(height: 20),
+                    CategorySelector(
+                      selectedCategory: _selectedCategory,
+                      themeColor: themeColor,
+                      isIncome: widget.isIncome,
+                      onCategorySelected: (cat) =>
+                          setState(() => _selectedCategory = cat),
+                    ),
+                    const SizedBox(height: AppSpacing.h12),
+                    DateSelector(
                         dateText: DateFormat(
                           'EEEE, MMM d, yyyy',
                         ).format(_selectedDate),
@@ -387,17 +379,19 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 ),
               ),
               const SizedBox(height: 16),
-              TransactionSaveButton(
+              Padding(
+                padding: EdgeInsets.only(bottom: bottomInset + 16),
+                child: TransactionSaveButton(
                 onPressed: () async { await _save(context); },
                 themeColor: themeColor,
                 title: widget.isEditing
                     ? (widget.isIncome ? 'Update Income' : 'Update Expense')
                     : (widget.isIncome ? 'Save Income' : 'Save Expense'),
               ),
+              ),
             ],
           ),
         ),
-      ),
     );
   }
 
