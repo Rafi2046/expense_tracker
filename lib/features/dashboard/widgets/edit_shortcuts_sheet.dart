@@ -82,11 +82,11 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
         child: Container(
           color: theme.colorScheme.surface,
           child: Padding(
-            padding: EdgeInsets.only(
-              left: 16,
-              right: 16,
-              top: 8,
-              bottom: mediaQuery.viewInsets.bottom + 16,
+            padding: EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              mediaQuery.viewInsets.bottom + mediaQuery.padding.bottom + 16,
             ),
             child: Column(
         mainAxisSize: MainAxisSize.min,
