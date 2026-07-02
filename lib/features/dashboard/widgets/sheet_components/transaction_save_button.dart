@@ -69,14 +69,14 @@ class _TransactionSaveButtonState extends State<TransactionSaveButton>
         onTapCancel: () => _controller.reverse(),
         child: Container(
           width: double.infinity,
-          height: 56,
+          height: 48,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [gradientStart, gradientEnd],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

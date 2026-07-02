@@ -27,7 +27,8 @@ class AddExpenseSheet extends StatefulWidget {
     required this.currency,
   });
 
-  static Future<void> show(BuildContext context, {
+  static Future<void> show(
+    BuildContext context, {
     required String tourId,
     required List<TourParticipant> participants,
     required String currency,
@@ -65,13 +66,26 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   XFile? _receiptImage;
 
   static const _categories = [
-    'Food', 'Transport', 'Accommodation', 'Activities',
-    'Shopping', 'Drinks', 'Groceries', 'Fuel', 'Tickets', 'Other',
+    'Food',
+    'Transport',
+    'Accommodation',
+    'Activities',
+    'Shopping',
+    'Drinks',
+    'Groceries',
+    'Fuel',
+    'Tickets',
+    'Other',
   ];
   static const _avatarColors = [
-    Color(0xFF6366F1), Color(0xFFEC4899), Color(0xFF10B981),
-    Color(0xFFF59E0B), Color(0xFF06B6D4), Color(0xFF8B5CF6),
-    Color(0xFFEF4444), Color(0xFF14B8A6),
+    Color(0xFF6366F1),
+    Color(0xFFEC4899),
+    Color(0xFF10B981),
+    Color(0xFFF59E0B),
+    Color(0xFF06B6D4),
+    Color(0xFF8B5CF6),
+    Color(0xFFEF4444),
+    Color(0xFF14B8A6),
   ];
 
   @override
@@ -101,18 +115,33 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   String _currencySymbol() {
     const symbols = {
-      'BDT': '৳', 'USD': r'$', 'EUR': '€', 'GBP': '£',
-      'INR': '₹', 'JPY': '¥', 'AED': 'د.إ', 'CAD': r'$',
+      'BDT': '৳',
+      'USD': r'$',
+      'EUR': '€',
+      'GBP': '£',
+      'INR': '₹',
+      'JPY': '¥',
+      'AED': 'د.إ',
+      'CAD': r'$',
     };
     return symbols[widget.currency] ?? r'$';
   }
 
-  double get _parsedAmount => double.tryParse(_amountController.text.trim()) ?? 0;
+  double get _parsedAmount =>
+      double.tryParse(_amountController.text.trim()) ?? 0;
 
-  int get _includedCount => widget.participants.where((p) => !_excludedIds.contains(p.id)).length;
+  int get _includedCount =>
+      widget.participants.where((p) => !_excludedIds.contains(p.id)).length;
 
   bool _hadNotJoinedYet(TourParticipant p) {
-    final endOfDay = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, 23, 59, 59);
+    final endOfDay = DateTime(
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+      23,
+      59,
+      59,
+    );
     return p.joinedAt.isAfter(endOfDay);
   }
 
@@ -143,12 +172,16 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         return '$_sym${perPerson.toStringAsFixed(perPerson == perPerson.roundToDouble() ? 0 : 2)}';
       case 'percentage':
         if (excluded) return null;
-        final pct = double.tryParse(_customValues[participantId]?.text.trim() ?? '') ?? 0;
+        final pct =
+            double.tryParse(_customValues[participantId]?.text.trim() ?? '') ??
+            0;
         final share = amount * pct / 100;
         return '$_sym${share.toStringAsFixed(share == share.roundToDouble() ? 0 : 2)}';
       case 'exact':
         if (excluded) return null;
-        final val = double.tryParse(_customValues[participantId]?.text.trim() ?? '');
+        final val = double.tryParse(
+          _customValues[participantId]?.text.trim() ?? '',
+        );
         if (val == null) return null;
         return '$_sym${val.toStringAsFixed(val == val.roundToDouble() ? 0 : 2)}';
       default:
@@ -165,15 +198,24 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     );
     if (picked == null) return;
     setState(() {
-      _selectedDate = DateTime(picked.year, picked.month, picked.day,
-          _selectedDate.hour, _selectedDate.minute);
+      _selectedDate = DateTime(
+        picked.year,
+        picked.month,
+        picked.day,
+        _selectedDate.hour,
+        _selectedDate.minute,
+      );
       _applyDateBasedDefaults();
       _validationError = null;
     });
   }
 
   Future<void> _pickReceipt(ImageSource source) async {
-    final file = await _picker.pickImage(source: source, maxWidth: 1200, imageQuality: 80);
+    final file = await _picker.pickImage(
+      source: source,
+      maxWidth: 1200,
+      imageQuality: 80,
+    );
     if (file != null) setState(() => _receiptImage = file);
   }
 
@@ -190,19 +232,42 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 36, height: 4, decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
+            Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
             const SizedBox(height: 20),
-            const Text('Attach Receipt', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: _dark)),
+            const Text(
+              'Attach Receipt',
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: _dark,
+              ),
+            ),
             const SizedBox(height: 20),
             ListTile(
               leading: const Icon(Icons.camera_alt_rounded, color: _green),
               title: const Text('Take Photo', style: TextStyle(fontSize: 15)),
-              onTap: () { Navigator.pop(ctx); _pickReceipt(ImageSource.camera); },
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickReceipt(ImageSource.camera);
+              },
             ),
             ListTile(
               leading: const Icon(Icons.photo_library_rounded, color: _green),
-              title: const Text('Choose from Gallery', style: TextStyle(fontSize: 15)),
-              onTap: () { Navigator.pop(ctx); _pickReceipt(ImageSource.gallery); },
+              title: const Text(
+                'Choose from Gallery',
+                style: TextStyle(fontSize: 15),
+              ),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickReceipt(ImageSource.gallery);
+              },
             ),
             const SizedBox(height: 8),
           ],
@@ -212,9 +277,23 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   }
 
   String _formatDate(DateTime d) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     final today = DateTime.now();
-    final isToday = d.year == today.year && d.month == today.month && d.day == today.day;
+    final isToday =
+        d.year == today.year && d.month == today.month && d.day == today.day;
     if (isToday) return 'Today';
     return '${d.day} ${months[d.month - 1]} ${d.year}';
   }
@@ -229,9 +308,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       final total = widget.participants
           .where((p) => !_excludedIds.contains(p.id))
           .fold(0.0, (s, p) {
-        final v = double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
-        return s + v;
-      });
+            final v =
+                double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
+            return s + v;
+          });
       if ((total * 100).round() != (amount * 100).round()) {
         return 'Exact amounts must total $_sym${amount.toStringAsFixed(amount == amount.roundToDouble() ? 0 : 2)}';
       }
@@ -241,9 +321,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       final total = widget.participants
           .where((p) => !_excludedIds.contains(p.id))
           .fold(0.0, (s, p) {
-        final v = double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
-        return s + v;
-      });
+            final v =
+                double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
+            return s + v;
+          });
       if ((total * 100).round() != 10000) return 'Percentages must total 100%';
     }
 
@@ -268,7 +349,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       paidBy: _paidById,
       splitType: _splitType,
       category: _selectedCategory,
-      note: _noteController.text.trim().isEmpty ? null : _noteController.text.trim(),
+      note: _noteController.text.trim().isEmpty
+          ? null
+          : _noteController.text.trim(),
       date: _selectedDate,
       receiptPath: _receiptImage?.path,
     );
@@ -332,7 +415,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 const SizedBox(height: 8),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(_validationError!, style: const TextStyle(color: _red, fontSize: 12)),
+                  child: Text(
+                    _validationError!,
+                    style: const TextStyle(color: _red, fontSize: 12),
+                  ),
                 ),
               ],
               const SizedBox(height: 8),
@@ -351,7 +437,16 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     return const Padding(
       padding: EdgeInsets.only(top: 10),
       child: Center(
-        child: SizedBox(width: 36, height: 4, child: DecoratedBox(decoration: BoxDecoration(color: Color(0xFFD1D5DB), borderRadius: BorderRadius.all(Radius.circular(2))))),
+        child: SizedBox(
+          width: 36,
+          height: 4,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: Color(0xFFD1D5DB),
+              borderRadius: BorderRadius.all(Radius.circular(2)),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -366,13 +461,24 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           TextField(
             controller: _amountController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d.]'))],
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
+            ],
             textAlign: TextAlign.center,
             onChanged: (_) => setState(() => _validationError = null),
-            style: const TextStyle(fontSize: 40, fontWeight: FontWeight.w700, color: _dark, height: 1.2),
+            style: const TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.w700,
+              color: _dark,
+              height: 1.2,
+            ),
             decoration: InputDecoration(
               hintText: '${_sym}0',
-              hintStyle: TextStyle(fontSize: 40, fontWeight: FontWeight.w300, color: Colors.grey.shade300),
+              hintStyle: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.w300,
+                color: Colors.grey.shade300,
+              ),
               border: InputBorder.none,
               filled: false,
               isDense: true,
@@ -412,18 +518,42 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(width: 36, height: 4, margin: const EdgeInsets.only(bottom: 16, left: 0),
-              decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
-            const Text('Category', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: _dark)),
+            Container(
+              width: 36,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 16, left: 0),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const Text(
+              'Category',
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: _dark,
+              ),
+            ),
             const SizedBox(height: 12),
             Wrap(
-              spacing: 8, runSpacing: 8,
-              children: _categories.map((c) => ActionChip(
-                label: Text(c, style: const TextStyle(fontSize: 13)),
-                backgroundColor: _selectedCategory == c ? _greenLight : _bgCard,
-                side: BorderSide.none,
-                onPressed: () { setState(() => _selectedCategory = c); Navigator.pop(ctx); },
-              )).toList(),
+              spacing: 8,
+              runSpacing: 8,
+              children: _categories
+                  .map(
+                    (c) => ActionChip(
+                      label: Text(c, style: const TextStyle(fontSize: 13)),
+                      backgroundColor: _selectedCategory == c
+                          ? _greenLight
+                          : _bgCard,
+                      side: BorderSide.none,
+                      onPressed: () {
+                        setState(() => _selectedCategory = c);
+                        Navigator.pop(ctx);
+                      },
+                    ),
+                  )
+                  .toList(),
             ),
           ],
         ),
@@ -447,7 +577,14 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           children: [
             Icon(icon, size: 14, color: _muted),
             const SizedBox(width: 5),
-            Text(displayText, style: const TextStyle(fontSize: 12, color: _muted, fontWeight: FontWeight.w500)),
+            Text(
+              displayText,
+              style: const TextStyle(
+                fontSize: 12,
+                color: _muted,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
       ),
@@ -463,10 +600,18 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         controller: _titleController,
         textAlign: TextAlign.center,
         onChanged: (_) => setState(() => _validationError = null),
-        style: const TextStyle(fontSize: 16, color: _dark, fontWeight: FontWeight.w500),
+        style: const TextStyle(
+          fontSize: 16,
+          color: _dark,
+          fontWeight: FontWeight.w500,
+        ),
         decoration: const InputDecoration(
           hintText: 'What was the expense for?',
-          hintStyle: TextStyle(fontSize: 16, color: Color(0xFFD1D5DB), fontWeight: FontWeight.w400),
+          hintStyle: TextStyle(
+            fontSize: 16,
+            color: Color(0xFFD1D5DB),
+            fontWeight: FontWeight.w400,
+          ),
           border: InputBorder.none,
           isDense: true,
           contentPadding: EdgeInsets.zero,
@@ -482,9 +627,24 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
-          _buildMetaChip(Icons.person_outline_rounded, widget.participants.firstWhere((p) => p.id == _paidById, orElse: () => widget.participants.first).name.split(' ').first, _pickPayer),
+          _buildMetaChip(
+            Icons.person_outline_rounded,
+            widget.participants
+                .firstWhere(
+                  (p) => p.id == _paidById,
+                  orElse: () => widget.participants.first,
+                )
+                .name
+                .split(' ')
+                .first,
+            _pickPayer,
+          ),
           const SizedBox(width: 8),
-          _buildMetaChip(Icons.date_range_rounded, _formatDate(_selectedDate), _pickDate),
+          _buildMetaChip(
+            Icons.date_range_rounded,
+            _formatDate(_selectedDate),
+            _pickDate,
+          ),
         ],
       ),
     );
@@ -494,7 +654,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     final selected = await showMenu<String>(
       context: context,
       position: const RelativeRect.fromLTRB(100, 300, 100, 300),
-      items: widget.participants.map((p) => PopupMenuItem(value: p.id, child: Text(p.name))).toList(),
+      items: widget.participants
+          .map((p) => PopupMenuItem(value: p.id, child: Text(p.name)))
+          .toList(),
     );
     if (selected != null) setState(() => _paidById = selected);
   }
@@ -504,13 +666,23 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(color: _bgCard, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+          color: _bgCard,
+          borderRadius: BorderRadius.circular(8),
+        ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, size: 14, color: _dark),
             const SizedBox(width: 4),
-            Text(text, style: const TextStyle(fontSize: 12, color: _dark, fontWeight: FontWeight.w500)),
+            Text(
+              text,
+              style: const TextStyle(
+                fontSize: 12,
+                color: _dark,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
       ),
@@ -536,14 +708,29 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300, width: 1.5, strokeAlign: BorderSide.strokeAlignInside),
+          border: Border.all(
+            color: Colors.grey.shade300,
+            width: 1.5,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.receipt_long_outlined, size: 18, color: Colors.grey.shade400),
+            Icon(
+              Icons.receipt_long_outlined,
+              size: 18,
+              color: Colors.grey.shade400,
+            ),
             const SizedBox(width: 8),
-            Text('Add Receipt', style: TextStyle(fontSize: 13, color: Colors.grey.shade500, fontWeight: FontWeight.w500)),
+            Text(
+              'Add Receipt',
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey.shade500,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
       ),
@@ -564,13 +751,19 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.file(File(_receiptImage!.path), width: 44, height: 44, fit: BoxFit.cover),
+              child: Image.file(
+                File(_receiptImage!.path),
+                width: 44,
+                height: 44,
+                fit: BoxFit.cover,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 _receiptImage!.name,
-                maxLines: 1, overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 13, color: _dark),
               ),
             ),
@@ -578,7 +771,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               onTap: () => setState(() => _receiptImage = null),
               child: Container(
                 padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(color: _redLight, shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                  color: _redLight,
+                  shape: BoxShape.circle,
+                ),
                 child: const Icon(Icons.close_rounded, size: 14, color: _red),
               ),
             ),
@@ -598,14 +794,28 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         children: [
           const Padding(
             padding: EdgeInsets.only(left: 2, bottom: 10),
-            child: Text('Paid by', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: _muted, letterSpacing: 0.3)),
+            child: Text(
+              'Paid by',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: _muted,
+                letterSpacing: 0.3,
+              ),
+            ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
               color: _bgCard,
               borderRadius: BorderRadius.circular(14),
-              boxShadow: const [BoxShadow(color: Color(0x08000000), blurRadius: 6, offset: Offset(0, 1))],
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x08000000),
+                  blurRadius: 6,
+                  offset: Offset(0, 1),
+                ),
+              ],
             ),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -614,7 +824,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   final selected = p.id == _paidById;
                   final idx = widget.participants.indexOf(p);
                   return Padding(
-                    padding: EdgeInsets.only(right: idx < widget.participants.length - 1 ? 8 : 0),
+                    padding: EdgeInsets.only(
+                      right: idx < widget.participants.length - 1 ? 8 : 0,
+                    ),
                     child: _buildPayerAvatar(p, selected, idx),
                   );
                 }).toList(),
@@ -636,7 +848,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         decoration: BoxDecoration(
           color: selected ? color.withValues(alpha: 0.12) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: selected ? color : Colors.transparent, width: 1.5),
+          border: Border.all(
+            color: selected ? color : Colors.transparent,
+            width: 1.5,
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -646,12 +861,23 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               backgroundColor: color,
               child: Text(
                 p.name.isNotEmpty ? p.name[0].toUpperCase() : '?',
-                style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             if (selected) ...[
               const SizedBox(width: 6),
-              Text(p.name.split(' ').first, style: const TextStyle(fontSize: 12, color: _dark, fontWeight: FontWeight.w600)),
+              Text(
+                p.name.split(' ').first,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: _dark,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               const SizedBox(width: 4),
               const Icon(Icons.check_circle_rounded, size: 14, color: _green),
             ],
@@ -671,14 +897,28 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         children: [
           const Padding(
             padding: EdgeInsets.only(left: 2, bottom: 10),
-            child: Text('Split', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: _muted, letterSpacing: 0.3)),
+            child: Text(
+              'Split',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: _muted,
+                letterSpacing: 0.3,
+              ),
+            ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
             decoration: BoxDecoration(
               color: _bgCard,
               borderRadius: BorderRadius.circular(14),
-              boxShadow: const [BoxShadow(color: Color(0x08000000), blurRadius: 6, offset: Offset(0, 1))],
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x08000000),
+                  blurRadius: 6,
+                  offset: Offset(0, 1),
+                ),
+              ],
             ),
             child: Column(
               children: [
@@ -718,7 +958,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 decoration: BoxDecoration(
                   color: active ? _green : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: active ? _green : const Color(0xFFE5E7EB), width: 1),
+                  border: Border.all(
+                    color: active ? _green : const Color(0xFFE5E7EB),
+                    width: 1,
+                  ),
                 ),
                 child: Center(
                   child: Text(
@@ -785,22 +1028,43 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               child: Row(
                 children: [
                   SizedBox(
-                    width: 24, height: 24,
+                    width: 24,
+                    height: 24,
                     child: Checkbox(
                       value: !excluded,
                       activeColor: _green,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                      side: WidgetStateBorderSide.resolveWith((_) => BorderSide(color: excluded ? Colors.grey.shade300 : _green)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      side: WidgetStateBorderSide.resolveWith(
+                        (_) => BorderSide(
+                          color: excluded ? Colors.grey.shade300 : _green,
+                        ),
+                      ),
                       onChanged: (v) => setState(() {
-                        if (v == true) { _excludedIds.remove(p.id); } else { _excludedIds.add(p.id); }
+                        if (v == true) {
+                          _excludedIds.remove(p.id);
+                        } else {
+                          _excludedIds.add(p.id);
+                        }
                       }),
                     ),
                   ),
                   const SizedBox(width: 8),
                   CircleAvatar(
                     radius: 14,
-                    backgroundColor: excluded ? Colors.grey.shade300 : _avatarColors[widget.participants.indexOf(p) % _avatarColors.length],
-                    child: Text(p.name[0].toUpperCase(), style: TextStyle(color: excluded ? Colors.grey.shade500 : Colors.white, fontSize: 10, fontWeight: FontWeight.w600)),
+                    backgroundColor: excluded
+                        ? Colors.grey.shade300
+                        : _avatarColors[widget.participants.indexOf(p) %
+                              _avatarColors.length],
+                    child: Text(
+                      p.name[0].toUpperCase(),
+                      style: TextStyle(
+                        color: excluded ? Colors.grey.shade500 : Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -810,10 +1074,20 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       children: [
                         Text(
                           p.name,
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: excluded ? _muted : _dark),
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: excluded ? _muted : _dark,
+                          ),
                         ),
                         if (_hadNotJoinedYet(p))
-                          Text('Joined later', style: TextStyle(fontSize: 10, color: excluded ? Colors.grey.shade400 : _muted)),
+                          Text(
+                            'Joined later',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: excluded ? Colors.grey.shade400 : _muted,
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -851,40 +1125,74 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 children: [
                   CircleAvatar(
                     radius: 14,
-                    backgroundColor: _avatarColors[widget.participants.indexOf(p) % _avatarColors.length],
-                    child: Text(p.name[0].toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600)),
+                    backgroundColor:
+                        _avatarColors[widget.participants.indexOf(p) %
+                            _avatarColors.length],
+                    child: Text(
+                      p.name[0].toUpperCase(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       p.name,
-                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: _dark),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: _dark,
+                      ),
                     ),
                   ),
                   if (preview != null) ...[
-                    Text(preview, style: const TextStyle(fontSize: 12, color: _muted, fontWeight: FontWeight.w500)),
+                    Text(
+                      preview,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: _muted,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     const SizedBox(width: 8),
                   ],
                   SizedBox(
                     width: 80,
                     child: TextField(
                       controller: _customValues[p.id],
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d.]'))],
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
+                      ],
                       textAlign: TextAlign.right,
                       onChanged: (_) => setState(() => _validationError = null),
-                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: _dark),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: _dark,
+                      ),
                       decoration: InputDecoration(
                         hintText: suffix == '%' ? '0' : '0',
                         suffixText: suffix,
-                        suffixStyle: const TextStyle(fontSize: 12, color: _muted),
+                        suffixStyle: const TextStyle(
+                          fontSize: 12,
+                          color: _muted,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide.none,
                         ),
                         filled: true,
                         fillColor: _bgCard,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 6,
+                        ),
                         isDense: true,
                       ),
                     ),
@@ -934,17 +1242,33 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SizedBox(
         width: double.infinity,
-        height: 50,
+        height: 45,
         child: FilledButton(
           onPressed: _isSaving ? null : _save,
           style: FilledButton.styleFrom(
             backgroundColor: _green,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
             elevation: 0,
           ),
           child: _isSaving
-              ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-              : const Text('Save Expense', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white)),
+              ? const SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : const Text(
+                  'Save Expense',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
         ),
       ),
     );
