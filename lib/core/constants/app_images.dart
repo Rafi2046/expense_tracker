@@ -25,6 +25,9 @@ class AppImages {
   static const String pendingPayments = 'assets/app_icons/pending_payments.png';
   static const String editIcon= 'assets/app_icons/edit_icon.webp';
 
+  //tour
+  static const String tour= 'assets/app_icons/tour .webp';
+
 
 
 // Ledger

@@ -44,6 +44,7 @@ class SelectCategorySheet extends StatefulWidget {
 class _SelectCategorySheetState extends State<SelectCategorySheet> {
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
+  bool _isHidden = false;
 
   @override
   void dispose() {
@@ -54,9 +55,10 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
   void _showAddNewCategoryDialog(
     BuildContext context,
     TransactionProvider provider,
-  ) {
+  ) async {
+    setState(() => _isHidden = true);
     final textController = TextEditingController();
-    showDialog(
+    await showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(
@@ -139,6 +141,9 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
         ],
       ),
     );
+    if (mounted) {
+      setState(() => _isHidden = false);
+    }
   }
 
   void _showRenameDialog(
@@ -146,11 +151,12 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
     TransactionProvider provider,
     String currentName,
     bool isIncome,
-  ) {
+  ) async {
+    setState(() => _isHidden = true);
     final controller = TextEditingController(text: currentName);
     final themeColor = isIncome ? AppColors.activeGreen : AppColors.activeRed;
 
-    showDialog(
+    await showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(
@@ -228,6 +234,9 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
         ],
       ),
     );
+    if (mounted) {
+      setState(() => _isHidden = false);
+    }
   }
 
   @override
@@ -247,6 +256,20 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
 
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
+    if (_isHidden) {
+      return Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.transparent,
+          ),
+          child: const SizedBox.shrink(),
+        ),
+      );
+    }
 
     return Padding(
       padding: EdgeInsets.only(

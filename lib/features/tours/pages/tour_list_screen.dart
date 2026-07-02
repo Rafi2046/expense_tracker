@@ -9,6 +9,7 @@ import 'package:expense_tracker/core/utils/database_helper.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_card.dart';
 import 'package:expense_tracker/features/tours/pages/tour_dashboard_screen.dart';
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
@@ -346,18 +347,14 @@ class _TourListScreenState extends State<TourListScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: isDark
-                    ? AppColors.white.withValues(alpha: 0.05)
-                    : const Color(0xFF2EBD85).withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
+            Image.asset(
+              AppImages.tour,
+              width: 200,
+              height: 200,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) => Icon(
                 Icons.explore_rounded,
-                size: 44,
+                size: 150,
                 color: isDark
                     ? AppColors.white.withValues(alpha: 0.3)
                     : AppColors.activeGreen,
