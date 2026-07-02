@@ -96,8 +96,92 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     );
   }
 
+  void _confirmDeleteTour(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.r16)),
+        backgroundColor: AppColors.white,
+        title: const Text('Delete Tour',
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17)),
+        content: const Text(
+          'This action cannot be undone.',
+          style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel',
+                style: TextStyle(color: Color(0xFF6B7280))),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<TourProvider>().deleteTour(widget.tourId);
+              Navigator.pop(context);
+            },
+            child: const Text('Delete',
+                style: TextStyle(
+                    color: AppColors.activeRed, fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditTourDialog(BuildContext context) {
+    final tour = context.read<TourProvider>().selectedTour;
+    if (tour == null) return;
+    final controller = TextEditingController(text: tour.name);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.r16)),
+        backgroundColor: AppColors.white,
+        title: const Text('Edit Tour',
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17)),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText: 'Tour name',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.r10),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.p12, vertical: AppSpacing.p12),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel',
+                style: TextStyle(color: Color(0xFF6B7280))),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              if (controller.text.trim().isNotEmpty) {
+                context
+                    .read<TourProvider>()
+                    .updateTour(tour.copyWith(name: controller.text.trim()));
+              }
+            },
+            child: const Text('Save',
+                style: TextStyle(
+                    color: AppColors.activeGreen,
+                    fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final provider = context.watch<TourProvider>();
     final tour = provider.selectedTour;
     final double bottomInset = MediaQuery.of(context).padding.bottom;
@@ -158,22 +242,55 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
             tooltip: 'Share Report',
           ),
           const SizedBox(width: AppSpacing.s4),
-          TextButton.icon(
-            onPressed: () {
-              if (_ensureMinimumMembers()) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        TourMemberManagementScreen(tourId: widget.tourId),
-                  ),
-                );
+          PopupMenuButton<String>(
+            offset: const Offset(0, 40),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.r10),
+            ),
+            onSelected: (value) {
+              if (value == 'edit') {
+                _showEditTourDialog(context);
+              } else if (value == 'delete') {
+                _confirmDeleteTour(context);
               }
             },
-            icon: const Icon(Icons.people_outline_rounded,
-                size: 18, color: Color(0xFF6B7280)),
-            label: const Text('Members',
-                style: TextStyle(fontSize: 13, color: Color(0xFF6B7280))),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'edit',
+                child: Row(
+                  children: [
+                    Icon(Icons.edit_outlined, size: 18, color: AppColors.activeGreen),
+                    const SizedBox(width: AppSpacing.s8),
+                    const Text('Edit Tour'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'delete',
+                child: Row(
+                  children: [
+                    Icon(Icons.delete_outline_rounded, size: 18, color: AppColors.activeRed),
+                    const SizedBox(width: AppSpacing.s8),
+                    const Text('Delete Tour',
+                        style: TextStyle(color: AppColors.activeRed)),
+                  ],
+                ),
+              ),
+            ],
+            child: Container(
+              padding: const EdgeInsets.all(AppSpacing.p8),
+              decoration: BoxDecoration(
+                color: theme.brightness == Brightness.dark
+                    ? Colors.grey.shade800
+                    : const Color(0xFFF3F4F6),
+                borderRadius: BorderRadius.circular(AppSpacing.r10),
+              ),
+              child: Icon(
+                Icons.more_horiz_rounded,
+                size: 20,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
           ),
         ],
       ),

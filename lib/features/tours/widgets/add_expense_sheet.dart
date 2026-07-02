@@ -56,6 +56,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   String _paidById = '';
   String _splitType = 'equal';
   final Set<String> _excludedIds = {};
+  final Set<String> _manuallyEditedMembers = {};
+  final Set<String> _manuallyEditedPercentMembers = {};
+  bool _isDistributing = false;
   bool _isSaving = false;
   String? _validationError;
   DateTime _selectedDate = DateTime.now();
@@ -95,6 +98,11 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       _customValues[p.id] = TextEditingController();
     }
     _applyDateBasedDefaults();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_splitType == 'exact' && _parsedAmount > 0) {
+        _resetExactSplit();
+      }
+    });
   }
 
   @override
@@ -134,6 +142,135 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   List<TourParticipant> get _lateJoiners =>
       widget.participants.where(_hadNotJoinedYet).toList();
 
+  double get _percentageTotal {
+    if (_splitType != 'percentage') return 100;
+    double total = 0;
+    for (final p in widget.participants) {
+      if (!_excludedIds.contains(p.id)) {
+        total += double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
+      }
+    }
+    return total;
+  }
+
+  bool get _exactAmountsExceed {
+    if (_splitType != 'exact' || _parsedAmount <= 0) return false;
+    double sum = 0;
+    for (final p in widget.participants) {
+      if (!_excludedIds.contains(p.id)) {
+        sum += double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
+      }
+    }
+    return (sum * 100).round() > (_parsedAmount * 100).round();
+  }
+
+  void _redistributeExactSplit() {
+    if (_splitType != 'exact') return;
+    final total = _parsedAmount;
+    if (total <= 0) return;
+    final included = widget.participants.where((p) => !_excludedIds.contains(p.id)).toList();
+    if (included.isEmpty) return;
+
+    double editedSum = 0;
+    for (final p in included) {
+      if (_manuallyEditedMembers.contains(p.id)) {
+        editedSum += double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
+      }
+    }
+
+    final remaining = total - editedSum;
+    final unedited = included.where((p) => !_manuallyEditedMembers.contains(p.id)).toList();
+
+    if (unedited.isEmpty) return;
+
+    final totalCents = (remaining * 100).round();
+    final baseCents = totalCents ~/ unedited.length;
+    final remainderCents = totalCents - (baseCents * unedited.length);
+
+    _isDistributing = true;
+    for (var i = 0; i < unedited.length; i++) {
+      final cents = baseCents + (i < remainderCents ? 1 : 0);
+      final value = cents / 100.0;
+      final text = value == value.roundToDouble() ? value.toStringAsFixed(0) : value.toStringAsFixed(2);
+      _customValues[unedited[i].id]?.text = text;
+    }
+    _isDistributing = false;
+  }
+
+  void _resetExactSplit() {
+    _manuallyEditedMembers.clear();
+    final included = widget.participants.where((p) => !_excludedIds.contains(p.id)).toList();
+    if (included.isEmpty) return;
+    final total = _parsedAmount;
+    if (total <= 0) return;
+
+    final totalCents = (total * 100).round();
+    final baseCents = totalCents ~/ included.length;
+    final remainderCents = totalCents - (baseCents * included.length);
+
+    _isDistributing = true;
+    for (var i = 0; i < included.length; i++) {
+      final cents = baseCents + (i < remainderCents ? 1 : 0);
+      final value = cents / 100.0;
+      final text = value == value.roundToDouble() ? value.toStringAsFixed(0) : value.toStringAsFixed(2);
+      _customValues[included[i].id]?.text = text;
+    }
+    _isDistributing = false;
+    setState(() {});
+  }
+
+  void _redistributePercentSplit() {
+    if (_splitType != 'percentage') return;
+    final included = widget.participants.where((p) => !_excludedIds.contains(p.id)).toList();
+    if (included.isEmpty) return;
+
+    double editedSum = 0;
+    for (final p in included) {
+      if (_manuallyEditedPercentMembers.contains(p.id)) {
+        editedSum += double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
+      }
+    }
+
+    if (editedSum >= 100) return;
+
+    final remaining = 100 - editedSum;
+    final unedited = included.where((p) => !_manuallyEditedPercentMembers.contains(p.id)).toList();
+    if (unedited.isEmpty) return;
+
+    final totalCents = (remaining * 100).round();
+    final baseCents = totalCents ~/ unedited.length;
+    final remainderCents = totalCents - (baseCents * unedited.length);
+
+    _isDistributing = true;
+    for (var i = 0; i < unedited.length; i++) {
+      final cents = baseCents + (i < remainderCents ? 1 : 0);
+      final value = cents / 100.0;
+      final text = value == value.roundToDouble() ? value.toStringAsFixed(0) : value.toStringAsFixed(2);
+      _customValues[unedited[i].id]?.text = text;
+    }
+    _isDistributing = false;
+  }
+
+  void _resetPercentSplit() {
+    _manuallyEditedPercentMembers.clear();
+    final included = widget.participants.where((p) => !_excludedIds.contains(p.id)).toList();
+    if (included.isEmpty) return;
+
+    final totalCents = 10000;
+    final baseCents = totalCents ~/ included.length;
+    final remainderCents = totalCents - (baseCents * included.length);
+
+    _isDistributing = true;
+    for (var i = 0; i < included.length; i++) {
+      final cents = baseCents + (i < remainderCents ? 1 : 0);
+      final value = cents / 100.0;
+      final text = value == value.roundToDouble() ? value.toStringAsFixed(0) : value.toStringAsFixed(2);
+      _customValues[included[i].id]?.text = text;
+    }
+    _isDistributing = false;
+    setState(() {});
+  }
+
   void _applyDateBasedDefaults() {
     _excludedIds.clear();
     for (final p in widget.participants) {
@@ -146,16 +283,23 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   String? _previewAmount(String participantId) {
     final amount = _parsedAmount;
     if (amount <= 0) return null;
-    final included = _includedCount;
-    if (included == 0) return null;
+    final includedCount = _includedCount;
+    if (includedCount == 0) return null;
     final excluded = _excludedIds.contains(participantId);
 
     switch (_splitType) {
       case 'equal':
       case 'exclusion':
         if (excluded) return '${_sym}0';
-        final perPerson = amount / included;
-        return '$_sym${perPerson.toStringAsFixed(perPerson == perPerson.roundToDouble() ? 0 : 2)}';
+        final included = widget.participants.where((p) => !_excludedIds.contains(p.id)).toList();
+        final idx = included.indexWhere((p) => p.id == participantId);
+        if (idx == -1) return null;
+        final totalCents = (amount * 100).round();
+        final baseCents = totalCents ~/ includedCount;
+        final remainderCents = totalCents - (baseCents * includedCount);
+        final cents = baseCents + (idx < remainderCents ? 1 : 0);
+        final share = cents / 100.0;
+        return '$_sym${share.toStringAsFixed(share == share.roundToDouble() ? 0 : 2)}';
       case 'percentage':
         if (excluded) return null;
         final pct = double.tryParse(_customValues[participantId]?.text.trim() ?? '') ?? 0;
@@ -262,7 +406,6 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   }
 
   String? _validate() {
-    if (_titleController.text.trim().isEmpty) return 'Enter a title';
     final amount = _parsedAmount;
     if (amount <= 0) return 'Enter a valid amount';
     if (_paidById.isEmpty) return 'Select who paid';
@@ -305,7 +448,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     final expense = TourExpense(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       tourId: widget.tourId,
-      title: _titleController.text.trim(),
+      title: _titleController.text.trim().isEmpty && _selectedCategory != null
+          ? _selectedCategory!
+          : _titleController.text.trim(),
       amount: amount,
       paidBy: _paidById,
       splitType: _splitType,
@@ -343,11 +488,42 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   // BUILD
   // ═══════════════════════════════════════════════════════════════════════
 
+  static const Color _sectionBg = Color(0xFFF8F9FA);
+
+  Widget _sectionWrapper(Widget child) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.p20),
+      decoration: BoxDecoration(
+        color: _sectionBg,
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
+      ),
+      child: child,
+    );
+  }
+
+  Widget _sectionLabel(ThemeData theme, String label) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 2, bottom: AppSpacing.s12),
+      child: Text(
+        label,
+        style: GoogleFonts.workSans(
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+          letterSpacing: 1.2,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     final bottomInset = MediaQuery.of(context).padding.bottom;
+    final percentageError = _splitType == 'percentage' && (_percentageTotal * 100).round() != 10000;
+    final exactExceedsError = _exactAmountsExceed;
 
     return Padding(
       padding: EdgeInsets.only(bottom: bottom),
@@ -368,20 +544,87 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _buildHandle(theme),
+                    _buildDragHandle(theme),
+                    const SizedBox(height: AppSpacing.s8),
                     _buildHeroSection(theme),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: AppSpacing.h24),
                     _buildCategoryChips(theme),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.h24),
                     _buildMetaRow(theme),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.h24),
                     _buildReceiptSection(theme),
-                    const SizedBox(height: 20),
-                    _buildPaidBySection(theme),
-                    const SizedBox(height: 16),
-                    _buildSplitSection(theme),
+                    const SizedBox(height: AppSpacing.h24),
+                    // Paid By section
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: _sectionWrapper(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _sectionLabel(theme, 'PAID BY'),
+                            _buildPayerContent(theme),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.h24),
+                    // Split section
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: _sectionWrapper(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _sectionLabel(theme, 'SPLIT'),
+                            _buildSplitTypePills(theme),
+                            if (_lateJoiners.isNotEmpty) ...[
+                              const SizedBox(height: AppSpacing.s12),
+                              _buildLateJoinerBanner(theme),
+                            ],
+                            const SizedBox(height: AppSpacing.s12),
+                            _buildSplitDetails(theme),
+                            if (percentageError) ...[
+                              const SizedBox(height: AppSpacing.s8),
+                              Text(
+                                'Sum must be 100%',
+                                style: GoogleFonts.workSans(
+                                  fontSize: 12,
+                                  color: AppColors.activeRed,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                            if (exactExceedsError) ...[
+                              const SizedBox(height: AppSpacing.s8),
+                              Text(
+                                'Amounts exceed total',
+                                style: GoogleFonts.workSans(
+                                  fontSize: 12,
+                                  color: AppColors.activeRed,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.h24),
+                    // Notes section
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: _sectionWrapper(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _sectionLabel(theme, 'NOTES'),
+                            _buildNoteContent(theme),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.h16),
                     if (_validationError != null) ...[
-                      const SizedBox(height: 8),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Container(
@@ -405,31 +648,29 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: AppSpacing.s12),
                     ],
-                    const SizedBox(height: 8),
-                    _buildNoteField(theme),
-                    const SizedBox(height: 16),
                   ],
                 ),
               ),
             ),
             // Sticky save button
-            _buildSaveButton(theme, bottomInset),
+            _buildSaveButton(theme, bottomInset, percentageError || exactExceedsError),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHandle(ThemeData theme) {
+  Widget _buildDragHandle(ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 4),
+      padding: const EdgeInsets.only(top: 12, bottom: 4),
       child: Center(
         child: Container(
-          width: 36, height: 4,
+          width: 40, height: 5,
           decoration: BoxDecoration(
-            color: theme.dividerColor.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(2),
+            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(3),
           ),
         ),
       ),
@@ -515,10 +756,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p14, vertical: AppSpacing.p12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.25),
+              color: _sectionBg,
               borderRadius: BorderRadius.circular(AppSpacing.r10),
               border: Border.all(
-                color: theme.dividerColor.withValues(alpha: 0.12),
+                color: theme.dividerColor.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -749,47 +990,20 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   // ─── Paid By Section ─────────────────────────────────────────────────
 
-  Widget _buildPaidBySection(ThemeData theme) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 2, bottom: 10),
-            child: Text(
-              'PAID BY',
-              style: GoogleFonts.workSans(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                letterSpacing: 1.2,
-              ),
+  Widget _buildPayerContent(ThemeData theme) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: widget.participants.map((p) {
+          final selected = p.id == _paidById;
+          final idx = widget.participants.indexOf(p);
+          return Padding(
+            padding: EdgeInsets.only(
+              right: idx < widget.participants.length - 1 ? 8 : 0,
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.25),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: widget.participants.map((p) {
-                  final selected = p.id == _paidById;
-                  final idx = widget.participants.indexOf(p);
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      right: idx < widget.participants.length - 1 ? 8 : 0,
-                    ),
-                    child: _buildPayerAvatar(theme, p, selected, idx),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-        ],
+            child: _buildPayerAvatar(theme, p, selected, idx),
+          );
+        }).toList(),
       ),
     );
   }
@@ -843,36 +1057,6 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   // ─── Split Section ───────────────────────────────────────────────────
 
-  Widget _buildSplitSection(ThemeData theme) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 2, bottom: AppSpacing.s8),
-            child: Text(
-              'SPLIT',
-              style: GoogleFonts.workSans(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-                letterSpacing: 1.2,
-              ),
-            ),
-          ),
-          _buildSplitTypePills(theme),
-          if (_lateJoiners.isNotEmpty) ...[
-            const SizedBox(height: AppSpacing.s12),
-            _buildLateJoinerBanner(theme),
-          ],
-          const SizedBox(height: AppSpacing.s12),
-          _buildSplitDetails(theme),
-        ],
-      ),
-    );
-  }
-
   Widget _buildSplitTypePills(ThemeData theme) {
     final types = ['equal', 'exact', 'percentage', 'exclusion'];
     final labels = ['Equal', 'Exact', 'Percent', 'Exclude'];
@@ -891,11 +1075,20 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             child: Padding(
               padding: EdgeInsets.only(left: i > 0 ? 4 : 0),
               child: GestureDetector(
-                onTap: () => setState(() {
-                  _splitType = types[i];
-                  _validationError = null;
-                  _applyDateBasedDefaults();
-                }),
+                onTap: () {
+                  setState(() {
+                    _splitType = types[i];
+                    _validationError = null;
+                    _applyDateBasedDefaults();
+                  });
+                  if (types[i] == 'percentage') {
+                    WidgetsBinding.instance.addPostFrameCallback((_) => _resetPercentSplit());
+                  } else if (types[i] == 'exact') {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (_parsedAmount > 0) _resetExactSplit();
+                    });
+                  }
+                },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1064,94 +1257,138 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     }
 
     if (showInputs) {
-      final suffix = _splitType == 'percentage' ? '%' : _sym;
+      final isPercentage = _splitType == 'percentage';
+      final isExact = _splitType == 'exact';
+      final suffix = isPercentage ? '%' : _sym;
       return Column(
-        children: widget.participants.asMap().entries.map((entry) {
-          final p = entry.value;
-          final preview = _previewAmount(p.id);
-          final index = entry.key;
-          return Padding(
-            padding: EdgeInsets.only(bottom: index < widget.participants.length - 1 ? AppSpacing.s8 : 0),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p10),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(AppSpacing.r10),
-                border: Border.all(
-                  color: theme.dividerColor.withValues(alpha: 0.15),
-                  width: 1,
+        children: [
+          ...widget.participants.asMap().entries.map((entry) {
+            final p = entry.value;
+            final preview = _previewAmount(p.id);
+            final index = entry.key;
+            return Padding(
+              padding: EdgeInsets.only(bottom: index < widget.participants.length - 1 ? AppSpacing.s8 : 0),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p10),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(AppSpacing.r10),
+                  border: Border.all(
+                    color: theme.dividerColor.withValues(alpha: 0.15),
+                    width: 1,
+                  ),
                 ),
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 14,
-                    backgroundColor: _avatarColors[index % _avatarColors.length],
-                    child: Text(
-                      p.name[0].toUpperCase(),
-                      style: const TextStyle(
-                        color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.s8),
-                  Expanded(
-                    child: Text(
-                      p.name,
-                      style: GoogleFonts.workSans(
-                        fontSize: 13, fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                  ),
-                  if (preview != null) ...[
-                    Text(
-                      preview,
-                      style: GoogleFonts.workSans(
-                        fontSize: 12,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                        fontWeight: FontWeight.w500,
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 14,
+                      backgroundColor: _avatarColors[index % _avatarColors.length],
+                      child: Text(
+                        p.name[0].toUpperCase(),
+                        style: const TextStyle(
+                          color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     const SizedBox(width: AppSpacing.s8),
-                  ],
-                  SizedBox(
-                    width: 80,
-                    child: TextField(
-                      controller: _customValues[p.id],
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
-                      ],
-                      textAlign: TextAlign.right,
-                      onChanged: (_) => setState(() => _validationError = null),
-                      style: GoogleFonts.workSans(
-                        fontSize: 13, fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: '0',
-                        suffixText: suffix,
-                        suffixStyle: GoogleFonts.workSans(
-                          fontSize: 12,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(AppSpacing.r8),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s8, vertical: AppSpacing.s6),
-                        isDense: true,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            p.name,
+                            style: GoogleFonts.workSans(
+                              fontSize: 13, fontWeight: FontWeight.w500,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                          if (preview != null && (isPercentage || isExact))
+                            Text(
+                              preview,
+                              style: GoogleFonts.workSans(
+                                fontSize: 11,
+                                color: AppColors.activeGreen,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                        ],
                       ),
                     ),
+                    SizedBox(
+                      width: 80,
+                      child: TextField(
+                        controller: _customValues[p.id],
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
+                        ],
+                        textAlign: TextAlign.right,
+                        onChanged: (_) {
+                          if (_isDistributing) return;
+                          setState(() => _validationError = null);
+                          if (isExact) {
+                            _manuallyEditedMembers.add(p.id);
+                            _redistributeExactSplit();
+                            setState(() {});
+                          } else if (isPercentage) {
+                            _manuallyEditedPercentMembers.add(p.id);
+                            _redistributePercentSplit();
+                            setState(() {});
+                          }
+                        },
+                        style: GoogleFonts.workSans(
+                          fontSize: 13, fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: '0',
+                          suffixText: suffix,
+                          suffixStyle: GoogleFonts.workSans(
+                            fontSize: 12,
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(AppSpacing.r8),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s8, vertical: AppSpacing.s6),
+                          isDense: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+          if (isExact || isPercentage) ...[
+            const SizedBox(height: AppSpacing.s12),
+            Align(
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: isExact ? _resetExactSplit : _resetPercentSplit,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.s6),
+                  decoration: BoxDecoration(
+                    color: AppColors.activeGreen.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
-                ],
+                  child: Text(
+                    'Reset split',
+                    style: GoogleFonts.workSans(
+                      fontSize: 12,
+                      color: AppColors.activeGreen,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ),
             ),
-          );
-        }).toList(),
+          ],
+        ],
       );
     }
 
@@ -1160,43 +1397,34 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   // ─── Note Field ──────────────────────────────────────────────────────
 
-  Widget _buildNoteField(ThemeData theme) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.25),
-          borderRadius: BorderRadius.circular(14),
+  Widget _buildNoteContent(ThemeData theme) {
+    return TextField(
+      controller: _noteController,
+      maxLines: 1,
+      style: GoogleFonts.workSans(fontSize: 14, color: theme.colorScheme.onSurface),
+      decoration: InputDecoration(
+        hintText: 'Add a note...',
+        hintStyle: GoogleFonts.workSans(
+          fontSize: 14,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
         ),
-        child: TextField(
-          controller: _noteController,
-          maxLines: 1,
-          style: GoogleFonts.workSans(fontSize: 14, color: theme.colorScheme.onSurface),
-          decoration: InputDecoration(
-            hintText: 'Add a note...',
-            hintStyle: GoogleFonts.workSans(
-              fontSize: 14,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
-            ),
-            border: InputBorder.none,
-            isDense: true,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12),
-            prefixIcon: Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Icon(Icons.sticky_note_2_outlined, size: 18,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.25)),
-            ),
-            prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
-          ),
+        border: InputBorder.none,
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(vertical: 2),
+        prefixIcon: Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: Icon(Icons.sticky_note_2_outlined, size: 18,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.25)),
         ),
+        prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
       ),
     );
   }
 
   // ─── Save Button (Sticky) ────────────────────────────────────────────
 
-  Widget _buildSaveButton(ThemeData theme, double bottomInset) {
+  Widget _buildSaveButton(ThemeData theme, double bottomInset, bool percentageError) {
+    final canSave = !_isSaving && !percentageError;
     return Container(
       padding: EdgeInsets.fromLTRB(20, 12, 20, bottomInset + 12),
       decoration: BoxDecoration(
@@ -1213,7 +1441,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         width: double.infinity,
         height: 50,
         child: FilledButton(
-          onPressed: _isSaving ? null : _save,
+          onPressed: canSave ? _save : null,
           style: FilledButton.styleFrom(
             backgroundColor: AppColors.activeGreen,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),

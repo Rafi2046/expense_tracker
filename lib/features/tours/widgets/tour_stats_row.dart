@@ -93,14 +93,17 @@ class _StatCard extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(
-              label,
-              style: GoogleFonts.workSans(
-                fontSize: 14, // Slightly larger
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                label,
+                style: GoogleFonts.workSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                ),
               ),
-              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

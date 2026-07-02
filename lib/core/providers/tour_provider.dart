@@ -701,7 +701,7 @@ class TourProvider extends ChangeNotifier {
             s.fromParticipant == participantId &&
             !s.isDeleted)
         .fold(0.0, (a, s) => a + s.amount);
-    return ((paid - share + (received - sent)) * 100).round() / 100.0;
+    return ((paid - share - received + sent) * 100).round() / 100.0;
   }
 
   /// Net balance per participant for the entire tour:
@@ -735,13 +735,13 @@ class TourProvider extends ChangeNotifier {
     for (final settlement in _settlements.where((s) => s.tourId == tourId)) {
       balances.update(
         settlement.fromParticipant,
-        (v) => v - settlement.amount,
-        ifAbsent: () => -settlement.amount,
+        (v) => v + settlement.amount,
+        ifAbsent: () => settlement.amount,
       );
       balances.update(
         settlement.toParticipant,
-        (v) => v + settlement.amount,
-        ifAbsent: () => settlement.amount,
+        (v) => v - settlement.amount,
+        ifAbsent: () => -settlement.amount,
       );
     }
 
