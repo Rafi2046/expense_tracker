@@ -4,12 +4,12 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class TourStatsRow extends StatelessWidget {
-  final int completedToursCount;
+  final int totalTours;
   final int totalBuddies;
 
   const TourStatsRow({
     super.key,
-    required this.completedToursCount,
+    required this.totalTours,
     required this.totalBuddies,
   });
 
@@ -27,7 +27,7 @@ class TourStatsRow extends StatelessWidget {
               isDark: isDark,
               theme: theme,
               icon: Icons.map_outlined,
-              label: '$completedToursCount completed',
+              label: '$totalTours ${totalTours == 1 ? 'tour' : 'tours'}',
             ),
           ),
           const SizedBox(width: 12), // Slightly more spacing

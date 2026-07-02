@@ -43,7 +43,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 10,
+      version: 11,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -453,6 +453,13 @@ class DatabaseHelper {
           lastModified TEXT NOT NULL
         )
       ''');
+    }
+    if (oldVersion < 11) {
+      final columns = await db.rawQuery('PRAGMA table_info(tours)');
+      final hasCompleted = columns.any((col) => col['name'] == 'isCompleted');
+      if (!hasCompleted) {
+        await db.execute('ALTER TABLE tours ADD COLUMN isCompleted INTEGER NOT NULL DEFAULT 0');
+      }
     }
   }
 

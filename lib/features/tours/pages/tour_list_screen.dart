@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
@@ -28,10 +29,51 @@ class TourListScreen extends StatefulWidget {
 
 class _TourListScreenState extends State<TourListScreen> {
   final Map<String, int> _memberCounts = {};
+
+  void _confirmDeleteTour(BuildContext context, Tour tour) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16)),
+        backgroundColor: Colors.white,
+        title: const Text('Delete Tour',
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17)),
+        content: const Text(
+          'This action cannot be undone.',
+          style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel',
+                style: TextStyle(color: Color(0xFF6B7280))),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<TourProvider>().deleteTour(tour.id);
+            },
+            child: const Text('Delete',
+                style: TextStyle(
+                    color: Color(0xFFDC2626), fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _toggleCompleteTour(Tour tour) {
+    context.read<TourProvider>().toggleTourCompletion(
+      tour.id,
+      !tour.isCompleted,
+    );
+  }
+
   final Map<String, double> _totalSpent = {};
   int _currentPageIndex = 0;
-  int _completedToursCount = 0;
   String? _lastProfileId;
+  bool _isLoading = true;
   late final PageController _pageController;
 
   @override
@@ -48,6 +90,7 @@ class _TourListScreenState extends State<TourListScreen> {
   }
 
   Future<void> _loadCounts() async {
+    setState(() => _isLoading = true);
     final provider = context.read<TourProvider>();
     final tourIds = provider.tours.map((t) => t.id).toList();
     if (tourIds.isEmpty) return;
@@ -73,24 +116,10 @@ class _TourListScreenState extends State<TourListScreen> {
       for (final row in spentResult) {
         _totalSpent[row['tourId'] as String] = (row['total'] as num).toDouble();
       }
-
-      final settlementResult = await db.rawQuery(
-        'SELECT tourId, COUNT(*) as cnt FROM tour_settlements '
-            'WHERE tourId IN ($placeholders) AND isDeleted = 0 GROUP BY tourId',
-        tourIds,
-      );
-      final settledTourIds = settlementResult
-          .map((r) => r['tourId'] as String)
-          .toSet();
-      _completedToursCount = tourIds
-          .where(
-            (id) => (_totalSpent[id] ?? 0) > 0 && settledTourIds.contains(id),
-      )
-          .length;
     } catch (e) {
       debugPrint('TourListScreen._loadCounts error: $e');
     }
-    if (mounted) setState(() {});
+    if (mounted) setState(() => _isLoading = false);
   }
 
   void _openCreateTourSheet() {
@@ -201,11 +230,13 @@ class _TourListScreenState extends State<TourListScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.only(top: 8, bottom: 24),
-          child: Column(
+          child: Skeletonizer(
+            enabled: _isLoading,
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TourStatsRow(
-                completedToursCount: _completedToursCount,
+                totalTours: tours.length,
                 totalBuddies: totalBuddies,
               ),
               const SizedBox(height: AppSpacing.s20),
@@ -255,6 +286,8 @@ class _TourListScreenState extends State<TourListScreen> {
                         memberCount: _memberCounts[tour.id] ?? 0,
                         totalSpent: _totalSpent[tour.id] ?? 0,
                         index: index,
+                        onDelete: () => _confirmDeleteTour(context, tour),
+                        onToggleComplete: () => _toggleCompleteTour(tour),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -303,6 +336,7 @@ class _TourListScreenState extends State<TourListScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

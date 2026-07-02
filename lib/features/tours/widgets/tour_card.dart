@@ -9,7 +9,8 @@ class TourCard extends StatelessWidget {
   final int memberCount;
   final double totalSpent;
   final VoidCallback onTap;
-  final VoidCallback? onLongPress;
+  final VoidCallback? onDelete;
+  final VoidCallback? onToggleComplete;
   final int index;
 
   static const _gradientPalette = [
@@ -29,7 +30,8 @@ class TourCard extends StatelessWidget {
     required this.memberCount,
     required this.totalSpent,
     required this.onTap,
-    this.onLongPress,
+    this.onDelete,
+    this.onToggleComplete,
     this.index = 0,
   });
 
@@ -109,39 +111,19 @@ class TourCard extends StatelessWidget {
               Positioned(
                 top: 14,
                 right: 14,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      width: 0.5,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 6,
-                        height: 6,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF4ADE80),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        'Active',
-                        style: GoogleFonts.workSans(
-                          color: Colors.white.withValues(alpha: 0.9),
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.3,
-                        ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _StatusBadge(isCompleted: tour.isCompleted),
+                    if (onDelete != null || onToggleComplete != null) ...[
+                      const SizedBox(width: 6),
+                      _CardMenuButton(
+                        isCompleted: tour.isCompleted,
+                        onDelete: onDelete,
+                        onToggleComplete: onToggleComplete,
                       ),
                     ],
-                  ),
+                  ],
                 ),
               ),
 
@@ -190,14 +172,30 @@ class TourCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Text(
-                            _formatAmount(totalSpent, tour.currency),
-                            style: GoogleFonts.workSans(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: -0.3,
-                            ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                'Total spent',
+                                style: GoogleFonts.workSans(
+                                  color: Colors.white.withValues(alpha: 0.5),
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.8,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                _formatAmount(totalSpent, tour.currency),
+                                style: GoogleFonts.workSans(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -0.5,
+                                  height: 1.1,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -221,6 +219,129 @@ class TourCard extends StatelessWidget {
           colors: _gradient,
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusBadge extends StatelessWidget {
+  final bool isCompleted;
+
+  const _StatusBadge({required this.isCompleted});
+
+  @override
+  Widget build(BuildContext context) {
+    final dotColor = isCompleted ? const Color(0xFF9CA3AF) : const Color(0xFF4ADE80);
+    final label = isCompleted ? 'Completed' : 'Active';
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: isCompleted ? 0.1 : 0.15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: isCompleted ? 0.12 : 0.2),
+          width: 0.5,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: dotColor,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: GoogleFonts.workSans(
+              color: Colors.white.withValues(alpha: isCompleted ? 0.6 : 0.9),
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CardMenuButton extends StatelessWidget {
+  final bool isCompleted;
+  final VoidCallback? onDelete;
+  final VoidCallback? onToggleComplete;
+
+  const _CardMenuButton({
+    required this.isCompleted,
+    this.onDelete,
+    this.onToggleComplete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      offset: const Offset(0, 40),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      onSelected: (value) {
+        if (value == 'toggleComplete') onToggleComplete?.call();
+        if (value == 'delete') onDelete?.call();
+      },
+      itemBuilder: (context) => [
+        if (onToggleComplete != null)
+          PopupMenuItem(
+            value: 'toggleComplete',
+            child: Row(
+              children: [
+                Icon(
+                  isCompleted ? Icons.radio_button_unchecked_rounded : Icons.check_circle_outline_rounded,
+                  size: 18,
+                  color: isCompleted ? const Color(0xFF6B7280) : const Color(0xFF4ADE80),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  isCompleted ? 'Mark as Active' : 'Mark as Completed',
+                  style: TextStyle(
+                    color: isCompleted ? const Color(0xFF6B7280) : const Color(0xFF4ADE80),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        if (onDelete != null)
+          const PopupMenuItem(
+            value: 'delete',
+            child: Row(
+              children: [
+                Icon(Icons.delete_outline_rounded, size: 18, color: Color(0xFFDC2626)),
+                SizedBox(width: 8),
+                Text('Delete Tour',
+                    style: TextStyle(color: Color(0xFFDC2626))),
+              ],
+            ),
+          ),
+      ],
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.2),
+            width: 0.5,
+          ),
+        ),
+        child: const Icon(
+          Icons.more_horiz_rounded,
+          size: 16,
+          color: Colors.white,
         ),
       ),
     );

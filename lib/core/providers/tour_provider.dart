@@ -124,6 +124,25 @@ class TourProvider extends ChangeNotifier {
     _syncTourToFirestore(updated);
   }
 
+  Future<void> toggleTourCompletion(String tourId, bool completed) async {
+    final db = await _db.database;
+    final now = DateTime.now().toIso8601String();
+    await db.update(
+      'tours',
+      {'isCompleted': completed ? 1 : 0, 'lastModified': now},
+      where: 'id = ?',
+      whereArgs: [tourId],
+    );
+    final idx = _tours.indexWhere((t) => t.id == tourId);
+    if (idx != -1) {
+      _tours[idx] = _tours[idx].copyWith(isCompleted: completed, lastModified: DateTime.now());
+    }
+    if (_selectedTourId == tourId) {
+      _selectedTourId = tourId;
+    }
+    notifyListeners();
+  }
+
   Future<void> deleteTour(String tourId) async {
     final now = DateTime.now().toIso8601String();
     final db = await _db.database;

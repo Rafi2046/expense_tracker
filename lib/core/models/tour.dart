@@ -7,6 +7,7 @@ class Tour {
   final String profileId;
   final String syncStatus;
   final bool isDeleted;
+  final bool isCompleted;
   final DateTime lastModified;
 
   Tour({
@@ -18,6 +19,7 @@ class Tour {
     this.profileId = 'default_profile',
     this.syncStatus = 'synced',
     this.isDeleted = false,
+    this.isCompleted = false,
     DateTime? lastModified,
   }) : lastModified = lastModified ?? createdAt;
 
@@ -30,6 +32,7 @@ class Tour {
     String? profileId,
     String? syncStatus,
     bool? isDeleted,
+    bool? isCompleted,
     DateTime? lastModified,
   }) =>
       Tour(
@@ -41,6 +44,7 @@ class Tour {
         profileId: profileId ?? this.profileId,
         syncStatus: syncStatus ?? this.syncStatus,
         isDeleted: isDeleted ?? this.isDeleted,
+        isCompleted: isCompleted ?? this.isCompleted,
         lastModified: lastModified ?? this.lastModified,
       );
 
@@ -70,6 +74,7 @@ class Tour {
     'profileId': profileId,
     'syncStatus': syncStatus,
     'isDeleted': isDeleted ? 1 : 0,
+    'isCompleted': isCompleted ? 1 : 0,
     'lastModified': lastModified.toIso8601String(),
   };
 
@@ -82,6 +87,7 @@ class Tour {
     profileId: json['profileId'] as String? ?? 'default_profile',
     syncStatus: json['syncStatus'] as String? ?? 'synced',
     isDeleted: (json['isDeleted'] as int? ?? 0) == 1,
+    isCompleted: (json['isCompleted'] as int? ?? 0) == 1,
     lastModified: json['lastModified'] != null
         ? DateTime.parse(json['lastModified'] as String)
         : null,
