@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
@@ -53,6 +54,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   final _picker = ImagePicker();
 
   String? _selectedCategory;
+  final _customCategories = <Map<String, dynamic>>[];
   String _paidById = '';
   String _splitType = 'equal';
   final Set<String> _excludedIds = {};
@@ -65,16 +67,16 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   XFile? _receiptImage;
 
   static const _categories = [
-    ('Food', Icons.restaurant_rounded),
-    ('Transport', Icons.directions_car_rounded),
-    ('Accommodation', Icons.hotel_rounded),
-    ('Activities', Icons.hiking_rounded),
-    ('Shopping', Icons.shopping_bag_rounded),
-    ('Drinks', Icons.local_bar_rounded),
-    ('Groceries', Icons.shopping_cart_rounded),
-    ('Fuel', Icons.local_gas_station_rounded),
-    ('Tickets', Icons.confirmation_num_rounded),
-    ('Other', Icons.more_horiz_rounded),
+    ('Food', Symbols.restaurant),
+    ('Transport', Symbols.directions_car),
+    ('Accommodation', Symbols.hotel),
+    ('Activities', Symbols.hiking),
+    ('Shopping', Symbols.shopping_bag),
+    ('Drinks', Symbols.local_bar),
+    ('Groceries', Symbols.shopping_cart),
+    ('Fuel', Symbols.local_gas_station),
+    ('Tickets', Symbols.confirmation_number),
+    ('Other', Symbols.more_horiz),
   ];
 
   static const _avatarColors = [
@@ -793,54 +795,62 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   // ─── Category Chips (inline) ─────────────────────────────────────────
 
   Widget _buildCategoryChips(ThemeData theme) {
+    final totalItems = _categories.length + _customCategories.length + 1;
+
     return SizedBox(
       height: 36,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        itemCount: _categories.length,
+        itemCount: totalItems,
         separatorBuilder: (_, __) => const SizedBox(width: 6),
         itemBuilder: (context, index) {
-          final (label, icon) = _categories[index];
-          final isSelected = _selectedCategory == label;
+          if (index < _categories.length) {
+            final (label, icon) = _categories[index];
+            final isSelected = _selectedCategory == label;
+            return GestureDetector(
+              onTap: () => setState(() {
+                _selectedCategory = isSelected ? null : label;
+              }),
+              child: _buildChip(label, icon, isSelected, theme),
+            );
+          }
+
+          if (index < _categories.length + _customCategories.length) {
+            final cat = _customCategories[index - _categories.length];
+            final isSelected = _selectedCategory == cat['name'];
+            return GestureDetector(
+              onTap: () => setState(() {
+                _selectedCategory = isSelected ? null : cat['name'];
+              }),
+              child: _buildChip(cat['name'] as String, cat['icon'] as IconData, isSelected, theme),
+            );
+          }
+
           return GestureDetector(
-            onTap: () => setState(() {
-              _selectedCategory = isSelected ? null : label;
-            }),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
+            onTap: () => _showAddCategoryDialog(),
+            child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: isSelected
-                    ? AppColors.activeGreen.withValues(alpha: 0.12)
-                    : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                color: const Color(0xFFF3F4F6),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isSelected
-                      ? AppColors.activeGreen.withValues(alpha: 0.3)
-                      : Colors.transparent,
-                  width: 1,
-                ),
+                border: Border.all(color: const Color(0xFFD1D5DB), width: 1),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    icon,
+                    Icons.add_rounded,
                     size: 14,
-                    color: isSelected
-                        ? AppColors.activeGreen
-                        : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                    color: const Color(0xFF6B7280),
                   ),
-                  const SizedBox(width: 5),
+                  const SizedBox(width: 4),
                   Text(
-                    label,
+                    'Add',
                     style: GoogleFonts.workSans(
                       fontSize: 12,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                      color: isSelected
-                          ? AppColors.activeGreen
-                          : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xFF6B7280),
                     ),
                   ),
                 ],
@@ -850,6 +860,298 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         },
       ),
     );
+  }
+
+  Widget _buildChip(String label, IconData icon, bool isSelected, ThemeData theme) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: isSelected
+            ? AppColors.activeGreen.withValues(alpha: 0.12)
+            : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isSelected
+              ? AppColors.activeGreen.withValues(alpha: 0.3)
+              : Colors.transparent,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 14,
+            color: isSelected
+                ? AppColors.activeGreen
+                : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: GoogleFonts.workSans(
+              fontSize: 12,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              color: isSelected
+                  ? AppColors.activeGreen
+                  : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static final _categoryIcons = <IconData>[
+    Symbols.label,
+    Symbols.restaurant,
+    Symbols.coffee,
+    Symbols.smoking_rooms,
+    Symbols.water_drop,
+    Symbols.directions_car,
+    Symbols.hotel,
+    Symbols.hiking,
+    Symbols.shopping_bag,
+    Symbols.local_bar,
+    Symbols.shopping_cart,
+    Symbols.local_gas_station,
+    Symbols.confirmation_number,
+    Symbols.more_horiz,
+    Symbols.flight,
+    Symbols.music_note,
+    Symbols.check_circle,
+    Symbols.arrow_downward,
+    Symbols.people_alt,
+    Symbols.explore,
+    Symbols.image,
+    Symbols.description,
+    Symbols.swap_horiz,
+    Symbols.camera_alt,
+    Symbols.photo_library,
+    Symbols.info,
+    Symbols.delete_outline,
+    Symbols.add,
+    Symbols.close,
+    Symbols.drag_handle,
+    Symbols.pin,
+    Symbols.percent,
+    Symbols.person_off,
+    Symbols.check,
+    Symbols.calendar_today,
+    Symbols.receipt_long,
+    Symbols.account_balance_wallet,
+    Symbols.keyboard_arrow_down,
+    Symbols.error_outline,
+    Symbols.remove_circle_outline,
+    Symbols.arrow_back,
+    Symbols.chevron_right,
+    Symbols.arrow_back_ios,
+    Symbols.home,
+    Symbols.pets,
+    Symbols.health_and_safety,
+    Symbols.flash_on,
+    Symbols.celebration,
+    Symbols.cake,
+    Symbols.card_giftcard,
+    Symbols.wifi,
+    Symbols.phone,
+    Symbols.construction,
+    Symbols.brush,
+    Symbols.forest,
+    Symbols.beach_access,
+  ];
+
+  static final _iconSearchData = <IconData, String>{
+    Symbols.label: 'label tag category other misc general',
+    Symbols.restaurant: 'food restaurant dining meal eat dinner lunch',
+    Symbols.coffee: 'coffee tea breakfast cafe drink beverage morning',
+    Symbols.smoking_rooms: 'cigarette smoking tobacco cigar',
+    Symbols.water_drop: 'water drink hydration bottle liquid',
+    Symbols.directions_car: 'transport car vehicle travel drive ride',
+    Symbols.hotel: 'hotel accommodation stay lodging room',
+    Symbols.hiking: 'activity outdoor adventure sport hiking trek',
+    Symbols.shopping_bag: 'shopping bag purchase retail store',
+    Symbols.local_bar: 'bar drink alcohol beer wine cocktail party',
+    Symbols.shopping_cart: 'grocery supermarket food shopping cart',
+    Symbols.local_gas_station: 'fuel gas station petrol car vehicle',
+    Symbols.confirmation_number: 'ticket ticket booking event movie show',
+    Symbols.more_horiz: 'more other misc extra additional',
+    Symbols.flight: 'flight plane travel airport trip vacation',
+    Symbols.music_note: 'music song entertainment party concert',
+    Symbols.check_circle: 'check done complete confirm yes verified',
+    Symbols.arrow_downward: 'down arrow download receive incoming',
+    Symbols.people_alt: 'people group team friends family members',
+    Symbols.explore: 'explore adventure discover compass navigate',
+    Symbols.image: 'photo image picture gallery photography',
+    Symbols.description: 'document description file report text',
+    Symbols.swap_horiz: 'swap transfer exchange switch change',
+    Symbols.camera_alt: 'camera photo image picture photography',
+    Symbols.photo_library: 'gallery photo image picture library album',
+    Symbols.info: 'info information help details notice',
+    Symbols.delete_outline: 'delete remove trash discard',
+    Symbols.add: 'add new create plus additional',
+    Symbols.close: 'close cancel exit remove stop',
+    Symbols.drag_handle: 'drag handle move reorder',
+    Symbols.pin: 'pin save bookmark important',
+    Symbols.percent: 'percent percentage discount offer sale',
+    Symbols.person_off: 'person user people individual',
+    Symbols.check: 'check done yes confirm verify',
+    Symbols.calendar_today: 'calendar date event schedule appointment',
+    Symbols.receipt_long: 'receipt bill invoice payment transaction',
+    Symbols.account_balance_wallet: 'wallet account balance finance money bank payment',
+    Symbols.keyboard_arrow_down: 'keyboard arrow down dropdown expand',
+    Symbols.error_outline: 'error warning alert problem issue',
+    Symbols.remove_circle_outline: 'remove circle delete clear cancel',
+    Symbols.arrow_back: 'arrow back left previous return',
+    Symbols.chevron_right: 'chevron right next forward continue',
+    Symbols.arrow_back_ios: 'arrow back left ios previous',
+    Symbols.home: 'home house rent lodging accommodation',
+    Symbols.pets: 'pets animal dog cat pet veterinary',
+    Symbols.health_and_safety: 'health medical medicine hospital doctor pharmacy',
+    Symbols.flash_on: 'flash electricity power energy utility bill',
+    Symbols.celebration: 'celebration party event occasion festival',
+    Symbols.cake: 'cake dessert birthday sweet bakery',
+    Symbols.card_giftcard: 'gift present card giftcard occasion',
+    Symbols.wifi: 'wifi internet network connection data',
+    Symbols.phone: 'phone mobile call communication mobile',
+    Symbols.construction: 'construction repair maintenance tool fix',
+    Symbols.brush: 'paint color decoration design art renovate brush',
+    Symbols.forest: 'forest nature tree park outdoor environment',
+    Symbols.beach_access: 'beach ocean sea water vacation holiday',
+  };
+
+  Future<void> _showAddCategoryDialog() async {
+    IconData selectedIcon = _categoryIcons.first;
+    final nameController = TextEditingController();
+    var searchQuery = '';
+
+    final result = await showDialog<Map<String, dynamic>?>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.r16),
+          ),
+          backgroundColor: AppColors.white,
+          title: const Text(
+            'New Category',
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                  TextField(
+                    controller: nameController,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      hintText: 'Search icons...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppSpacing.r10),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.p12,
+                        vertical: AppSpacing.p12,
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setDialogState(() => searchQuery = value.trim().toLowerCase());
+                    },
+                    onSubmitted: (value) {
+                      final name = value.trim();
+                      if (name.isNotEmpty) {
+                        Navigator.pop(ctx, {'name': name, 'icon': selectedIcon});
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Choose an icon',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF6B7280),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                Expanded(
+                  child: Builder(builder: (ctx) {
+                    final filtered = searchQuery.isEmpty
+                        ? _categoryIcons
+                        : _iconSearchData.entries
+                            .where((e) => e.value.contains(searchQuery))
+                            .map((e) => e.key)
+                            .toList();
+                    return GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 6,
+                        crossAxisSpacing: 6,
+                        mainAxisSpacing: 6,
+                      ),
+                      itemCount: filtered.length,
+                      itemBuilder: (ctx, i) {
+                        final icon = filtered[i];
+                        final isSelected = icon == selectedIcon;
+                        return GestureDetector(
+                          onTap: () => setDialogState(() => selectedIcon = icon),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? AppColors.activeGreen.withValues(alpha: 0.12)
+                                  : const Color(0xFFF3F4F6),
+                              borderRadius: BorderRadius.circular(AppSpacing.r10),
+                              border: Border.all(
+                                color: isSelected
+                                    ? AppColors.activeGreen
+                                    : Colors.transparent,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Icon(icon, size: 22,
+                                color: isSelected
+                                    ? AppColors.activeGreen
+                                    : const Color(0xFF6B7280)),
+                          ),
+                        );
+                      },
+                    );
+                  }),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel',
+                  style: TextStyle(color: Color(0xFF6B7280))),
+            ),
+            TextButton(
+              onPressed: () {
+                final name = nameController.text.trim();
+                if (name.isNotEmpty) {
+                  Navigator.pop(ctx, {'name': name, 'icon': selectedIcon});
+                }
+              },
+              child: const Text('Add',
+                  style: TextStyle(
+                      color: AppColors.activeGreen,
+                      fontWeight: FontWeight.w600)),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (result != null && mounted) {
+      setState(() {
+        _customCategories.add(result);
+        _selectedCategory = result['name'] as String;
+      });
+    }
   }
 
   // ─── Meta Row ────────────────────────────────────────────────────────
