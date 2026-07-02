@@ -348,6 +348,34 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                   });
                 },
               ),
+              const SizedBox(height: 12),
+
+              // + Add New Category
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: OutlinedButton.icon(
+                  icon: const Icon(Symbols.add, size: 18),
+                  label: const Text('Add New Category'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: theme.colorScheme.onSurface,
+                    side: BorderSide(
+                      color: isDark
+                          ? theme.colorScheme.onSurface.withValues(alpha: 0.2)
+                          : Colors.grey.shade200,
+                      width: 1.5,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    textStyle: GoogleFonts.workSans(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  onPressed: () => _showAddNewCategoryDialog(context, provider),
+                ),
+              ),
               const SizedBox(height: 16),
 
               // Scrollable List
@@ -413,35 +441,6 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                           );
                         },
                       ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Bottom Border Button: + Add New Category
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: OutlinedButton.icon(
-                  icon: const Icon(Symbols.add, size: 18),
-                  label: const Text('Add New Category'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: theme.colorScheme.onSurface,
-                    side: BorderSide(
-                      color: isDark
-                          ? theme.colorScheme.onSurface.withValues(alpha: 0.2)
-                          : Colors.grey.shade200,
-                      width: 1.5,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    textStyle: GoogleFonts.workSans(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
-                  ),
-                  onPressed: () => _showAddNewCategoryDialog(context, provider),
-                ),
               ),
               const SizedBox(height: 8),
             ],

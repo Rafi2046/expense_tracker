@@ -259,10 +259,6 @@ class ProfileProvider extends ChangeNotifier {
     });
 
     _profiles.add(newProfile);
-    debugPrint('[finalizeProfileCreation] _profiles count: ${_profiles.length}');
-    for (final p in _profiles) {
-      debugPrint('[finalizeProfileCreation]   profile: id=${p.id}, name=${p.name}');
-    }
     _currentProfile = newProfile;
     resetCreationState();
     notifyListeners();

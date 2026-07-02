@@ -61,10 +61,6 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
     final profileProvider = context.watch<ProfileProvider>();
     final profiles = profileProvider.profiles;
     final selectedId = profileProvider.currentProfile.id;
-    debugPrint('[ProfileSwitchSheet] profiles count: ${profiles.length}');
-    for (final p in profiles) {
-      debugPrint('[ProfileSwitchSheet]   profile: id=${p.id}, name=${p.name}');
-    }
 
     return Container(
       decoration: const BoxDecoration(
