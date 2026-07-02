@@ -27,6 +27,7 @@ class AppImages {
 
   //tour
   static const String tour= 'assets/app_icons/tour .webp';
+  static const String noExpense= 'assets/app_icons/no_expense.png';
 
 
 

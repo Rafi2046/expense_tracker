@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
@@ -166,7 +167,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         ],
       ),
       body: ListView(
-        padding: EdgeInsets.fromLTRB(16, 16, 16, bottomInset + 100),
+        padding: EdgeInsets.fromLTRB(16, 16, 16, bottomInset + 0),
         children: [
           TourSummaryRow(
             totalSpentText: totalSpentText,
@@ -174,7 +175,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
             isSettled: isSettled,
           ),
           if (participants.isNotEmpty) ...[
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             TourMemberBalances(
               participants: participants,
               balances: netBalances,
@@ -193,7 +194,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               },
             ),
           ],
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
           _buildExpensesHeader(theme, expenses.length),
           if (expenses.isEmpty)
             _buildEmptyState(theme)
@@ -208,7 +209,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         ],
       ),
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: bottomInset + 16),
+        padding: EdgeInsets.only(bottom: bottomInset + 0),
         child: FloatingActionButton.extended(
           heroTag: 'tour_dashboard_fab',
           onPressed: () {
@@ -228,12 +229,12 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
             style: TextStyle(
               fontWeight: FontWeight.w600,
               color: AppColors.white,
-              fontSize: 14,
+              fontSize: 12,
             ),
           ),
           elevation: 4,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.r16),
+            borderRadius: BorderRadius.circular(AppSpacing.r8),
           ),
         ),
       ),
@@ -438,16 +439,12 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
   Widget _buildEmptyState(ThemeData theme) {
     final isDark = theme.brightness == Brightness.dark;
     return Padding(
-      padding: const EdgeInsets.only(top: 48),
+      padding: const EdgeInsets.only(top: 20),
       child: Center(
         child: Column(
           children: [
-            Icon(
-              Icons.receipt_long_outlined,
-              size: 56,
-              color: isDark ? const Color(0xFF2D2D3D) : Colors.grey.shade300,
-            ),
-            const SizedBox(height: 16),
+            Image.asset(AppImages.noExpense, height: 180, width: 180),
+
             Text(
               'No expenses yet',
               style: TextStyle(
