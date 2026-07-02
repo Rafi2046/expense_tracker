@@ -100,6 +100,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
   Widget build(BuildContext context) {
     final provider = context.watch<TourProvider>();
     final tour = provider.selectedTour;
+    final double bottomInset = MediaQuery.of(context).padding.bottom;
 
     if (tour == null && provider.isLoading) {
       return const Scaffold(
@@ -177,7 +178,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
+        padding: EdgeInsets.fromLTRB(16, 16, 16, bottomInset + 150),
         children: [
           _buildSummaryRow(totalSpent, totalOutstanding, tour.currency),
           if (participants.isNotEmpty) ...[
@@ -194,7 +195,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         ],
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 32),
+        padding: EdgeInsets.only(bottom: bottomInset + 0),
         child: FloatingActionButton.extended(
           heroTag: 'tour_dashboard_fab',
           onPressed: () {
