@@ -8,9 +8,11 @@ import 'package:expense_tracker/features/tours/widgets/add_expense_sheet.dart';
 import 'package:expense_tracker/features/tours/pages/settle_up_screen.dart';
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
 import 'package:expense_tracker/features/tours/utils/tour_export_service.dart';
+import 'package:expense_tracker/features/tours/utils/tour_invoice_generator.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/utils/debt_simplifier.dart';
 
 const Color _bgColor = Color(0xFFF7F9FA);
 
@@ -179,6 +181,103 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     );
   }
 
+  void _showExportOptionsSheet(BuildContext context) {
+    final provider = context.read<TourProvider>();
+    final tour = provider.selectedTour;
+    if (tour == null) return;
+
+    final participants = provider.participants;
+    final expenses = provider.expenses;
+    final netBalances = provider.netBalances(tour.id);
+    final totalSpent = provider.totalSpent(tour.id);
+    final totalOutstanding = provider.totalOutstanding(tour.id);
+    final settlements = simplifyDebts(netBalances);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(ctx).viewInsets.bottom +
+              MediaQuery.of(ctx).padding.bottom +
+              20,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD1D5DB),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const Text(
+                'Export Report',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF111827),
+                ),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Choose how to share your tour details',
+                style: TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
+              ),
+              const SizedBox(height: 20),
+              _ExportOptionTile(
+                icon: Icons.image_rounded,
+                title: 'Share Balances Image',
+                subtitle: 'A snapshot showing who owes whom',
+                gradientColors: const [Color(0xFF059669), Color(0xFF0F766E)],
+                onTap: () {
+                  Navigator.pop(ctx);
+                  TourExportService.shareReport(context, widget.tourId);
+                },
+              ),
+              const SizedBox(height: 12),
+              _ExportOptionTile(
+                icon: Icons.description_rounded,
+                title: 'Download Detailed Invoice (PDF)',
+                subtitle:
+                    'Full report with category breakdown & ledger table',
+                gradientColors: const [Color(0xFF2563EB), Color(0xFF1D4ED8)],
+                onTap: () {
+                  Navigator.pop(ctx);
+                  TourInvoiceGenerator.generateAndShare(
+                    tour: tour,
+                    participants: participants,
+                    expenses: expenses,
+                    settlements: settlements,
+                    totalSpent: totalSpent,
+                    totalOutstanding: totalOutstanding,
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -226,7 +325,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () => TourExportService.shareReport(context, widget.tourId),
+            onPressed: () => _showExportOptionsSheet(context),
             icon: Container(
               padding: const EdgeInsets.all(AppSpacing.p8),
               decoration: BoxDecoration(
@@ -239,7 +338,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 color: AppColors.activeGreen,
               ),
             ),
-            tooltip: 'Share Report',
+            tooltip: 'Export',
           ),
           const SizedBox(width: AppSpacing.s4),
           PopupMenuButton<String>(
@@ -707,6 +806,87 @@ class _ExpenseTile extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ExportOptionTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final List<Color> gradientColors;
+  final VoidCallback onTap;
+
+  const _ExportOptionTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.gradientColors,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF8F9FA),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFE5E7EB)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: gradientColors,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(icon, color: Colors.white, size: 22),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF111827),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF6B7280),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: Color(0xFF9CA3AF),
+                size: 20,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
