@@ -10,6 +10,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
   final String currency;
   final String Function(double, String) formatAmount;
   final VoidCallback onDelete;
+  final VoidCallback? onEdit;
 
   const TourExpenseDetailsSheet({
     super.key,
@@ -18,6 +19,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
     required this.currency,
     required this.formatAmount,
     required this.onDelete,
+    this.onEdit,
   });
 
   @override
@@ -180,26 +182,56 @@ class TourExpenseDetailsSheet extends StatelessWidget {
           const SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: ElevatedButton.icon(
-              onPressed: onDelete,
-              icon: const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 18),
-              label: const Text(
-                'Delete Expense',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                  fontSize: 14,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (onEdit != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: ElevatedButton.icon(
+                      onPressed: onEdit,
+                      icon: const Icon(Icons.edit_outlined, color: Colors.white, size: 18),
+                      label: const Text(
+                        'Edit Expense',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF4F46E5),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ElevatedButton.icon(
+                  onPressed: onDelete,
+                  icon: const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 18),
+                  label: const Text(
+                    'Delete Expense',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.activeRed,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                 ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.activeRed,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+              ],
             ),
           ),
         ],

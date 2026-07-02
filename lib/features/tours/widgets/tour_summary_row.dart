@@ -30,7 +30,7 @@ class TourSummaryRow extends StatelessWidget {
             valueColor: theme.colorScheme.onSurface,
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 8),
         Expanded(
           child: _buildSummaryCard(
             theme: theme,
@@ -59,10 +59,10 @@ class TourSummaryRow extends StatelessWidget {
   }) {
     final isDark = theme.brightness == Brightness.dark;
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFF1F5F9),
           width: 1.2,
@@ -95,20 +95,20 @@ class TourSummaryRow extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   color: iconBgColor,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, size: 16, color: iconColor),
+                child: Icon(icon, size: 14, color: iconColor),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 6),
           Text(
             value,
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 18,
               fontWeight: FontWeight.w800,
               color: valueColor,
               letterSpacing: -0.5,

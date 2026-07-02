@@ -326,6 +326,17 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     );
   }
 
+  void _editExpense(TourExpense expense) {
+    final provider = context.read<TourProvider>();
+    AddExpenseSheet.show(
+      context,
+      tourId: widget.tourId,
+      participants: provider.participants,
+      currency: provider.selectedTour?.currency ?? 'USD',
+      expenseToEdit: expense,
+    );
+  }
+
   void _showExpenseDetailsSheet(
     BuildContext context,
     TourExpense expense,
@@ -345,6 +356,10 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           onDelete: () {
             Navigator.pop(ctx);
             _confirmDeleteExpense(context, expense.id);
+          },
+          onEdit: () {
+            Navigator.pop(ctx);
+            _editExpense(expense);
           },
         );
       },
@@ -447,7 +462,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(AppImages.noExpense, height: 120, width: 120),
+            Image.asset(AppImages.noExpense, height: 140, width: 140),
 
             Text(
               'No expenses yet',

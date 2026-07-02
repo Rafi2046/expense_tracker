@@ -15,12 +15,14 @@ class AddExpenseSheet extends StatefulWidget {
   final String tourId;
   final List<TourParticipant> participants;
   final String currency;
+  final TourExpense? expenseToEdit;
 
   const AddExpenseSheet({
     super.key,
     required this.tourId,
     required this.participants,
     required this.currency,
+    this.expenseToEdit,
   });
 
   static Future<void> show(
@@ -28,6 +30,7 @@ class AddExpenseSheet extends StatefulWidget {
     required String tourId,
     required List<TourParticipant> participants,
     required String currency,
+    TourExpense? expenseToEdit,
   }) {
     return showModalBottomSheet(
       context: context,
@@ -38,6 +41,7 @@ class AddExpenseSheet extends StatefulWidget {
         tourId: tourId,
         participants: participants,
         currency: currency,
+        expenseToEdit: expenseToEdit,
       ),
     );
   }
@@ -93,8 +97,22 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   @override
   void initState() {
     super.initState();
-    if (widget.participants.isNotEmpty) {
-      _paidById = widget.participants.first.id;
+    final edit = widget.expenseToEdit;
+    if (edit != null) {
+      _titleController.text = edit.title;
+      _amountController.text = edit.amount.toStringAsFixed(0);
+      _paidById = edit.paidBy;
+      _splitType = edit.splitType;
+      _selectedCategory = edit.category;
+      if (edit.note != null) _noteController.text = edit.note!;
+      _selectedDate = edit.date;
+      if (edit.receiptPath != null) {
+        _receiptImage = XFile(edit.receiptPath!);
+      }
+    } else {
+      if (widget.participants.isNotEmpty) {
+        _paidById = widget.participants.first.id;
+      }
     }
     for (final p in widget.participants) {
       _customValues[p.id] = TextEditingController();
@@ -447,8 +465,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     setState(() => _isSaving = true);
 
     final amount = _parsedAmount;
+    final isEdit = widget.expenseToEdit != null;
     final expense = TourExpense(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      id: isEdit ? widget.expenseToEdit!.id : DateTime.now().microsecondsSinceEpoch.toString(),
       tourId: widget.tourId,
       title: _titleController.text.trim().isEmpty && _selectedCategory != null
           ? _selectedCategory!
@@ -482,7 +501,11 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           : null,
     );
 
-    await provider.addExpense(expense, shares);
+    if (isEdit) {
+      await provider.updateExpense(expense, shares);
+    } else {
+      await provider.addExpense(expense, shares);
+    }
     if (mounted) Navigator.of(context).pop();
   }
 
