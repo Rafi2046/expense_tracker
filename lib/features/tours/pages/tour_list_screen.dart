@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
@@ -73,7 +72,6 @@ class _TourListScreenState extends State<TourListScreen> {
   final Map<String, double> _totalSpent = {};
   int _currentPageIndex = 0;
   String? _lastProfileId;
-  bool _isLoading = true;
   late final PageController _pageController;
 
   @override
@@ -90,7 +88,6 @@ class _TourListScreenState extends State<TourListScreen> {
   }
 
   Future<void> _loadCounts() async {
-    setState(() => _isLoading = true);
     final provider = context.read<TourProvider>();
     final tourIds = provider.tours.map((t) => t.id).toList();
     if (tourIds.isEmpty) return;
@@ -119,7 +116,7 @@ class _TourListScreenState extends State<TourListScreen> {
     } catch (e) {
       debugPrint('TourListScreen._loadCounts error: $e');
     }
-    if (mounted) setState(() => _isLoading = false);
+    if (mounted) setState(() {});
   }
 
   void _openCreateTourSheet() {
@@ -230,9 +227,7 @@ class _TourListScreenState extends State<TourListScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.only(top: 8, bottom: 24),
-          child: Skeletonizer(
-            enabled: _isLoading,
-            child: Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TourStatsRow(
@@ -336,7 +331,6 @@ class _TourListScreenState extends State<TourListScreen> {
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
