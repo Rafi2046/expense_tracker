@@ -8,6 +8,7 @@ import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class AddExpenseSheet extends StatefulWidget {
   final String tourId;
@@ -29,6 +30,7 @@ class AddExpenseSheet extends StatefulWidget {
   }) {
     return showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => AddExpenseSheet(
@@ -507,27 +509,39 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          // Title field
-          TextField(
-            controller: _titleController,
-            textAlign: TextAlign.center,
-            onChanged: (_) => setState(() => _validationError = null),
-            style: GoogleFonts.workSans(
-              fontSize: 15,
-              color: theme.colorScheme.onSurface,
-              fontWeight: FontWeight.w500,
-            ),
-            decoration: InputDecoration(
-              hintText: 'What was the expense for?',
-              hintStyle: GoogleFonts.workSans(
-                fontSize: 15,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
-                fontWeight: FontWeight.w400,
+          const SizedBox(height: 12),
+          // Title field — visible input container
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p14, vertical: AppSpacing.p12),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.25),
+              borderRadius: BorderRadius.circular(AppSpacing.r10),
+              border: Border.all(
+                color: theme.dividerColor.withValues(alpha: 0.12),
+                width: 1,
               ),
-              border: InputBorder.none,
-              isDense: true,
-              contentPadding: EdgeInsets.zero,
+            ),
+            child: TextField(
+              controller: _titleController,
+              textAlign: TextAlign.start,
+              onChanged: (_) => setState(() => _validationError = null),
+              style: GoogleFonts.workSans(
+                fontSize: 15,
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.w500,
+              ),
+              decoration: InputDecoration(
+                hintText: 'What was the expense for?',
+                hintStyle: GoogleFonts.workSans(
+                  fontSize: 15,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
+                  fontWeight: FontWeight.w400,
+                ),
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+              ),
             ),
           ),
         ],
@@ -600,31 +614,14 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   // ─── Meta Row ────────────────────────────────────────────────────────
 
   Widget _buildMetaRow(ThemeData theme) {
-    final payerName = widget.participants
-        .firstWhere((p) => p.id == _paidById, orElse: () => widget.participants.first)
-        .name.split(' ').first;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
-          _buildMetaChip(theme, Icons.person_outline_rounded, payerName, _pickPayer),
-          const SizedBox(width: 8),
           _buildMetaChip(theme, Icons.calendar_today_rounded, _formatDate(_selectedDate), _pickDate),
         ],
       ),
     );
-  }
-
-  void _pickPayer() async {
-    final selected = await showMenu<String>(
-      context: context,
-      position: const RelativeRect.fromLTRB(100, 300, 100, 300),
-      items: widget.participants
-          .map((p) => PopupMenuItem(value: p.id, child: Text(p.name)))
-          .toList(),
-    );
-    if (selected != null) setState(() => _paidById = selected);
   }
 
   Widget _buildMetaChip(ThemeData theme, IconData icon, String text, VoidCallback onTap) {
@@ -853,7 +850,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 2, bottom: 10),
+            padding: const EdgeInsets.only(left: 2, bottom: AppSpacing.s8),
             child: Text(
               'SPLIT',
               style: GoogleFonts.workSans(
@@ -864,24 +861,13 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.25),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Column(
-              children: [
-                _buildSplitTypePills(theme),
-                const SizedBox(height: 14),
-                if (_lateJoiners.isNotEmpty) ...[
-                  _buildLateJoinerBanner(theme),
-                  const SizedBox(height: 10),
-                ],
-                _buildSplitDetails(theme),
-              ],
-            ),
-          ),
+          _buildSplitTypePills(theme),
+          if (_lateJoiners.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.s12),
+            _buildLateJoinerBanner(theme),
+          ],
+          const SizedBox(height: AppSpacing.s12),
+          _buildSplitDetails(theme),
         ],
       ),
     );
@@ -976,25 +962,33 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
     if (showCheckboxes) {
       return Column(
-        children: widget.participants.map((p) {
+        children: widget.participants.asMap().entries.map((entry) {
+          final p = entry.value;
           final excluded = _excludedIds.contains(p.id);
           final preview = _previewAmount(p.id);
+          final index = entry.key;
           return Padding(
-            padding: const EdgeInsets.only(bottom: 4),
+            padding: EdgeInsets.only(bottom: index < widget.participants.length - 1 ? AppSpacing.s8 : 0),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p10),
               decoration: BoxDecoration(
-                color: excluded ? Colors.transparent : theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(10),
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(AppSpacing.r10),
+                border: Border.all(
+                  color: excluded
+                      ? theme.dividerColor.withValues(alpha: 0.08)
+                      : theme.dividerColor.withValues(alpha: 0.15),
+                  width: 1,
+                ),
               ),
               child: Row(
                 children: [
                   SizedBox(
-                    width: 24, height: 24,
+                    width: 22, height: 22,
                     child: Checkbox(
                       value: !excluded,
                       activeColor: AppColors.activeGreen,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r4)),
                       side: WidgetStateBorderSide.resolveWith(
                         (_) => BorderSide(
                           color: excluded
@@ -1011,12 +1005,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       }),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.s8),
                   CircleAvatar(
                     radius: 14,
                     backgroundColor: excluded
                         ? theme.dividerColor.withValues(alpha: 0.3)
-                        : _avatarColors[widget.participants.indexOf(p) % _avatarColors.length],
+                        : _avatarColors[index % _avatarColors.length],
                     child: Text(
                       p.name[0].toUpperCase(),
                       style: TextStyle(
@@ -1025,7 +1019,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.s8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1072,21 +1066,27 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     if (showInputs) {
       final suffix = _splitType == 'percentage' ? '%' : _sym;
       return Column(
-        children: widget.participants.map((p) {
+        children: widget.participants.asMap().entries.map((entry) {
+          final p = entry.value;
           final preview = _previewAmount(p.id);
+          final index = entry.key;
           return Padding(
-            padding: const EdgeInsets.only(bottom: 4),
+            padding: EdgeInsets.only(bottom: index < widget.participants.length - 1 ? AppSpacing.s8 : 0),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p10),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(10),
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(AppSpacing.r10),
+                border: Border.all(
+                  color: theme.dividerColor.withValues(alpha: 0.15),
+                  width: 1,
+                ),
               ),
               child: Row(
                 children: [
                   CircleAvatar(
                     radius: 14,
-                    backgroundColor: _avatarColors[widget.participants.indexOf(p) % _avatarColors.length],
+                    backgroundColor: _avatarColors[index % _avatarColors.length],
                     child: Text(
                       p.name[0].toUpperCase(),
                       style: const TextStyle(
@@ -1094,7 +1094,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.s8),
                   Expanded(
                     child: Text(
                       p.name,
@@ -1113,7 +1113,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSpacing.s8),
                   ],
                   SizedBox(
                     width: 80,
@@ -1137,12 +1137,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                         ),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppSpacing.r8),
                           borderSide: BorderSide.none,
                         ),
                         filled: true,
                         fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s8, vertical: AppSpacing.s6),
                         isDense: true,
                       ),
                     ),
