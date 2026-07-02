@@ -439,11 +439,15 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
   Widget _buildEmptyState(ThemeData theme) {
     final isDark = theme.brightness == Brightness.dark;
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
+      padding: EdgeInsets.only(
+        top: 4,
+        bottom: MediaQuery.of(context).padding.bottom + 100,
+      ),
       child: Center(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(AppImages.noExpense, height: 180, width: 180),
+            Image.asset(AppImages.noExpense, height: 120, width: 120),
 
             Text(
               'No expenses yet',
@@ -453,7 +457,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 color: theme.colorScheme.onSurface,
               ),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
             Text(
               'Tap + to add the first expense',
               style: TextStyle(
