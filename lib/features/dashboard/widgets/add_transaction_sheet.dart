@@ -10,6 +10,7 @@ import 'package:expense_tracker/features/dashboard/widgets/add_transaction_compo
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/party_selector_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/party_selector_tile.dart';
 import 'package:expense_tracker/features/dashboard/widgets/sheet_components/category_selector.dart';
+import 'package:expense_tracker/features/dashboard/widgets/select_category_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/sheet_components/date_selector.dart';
 import 'package:expense_tracker/features/dashboard/widgets/sheet_components/income_month_selector.dart';
 import 'package:expense_tracker/features/dashboard/widgets/sheet_components/payment_mode_selector.dart';
@@ -73,6 +74,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   String? _selectedIncomeMonth;
   String _paymentMethod = 'Cash';
   String? _selectedPartyName;
+  bool _isHidden = false;
 
   @override
   void initState() {
@@ -299,13 +301,17 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(AppSpacing.br20),
-          topRight: Radius.circular(AppSpacing.br20),
-        ),
+        color: _isHidden ? Colors.transparent : theme.cardColor,
+        borderRadius: _isHidden
+            ? BorderRadius.zero
+            : const BorderRadius.only(
+                topLeft: Radius.circular(AppSpacing.br20),
+                topRight: Radius.circular(AppSpacing.br20),
+              ),
       ),
-      child: Form(
+      child: _isHidden
+          ? const SizedBox.shrink()
+          : Form(
         key: _formKey,
         child: Column(
           children: [
@@ -336,6 +342,19 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                       isIncome: widget.isIncome,
                       onCategorySelected: (cat) =>
                           setState(() => _selectedCategory = cat),
+                      onTap: () async {
+                        setState(() => _isHidden = true);
+                        await SelectCategorySheet.show(
+                          context: context,
+                          isIncome: widget.isIncome,
+                          selectedCategory: _selectedCategory,
+                          onCategorySelected: (cat) =>
+                              setState(() => _selectedCategory = cat),
+                        );
+                        if (mounted) {
+                          setState(() => _isHidden = false);
+                        }
+                      },
                     ),
                     const SizedBox(height: AppSpacing.h12),
                     DateSelector(
@@ -431,9 +450,10 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
     }
   }
 
-  void _showMonthSheet(BuildContext context) {
+  void _showMonthSheet(BuildContext context) async {
+    setState(() => _isHidden = true);
     final provider = context.read<TransactionProvider>();
-    showModalBottomSheet(
+    await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) => MonthSelectorSheet(
@@ -445,9 +465,13 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         },
       ),
     );
+    if (mounted) {
+      setState(() => _isHidden = false);
+    }
   }
 
-  void _showPartySheet(BuildContext context) {
+  void _showPartySheet(BuildContext context) async {
+    setState(() => _isHidden = true);
     final debtProvider = context.read<DebtProvider>();
     final Map<String, DebtItem> uniqueParties = {};
     for (var item in debtProvider.items) {
@@ -457,7 +481,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
       }
     }
 
-    showModalBottomSheet(
+    await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) => PartySelectorSheet(
@@ -474,5 +498,8 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         },
       ),
     );
+    if (mounted) {
+      setState(() => _isHidden = false);
+    }
   }
 }

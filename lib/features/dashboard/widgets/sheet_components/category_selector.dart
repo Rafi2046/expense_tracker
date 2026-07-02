@@ -8,6 +8,7 @@ class CategorySelector extends StatelessWidget {
   final Color themeColor;
   final bool isIncome;
   final ValueChanged<String> onCategorySelected;
+  final VoidCallback? onTap;
 
   const CategorySelector({
     super.key,
@@ -15,6 +16,7 @@ class CategorySelector extends StatelessWidget {
     required this.themeColor,
     required this.isIncome,
     required this.onCategorySelected,
+    this.onTap,
   });
 
   @override
@@ -26,7 +28,7 @@ class CategorySelector extends StatelessWidget {
       isValueSelected: selectedCategory != null,
       themeColor: themeColor,
       trailingIcon: Symbols.arrow_forward_ios_rounded,
-      onTap: () {
+      onTap: onTap ?? () {
         SelectCategorySheet.show(
           context: context,
           isIncome: isIncome,

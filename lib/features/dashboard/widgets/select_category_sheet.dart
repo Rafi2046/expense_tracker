@@ -19,13 +19,13 @@ class SelectCategorySheet extends StatefulWidget {
     required this.onCategorySelected,
   });
 
-  static void show({
+  static Future<void> show({
     required BuildContext context,
     required bool isIncome,
     String? selectedCategory,
     required ValueChanged<String> onCategorySelected,
   }) {
-    showModalBottomSheet(
+    return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
