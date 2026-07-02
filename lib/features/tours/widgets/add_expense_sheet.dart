@@ -3,17 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
-
-const Color _green = Color(0xFF2EBD85);
-const Color _greenLight = Color(0xFFE8F8F5);
-const Color _dark = Color(0xFF1F2937);
-const Color _muted = Color(0xFF9CA3AF);
-const Color _bgCard = Color(0xFFF9FAFB);
-const Color _red = Color(0xFFDC3545);
-const Color _redLight = Color(0xFFFEF2F2);
+import 'package:expense_tracker/core/constants/app_colors.dart';
 
 class AddExpenseSheet extends StatefulWidget {
   final String tourId;
@@ -66,17 +60,18 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   XFile? _receiptImage;
 
   static const _categories = [
-    'Food',
-    'Transport',
-    'Accommodation',
-    'Activities',
-    'Shopping',
-    'Drinks',
-    'Groceries',
-    'Fuel',
-    'Tickets',
-    'Other',
+    ('Food', Icons.restaurant_rounded),
+    ('Transport', Icons.directions_car_rounded),
+    ('Accommodation', Icons.hotel_rounded),
+    ('Activities', Icons.hiking_rounded),
+    ('Shopping', Icons.shopping_bag_rounded),
+    ('Drinks', Icons.local_bar_rounded),
+    ('Groceries', Icons.shopping_cart_rounded),
+    ('Fuel', Icons.local_gas_station_rounded),
+    ('Tickets', Icons.confirmation_num_rounded),
+    ('Other', Icons.more_horiz_rounded),
   ];
+
   static const _avatarColors = [
     Color(0xFF6366F1),
     Color(0xFFEC4899),
@@ -115,14 +110,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   String _currencySymbol() {
     const symbols = {
-      'BDT': '৳',
-      'USD': r'$',
-      'EUR': '€',
-      'GBP': '£',
-      'INR': '₹',
-      'JPY': '¥',
-      'AED': 'د.إ',
-      'CAD': r'$',
+      'BDT': '৳', 'USD': r'$', 'EUR': '€', 'GBP': '£',
+      'INR': '₹', 'JPY': '¥', 'AED': 'د.إ', 'CAD': r'$',
     };
     return symbols[widget.currency] ?? r'$';
   }
@@ -135,12 +124,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   bool _hadNotJoinedYet(TourParticipant p) {
     final endOfDay = DateTime(
-      _selectedDate.year,
-      _selectedDate.month,
-      _selectedDate.day,
-      23,
-      59,
-      59,
+      _selectedDate.year, _selectedDate.month, _selectedDate.day, 23, 59, 59,
     );
     return p.joinedAt.isAfter(endOfDay);
   }
@@ -172,16 +156,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         return '$_sym${perPerson.toStringAsFixed(perPerson == perPerson.roundToDouble() ? 0 : 2)}';
       case 'percentage':
         if (excluded) return null;
-        final pct =
-            double.tryParse(_customValues[participantId]?.text.trim() ?? '') ??
-            0;
+        final pct = double.tryParse(_customValues[participantId]?.text.trim() ?? '') ?? 0;
         final share = amount * pct / 100;
         return '$_sym${share.toStringAsFixed(share == share.roundToDouble() ? 0 : 2)}';
       case 'exact':
         if (excluded) return null;
-        final val = double.tryParse(
-          _customValues[participantId]?.text.trim() ?? '',
-        );
+        final val = double.tryParse(_customValues[participantId]?.text.trim() ?? '');
         if (val == null) return null;
         return '$_sym${val.toStringAsFixed(val == val.roundToDouble() ? 0 : 2)}';
       default:
@@ -199,11 +179,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     if (picked == null) return;
     setState(() {
       _selectedDate = DateTime(
-        picked.year,
-        picked.month,
-        picked.day,
-        _selectedDate.hour,
-        _selectedDate.minute,
+        picked.year, picked.month, picked.day,
+        _selectedDate.hour, _selectedDate.minute,
       );
       _applyDateBasedDefaults();
       _validationError = null;
@@ -211,64 +188,43 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   }
 
   Future<void> _pickReceipt(ImageSource source) async {
-    final file = await _picker.pickImage(
-      source: source,
-      maxWidth: 1200,
-      imageQuality: 80,
-    );
+    final file = await _picker.pickImage(source: source, maxWidth: 1200, imageQuality: 80);
     if (file != null) setState(() => _receiptImage = file);
   }
 
   void _showReceiptSourceSheet() {
+    final theme = Theme.of(context);
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
         padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 36,
-              height: 4,
+              width: 36, height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
+                color: theme.dividerColor.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Attach Receipt',
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-                color: _dark,
+              style: GoogleFonts.workSans(
+                fontSize: 17, fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 20),
-            ListTile(
-              leading: const Icon(Icons.camera_alt_rounded, color: _green),
-              title: const Text('Take Photo', style: TextStyle(fontSize: 15)),
-              onTap: () {
-                Navigator.pop(ctx);
-                _pickReceipt(ImageSource.camera);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_library_rounded, color: _green),
-              title: const Text(
-                'Choose from Gallery',
-                style: TextStyle(fontSize: 15),
-              ),
-              onTap: () {
-                Navigator.pop(ctx);
-                _pickReceipt(ImageSource.gallery);
-              },
-            ),
+            _buildReceiptOption(ctx, theme, Icons.camera_alt_rounded, 'Take Photo', ImageSource.camera),
+            const SizedBox(height: 4),
+            _buildReceiptOption(ctx, theme, Icons.photo_library_rounded, 'Choose from Gallery', ImageSource.gallery),
             const SizedBox(height: 8),
           ],
         ),
@@ -276,24 +232,29 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     );
   }
 
+  Widget _buildReceiptOption(BuildContext ctx, ThemeData theme, IconData icon, String label, ImageSource source) {
+    return ListTile(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      leading: Container(
+        width: 40, height: 40,
+        decoration: BoxDecoration(
+          color: AppColors.activeGreen.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(icon, color: AppColors.activeGreen, size: 20),
+      ),
+      title: Text(label, style: GoogleFonts.workSans(fontSize: 14, fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface)),
+      onTap: () {
+        Navigator.pop(ctx);
+        _pickReceipt(source);
+      },
+    );
+  }
+
   String _formatDate(DateTime d) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     final today = DateTime.now();
-    final isToday =
-        d.year == today.year && d.month == today.month && d.day == today.day;
+    final isToday = d.year == today.year && d.month == today.month && d.day == today.day;
     if (isToday) return 'Today';
     return '${d.day} ${months[d.month - 1]} ${d.year}';
   }
@@ -308,8 +269,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       final total = widget.participants
           .where((p) => !_excludedIds.contains(p.id))
           .fold(0.0, (s, p) {
-            final v =
-                double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
+            final v = double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
             return s + v;
           });
       if ((total * 100).round() != (amount * 100).round()) {
@@ -321,8 +281,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       final total = widget.participants
           .where((p) => !_excludedIds.contains(p.id))
           .fold(0.0, (s, p) {
-            final v =
-                double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
+            final v = double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
             return s + v;
           });
       if ((total * 100).round() != 10000) return 'Percentages must total 100%';
@@ -349,9 +308,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       paidBy: _paidById,
       splitType: _splitType,
       category: _selectedCategory,
-      note: _noteController.text.trim().isEmpty
-          ? null
-          : _noteController.text.trim(),
+      note: _noteController.text.trim().isEmpty ? null : _noteController.text.trim(),
       date: _selectedDate,
       receiptPath: _receiptImage?.path,
     );
@@ -380,271 +337,280 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     if (mounted) Navigator.of(context).pop();
   }
 
-  // ═══════════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════════
   // BUILD
-  // ═══════════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════════
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final bottom = MediaQuery.of(context).viewInsets.bottom;
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+
     return Padding(
       padding: EdgeInsets.only(bottom: bottom),
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.92,
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildHandle(),
-              const SizedBox(height: 8),
-              _buildHeroAmount(),
-              const SizedBox(height: 8),
-              _buildTitleField(),
-              const SizedBox(height: 16),
-              _buildMetaRow(),
-              const SizedBox(height: 16),
-              _buildReceiptSection(),
-              const SizedBox(height: 20),
-              _buildPaidBySection(),
-              const SizedBox(height: 16),
-              _buildSplitSection(),
-              if (_validationError != null) ...[
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    _validationError!,
-                    style: const TextStyle(color: _red, fontSize: 12),
-                  ),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Scrollable content
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildHandle(theme),
+                    _buildHeroSection(theme),
+                    const SizedBox(height: 6),
+                    _buildCategoryChips(theme),
+                    const SizedBox(height: 16),
+                    _buildMetaRow(theme),
+                    const SizedBox(height: 16),
+                    _buildReceiptSection(theme),
+                    const SizedBox(height: 20),
+                    _buildPaidBySection(theme),
+                    const SizedBox(height: 16),
+                    _buildSplitSection(theme),
+                    if (_validationError != null) ...[
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: AppColors.activeRed.withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.error_outline_rounded, size: 16, color: AppColors.activeRed.withValues(alpha: 0.8)),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  _validationError!,
+                                  style: GoogleFonts.workSans(color: AppColors.activeRed, fontSize: 12, fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 8),
+                    _buildNoteField(theme),
+                    const SizedBox(height: 16),
+                  ],
                 ),
-              ],
-              const SizedBox(height: 8),
-              _buildNoteField(),
-              const SizedBox(height: 20),
-              _buildSaveButton(),
-              const SizedBox(height: 16),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHandle() {
-    return const Padding(
-      padding: EdgeInsets.only(top: 10),
-      child: Center(
-        child: SizedBox(
-          width: 36,
-          height: 4,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: Color(0xFFD1D5DB),
-              borderRadius: BorderRadius.all(Radius.circular(2)),
+              ),
             ),
+            // Sticky save button
+            _buildSaveButton(theme, bottomInset),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHandle(ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10, bottom: 4),
+      child: Center(
+        child: Container(
+          width: 36, height: 4,
+          decoration: BoxDecoration(
+            color: theme.dividerColor.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(2),
           ),
         ),
       ),
     );
   }
 
-  // ─── Hero Amount ─────────────────────────────────────────────────────
+  // ─── Hero Section (Amount + Title) ─────────────────────────────────────
 
-  Widget _buildHeroAmount() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+  Widget _buildHeroSection(ThemeData theme) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.activeGreen.withValues(alpha: 0.06),
+            AppColors.activeGreen.withValues(alpha: 0.02),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.activeGreen.withValues(alpha: 0.1),
+          width: 1,
+        ),
+      ),
       child: Column(
         children: [
-          TextField(
-            controller: _amountController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
+          // Amount input
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                _sym,
+                style: GoogleFonts.workSans(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w300,
+                  color: AppColors.activeGreen.withValues(alpha: 0.5),
+                ),
+              ),
+              const SizedBox(width: 4),
+              IntrinsicWidth(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 60, maxWidth: 200),
+                  child: TextField(
+                    controller: _amountController,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
+                    ],
+                    textAlign: TextAlign.center,
+                    onChanged: (_) => setState(() => _validationError = null),
+                    style: GoogleFonts.workSans(
+                      fontSize: 38,
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onSurface,
+                      height: 1.2,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: '0',
+                      hintStyle: GoogleFonts.workSans(
+                        fontSize: 38,
+                        fontWeight: FontWeight.w300,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
+                      ),
+                      border: InputBorder.none,
+                      filled: false,
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    scrollPadding: EdgeInsets.zero,
+                  ),
+                ),
+              ),
             ],
+          ),
+          const SizedBox(height: 8),
+          // Title field
+          TextField(
+            controller: _titleController,
             textAlign: TextAlign.center,
             onChanged: (_) => setState(() => _validationError = null),
-            style: const TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.w700,
-              color: _dark,
-              height: 1.2,
+            style: GoogleFonts.workSans(
+              fontSize: 15,
+              color: theme.colorScheme.onSurface,
+              fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
-              hintText: '${_sym}0',
-              hintStyle: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.w300,
-                color: Colors.grey.shade300,
+              hintText: 'What was the expense for?',
+              hintStyle: GoogleFonts.workSans(
+                fontSize: 15,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
+                fontWeight: FontWeight.w400,
               ),
               border: InputBorder.none,
-              filled: false,
               isDense: true,
               contentPadding: EdgeInsets.zero,
             ),
-            scrollPadding: EdgeInsets.zero,
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildChip('Today', Icons.calendar_today_rounded, _pickDate),
-              const SizedBox(width: 8),
-              _buildChip(
-                _selectedCategory ?? 'Category',
-                Icons.category_outlined,
-                () => _showCategoryPicker(),
-              ),
-            ],
           ),
         ],
       ),
     );
   }
 
-  void _showCategoryPicker() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) => Container(
-        padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 36,
-              height: 4,
-              margin: const EdgeInsets.only(bottom: 16, left: 0),
+  // ─── Category Chips (inline) ─────────────────────────────────────────
+
+  Widget _buildCategoryChips(ThemeData theme) {
+    return SizedBox(
+      height: 36,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        itemCount: _categories.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 6),
+        itemBuilder: (context, index) {
+          final (label, icon) = _categories[index];
+          final isSelected = _selectedCategory == label;
+          return GestureDetector(
+            onTap: () => setState(() {
+              _selectedCategory = isSelected ? null : label;
+            }),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
+                color: isSelected
+                    ? AppColors.activeGreen.withValues(alpha: 0.12)
+                    : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: isSelected
+                      ? AppColors.activeGreen.withValues(alpha: 0.3)
+                      : Colors.transparent,
+                  width: 1,
+                ),
               ),
-            ),
-            const Text(
-              'Category',
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-                color: _dark,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _categories
-                  .map(
-                    (c) => ActionChip(
-                      label: Text(c, style: const TextStyle(fontSize: 13)),
-                      backgroundColor: _selectedCategory == c
-                          ? _greenLight
-                          : _bgCard,
-                      side: BorderSide.none,
-                      onPressed: () {
-                        setState(() => _selectedCategory = c);
-                        Navigator.pop(ctx);
-                      },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icon,
+                    size: 14,
+                    color: isSelected
+                        ? AppColors.activeGreen
+                        : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    label,
+                    style: GoogleFonts.workSans(
+                      fontSize: 12,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                      color: isSelected
+                          ? AppColors.activeGreen
+                          : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                     ),
-                  )
-                  .toList(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildChip(String text, IconData icon, VoidCallback onTap) {
-    final isDate = text == _formatDate(_selectedDate) || text == 'Today';
-    final displayText = isDate ? text : text;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-        decoration: BoxDecoration(
-          color: _bgCard,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 14, color: _muted),
-            const SizedBox(width: 5),
-            Text(
-              displayText,
-              style: const TextStyle(
-                fontSize: 12,
-                color: _muted,
-                fontWeight: FontWeight.w500,
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ─── Title Field ─────────────────────────────────────────────────────
-
-  Widget _buildTitleField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TextField(
-        controller: _titleController,
-        textAlign: TextAlign.center,
-        onChanged: (_) => setState(() => _validationError = null),
-        style: const TextStyle(
-          fontSize: 16,
-          color: _dark,
-          fontWeight: FontWeight.w500,
-        ),
-        decoration: const InputDecoration(
-          hintText: 'What was the expense for?',
-          hintStyle: TextStyle(
-            fontSize: 16,
-            color: Color(0xFFD1D5DB),
-            fontWeight: FontWeight.w400,
-          ),
-          border: InputBorder.none,
-          isDense: true,
-          contentPadding: EdgeInsets.zero,
-        ),
+          );
+        },
       ),
     );
   }
 
   // ─── Meta Row ────────────────────────────────────────────────────────
 
-  Widget _buildMetaRow() {
+  Widget _buildMetaRow(ThemeData theme) {
+    final payerName = widget.participants
+        .firstWhere((p) => p.id == _paidById, orElse: () => widget.participants.first)
+        .name.split(' ').first;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
-          _buildMetaChip(
-            Icons.person_outline_rounded,
-            widget.participants
-                .firstWhere(
-                  (p) => p.id == _paidById,
-                  orElse: () => widget.participants.first,
-                )
-                .name
-                .split(' ')
-                .first,
-            _pickPayer,
-          ),
+          _buildMetaChip(theme, Icons.person_outline_rounded, payerName, _pickPayer),
           const SizedBox(width: 8),
-          _buildMetaChip(
-            Icons.date_range_rounded,
-            _formatDate(_selectedDate),
-            _pickDate,
-          ),
+          _buildMetaChip(theme, Icons.calendar_today_rounded, _formatDate(_selectedDate), _pickDate),
         ],
       ),
     );
@@ -661,73 +627,75 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     if (selected != null) setState(() => _paidById = selected);
   }
 
-  Widget _buildMetaChip(IconData icon, String text, VoidCallback onTap) {
+  Widget _buildMetaChip(ThemeData theme, IconData icon, String text, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: _bgCard,
-          borderRadius: BorderRadius.circular(8),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: theme.dividerColor.withValues(alpha: 0.1),
+            width: 1,
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 14, color: _dark),
-            const SizedBox(width: 4),
+            Icon(icon, size: 14, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+            const SizedBox(width: 6),
             Text(
               text,
-              style: const TextStyle(
-                fontSize: 12,
-                color: _dark,
+              style: GoogleFonts.workSans(
+                fontSize: 13,
+                color: theme.colorScheme.onSurface,
                 fontWeight: FontWeight.w500,
               ),
             ),
+            const SizedBox(width: 4),
+            Icon(Icons.keyboard_arrow_down_rounded, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
           ],
         ),
       ),
     );
   }
 
-  // ─── Receipt Attach ──────────────────────────────────────────────────
+  // ─── Receipt Section ──────────────────────────────────────────────────
 
-  Widget _buildReceiptSection() {
+  Widget _buildReceiptSection(ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: _receiptImage != null
-          ? _buildReceiptThumbnail()
-          : _buildReceiptButton(),
+          ? _buildReceiptThumbnail(theme)
+          : _buildReceiptButton(theme),
     );
   }
 
-  Widget _buildReceiptButton() {
+  Widget _buildReceiptButton(ThemeData theme) {
     return GestureDetector(
       onTap: _showReceiptSourceSheet,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: Colors.grey.shade300,
+            color: theme.dividerColor.withValues(alpha: 0.2),
             width: 1.5,
-            strokeAlign: BorderSide.strokeAlignInside,
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.receipt_long_outlined,
-              size: 18,
-              color: Colors.grey.shade400,
-            ),
+            Icon(Icons.receipt_long_outlined, size: 18,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
             const SizedBox(width: 8),
             Text(
               'Add Receipt',
-              style: TextStyle(
+              style: GoogleFonts.workSans(
                 fontSize: 13,
-                color: Colors.grey.shade500,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -737,25 +705,23 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     );
   }
 
-  Widget _buildReceiptThumbnail() {
+  Widget _buildReceiptThumbnail(ThemeData theme) {
     return GestureDetector(
       onTap: _showReceiptSourceSheet,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: _bgCard,
-          borderRadius: BorderRadius.circular(12),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          borderRadius: BorderRadius.circular(14),
         ),
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(10),
               child: Image.file(
                 File(_receiptImage!.path),
-                width: 44,
-                height: 44,
-                fit: BoxFit.cover,
+                width: 44, height: 44, fit: BoxFit.cover,
               ),
             ),
             const SizedBox(width: 12),
@@ -764,18 +730,18 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 _receiptImage!.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 13, color: _dark),
+                style: GoogleFonts.workSans(fontSize: 13, color: theme.colorScheme.onSurface),
               ),
             ),
             GestureDetector(
               onTap: () => setState(() => _receiptImage = null),
               child: Container(
-                padding: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: _redLight,
+                  color: AppColors.activeRed.withValues(alpha: 0.08),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.close_rounded, size: 14, color: _red),
+                child: Icon(Icons.close_rounded, size: 14, color: AppColors.activeRed.withValues(alpha: 0.7)),
               ),
             ),
           ],
@@ -786,36 +752,29 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   // ─── Paid By Section ─────────────────────────────────────────────────
 
-  Widget _buildPaidBySection() {
+  Widget _buildPaidBySection(ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 2, bottom: 10),
+          Padding(
+            padding: const EdgeInsets.only(left: 2, bottom: 10),
             child: Text(
-              'Paid by',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: _muted,
-                letterSpacing: 0.3,
+              'PAID BY',
+              style: GoogleFonts.workSans(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                letterSpacing: 1.2,
               ),
             ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
-              color: _bgCard,
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x08000000),
-                  blurRadius: 6,
-                  offset: Offset(0, 1),
-                ),
-              ],
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.25),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -827,7 +786,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     padding: EdgeInsets.only(
                       right: idx < widget.participants.length - 1 ? 8 : 0,
                     ),
-                    child: _buildPayerAvatar(p, selected, idx),
+                    child: _buildPayerAvatar(theme, p, selected, idx),
                   );
                 }).toList(),
               ),
@@ -838,7 +797,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     );
   }
 
-  Widget _buildPayerAvatar(TourParticipant p, bool selected, int index) {
+  Widget _buildPayerAvatar(ThemeData theme, TourParticipant p, bool selected, int index) {
     final color = _avatarColors[index % _avatarColors.length];
     return GestureDetector(
       onTap: () => setState(() => _paidById = p.id),
@@ -862,9 +821,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               child: Text(
                 p.name.isNotEmpty ? p.name[0].toUpperCase() : '?',
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
+                  color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -872,14 +829,14 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               const SizedBox(width: 6),
               Text(
                 p.name.split(' ').first,
-                style: const TextStyle(
+                style: GoogleFonts.workSans(
                   fontSize: 12,
-                  color: _dark,
+                  color: theme.colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(width: 4),
-              const Icon(Icons.check_circle_rounded, size: 14, color: _green),
+              const Icon(Icons.check_circle_rounded, size: 14, color: AppColors.activeGreen),
             ],
           ],
         ),
@@ -889,46 +846,39 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   // ─── Split Section ───────────────────────────────────────────────────
 
-  Widget _buildSplitSection() {
+  Widget _buildSplitSection(ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 2, bottom: 10),
+          Padding(
+            padding: const EdgeInsets.only(left: 2, bottom: 10),
             child: Text(
-              'Split',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: _muted,
-                letterSpacing: 0.3,
+              'SPLIT',
+              style: GoogleFonts.workSans(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                letterSpacing: 1.2,
               ),
             ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
             decoration: BoxDecoration(
-              color: _bgCard,
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x08000000),
-                  blurRadius: 6,
-                  offset: Offset(0, 1),
-                ),
-              ],
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.25),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
               children: [
-                _buildSplitTypePills(),
+                _buildSplitTypePills(theme),
                 const SizedBox(height: 14),
                 if (_lateJoiners.isNotEmpty) ...[
-                  _buildLateJoinerBanner(),
+                  _buildLateJoinerBanner(theme),
                   const SizedBox(height: 10),
                 ],
-                _buildSplitDetails(),
+                _buildSplitDetails(theme),
               ],
             ),
           ),
@@ -937,68 +887,80 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     );
   }
 
-  Widget _buildSplitTypePills() {
+  Widget _buildSplitTypePills(ThemeData theme) {
     final types = ['equal', 'exact', 'percentage', 'exclusion'];
     final labels = ['Equal', 'Exact', 'Percent', 'Exclude'];
-    return Row(
-      children: List.generate(types.length, (i) {
-        final active = _splitType == types[i];
-        return Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(left: i > 0 ? 6 : 0),
-            child: GestureDetector(
-              onTap: () => setState(() {
-                _splitType = types[i];
-                _validationError = null;
-                _applyDateBasedDefaults();
-              }),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: active ? _green : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: active ? _green : const Color(0xFFE5E7EB),
-                    width: 1,
+    final icons = [Icons.drag_handle_rounded, Icons.pin_rounded, Icons.percent_rounded, Icons.person_off_rounded];
+
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: List.generate(types.length, (i) {
+          final active = _splitType == types[i];
+          return Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(left: i > 0 ? 4 : 0),
+              child: GestureDetector(
+                onTap: () => setState(() {
+                  _splitType = types[i];
+                  _validationError = null;
+                  _applyDateBasedDefaults();
+                }),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                    color: active ? AppColors.activeGreen : Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: active
+                        ? [BoxShadow(color: AppColors.activeGreen.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 2))]
+                        : null,
                   ),
-                ),
-                child: Center(
-                  child: Text(
-                    labels[i],
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: active ? FontWeight.w600 : FontWeight.w500,
-                      color: active ? Colors.white : _muted,
-                    ),
+                  child: Column(
+                    children: [
+                      Icon(icons[i], size: 16, color: active ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.3)),
+                      const SizedBox(height: 2),
+                      Text(
+                        labels[i],
+                        style: GoogleFonts.workSans(
+                          fontSize: 10,
+                          fontWeight: active ? FontWeight.w600 : FontWeight.w500,
+                          color: active ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 
-  Widget _buildLateJoinerBanner() {
+  Widget _buildLateJoinerBanner(ThemeData theme) {
     final names = _lateJoiners.map((p) => p.name.split(' ').first).join(', ');
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: _greenLight,
+        color: AppColors.activeGreen.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.info_outline_rounded, size: 14, color: _green),
+          const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.activeGreen),
           const SizedBox(width: 6),
           Expanded(
             child: Text(
               '$names joined after ${_formatDate(_selectedDate)} — unchecked by default.',
-              style: const TextStyle(fontSize: 11, color: _green),
+              style: GoogleFonts.workSans(fontSize: 11, color: AppColors.activeGreen),
             ),
           ),
         ],
@@ -1008,7 +970,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   // ─── Split Details (with live preview) ───────────────────────────────
 
-  Widget _buildSplitDetails() {
+  Widget _buildSplitDetails(ThemeData theme) {
     final showCheckboxes = _splitType == 'equal' || _splitType == 'exclusion';
     final showInputs = _splitType == 'exact' || _splitType == 'percentage';
 
@@ -1018,27 +980,26 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           final excluded = _excludedIds.contains(p.id);
           final preview = _previewAmount(p.id);
           return Padding(
-            padding: const EdgeInsets.only(bottom: 6),
+            padding: const EdgeInsets.only(bottom: 4),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
               decoration: BoxDecoration(
-                color: excluded ? Colors.transparent : Colors.white,
+                color: excluded ? Colors.transparent : theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
                 children: [
                   SizedBox(
-                    width: 24,
-                    height: 24,
+                    width: 24, height: 24,
                     child: Checkbox(
                       value: !excluded,
-                      activeColor: _green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
+                      activeColor: AppColors.activeGreen,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                       side: WidgetStateBorderSide.resolveWith(
                         (_) => BorderSide(
-                          color: excluded ? Colors.grey.shade300 : _green,
+                          color: excluded
+                              ? theme.dividerColor.withValues(alpha: 0.3)
+                              : AppColors.activeGreen,
                         ),
                       ),
                       onChanged: (v) => setState(() {
@@ -1054,15 +1015,13 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   CircleAvatar(
                     radius: 14,
                     backgroundColor: excluded
-                        ? Colors.grey.shade300
-                        : _avatarColors[widget.participants.indexOf(p) %
-                              _avatarColors.length],
+                        ? theme.dividerColor.withValues(alpha: 0.3)
+                        : _avatarColors[widget.participants.indexOf(p) % _avatarColors.length],
                     child: Text(
                       p.name[0].toUpperCase(),
                       style: TextStyle(
-                        color: excluded ? Colors.grey.shade500 : Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
+                        color: excluded ? theme.colorScheme.onSurface.withValues(alpha: 0.3) : Colors.white,
+                        fontSize: 10, fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -1074,18 +1033,19 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       children: [
                         Text(
                           p.name,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: excluded ? _muted : _dark,
+                          style: GoogleFonts.workSans(
+                            fontSize: 13, fontWeight: FontWeight.w500,
+                            color: excluded
+                                ? theme.colorScheme.onSurface.withValues(alpha: 0.35)
+                                : theme.colorScheme.onSurface,
                           ),
                         ),
                         if (_hadNotJoinedYet(p))
                           Text(
                             'Joined later',
-                            style: TextStyle(
+                            style: GoogleFonts.workSans(
                               fontSize: 10,
-                              color: excluded ? Colors.grey.shade400 : _muted,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                             ),
                           ),
                       ],
@@ -1094,10 +1054,11 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   if (preview != null)
                     Text(
                       preview,
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: excluded ? Colors.grey.shade400 : _green,
+                      style: GoogleFonts.workSans(
+                        fontSize: 13, fontWeight: FontWeight.w600,
+                        color: excluded
+                            ? theme.colorScheme.onSurface.withValues(alpha: 0.2)
+                            : AppColors.activeGreen,
                       ),
                     ),
                 ],
@@ -1114,26 +1075,22 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         children: widget.participants.map((p) {
           final preview = _previewAmount(p.id);
           return Padding(
-            padding: const EdgeInsets.only(bottom: 6),
+            padding: const EdgeInsets.only(bottom: 4),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
                 children: [
                   CircleAvatar(
                     radius: 14,
-                    backgroundColor:
-                        _avatarColors[widget.participants.indexOf(p) %
-                            _avatarColors.length],
+                    backgroundColor: _avatarColors[widget.participants.indexOf(p) % _avatarColors.length],
                     child: Text(
                       p.name[0].toUpperCase(),
                       style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
+                        color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -1141,19 +1098,18 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   Expanded(
                     child: Text(
                       p.name,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: _dark,
+                      style: GoogleFonts.workSans(
+                        fontSize: 13, fontWeight: FontWeight.w500,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                   ),
                   if (preview != null) ...[
                     Text(
                       preview,
-                      style: const TextStyle(
+                      style: GoogleFonts.workSans(
                         fontSize: 12,
-                        color: _muted,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -1163,36 +1119,30 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     width: 80,
                     child: TextField(
                       controller: _customValues[p.id],
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
                       ],
                       textAlign: TextAlign.right,
                       onChanged: (_) => setState(() => _validationError = null),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: _dark,
+                      style: GoogleFonts.workSans(
+                        fontSize: 13, fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurface,
                       ),
                       decoration: InputDecoration(
-                        hintText: suffix == '%' ? '0' : '0',
+                        hintText: '0',
                         suffixText: suffix,
-                        suffixStyle: const TextStyle(
+                        suffixStyle: GoogleFonts.workSans(
                           fontSize: 12,
-                          color: _muted,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide.none,
                         ),
                         filled: true,
-                        fillColor: _bgCard,
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 6,
-                        ),
+                        fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                         isDense: true,
                       ),
                     ),
@@ -1210,64 +1160,82 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   // ─── Note Field ──────────────────────────────────────────────────────
 
-  Widget _buildNoteField() {
+  Widget _buildNoteField(ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14),
         decoration: BoxDecoration(
-          color: _bgCard,
-          borderRadius: BorderRadius.circular(12),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.25),
+          borderRadius: BorderRadius.circular(14),
         ),
         child: TextField(
           controller: _noteController,
           maxLines: 1,
-          style: const TextStyle(fontSize: 14, color: _dark),
-          decoration: const InputDecoration(
+          style: GoogleFonts.workSans(fontSize: 14, color: theme.colorScheme.onSurface),
+          decoration: InputDecoration(
             hintText: 'Add a note...',
-            hintStyle: TextStyle(fontSize: 14, color: Color(0xFFD1D5DB)),
+            hintStyle: GoogleFonts.workSans(
+              fontSize: 14,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+            ),
             border: InputBorder.none,
             isDense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            prefixIcon: Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Icon(Icons.sticky_note_2_outlined, size: 18,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.25)),
+            ),
+            prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
           ),
         ),
       ),
     );
   }
 
-  // ─── Save Button ─────────────────────────────────────────────────────
+  // ─── Save Button (Sticky) ────────────────────────────────────────────
 
-  Widget _buildSaveButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+  Widget _buildSaveButton(ThemeData theme, double bottomInset) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(20, 12, 20, bottomInset + 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withValues(alpha: 0.06),
+            blurRadius: 12,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
       child: SizedBox(
         width: double.infinity,
-        height: 45,
+        height: 50,
         child: FilledButton(
           onPressed: _isSaving ? null : _save,
           style: FilledButton.styleFrom(
-            backgroundColor: _green,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
+            backgroundColor: AppColors.activeGreen,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
             elevation: 0,
           ),
           child: _isSaving
               ? const SizedBox(
-                  width: 22,
-                  height: 22,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
+                  width: 22, height: 22,
+                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                 )
-              : const Text(
-                  'Save Expense',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.check_rounded, size: 20, color: Colors.white),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Save Expense',
+                      style: GoogleFonts.workSans(
+                        fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
         ),
       ),

@@ -37,12 +37,7 @@ class TourExportService {
     final imageBytes = await controller.captureFromWidget(
       MediaQuery(
         data: mediaQueryData,
-        child: Material(
-          child: SizedBox(
-            width: 420,
-            child: receiptWidget,
-          ),
-        ),
+        child: Material(child: SizedBox(width: 420, child: receiptWidget)),
       ),
       pixelRatio: 3.0,
     );
@@ -95,7 +90,9 @@ class TourExportService {
           const SizedBox(height: AppSpacing.s24),
           _buildDivider(),
           const SizedBox(height: AppSpacing.s20),
-          _buildSectionLabel(isAllSettled ? 'SETTLEMENT STATUS' : 'PAYMENTS REQUIRED'),
+          _buildSectionLabel(
+            isAllSettled ? 'SETTLEMENT STATUS' : 'PAYMENTS REQUIRED',
+          ),
           const SizedBox(height: AppSpacing.s16),
           if (isAllSettled)
             _buildAllSettled()
@@ -136,8 +133,11 @@ class TourExportService {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.receipt_long_rounded,
-                  size: 16, color: AppColors.white),
+              Icon(
+                Icons.receipt_long_rounded,
+                size: 16,
+                color: AppColors.white,
+              ),
               const SizedBox(width: AppSpacing.s8),
               Text(
                 'SETTLEMENT REPORT',
@@ -240,14 +240,15 @@ class TourExportService {
       decoration: BoxDecoration(
         color: const Color(0xFFF0FDF9),
         borderRadius: BorderRadius.circular(AppSpacing.r16),
-        border: Border.all(
-          color: AppColors.activeGreen.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: AppColors.activeGreen.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
-          Icon(Icons.check_circle_rounded,
-              color: AppColors.activeGreen, size: 40),
+          Icon(
+            Icons.check_circle_rounded,
+            color: AppColors.activeGreen,
+            size: 40,
+          ),
           const SizedBox(height: AppSpacing.s12),
           Text(
             'All settled up',
@@ -304,8 +305,11 @@ class TourExportService {
                 const Spacer(),
                 Column(
                   children: [
-                    Icon(Icons.arrow_downward_rounded,
-                        size: 18, color: AppColors.activeGreen),
+                    Icon(
+                      Icons.arrow_downward_rounded,
+                      size: 18,
+                      color: AppColors.activeGreen,
+                    ),
                     Text(
                       _formatAmount(s.amount, currency),
                       style: GoogleFonts.jetBrainsMono(
@@ -369,8 +373,11 @@ class TourExportService {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.account_balance_wallet_rounded,
-            size: 14, color: Colors.grey.shade400),
+        Icon(
+          Icons.account_balance_wallet_rounded,
+          size: 14,
+          color: Colors.grey.shade400,
+        ),
         const SizedBox(width: AppSpacing.s6),
         Flexible(
           child: Text(
@@ -389,8 +396,14 @@ class TourExportService {
 
   static String _formatAmount(double amount, String currency) {
     const symbols = {
-      'BDT': '\u09F3', 'USD': r'$', 'EUR': '\u20AC', 'GBP': '\u00A3',
-      'INR': '\u20B9', 'JPY': '\u00A5', 'AED': '\u062F.\u0625', 'CAD': r'$',
+      'BDT': '\u09F3',
+      'USD': r'$',
+      'EUR': '\u20AC',
+      'GBP': '\u00A3',
+      'INR': '\u20B9',
+      'JPY': '\u00A5',
+      'AED': '\u062F.\u0625',
+      'CAD': r'$',
     };
     final sym = symbols[currency] ?? r'$';
     if (amount == amount.roundToDouble()) {

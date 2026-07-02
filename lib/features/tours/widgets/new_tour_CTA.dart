@@ -1,0 +1,76 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
+class NewTourCTA extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const NewTourCTA({super.key, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p20),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20), // Increased height for premium feel
+          decoration: BoxDecoration(
+            color: isDark ? theme.colorScheme.surfaceContainer : Colors.white,
+            borderRadius: BorderRadius.circular(20), // Softer, rounder corners
+            // Premium elegant shadow
+            boxShadow: isDark
+                ? []
+                : [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 24,
+                offset: const Offset(0, 12),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 26,
+                height: 26,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.activeGreen.withValues(alpha: 0.25),
+                      AppColors.activeGreen.withValues(alpha: 0.05),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.add_rounded,
+                  size: 18,
+                  color: AppColors.activeGreen,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Create New Tour',
+                style: GoogleFonts.workSans(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700, // Bolder text
+                  letterSpacing: 0.3,
+                  color: theme.colorScheme.onSurface, // Solid text color, not faded
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

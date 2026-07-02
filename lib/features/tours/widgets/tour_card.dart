@@ -9,6 +9,7 @@ class TourCard extends StatelessWidget {
   final int memberCount;
   final double totalSpent;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
   final int index;
 
   static const _gradientPalette = [
@@ -28,6 +29,7 @@ class TourCard extends StatelessWidget {
     required this.memberCount,
     required this.totalSpent,
     required this.onTap,
+    this.onLongPress,
     this.index = 0,
   });
 
@@ -57,19 +59,20 @@ class TourCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
+          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 28,
-              offset: const Offset(0, 14),
+              color: Colors.black.withValues(alpha: 0.18),
+              blurRadius: 16,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(32),
+          borderRadius: BorderRadius.circular(24),
           child: Stack(
             children: [
+              // Background: cover photo or gradient
               if (hasCoverPhoto)
                 Image.file(
                   File(tour.coverPhoto!),
@@ -81,11 +84,13 @@ class TourCard extends StatelessWidget {
                 )
               else
                 _buildGradientFallback(),
+
+              // Bottom gradient overlay
               Positioned(
                 bottom: 0,
                 left: 0,
                 right: 0,
-                height: 200,
+                height: 160,
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -93,12 +98,54 @@ class TourCard extends StatelessWidget {
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withValues(alpha: 0.95),
+                        Colors.black.withValues(alpha: 0.85),
                       ],
                     ),
                   ),
                 ),
               ),
+
+              // Status chip — top right
+              Positioned(
+                top: 14,
+                right: 14,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      width: 0.5,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 6,
+                        height: 6,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF4ADE80),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        'Active',
+                        style: GoogleFonts.workSans(
+                          color: Colors.white.withValues(alpha: 0.9),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Bottom content — name, members, amount
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -114,10 +161,10 @@ class TourCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.workSans(
                           color: Colors.white,
-                          fontSize: 28,
-                          fontWeight: FontWeight.w900,
-                          height: 1.1,
-                          letterSpacing: -0.5,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          height: 1.15,
+                          letterSpacing: -0.3,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.s12),
@@ -129,16 +176,16 @@ class TourCard extends StatelessWidget {
                             children: [
                               Icon(
                                 Icons.people_alt_rounded,
-                                color: Colors.white70,
-                                size: 18,
+                                color: Colors.white.withValues(alpha: 0.7),
+                                size: 16,
                               ),
                               const SizedBox(width: AppSpacing.s6),
                               Text(
                                 '$memberCount ${memberCount == 1 ? 'member' : 'members'}',
                                 style: GoogleFonts.workSans(
-                                  color: Colors.white70,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white.withValues(alpha: 0.7),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
@@ -147,7 +194,7 @@ class TourCard extends StatelessWidget {
                             _formatAmount(totalSpent, tour.currency),
                             style: GoogleFonts.workSans(
                               color: Colors.white,
-                              fontSize: 24,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                               letterSpacing: -0.3,
                             ),

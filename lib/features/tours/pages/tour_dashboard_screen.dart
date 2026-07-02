@@ -195,7 +195,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         ],
       ),
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: bottomInset + 0),
+        padding: EdgeInsets.only(bottom: bottomInset + 16),
         child: FloatingActionButton.extended(
           heroTag: 'tour_dashboard_fab',
           onPressed: () {
