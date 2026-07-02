@@ -380,7 +380,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
               ),
               const SizedBox(height: 16),
               Padding(
-                padding: EdgeInsets.only(bottom: bottomInset + 16),
+                padding: EdgeInsets.fromLTRB(AppSpacing.p24, 0, AppSpacing.p24, bottomInset),
                 child: TransactionSaveButton(
                 onPressed: () async { await _save(context); },
                 themeColor: themeColor,
