@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
@@ -459,6 +460,20 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     return null;
   }
 
+  Future<String?> _persistReceipt(String? path) async {
+    if (path == null || path.isEmpty) return null;
+    final file = File(path);
+    if (!file.existsSync()) return null;
+    final dir = await getApplicationDocumentsDirectory();
+    final receiptDir = Directory('${dir.path}/receipts');
+    if (!receiptDir.existsSync()) receiptDir.createSync();
+    final ext = path.contains('.') ? path.split('.').last : 'jpg';
+    final newName = '${DateTime.now().microsecondsSinceEpoch}.$ext';
+    final newPath = '${receiptDir.path}/$newName';
+    await file.copy(newPath);
+    return newPath;
+  }
+
   Future<void> _save() async {
     setState(() => _validationError = _validate());
     if (_validationError != null) return;
@@ -478,7 +493,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       category: _selectedCategory,
       note: _noteController.text.trim().isEmpty ? null : _noteController.text.trim(),
       date: _selectedDate,
-      receiptPath: _receiptImage?.path,
+      receiptPath: await _persistReceipt(_receiptImage?.path),
     );
 
     final provider = context.read<TourProvider>();

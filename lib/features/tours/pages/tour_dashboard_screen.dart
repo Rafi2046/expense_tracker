@@ -16,6 +16,7 @@ import 'package:expense_tracker/features/tours/widgets/tour_expense_tile.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_expense_details_sheet.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_export_options_sheet.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_member_required_dialog.dart';
+import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
 
 class TourDashboardScreen extends StatefulWidget {
   final String tourId;
@@ -75,6 +76,18 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => TourExportOptionsSheet(tourId: widget.tourId),
+    );
+  }
+
+  void _openMemberManagement(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => TourMemberManagementScreen(
+          tourId: widget.tourId,
+          isInitialSetup: false,
+        ),
+      ),
     );
   }
 
@@ -146,6 +159,25 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           ),
         ),
         actions: [
+          IconButton(
+            onPressed: () => _openMemberManagement(context),
+            icon: Container(
+              padding: const EdgeInsets.all(AppSpacing.p8),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? const Color(0xFF064E3B).withValues(alpha: 0.2)
+                    : AppColors.selectionGreenBg,
+                borderRadius: BorderRadius.circular(AppSpacing.r10),
+              ),
+              child: const Icon(
+                Icons.person_add_alt_rounded,
+                size: 20,
+                color: AppColors.activeGreen,
+              ),
+            ),
+            tooltip: 'Manage Members',
+          ),
+
           IconButton(
             onPressed: () => _showExportOptionsSheet(context),
             icon: Container(

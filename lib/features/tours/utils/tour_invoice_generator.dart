@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -20,28 +21,32 @@ class TourInvoiceGenerator {
     required double totalSpent,
     required double totalOutstanding,
   }) async {
-    final doc = _buildPdf(
-      tour: tour,
-      participants: participants,
-      expenses: expenses,
-      settlements: settlements,
-      totalSpent: totalSpent,
-      totalOutstanding: totalOutstanding,
-    );
+    try {
+      final doc = _buildPdf(
+        tour: tour,
+        participants: participants,
+        expenses: expenses,
+        settlements: settlements,
+        totalSpent: totalSpent,
+        totalOutstanding: totalOutstanding,
+      );
 
-    final pdfBytes = await doc.save();
-    final dir = await getTemporaryDirectory();
-    final file = File(
-      '${dir.path}/tour_invoice_${tour.id.substring(0, 8)}.pdf',
-    );
-    await file.writeAsBytes(pdfBytes);
+      final pdfBytes = await doc.save();
+      final dir = await getTemporaryDirectory();
+      final file = File(
+        '${dir.path}/tour_invoice_${tour.id.substring(0, 8)}.pdf',
+      );
+      await file.writeAsBytes(pdfBytes);
 
-    await SharePlus.instance.share(
-      ShareParams(
-        files: [XFile(file.path)],
-        text: '${tour.name} \u2014 Detailed Invoice',
-      ),
-    );
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: '${tour.name} \u2014 Detailed Invoice',
+        ),
+      );
+    } catch (e) {
+      debugPrint('PDF generation error: $e');
+    }
   }
 
   static Future<void> printPdf({

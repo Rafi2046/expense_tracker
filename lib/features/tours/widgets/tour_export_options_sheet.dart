@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/features/tours/utils/tour_export_service.dart';
 import 'package:expense_tracker/features/tours/utils/tour_invoice_generator.dart';
+import 'package:expense_tracker/features/tours/pages/tour_invoice_screen.dart';
 import 'package:expense_tracker/core/utils/debt_simplifier.dart';
 
 class TourExportOptionsSheet extends StatelessWidget {
@@ -90,9 +91,25 @@ class TourExportOptionsSheet extends StatelessWidget {
             const SizedBox(height: 12),
             _ExportOptionTile(
               icon: Icons.description_rounded,
-              title: 'Download Detailed Invoice (PDF)',
+              title: 'View Detailed Invoice',
               subtitle: 'Full report with category breakdown & ledger table',
               gradientColors: const [Color(0xFF2563EB), Color(0xFF1D4ED8)],
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => TourInvoiceScreen(tourId: tour.id),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
+            _ExportOptionTile(
+              icon: Icons.picture_as_pdf_rounded,
+              title: 'Download Detailed Invoice (PDF)',
+              subtitle: 'Export as PDF file to share or print',
+              gradientColors: const [Color(0xFFDC2626), Color(0xFFB91C1C)],
               onTap: () {
                 Navigator.pop(context);
                 TourInvoiceGenerator.generateAndShare(
