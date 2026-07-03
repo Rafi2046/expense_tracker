@@ -199,7 +199,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         ],
       ),
       body: ListView(
-        padding: EdgeInsets.fromLTRB(16, 16, 16, bottomInset + 0),
+        padding: EdgeInsets.fromLTRB(16, 16, 16, bottomInset + 100),
         children: [
           TourSummaryRow(
             totalSpentText: totalSpentText,
