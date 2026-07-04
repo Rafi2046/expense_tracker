@@ -110,19 +110,19 @@ class ProfileProvider extends ChangeNotifier {
       }
 
       final allProfiles = await DatabaseHelper.instance.readAllProfiles();
-      final loaded = <UserProfile>[];
+      debugPrint('ProfileProvider._loadFromDb: DB has ${allProfiles.length} profiles');
       for (final row in allProfiles) {
-        loaded.add(UserProfile(
-          id: row['id'] as String,
-          name: row['name'] as String,
-          type: row['type'] as String,
-        ));
+        final id = row['id'] as String;
+        if (!_profiles.any((p) => p.id == id)) {
+          _profiles.add(UserProfile(
+            id: id,
+            name: row['name'] as String,
+            type: row['type'] as String,
+          ));
+          debugPrint('ProfileProvider._loadFromDb: added from DB -> $id');
+        }
       }
-      debugPrint('ProfileProvider._loadFromDb: loaded ${loaded.length} profiles');
-      if (loaded.isNotEmpty) {
-        _profiles
-          ..clear()
-          ..addAll(loaded);
+      if (_profiles.isNotEmpty) {
         final match = _profiles.where((p) => p.id == _initialProfileId);
         _currentProfile = match.isNotEmpty ? match.first : _profiles.first;
         _saveProfilesToPrefs();
