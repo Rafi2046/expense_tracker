@@ -54,6 +54,11 @@ class ProfileSwitchSheet extends StatefulWidget {
 }
 
 class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
+  String _profileLabel(UserProfile p) {
+    if (p.id == 'default_profile') return 'Main Profile';
+    if (p.type == 'Personal') return 'Secondary';
+    return p.type;
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -95,7 +100,13 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
             ),
             const SizedBox(height: 20),
 
-            ListView.builder(
+            if (!profileProvider.isReady)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 24),
+                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+              )
+            else
+              ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: profiles.length,
@@ -126,11 +137,23 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                       color: theme.textTheme.titleMedium?.color,
                     ),
                   ),
-                  subtitle: Text(
-                    profile.type,
-                    style: GoogleFonts.workSans(
-                      color: theme.textTheme.bodySmall?.color,
-                    ),
+                  subtitle: Row(
+                    children: [
+                      if (profile.id == 'default_profile') ...[
+                        Icon(Symbols.star_rounded, size: 13, color: const Color(0xFFF59E0B)),
+                        const SizedBox(width: 4),
+                      ],
+                      Text(
+                        _profileLabel(profile),
+                        style: GoogleFonts.workSans(
+                          fontSize: 12,
+                          color: profile.id == 'default_profile'
+                              ? const Color(0xFFF59E0B)
+                              : theme.textTheme.bodySmall?.color,
+                          fontWeight: profile.id == 'default_profile' ? FontWeight.w600 : FontWeight.w400,
+                        ),
+                      ),
+                    ],
                   ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
