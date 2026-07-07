@@ -100,10 +100,8 @@ class DashboardScreen extends StatelessWidget {
               // Row 1: Income and Expense Card
               Skeletonizer(
                 enabled: isLoading,
-                child: IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
+                child: Row(
+                  children: [
                       Expanded(
                         child: DashboardStatCard(
                           title:
@@ -111,12 +109,11 @@ class DashboardScreen extends StatelessWidget {
                           value: PrivacyMaskedText(
                             amount: txProvider.calendarMonthIncome,
                             style: AppTextStyles.cardValueGreen.copyWith(
-                              fontSize: 17,
+                              fontSize: 15,
                             ),
                           ),
                           isPositive: txProvider.isCalendarIncomeTrendGood,
                           isTrend: false,
-                          centerText: true,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -136,12 +133,11 @@ class DashboardScreen extends StatelessWidget {
                           value: PrivacyMaskedText(
                             amount: txProvider.calendarMonthExpense,
                             style: AppTextStyles.cardValueRed.copyWith(
-                              fontSize: 17,
+                              fontSize: 15,
                             ),
                           ),
                           isPositive: txProvider.isCalendarExpenseTrendGood,
                           isTrend: false,
-                          centerText: true,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -155,24 +151,21 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
               ),
               const SizedBox(height: 8),
 
               // Row 2: To Receive and To Give Card
               Skeletonizer(
                 enabled: isLoading,
-                child: IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
                         child: DashboardStatCard(
                           title: context.translate('to_receive'),
                           value: PrivacyMaskedText(
                             amount: debtProvider.totalToReceive,
                             style: AppTextStyles.cardValueGreen.copyWith(
-                              fontSize: 17,
+                              fontSize: 15,
                             ),
                           ),
                           statusText: Text(
@@ -200,7 +193,7 @@ class DashboardScreen extends StatelessWidget {
                           value: PrivacyMaskedText(
                             amount: debtProvider.totalToGive,
                             style: AppTextStyles.cardValueRed.copyWith(
-                              fontSize: 17,
+                              fontSize: 15,
                             ),
                           ),
                           statusText: Text(
@@ -223,26 +216,23 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
               ),
               const SizedBox(height: 8),
 
               // Row 3: Total Balance and Reports Card
               Skeletonizer(
                 enabled: isLoading,
-                child: IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: DashboardStatCard(
-                          title:
-                              '${context.translate('cash')} & ${context.translate('bank')}',
-                          value: Text(
-                            context.translate('total_balance'),
-                            style: AppTextStyles.cardValueGreen.copyWith(
-                              fontSize: 17,
-                            ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: DashboardStatCard(
+                        title:
+                            '${context.translate('cash')} & ${context.translate('bank')}',
+                        value: Text(
+                          context.translate('total_balance'),
+                          style: AppTextStyles.cardValueGreen.copyWith(
+                            fontSize: 15,
+                          ),
                           ),
                           statusText: PrivacyMaskedText(
                             amount: totalBalance,
@@ -270,7 +260,7 @@ class DashboardScreen extends StatelessWidget {
                           value: Text(
                             context.translate('reports'),
                             style: AppTextStyles.cardValueGreen.copyWith(
-                              fontSize: 17,
+                              fontSize: 15,
                             ),
                           ),
                           isPositive: true,
@@ -287,7 +277,6 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
               ),
               const SizedBox(height: 8),
               Skeletonizer(

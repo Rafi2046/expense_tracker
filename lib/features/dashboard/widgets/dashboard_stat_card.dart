@@ -1,5 +1,5 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +11,6 @@ class DashboardStatCard extends StatelessWidget {
   final bool isPositive;
   final bool isTrend;
   final Color? textColor;
-  final bool centerText;
   final VoidCallback? onTap;
 
   const DashboardStatCard({
@@ -23,113 +22,63 @@ class DashboardStatCard extends StatelessWidget {
     required this.isPositive,
     required this.isTrend,
     this.textColor,
-    this.centerText = false,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cornerColor = isPositive
-        ? (isDark
-              ? AppColors.activeGreen.withValues(alpha: 0.15)
-              : AppColors.selectionGreenBg)
-        : (isDark
-              ? AppColors.activeRed.withValues(alpha: 0.15)
-              : const Color(0xFFFFECEE));
+    final hasTrendIndicator = isTrend && percentageText != null;
+    final hasStatus = !isTrend && statusText != null;
+    final hasBottomContent = hasTrendIndicator || hasStatus;
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(AppSpacing.r8),
       child: Container(
+        height: 78,
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           border: Border.all(
-            color:
-                Theme.of(context).dividerTheme.color ?? AppColors.dividerColor,
-            width: 1.0,
+            color: Theme.of(context).dividerTheme.color ?? AppColors.dividerColor,
+            width: AppSpacing.w1,
           ),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.r8),
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Stack(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Top-right corner color block with arrow icon, clipped by parent ClipRRect
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    color: cornerColor,
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(24),
-                    ),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 4, bottom: 4),
-                      child: Icon(
-                        Symbols.arrow_forward_ios_rounded,
-                        size: 8,
-                        color: isPositive
-                            ? AppColors.activeGreen
-                            : AppColors.activeRed,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12.0,
-                  vertical: 10.0,
-                ),
+              Expanded(
                 child: Column(
-                  crossAxisAlignment: centerText
-                      ? CrossAxisAlignment.start
-                      : CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (centerText &&
-                        ((isTrend && percentageText == null) ||
-                            (!isTrend && statusText == null)))
-                      const SizedBox(height: 9),
-
-                    value,
-                    const SizedBox(height: 2),
-
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      clipBehavior: Clip.hardEdge,
+                      child: value,
+                    ),
+                    SizedBox(height: AppSpacing.h2),
                     Text(
                       title,
-                      textAlign:
-                          centerText ? TextAlign.center : TextAlign.start,
                       style: AppTextStyles.cardTitle.copyWith(
-                        fontSize: 10.5,
                         color: AppColors.textMuted,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0.1,
+                        fontSize: 10,
+                        letterSpacing: 0,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-
-                    // Trend / Status indicator if present
-                    if ((isTrend && percentageText != null) ||
-                        (!isTrend && statusText != null)) ...[
-                      const SizedBox(height: 4),
-                      if (isTrend && percentageText != null)
+                    if (hasBottomContent) ...[
+                      SizedBox(height: AppSpacing.h2),
+                      if (hasTrendIndicator)
                         Row(
                           mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: centerText
-                              ? MainAxisAlignment.center
-                              : MainAxisAlignment.start,
                           children: [
                             Icon(
-                              isPositive
-                                  ? Symbols.trending_up
-                                  : Symbols.trending_down,
+                              isPositive ? Icons.trending_up : Icons.trending_down,
                               color: isPositive
                                   ? AppColors.activeGreen
                                   : AppColors.activeRed,
@@ -139,23 +88,33 @@ class DashboardStatCard extends StatelessWidget {
                             Flexible(
                               child: Text(
                                 percentageText!,
-                                style:
-                                    (isPositive
-                                            ? AppTextStyles.cardTrendGreen
-                                            : AppTextStyles.cardTrendRed)
-                                        .copyWith(fontSize: 10.5),
+                                style: (isPositive
+                                        ? AppTextStyles.cardTrendGreen
+                                        : AppTextStyles.cardTrendRed)
+                                    .copyWith(fontSize: 10.5),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
                         )
-                      else if (!isTrend && statusText != null)
-                        statusText!,
-                    ] else
-                      SizedBox(height: centerText ? 10 : 19),
+                      else
+                        DefaultTextStyle(
+                          style: DefaultTextStyle.of(context).style.copyWith(
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          maxLines: 1,
+                          child: statusText!,
+                        ),
+                    ],
                   ],
                 ),
+              ),
+              SizedBox(width: AppSpacing.p8),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.textMuted,
+                size: 20,
               ),
             ],
           ),
