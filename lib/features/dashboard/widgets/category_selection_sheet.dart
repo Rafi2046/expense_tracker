@@ -1,0 +1,135 @@
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/profile_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+class CategorySelectionSheetContent extends StatelessWidget {
+  final Function(String) onCategorySelected;
+
+  const CategorySelectionSheetContent({
+    super.key,
+    required this.onCategorySelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = context.watch<ProfileProvider>();
+    final filteredCategories = provider.filteredCategories;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Container(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 5,
+              decoration: BoxDecoration(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.3)
+                    : Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          Text(
+            'Select Business Category',
+            style: GoogleFonts.workSans(
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: theme.textTheme.titleLarge?.color,
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          TextField(
+            style: GoogleFonts.workSans(
+              fontSize: 15,
+              color: theme.textTheme.bodyLarge?.color,
+            ),
+            decoration: InputDecoration(
+              hintText: 'Search Category',
+              hintStyle: TextStyle(color: theme.textTheme.bodySmall?.color),
+              prefixIcon: Icon(
+                Symbols.search,
+                color: theme.textTheme.bodySmall?.color,
+              ),
+              contentPadding: const EdgeInsets.symmetric(vertical: 12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: theme.dividerColor),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: theme.dividerColor),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: AppColors.activeGreen,
+                  width: 2,
+                ),
+              ),
+              fillColor: theme.cardColor,
+              filled: true,
+            ),
+            onChanged: (val) {
+              provider.setCategorySearchQuery(val);
+            },
+          ),
+          const SizedBox(height: 16),
+
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.45,
+            ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: filteredCategories.length,
+              itemBuilder: (context, index) {
+                final cat = filteredCategories[index];
+                final isSelected = cat == provider.selectedCategory;
+
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(
+                    cat,
+                    style: GoogleFonts.workSans(
+                      fontSize: 15,
+                      color: theme.textTheme.bodyLarge?.color,
+                    ),
+                  ),
+                  trailing: Icon(
+                    isSelected
+                        ? Symbols.radio_button_checked
+                        : Symbols.radio_button_unchecked,
+                    color: isSelected
+                        ? AppColors.activeGreen
+                        : (isDark
+                            ? Colors.white.withValues(alpha: 0.3)
+                            : Colors.grey.shade300),
+                  ),
+                  onTap: () {
+                    provider.setSelectedCategory(cat);
+
+                    Future.delayed(const Duration(milliseconds: 200), () {
+                      onCategorySelected(cat);
+                    });
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

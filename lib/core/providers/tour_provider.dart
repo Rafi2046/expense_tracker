@@ -1,0 +1,855 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import '../models/tour.dart';
+import '../models/tour_participant.dart';
+import '../models/tour_expense.dart';
+import '../models/tour_expense_share.dart';
+import '../models/tour_settlement.dart';
+import '../utils/database_helper.dart';
+
+class TourProvider extends ChangeNotifier {
+  final DatabaseHelper _db = DatabaseHelper.instance;
+
+  String _activeProfileId;
+  bool _isLoading = true;
+
+  List<Tour> _tours = [];
+  String? _selectedTourId;
+
+  List<TourParticipant> _participants = [];
+  List<TourExpense> _expenses = [];
+  List<TourExpenseShare> _shares = [];
+  List<TourSettlement> _settlements = [];
+
+  TourProvider({required String initialProfileId})
+    : _activeProfileId = initialProfileId {
+    _loadTours();
+  }
+
+  // ─── Getters ──────────────────────────────────────────────────────
+
+  bool get isLoading => _isLoading;
+
+  String get activeProfileId => _activeProfileId;
+
+  List<Tour> get tours => List.unmodifiable(_tours);
+
+  String? get selectedTourId => _selectedTourId;
+
+  List<TourParticipant> get participants => List.unmodifiable(_participants);
+
+  List<TourExpense> get expenses => List.unmodifiable(_expenses);
+
+  List<TourExpenseShare> get shares => List.unmodifiable(_shares);
+
+  List<TourSettlement> get settlements => List.unmodifiable(_settlements);
+
+  bool get hasSelectedTour => _selectedTourId != null;
+
+  Tour? get selectedTour {
+    if (_selectedTourId == null) return null;
+    return _tours.cast<Tour?>().firstWhere(
+      (t) => t!.id == _selectedTourId,
+      orElse: () => null,
+    );
+  }
+
+  // ─── Profile switching ─────────────────────────────────────────────
+
+  void updateProfileId(String id) {
+    if (id == _activeProfileId) return;
+    _activeProfileId = id;
+    _tours.clear();
+    _selectedTourId = null;
+    _participants.clear();
+    _expenses.clear();
+    _shares.clear();
+    _settlements.clear();
+    _isLoading = true;
+    notifyListeners();
+    _loadTours();
+  }
+
+  // ─── Tour CRUD ─────────────────────────────────────────────────────
+
+  Future<void> _loadTours() async {
+    try {
+      final db = await _db.database;
+      final maps = await db.query(
+        'tours',
+        where: 'isDeleted = 0 AND profileId = ?',
+        whereArgs: [_activeProfileId],
+        orderBy: 'createdAt DESC',
+      );
+      _tours = maps.map((m) => Tour.fromJson(m)).toList();
+    } catch (e) {
+      debugPrint('TourProvider._loadTours error: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> createTour(Tour tour) async {
+    final db = await _db.database;
+    await db.insert(
+      'tours',
+      tour.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    _tours.insert(0, tour);
+    notifyListeners();
+    _syncTourToFirestore(tour);
+  }
+
+  Future<void> updateTour(Tour tour) async {
+    final db = await _db.database;
+    final updated = tour.copyWith(lastModified: DateTime.now());
+    await db.update(
+      'tours',
+      updated.toJson(),
+      where: 'id = ?',
+      whereArgs: [tour.id],
+    );
+    final idx = _tours.indexWhere((t) => t.id == tour.id);
+    if (idx != -1) {
+      _tours[idx] = updated;
+    }
+    if (_selectedTourId == tour.id) {
+      _selectedTourId = tour.id;
+    }
+    notifyListeners();
+    _syncTourToFirestore(updated);
+  }
+
+  Future<void> toggleTourCompletion(String tourId, bool completed) async {
+    final db = await _db.database;
+    final now = DateTime.now().toIso8601String();
+    await db.update(
+      'tours',
+      {'isCompleted': completed ? 1 : 0, 'lastModified': now},
+      where: 'id = ?',
+      whereArgs: [tourId],
+    );
+    final idx = _tours.indexWhere((t) => t.id == tourId);
+    if (idx != -1) {
+      _tours[idx] = _tours[idx].copyWith(isCompleted: completed, lastModified: DateTime.now());
+    }
+    if (_selectedTourId == tourId) {
+      _selectedTourId = tourId;
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteTour(String tourId) async {
+    final now = DateTime.now().toIso8601String();
+    final db = await _db.database;
+
+    await db.transaction((txn) async {
+      await txn.update(
+        'tours',
+        {'isDeleted': 1, 'lastModified': now},
+        where: 'id = ?',
+        whereArgs: [tourId],
+      );
+      await txn.delete(
+        'tour_participants',
+        where: 'tourId = ?',
+        whereArgs: [tourId],
+      );
+      await txn.delete(
+        'tour_expenses',
+        where: 'tourId = ?',
+        whereArgs: [tourId],
+      );
+      await txn.delete(
+        'tour_expense_shares',
+        where: 'expenseId IN (SELECT id FROM tour_expenses WHERE tourId = ?)',
+        whereArgs: [tourId],
+      );
+      await txn.delete(
+        'tour_settlements',
+        where: 'tourId = ?',
+        whereArgs: [tourId],
+      );
+    });
+
+    _tours.removeWhere((t) => t.id == tourId);
+    if (_selectedTourId == tourId) {
+      _selectedTourId = null;
+      _participants.clear();
+      _expenses.clear();
+      _shares.clear();
+      _settlements.clear();
+    }
+    notifyListeners();
+  }
+
+  // ─── Tour detail loading ────────────────────────────────────────────
+
+  Future<void> selectTour(String tourId) async {
+    _selectedTourId = tourId;
+    _isLoading = true;
+    notifyListeners();
+    await _loadTourDetails(tourId);
+  }
+
+  Future<void> _loadTourDetails(String tourId) async {
+    try {
+      final db = await _db.database;
+
+      final participantMaps = await db.query(
+        'tour_participants',
+        where: 'tourId = ? AND isDeleted = 0',
+        whereArgs: [tourId],
+        orderBy: 'joinedAt ASC',
+      );
+      _participants = participantMaps
+          .map((m) => TourParticipant.fromJson(m))
+          .toList();
+
+      final expenseMaps = await db.query(
+        'tour_expenses',
+        where: 'tourId = ? AND isDeleted = 0',
+        whereArgs: [tourId],
+        orderBy: 'date DESC',
+      );
+      _expenses = expenseMaps.map((m) => TourExpense.fromJson(m)).toList();
+
+      final expenseIds = _expenses.map((e) => e.id).toList();
+      if (expenseIds.isNotEmpty) {
+        final placeholders = expenseIds.map((_) => '?').join(',');
+        final shareMaps = await db.rawQuery(
+          'SELECT * FROM tour_expense_shares WHERE expenseId IN ($placeholders) AND isDeleted = 0',
+          expenseIds,
+        );
+        _shares = shareMaps.map((m) => TourExpenseShare.fromJson(m)).toList();
+      } else {
+        _shares.clear();
+      }
+
+      final settlementMaps = await db.query(
+        'tour_settlements',
+        where: 'tourId = ? AND isDeleted = 0',
+        whereArgs: [tourId],
+        orderBy: 'date ASC',
+      );
+      _settlements = settlementMaps
+          .map((m) => TourSettlement.fromJson(m))
+          .toList();
+    } catch (e) {
+      debugPrint('TourProvider._loadTourDetails error: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void clearSelection() {
+    _selectedTourId = null;
+    _participants.clear();
+    _expenses.clear();
+    _shares.clear();
+    _settlements.clear();
+    notifyListeners();
+  }
+
+  /// Reloads all detail data for the currently selected tour from SQLite.
+  /// Call this after any mutation (add/remove participant, add expense, etc.)
+  /// to guarantee the in-memory lists match the database.
+  Future<void> refreshTourData() async {
+    if (_selectedTourId == null) return;
+    await _loadTourDetails(_selectedTourId!);
+  }
+
+  // ─── Participant CRUD ───────────────────────────────────────────────
+
+  Future<void> addParticipant(TourParticipant participant) async {
+    final db = await _db.database;
+    await db.insert(
+      'tour_participants',
+      participant.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    if (_selectedTourId == participant.tourId) {
+      await refreshTourData();
+    } else {
+      _participants.add(participant);
+      notifyListeners();
+    }
+    _syncParticipantToFirestore(participant);
+  }
+
+  Future<void> updateParticipant(TourParticipant participant) async {
+    final db = await _db.database;
+    await db.update(
+      'tour_participants',
+      participant.toJson(),
+      where: 'id = ?',
+      whereArgs: [participant.id],
+    );
+    if (_selectedTourId == participant.tourId) {
+      await refreshTourData();
+    } else {
+      final idx = _participants.indexWhere((p) => p.id == participant.id);
+      if (idx != -1) {
+        _participants[idx] = participant;
+      }
+      notifyListeners();
+    }
+    _syncParticipantToFirestore(participant);
+  }
+
+  Future<void> removeParticipant(String participantId) async {
+    final now = DateTime.now().toIso8601String();
+    String? tourId;
+    final idx = _participants.indexWhere((p) => p.id == participantId);
+    if (idx != -1) {
+      tourId = _participants[idx].tourId;
+    }
+    final db = await _db.database;
+    await db.update(
+      'tour_participants',
+      {'isDeleted': 1, 'lastModified': now},
+      where: 'id = ?',
+      whereArgs: [participantId],
+    );
+    if (tourId != null && _selectedTourId == tourId) {
+      await refreshTourData();
+    } else {
+      _participants.removeWhere((p) => p.id == participantId);
+      notifyListeners();
+    }
+    if (tourId != null) {
+      _softDeleteDoc(tourId, 'participants', participantId, now);
+    }
+  }
+
+  // ─── Expense CRUD ───────────────────────────────────────────────────
+
+  Future<void> addExpense(
+    TourExpense expense,
+    List<TourExpenseShare> shares,
+  ) async {
+    if (shares.isEmpty) {
+      debugPrint('ERROR: addExpense called with zero shares — aborting');
+      return;
+    }
+    final db = await _db.database;
+    await db.transaction((txn) async {
+      await txn.insert(
+        'tour_expenses',
+        expense.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      for (final share in shares) {
+        await txn.insert(
+          'tour_expense_shares',
+          share.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+    });
+    await refreshTourData();
+    _syncExpenseToFirestore(expense, shares);
+  }
+
+  Future<void> updateExpense(
+    TourExpense expense,
+    List<TourExpenseShare> shares,
+  ) async {
+    final db = await _db.database;
+    await db.transaction((txn) async {
+      await txn.update(
+        'tour_expenses',
+        expense.toJson(),
+        where: 'id = ?',
+        whereArgs: [expense.id],
+      );
+      await txn.delete(
+        'tour_expense_shares',
+        where: 'expenseId = ?',
+        whereArgs: [expense.id],
+      );
+      for (final share in shares) {
+        await txn.insert(
+          'tour_expense_shares',
+          share.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+    });
+    await refreshTourData();
+    _syncExpenseToFirestore(expense, shares);
+  }
+
+  Future<void> deleteExpense(String expenseId) async {
+    final now = DateTime.now().toIso8601String();
+    final idx = _expenses.indexWhere((e) => e.id == expenseId);
+    final String? tourId = idx != -1 ? _expenses[idx].tourId : null;
+
+    final db = await _db.database;
+    await db.transaction((txn) async {
+      await txn.update(
+        'tour_expenses',
+        {'isDeleted': 1, 'lastModified': now},
+        where: 'id = ?',
+        whereArgs: [expenseId],
+      );
+      await txn.update(
+        'tour_expense_shares',
+        {'isDeleted': 1, 'lastModified': now},
+        where: 'expenseId = ?',
+        whereArgs: [expenseId],
+      );
+    });
+    if (tourId != null && _selectedTourId == tourId) {
+      await refreshTourData();
+    } else {
+      _expenses.removeWhere((e) => e.id == expenseId);
+      _shares.removeWhere((s) => s.expenseId == expenseId);
+      notifyListeners();
+    }
+    if (tourId != null) {
+      _softDeleteDoc(tourId, 'expenses', expenseId, now);
+    }
+  }
+
+  /// Pure calculation of shares for a given expense and active participants.
+  /// Does NOT persist — returns the computed share list for the caller to
+  /// pass to [addExpense] or [updateExpense].
+  ///
+  /// The caller is responsible for passing [excludedIds] (includes late-joiner
+  /// exclusions). Supports split types: equal, exact, percentage, exclusion,
+  /// transfer.
+  ///
+  /// Throws if [activeParticipants] is empty or if all participants are
+  /// excluded, because at least one person must be included for a valid split.
+  List<TourExpenseShare> calculateShares({
+    required TourExpense expense,
+    required List<TourParticipant> activeParticipants,
+    Map<String, double>? customValues,
+    List<String>? excludedIds,
+  }) {
+    if (activeParticipants.isEmpty) {
+      throw StateError('calculateShares: activeParticipants is empty');
+    }
+
+    final excludedSet = excludedIds ?? <String>{};
+    final included = <TourParticipant>[];
+    final excluded = <TourParticipant>[];
+    for (final p in activeParticipants) {
+      if (excludedSet.contains(p.id)) {
+        excluded.add(p);
+      } else {
+        included.add(p);
+      }
+    }
+
+    if (included.isEmpty) {
+      throw StateError(
+        'calculateShares: all ${activeParticipants.length} participants '
+        'are excluded — at least one must be included',
+      );
+    }
+
+    final result = <TourExpenseShare>[];
+    final shareId = DateTime.now().microsecondsSinceEpoch;
+
+    switch (expense.splitType) {
+      case 'equal':
+        result.addAll(_splitEqually(expense, included, shareId));
+        break;
+
+      case 'exact':
+        for (final p in included) {
+          final value = customValues?[p.id] ?? 0;
+          result.add(
+            TourExpenseShare(
+              id: 'share_${shareId}_${p.id}',
+              expenseId: expense.id,
+              participantId: p.id,
+              shareAmount: (value * 100).round() / 100.0,
+              customValue: value,
+            ),
+          );
+        }
+        break;
+
+      case 'percentage':
+        for (final p in included) {
+          final pct = customValues?[p.id] ?? 0;
+          final amount = expense.amount * pct / 100;
+          result.add(
+            TourExpenseShare(
+              id: 'share_${shareId}_${p.id}',
+              expenseId: expense.id,
+              participantId: p.id,
+              shareAmount: (amount * 100).round() / 100.0,
+              customValue: pct,
+            ),
+          );
+        }
+        break;
+
+      case 'exclusion':
+        result.addAll(_splitEqually(expense, included, shareId));
+        for (final p in excluded) {
+          result.add(
+            TourExpenseShare(
+              id: 'share_${shareId}_excluded_${p.id}',
+              expenseId: expense.id,
+              participantId: p.id,
+              shareAmount: 0,
+              isExcluded: true,
+            ),
+          );
+        }
+        break;
+
+      case 'transfer':
+        result.addAll(_splitTransfer(expense, included, excluded, shareId));
+        break;
+    }
+
+    return result;
+  }
+
+  /// Splits [expense.amount] equally (in cents) across [included] participants.
+  /// Any leftover cents (from rounding) are distributed one-by-one across
+  /// participants instead of always dumping the whole remainder on the first
+  /// person — fairer over many expenses.
+  List<TourExpenseShare> _splitEqually(
+    TourExpense expense,
+    List<TourParticipant> included,
+    int shareId,
+  ) {
+    if (included.isEmpty) return [];
+
+    final totalCents = (expense.amount * 100).round();
+    final baseCents = totalCents ~/ included.length;
+    final remainderCents = totalCents - (baseCents * included.length);
+
+    final startOffset = shareId % included.length;
+
+    final result = <TourExpenseShare>[];
+    for (var i = 0; i < included.length; i++) {
+      final rotatedIndex = (i + startOffset) % included.length;
+      final cents = baseCents + (i < remainderCents ? 1 : 0);
+      result.add(
+        TourExpenseShare(
+          id: 'share_${shareId}_${included[rotatedIndex].id}',
+          expenseId: expense.id,
+          participantId: included[rotatedIndex].id,
+          shareAmount: cents / 100.0,
+        ),
+      );
+    }
+    return result;
+  }
+
+  /// Handles the 'transfer' split type: the payer transfers the full expense
+  /// amount to exactly one other participant. The transferred-to participant
+  /// gets a single share equal to the full expense amount. The payer does not
+  /// receive a share — they paid out of pocket, and the entire burden is on
+  /// the transfer recipient.
+  List<TourExpenseShare> _splitTransfer(
+    TourExpense expense,
+    List<TourParticipant> included,
+    List<TourParticipant> excluded,
+    int shareId,
+  ) {
+    final result = <TourExpenseShare>[];
+
+    final target = included.where((p) => p.id != expense.paidBy).toList();
+    for (final p in target) {
+      result.add(
+        TourExpenseShare(
+          id: 'share_${shareId}_transfer_${p.id}',
+          expenseId: expense.id,
+          participantId: p.id,
+          shareAmount: expense.amount,
+          customValue: expense.amount,
+        ),
+      );
+    }
+
+    for (final p in excluded) {
+      result.add(
+        TourExpenseShare(
+          id: 'share_${shareId}_excluded_${p.id}',
+          expenseId: expense.id,
+          participantId: p.id,
+          shareAmount: 0,
+          isExcluded: true,
+        ),
+      );
+    }
+
+    return result;
+  }
+
+  // ─── Settlement CRUD ────────────────────────────────────────────────
+
+  Future<void> addSettlement(TourSettlement settlement) async {
+    final db = await _db.database;
+    await db.insert(
+      'tour_settlements',
+      settlement.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    if (_selectedTourId == settlement.tourId) {
+      await refreshTourData();
+    } else {
+      _settlements.add(settlement);
+      notifyListeners();
+    }
+    _syncSettlementToFirestore(settlement);
+  }
+
+  Future<void> removeSettlement(String settlementId) async {
+    final now = DateTime.now().toIso8601String();
+    final idx = _settlements.indexWhere((s) => s.id == settlementId);
+    final String? tourId = idx != -1 ? _settlements[idx].tourId : null;
+
+    final db = await _db.database;
+    await db.update(
+      'tour_settlements',
+      {'isDeleted': 1, 'lastModified': now},
+      where: 'id = ?',
+      whereArgs: [settlementId],
+    );
+    if (tourId != null && _selectedTourId == tourId) {
+      await refreshTourData();
+    } else {
+      _settlements.removeWhere((s) => s.id == settlementId);
+      notifyListeners();
+    }
+    if (tourId != null) {
+      _softDeleteDoc(tourId, 'settlements', settlementId, now);
+    }
+  }
+
+  // ─── Fund calculations ──────────────────────────────────────────────
+
+  /// Sum of all settlement amounts for the tour — total money that has
+  /// moved through settlements.
+  double totalFundCollected(String tourId) {
+    return _settlements
+        .where((s) => s.tourId == tourId)
+        .fold(0.0, (a, s) => a + s.amount);
+  }
+
+  /// Gross amount spent across all expenses in this tour — regardless
+  /// of who paid or how it was split.
+  double totalSpent(String tourId) {
+    return _expenses
+        .where((e) => e.tourId == tourId)
+        .fold(0.0, (a, e) => a + e.amount);
+  }
+
+  /// Total amount still outstanding across the whole tour. Sums only the
+  /// positive side of net balances — how much money still needs to change
+  /// hands to fully settle this tour.
+  double totalOutstanding(String tourId) {
+    final balances = netBalances(tourId);
+    return balances.values.where((v) => v > 0).fold(0.0, (a, v) => a + v);
+  }
+
+  /// Net cash a given participant holds: what they received minus what
+  /// they paid out across all settlements. Positive = they hold money
+  /// (are owed), negative = they owe.
+  ///
+  /// IMPORTANT: call as cashInHand(participantId, tourId).
+  double cashInHand(String participantId, String tourId) {
+    final received = _settlements
+        .where((s) => s.tourId == tourId && s.toParticipant == participantId)
+        .fold(0.0, (a, s) => a + s.amount);
+    final paid = _settlements
+        .where((s) => s.tourId == tourId && s.fromParticipant == participantId)
+        .fold(0.0, (a, s) => a + s.amount);
+    return ((received - paid) * 100).round() / 100;
+  }
+
+  /// Total amount [participantId] paid out of pocket (as `paidBy` in expenses)
+  /// for the given tour. Includes all expense types (equal, exact, transfer, etc.).
+  double effectivePaid(String participantId, String tourId) {
+    return _expenses
+        .where((e) => e.tourId == tourId && e.paidBy == participantId && !e.isDeleted)
+        .fold(0.0, (a, e) => a + e.amount);
+  }
+
+  /// Total cost [participantId] is actually responsible for — the sum of all
+  /// their share amounts across every expense in the tour. Settlements are
+  /// NOT included here (they are accounted for in [balance]).
+  double finalShare(String participantId, String tourId) {
+    final expenseIds = _expenses
+        .where((e) => e.tourId == tourId && !e.isDeleted)
+        .map((e) => e.id)
+        .toSet();
+    return _shares
+        .where((s) =>
+            expenseIds.contains(s.expenseId) &&
+            s.participantId == participantId &&
+            !s.isDeleted &&
+            !s.isExcluded)
+        .fold(0.0, (a, s) => a + s.shareAmount);
+  }
+
+  /// Net balance for [participantId]:
+  ///   effectivePaid - finalShare + netSettlementPosition
+  ///
+  /// Positive = the person is owed money (should get money back).
+  /// Negative = the person owes money (should pay others).
+  ///
+  /// Includes settlements: money received (+) and sent (-) are factored in.
+  double balance(String participantId, String tourId) {
+    final paid = effectivePaid(participantId, tourId);
+    final share = finalShare(participantId, tourId);
+    final received = _settlements
+        .where((s) =>
+            s.tourId == tourId &&
+            s.toParticipant == participantId &&
+            !s.isDeleted)
+        .fold(0.0, (a, s) => a + s.amount);
+    final sent = _settlements
+        .where((s) =>
+            s.tourId == tourId &&
+            s.fromParticipant == participantId &&
+            !s.isDeleted)
+        .fold(0.0, (a, s) => a + s.amount);
+    return ((paid - share - received + sent) * 100).round() / 100.0;
+  }
+
+  /// Net balance per participant for the entire tour:
+  /// (total paid in expenses) - (total share of expenses) + (net settlement position).
+  Map<String, double> netBalances(String tourId) {
+    final balances = <String, double>{};
+    for (final p in _participants.where((p) => p.tourId == tourId)) {
+      balances[p.id] = 0;
+    }
+
+    for (final expense in _expenses.where((e) => e.tourId == tourId)) {
+      balances.update(
+        expense.paidBy,
+        (v) => v + expense.amount,
+        ifAbsent: () => expense.amount,
+      );
+    }
+
+    final expenseById = {for (final e in _expenses) e.id: e};
+
+    for (final share in _shares) {
+      final expense = expenseById[share.expenseId];
+      if (expense == null || expense.tourId != tourId) continue;
+      balances.update(
+        share.participantId,
+        (v) => v - share.shareAmount,
+        ifAbsent: () => -share.shareAmount,
+      );
+    }
+
+    for (final settlement in _settlements.where((s) => s.tourId == tourId)) {
+      balances.update(
+        settlement.fromParticipant,
+        (v) => v + settlement.amount,
+        ifAbsent: () => settlement.amount,
+      );
+      balances.update(
+        settlement.toParticipant,
+        (v) => v - settlement.amount,
+        ifAbsent: () => -settlement.amount,
+      );
+    }
+
+    for (final key in balances.keys.toList()) {
+      balances[key] = (balances[key]! * 100).round() / 100.0;
+    }
+    return balances;
+  }
+
+  // ─── Firestore sync ────────────────────────────────────────────────
+
+  CollectionReference? get _toursCollection {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return null;
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('tours');
+  }
+
+  Future<void> _syncTourToFirestore(Tour tour) async {
+    final col = _toursCollection;
+    if (col == null) return;
+    await col.doc(tour.id).set(tour.toMap());
+  }
+
+  Future<void> _syncExpenseToFirestore(
+    TourExpense expense,
+    List<TourExpenseShare> shares,
+  ) async {
+    final col = _toursCollection;
+    if (col == null) return;
+    await col
+        .doc(expense.tourId)
+        .collection('expenses')
+        .doc(expense.id)
+        .set(expense.toMap());
+    final batch = FirebaseFirestore.instance.batch();
+    for (final share in shares) {
+      final ref = col.doc(expense.tourId).collection('shares').doc(share.id);
+      batch.set(ref, share.toMap());
+    }
+    await batch.commit();
+  }
+
+  Future<void> _syncSettlementToFirestore(TourSettlement settlement) async {
+    final col = _toursCollection;
+    if (col == null) return;
+    await col
+        .doc(settlement.tourId)
+        .collection('settlements')
+        .doc(settlement.id)
+        .set(settlement.toMap());
+  }
+
+  Future<void> _syncParticipantToFirestore(TourParticipant participant) async {
+    final col = _toursCollection;
+    if (col == null) return;
+    await col
+        .doc(participant.tourId)
+        .collection('participants')
+        .doc(participant.id)
+        .set(participant.toMap());
+  }
+
+  Future<void> _softDeleteDoc(
+    String tourId,
+    String subcollection,
+    String docId,
+    String now,
+  ) async {
+    final col = _toursCollection;
+    if (col == null) return;
+    await col.doc(tourId).collection(subcollection).doc(docId).set({
+      'isDeleted': 1,
+      'lastModified': now,
+    }, SetOptions(merge: true));
+  }
+
+  // ─── Lifecycle ──────────────────────────────────────────────────────
+
+  void clear() {
+    _tours.clear();
+    _selectedTourId = null;
+    _participants.clear();
+    _expenses.clear();
+    _shares.clear();
+    _settlements.clear();
+    _isLoading = true;
+    notifyListeners();
+  }
+}

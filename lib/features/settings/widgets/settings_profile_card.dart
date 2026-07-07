@@ -1,0 +1,122 @@
+import 'package:material_symbols_icons/symbols.dart';
+import 'dart:io';
+import 'package:expense_tracker/core/constants/app_images.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class SettingsProfileCard extends StatelessWidget {
+  final String name;
+  final String email;
+  final String? photoUrl;
+  final VoidCallback? onEditTap;
+
+  const SettingsProfileCard({
+    super.key,
+    required this.name,
+    required this.email,
+    this.photoUrl,
+    this.onEditTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFF32235B), // Deep royal purple
+            Color(0xFF6A53A1), // Soft premium violet
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF6A53A1).withValues(alpha: 0.15),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          // Circle Avatar with glowing white ring
+          Container(
+            padding: const EdgeInsets.all(1.5),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: CircleAvatar(
+              radius: 24,
+              backgroundColor: Colors.grey.shade100,
+              backgroundImage: (photoUrl != null && photoUrl!.startsWith('http'))
+                  ? NetworkImage(photoUrl!) as ImageProvider
+                  : (photoUrl != null && photoUrl!.isNotEmpty && File(photoUrl!).existsSync()
+                      ? FileImage(File(photoUrl!)) as ImageProvider
+                      : const AssetImage(AppImages.avatarImage)),
+            ),
+          ),
+          const SizedBox(width: 12),
+
+          // User Info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.workSans(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  email,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.workSans(
+                    fontSize: 12,
+                    color: Colors.white.withValues(alpha: 0.75),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+
+          // Edit Button with translucent circle overlay
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: IconButton(
+              onPressed: onEditTap,
+              icon: const Icon(
+                Symbols.edit,
+                color: Colors.white,
+                size: 16,
+              ),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              splashRadius: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
