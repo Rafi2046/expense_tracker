@@ -48,16 +48,19 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
         ),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => AddEditDebtSheet.show(
-          context: context,
-          payeeLabel: 'Client/Friend Name',
-          themeColor: theme.primaryColor,
-          isReceive: true,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 72),
+        child: FloatingActionButton(
+          onPressed: () => AddEditDebtSheet.show(
+            context: context,
+            payeeLabel: 'Client/Friend Name',
+            themeColor: theme.primaryColor,
+            isReceive: true,
+          ),
+          backgroundColor: theme.primaryColor,
+          elevation: 2,
+          child: const Icon(Symbols.add, color: Colors.white, size: 28),
         ),
-        backgroundColor: theme.primaryColor,
-        elevation: 2,
-        child: const Icon(Symbols.add, color: Colors.white, size: 28),
       ),
       body: SafeArea(
         child: Column(
