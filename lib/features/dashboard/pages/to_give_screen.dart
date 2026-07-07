@@ -46,16 +46,19 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
         ),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => AddEditDebtSheet.show(
-          context: context,
-          payeeLabel: 'Payee Name',
-          themeColor: AppColors.activeRed,
-          isReceive: false,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 72),
+        child: FloatingActionButton(
+          onPressed: () => AddEditDebtSheet.show(
+            context: context,
+            payeeLabel: 'Payee Name',
+            themeColor: AppColors.activeRed,
+            isReceive: false,
+          ),
+          backgroundColor: theme.primaryColor,
+          elevation: 2,
+          child: const Icon(Symbols.add, color: Colors.white, size: 28),
         ),
-        backgroundColor: theme.primaryColor,
-        elevation: 2,
-        child: const Icon(Symbols.add, color: Colors.white, size: 28),
       ),
       body: SafeArea(
         child: Column(
@@ -141,27 +144,25 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
 
             Expanded(
               child: items.isEmpty
-                  ? SingleChildScrollView(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              AppImages.pendingPayments,
-                              height: 150,
-                              width: 150,
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            AppImages.pendingPayments,
+                            height: 150,
+                            width: 150,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'No pending debts!',
+                            style: GoogleFonts.workSans(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade500,
                             ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'No pending debts!',
-                              style: GoogleFonts.workSans(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey.shade500,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     )
                   : ListView.builder(

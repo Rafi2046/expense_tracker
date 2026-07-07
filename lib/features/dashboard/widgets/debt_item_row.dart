@@ -84,14 +84,14 @@ class DebtItemRow extends StatelessWidget {
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
           color: isDark
               ? themeColor.withValues(alpha: 0.15)
               : (themeColor == AppColors.activeRed
                   ? const Color(0xFFFEE2E2)
                   : const Color(0xFFE8F8F5)),
-          borderRadius: BorderRadius.circular(AppSpacing.r16),
+          borderRadius: BorderRadius.circular(AppSpacing.r8),
           border: Border.all(
             color: isDark
                 ? themeColor.withValues(alpha: 0.3)
@@ -117,26 +117,28 @@ class DebtItemRow extends StatelessWidget {
         ),
       ),
       onDismissed: (direction) {
-        debtProvider.settleDebtItem(item.id);
+        final id = item.id;
+        final name = item.name;
+        Future.microtask(() => debtProvider.settleDebtItem(id));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${item.name}\'s debt settled'),
+            content: Text('$name\'s debt settled'),
             duration: const Duration(seconds: 3),
             action: SnackBarAction(
               label: 'Undo',
               textColor: Colors.yellow,
               onPressed: () {
-                debtProvider.toggleSettledStatus(item.id);
+                debtProvider.toggleSettledStatus(id);
               },
             ),
           ),
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
           color: theme.cardColor,
-          borderRadius: BorderRadius.circular(AppSpacing.r16),
+          borderRadius: BorderRadius.circular(AppSpacing.r8),
           border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF0F0F0)),
           boxShadow: [
             BoxShadow(
@@ -147,7 +149,7 @@ class DebtItemRow extends StatelessWidget {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(AppSpacing.r16),
+          borderRadius: BorderRadius.circular(AppSpacing.r8),
           child: Stack(
             children: [
               Positioned(
@@ -160,12 +162,12 @@ class DebtItemRow extends StatelessWidget {
                 contentPadding: const EdgeInsets.only(
                   left: 20,
                   right: 16,
-                  top: 8,
-                  bottom: 8,
+                  top: 6,
+                  bottom: 6,
                 ),
                 leading: Container(
-                  width: 44,
-                  height: 44,
+                  width: 38,
+                  height: 38,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
@@ -200,7 +202,7 @@ class DebtItemRow extends StatelessWidget {
                   ),
                 ),
                 subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
+                  padding: const EdgeInsets.only(top: 2.0),
                   child: Text(
                     item.detail,
                     style: GoogleFonts.inter(

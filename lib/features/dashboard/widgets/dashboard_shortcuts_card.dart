@@ -1,5 +1,6 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/shortcut_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.dart';
@@ -13,65 +14,64 @@ import 'package:provider/provider.dart';
 class DashboardShortcutsCard extends StatelessWidget {
   const DashboardShortcutsCard({super.key});
 
-  Widget _buildShortcutIcon(String id) {
-    const Color activeGreen = AppColors.activeGreen;
+  // Soft gradient pair per action — gives the icon circle a little depth
+  List<Color> _gradient(String id, bool isDark) {
     switch (id) {
-      case 'payment_out':
-        return const Stack(
-          alignment: Alignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 4.0),
-              child: Icon(
-                Symbols.account_balance_wallet,
-                size: 18,
-                color: activeGreen,
-              ),
-            ),
-            Positioned(
-              top: 0,
-              child: Icon(Symbols.arrow_upward, size: 9, color: activeGreen),
-            ),
-          ],
-        );
       case 'income':
-        return const Icon(
-          Symbols.payments,
-          size: 20,
-          color: activeGreen,
-        );
+        return isDark
+            ? [const Color(0xFF16321F), const Color(0xFF1D4029)]
+            : [const Color(0xFFE8F9EE), const Color(0xFFD5F2E0)];
       case 'expense':
-        return const Icon(
-          Symbols.account_balance_wallet,
-          size: 20,
-          color: activeGreen,
-        );
+        return isDark
+            ? [const Color(0xFF3A1E1A), const Color(0xFF4A2620)]
+            : [const Color(0xFFFDEDEA), const Color(0xFFFBDCD5)];
       case 'payment_in':
-        return const Stack(
-          alignment: Alignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 4.0),
-              child: Icon(
-                Symbols.account_balance_wallet,
-                size: 18,
-                color: activeGreen,
-              ),
-            ),
-            Positioned(
-              top: 0,
-              child: Icon(Symbols.arrow_downward, size: 9, color: activeGreen),
-            ),
-          ],
-        );
+        return isDark
+            ? [const Color(0xFF17253F), const Color(0xFF1E3050)]
+            : [const Color(0xFFEAF1FE), const Color(0xFFD6E4FC)];
+      case 'payment_out':
+        return isDark
+            ? [const Color(0xFF3A2A14), const Color(0xFF4A3419)]
+            : [const Color(0xFFFEF3E8), const Color(0xFFFCE4C8)];
       case 'add_party':
-        return const Icon(
-          Symbols.person_add,
-          size: 20,
-          color: activeGreen,
-        );
+        return isDark
+            ? [const Color(0xFF2E2140), const Color(0xFF3A2B52)]
+            : [const Color(0xFFF3EBFC), const Color(0xFFE7D5F9)];
       default:
-        return const Icon(Symbols.help_outline, size: 20, color: activeGreen);
+        return [Colors.grey.shade200, Colors.grey.shade300];
+    }
+  }
+
+  Color _iconColor(String id) {
+    switch (id) {
+      case 'income':
+        return const Color(0xFF16A34A);
+      case 'expense':
+        return const Color(0xFFDC2626);
+      case 'payment_in':
+        return const Color(0xFF2563EB);
+      case 'payment_out':
+        return const Color(0xFFEA580C);
+      case 'add_party':
+        return const Color(0xFF7C3AED);
+      default:
+        return AppColors.activeGreen;
+    }
+  }
+
+  IconData _icon(String id) {
+    switch (id) {
+      case 'income':
+        return Symbols.arrow_downward_rounded;
+      case 'expense':
+        return Symbols.arrow_upward_rounded;
+      case 'payment_in':
+      case 'payment_out':
+        return Symbols.account_balance_wallet_rounded;
+      case 'add_party':
+        return Symbols.person_add_rounded;
+      default:
+        return Symbols.help_outline_rounded;
     }
   }
 
@@ -79,189 +79,201 @@ class DashboardShortcutsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final shortcutProvider = context.watch<ShortcutProvider>();
     final activeShortcuts = shortcutProvider.activeShortcuts;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Section Header Row
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                context.translate('quick_actions'),
-                style: GoogleFonts.workSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-              GestureDetector(
-                onTap: () => EditShortcutsSheet.show(context),
-                behavior: HitTestBehavior.opaque,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(
-                      Symbols.edit_square,
-                      size: 13,
-                      color: AppColors.activeGreen,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      context.translate('edit_menu'),
-                      style: GoogleFonts.workSans(
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.activeGreen,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
+    // Add Party is always-on and gets its own row treatment, so split it out
+    final addParty = activeShortcuts.where((s) => s.id == 'add_party').toList();
+    final gridItems = activeShortcuts.where((s) => s.id != 'add_party').toList();
 
-        // Container Card
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.2 : 0.03),
-                blurRadius: 10,
-                offset: const Offset(0, 3),
-              ),
-            ],
-            border: Border.all(
-              color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF0F0F0),
-              width: 1,
+    final cardBg = Theme.of(context).cardColor;
+    final dividerColor = Theme.of(context).dividerTheme.color ?? AppColors.dividerColor;
+    final labelColor = Theme.of(context).colorScheme.onSurface;
+    final subLabelColor = AppColors.textMuted;
+
+    return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: cardBg,
+          borderRadius: BorderRadius.circular(AppSpacing.r8),
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? Colors.black.withValues(alpha: 0.25)
+                  : Colors.black.withValues(alpha: 0.045),
+              blurRadius: 20,
+              offset: const Offset(0, 4),
             ),
-          ),
-          child: activeShortcuts.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text(
-                      'No quick actions enabled. Tap "Edit Menu" to add some.',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.workSans(
-                        fontSize: 12,
-                        color: Colors.grey.shade400,
-                      ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.translate('quick_actions'),
+                  style: GoogleFonts.workSans(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.2,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => EditShortcutsSheet.show(context),
+                  behavior: HitTestBehavior.opaque,
+                  child: Text(
+                    context.translate('edit_menu'),
+                    style: GoogleFonts.workSans(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: labelColor,
                     ),
                   ),
-                )
-              : _buildGrid(context, activeShortcuts),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildGrid(BuildContext context, List<ShortcutItem> activeShortcuts) {
-    final List<List<ShortcutItem>> chunks = [];
-    for (var i = 0; i < activeShortcuts.length; i += 3) {
-      final end = (i + 3 > activeShortcuts.length)
-          ? activeShortcuts.length
-          : i + 3;
-      chunks.add(activeShortcuts.sublist(i, end));
-    }
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (int rowIndex = 0; rowIndex < chunks.length; rowIndex++) ...[
-          if (rowIndex > 0) const SizedBox(height: 12),
-          Row(
-            children: [
-              for (int colIndex = 0; colIndex < 3; colIndex++) ...[
-                if (colIndex < chunks[rowIndex].length)
-                  Expanded(
-                    child: _buildShortcutItem(
-                      context,
-                      chunks[rowIndex][colIndex],
-                    ),
-                  )
-                else
-                  const Expanded(child: SizedBox()),
+                ),
+              ],
+            ),
+            const SizedBox(height: 18),
+            if (gridItems.isEmpty)
+              for (final item in addParty)
+                _buildRowItem(context, item, isDark, subLabelColor)
+            else ...[
+              Row(
+                children: [
+                  for (final item in gridItems) ...[
+                    Expanded(child: _buildGridItem(context, item, isDark, labelColor)),
+                  ],
+                ],
+              ),
+              if (addParty.isNotEmpty) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  child: Container(height: 1, color: dividerColor),
+                ),
+                for (final item in addParty)
+                  _buildRowItem(context, item, isDark, subLabelColor),
               ],
             ],
-          ),
-        ],
-      ],
+          ],
+        ),
     );
   }
 
-  Widget _buildShortcutItem(BuildContext context, ShortcutItem item) {
+  Widget _buildGridItem(BuildContext context, ShortcutItem item, bool isDark, Color labelColor) {
     return GestureDetector(
-      onTap: () {
-        if (item.id == 'add_party') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddPartyScreen()),
-          );
-        } else if (item.id == 'expense') {
-          AddTransactionSheet.show(context: context, isIncome: false);
-        } else if (item.id == 'income') {
-          AddTransactionSheet.show(context: context, isIncome: true);
-        } else if (item.id == 'payment_out') {
-          AddEditDebtSheet.show(
-            context: context,
-            payeeLabel: 'Payee Name',
-            themeColor: AppColors.activeRed,
-            isReceive: false,
-          );
-        } else if (item.id == 'payment_in') {
-          AddEditDebtSheet.show(
-            context: context,
-            payeeLabel: 'Client/Friend Name',
-            themeColor: AppColors.buttonColor,
-            isReceive: true,
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${item.label} shortcut clicked'),
-              duration: const Duration(seconds: 1),
-            ),
-          );
-        }
-      },
+      onTap: () => _handleTap(context, item),
       behavior: HitTestBehavior.opaque,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Round Icon Container
           Container(
-            width: 42,
-            height: 42,
+            width: 38,
+            height: 38,
             decoration: BoxDecoration(
-              color: AppColors.activeGreen.withValues(alpha: 0.08),
               shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: _gradient(item.id, isDark),
+              ),
             ),
-            child: Center(child: _buildShortcutIcon(item.id)),
+            child: Icon(_icon(item.id), size: 17, color: _iconColor(item.id)),
           ),
-          const SizedBox(height: 6),
-          // Label
+          const SizedBox(height: 8),
           Text(
             context.translate(item.id),
-            textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
             style: GoogleFonts.workSans(
               fontSize: 10.5,
-              fontWeight: FontWeight.w500,
-              color: Theme.of(context).brightness == Brightness.dark ? Colors.white60 : const Color(0xFF4A5568),
+              fontWeight: FontWeight.w600,
+              color: labelColor,
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildRowItem(BuildContext context, ShortcutItem item, bool isDark, Color subLabelColor) {
+    return GestureDetector(
+      onTap: () => _handleTap(context, item),
+      behavior: HitTestBehavior.opaque,
+      child: Row(
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: _gradient(item.id, isDark),
+              ),
+            ),
+            child: Icon(_icon(item.id), size: 17, color: _iconColor(item.id)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.translate(item.id),
+                  style: GoogleFonts.workSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                Text(
+                  context.translate('always_on'),
+                  style: GoogleFonts.workSans(fontSize: 10.5, color: subLabelColor),
+                ),
+              ],
+            ),
+          ),
+          Icon(Symbols.chevron_right_rounded, size: 18, color: Colors.grey.shade400),
+        ],
+      ),
+    );
+  }
+
+  void _handleTap(BuildContext context, ShortcutItem item) {
+    if (item.id == 'add_party') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AddPartyScreen()),
+      );
+    } else if (item.id == 'expense') {
+      AddTransactionSheet.show(context: context, isIncome: false);
+    } else if (item.id == 'income') {
+      AddTransactionSheet.show(context: context, isIncome: true);
+    } else if (item.id == 'payment_out') {
+      AddEditDebtSheet.show(
+        context: context,
+        payeeLabel: 'Payee Name',
+        themeColor: AppColors.activeRed,
+        isReceive: false,
+      );
+    } else if (item.id == 'payment_in') {
+      AddEditDebtSheet.show(
+        context: context,
+        payeeLabel: 'Client/Friend Name',
+        themeColor: AppColors.buttonColor,
+        isReceive: true,
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${item.label} shortcut clicked'),
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    }
   }
 }
