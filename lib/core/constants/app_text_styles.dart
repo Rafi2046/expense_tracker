@@ -167,7 +167,7 @@ class AppTextStyles {
   );
 
   static TextStyle summaryCardValue = TextStyle(
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: FontWeight.bold,
     color: AppColors.activeGreen,
     fontFamily: GoogleFonts.workSans().fontFamily,
@@ -195,7 +195,7 @@ class AppTextStyles {
   );
 
   static TextStyle sectionHeaderTitle = TextStyle(
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: FontWeight.bold,
     color: AppColors.black,
     fontFamily: GoogleFonts.workSans().fontFamily,

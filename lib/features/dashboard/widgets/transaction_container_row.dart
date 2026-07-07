@@ -8,6 +8,7 @@ class TransactionContainerRow extends StatelessWidget {
   final String subtitle;
   final Widget amount;
   final String? subAmountLabel;
+  final VoidCallback? onTap;
 
   const TransactionContainerRow({
     super.key,
@@ -16,6 +17,7 @@ class TransactionContainerRow extends StatelessWidget {
     required this.subtitle,
     required this.amount,
     this.subAmountLabel,
+    this.onTap,
   });
 
   @override
@@ -23,67 +25,70 @@ class TransactionContainerRow extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: isDark
-                  ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
-                  : const Color(0xFFF3F5F4),
-              shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: isDark
+                    ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
+                    : const Color(0xFFF3F5F4),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: AppColors.buttonColor, size: 22),
             ),
-            child: Icon(icon, color: AppColors.buttonColor, size: 22),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                      fontFamily: GoogleFonts.workSans().fontFamily,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: isDark ? Colors.white60 : Colors.grey.shade600,
+                      fontFamily: GoogleFonts.workSans().fontFamily,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
+                amount,
+                if (subAmountLabel != null) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    subAmountLabel!,
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: isDark ? Colors.white38 : Colors.grey.shade500,
+                      fontFamily: GoogleFonts.workSans().fontFamily,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: isDark ? Colors.white60 : Colors.grey.shade600,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
-                  ),
-                ),
+                ],
               ],
             ),
-          ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              amount,
-              if (subAmountLabel != null) ...[
-                const SizedBox(height: 4),
-                Text(
-                  subAmountLabel!,
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    color: isDark ? Colors.white38 : Colors.grey.shade500,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

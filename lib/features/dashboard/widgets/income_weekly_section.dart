@@ -2,6 +2,8 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
+import 'package:expense_tracker/features/dashboard/pages/income_transaction_list_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/transaction_details_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_container_row.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_list_container.dart';
 import 'package:expense_tracker/features/dashboard/widgets/weekly_trend_chart.dart';
@@ -35,7 +37,16 @@ class IncomeWeeklySection extends StatelessWidget {
         TransactionListContainer(
           title: 'Weekly Activity',
           trailing: TextButton(
-            onPressed: () {},
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => IncomeTransactionListScreen(
+                  title: 'Weekly Activity',
+                  transactions: weeklyTransactions,
+                  isMasked: isMasked,
+                ),
+              ),
+            ),
             style: TextButton.styleFrom(
               padding: EdgeInsets.zero,
               minimumSize: Size.zero,
@@ -76,6 +87,12 @@ class IncomeWeeklySection extends StatelessWidget {
                           style: _amountStyle,
                         ),
                       ],
+                    ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TransactionDetailsScreen(transaction: tx),
+                      ),
                     ),
                   );
                 }).toList(),

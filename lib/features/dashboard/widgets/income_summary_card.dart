@@ -33,11 +33,11 @@ class IncomeSummaryCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: theme.cardColor,
         border: Border.all(color: theme.dividerTheme.color ?? AppColors.dividerColor, width: 1.0),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

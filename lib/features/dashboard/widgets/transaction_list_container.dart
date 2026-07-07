@@ -29,7 +29,7 @@ class TransactionListContainer extends StatelessWidget {
               : AppColors.dividerColor,
           width: 1.0,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

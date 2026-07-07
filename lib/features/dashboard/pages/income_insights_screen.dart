@@ -291,7 +291,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
             children: [
               // Summary card
               _buildSummaryCard(analytics),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
               // Timeframe selector
               TimeFrameSelector(
@@ -303,15 +303,15 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
               // Timeframe-dependent content
               _buildTimeFrameContent(),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
 
               // Bottom Banner
               const FinancialHealthBanner(),
-              const SizedBox(height: 16),
+              SizedBox(height: 24 + MediaQuery.of(context).padding.bottom),
             ],
           ),
         ),

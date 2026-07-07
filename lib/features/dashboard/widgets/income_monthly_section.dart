@@ -2,6 +2,8 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
+import 'package:expense_tracker/features/dashboard/pages/income_transaction_list_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/transaction_details_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_transaction_row.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_trend_chart.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +44,16 @@ class IncomeMonthlySection extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => IncomeTransactionListScreen(
+                    title: 'All Monthly Income',
+                    transactions: monthlyTransactions,
+                    isMasked: isMasked,
+                  ),
+                ),
+              ),
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
                 minimumSize: Size.zero,
@@ -92,6 +103,12 @@ class IncomeMonthlySection extends StatelessWidget {
                       ],
                     ),
                     status: 'completed',
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TransactionDetailsScreen(transaction: tx),
+                      ),
+                    ),
                   );
                 },
               ),
