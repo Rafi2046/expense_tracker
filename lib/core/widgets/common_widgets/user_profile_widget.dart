@@ -11,8 +11,9 @@ class UserProfile {
   final String id;
   final String name;
   final String type;
+  final String? uid;
 
-  UserProfile({required this.id, required this.name, required this.type});
+  UserProfile({required this.id, required this.name, required this.type, this.uid});
 }
 
 class ProfileSwitchSheet extends StatefulWidget {

@@ -115,13 +115,14 @@ class ProfileProvider extends ChangeNotifier {
     final displayName = (user?.displayName != null && user!.displayName!.trim().isNotEmpty)
         ? user.displayName!.trim()
         : (user?.email != null && user!.email!.contains('@') ? user.email!.split('@').first : 'Personal');
-    _profiles.add(UserProfile(id: 'default_profile', name: displayName, type: 'Personal'));
+    _profiles.add(UserProfile(id: 'default_profile', name: displayName, type: 'Personal', uid: uid));
     _currentProfile = _profiles.first;
     await DatabaseHelper.instance.insertProfile({
       'id': 'default_profile',
       'name': displayName,
       'type': 'Personal',
       'createdAt': DateTime.now().toIso8601String(),
+      'uid': uid,
     });
     await _saveProfilesToPrefs();
     notifyListeners();
@@ -129,7 +130,8 @@ class ProfileProvider extends ChangeNotifier {
 
   void _initSync() {
     _profiles.clear();
-    _profiles.add(UserProfile(id: 'default_profile', name: 'Personal', type: 'Personal'));
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    _profiles.add(UserProfile(id: 'default_profile', name: 'Personal', type: 'Personal', uid: uid));
     _currentProfile = _profiles.first;
   }
 
@@ -144,14 +146,23 @@ class ProfileProvider extends ChangeNotifier {
 
       _profiles.clear();
 
+      final currentUid = currentUser?.uid;
+
       final allProfiles = await DatabaseHelper.instance.readAllProfiles();
       debugPrint('ProfileProvider._loadFromDb: DB has ${allProfiles.length} profiles');
       for (final row in allProfiles) {
         final id = row['id'] as String;
+        final rowUid = row['uid'] as String?;
+        if (rowUid != null && rowUid != currentUid) continue;
+        if (rowUid == null && currentUid != null) {
+          final db = await DatabaseHelper.instance.database;
+          await db.update('profiles', {'uid': currentUid}, where: 'id = ?', whereArgs: [id]);
+        }
         _profiles.add(UserProfile(
           id: id,
           name: row['name'] as String,
           type: row['type'] as String,
+          uid: currentUid ?? rowUid,
         ));
         debugPrint('ProfileProvider._loadFromDb: added from DB -> $id');
       }
@@ -166,13 +177,14 @@ class ProfileProvider extends ChangeNotifier {
                     ? currentUser.email!.split('@').first
                     : 'Personal'))
             : 'Personal';
-        _profiles.add(UserProfile(id: 'default_profile', name: name, type: 'Personal'));
+        _profiles.add(UserProfile(id: 'default_profile', name: name, type: 'Personal', uid: currentUid));
         _currentProfile = _profiles.first;
         await DatabaseHelper.instance.insertProfile({
           'id': 'default_profile',
           'name': name,
           'type': 'Personal',
           'createdAt': DateTime.now().toIso8601String(),
+          if (currentUid != null) 'uid': currentUid,
         });
         await _profileDoc('default_profile')?.set({
           'name': name,
@@ -197,7 +209,7 @@ class ProfileProvider extends ChangeNotifier {
     if (idx != -1) {
       final old = _profiles[idx];
       if (old.name != name) {
-        _profiles[idx] = UserProfile(id: old.id, name: name, type: old.type);
+        _profiles[idx] = UserProfile(id: old.id, name: name, type: old.type, uid: old.uid);
         DatabaseHelper.instance.updateProfile('default_profile', {'name': name});
         _profileDoc('default_profile')?.set({'name': name}, SetOptions(merge: true));
         if (_currentProfile.id == 'default_profile') {
@@ -271,7 +283,7 @@ class ProfileProvider extends ChangeNotifier {
     if (index == -1) return;
 
     final old = _profiles[index];
-    _profiles[index] = UserProfile(id: old.id, name: newName, type: old.type);
+    _profiles[index] = UserProfile(id: old.id, name: newName, type: old.type, uid: old.uid);
 
     if (_currentProfile.id == profileId) {
       _currentProfile = _profiles[index];
@@ -315,6 +327,7 @@ class ProfileProvider extends ChangeNotifier {
       'id': p.id,
       'name': p.name,
       'type': p.type,
+      if (p.uid != null) 'uid': p.uid,
     }).toList();
     await SharedPrefsHelper.setString('profiles_backup', jsonEncode(data));
   }
@@ -324,12 +337,14 @@ class ProfileProvider extends ChangeNotifier {
       return null;
     }
 
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
     final newProfile = UserProfile(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: _creationName.trim(),
       type: _creationProfileType == 'business'
           ? 'Business ($_selectedCategory)'
           : 'Personal',
+      uid: currentUid,
     );
 
     debugPrint('ProfileProvider.finalizeProfileCreation: saving ${newProfile.name} (${newProfile.id})');
@@ -340,6 +355,7 @@ class ProfileProvider extends ChangeNotifier {
         'name': newProfile.name,
         'type': newProfile.type,
         'createdAt': DateTime.now().toIso8601String(),
+        if (currentUid != null) 'uid': currentUid,
       });
 
       final verify = await DatabaseHelper.instance.readAllProfiles();
@@ -385,7 +401,7 @@ class ProfileProvider extends ChangeNotifier {
       final defaultProfile = _profiles.firstWhere(
         (p) => p.id == 'default_profile',
         orElse: () => _profiles.isNotEmpty ? _profiles.first : UserProfile(
-          id: 'default_profile', name: 'Personal', type: 'Personal',
+          id: 'default_profile', name: 'Personal', type: 'Personal', uid: FirebaseAuth.instance.currentUser?.uid,
         ),
       );
       _currentProfile = defaultProfile;

@@ -43,7 +43,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 11,
+      version: 12,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -120,7 +120,8 @@ class DatabaseHelper {
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         type TEXT NOT NULL,
-        createdAt TEXT NOT NULL
+        createdAt TEXT NOT NULL,
+        uid TEXT
       )
     ''');
     await db.insert('profiles', {
@@ -282,7 +283,8 @@ class DatabaseHelper {
           id TEXT PRIMARY KEY,
           name TEXT NOT NULL,
           type TEXT NOT NULL,
-          createdAt TEXT NOT NULL
+          createdAt TEXT NOT NULL,
+          uid TEXT
         )
       ''');
       await db.insert('profiles', {
@@ -459,6 +461,13 @@ class DatabaseHelper {
       final hasCompleted = columns.any((col) => col['name'] == 'isCompleted');
       if (!hasCompleted) {
         await db.execute('ALTER TABLE tours ADD COLUMN isCompleted INTEGER NOT NULL DEFAULT 0');
+      }
+    }
+    if (oldVersion < 12) {
+      final columns = await db.rawQuery('PRAGMA table_info(profiles)');
+      final hasUid = columns.any((col) => col['name'] == 'uid');
+      if (!hasUid) {
+        await db.execute('ALTER TABLE profiles ADD COLUMN uid TEXT');
       }
     }
   }

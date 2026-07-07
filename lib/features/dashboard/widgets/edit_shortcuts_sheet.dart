@@ -271,6 +271,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
               ),
             ),
           ],
+
         ),
       ),
     );
