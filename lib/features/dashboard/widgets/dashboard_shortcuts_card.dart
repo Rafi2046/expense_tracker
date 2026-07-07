@@ -91,73 +91,73 @@ class DashboardShortcutsCard extends StatelessWidget {
     final subLabelColor = AppColors.textMuted;
 
     return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          color: cardBg,
-          borderRadius: BorderRadius.circular(AppSpacing.r8),
-          boxShadow: [
-            BoxShadow(
-              color: isDark
-                  ? Colors.black.withValues(alpha: 0.25)
-                  : Colors.black.withValues(alpha: 0.045),
-              blurRadius: 20,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  context.translate('quick_actions'),
-                  style: GoogleFonts.workSans(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.2,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(AppSpacing.r8),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.25)
+                : Colors.black.withValues(alpha: 0.045),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                context.translate('quick_actions'),
+                style: GoogleFonts.workSans(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
-                GestureDetector(
-                  onTap: () => EditShortcutsSheet.show(context),
-                  behavior: HitTestBehavior.opaque,
-                  child: Text(
-                    context.translate('edit_menu'),
-                    style: GoogleFonts.workSans(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: labelColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 18),
-            if (gridItems.isEmpty)
-              for (final item in addParty)
-                _buildRowItem(context, item, isDark, subLabelColor)
-            else ...[
-              Row(
-                children: [
-                  for (final item in gridItems) ...[
-                    Expanded(child: _buildGridItem(context, item, isDark, labelColor)),
-                  ],
-                ],
               ),
-              if (addParty.isNotEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  child: Container(height: 1, color: dividerColor),
+              GestureDetector(
+                onTap: () => EditShortcutsSheet.show(context),
+                behavior: HitTestBehavior.opaque,
+                child: Text(
+                  context.translate('edit_menu'),
+                  style: GoogleFonts.workSans(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: labelColor,
+                  ),
                 ),
-                for (final item in addParty)
-                  _buildRowItem(context, item, isDark, subLabelColor),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          if (gridItems.isEmpty)
+            for (final item in addParty)
+              _buildRowItem(context, item, isDark, subLabelColor)
+          else ...[
+            Row(
+              children: [
+                for (final item in gridItems) ...[
+                  Expanded(child: _buildGridItem(context, item, isDark, labelColor)),
+                ],
               ],
+            ),
+            if (addParty.isNotEmpty) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                child: Container(height: 1, color: dividerColor),
+              ),
+              for (final item in addParty)
+                _buildRowItem(context, item, isDark, subLabelColor),
             ],
           ],
-        ),
+        ],
+      ),
     );
   }
 

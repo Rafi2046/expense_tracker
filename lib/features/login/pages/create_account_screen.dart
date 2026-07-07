@@ -3,7 +3,7 @@ import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
-import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
+import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/login/widgets/custom_round_button.dart';
 import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
@@ -75,7 +75,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           // Navigate to Dashboard and clear history
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const BottomNavScreen()),
+            MaterialPageRoute(builder: (context) => const OnboardingScreen()),
                 (route) => false,
           );
         }
@@ -97,7 +97,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       if (userCredential != null && mounted) {
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const BottomNavScreen()),
+          MaterialPageRoute(builder: (context) => const OnboardingScreen()),
               (route) => false,
         );
       }

@@ -21,6 +21,7 @@ class CreateProfileNameScreen extends StatefulWidget {
 
 class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
   final TextEditingController _nameController = TextEditingController();
+  bool _isCreating = false;
 
   @override
   void dispose() {
@@ -29,6 +30,8 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
   }
 
   void _showPremiumUpgrade(BuildContext context) {
+    _isCreating = false;
+    if (mounted) setState(() {});
     PremiumUpgradeSheet.show(context);
   }
 
@@ -52,6 +55,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
               _showPremiumUpgrade(context);
               return;
             }
+            _isCreating = false;
             context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
             Navigator.pop(context, newProfile);
           },
@@ -105,9 +109,11 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
               const SizedBox(height: 24),
 
               CustomButton(
-                text: 'Continue',
+                text: _isCreating ? 'Creating…' : 'Continue',
                 backgroundColor: const Color(0xFF2EBD85),
-                onPressed: () async {
+                onPressed: _isCreating
+                    ? () {}
+                    : () {
                   final name = _nameController.text.trim();
                   if (name.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -116,18 +122,21 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
                     return;
                   }
 
+                  setState(() => _isCreating = true);
                   provider.setCreationName(name);
 
                   if (widget.isBusiness) {
                     _showCategoryBottomSheet(context, provider);
                   } else {
-                    final newProfile = await provider.finalizeProfileCreation();
-                    if (newProfile == null) {
-                      _showPremiumUpgrade(context);
-                      return;
-                    }
-                    context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
-                    Navigator.pop(context, newProfile);
+                    provider.finalizeProfileCreation().then((newProfile) {
+                      if (newProfile == null) {
+                        _showPremiumUpgrade(context);
+                        return;
+                      }
+                      _isCreating = false;
+                      context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
+                      Navigator.pop(context, newProfile);
+                    });
                   }
                 },
               ),

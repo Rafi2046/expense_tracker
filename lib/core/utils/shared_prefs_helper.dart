@@ -4,6 +4,9 @@ class SharedPrefsHelper {
   /// Key used to persist the last active profile ID across restarts.
   static const String activeProfileKey = 'active_profile_id';
 
+  /// Key used to track whether the user has completed the onboarding flow.
+  static const String onboardingCompleteKey = 'onboarding_complete';
+
   static SharedPreferences? _prefs;
 
   // Initialize the SharedPreferences instance.

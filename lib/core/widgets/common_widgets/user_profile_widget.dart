@@ -20,6 +20,7 @@ class ProfileSwitchSheet extends StatefulWidget {
   final List<UserProfile> profiles;
   final Function(UserProfile) onProfileSelected;
   final VoidCallback onCreateNewTap;
+  final double maxHeight;
 
   const ProfileSwitchSheet({
     super.key,
@@ -27,6 +28,7 @@ class ProfileSwitchSheet extends StatefulWidget {
     required this.profiles,
     required this.onProfileSelected,
     required this.onCreateNewTap,
+    this.maxHeight = 500,
   });
 
   static void show({
@@ -36,15 +38,21 @@ class ProfileSwitchSheet extends StatefulWidget {
     required Function(UserProfile) onProfileSelected,
     required VoidCallback onCreateNewTap,
   }) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final viewInsets = MediaQuery.of(context).viewInsets.bottom;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (_) => ProfileSwitchSheet(
-        currentProfileId: currentProfileId,
-        profiles: profiles,
-        onProfileSelected: onProfileSelected,
-        onCreateNewTap: onCreateNewTap,
+      builder: (_) => Padding(
+        padding: EdgeInsets.only(bottom: viewInsets),
+        child: ProfileSwitchSheet(
+          currentProfileId: currentProfileId,
+          profiles: profiles,
+          onProfileSelected: onProfileSelected,
+          onCreateNewTap: onCreateNewTap,
+          maxHeight: (screenHeight - viewInsets) * 0.55,
+        ),
       ),
     );
   }
@@ -75,6 +83,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         child: Container(
           color: theme.colorScheme.surface,
+          constraints: BoxConstraints(maxHeight: widget.maxHeight),
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -106,11 +115,10 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                 child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
               )
             else
-              ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: profiles.length,
-              itemBuilder: (context, index) {
+              Expanded(
+                child: ListView.builder(
+                  itemCount: profiles.length,
+                  itemBuilder: (context, index) {
                 final profile = profiles[index];
                 final isSelected = profile.id == selectedId;
 
@@ -196,10 +204,11 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                     });
                   },
                 );
-              },
-            ),
+                  },
+                ),
+              ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
             SizedBox(
               width: double.infinity,

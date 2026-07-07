@@ -14,6 +14,7 @@ import 'package:expense_tracker/features/login/pages/forgot_password_screen.dart
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
 import 'package:expense_tracker/features/login/widgets/sync_loading_overlay.dart';
+import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'create_account_screen.dart';
 
@@ -221,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen>
     if (isNewUser || uid == null) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const BottomNavScreen()),
+        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
       );
       return;
     }

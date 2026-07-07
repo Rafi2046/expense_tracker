@@ -1315,7 +1315,6 @@ class DatabaseHelper {
       await txn.delete('debt_items');
       await txn.delete('budget');
       await txn.delete('notes');
-      await txn.delete('profiles');
     });
   }
 
