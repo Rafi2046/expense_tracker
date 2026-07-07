@@ -3,7 +3,6 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
-
 class DashboardStatCard extends StatelessWidget {
   final String title;
   final Widget value;
