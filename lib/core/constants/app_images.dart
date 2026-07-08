@@ -24,6 +24,8 @@ class AppImages {
   static const String notifications = 'assets/app_icons/notifications.png';
   static const String pendingPayments = 'assets/app_icons/pending_payments.png';
   static const String editIcon= 'assets/app_icons/edit_icon.webp';
+  static const String noTransactions= 'assets/app_icons/no_transaction.png';
+
 
   //tour
   static const String tour= 'assets/app_icons/tour .webp';

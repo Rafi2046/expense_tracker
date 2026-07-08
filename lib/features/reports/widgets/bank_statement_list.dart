@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,19 +27,8 @@ class BankStatementList extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  color: theme.cardColor,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Symbols.text_snippet,
-                  size: 72,
-                  color: isDark ? Colors.white30 : Colors.grey.shade200,
-                ),
-              ),
+
+              Image.asset(AppImages.noTransactions,width: 160,height: 160,),
               const SizedBox(height: 16),
               Text(
                 'No Transaction Found',
