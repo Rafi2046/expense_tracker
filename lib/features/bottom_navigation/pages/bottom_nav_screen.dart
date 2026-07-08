@@ -1,9 +1,9 @@
+import 'package:expense_tracker/features/transactions/pages/transactions_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/features/bottom_navigation/widgets/exit_dialog.dart';
 import 'package:expense_tracker/features/dashboard/pages/dashboard_screen.dart';
-import 'package:expense_tracker/features/ledger/pages/ledger_screen.dart';
 import 'package:expense_tracker/features/settings/pages/settings_screen.dart';
 import 'package:expense_tracker/features/tours/pages/tour_list_screen.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -28,7 +28,7 @@ class _AppBottomNavState extends State<BottomNavScreen> {
 
   final List<Widget> _screens = const [
     DashboardScreen(),
-    LedgerScreen(),
+    TransactionsScreen(),
     TourListScreen(),
     SettingsScreen(),
   ];

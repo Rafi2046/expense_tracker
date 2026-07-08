@@ -7,11 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class LedgerStatsCards extends StatelessWidget {
+class TransactionsStatsCards extends StatelessWidget {
   final bool isMasked;
   final VoidCallback onToggleMask;
 
-  const LedgerStatsCards({
+  const TransactionsStatsCards({
     super.key,
     required this.isMasked,
     required this.onToggleMask,

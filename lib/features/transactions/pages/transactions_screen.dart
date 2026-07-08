@@ -1,25 +1,25 @@
+import 'package:expense_tracker/features/transactions/widgets/ledger_month_selector.dart';
+import 'package:expense_tracker/features/transactions/widgets/ledger_stats_cards.dart';
+import 'package:expense_tracker/features/transactions/widgets/ledger_transaction_list.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
-import 'package:expense_tracker/features/ledger/widgets/ledger_month_selector.dart';
-import 'package:expense_tracker/features/ledger/widgets/ledger_stats_cards.dart';
-import 'package:expense_tracker/features/ledger/widgets/ledger_transaction_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class LedgerScreen extends StatefulWidget {
-  const LedgerScreen({super.key});
+class TransactionsScreen extends StatefulWidget {
+  const TransactionsScreen({super.key});
 
   @override
-  State<LedgerScreen> createState() => _LedgerScreenState();
+  State<TransactionsScreen> createState() => _TransactionsScreenState();
 }
 
-class _LedgerScreenState extends State<LedgerScreen> {
+class _TransactionsScreenState extends State<TransactionsScreen> {
   static bool _localMasked = false;
   bool _isScreenLoading = true;
   final TextEditingController _searchController = TextEditingController();
@@ -47,7 +47,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
       case TransactionTypeFilter.expense:
         selectedColor = AppColors.expensePink;
       case TransactionTypeFilter.all:
-        selectedColor = isDark ? Colors.white.withValues(alpha: 0.25) : Colors.grey.shade500;
+        selectedColor = const Color(0xFF6A53A1);
     }
 
     return Expanded(
@@ -157,7 +157,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
                 onChanged: (val) => provider.updateSearchQuery(val),
               )
             : Text(
-                context.translate('ledger'),
+                context.translate('transactions'),
                 style: GoogleFonts.workSans(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -210,7 +210,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Stats Summary Cards (Income vs Expense + Net Balance)
-                LedgerStatsCards(
+                TransactionsStatsCards(
                   isMasked: _localMasked,
                   onToggleMask: () => setState(() => _localMasked = !_localMasked),
                 ),

@@ -4,7 +4,6 @@ class AppTranslations {
       'cash': 'Cash',
       'bank': 'Bank',
       'home': 'Home',
-      'ledger': 'Ledger',
       'transactions': 'Transactions',
       'analytics': 'Analytics',
       'settings': 'Settings',

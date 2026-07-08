@@ -25,7 +25,7 @@ class TransactionInfoRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
               color: theme.cardColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: isDark
                     ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -64,7 +64,7 @@ class TransactionInfoRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
               color: theme.cardColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: isDark
                     ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -117,7 +117,7 @@ class CategoryDetailCard extends StatelessWidget {
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -167,7 +167,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -264,7 +264,7 @@ class MemoDetailCard extends StatelessWidget {
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -312,7 +312,7 @@ class SyncStatusCard extends StatelessWidget {
         color: isDark
             ? theme.colorScheme.onSurface.withValues(alpha: 0.04)
             : const Color(0xFFF9F9F9),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.12)

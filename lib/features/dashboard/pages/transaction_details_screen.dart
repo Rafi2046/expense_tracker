@@ -90,7 +90,7 @@ class TransactionDetailsScreen extends StatelessWidget {
       builder: (ctx) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
           ),
           title: const Text(
             'Delete Transaction',
