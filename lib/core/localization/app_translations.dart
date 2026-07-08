@@ -5,6 +5,7 @@ class AppTranslations {
       'bank': 'Bank',
       'home': 'Home',
       'ledger': 'Ledger',
+      'transactions': 'Transactions',
       'analytics': 'Analytics',
       'settings': 'Settings',
       'quick_actions': 'Quick Actions',
