@@ -1,4 +1,4 @@
-import 'package:expense_tracker/features/transactions/widgets/ledger_month_selector.dart';
+import 'package:expense_tracker/features/transactions/widgets/transactions_month_selector.dart';
 import 'package:expense_tracker/features/transactions/widgets/ledger_stats_cards.dart';
 import 'package:expense_tracker/features/transactions/widgets/ledger_transaction_list.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -217,7 +217,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 const SizedBox(height: AppSpacing.s20),
 
                 // Month Selector Slider
-                const LedgerMonthSelector(),
+                const TransactionsMonthSelector(),
                 const SizedBox(height: 12),
 
                 // Filter: All / Income / Expense

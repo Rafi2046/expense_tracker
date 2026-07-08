@@ -64,7 +64,7 @@ class LedgerTransactionRow extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
           child: Row(
             children: [
               Container(
@@ -81,7 +81,7 @@ class LedgerTransactionRow extends StatelessWidget {
                   size: 20,
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
 
               Expanded(
                 child: Column(
@@ -109,8 +109,6 @@ class LedgerTransactionRow extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
-
               Text(
                 amountPrefix,
                 style: GoogleFonts.workSans(

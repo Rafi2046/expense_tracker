@@ -7,14 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class LedgerMonthSelector extends StatefulWidget {
-  const LedgerMonthSelector({super.key});
+class TransactionsMonthSelector extends StatefulWidget {
+  const TransactionsMonthSelector({super.key});
 
   @override
-  State<LedgerMonthSelector> createState() => _LedgerMonthSelectorState();
+  State<TransactionsMonthSelector> createState() => _TransactionsMonthSelectorState();
 }
 
-class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
+class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -82,7 +82,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                     ),
                   ),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         padding: const EdgeInsets.all(6),
