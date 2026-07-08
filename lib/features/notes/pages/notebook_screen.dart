@@ -126,16 +126,19 @@ class _NotebookScreenState extends State<NotebookScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddNoteScreen()),
-          );
-        },
-        backgroundColor: AppColors.activeGreen,
-        elevation: 2,
-        child: const Icon(Symbols.add, color: Colors.white, size: 28),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 72),
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AddNoteScreen()),
+            );
+          },
+          backgroundColor: AppColors.activeGreen,
+          elevation: 2,
+          child: const Icon(Symbols.add, color: Colors.white, size: 28),
+        ),
       ),
       body: Column(
         children: [

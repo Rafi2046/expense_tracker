@@ -14,7 +14,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PartyStatementScreen extends StatefulWidget {
-  const PartyStatementScreen({super.key});
+  final String? initialPartyName;
+
+  const PartyStatementScreen({super.key, this.initialPartyName});
 
   @override
   State<PartyStatementScreen> createState() => _PartyStatementScreenState();
@@ -27,6 +29,15 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.initialPartyName != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          context.read<ReportsProvider>().setStatementParty(
+            widget.initialPartyName,
+          );
+        }
+      });
+    }
     Future.delayed(const Duration(milliseconds: 800), () {
       if (mounted) setState(() => _isScreenLoading = false);
     });
@@ -41,13 +52,21 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
     final dateFormat = DateFormat('dd MMM yyyy');
 
     final headers = ['Date', 'Detail', 'Amount', 'Type'];
-    final rows = reportsProvider.partyStatementTransactions.map((item) => {
-      'Date': dateFormat.format(item.dateTime),
-      'Detail': '${item.partyName} • ${item.description}',
-      'Amount': '${context.currencySymbol} ${item.amount.toStringAsFixed(0)}',
-      'Type': item.isInflow ? 'Receive' : 'Give',
-    }).toList();
-    final dateSubtitle = reportsProvider.getDateRangeSubtitle(reportsProvider.selectedOption, reportsProvider.selectedDateRange);
+    final rows = reportsProvider.partyStatementTransactions
+        .map(
+          (item) => {
+            'Date': dateFormat.format(item.dateTime),
+            'Detail': '${item.partyName} • ${item.description}',
+            'Amount':
+                '${context.currencySymbol} ${item.amount.toStringAsFixed(0)}',
+            'Type': item.isInflow ? 'Receive' : 'Give',
+          },
+        )
+        .toList();
+    final dateSubtitle = reportsProvider.getDateRangeSubtitle(
+      reportsProvider.selectedOption,
+      reportsProvider.selectedDateRange,
+    );
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -65,13 +84,12 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
         ),
         title: Text(
           'Party Statement',
-          style: AppTextStyles.reportAppBarTitle.copyWith(color: theme.appBarTheme.titleTextStyle?.color),
+          style: AppTextStyles.reportAppBarTitle.copyWith(
+            color: theme.appBarTheme.titleTextStyle?.color,
+          ),
         ),
         centerTitle: true,
-        actions: const [
-          PartyStatementViewToggle(),
-          SizedBox(width: 8),
-        ],
+        actions: const [PartyStatementViewToggle(), SizedBox(width: 8)],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
@@ -95,7 +113,8 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
                 children: [
                   PrivacyToggleSection(
                     isMasked: _localMasked,
-                    onToggle: () => setState(() => _localMasked = !_localMasked),
+                    onToggle: () =>
+                        setState(() => _localMasked = !_localMasked),
                   ),
                   const SizedBox(height: 14),
                   const ReportDateSelector(),
@@ -106,7 +125,9 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
                   const SizedBox(height: 20),
                   PartyStatementContent(
                     isMasked: _localMasked,
-                    isLoading: txProvider.isLoading || (_isScreenLoading && partyName != null),
+                    isLoading:
+                        txProvider.isLoading ||
+                        (_isScreenLoading && partyName != null),
                   ),
                 ],
               ),

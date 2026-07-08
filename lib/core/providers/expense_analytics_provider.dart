@@ -10,6 +10,7 @@ import 'package:expense_tracker/features/dashboard/widgets/expense_breakdown_car
 class ExpenseAnalyticsProvider extends ChangeNotifier {
   List<TransactionItem> _expenseTransactions = [];
 
+  String? _currentProfileId;
   StreamSubscription<User?>? _authSubscription;
 
   static const _categoryColors = [
@@ -34,6 +35,7 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
   void _onAuthChanged(User? newUser) {
     if (newUser == null) {
       _expenseTransactions = [];
+      _currentProfileId = null;
       notifyListeners();
     }
   }
@@ -427,6 +429,8 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
   }
 
   void updateProfileId(String newProfileId) {
+    if (_currentProfileId == newProfileId) return;
+    _currentProfileId = newProfileId;
     _expenseTransactions = [];
     notifyListeners();
   }
