@@ -214,7 +214,7 @@ class _TourMemberManagementScreenState
           // Members List
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
+              padding: EdgeInsets.fromLTRB(AppSpacing.p16, 0, AppSpacing.p16, MediaQuery.of(context).padding.bottom + 16),
               itemCount: participants.length,
               itemBuilder: (context, index) {
                 final member = participants[index];
@@ -319,17 +319,17 @@ class _TourMemberManagementScreenState
           borderRadius: BorderRadius.circular(AppSpacing.br8),
         ),
         backgroundColor: theme.colorScheme.surface,
-        title: Text('Outstanding Balance', style: AppTextStyles.dialogTitle),
+        title: Text('Outstanding Balance', style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface)),
         content: Text(
           '$name $owesOrOwed $amount in this tour. Removing them now will make this amount disappear from everyone\'s calculation — it won\'t be settled.\n\nSettle up first, or remove anyway?',
-          style: AppTextStyles.dialogBody,
+          style: AppTextStyles.dialogBody.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text(
+            child: Text(
               'Cancel',
-              style: TextStyle(color: AppColors.loginSubTitle),
+              style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
             ),
           ),
           TextButton(
@@ -359,17 +359,17 @@ class _TourMemberManagementScreenState
           borderRadius: BorderRadius.circular(AppSpacing.br8),
         ),
         backgroundColor: theme.colorScheme.surface,
-        title: Text('Remove Member', style: AppTextStyles.dialogTitle),
+        title: Text('Remove Member', style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface)),
         content: Text(
           'Remove $name from this tour?',
-          style: AppTextStyles.dialogBody,
+          style: AppTextStyles.dialogBody.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text(
+            child: Text(
               'Cancel',
-              style: TextStyle(color: AppColors.loginSubTitle),
+              style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
             ),
           ),
           TextButton(

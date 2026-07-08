@@ -38,12 +38,21 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
     final settlements = simplifyDebts(netBalances);
     final pById = {for (final p in participants) p.id: p.name};
     final isAllSettled = totalOutstanding == 0;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF111118) : const Color(0xFFF8F9FA),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text('Invoice', style: GoogleFonts.workSans(fontWeight: FontWeight.w600)),
+        backgroundColor: theme.colorScheme.surface,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+        foregroundColor: theme.colorScheme.onSurface,
+        shape: Border(
+          bottom: BorderSide(color: theme.colorScheme.onSurface.withValues(alpha: 0.08)),
+        ),
+        title: Text('Invoice', style: GoogleFonts.workSans(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface)),
         actions: [
           IconButton(
             icon: _isSharing
@@ -64,14 +73,14 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
           margin: const EdgeInsets.fromLTRB(16, 12, 16, 32),
           decoration: BoxDecoration(
             color: isDark ? const Color(0xFF1E1E2E) : Colors.white,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(8),
             border: Border.all(color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFF1F5F9), width: 1.2),
             boxShadow: [
               BoxShadow(color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05), blurRadius: 24, offset: const Offset(0, 8)),
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(8),
             child: SingleChildScrollView(
               padding: EdgeInsets.fromLTRB(28, 28, 28, MediaQuery.of(context).padding.bottom + 28),
               child: Column(
@@ -142,6 +151,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
   }
 
   Widget _buildHeader(Tour tour) {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -154,15 +164,15 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
               children: [
                 Text('INVOICE', style: GoogleFonts.jetBrainsMono(fontSize: 10, fontWeight: FontWeight.w800, color: AppColors.activeGreen, letterSpacing: 3)),
                 const SizedBox(height: 6),
-                Text(tour.name, style: GoogleFonts.workSans(fontSize: 26, fontWeight: FontWeight.w800, color: const Color(0xFF111827), letterSpacing: -0.5)),
+                Text(tour.name, style: GoogleFonts.workSans(fontSize: 26, fontWeight: FontWeight.w800, color: theme.colorScheme.onSurface, letterSpacing: -0.5)),
               ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(_formatDate(tour.createdAt), style: GoogleFonts.workSans(fontSize: 11, color: const Color(0xFF9CA3AF))),
+                Text(_formatDate(tour.createdAt), style: GoogleFonts.workSans(fontSize: 11, color: theme.colorScheme.onSurface.withValues(alpha: 0.4))),
                 const SizedBox(height: 2),
-                Text(tour.currency, style: GoogleFonts.workSans(fontSize: 11, fontWeight: FontWeight.w600, color: const Color(0xFF6B7280))),
+                Text(tour.currency, style: GoogleFonts.workSans(fontSize: 11, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5))),
               ],
             ),
           ],

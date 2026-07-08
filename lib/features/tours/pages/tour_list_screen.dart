@@ -11,12 +11,10 @@ import 'package:expense_tracker/features/tours/pages/tour_dashboard_screen.dart'
 import 'package:expense_tracker/core/providers/session_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 // Extracted Widgets (আপনার পাথ অনুযায়ী মিলিয়ে নিন)
 import 'package:expense_tracker/features/tours/widgets/tour_list_header.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_list_empty_state.dart';
-import 'package:expense_tracker/features/tours/widgets/tour_stats_row.dart';
 import 'package:expense_tracker/features/tours/widgets/new_tour_cta.dart';
 
 class TourListScreen extends StatefulWidget {
@@ -184,8 +182,10 @@ class _TourListScreenState extends State<TourListScreen> {
               currentProfile: currentProfile,
               photoUrl: photoUrl,
               initials: initials,
+              totalTours: tours.length,
+              totalBuddies: tours.fold<int>(0, (sum, t) => sum + (_memberCounts[t.id] ?? 0)),
             ),
-            const SizedBox(height: AppSpacing.s8),
+            const SizedBox(height: AppSpacing.s12),
 
             Expanded(
               child: RefreshIndicator(
@@ -227,52 +227,13 @@ class _TourListScreenState extends State<TourListScreen> {
   }
 
   Widget _buildTourListContent(ThemeData theme, List<Tour> tours) {
-    final totalBuddies = tours.fold<int>(
-      0,
-      (sum, t) => sum + (_memberCounts[t.id] ?? 0),
-    );
-
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.only(top: 8, bottom: 24),
+        padding: const EdgeInsets.only(top: 4, bottom: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-              TourStatsRow(
-                totalTours: tours.length,
-                totalBuddies: totalBuddies,
-              ),
-              const SizedBox(height: AppSpacing.s20),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      tours.length == 1 ? 'Active Tour' : 'Active Tours',
-                      style: GoogleFonts.workSans(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                    Text(
-                      '${_currentPageIndex + 1} of ${tours.length}',
-                      style: GoogleFonts.workSans(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.onSurfaceVariant.withValues(
-                          alpha: 0.6,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: AppSpacing.s14),
-
               SizedBox(
                 height: 220,
                 child: PageView.builder(

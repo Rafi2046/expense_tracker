@@ -13,12 +13,16 @@ class TourListHeader extends StatelessWidget {
   final UserProfile currentProfile;
   final String? photoUrl;
   final String initials;
+  final int totalTours;
+  final int totalBuddies;
 
   const TourListHeader({
     super.key,
     required this.currentProfile,
     required this.photoUrl,
     required this.initials,
+    this.totalTours = 0,
+    this.totalBuddies = 0,
   });
 
   ImageProvider? _resolveImage(String? url) {
@@ -76,6 +80,17 @@ class TourListHeader extends StatelessWidget {
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
+                if (totalTours > 0) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    '$totalTours tour${totalTours == 1 ? '' : 's'} · $totalBuddies ${totalBuddies == 1 ? 'buddy' : 'buddies'}',
+                    style: GoogleFonts.workSans(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

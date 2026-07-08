@@ -27,6 +27,9 @@ class TourExportOptionsSheet extends StatelessWidget {
     final totalOutstanding = provider.totalOutstanding(tour.id);
     final settlements = simplifyDebts(netBalances);
 
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+    final viewInsets = MediaQuery.of(context).viewInsets.bottom;
+
     return Container(
       decoration: BoxDecoration(
         color: theme.cardColor,
@@ -39,93 +42,87 @@ class TourExportOptionsSheet extends StatelessWidget {
           width: 1.2,
         ),
       ),
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom +
-            MediaQuery.of(context).padding.bottom +
-            20,
-      ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+        padding: EdgeInsets.fromLTRB(24, 12, 24, viewInsets + bottomInset + 8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF4B5563) : const Color(0xFFD1D5DB),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            Text(
-              'Export Report',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Choose how to share your tour details',
-              style: TextStyle(
-                fontSize: 13,
-                color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
-              ),
-            ),
-            const SizedBox(height: 20),
-            _ExportOptionTile(
-              icon: Icons.image_rounded,
-              title: 'Share Balances Image',
-              subtitle: 'A snapshot showing who owes whom',
-              gradientColors: const [Color(0xFF059669), Color(0xFF0F766E)],
-              onTap: () {
-                Navigator.pop(context);
-                TourExportService.shareReport(context, tourId);
-              },
-            ),
-            const SizedBox(height: 12),
-            _ExportOptionTile(
-              icon: Icons.description_rounded,
-              title: 'View Detailed Invoice',
-              subtitle: 'Full report with category breakdown & ledger table',
-              gradientColors: const [Color(0xFF2563EB), Color(0xFF1D4ED8)],
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => TourInvoiceScreen(tourId: tour.id),
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF4B5563) : const Color(0xFFD1D5DB),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
-                );
-              },
+                ),
+                Text(
+                  'Export Report',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Choose how to share your tour details',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _ExportOptionTile(
+                  icon: Icons.image_rounded,
+                  title: 'Share Balances Image',
+                  subtitle: 'A snapshot showing who owes whom',
+                  gradientColors: const [Color(0xFF059669), Color(0xFF0F766E)],
+                  onTap: () {
+                    Navigator.pop(context);
+                    TourExportService.shareReport(context, tourId);
+                  },
+                ),
+                const SizedBox(height: 12),
+                _ExportOptionTile(
+                  icon: Icons.description_rounded,
+                  title: 'View Detailed Invoice',
+                  subtitle: 'Full report with category breakdown & ledger table',
+                  gradientColors: const [Color(0xFF2563EB), Color(0xFF1D4ED8)],
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TourInvoiceScreen(tourId: tour.id),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+                _ExportOptionTile(
+                  icon: Icons.picture_as_pdf_rounded,
+                  title: 'Download Detailed Invoice (PDF)',
+                  subtitle: 'Export as PDF file to share or print',
+                  gradientColors: const [Color(0xFFDC2626), Color(0xFFB91C1C)],
+                  onTap: () {
+                    Navigator.pop(context);
+                    TourInvoiceGenerator.generateAndShare(
+                      tour: tour,
+                      participants: participants,
+                      expenses: expenses,
+                      settlements: settlements,
+                      totalSpent: totalSpent,
+                      totalOutstanding: totalOutstanding,
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+              ],
             ),
-            const SizedBox(height: 12),
-            _ExportOptionTile(
-              icon: Icons.picture_as_pdf_rounded,
-              title: 'Download Detailed Invoice (PDF)',
-              subtitle: 'Export as PDF file to share or print',
-              gradientColors: const [Color(0xFFDC2626), Color(0xFFB91C1C)],
-              onTap: () {
-                Navigator.pop(context);
-                TourInvoiceGenerator.generateAndShare(
-                  tour: tour,
-                  participants: participants,
-                  expenses: expenses,
-                  settlements: settlements,
-                  totalSpent: totalSpent,
-                  totalOutstanding: totalOutstanding,
-                );
-              },
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
+          ),
     );
   }
 }
@@ -153,13 +150,13 @@ class _ExportOptionTile extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isDark ? const Color(0xFF1E1E2E) : const Color(0xFFF8F9FA),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFE5E7EB),
             ),

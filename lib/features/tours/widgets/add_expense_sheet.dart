@@ -54,6 +54,7 @@ class AddExpenseSheet extends StatefulWidget {
 class _AddExpenseSheetState extends State<AddExpenseSheet> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+  final _amountFocusNode = FocusNode();
   final _noteController = TextEditingController();
   final _customValues = <String, TextEditingController>{};
   final _picker = ImagePicker();
@@ -130,6 +131,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   void dispose() {
     _titleController.dispose();
     _amountController.dispose();
+    _amountFocusNode.dispose();
     _noteController.dispose();
     for (final c in _customValues.values) {
       c.dispose();
@@ -566,12 +568,13 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     final percentageError = _splitType == 'percentage' && (_percentageTotal * 100).round() != 10000;
     final exactExceedsError = _exactAmountsExceed;
 
+    final double maxHeight = (MediaQuery.of(context).size.height - bottom) * 0.85;
+
     return Padding(
       padding: EdgeInsets.only(bottom: bottom),
-      child: Container(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.92,
-        ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: maxHeight),
+        child: Container(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -700,6 +703,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           ],
         ),
       ),
+      ),
     );
   }
 
@@ -761,6 +765,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   constraints: const BoxConstraints(minWidth: 60, maxWidth: 200),
                   child: TextField(
                     controller: _amountController,
+                    focusNode: _amountFocusNode,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
@@ -773,8 +778,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       color: theme.colorScheme.onSurface,
                       height: 1.2,
                     ),
+                    autofocus: true,
+                    cursorColor: AppColors.activeGreen,
+                    cursorWidth: 3,
+                    cursorHeight: 44,
                     decoration: InputDecoration(
-                      hintText: '0',
+                      hintText: '0.00',
                       hintStyle: GoogleFonts.workSans(
                         fontSize: 38,
                         fontWeight: FontWeight.w300,
@@ -834,111 +843,145 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   // ─── Category Chips (inline) ─────────────────────────────────────────
 
   Widget _buildCategoryChips(ThemeData theme) {
-    final totalItems = _categories.length + _customCategories.length + 1;
+    final isDark = theme.brightness == Brightness.dark;
 
-    return SizedBox(
-      height: 36,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        itemCount: totalItems,
-        separatorBuilder: (_, __) => const SizedBox(width: 6),
-        itemBuilder: (context, index) {
-          if (index < _categories.length) {
-            final (label, icon) = _categories[index];
-            final isSelected = _selectedCategory == label;
-            return GestureDetector(
-              onTap: () => setState(() {
-                _selectedCategory = isSelected ? null : label;
-              }),
-              child: _buildChip(label, icon, isSelected, theme),
-            );
-          }
-
-          if (index < _categories.length + _customCategories.length) {
-            final cat = _customCategories[index - _categories.length];
-            final isSelected = _selectedCategory == cat['name'];
-            return GestureDetector(
-              onTap: () => setState(() {
-                _selectedCategory = isSelected ? null : cat['name'];
-              }),
-              child: _buildChip(cat['name'] as String, cat['icon'] as IconData, isSelected, theme),
-            );
-          }
-
-          return GestureDetector(
-            onTap: () => _showAddCategoryDialog(),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3F4F6),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0xFFD1D5DB), width: 1),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.add_rounded,
-                    size: 14,
-                    color: const Color(0xFF6B7280),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Add',
-                    style: GoogleFonts.workSans(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF6B7280),
-                    ),
-                  ),
-                ],
-              ),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.dividerColor.withValues(alpha: 0.1),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'CATEGORY',
+            style: GoogleFonts.workSans(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.5,
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
-          );
-        },
+          ),
+          const SizedBox(height: 8),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              crossAxisSpacing: 6,
+              mainAxisSpacing: 6,
+              childAspectRatio: 1.3,
+            ),
+            itemCount: _categories.length + _customCategories.length + 1,
+            itemBuilder: (context, index) {
+              if (index < _categories.length) {
+                final (label, icon) = _categories[index];
+                return _buildCategoryGridItem(theme, label, icon, _selectedCategory == label);
+              }
+              final ci = index - _categories.length;
+              if (ci < _customCategories.length) {
+                final cat = _customCategories[ci];
+                return _buildCategoryGridItem(
+                  theme, cat['name'] as String, cat['icon'] as IconData,
+                  _selectedCategory == cat['name'],
+                  onTap: () => setState(() {
+                    _selectedCategory = _selectedCategory == cat['name'] ? null : cat['name'];
+                  }),
+                );
+              }
+              return _buildAddGridItem(theme);
+            },
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildChip(String label, IconData icon, bool isSelected, ThemeData theme) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: isSelected
-            ? AppColors.activeGreen.withValues(alpha: 0.12)
-            : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isSelected
-              ? AppColors.activeGreen.withValues(alpha: 0.3)
-              : Colors.transparent,
-          width: 1,
+  Widget _buildCategoryGridItem(ThemeData theme, String label, IconData icon, bool selected, {VoidCallback? onTap}) {
+    final isDark = theme.brightness == Brightness.dark;
+    return GestureDetector(
+      onTap: onTap ?? () => setState(() => _selectedCategory = selected ? null : label),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          color: selected
+              ? AppColors.activeGreen.withValues(alpha: 0.12)
+              : (isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFF0F0F0)),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: selected
+                ? AppColors.activeGreen.withValues(alpha: 0.3)
+                : (isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFE5E5E5)),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: selected
+                  ? AppColors.activeGreen
+                  : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+            ),
+            const SizedBox(height: 3),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.workSans(
+                fontSize: 9,
+                fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                color: selected
+                    ? AppColors.activeGreen
+                    : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
         ),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 14,
-            color: isSelected
-                ? AppColors.activeGreen
-                : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+    );
+  }
+
+  Widget _buildAddGridItem(ThemeData theme) {
+    final isDark = theme.brightness == Brightness.dark;
+    return GestureDetector(
+      onTap: () => _showAddCategoryDialog(),
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFF0F0F0),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFE5E5E5),
+            width: 1,
           ),
-          const SizedBox(width: 5),
-          Text(
-            label,
-            style: GoogleFonts.workSans(
-              fontSize: 12,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-              color: isSelected
-                  ? AppColors.activeGreen
-                  : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.add_rounded,
+              size: 16,
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
             ),
-          ),
-        ],
+            const SizedBox(height: 3),
+            Text(
+              'Add',
+              style: GoogleFonts.workSans(
+                fontSize: 9,
+                fontWeight: FontWeight.w500,
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1106,7 +1149,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       }
                     },
                   ),
-                  const SizedBox(height: 8),
+          const SizedBox(height: 6),
                   const Text(
                     'Choose an icon',
                     style: TextStyle(
@@ -1377,16 +1420,16 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 ),
               ),
             ),
-            if (selected) ...[
-              const SizedBox(width: 6),
-              Text(
-                p.name.split(' ').first,
-                style: GoogleFonts.workSans(
-                  fontSize: 12,
-                  color: theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
+            const SizedBox(width: 6),
+            Text(
+              p.name.split(' ').first,
+              style: GoogleFonts.workSans(
+                fontSize: 12,
+                color: theme.colorScheme.onSurface.withValues(alpha: selected ? 1 : 0.6),
+                fontWeight: FontWeight.w600,
               ),
+            ),
+            if (selected) ...[
               const SizedBox(width: 4),
               const Icon(Icons.check_circle_rounded, size: 14, color: AppColors.activeGreen),
             ],
