@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CreateTourSheet extends StatefulWidget {
   final Function(Tour tour) onTourCreated;
@@ -32,7 +32,6 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
   final nameController = TextEditingController();
   String selectedCurrency = 'BDT';
   String? coverPhotoPath;
-  bool _isHidden = false;
 
   @override
   void dispose() {
@@ -43,213 +42,254 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final double viewInsets = MediaQuery.of(context).viewInsets.bottom;
-    final double bottomInset = MediaQuery.of(context).padding.bottom;
-    final double maxHeight = 430;
+    final isDark = theme.brightness == Brightness.dark;
+    final viewInsets = MediaQuery.of(context).viewInsets.bottom;
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+    final double maxHeight = (MediaQuery.of(context).size.height - viewInsets) * 0.65;
 
     return Padding(
       padding: EdgeInsets.only(bottom: viewInsets),
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: maxHeight),
-          child: Container(
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              color: _isHidden ? Colors.transparent : theme.colorScheme.surface,
-              borderRadius: _isHidden
-                  ? BorderRadius.zero
-                  : const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24),
-                    ),
-            ),
-            padding: EdgeInsets.fromLTRB(24, 12, 24, bottomInset + 70),
-            child: _isHidden
-                ? const SizedBox.shrink()
-                : Column(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: maxHeight),
+        child: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(24, 12, 24, 20 + bottomInset),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Flexible(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Center(
-                                child: Container(
-                                  width: 36,
-                                  height: 4,
-                                  decoration: BoxDecoration(
-                                    color: theme.dividerColor.withValues(alpha: 0.5),
-                                    borderRadius: BorderRadius.circular(2),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Text('New Tour', style: AppTextStyles.dialogTitle),
-                              const SizedBox(height: 12),
-                              TextField(
-                                controller: nameController,
-                                autofocus: true,
-                                decoration: InputDecoration(
-                                  labelText: 'Tour Name',
-                                  hintText: 'e.g. Bali Trip 2026',
-                                  filled: true,
-                                  fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                                ),
-                                style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
-                                onSubmitted: (_) {
-                                  FocusScope.of(context).unfocus();
-                                },
-                              ),
+                      Text(
+                        'Create New Tour',
+                        style: GoogleFonts.workSans(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
 
-                                const SizedBox(height: 12),
-                                DropdownButtonFormField<String>(
-                                  initialValue: selectedCurrency,
-                                  decoration: InputDecoration(
-                                    labelText: 'Currency',
-                                    filled: true,
-                                    fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                      borderSide: BorderSide.none,
+                      Container(
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.05)
+                              : Colors.grey.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                          ),
+                        ),
+                        child: TextField(
+                          controller: nameController,
+                          autofocus: true,
+                          decoration: InputDecoration(
+                            labelText: 'Tour Name',
+                            hintText: 'e.g. Bali Trip 2026',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                          ),
+                          style: GoogleFonts.workSans(
+                            fontSize: 15,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.05)
+                              : Colors.grey.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                          ),
+                        ),
+                        child: DropdownButtonFormField<String>(
+                          initialValue: selectedCurrency,
+                          decoration: InputDecoration(
+                            labelText: 'Currency',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                          ),
+                        dropdownColor: theme.colorScheme.surface,
+                        items: const [
+                          DropdownMenuItem(value: 'USD', child: Text('\$ USD')),
+                          DropdownMenuItem(value: 'BDT', child: Text('৳ BDT')),
+                          DropdownMenuItem(value: 'EUR', child: Text('€ EUR')),
+                          DropdownMenuItem(value: 'GBP', child: Text('£ GBP')),
+                          DropdownMenuItem(value: 'INR', child: Text('₹ INR')),
+                          DropdownMenuItem(value: 'JPY', child: Text('¥ JPY')),
+                        ],
+                        onChanged: (v) {
+                          if (v != null) setState(() => selectedCurrency = v);
+                        },
+                        style: GoogleFonts.workSans(
+                          fontSize: 15,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      InkWell(
+                        onTap: () async {
+                          final source = await showModalBottomSheet<ImageSource>(
+                            context: context,
+                            backgroundColor: Colors.transparent,
+                            builder: (sCtx) {
+                              final sTheme = Theme.of(sCtx);
+                              final sDark = sTheme.brightness == Brightness.dark;
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: sTheme.colorScheme.surface,
+                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                                ),
+                                padding: EdgeInsets.fromLTRB(24, 12, 24, 20 + MediaQuery.of(sCtx).padding.bottom),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 36, height: 4,
+                                      decoration: BoxDecoration(
+                                        color: sDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                                        borderRadius: BorderRadius.circular(2),
+                                      ),
                                     ),
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                                  ),
-                                  dropdownColor: theme.colorScheme.surface,
-                                  items: const [
-                                    DropdownMenuItem(value: 'USD', child: Text('\$ USD')),
-                                    DropdownMenuItem(value: 'BDT', child: Text('৳ BDT')),
-                                    DropdownMenuItem(value: 'EUR', child: Text('€ EUR')),
-                                    DropdownMenuItem(value: 'GBP', child: Text('£ GBP')),
-                                    DropdownMenuItem(value: 'INR', child: Text('₹ INR')),
-                                    DropdownMenuItem(value: 'JPY', child: Text('¥ JPY')),
+                                    const SizedBox(height: 20),
+                                    Text('Cover Photo',
+                                      style: GoogleFonts.workSans(fontSize: 17, fontWeight: FontWeight.w600, color: sTheme.colorScheme.onSurface),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    ListTile(
+                                      leading: const Icon(Icons.camera_alt_rounded),
+                                      title: Text('Take Photo', style: GoogleFonts.workSans(fontSize: 15)),
+                                      onTap: () => Navigator.pop(sCtx, ImageSource.camera),
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(Icons.photo_library_rounded),
+                                      title: Text('Choose from Gallery', style: GoogleFonts.workSans(fontSize: 15)),
+                                      onTap: () => Navigator.pop(sCtx, ImageSource.gallery),
+                                    ),
                                   ],
-                                  onChanged: (v) {
-                                    if (v != null) {
-                                      setState(() => selectedCurrency = v);
-                                    }
-                                  },
-                                  style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
                                 ),
-                                const SizedBox(height: 12),
-                                InkWell(
-                                  onTap: () async {
-                                    setState(() => _isHidden = true);
-                                    final source = await showModalBottomSheet<ImageSource>(
-                                      context: context,
-                                      backgroundColor: Colors.transparent,
-                                      builder: (sCtx) => Container(
-                                        decoration: BoxDecoration(
-                                          color: theme.colorScheme.surface,
-                                          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                                        ),
-                                        padding: EdgeInsets.fromLTRB(24, 12, 24, bottomInset + 20),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Container(
-                                              width: 36,
-                                              height: 4,
-                                              decoration: BoxDecoration(
-                                                color: theme.dividerColor.withValues(alpha: 0.5),
-                                                borderRadius: BorderRadius.circular(2),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 20),
-                                            const Text('Cover Photo', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                                            const SizedBox(height: 20),
-                                            ListTile(
-                                              leading: const Icon(Icons.camera_alt_rounded),
-                                              title: const Text('Take Photo'),
-                                              onTap: () => Navigator.pop(sCtx, ImageSource.camera),
-                                            ),
-                                            ListTile(
-                                              leading: const Icon(Icons.photo_library_rounded),
-                                              title: const Text('Choose from Gallery'),
-                                              onTap: () => Navigator.pop(sCtx, ImageSource.gallery),
-                                            ),
-                                          ],
+                              );
+                            },
+                          );
+                          if (source != null) {
+                            final picked = await ImagePicker().pickImage(
+                              source: source,
+                              maxWidth: 1200,
+                              imageQuality: 85,
+                            );
+                            if (picked != null) {
+                              setState(() => coverPhotoPath = picked.path);
+                            }
+                          }
+                        },
+                        child: Container(
+                          height: 150,
+                          decoration: BoxDecoration(
+                            color: coverPhotoPath != null
+                                ? null
+                                : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.shade50),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                            ),
+                            image: coverPhotoPath != null
+                                ? DecorationImage(image: FileImage(File(coverPhotoPath!)), fit: BoxFit.cover)
+                                : null,
+                          ),
+                          child: coverPhotoPath == null
+                              ? Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.add_photo_alternate_outlined,
+                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.35), size: 22),
+                                      const SizedBox(width: 8),
+                                      Text('Add cover photo',
+                                        style: GoogleFonts.workSans(
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
+                                          fontSize: 14,
                                         ),
                                       ),
-                                    );
-                                    setState(() => _isHidden = false);
-                                    if (source != null) {
-                                      final picked = await ImagePicker().pickImage(
-                                        source: source,
-                                        maxWidth: 1200,
-                                        imageQuality: 85,
-                                      );
-                                      if (picked != null) {
-                                        setState(() => coverPhotoPath = picked.path);
-                                      }
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 100,
-                                    decoration: BoxDecoration(
-                                      color: coverPhotoPath != null
-                                          ? null
-                                          : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                                      borderRadius: BorderRadius.circular(14),
-                                      border: Border.all(
-                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.12),
-                                        style: BorderStyle.solid,
-                                      ),
-                                      image: coverPhotoPath != null
-                                          ? DecorationImage(image: FileImage(File(coverPhotoPath!)), fit: BoxFit.cover)
-                                          : null,
-                                    ),
-                                    child: coverPhotoPath == null
-                                        ? Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Icon(Icons.add_photo_alternate_outlined, color: theme.colorScheme.onSurface.withValues(alpha: 0.4), size: 22),
-                                              const SizedBox(width: 8),
-                                              Text('Add cover photo', style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 14)),
-                                            ],
-                                          )
-                                        : null,
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(height: 16),
-                                FilledButton(
-                                  onPressed: () {
-                                    final name = nameController.text.trim();
-                                    if (name.isEmpty) return;
-                                    final tour = Tour(
-                                      id: DateTime.now().microsecondsSinceEpoch.toString(),
-                                      name: name,
-                                      coverPhoto: coverPhotoPath,
-                                      currency: selectedCurrency,
-                                      createdAt: DateTime.now(),
-                                      profileId: context.read<TourProvider>().activeProfileId,
-                                    );
-                                    Navigator.pop(context);
-                                    widget.onTourCreated(tour);
-                                  },
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor: AppColors.activeGreen,
-                                    minimumSize: const Size(double.infinity, 54),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                                    elevation: 0,
-                                  ),
-                                  child: const Text('Create Tour', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.white)),
-                                ),
+                                )
+                              : null,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
 
-                            ],
+                      FilledButton(
+                        onPressed: () {
+                          final name = nameController.text.trim();
+                          if (name.isEmpty) return;
+                          final tour = Tour(
+                            id: DateTime.now().microsecondsSinceEpoch.toString(),
+                            name: name,
+                            coverPhoto: coverPhotoPath,
+                            currency: selectedCurrency,
+                            createdAt: DateTime.now(),
+                            profileId: context.read<TourProvider>().activeProfileId,
+                          );
+                          Navigator.pop(context);
+                          widget.onTourCreated(tour);
+                        },
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AppColors.activeGreen,
+                          minimumSize: const Size(double.infinity, 52),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          'Create Tour',
+                          style: GoogleFonts.workSans(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.white,
                           ),
                         ),
                       ),
                     ],
                   ),
+                ),
+              ),
+            ],
           ),
+        ),
         ),
       ),
     );
