@@ -41,11 +41,11 @@ class BudgetManagementScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(
+        padding: EdgeInsets.fromLTRB(
           AppSpacing.p16,
           AppSpacing.p4,
           AppSpacing.p16,
-          AppSpacing.p24,
+          AppSpacing.p24 + MediaQuery.of(context).padding.bottom,
         ),
         child: Skeletonizer(
           enabled: isLoading,

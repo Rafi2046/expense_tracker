@@ -86,22 +86,28 @@ class DashboardScreen extends StatelessWidget {
           );
         },
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(
-            16,
-            16,
-            16,
-            16 + MediaQuery.of(context).padding.bottom + 10,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Row 1: Income and Expense Card
-              Skeletonizer(
-                enabled: isLoading,
-                child: Row(
-                  children: [
+      body: RefreshIndicator(
+        onRefresh: () async {
+          txProvider.updateProfileId(currentProfile.id);
+          debtProvider.updateProfileId(currentProfile.id);
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              16 + MediaQuery.of(context).padding.bottom + 10,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Row 1: Income and Expense Card
+                Skeletonizer(
+                  enabled: isLoading,
+                  child: Row(
+                    children: [
                       Expanded(
                         child: DashboardStatCard(
                           title:
@@ -151,15 +157,15 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-              ),
-              const SizedBox(height: 8),
+                ),
+                const SizedBox(height: 8),
 
-              // Row 2: To Receive and To Give Card
-              Skeletonizer(
-                enabled: isLoading,
-                child: Row(
-                  children: [
-                    Expanded(
+                // Row 2: To Receive and To Give Card
+                Skeletonizer(
+                  enabled: isLoading,
+                  child: Row(
+                    children: [
+                      Expanded(
                         child: DashboardStatCard(
                           title: context.translate('to_receive'),
                           value: PrivacyMaskedText(
@@ -216,23 +222,23 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-              ),
-              const SizedBox(height: 8),
+                ),
+                const SizedBox(height: 8),
 
-              // Row 3: Total Balance and Reports Card
-              Skeletonizer(
-                enabled: isLoading,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: DashboardStatCard(
-                        title:
-                            '${context.translate('cash')} & ${context.translate('bank')}',
-                        value: Text(
-                          context.translate('total_balance'),
-                          style: AppTextStyles.cardValueGreen.copyWith(
-                            fontSize: 15,
-                          ),
+                // Row 3: Total Balance and Reports Card
+                Skeletonizer(
+                  enabled: isLoading,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: DashboardStatCard(
+                          title:
+                              '${context.translate('cash')} & ${context.translate('bank')}',
+                          value: Text(
+                            context.translate('total_balance'),
+                            style: AppTextStyles.cardValueGreen.copyWith(
+                              fontSize: 15,
+                            ),
                           ),
                           statusText: PrivacyMaskedText(
                             amount: totalBalance,
@@ -277,88 +283,89 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-              ),
-              const SizedBox(height: 8),
-              Skeletonizer(
-                enabled: isLoading,
-                child: BudgetSummaryCard(
-                  monthlyExpense: txProvider.monthlyExpense,
                 ),
-              ),
-              const SizedBox(height: 8),
-              const DashboardShortcutsCard(),
-              const SizedBox(height: 8),
-              if (isLoading)
-                _recentActivitySkeleton(context)
-              else
-                DashboardRecentActivity(
-                  items: txProvider.transactions.take(3).map((tx) {
-                    return RecentActivityItem(
-                      title: tx.note.isEmpty ? tx.category : tx.note,
-                      category: tx.category,
-                      timeText: _getRelativeTime(tx.dateTime),
-                      amount: tx.amount,
-                      isIncome: tx.isIncome,
-                      icon: _getCategoryIcon(tx.category),
-                      transaction: tx,
-                    );
-                  }).toList(),
-                  onViewAllTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const RecentActivityScreen(),
-                      ),
-                    );
-                  },
-                  onItemTap: (item) {
-                    final tx = item.transaction;
-                    if (tx != null) {
-                      AddTransactionSheet.show(
-                        context: context,
-                        isIncome: tx.isIncome,
-                        transaction: tx,
-                      );
-                    }
-                  },
-                ),
-              const SizedBox(height: 8),
-              DashboardSpendingCategories(
-                categoryName: expenseAnalytics.monthlyCategories.isNotEmpty
-                    ? expenseAnalytics.monthlyCategories.first.name
-                    : 'No Expenses',
-                percentage: expenseAnalytics.monthlyCategories.isNotEmpty
-                    ? ((expenseAnalytics.monthlyCategories.first.amount /
-                                  expenseAnalytics.currentMonthExpense) *
-                              100)
-                          .clamp(0, 100)
-                          .toDouble()
-                    : 0,
-              ),
-              const SizedBox(height: 8),
-              DashboardBudgetStatus(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const BudgetManagementScreen(),
+                const SizedBox(height: 8),
+                Skeletonizer(
+                  enabled: isLoading,
+                  child: BudgetSummaryCard(
+                    monthlyExpense: txProvider.monthlyExpense,
                   ),
                 ),
-                items: expenseAnalytics.monthlyCategories.take(3).map((cat) {
-                  final totalExpense = expenseAnalytics.currentMonthExpense;
-                  final pct = totalExpense > 0
-                      ? ((cat.amount / totalExpense) * 100)
+                const SizedBox(height: 8),
+                const DashboardShortcutsCard(),
+                const SizedBox(height: 8),
+                if (isLoading)
+                  _recentActivitySkeleton(context)
+                else
+                  DashboardRecentActivity(
+                    items: txProvider.transactions.take(3).map((tx) {
+                      return RecentActivityItem(
+                        title: tx.note.isEmpty ? tx.category : tx.note,
+                        category: tx.category,
+                        timeText: _getRelativeTime(tx.dateTime),
+                        amount: tx.amount,
+                        isIncome: tx.isIncome,
+                        icon: _getCategoryIcon(tx.category),
+                        transaction: tx,
+                      );
+                    }).toList(),
+                    onViewAllTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RecentActivityScreen(),
+                        ),
+                      );
+                    },
+                    onItemTap: (item) {
+                      final tx = item.transaction;
+                      if (tx != null) {
+                        AddTransactionSheet.show(
+                          context: context,
+                          isIncome: tx.isIncome,
+                          transaction: tx,
+                        );
+                      }
+                    },
+                  ),
+                const SizedBox(height: 8),
+                DashboardSpendingCategories(
+                  categoryName: expenseAnalytics.monthlyCategories.isNotEmpty
+                      ? expenseAnalytics.monthlyCategories.first.name
+                      : 'No Expenses',
+                  percentage: expenseAnalytics.monthlyCategories.isNotEmpty
+                      ? ((expenseAnalytics.monthlyCategories.first.amount /
+                                    expenseAnalytics.currentMonthExpense) *
+                                100)
                             .clamp(0, 100)
                             .toDouble()
-                      : cat.percentage;
-                  return BudgetStatusItem(
-                    categoryName: cat.name,
-                    percentage: pct,
-                    color: cat.color,
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 16),
-            ],
+                      : 0,
+                ),
+                const SizedBox(height: 8),
+                DashboardBudgetStatus(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const BudgetManagementScreen(),
+                    ),
+                  ),
+                  items: expenseAnalytics.monthlyCategories.take(3).map((cat) {
+                    final totalExpense = expenseAnalytics.currentMonthExpense;
+                    final pct = totalExpense > 0
+                        ? ((cat.amount / totalExpense) * 100)
+                              .clamp(0, 100)
+                              .toDouble()
+                        : cat.percentage;
+                    return BudgetStatusItem(
+                      categoryName: cat.name,
+                      percentage: pct,
+                      color: cat.color,
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),
