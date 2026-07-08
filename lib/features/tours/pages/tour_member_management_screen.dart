@@ -44,16 +44,23 @@ class _TourMemberManagementScreenState
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: theme.scaffoldBackgroundColor,
+        backgroundColor: theme.colorScheme.surface,
         elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shape: Border(
+          bottom: BorderSide(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+          ),
+        ),
         centerTitle: true,
-        title: Text('Manage Members', style: AppTextStyles.appbarTitle),
+        title: Text('Manage Members', style: AppTextStyles.appbarTitle.copyWith(color: theme.colorScheme.onSurface)),
         leading: widget.isInitialSetup
             ? const SizedBox.shrink()
             : IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.arrow_back_ios_new_rounded,
-                  color: AppColors.black,
+                  color: theme.colorScheme.onSurface,
                   size: 20,
                 ),
                 onPressed: () => Navigator.pop(context),
@@ -84,11 +91,11 @@ class _TourMemberManagementScreenState
             margin: const EdgeInsets.all(AppSpacing.m16),
             padding: const EdgeInsets.all(AppSpacing.p16),
             decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(AppSpacing.br20),
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(AppSpacing.br8),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.black.withValues(alpha: 0.04),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.04),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),
@@ -104,7 +111,7 @@ class _TourMemberManagementScreenState
                     hintStyle: AppTextStyles.textFieldHint,
                     border: InputBorder.none,
                     filled: true,
-                    fillColor: AppColors.containerColorGrey,
+                    fillColor: theme.brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.05) : AppColors.containerColorGrey,
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.p16,
                       vertical: AppSpacing.p14,
@@ -140,7 +147,7 @@ class _TourMemberManagementScreenState
                               shape: BoxShape.circle,
                               border: _selectedColorIndex == index
                                   ? Border.all(
-                                      color: AppColors.black,
+                    color: theme.colorScheme.onSurface,
                                       width: 2.5,
                                     )
                                   : null,
@@ -215,8 +222,8 @@ class _TourMemberManagementScreenState
                   margin: const EdgeInsets.only(bottom: AppSpacing.m12),
                   padding: const EdgeInsets.all(AppSpacing.p12),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(AppSpacing.br12),
+                    color: theme.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(AppSpacing.br8),
                     // Using br12 instead of br16
                     border: Border.all(
                       color: AppColors.dividerColor.withValues(alpha: 0.3),
@@ -243,7 +250,7 @@ class _TourMemberManagementScreenState
                         child: Text(
                           member.name,
                           style: AppTextStyles.cardTitle.copyWith(
-                            color: AppColors.black,
+                            color: theme.colorScheme.onSurface,
                             fontSize: 16,
                             letterSpacing: 0,
                           ),
@@ -304,13 +311,14 @@ class _TourMemberManagementScreenState
   ) {
     final owesOrOwed = balance > 0 ? 'is owed' : 'owes';
     final amount = balance.abs().toStringAsFixed(2);
+    final theme = Theme.of(context);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.br20),
+          borderRadius: BorderRadius.circular(AppSpacing.br8),
         ),
-        backgroundColor: AppColors.white,
+        backgroundColor: theme.colorScheme.surface,
         title: Text('Outstanding Balance', style: AppTextStyles.dialogTitle),
         content: Text(
           '$name $owesOrOwed $amount in this tour. Removing them now will make this amount disappear from everyone\'s calculation — it won\'t be settled.\n\nSettle up first, or remove anyway?',
@@ -343,13 +351,14 @@ class _TourMemberManagementScreenState
   }
 
   void _showConfirmRemoveDialog(String name, String memberId) {
+    final theme = Theme.of(context);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.br20),
+          borderRadius: BorderRadius.circular(AppSpacing.br8),
         ),
-        backgroundColor: AppColors.white,
+        backgroundColor: theme.colorScheme.surface,
         title: Text('Remove Member', style: AppTextStyles.dialogTitle),
         content: Text(
           'Remove $name from this tour?',

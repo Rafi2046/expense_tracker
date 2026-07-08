@@ -528,14 +528,15 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   // BUILD
   // ═══════════════════════════════════════════════════════════════════════
 
-  static const Color _sectionBg = Color(0xFFF8F9FA);
+  Color _sectionBg(ThemeData theme) =>
+      theme.brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA);
 
-  Widget _sectionWrapper(Widget child) {
+  Widget _sectionWrapper(ThemeData theme, Widget child) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.p20),
       decoration: BoxDecoration(
-        color: _sectionBg,
+        color: _sectionBg(theme),
         borderRadius: BorderRadius.circular(AppSpacing.r16),
       ),
       child: child,
@@ -597,7 +598,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     // Paid By section
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _sectionWrapper(
+                      child: _sectionWrapper(theme,
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -611,7 +612,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     // Split section
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _sectionWrapper(
+                      child: _sectionWrapper(theme,
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -653,7 +654,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     // Notes section
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _sectionWrapper(
+                      child: _sectionWrapper(theme,
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -796,7 +797,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p14, vertical: AppSpacing.p12),
             decoration: BoxDecoration(
-              color: _sectionBg,
+              color: _sectionBg(theme),
               borderRadius: BorderRadius.circular(AppSpacing.r10),
               border: Border.all(
                 color: theme.dividerColor.withValues(alpha: 0.1),
@@ -813,7 +814,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 fontWeight: FontWeight.w500,
               ),
               decoration: InputDecoration(
-                hintText: 'What was the expense for?',
+                hintText: 'e.g. Kacchi Bhai Dinner',
                 hintStyle: GoogleFonts.workSans(
                   fontSize: 15,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
@@ -1072,7 +1073,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.r16),
           ),
-          backgroundColor: AppColors.white,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           title: const Text(
             'New Category',
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
@@ -1505,7 +1506,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p10),
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(AppSpacing.r10),
                 border: Border.all(
                   color: excluded
@@ -1611,7 +1612,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p10),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: theme.colorScheme.surface,
                   borderRadius: BorderRadius.circular(AppSpacing.r10),
                   border: Border.all(
                     color: theme.dividerColor.withValues(alpha: 0.15),
