@@ -43,7 +43,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 12,
+      version: 13,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -141,6 +141,7 @@ class DatabaseHelper {
         profileId TEXT NOT NULL DEFAULT 'default_profile',
         syncStatus TEXT NOT NULL DEFAULT 'synced',
         isDeleted INTEGER NOT NULL DEFAULT 0,
+        isCompleted INTEGER NOT NULL DEFAULT 0,
         lastModified TEXT NOT NULL
       )
     ''');
@@ -468,6 +469,13 @@ class DatabaseHelper {
       final hasUid = columns.any((col) => col['name'] == 'uid');
       if (!hasUid) {
         await db.execute('ALTER TABLE profiles ADD COLUMN uid TEXT');
+      }
+    }
+    if (oldVersion < 13) {
+      final columns = await db.rawQuery('PRAGMA table_info(tours)');
+      final hasCompleted = columns.any((col) => col['name'] == 'isCompleted');
+      if (!hasCompleted) {
+        await db.execute('ALTER TABLE tours ADD COLUMN isCompleted INTEGER NOT NULL DEFAULT 0');
       }
     }
   }

@@ -92,6 +92,12 @@ class TourProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> refreshTours() async {
+    _isLoading = true;
+    notifyListeners();
+    await _loadTours();
+  }
+
   Future<void> createTour(Tour tour) async {
     final db = await _db.database;
     await db.insert(

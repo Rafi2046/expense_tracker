@@ -198,47 +198,53 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           ),
         ],
       ),
-      body: ListView(
-        padding: EdgeInsets.fromLTRB(16, 16, 16, bottomInset + 100),
-        children: [
-          TourSummaryRow(
-            totalSpentText: totalSpentText,
-            outstandingText: outstandingText,
-            isSettled: isSettled,
-          ),
-          if (participants.isNotEmpty) ...[
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await context.read<TourProvider>().refreshTourData();
+        },
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.fromLTRB(16, 16, 16, bottomInset + 100),
+          children: [
+            TourSummaryRow(
+              totalSpentText: totalSpentText,
+              outstandingText: outstandingText,
+              isSettled: isSettled,
+            ),
+            if (participants.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              TourMemberBalances(
+                participants: participants,
+                balances: netBalances,
+                currency: tour.currency,
+                outstanding: totalOutstanding,
+                formatAmount: (val) => _formatAmount(val, tour.currency),
+                onSettleUp: () {
+                  if (_ensureMinimumMembers()) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => SettleUpScreen(tourId: widget.tourId),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
             const SizedBox(height: 12),
-            TourMemberBalances(
-              participants: participants,
-              balances: netBalances,
-              currency: tour.currency,
-              outstanding: totalOutstanding,
-              formatAmount: (val) => _formatAmount(val, tour.currency),
-              onSettleUp: () {
-                if (_ensureMinimumMembers()) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => SettleUpScreen(tourId: widget.tourId),
-                    ),
-                  );
-                }
-              },
-            ),
+            _buildExpensesHeader(theme, expenses.length),
+            if (expenses.isEmpty)
+              _buildEmptyState(theme)
+            else
+              _buildExpenseList(
+                theme,
+                expenses,
+                shares,
+                participants,
+                tour.currency,
+              ),
           ],
-          const SizedBox(height: 12),
-          _buildExpensesHeader(theme, expenses.length),
-          if (expenses.isEmpty)
-            _buildEmptyState(theme)
-          else
-            _buildExpenseList(
-              theme,
-              expenses,
-              shares,
-              participants,
-              tour.currency,
-            ),
-        ],
+        ),
       ),
       floatingActionButton: Padding(
         padding: EdgeInsets.only(bottom: bottomInset + 0),

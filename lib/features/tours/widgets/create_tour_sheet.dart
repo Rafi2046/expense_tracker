@@ -150,7 +150,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                           color: theme.colorScheme.surface,
                                           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
                                         ),
-                                        padding: EdgeInsets.fromLTRB(24, 12, 24, bottomInset + 70),
+                                        padding: EdgeInsets.fromLTRB(24, 12, 24, bottomInset + 20),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [

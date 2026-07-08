@@ -187,23 +187,36 @@ class _TourListScreenState extends State<TourListScreen> {
             const SizedBox(height: AppSpacing.s8),
 
             Expanded(
-              child: tours.isEmpty
-                  ? TourListEmptyState(onCreateTour: _openCreateTourSheet)
-                  : Column(
-                children: [
-                  // Scrollable List
-                  Expanded(
-                    child: _buildTourList(Theme.of(context), tours),
-                  ),
-                  // Fixed Bottom Button
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 8.0,
-                      bottom: 16.0,
-                    ),
-                    child: NewTourCTA(onTap: _openCreateTourSheet),
-                  ),
-                ],
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await context.read<TourProvider>().refreshTours();
+                  await _loadCounts();
+                },
+                child: tours.isEmpty
+                    ? SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: MediaQuery.of(context).size.height * 0.7,
+                          child: TourListEmptyState(onCreateTour: _openCreateTourSheet),
+                        ),
+                      )
+                    : Column(
+                        children: [
+                          // Scrollable List
+                          Expanded(
+                            child: _buildTourListContent(Theme.of(context), tours),
+                          ),
+                          // Fixed Bottom Button
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: 8.0,
+                              bottom: 16.0,
+                            ),
+                            child: NewTourCTA(onTap: _openCreateTourSheet),
+                          ),
+                        ],
+                      ),
               ),
             ),
           ],
@@ -212,24 +225,19 @@ class _TourListScreenState extends State<TourListScreen> {
     );
   }
 
-  Widget _buildTourList(ThemeData theme, List<Tour> tours) {
+  Widget _buildTourListContent(ThemeData theme, List<Tour> tours) {
     final totalBuddies = tours.fold<int>(
       0,
-          (sum, t) => sum + (_memberCounts[t.id] ?? 0),
+      (sum, t) => sum + (_memberCounts[t.id] ?? 0),
     );
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        context.read<TourProvider>().clearSelection();
-        await _loadCounts();
-      },
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8, bottom: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
               TourStatsRow(
                 totalTours: tours.length,
                 totalBuddies: totalBuddies,
@@ -330,7 +338,6 @@ class _TourListScreenState extends State<TourListScreen> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
