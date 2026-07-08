@@ -35,7 +35,7 @@ class _TourListScreenState extends State<TourListScreen> {
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16)),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
         title: const Text('Delete Tour',
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17)),
         content: const Text(
@@ -175,6 +175,7 @@ class _TourListScreenState extends State<TourListScreen> {
         : 'P');
 
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

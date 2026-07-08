@@ -53,7 +53,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       primaryColor: brandPrimaryDark,
-      scaffoldBackgroundColor: backgroundDark,
+      scaffoldBackgroundColor: surfaceDark,
       cardColor: surfaceDark,
       colorScheme: const ColorScheme.dark(
         primary: brandPrimaryDark,
