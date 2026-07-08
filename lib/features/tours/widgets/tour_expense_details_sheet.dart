@@ -161,7 +161,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                   File(expense.receiptPath!),
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
+                  errorBuilder: (_, _, _) => Container(
                     padding: const EdgeInsets.all(16),
                     color: isDark ? const Color(0xFF1E1E2E) : const Color(0xFFF8F9FA),
                     child: Row(

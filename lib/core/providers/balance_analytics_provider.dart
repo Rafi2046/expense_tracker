@@ -8,7 +8,6 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
   List<TransactionItem> _transactions = [];
   List<DebtItem> _debts = [];
 
-  User? _firebaseUser;
   StreamSubscription<User?>? _authSubscription;
 
   double allTimeCashBalance = 0.0;
@@ -22,7 +21,6 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
   }
 
   void _onAuthChanged(User? newUser) {
-    _firebaseUser = newUser;
     if (newUser == null) {
       _transactions = [];
       _debts = [];
@@ -98,7 +96,6 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
     allTimeCashBalance = 0.0;
     allTimeBankBalance = 0.0;
     allTimeTotalBalance = 0.0;
-    _firebaseUser = null;
     notifyListeners();
   }
 

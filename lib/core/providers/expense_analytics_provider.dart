@@ -10,7 +10,6 @@ import 'package:expense_tracker/features/dashboard/widgets/expense_breakdown_car
 class ExpenseAnalyticsProvider extends ChangeNotifier {
   List<TransactionItem> _expenseTransactions = [];
 
-  User? _firebaseUser;
   StreamSubscription<User?>? _authSubscription;
 
   static const _categoryColors = [
@@ -33,7 +32,6 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
   }
 
   void _onAuthChanged(User? newUser) {
-    _firebaseUser = newUser;
     if (newUser == null) {
       _expenseTransactions = [];
       notifyListeners();
@@ -435,7 +433,6 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
 
   void clear() {
     _expenseTransactions = [];
-    _firebaseUser = null;
     notifyListeners();
   }
 
