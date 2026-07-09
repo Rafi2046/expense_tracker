@@ -169,7 +169,7 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
                 controller: _amountController,
                 prefix: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 8),
-                  child: Text(symbol, style: TextStyle(fontSize: AppFontSizes.size16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
+                  child: Text(symbol, style: AppTextStyles.h3.copyWith(color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -180,7 +180,7 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
                 controller: _rateController,
                 suffix: Padding(
                   padding: const EdgeInsets.only(left: 8, right: 16),
-                  child: Text('%', style: TextStyle(fontSize: AppFontSizes.size16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
+                  child: Text('%', style: AppTextStyles.h3.copyWith(color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 24),

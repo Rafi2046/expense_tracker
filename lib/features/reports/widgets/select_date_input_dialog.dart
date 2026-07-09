@@ -172,7 +172,6 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                         Text(
                           'Start date',
                           style: AppTextStyles.reportStatLabel.copyWith(
-                            fontSize: AppFontSizes.size11,
                             color: _startError != null ? AppColors.activeRed : theme.primaryColor,
                           ),
                         ),
@@ -203,7 +202,6 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                         Text(
                           'End date',
                           style: AppTextStyles.reportStatLabel.copyWith(
-                            fontSize: AppFontSizes.size11,
                             color: _endError != null ? AppColors.activeRed : (isDark ? Colors.white60 : Colors.grey.shade600),
                           ),
                         ),

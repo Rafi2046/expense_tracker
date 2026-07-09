@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class LanguageSelectorSheet extends StatelessWidget {
@@ -80,17 +81,12 @@ class LanguageSelectorSheet extends StatelessWidget {
                     children: [
                       Text(
                         context.translate('change_language'),
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size18,
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onSurface,
-                        ),
+                        style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         'Select your preferred interface language',
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size12,
+                        style: AppTextStyles.label.copyWith(
                           color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                           fontWeight: FontWeight.w400,
                         ),
@@ -185,9 +181,8 @@ class LanguageSelectorSheet extends StatelessWidget {
                 // Name
                 Text(
                   lang.name,
-                  style: GoogleFonts.workSans(
+                  style: AppTextStyles.h3.copyWith(
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                    fontSize: AppFontSizes.size16,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -196,8 +191,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                 // Native Subtitle
                 Text(
                   _getNativeName(lang.code),
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size12,
+                  style: AppTextStyles.label.copyWith(
                     color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                     fontWeight: FontWeight.w400,
                   ),

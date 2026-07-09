@@ -8,7 +8,6 @@ import 'package:expense_tracker/features/dashboard/widgets/debt_total_card.dart'
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class ToReceiveScreen extends StatefulWidget {
   const ToReceiveScreen({super.key});
@@ -98,11 +97,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                       children: [
                         Text(
                           'Pending Collections',
-                          style: GoogleFonts.workSans(
-                            fontSize: AppFontSizes.size16,
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurface,
-                          ),
+                          style: AppTextStyles.sectionHeaderTitle.copyWith(color: theme.colorScheme.onSurface),
                         ),
                         const SizedBox(width: 8),
                         Container(
@@ -116,11 +111,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                           ),
                           child: Text(
                             '${items.length}',
-                            style: GoogleFonts.workSans(
-                              fontSize: AppFontSizes.size12,
-                              fontWeight: FontWeight.bold,
-                              color: theme.primaryColor,
-                            ),
+                            style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold, color: theme.primaryColor),
                           ),
                         ),
                       ],
@@ -159,11 +150,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                           const SizedBox(height: 12),
                           Text(
                             'No pending payments!',
-                            style: GoogleFonts.workSans(
-                              fontSize: AppFontSizes.size15,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey.shade500,
-                            ),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: Colors.grey.shade500),
                           ),
                         ],
                       ),

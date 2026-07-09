@@ -5,8 +5,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/notification_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/notification_empty_state.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -53,30 +53,21 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             Expanded(
               child: Text(
                 item.title,
-                style: GoogleFonts.workSans(
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppFontSizes.size16,
-                  color: theme.colorScheme.onSurface,
-                ),
+                style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
               ),
             ),
           ],
         ),
         content: Text(
           item.description,
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size14,
-            color: isDark ? Colors.grey.shade300 : AppColors.loginTitle,
-            height: 1.4,
-          ),
+          style: AppTextStyles.body.copyWith(color: isDark ? Colors.grey.shade300 : AppColors.loginTitle, height: 1.4),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
               context.translate('close'),
-              style: GoogleFonts.workSans(
-                fontWeight: FontWeight.bold,
+              style: AppTextStyles.bodyBold.copyWith(
                 color: isDark ? const Color(0xFF8E75C8) : AppColors.buttonColor,
               ),
             ),
@@ -132,11 +123,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ),
         title: Text(
           context.translate('notifications'),
-          style: GoogleFonts.workSans(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-            fontSize: AppFontSizes.size18,
-          ),
+          style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
         ),
         centerTitle: true,
         actions: [
@@ -145,11 +132,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               onPressed: () => provider.markAllAsRead(),
               child: Text(
                 context.translate('mark_read'),
-                style: GoogleFonts.workSans(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.activeGreen,
-                  fontSize: AppFontSizes.size14,
-                ),
+                style: AppTextStyles.bodyBold.copyWith(color: AppColors.activeGreen),
               ),
             ),
         ],
@@ -255,11 +238,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       },
       selectedColor: primaryColor.withValues(alpha: 0.15),
       backgroundColor: isDark ? theme.cardColor : Colors.grey.shade100,
-      labelStyle: GoogleFonts.workSans(
-        color: isSelected ? primaryColor : (isDark ? Colors.grey.shade400 : Colors.grey.shade600),
-        fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-        fontSize: AppFontSizes.size13,
-      ),
+      labelStyle: AppTextStyles.label.copyWith(fontSize: AppFontSizes.size13),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(

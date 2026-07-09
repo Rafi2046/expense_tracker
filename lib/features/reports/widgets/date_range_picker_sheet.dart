@@ -2,9 +2,9 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/reports/widgets/select_date_input_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class DateRangePickerSheet extends StatefulWidget {
   final DateTimeRange? initialSelectedRange;
@@ -133,9 +133,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                 ),
                 Text(
                   'Select Date',
-                  style: GoogleFonts.workSans(
-                    fontWeight: FontWeight.w600,
-                    fontSize: AppFontSizes.size15,
+                  style: AppTextStyles.reportTileTitle.copyWith(
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -155,8 +153,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                   children: [
                     Text(
                       _rangeText,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size18,
+                      style: AppTextStyles.h2.copyWith(
                         fontWeight: FontWeight.w600,
                         color: theme.colorScheme.onSurface,
                       ),
@@ -200,10 +197,9 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                   child: Center(
                     child: Text(
                       day,
-                      style: GoogleFonts.workSans(
+                      style: AppTextStyles.label.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
-                        fontSize: AppFontSizes.size12,
                       ),
                     ),
                   ),
@@ -244,10 +240,8 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                   ),
                   child: Text(
                     'Cancel',
-                    style: GoogleFonts.workSans(
+                    style: AppTextStyles.bodyBold.copyWith(
                       color: AppColors.activeGreen,
-                      fontWeight: FontWeight.w600,
-                      fontSize: AppFontSizes.size14,
                     ),
                   ),
                 ),
@@ -272,12 +266,10 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                   ),
                   child: Text(
                     'Ok',
-                    style: GoogleFonts.workSans(
+                    style: AppTextStyles.bodyBold.copyWith(
                       color: _startDate == null || _endDate == null
                           ? (isDark ? Colors.white24 : Colors.grey.shade400)
                           : Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: AppFontSizes.size14,
                     ),
                   ),
                 ),
@@ -306,9 +298,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
           padding: const EdgeInsets.symmetric(vertical: 12.0),
           child: Text(
             monthName,
-            style: GoogleFonts.workSans(
-              fontSize: AppFontSizes.size15,
-              fontWeight: FontWeight.bold,
+            style: AppTextStyles.reportTransactionTitle.copyWith(
               color: theme.colorScheme.onSurface,
             ),
           ),
@@ -372,7 +362,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                     child: Center(
                       child: Text(
                         '$day',
-                        style: GoogleFonts.workSans(
+                        style: AppTextStyles.bodyBold.copyWith(
                           color: isSelected
                               ? Colors.white
                               : (isInRange

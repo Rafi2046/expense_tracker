@@ -8,7 +8,6 @@ import 'package:expense_tracker/features/dashboard/widgets/party_segmented_tabs.
 import 'package:expense_tracker/features/dashboard/widgets/credit_info_form.dart';
 import 'package:expense_tracker/features/dashboard/widgets/additional_details_form.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
@@ -52,11 +51,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
         ),
         title: Text(
           'Add New Party',
-          style: GoogleFonts.workSans(
-            fontWeight: FontWeight.bold,
-            color: theme.appBarTheme.titleTextStyle?.color,
-            fontSize: AppFontSizes.size18,
-          ),
+          style: AppTextStyles.h2.copyWith(color: theme.appBarTheme.titleTextStyle?.color),
         ),
         centerTitle: true,
         bottom: PreferredSize(

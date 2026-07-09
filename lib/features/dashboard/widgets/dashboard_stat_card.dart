@@ -64,10 +64,10 @@ class DashboardStatCard extends StatelessWidget {
                     SizedBox(height: AppSpacing.h2),
                     Text(
                       title,
-                      style: AppTextStyles.cardTitle.copyWith(
-                        color: AppColors.textMuted,
+                      style: AppTextStyles.caption.copyWith(
                         fontSize: AppFontSizes.size10,
-                        letterSpacing: 0,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textMuted,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

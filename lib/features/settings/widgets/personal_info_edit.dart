@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PersonalInfoEdit extends StatelessWidget {
@@ -60,8 +61,7 @@ class PersonalInfoEdit extends StatelessWidget {
       children: [
         Text(
           label,
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size13,
+          style: AppTextStyles.bodySmall.copyWith(
             fontWeight: FontWeight.w600,
             color: isDark ? Colors.grey.shade400 : Colors.black54,
           ),
@@ -221,18 +221,17 @@ class PersonalInfoEdit extends StatelessWidget {
           children: [
             Text(
               'Date of Birth',
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size13,
-                fontWeight: FontWeight.w600,
-                color: isDark ? Colors.grey.shade400 : Colors.black54,
-              ),
+            style: AppTextStyles.bodySmall.copyWith(
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.grey.shade400 : Colors.black54,
             ),
-            const SizedBox(height: 6),
-            TextFormField(
-              controller: dobController,
-              readOnly: true,
-              onTap: onSelectDate,
-              style: GoogleFonts.workSans(fontSize: AppFontSizes.size15, color: theme.colorScheme.onSurface),
+          ),
+          const SizedBox(height: 6),
+          TextFormField(
+            controller: dobController,
+            readOnly: true,
+            onTap: onSelectDate,
+            style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
               decoration: InputDecoration(
                 filled: true,
                 fillColor: inputBg,
@@ -242,7 +241,7 @@ class PersonalInfoEdit extends StatelessWidget {
                   size: 18,
                 ),
                 hintText: 'DD/MM/YYYY',
-                hintStyle: GoogleFonts.workSans(fontSize: AppFontSizes.size14, color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
+            hintStyle: AppTextStyles.body.copyWith(fontFamily: GoogleFonts.workSans().fontFamily, color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -273,13 +272,12 @@ class PersonalInfoEdit extends StatelessWidget {
           children: [
             Text(
               'Gender',
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size13,
-                fontWeight: FontWeight.w600,
-                color: isDark ? Colors.grey.shade400 : Colors.black54,
-              ),
+            style: AppTextStyles.bodySmall.copyWith(
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.grey.shade400 : Colors.black54,
             ),
-            const SizedBox(height: 8),
+          ),
+          const SizedBox(height: 8),
             Row(
               children: ['Male', 'Female'].map((gender) {
                 final isSelected = selectedGender == gender;
@@ -317,11 +315,9 @@ class PersonalInfoEdit extends StatelessWidget {
                           ),
                           Text(
                             gender,
-                            style: GoogleFonts.workSans(
-                              color: isSelected ? Colors.white : theme.colorScheme.onSurface,
-                              fontWeight: FontWeight.w600,
-                              fontSize: AppFontSizes.size14,
-                            ),
+                          style: AppTextStyles.bodyBold.copyWith(
+                            color: isSelected ? Colors.white : theme.colorScheme.onSurface,
+                          ),
                           ),
                         ],
                       ),
@@ -350,12 +346,7 @@ class PersonalInfoEdit extends StatelessWidget {
           children: [
             Text(
               'Email Address',
-              style: TextStyle(
-                fontSize: AppFontSizes.size14,
-                fontWeight: FontWeight.w500,
-                color: isDark ? Colors.grey.shade400 : AppColors.loginLabelColor,
-                fontFamily: GoogleFonts.workSans().fontFamily,
-              ),
+            style: AppTextStyles.partyFormLabel.copyWith(color: isDark ? Colors.grey.shade400 : null),
             ),
             const SizedBox(height: 6),
             Container(
@@ -373,10 +364,8 @@ class PersonalInfoEdit extends StatelessWidget {
                       userEmail,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size15,
+                      style: AppTextStyles.reportTileTitle.copyWith(
                         color: isDark ? Colors.grey.shade400 : Colors.black54,
-                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),

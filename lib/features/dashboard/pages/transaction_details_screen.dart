@@ -29,10 +29,7 @@ class TransactionDetailsScreen extends StatelessWidget {
         ),
         title: Text(
           isIncome ? 'Income Details' : 'Expense Details',
-          style: AppTextStyles.reportAppBarTitle.copyWith(
-            fontSize: AppFontSizes.size16,
-            color: theme.colorScheme.onSurface,
-          ),
+          style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
         ),
         centerTitle: true,
         actions: [
@@ -93,23 +90,20 @@ class TransactionDetailsScreen extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          title: const Text(
+          title: Text(
             'Delete Transaction',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: AppFontSizes.size16,
-            ),
+            style: AppTextStyles.h3,
           ),
-          content: const Text(
+          content: Text(
             'Are you sure you want to delete this transaction? This action cannot be undone.',
-            style: TextStyle(fontSize: AppFontSizes.size14),
+            style: AppTextStyles.body,
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text(
+              child: Text(
                 'Cancel',
-                style: TextStyle(color: Colors.grey, fontSize: AppFontSizes.size13),
+                style: AppTextStyles.label.copyWith(fontSize: AppFontSizes.size13, color: Colors.grey),
               ),
             ),
             ElevatedButton(
@@ -129,13 +123,9 @@ class TransactionDetailsScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text(
+              child: Text(
                 'Delete',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppFontSizes.size13,
-                ),
+                style: AppTextStyles.label.copyWith(fontSize: AppFontSizes.size13, color: Colors.white, fontWeight: FontWeight.bold),
               ),
             ),
           ],

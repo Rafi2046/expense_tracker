@@ -2,6 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
@@ -28,7 +29,6 @@ import 'package:expense_tracker/features/reports/pages/view_reports_screen.dart'
 import 'package:expense_tracker/features/dashboard/pages/total_balance_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/budget_management_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -115,9 +115,7 @@ class DashboardScreen extends StatelessWidget {
                               '${context.translate('income')} ($currentMonthName)',
                           value: PrivacyMaskedText(
                             amount: txProvider.calendarMonthIncome,
-                            style: AppTextStyles.cardValueGreen.copyWith(
-                              fontSize: AppFontSizes.size15,
-                            ),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeGreen),
                           ),
                           isPositive: txProvider.isCalendarIncomeTrendGood,
                           isTrend: false,
@@ -139,9 +137,7 @@ class DashboardScreen extends StatelessWidget {
                               '${context.translate('expense')} ($currentMonthName)',
                           value: PrivacyMaskedText(
                             amount: txProvider.calendarMonthExpense,
-                            style: AppTextStyles.cardValueRed.copyWith(
-                              fontSize: AppFontSizes.size15,
-                            ),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeRed),
                           ),
                           isPositive: txProvider.isCalendarExpenseTrendGood,
                           isTrend: false,
@@ -171,13 +167,11 @@ class DashboardScreen extends StatelessWidget {
                           title: context.translate('to_receive'),
                           value: PrivacyMaskedText(
                             amount: debtProvider.totalToReceive,
-                            style: AppTextStyles.cardValueGreen.copyWith(
-                              fontSize: AppFontSizes.size15,
-                            ),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeGreen),
                           ),
                           statusText: Text(
                             '${debtProvider.toReceiveUnpaid.length} ${context.translate('pending')}',
-                            style: AppTextStyles.cardStatusText.copyWith(
+                            style: AppTextStyles.caption.copyWith(
                               fontSize: AppFontSizes.size10,
                             ),
                           ),
@@ -199,13 +193,11 @@ class DashboardScreen extends StatelessWidget {
                           title: context.translate('to_give'),
                           value: PrivacyMaskedText(
                             amount: debtProvider.totalToGive,
-                            style: AppTextStyles.cardValueRed.copyWith(
-                              fontSize: AppFontSizes.size15,
-                            ),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeRed),
                           ),
                           statusText: Text(
                             '${debtProvider.toGiveUnpaid.length} ${context.translate('pending')}',
-                            style: AppTextStyles.cardStatusText.copyWith(
+                            style: AppTextStyles.caption.copyWith(
                               fontSize: AppFontSizes.size10,
                             ),
                           ),
@@ -237,13 +229,11 @@ class DashboardScreen extends StatelessWidget {
                               '${context.translate('cash')} & ${context.translate('bank')}',
                           value: Text(
                             context.translate('total_balance'),
-                            style: AppTextStyles.cardValueGreen.copyWith(
-                              fontSize: AppFontSizes.size15,
-                            ),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeGreen),
                           ),
                           statusText: PrivacyMaskedText(
                             amount: totalBalance,
-                            style: AppTextStyles.cardStatusText.copyWith(
+                            style: AppTextStyles.caption.copyWith(
                               fontSize: AppFontSizes.size10,
                             ),
                           ),
@@ -266,9 +256,7 @@ class DashboardScreen extends StatelessWidget {
                           title: 'Transactions, Parties, In...',
                           value: Text(
                             context.translate('reports'),
-                            style: AppTextStyles.cardValueGreen.copyWith(
-                              fontSize: AppFontSizes.size15,
-                            ),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeGreen),
                           ),
                           isPositive: true,
                           isTrend: false,
@@ -431,18 +419,11 @@ Widget _recentActivitySkeleton(BuildContext context) {
           children: [
             Text(
               'Recent Activity',
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size14,
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurface,
-              ),
+              style: AppTextStyles.bodyBold.copyWith(color: theme.colorScheme.onSurface),
             ),
             Text(
               'View All',
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size11,
-                fontWeight: FontWeight.w600,
-              ),
+              style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -482,40 +463,24 @@ Widget _recentActivitySkeleton(BuildContext context) {
                         children: [
                           Text(
                             'Transaction Title',
-                            style: GoogleFonts.workSans(
-                              fontSize: AppFontSizes.size13,
-                              fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.onSurface,
-                            ),
+                            style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             'Category  •  Today',
-                            style: GoogleFonts.workSans(
-                              fontSize: AppFontSizes.size10,
-                              fontWeight: FontWeight.w400,
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.5,
-                              ),
-                            ),
+                            style: AppTextStyles.caption.copyWith(fontSize: AppFontSizes.size10, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                           ),
                         ],
                       ),
                     ),
                     Text(
                       '+৳0,000',
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size12,
-                        fontWeight: FontWeight.w700,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.5,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
+                      style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+),
+                    ],
+                  ),
+                );
+              }),
           ),
         ),
       ),

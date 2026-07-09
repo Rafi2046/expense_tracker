@@ -1,7 +1,6 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class ShareReportSheet extends StatelessWidget {
   const ShareReportSheet({super.key});
@@ -49,9 +48,7 @@ class ShareReportSheet extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
             child: Text(
               'Share Report',
-              style: GoogleFonts.workSans(
-                fontWeight: FontWeight.w600,
-                fontSize: AppFontSizes.size16,
+              style: AppTextStyles.h3.copyWith(
                 color: theme.colorScheme.onSurface,
               ),
             ),
@@ -77,10 +74,9 @@ class ShareReportSheet extends StatelessWidget {
             ),
             title: Text(
               'Share Image',
-              style: GoogleFonts.workSans(
+              style: AppTextStyles.bodyBold.copyWith(
                 fontWeight: FontWeight.w500,
                 color: theme.colorScheme.onSurface,
-                fontSize: AppFontSizes.size14,
               ),
             ),
           ),
@@ -103,10 +99,9 @@ class ShareReportSheet extends StatelessWidget {
             ),
             title: Text(
               'Share PDF',
-              style: GoogleFonts.workSans(
+              style: AppTextStyles.bodyBold.copyWith(
                 fontWeight: FontWeight.w500,
                 color: theme.colorScheme.onSurface,
-                fontSize: AppFontSizes.size14,
               ),
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class InlinePasswordForm extends StatefulWidget {
@@ -117,8 +118,7 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
       children: [
         Text(
           label,
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size13,
+          style: AppTextStyles.bodySmall.copyWith(
             fontWeight: FontWeight.w600,
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -132,14 +132,11 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
           child: TextFormField(
             controller: controller,
             obscureText: obscureText,
-            style: GoogleFonts.workSans(
-              fontSize: AppFontSizes.size15,
-              color: theme.colorScheme.onSurface,
-            ),
+            style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size14,
+              hintStyle: AppTextStyles.body.copyWith(
+                fontFamily: GoogleFonts.workSans().fontFamily,
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
               border: InputBorder.none,
@@ -222,10 +219,7 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
                 )
               : Text(
                   'Update Password',
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size15,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTextStyles.reportTileTitle.copyWith(fontWeight: FontWeight.bold),
                 ),
         ),
       ],

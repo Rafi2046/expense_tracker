@@ -7,6 +7,7 @@ import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class CreateTourSheet extends StatefulWidget {
   final Function(Tour tour) onTourCreated;
@@ -85,9 +86,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                     children: [
                       Text(
                         'Create New Tour',
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size16,
-                          fontWeight: FontWeight.w600,
+                        style: AppTextStyles.h3.copyWith(
                           color: theme.colorScheme.onSurface,
                         ),
                       ),
@@ -115,8 +114,8 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                             ),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                           ),
-                          style: GoogleFonts.workSans(
-                            fontSize: AppFontSizes.size15,
+                          style: AppTextStyles.reportTileTitle.copyWith(
+                            fontWeight: FontWeight.w400,
                             color: theme.colorScheme.onSurface,
                           ),
                         ),
@@ -155,8 +154,8 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                         onChanged: (v) {
                           if (v != null) setState(() => selectedCurrency = v);
                         },
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size15,
+                        style: AppTextStyles.reportTileTitle.copyWith(
+                          fontWeight: FontWeight.w400,
                           color: theme.colorScheme.onSurface,
                         ),
                       ),
@@ -189,17 +188,17 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                     ),
                                     const SizedBox(height: 20),
                                     Text('Cover Photo',
-                                      style: GoogleFonts.workSans(fontSize: AppFontSizes.size18, fontWeight: FontWeight.w600, color: sTheme.colorScheme.onSurface),
+                                      style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w600, color: sTheme.colorScheme.onSurface),
                                     ),
                                     const SizedBox(height: 20),
                                     ListTile(
                                       leading: const Icon(Icons.camera_alt_rounded),
-                                      title: Text('Take Photo', style: GoogleFonts.workSans(fontSize: AppFontSizes.size15)),
+                                      title: Text('Take Photo', style: AppTextStyles.reportTileTitle.copyWith(fontWeight: FontWeight.w400)),
                                       onTap: () => Navigator.pop(sCtx, ImageSource.camera),
                                     ),
                                     ListTile(
                                       leading: const Icon(Icons.photo_library_rounded),
-                                      title: Text('Choose from Gallery', style: GoogleFonts.workSans(fontSize: AppFontSizes.size15)),
+                                      title: Text('Choose from Gallery', style: AppTextStyles.reportTileTitle.copyWith(fontWeight: FontWeight.w400)),
                                       onTap: () => Navigator.pop(sCtx, ImageSource.gallery),
                                     ),
                                   ],
@@ -241,9 +240,9 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                         color: theme.colorScheme.onSurface.withValues(alpha: 0.35), size: 22),
                                       const SizedBox(width: 8),
                                       Text('Add cover photo',
-                                        style: GoogleFonts.workSans(
+                                        style: AppTextStyles.bodyBold.copyWith(
+                                          fontWeight: FontWeight.w400,
                                           color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
-                                          fontSize: AppFontSizes.size14,
                                         ),
                                       ),
                                     ],
@@ -285,9 +284,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                         ),
                         child: Text(
                           'Create Tour',
-                          style: GoogleFonts.workSans(
-                            fontSize: AppFontSizes.size16,
-                            fontWeight: FontWeight.w600,
+                          style: AppTextStyles.h3.copyWith(
                             color: AppColors.white,
                           ),
                         ),

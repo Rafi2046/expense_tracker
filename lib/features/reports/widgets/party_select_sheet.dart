@@ -1,5 +1,6 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -110,9 +111,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                 Expanded(
                   child: Text(
                     'Select Party to View Report',
-                    style: GoogleFonts.workSans(
-                      fontWeight: FontWeight.w600,
-                      fontSize: AppFontSizes.size16,
+                    style: AppTextStyles.h3.copyWith(
                       color: theme.colorScheme.onSurface,
                     ),
                   ),
@@ -184,10 +183,9 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                         const SizedBox(height: 12),
                         Text(
                           'No parties found',
-                          style: GoogleFonts.workSans(
+                          style: AppTextStyles.reportTileTitle.copyWith(
                             color: isDark ? Colors.white60 : Colors.grey.shade500,
                             fontWeight: FontWeight.w500,
-                            fontSize: AppFontSizes.size15,
                           ),
                         ),
                       ],
@@ -230,17 +228,15 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                         ),
                         title: Text(
                           party.name,
-                          style: GoogleFonts.workSans(
+                          style: AppTextStyles.bodyBold.copyWith(
                             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                             color: theme.colorScheme.onSurface,
-                            fontSize: AppFontSizes.size14,
                           ),
                         ),
                         subtitle: Text(
                           party.phone ?? 'No phone number',
-                          style: GoogleFonts.workSans(
+                          style: AppTextStyles.reportTransactionSubtitle.copyWith(
                             color: isDark ? Colors.white60 : Colors.grey.shade500,
-                            fontSize: AppFontSizes.size12,
                           ),
                         ),
                         trailing: isSelected

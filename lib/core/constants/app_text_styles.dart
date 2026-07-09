@@ -5,6 +5,94 @@ import 'app_colors.dart';
 import 'app_font_sizes.dart';
 
 class AppTextStyles {
+  // ──────────────────────────────────────────────
+  // Semantic roles — use these for consistency
+  // ──────────────────────────────────────────────
+
+  /// Page titles, appbar titles (size20, w600)
+  static TextStyle h1 = TextStyle(
+    fontSize: AppFontSizes.size20,
+    fontWeight: FontWeight.w600,
+    color: AppColors.black,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  /// Section headers, dialog titles (size18, bold)
+  static TextStyle h2 = TextStyle(
+    fontSize: AppFontSizes.size18,
+    fontWeight: FontWeight.bold,
+    color: AppColors.black,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  /// Card titles, subsection headers (size16, w600)
+  static TextStyle h3 = TextStyle(
+    fontSize: AppFontSizes.size16,
+    fontWeight: FontWeight.w600,
+    color: AppColors.black,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  /// Primary body text (size14, w400, inter)
+  static TextStyle body = TextStyle(
+    fontSize: AppFontSizes.size14,
+    fontWeight: FontWeight.w400,
+    fontFamily: GoogleFonts.inter().fontFamily,
+    color: AppColors.loginSubTitle,
+  );
+
+  /// Emphasized body (size14, w600)
+  static TextStyle bodyBold = TextStyle(
+    fontSize: AppFontSizes.size14,
+    fontWeight: FontWeight.w600,
+    color: AppColors.black,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  /// Secondary body text (size13, w400)
+  static TextStyle bodySmall = TextStyle(
+    fontSize: AppFontSizes.size13,
+    fontWeight: FontWeight.w400,
+    color: AppColors.loginSubTitle,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  /// Form labels, badges, metadata (size12, w500, sans)
+  static TextStyle label = TextStyle(
+    fontSize: AppFontSizes.size12,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textMuted,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  /// Smallest labels, timestamps (size11)
+  static TextStyle caption = TextStyle(
+    fontSize: AppFontSizes.size11,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textMuted,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  /// Hero amounts, display numbers (size24, bold)
+  static TextStyle displayMedium = TextStyle(
+    fontSize: AppFontSizes.size24,
+    fontWeight: FontWeight.bold,
+    color: AppColors.black,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  /// Large display values (size28, bold)
+  static TextStyle displayLarge = TextStyle(
+    fontSize: AppFontSizes.size28,
+    fontWeight: FontWeight.bold,
+    color: AppColors.black,
+    fontFamily: GoogleFonts.workSans().fontFamily,
+  );
+
+  // ──────────────────────────────────────────────
+  // Named styles — kept for backward compatibility
+  // ──────────────────────────────────────────────
+
   // Splash
   static TextStyle splashTextTitle = TextStyle(
     fontSize: AppFontSizes.size16,

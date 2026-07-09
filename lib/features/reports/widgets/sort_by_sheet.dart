@@ -53,11 +53,9 @@ class SortBySheet extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
             child: Text(
               'Sort By:',
-              style: AppTextStyles.dialogTitle.copyWith(
-                fontSize: AppFontSizes.size16,
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface,
-              ),
+            style: AppTextStyles.h3.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
             ),
           ),
           Divider(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), height: 1),

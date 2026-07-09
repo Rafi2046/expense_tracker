@@ -1,8 +1,7 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class SpendingDistributionItem {
   final String category;
@@ -69,11 +68,7 @@ class SpendingOverviewCard extends StatelessWidget {
               const SizedBox(width: 10),
               Text(
                 context.translate('distribution'),
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size16,
-                  fontWeight: FontWeight.w700,
-                  color: onSurface,
-                ),
+                style: AppTextStyles.h2.copyWith(color: onSurface),
               ),
             ],
           ),
@@ -82,10 +77,7 @@ class SpendingOverviewCard extends StatelessWidget {
             padding: const EdgeInsets.only(left: 14),
             child: Text(
               context.translate('current_month_distribution'),
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size12,
-                color: Colors.grey.shade500,
-              ),
+              style: AppTextStyles.caption.copyWith(color: Colors.grey.shade500),
             ),
           ),
           const SizedBox(height: 16),
@@ -135,11 +127,7 @@ class SpendingOverviewCard extends StatelessWidget {
                                     children: [
                                       Text(
                                         context.translate('total'),
-                                        style: GoogleFonts.workSans(
-                                          fontSize: AppFontSizes.size11,
-                                          color: Colors.grey.shade500,
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                                        style: AppTextStyles.body.copyWith(color: Colors.grey.shade500),
                                       ),
                                       const SizedBox(height: 4),
                                       totalAmount,
@@ -181,11 +169,7 @@ class SpendingOverviewCard extends StatelessWidget {
                                 children: [
                                   Text(
                                     item.category,
-                                    style: GoogleFonts.workSans(
-                                      fontSize: AppFontSizes.size11,
-                                      fontWeight: FontWeight.w600,
-                                      color: onSurface,
-                                    ),
+                                    style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600, color: onSurface),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -209,11 +193,7 @@ class SpendingOverviewCard extends StatelessWidget {
                               item.percentage < 1
                                   ? '${item.percentage.toStringAsFixed(1)}%'
                                   : '${item.percentage.toStringAsFixed(0)}%',
-                              style: GoogleFonts.workSans(
-                                fontSize: AppFontSizes.size11,
-                                fontWeight: FontWeight.w700,
-                                color: onSurface.withValues(alpha: 0.7),
-                              ),
+                              style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w700, color: onSurface.withValues(alpha: 0.7)),
                             ),
                           ],
                         ),

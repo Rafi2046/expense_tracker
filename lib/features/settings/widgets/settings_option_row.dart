@@ -1,6 +1,7 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class SettingsOptionRow extends StatelessWidget {
@@ -65,8 +66,7 @@ class SettingsOptionRow extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size12,
+                style: AppTextStyles.label.copyWith(
                   fontWeight: FontWeight.w600,
                   color: defaultColor,
                 ),
@@ -77,10 +77,9 @@ class SettingsOptionRow extends StatelessWidget {
             if (trailingText != null) ...[
               Text(
                 trailingText!,
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size11,
-                  color: theme.colorScheme.onSurfaceVariant,
+                style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w500,
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(width: 6),

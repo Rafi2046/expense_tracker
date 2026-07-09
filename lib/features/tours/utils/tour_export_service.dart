@@ -156,8 +156,7 @@ class TourExportService {
         Text(
           tour.name,
           textAlign: TextAlign.center,
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size28,
+          style: AppTextStyles.displayLarge.copyWith(
             fontWeight: FontWeight.w800,
             color: const Color(0xFF111827),
             letterSpacing: -0.5,
@@ -253,17 +252,14 @@ class TourExportService {
           const SizedBox(height: AppSpacing.s12),
           Text(
             'All settled up',
-            style: GoogleFonts.workSans(
-              fontSize: AppFontSizes.size18,
-              fontWeight: FontWeight.w700,
+            style: AppTextStyles.h2.copyWith(
               color: const Color(0xFF065F46),
             ),
           ),
           const SizedBox(height: AppSpacing.s4),
           Text(
             'No payments needed \u2014 everyone is even',
-            style: GoogleFonts.workSans(
-              fontSize: AppFontSizes.size13,
+            style: AppTextStyles.bodySmall.copyWith(
               fontWeight: FontWeight.w500,
               color: const Color(0xFF6B7280),
             ),
@@ -345,8 +341,7 @@ class TourExportService {
           backgroundColor: bgColor,
           child: Text(
             name.isNotEmpty ? name[0].toUpperCase() : '?',
-            style: GoogleFonts.workSans(
-              fontSize: AppFontSizes.size14,
+            style: AppTextStyles.bodyBold.copyWith(
               fontWeight: FontWeight.w700,
               color: textColor,
             ),
@@ -359,8 +354,7 @@ class TourExportService {
             name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.workSans(
-              fontSize: AppFontSizes.size13,
+            style: AppTextStyles.bodySmall.copyWith(
               fontWeight: FontWeight.w600,
               color: const Color(0xFF374151),
             ),
@@ -383,7 +377,7 @@ class TourExportService {
         Flexible(
           child: Text(
             'Generated via Expense Tracker  \u2022  Shared Expenses Simplified',
-            style: GoogleFonts.workSans(
+            style: AppTextStyles.caption.copyWith(
               fontSize: AppFontSizes.size9,
               color: Colors.grey.shade400,
               fontWeight: FontWeight.w500,

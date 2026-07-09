@@ -6,9 +6,8 @@ import 'package:expense_tracker/features/dashboard/widgets/premium_upgrade_sheet
 import 'package:expense_tracker/features/dashboard/widgets/profile_name_input_field.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class CreateProfileNameScreen extends StatefulWidget {
   final bool isBusiness;
@@ -89,19 +88,12 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
             children: [
               Text(
                 'Create an Account',
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size20,
-                  fontWeight: FontWeight.w800,
-                  color: theme.textTheme.titleLarge?.color,
-                ),
+                style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w800, color: theme.textTheme.titleLarge?.color),
               ),
               const SizedBox(height: 6),
               Text(
                 'Please enter the following details to get started',
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size13,
-                  color: theme.textTheme.bodySmall?.color,
-                ),
+                style: AppTextStyles.bodySmall.copyWith(color: theme.textTheme.bodySmall?.color),
               ),
               const SizedBox(height: 24),
 

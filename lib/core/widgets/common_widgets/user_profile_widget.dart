@@ -6,6 +6,7 @@ import 'package:expense_tracker/features/dashboard/widgets/edit_profile_sheet.da
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class UserProfile {
@@ -95,8 +96,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
           children: [
             Text(
               'Switch Profile',
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size20,
+              style: AppTextStyles.h1.copyWith(
                 fontWeight: FontWeight.w800,
                 color: theme.textTheme.titleLarge?.color,
               ),
@@ -104,10 +104,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
             const SizedBox(height: 4),
             Text(
               'Choose a profile to manage',
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size13,
-                color: theme.textTheme.bodySmall?.color,
-              ),
+              style: AppTextStyles.bodySmall.copyWith(color: theme.textTheme.bodySmall?.color),
             ),
             const SizedBox(height: 20),
 
@@ -133,16 +130,12 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                     radius: 24,
                     child: Text(
                       profile.name.substring(0, 1).toUpperCase(),
-                      style: TextStyle(
-                        color: theme.textTheme.titleLarge?.color,
-                        fontWeight: FontWeight.bold,
-                        fontSize: AppFontSizes.size18,
-                      ),
+                      style: AppTextStyles.h2.copyWith(color: theme.textTheme.titleLarge?.color),
                     ),
                   ),
                   title: Text(
                     profile.name,
-                    style: GoogleFonts.workSans(
+                    style: AppTextStyles.reportTileTitle.copyWith(
                       fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                       color: theme.textTheme.titleMedium?.color,
                     ),
@@ -155,8 +148,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                       ],
                       Text(
                         _profileLabel(profile),
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size12,
+                        style: AppTextStyles.label.copyWith(
                           color: profile.id == 'default_profile'
                               ? const Color(0xFFF59E0B)
                               : theme.textTheme.bodySmall?.color,
@@ -223,8 +215,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                 icon: const Icon(Symbols.add, color: Color(0xFF00BFA5)),
                 label: Text(
                   'Create New Profile',
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size15,
+                  style: AppTextStyles.reportTileTitle.copyWith(
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF00BFA5),
                   ),

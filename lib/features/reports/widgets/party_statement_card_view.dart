@@ -8,7 +8,6 @@ import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -209,7 +208,6 @@ class PartyStatementCardView extends StatelessWidget {
                                           ? AppColors.activeGreen
                                           : const Color(0xFF146C48))
                                       .withValues(alpha: 0.7),
-                              fontSize: AppFontSizes.size11,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -219,8 +217,6 @@ class PartyStatementCardView extends StatelessWidget {
                             isMasked: isMasked,
                             style: AppTextStyles.reportTransactionTitle
                                 .copyWith(
-                                  fontSize: AppFontSizes.size15,
-                                  fontWeight: FontWeight.bold,
                                   color: theme.colorScheme.onSurface,
                                 ),
                           ),
@@ -279,7 +275,6 @@ class PartyStatementCardView extends StatelessWidget {
                                           ? AppColors.activeRed
                                           : const Color(0xFFDC3545))
                                       .withValues(alpha: 0.7),
-                              fontSize: AppFontSizes.size11,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -289,8 +284,6 @@ class PartyStatementCardView extends StatelessWidget {
                             isMasked: isMasked,
                             style: AppTextStyles.reportTransactionTitle
                                 .copyWith(
-                                  fontSize: AppFontSizes.size15,
-                                  fontWeight: FontWeight.bold,
                                   color: theme.colorScheme.onSurface,
                                 ),
                           ),
@@ -308,9 +301,7 @@ class PartyStatementCardView extends StatelessWidget {
         // ── Section Header ──
         Text(
           'Transactions',
-          style: GoogleFonts.workSans(
-            fontWeight: FontWeight.w700,
-            fontSize: AppFontSizes.size15,
+          style: AppTextStyles.reportTransactionTitle.copyWith(
             color: theme.colorScheme.onSurface,
             letterSpacing: -0.2,
           ),
@@ -478,9 +469,7 @@ class _PremiumTransactionTile extends StatelessWidget {
                       description,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size14,
-                        fontWeight: FontWeight.w600,
+                      style: AppTextStyles.bodyBold.copyWith(
                         color: theme.colorScheme.onSurface,
                         letterSpacing: -0.15,
                       ),
@@ -488,9 +477,7 @@ class _PremiumTransactionTile extends StatelessWidget {
                     const SizedBox(height: 5),
                     Text(
                       DateFormat('dd MMM yyyy • h:mm a').format(dateTime),
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size11,
-                        fontWeight: FontWeight.w400,
+                      style: AppTextStyles.caption.copyWith(
                         color: isDark ? Colors.white38 : Colors.grey.shade500,
                       ),
                     ),
@@ -507,9 +494,7 @@ class _PremiumTransactionTile extends StatelessWidget {
                     children: [
                       Text(
                         isInflow ? '+ ' : '− ',
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size15,
-                          fontWeight: FontWeight.w700,
+                        style: AppTextStyles.reportTransactionTitle.copyWith(
                           color: typeColor,
                           letterSpacing: -0.2,
                         ),
@@ -517,9 +502,7 @@ class _PremiumTransactionTile extends StatelessWidget {
                       PrivacyMaskedText(
                         amount: amount,
                         isMasked: isMasked,
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size15,
-                          fontWeight: FontWeight.w700,
+                        style: AppTextStyles.reportTransactionTitle.copyWith(
                           color: typeColor,
                           letterSpacing: -0.2,
                         ),
@@ -536,13 +519,13 @@ class _PremiumTransactionTile extends StatelessWidget {
                         color: theme.colorScheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Text(
-                        'Opening',
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size10,
-                          fontWeight: FontWeight.w600,
-                          color: theme.colorScheme.primary,
-                        ),
+                        child: Text(
+                          'Opening',
+                          style: AppTextStyles.caption.copyWith(
+                            fontSize: AppFontSizes.size10,
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.primary,
+                          ),
                       ),
                     ),
                 ],

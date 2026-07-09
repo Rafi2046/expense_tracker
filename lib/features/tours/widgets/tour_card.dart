@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class TourCard extends StatelessWidget {
   final Tour tour;
@@ -142,9 +143,8 @@ class TourCard extends StatelessWidget {
                         tour.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.workSans(
+                        style: AppTextStyles.displayMedium.copyWith(
                           color: Colors.white,
-                          fontSize: AppFontSizes.size24,
                           fontWeight: FontWeight.w800,
                           height: 1.15,
                           letterSpacing: -0.3,
@@ -165,9 +165,8 @@ class TourCard extends StatelessWidget {
                               const SizedBox(width: AppSpacing.s6),
                               Text(
                                 '$memberCount ${memberCount == 1 ? 'member' : 'members'}',
-                                style: GoogleFonts.workSans(
+                                style: AppTextStyles.bodySmall.copyWith(
                                   color: Colors.white.withValues(alpha: 0.7),
-                                  fontSize: AppFontSizes.size13,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -178,7 +177,7 @@ class TourCard extends StatelessWidget {
                             children: [
                               Text(
                                 'Total spent',
-                                style: GoogleFonts.workSans(
+                                style: AppTextStyles.caption.copyWith(
                                   color: Colors.white.withValues(alpha: 0.5),
                                   fontSize: AppFontSizes.size10,
                                   fontWeight: FontWeight.w600,
@@ -188,9 +187,8 @@ class TourCard extends StatelessWidget {
                               const SizedBox(height: 2),
                               Text(
                                 _formatAmount(totalSpent, tour.currency),
-                                style: GoogleFonts.workSans(
+                                style: AppTextStyles.displayMedium.copyWith(
                                   color: Colors.white,
-                                  fontSize: AppFontSizes.size24,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: -0.5,
                                   height: 1.1,
@@ -260,9 +258,8 @@ class _StatusBadge extends StatelessWidget {
           const SizedBox(width: 5),
           Text(
             label,
-            style: GoogleFonts.workSans(
+            style: AppTextStyles.caption.copyWith(
               color: Colors.white.withValues(alpha: isCompleted ? 0.6 : 0.9),
-              fontSize: AppFontSizes.size11,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.3,
             ),

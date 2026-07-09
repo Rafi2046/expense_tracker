@@ -12,6 +12,7 @@ import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class AddExpenseSheet extends StatefulWidget {
   final String tourId;
@@ -386,10 +387,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             const SizedBox(height: 20),
             Text(
               'Attach Receipt',
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size18, fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface,
-              ),
+              style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
             ),
             const SizedBox(height: 20),
             _buildReceiptOption(ctx, theme, Icons.camera_alt_rounded, 'Take Photo', ImageSource.camera),
@@ -413,7 +411,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         ),
         child: Icon(icon, color: AppColors.activeGreen, size: 20),
       ),
-      title: Text(label, style: GoogleFonts.workSans(fontSize: AppFontSizes.size14, fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface)),
+      title: Text(label, style: AppTextStyles.bodyBold.copyWith(fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface)),
       onTap: () {
         Navigator.pop(ctx);
         _pickReceipt(source);
@@ -560,8 +558,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       padding: const EdgeInsets.only(left: 2, bottom: AppSpacing.s12),
       child: Text(
         label,
-        style: GoogleFonts.workSans(
-          fontSize: AppFontSizes.size11,
+        style: AppTextStyles.caption.copyWith(
           fontWeight: FontWeight.w700,
           color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
           letterSpacing: 1.2,
@@ -641,22 +638,14 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                               const SizedBox(height: AppSpacing.s8),
                               Text(
                                 'Sum must be 100%',
-                                style: GoogleFonts.workSans(
-                                  fontSize: AppFontSizes.size12,
-                                  color: AppColors.activeRed,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: AppTextStyles.label.copyWith(color: AppColors.activeRed),
                               ),
                             ],
                             if (exactExceedsError) ...[
                               const SizedBox(height: AppSpacing.s8),
                               Text(
                                 'Amounts exceed total',
-                                style: GoogleFonts.workSans(
-                                  fontSize: AppFontSizes.size12,
-                                  color: AppColors.activeRed,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: AppTextStyles.label.copyWith(color: AppColors.activeRed),
                               ),
                             ],
                           ],
@@ -695,7 +684,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                               Expanded(
                                 child: Text(
                                   _validationError!,
-                                  style: GoogleFonts.workSans(color: AppColors.activeRed, fontSize: AppFontSizes.size12, fontWeight: FontWeight.w500),
+                                  style: AppTextStyles.label.copyWith(color: AppColors.activeRed),
                                 ),
                               ),
                             ],
@@ -763,8 +752,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             children: [
               Text(
                 _sym,
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size28,
+                style: AppTextStyles.displayLarge.copyWith(
                   fontWeight: FontWeight.w300,
                   color: AppColors.activeGreen.withValues(alpha: 0.5),
                 ),
@@ -782,7 +770,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     ],
                     textAlign: TextAlign.center,
                     onChanged: (_) => setState(() => _validationError = null),
-                    style: GoogleFonts.workSans(
+                    style: AppTextStyles.displayLarge.copyWith(
                       fontSize: AppFontSizes.size36,
                       fontWeight: FontWeight.w700,
                       color: theme.colorScheme.onSurface,
@@ -794,7 +782,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     cursorHeight: 44,
                     decoration: InputDecoration(
                       hintText: '0.00',
-                      hintStyle: GoogleFonts.workSans(
+                      hintStyle: AppTextStyles.displayLarge.copyWith(
                         fontSize: AppFontSizes.size36,
                         fontWeight: FontWeight.w300,
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
@@ -827,14 +815,14 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               controller: _titleController,
               textAlign: TextAlign.start,
               onChanged: (_) => setState(() => _validationError = null),
-              style: GoogleFonts.workSans(
+              style: AppTextStyles.bodyBold.copyWith(
                 fontSize: AppFontSizes.size15,
                 color: theme.colorScheme.onSurface,
                 fontWeight: FontWeight.w500,
               ),
               decoration: InputDecoration(
                 hintText: 'e.g. Kacchi Bhai Dinner',
-                hintStyle: GoogleFonts.workSans(
+                hintStyle: AppTextStyles.bodyBold.copyWith(
                   fontSize: AppFontSizes.size15,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
                   fontWeight: FontWeight.w400,
@@ -870,7 +858,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         children: [
           Text(
             'CATEGORY',
-            style: GoogleFonts.workSans(
+            style: AppTextStyles.caption.copyWith(
               fontSize: AppFontSizes.size10,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.5,
@@ -946,7 +934,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.workSans(
+              style: AppTextStyles.caption.copyWith(
                 fontSize: AppFontSizes.size9,
                 fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
                 color: selected
@@ -984,7 +972,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             const SizedBox(height: 3),
             Text(
               'Add',
-              style: GoogleFonts.workSans(
+              style: AppTextStyles.caption.copyWith(
                 fontSize: AppFontSizes.size9,
                 fontWeight: FontWeight.w500,
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
@@ -1279,10 +1267,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             const SizedBox(width: 6),
             Text(
               text,
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size13,
-                color: theme.colorScheme.onSurface,
+              style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.w500,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(width: 4),
@@ -1325,10 +1312,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             const SizedBox(width: 8),
             Text(
               'Add Receipt',
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size13,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
+              style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.w500,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
               ),
             ),
           ],
@@ -1362,7 +1348,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 _receiptImage!.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.workSans(fontSize: AppFontSizes.size13, color: theme.colorScheme.onSurface),
+                style: AppTextStyles.bodySmall.copyWith(color: theme.colorScheme.onSurface),
               ),
             ),
             GestureDetector(
@@ -1433,10 +1419,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             const SizedBox(width: 6),
             Text(
               p.name.split(' ').first,
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size12,
-                color: theme.colorScheme.onSurface.withValues(alpha: selected ? 1 : 0.6),
+              style: AppTextStyles.label.copyWith(
                 fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface.withValues(alpha: selected ? 1 : 0.6),
               ),
             ),
             if (selected) ...[
@@ -1499,7 +1484,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       const SizedBox(height: 2),
                       Text(
                         labels[i],
-                        style: GoogleFonts.workSans(
+                        style: AppTextStyles.caption.copyWith(
                           fontSize: AppFontSizes.size10,
                           fontWeight: active ? FontWeight.w600 : FontWeight.w500,
                           color: active ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.4),
@@ -1533,7 +1518,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           Expanded(
             child: Text(
               '$names joined after ${_formatDate(_selectedDate)} — unchecked by default.',
-              style: GoogleFonts.workSans(fontSize: AppFontSizes.size11, color: AppColors.activeGreen),
+              style: AppTextStyles.caption.copyWith(color: AppColors.activeGreen),
             ),
           ),
         ],
@@ -1614,8 +1599,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       children: [
                         Text(
                           p.name,
-                          style: GoogleFonts.workSans(
-                            fontSize: AppFontSizes.size13, fontWeight: FontWeight.w500,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            fontWeight: FontWeight.w500,
                             color: excluded
                                 ? theme.colorScheme.onSurface.withValues(alpha: 0.35)
                                 : theme.colorScheme.onSurface,
@@ -1624,7 +1609,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                         if (_hadNotJoinedYet(p))
                           Text(
                             'Joined later',
-                            style: GoogleFonts.workSans(
+                            style: AppTextStyles.caption.copyWith(
                               fontSize: AppFontSizes.size10,
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                             ),
@@ -1635,8 +1620,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   if (preview != null)
                     Text(
                       preview,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size13, fontWeight: FontWeight.w600,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        fontWeight: FontWeight.w600,
                         color: excluded
                             ? theme.colorScheme.onSurface.withValues(alpha: 0.2)
                             : AppColors.activeGreen,
@@ -1692,18 +1677,17 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                         children: [
                           Text(
                             p.name,
-                            style: GoogleFonts.workSans(
-                              fontSize: AppFontSizes.size13, fontWeight: FontWeight.w500,
+                            style: AppTextStyles.bodySmall.copyWith(
+                              fontWeight: FontWeight.w500,
                               color: theme.colorScheme.onSurface,
                             ),
                           ),
                           if (preview != null && (isPercentage || isExact))
                             Text(
                               preview,
-                              style: GoogleFonts.workSans(
-                                fontSize: AppFontSizes.size11,
-                                color: AppColors.activeGreen,
+                              style: AppTextStyles.caption.copyWith(
                                 fontWeight: FontWeight.w600,
+                                color: AppColors.activeGreen,
                               ),
                             ),
                         ],
@@ -1731,15 +1715,14 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                             setState(() {});
                           }
                         },
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size13, fontWeight: FontWeight.w600,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          fontWeight: FontWeight.w600,
                           color: theme.colorScheme.onSurface,
                         ),
                         decoration: InputDecoration(
                           hintText: '0',
                           suffixText: suffix,
-                          suffixStyle: GoogleFonts.workSans(
-                            fontSize: AppFontSizes.size12,
+                          suffixStyle: AppTextStyles.label.copyWith(
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                           ),
                           border: OutlineInputBorder(
@@ -1772,10 +1755,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   ),
                   child: Text(
                     'Reset split',
-                    style: GoogleFonts.workSans(
-                      fontSize: AppFontSizes.size12,
-                      color: AppColors.activeGreen,
+                    style: AppTextStyles.label.copyWith(
                       fontWeight: FontWeight.w600,
+                      color: AppColors.activeGreen,
                     ),
                   ),
                 ),
@@ -1795,13 +1777,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     return TextField(
       controller: _noteController,
       maxLines: 1,
-      style: GoogleFonts.workSans(fontSize: AppFontSizes.size14, color: theme.colorScheme.onSurface),
+      style: AppTextStyles.bodyBold.copyWith(fontWeight: FontWeight.w400, color: theme.colorScheme.onSurface),
       decoration: InputDecoration(
         hintText: 'Add a note...',
-        hintStyle: GoogleFonts.workSans(
-          fontSize: AppFontSizes.size14,
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
-        ),
+        hintStyle: AppTextStyles.bodyBold.copyWith(fontWeight: FontWeight.w400, color: theme.colorScheme.onSurface.withValues(alpha: 0.25)),
         border: InputBorder.none,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(vertical: 2),
@@ -1853,8 +1832,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     const SizedBox(width: 8),
                     Text(
                       'Save Expense',
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size15, fontWeight: FontWeight.w600, color: Colors.white,
+                      style: AppTextStyles.bodyBold.copyWith(
+                        fontSize: AppFontSizes.size15, color: Colors.white,
                       ),
                     ),
                   ],

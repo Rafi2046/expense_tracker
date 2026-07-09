@@ -2,8 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/utils/category_utils.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class LedgerTransactionRow extends StatelessWidget {
   final String title;
@@ -92,19 +91,16 @@ class LedgerTransactionRow extends StatelessWidget {
                       _toTitleCase(category),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size15,
-                        fontWeight: FontWeight.w600,
+                      style: AppTextStyles.reportTransactionTitle.copyWith(
                         color: isDark ? Colors.white70 : const Color(0xFF1F2937),
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 3),
                     Text(
                       title.isNotEmpty ? '$title  •  $dateText' : dateText,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size12,
+                      style: AppTextStyles.reportTransactionSubtitle.copyWith(
                         color: AppColors.textMuted,
-                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
@@ -112,18 +108,14 @@ class LedgerTransactionRow extends StatelessWidget {
               ),
               Text(
                 amountPrefix,
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size15,
-                  fontWeight: FontWeight.bold,
+                style: AppTextStyles.reportTransactionTitle.copyWith(
                   color: amountColor,
                 ),
               ),
               PrivacyMaskedText(
                 amount: amount,
                 isMasked: isMasked,
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size15,
-                  fontWeight: FontWeight.bold,
+                style: AppTextStyles.reportTransactionTitle.copyWith(
                   color: amountColor,
                 ),
               ),

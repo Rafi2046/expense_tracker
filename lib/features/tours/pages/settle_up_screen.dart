@@ -230,11 +230,9 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
       ),
       child: Column(
         children: [
-          const Text(
+          Text(
             'Total Outstanding',
-            style: TextStyle(
-              fontSize: AppFontSizes.size12,
-              fontWeight: FontWeight.w600,
+            style: AppTextStyles.cardTitle.copyWith(
               color: Colors.white70,
               letterSpacing: 1.2,
             ),
@@ -256,9 +254,9 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
               color: Colors.white.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Text(
+            child: Text(
               'Outstanding balances to settle',
-              style: TextStyle(fontSize: AppFontSizes.size10, color: Colors.white70, fontWeight: FontWeight.w500),
+              style: AppTextStyles.caption.copyWith(fontSize: AppFontSizes.size10, fontWeight: FontWeight.w500, color: Colors.white70),
             ),
           ),
         ],
@@ -370,7 +368,7 @@ class _SettlementCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               CircleAvatar(radius: 20, backgroundColor: fromColor,
-                child: Text(fromInitials, style: const TextStyle(color: AppColors.white, fontSize: AppFontSizes.size11, fontWeight: FontWeight.w700)),
+                child: Text(fromInitials, style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w700, color: AppColors.white)),
               ),
               const SizedBox(height: 2),
               SizedBox(
@@ -379,7 +377,7 @@ class _SettlementCard extends StatelessWidget {
                   fromName,
                   maxLines: 1, overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: AppFontSizes.size10, fontWeight: FontWeight.w500, color: isDark ? Colors.white70 : const Color(0xFFDC3545)),
+                  style: AppTextStyles.caption.copyWith(fontSize: AppFontSizes.size10, fontWeight: FontWeight.w500, color: isDark ? Colors.white70 : const Color(0xFFDC3545)),
                 ),
               ),
             ],
@@ -408,7 +406,7 @@ class _SettlementCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               CircleAvatar(radius: 20, backgroundColor: toColor,
-                child: Text(toInitials, style: const TextStyle(color: AppColors.white, fontSize: AppFontSizes.size11, fontWeight: FontWeight.w700)),
+                child: Text(toInitials, style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w700, color: AppColors.white)),
               ),
               const SizedBox(height: 2),
               SizedBox(
@@ -417,7 +415,7 @@ class _SettlementCard extends StatelessWidget {
                   toName,
                   maxLines: 1, overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: AppFontSizes.size10, fontWeight: FontWeight.w500, color: AppColors.activeGreen),
+                  style: AppTextStyles.caption.copyWith(fontSize: AppFontSizes.size10, fontWeight: FontWeight.w500, color: AppColors.activeGreen),
                 ),
               ),
             ],
@@ -434,7 +432,7 @@ class _SettlementCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 elevation: 0,
               ),
-              child: const Text('Settle', style: TextStyle(fontSize: AppFontSizes.size12, fontWeight: FontWeight.w700, color: AppColors.white)),
+              child: Text('Settle', style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w700, color: AppColors.white)),
             ),
           ),
         ],
@@ -514,8 +512,8 @@ class _SettlementDetailSheet extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  const Text('SETTLEMENT AMOUNT',
-                    style: TextStyle(fontSize: AppFontSizes.size10, fontWeight: FontWeight.w700, color: Colors.white70, letterSpacing: 1.5),
+                  Text('SETTLEMENT AMOUNT',
+                    style: AppTextStyles.cardTitle.copyWith(fontSize: AppFontSizes.size10, fontWeight: FontWeight.w700, color: Colors.white70, letterSpacing: 1.5),
                   ),
                   const SizedBox(height: 6),
                   Text(amount,
@@ -535,15 +533,15 @@ class _SettlementDetailSheet extends StatelessWidget {
                     child: Column(
                       children: [
                         CircleAvatar(radius: 28, backgroundColor: fromColor,
-                          child: Text(fromInitials, style: const TextStyle(color: Colors.white, fontSize: AppFontSizes.size14, fontWeight: FontWeight.w700)),
+                          child: Text(fromInitials, style: AppTextStyles.bodySmall.copyWith(fontSize: AppFontSizes.size14, fontWeight: FontWeight.w700, color: Colors.white)),
                         ),
                         const SizedBox(height: 6),
                         Text(fromName, maxLines: 1, overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.workSans(fontSize: AppFontSizes.size13, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
+                          style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
                         ),
                         const SizedBox(height: 2),
                         Text('pays',
-                          style: GoogleFonts.workSans(fontSize: AppFontSizes.size11, color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
+                          style: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
                         ),
                       ],
                     ),
@@ -563,15 +561,15 @@ class _SettlementDetailSheet extends StatelessWidget {
                     child: Column(
                       children: [
                         CircleAvatar(radius: 28, backgroundColor: toColor,
-                          child: Text(toInitials, style: const TextStyle(color: Colors.white, fontSize: AppFontSizes.size14, fontWeight: FontWeight.w700)),
+                          child: Text(toInitials, style: AppTextStyles.bodySmall.copyWith(fontSize: AppFontSizes.size14, fontWeight: FontWeight.w700, color: Colors.white)),
                         ),
                         const SizedBox(height: 6),
                         Text(toName, maxLines: 1, overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.workSans(fontSize: AppFontSizes.size13, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
+                          style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
                         ),
                         const SizedBox(height: 2),
                         Text('receives',
-                          style: GoogleFonts.workSans(fontSize: AppFontSizes.size11, color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
+                          style: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
                         ),
                       ],
                     ),
@@ -593,8 +591,8 @@ class _SettlementDetailSheet extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     elevation: 0,
                   ),
-                  child: const Text('Mark as Settled',
-                    style: TextStyle(fontSize: AppFontSizes.size15, fontWeight: FontWeight.w700, color: Colors.white),
+                  child: Text('Mark as Settled',
+                    style: AppTextStyles.bodyBold.copyWith(fontSize: AppFontSizes.size15, color: Colors.white),
                   ),
                 ),
               ),

@@ -1,9 +1,9 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/models/transaction_models.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class RecentActivityItem {
@@ -53,22 +53,14 @@ class DashboardRecentActivity extends StatelessWidget {
             children: [
               Text(
                 context.translate('recent_activity'),
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size14,
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
+                style: AppTextStyles.bodyBold.copyWith(color: Theme.of(context).colorScheme.onSurface),
               ),
               GestureDetector(
                 onTap: onViewAllTap,
                 behavior: HitTestBehavior.opaque,
                 child: Text(
                   context.translate('view_all'),
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size11,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.activeGreen,
-                  ),
+                  style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600, color: AppColors.activeGreen),
                 ),
               ),
             ],
@@ -153,20 +145,12 @@ class DashboardRecentActivity extends StatelessWidget {
                     children: [
                       Text(
                         item.title,
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size13,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
+                        style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         '${context.translate(item.category.toLowerCase())}  •  ${item.timeText}',
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size10,
-                          color: Colors.grey.shade400,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        style: AppTextStyles.caption.copyWith(fontSize: AppFontSizes.size10, color: Colors.grey.shade400),
                       ),
                     ],
                   ),
@@ -178,23 +162,11 @@ class DashboardRecentActivity extends StatelessWidget {
                   children: [
                     Text(
                       isInc ? '+' : '-',
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size12,
-                        fontWeight: FontWeight.w700,
-                        color: isInc
-                            ? AppColors.activeGreen
-                            : AppColors.expensePink,
-                      ),
+                      style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w700, color: isInc ? AppColors.activeGreen : AppColors.expensePink),
                     ),
                     PrivacyMaskedText(
                       amount: item.amount,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size12,
-                        fontWeight: FontWeight.w700,
-                        color: isInc
-                            ? AppColors.activeGreen
-                            : AppColors.expensePink,
-                      ),
+                      style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w700, color: isInc ? AppColors.activeGreen : AppColors.expensePink),
                     ),
                   ],
                 ),

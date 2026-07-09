@@ -39,7 +39,6 @@ class CashStatementBalanceCard extends StatelessWidget {
           Text(
             'Closing Balance',
             style: AppTextStyles.reportStatLabel.copyWith(
-              fontSize: AppFontSizes.size11,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
           ),

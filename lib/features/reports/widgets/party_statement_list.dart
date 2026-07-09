@@ -5,7 +5,6 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -64,9 +63,7 @@ class PartyStatementList extends StatelessWidget {
       children: [
         Text(
           'Transaction Lists',
-          style: GoogleFonts.workSans(
-            fontWeight: FontWeight.w700,
-            fontSize: AppFontSizes.size15,
+          style: AppTextStyles.reportTransactionTitle.copyWith(
             color: theme.colorScheme.onSurface,
             letterSpacing: -0.2,
           ),
@@ -152,9 +149,7 @@ class PartyStatementList extends StatelessWidget {
                           entry.description,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.workSans(
-                            fontSize: AppFontSizes.size14,
-                            fontWeight: FontWeight.w600,
+                          style: AppTextStyles.bodyBold.copyWith(
                             color: theme.colorScheme.onSurface,
                             letterSpacing: -0.15,
                           ),
@@ -162,9 +157,7 @@ class PartyStatementList extends StatelessWidget {
                         const SizedBox(height: 5),
                         Text(
                           DateFormat('dd MMM yyyy').format(entry.dateTime),
-                          style: GoogleFonts.workSans(
-                            fontSize: AppFontSizes.size11,
-                            fontWeight: FontWeight.w400,
+                          style: AppTextStyles.caption.copyWith(
                             color: isDark ? Colors.white38 : Colors.grey.shade500,
                           ),
                         ),
@@ -174,15 +167,13 @@ class PartyStatementList extends StatelessWidget {
                   const SizedBox(width: 10),
 
                   // ── Trailing: Amount ──
-                  Text(
-                    '${isInflow ? '+' : '−'} $currencySymbol ${entry.amount.toStringAsFixed(0)}',
-                    style: GoogleFonts.workSans(
-                      fontSize: AppFontSizes.size15,
-                      fontWeight: FontWeight.w700,
-                      color: typeColor,
-                      letterSpacing: -0.2,
+                    Text(
+                      '${isInflow ? '+' : '−'} $currencySymbol ${entry.amount.toStringAsFixed(0)}',
+                      style: AppTextStyles.reportTransactionTitle.copyWith(
+                        color: typeColor,
+                        letterSpacing: -0.2,
+                      ),
                     ),
-                  ),
                 ],
               ),
             );

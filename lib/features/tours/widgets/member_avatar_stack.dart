@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class MemberAvatarStack extends StatelessWidget {
   final List<TourParticipant> participants;
@@ -65,9 +66,8 @@ class MemberAvatarStack extends StatelessWidget {
                 child: Center(
                   child: Text(
                     '+$overflow',
-                    style: TextStyle(
+                    style: AppTextStyles.caption.copyWith(
                       color: AppColors.textMuted.withValues(alpha: 0.7),
-                      fontSize: AppFontSizes.size11,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -119,9 +119,8 @@ class _SingleAvatar extends StatelessWidget {
             child: Center(
               child: Text(
                 _initials,
-                style: const TextStyle(
+                style: AppTextStyles.label.copyWith(
                   color: AppColors.white,
-                  fontSize: AppFontSizes.size12,
                   fontWeight: FontWeight.w600,
                 ),
               ),

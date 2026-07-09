@@ -66,9 +66,7 @@ class SelectDateOptionSheet extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
           child: Text(
             'Select Date',
-            style: AppTextStyles.dialogTitle.copyWith(
-              fontSize: AppFontSizes.size16,
-              fontWeight: FontWeight.w600,
+            style: AppTextStyles.h3.copyWith(
               color: theme.colorScheme.onSurface,
             ),
           ),

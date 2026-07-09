@@ -5,9 +5,7 @@ import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/pages/transaction_details_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_transaction_row.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class IncomeTransactionListScreen extends StatelessWidget {
   final String title;
@@ -50,11 +48,7 @@ class IncomeTransactionListScreen extends StatelessWidget {
           ? Center(
               child: Text(
                 'No transactions found',
-                style: TextStyle(
-                  fontSize: AppFontSizes.size15,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                  fontFamily: GoogleFonts.workSans().fontFamily,
-                ),
+                style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
               ),
             )
           : ListView.separated(
@@ -81,21 +75,11 @@ class IncomeTransactionListScreen extends StatelessWidget {
                   amount: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('+ ', style: TextStyle(
-                        fontSize: AppFontSizes.size15,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF2EBD85),
-                        fontFamily: GoogleFonts.workSans().fontFamily,
-                      )),
+                      Text('+ ', style: AppTextStyles.reportTileTitle.copyWith(color: const Color(0xFF2EBD85))),
                       PrivacyMaskedText(
                         amount: tx.amount,
                         isMasked: isMasked,
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size15,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF2EBD85),
-                          fontFamily: GoogleFonts.workSans().fontFamily,
-                        ),
+                        style: AppTextStyles.reportTileTitle.copyWith(color: const Color(0xFF2EBD85)),
                       ),
                     ],
                   ),

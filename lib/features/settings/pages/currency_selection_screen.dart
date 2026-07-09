@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class CurrencySelectionScreen extends StatefulWidget {
@@ -115,14 +116,10 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                       child: TextField(
                         controller: _searchController,
                         autofocus: true,
-                        style: GoogleFonts.workSans(
-                          color: theme.colorScheme.onSurface,
-                          fontSize: AppFontSizes.size14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: AppTextStyles.partyFormLabel.copyWith(color: theme.colorScheme.onSurface),
                         decoration: InputDecoration(
                           hintText: 'Search currency...',
-                          hintStyle: GoogleFonts.workSans(color: isDark ? Colors.grey.shade600 : const Color(0xFF9CA3AF), fontSize: AppFontSizes.size14),
+                          hintStyle: AppTextStyles.body.copyWith(fontFamily: GoogleFonts.workSans().fontFamily, color: isDark ? Colors.grey.shade600 : const Color(0xFF9CA3AF)),
                           border: InputBorder.none,
                           isDense: true,
                         ),
@@ -138,11 +135,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
               )
             : Text(
                 'Select Currency',
-                style: GoogleFonts.workSans(
-                  color: theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                  fontSize: AppFontSizes.size18,
-                ),
+                style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
               ),
         centerTitle: true,
         actions: [
@@ -174,8 +167,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
             if (!_isSearching || filtered.contains(selectedCurrency)) ...[
               Text(
                 'CURRENT CURRENCY',
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size11,
+                style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w800,
                   color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF),
                   letterSpacing: 1.2,
@@ -207,28 +199,19 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                               children: [
                                 Text(
                                   selectedCurrency.name,
-                                  style: GoogleFonts.workSans(
-                                    fontSize: AppFontSizes.size15,
-                                    color: theme.colorScheme.onSurface,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
                                   selectedCurrency.code,
-                                  style: GoogleFonts.workSans(
-                                    fontSize: AppFontSizes.size12,
-                                    color: isDark ? Colors.grey.shade400 : const Color(0xFF6B7280),
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  style: AppTextStyles.label.copyWith(color: isDark ? Colors.grey.shade400 : const Color(0xFF6B7280)),
                                 ),
                               ],
                             ),
                           ),
                           Text(
                             selectedCurrency.symbol,
-                            style: GoogleFonts.workSans(
-                              fontSize: AppFontSizes.size16,
+                            style: AppTextStyles.h3.copyWith(
                               fontWeight: FontWeight.w700,
                               color: activeGreenColor,
                             ),
@@ -255,7 +238,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                 child: Center(
                   child: Text(
                     'No currencies found',
-                    style: GoogleFonts.workSans(color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF), fontSize: AppFontSizes.size15),
+                    style: AppTextStyles.reportTileTitle.copyWith(color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF)),
                   ),
                 ),
               )
@@ -265,12 +248,11 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                   padding: const EdgeInsets.only(top: 22.0, bottom: 8.0),
                   child: Text(
                     region,
-                    style: GoogleFonts.workSans(
-                      fontSize: AppFontSizes.size11,
-                      fontWeight: FontWeight.w800,
-                      color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF),
-                      letterSpacing: 1.5,
-                    ),
+                style: AppTextStyles.caption.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF),
+                  letterSpacing: 1.5,
+                ),
                   ),
                 ),
                 ListView.separated(
@@ -304,8 +286,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                                 children: [
                                   Text(
                                     currency.name,
-                                    style: GoogleFonts.workSans(
-                                      fontSize: AppFontSizes.size15,
+                                    style: AppTextStyles.reportTileTitle.copyWith(
                                       color: theme.colorScheme.onSurface,
                                       fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w400,
                                     ),
@@ -313,22 +294,17 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                                   const SizedBox(height: 2),
                                   Text(
                                     currency.code,
-                                    style: GoogleFonts.workSans(
-                                      fontSize: AppFontSizes.size12,
-                                      color: isDark ? Colors.grey.shade400 : const Color(0xFF6B7280),
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                    style: AppTextStyles.label.copyWith(color: isDark ? Colors.grey.shade400 : const Color(0xFF6B7280)),
                                   ),
                                 ],
                               ),
                             ),
                             Text(
                               currency.symbol,
-                              style: GoogleFonts.workSans(
-                                fontSize: AppFontSizes.size16,
-                                fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w500,
-                                color: isCurrent ? activeGreenColor : (isDark ? Colors.grey.shade400 : const Color(0xFF6B7280)),
-                              ),
+                            style: AppTextStyles.h3.copyWith(
+                              fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w500,
+                              color: isCurrent ? activeGreenColor : (isDark ? Colors.grey.shade400 : const Color(0xFF6B7280)),
+                            ),
                             ),
                             if (isCurrent) ...[
                               const SizedBox(width: 14),

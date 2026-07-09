@@ -4,9 +4,9 @@ import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class TransactionsStatsCards extends StatelessWidget {
   final bool isMasked;
@@ -53,15 +53,13 @@ class TransactionsStatsCards extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  context.translate('total_balance').toUpperCase(),
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size11,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white70,
-                    letterSpacing: 1.0,
+                  child: Text(
+                    context.translate('total_balance').toUpperCase(),
+                    style: AppTextStyles.reportStatLabel.copyWith(
+                      color: Colors.white70,
+                      letterSpacing: 1.0,
+                    ),
                   ),
-                ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(
@@ -74,7 +72,7 @@ class TransactionsStatsCards extends StatelessWidget {
                 ),
                 child: Text(
                   provider.selectedMonth.year.toString(),
-                  style: GoogleFonts.workSans(
+                  style: AppTextStyles.caption.copyWith(
                     fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -101,9 +99,7 @@ class TransactionsStatsCards extends StatelessWidget {
           PrivacyMaskedText(
             amount: netBalance,
             isMasked: isMasked,
-            style: GoogleFonts.workSans(
-              fontSize: AppFontSizes.size28,
-              fontWeight: FontWeight.bold,
+            style: AppTextStyles.reportLargeValue.copyWith(
               color: Colors.white,
               letterSpacing: -0.5,
             ),
@@ -139,8 +135,7 @@ class TransactionsStatsCards extends StatelessWidget {
                         children: [
                           Text(
                             context.translate('income'),
-                            style: GoogleFonts.workSans(
-                              fontSize: AppFontSizes.size11,
+                            style: AppTextStyles.caption.copyWith(
                               color: Colors.white70,
                               fontWeight: FontWeight.w500,
                             ),
@@ -149,8 +144,7 @@ class TransactionsStatsCards extends StatelessWidget {
                           PrivacyMaskedText(
                             amount: totalIncome,
                             isMasked: isMasked,
-                            style: GoogleFonts.workSans(
-                              fontSize: AppFontSizes.size13,
+                            style: AppTextStyles.bodySmall.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -191,8 +185,7 @@ class TransactionsStatsCards extends StatelessWidget {
                         children: [
                           Text(
                             context.translate('expense'),
-                            style: GoogleFonts.workSans(
-                              fontSize: AppFontSizes.size11,
+                            style: AppTextStyles.caption.copyWith(
                               color: Colors.white70,
                               fontWeight: FontWeight.w500,
                             ),
@@ -201,8 +194,7 @@ class TransactionsStatsCards extends StatelessWidget {
                           PrivacyMaskedText(
                             amount: totalExpense,
                             isMasked: isMasked,
-                            style: GoogleFonts.workSans(
-                              fontSize: AppFontSizes.size13,
+                            style: AppTextStyles.bodySmall.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),

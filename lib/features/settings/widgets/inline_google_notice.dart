@@ -1,6 +1,7 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class InlineGoogleNotice extends StatelessWidget {
@@ -29,21 +30,17 @@ class InlineGoogleNotice extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 'Google Sign-in Active',
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size14,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
-                ),
+              style: AppTextStyles.bodyBold.copyWith(color: theme.colorScheme.onSurface),
               ),
               const SizedBox(height: 6),
               Text(
                 'Your account password is managed securely by Google. You cannot change your Google account credentials inside this app.',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size12,
-                  color: theme.colorScheme.onSurfaceVariant,
-                  height: 1.4,
-                ),
+              style: AppTextStyles.label.copyWith(
+                fontWeight: FontWeight.w400,
+                color: theme.colorScheme.onSurfaceVariant,
+                height: 1.4,
+              ),
               ),
             ],
           ),

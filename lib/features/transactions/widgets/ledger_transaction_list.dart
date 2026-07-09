@@ -6,10 +6,9 @@ import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class LedgerTransactionList extends StatelessWidget {
   final bool isMasked;
@@ -93,9 +92,7 @@ class LedgerTransactionList extends StatelessWidget {
           padding: const EdgeInsets.only(top: 20.0, bottom: 8.0, left: 4.0),
           child: Text(
             dateHeader.toUpperCase(),
-            style: GoogleFonts.workSans(
-              fontSize: AppFontSizes.size11,
-              fontWeight: FontWeight.bold,
+            style: AppTextStyles.reportStatLabel.copyWith(
               color: Colors.grey.shade400,
               letterSpacing: 1.0,
             ),
@@ -120,16 +117,16 @@ class LedgerTransactionList extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(ctx, false),
-                      child: Text('Cancel',
-                        style: GoogleFonts.workSans(color: AppColors.textMuted),
-                      ),
+                    child: Text('Cancel',
+                      style: AppTextStyles.bodyBold.copyWith(color: AppColors.textMuted),
                     ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(ctx, true),
-                      child: Text('Delete',
-                        style: GoogleFonts.workSans(color: AppColors.activeRed),
-                      ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx, true),
+                    child: Text('Delete',
+                      style: AppTextStyles.bodyBold.copyWith(color: AppColors.activeRed),
                     ),
+                  ),
                   ],
                 ),
               ) ?? false;

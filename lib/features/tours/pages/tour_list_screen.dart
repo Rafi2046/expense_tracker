@@ -15,6 +15,7 @@ import 'package:expense_tracker/features/tours/widgets/tour_list_header.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_list_empty_state.dart';
 import 'package:expense_tracker/features/tours/widgets/join_tour_sheet.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class TourListScreen extends StatefulWidget {
   const TourListScreen({super.key});
@@ -33,26 +34,26 @@ class _TourListScreenState extends State<TourListScreen> {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16)),
         backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
-        title: const Text('Delete Tour',
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: AppFontSizes.size18)),
-        content: const Text(
+        title: Text('Delete Tour',
+            style: AppTextStyles.h2),
+        content: Text(
           'This action cannot be undone.',
-          style: TextStyle(fontSize: AppFontSizes.size14, color: Color(0xFF6B7280)),
+          style: AppTextStyles.profileSubtitle.copyWith(color: const Color(0xFF6B7280)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel',
-                style: TextStyle(color: Color(0xFF6B7280))),
+            child: Text('Cancel',
+                style: AppTextStyles.label.copyWith(color: const Color(0xFF6B7280))),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               context.read<TourProvider>().deleteTour(tour.id);
             },
-            child: const Text('Delete',
-                style: TextStyle(
-                    color: Color(0xFFDC2626), fontWeight: FontWeight.w600)),
+            child: Text('Delete',
+                style: AppTextStyles.label.copyWith(
+                    color: const Color(0xFFDC2626), fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -206,11 +207,7 @@ class _TourListScreenState extends State<TourListScreen> {
                 ),
                 title: Text(
                   'Create a New Tour',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: AppFontSizes.size16,
-                    color: theme.colorScheme.onSurface,
-                  ),
+                  style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
                 ),
                 onTap: () {
                   Navigator.pop(ctx);
@@ -230,11 +227,7 @@ class _TourListScreenState extends State<TourListScreen> {
                 ),
                 title: Text(
                   'Join with Invite Code',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: AppFontSizes.size16,
-                    color: theme.colorScheme.onSurface,
-                  ),
+                  style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
                 ),
                 onTap: () {
                   Navigator.pop(ctx);
@@ -265,7 +258,7 @@ class _TourListScreenState extends State<TourListScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
           'All Tours (${names.length})',
-          style: TextStyle(color: theme.colorScheme.onSurface),
+          style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -273,14 +266,14 @@ class _TourListScreenState extends State<TourListScreen> {
           children: names.map((n) => Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Text(n,
-                style: TextStyle(color: theme.colorScheme.onSurface)),
+                style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface)),
           )).toList(),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child:
-                const Text('Close', style: TextStyle(color: AppColors.activeGreen)),
+                Text('Close', style: AppTextStyles.viewAllText),
           ),
         ],
       ),

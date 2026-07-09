@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class TourStatsRow extends StatelessWidget {
   final int totalTours;
@@ -97,14 +98,12 @@ class _StatCard extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               alignment: Alignment.centerLeft,
-              child: Text(
-                label,
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size14,
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                child: Text(
+                  label,
+                  style: AppTextStyles.bodyBold.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                  ),
                 ),
-              ),
             ),
           ),
         ],

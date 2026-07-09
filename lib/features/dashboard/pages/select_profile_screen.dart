@@ -6,10 +6,9 @@ import 'package:expense_tracker/features/dashboard/widgets/profile_type_card.dar
 import 'package:expense_tracker/features/dashboard/widgets/coming_soon_sheet.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/dashboard/pages/create_profile_name_screen.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class SelectProfileScreen extends StatelessWidget {
   const SelectProfileScreen({super.key});
@@ -39,19 +38,12 @@ class SelectProfileScreen extends StatelessWidget {
             children: [
               Text(
                 'Select Your Profile',
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size20,
-                  fontWeight: FontWeight.w800,
-                  color: theme.textTheme.titleLarge?.color,
-                ),
+                style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w800, color: theme.textTheme.titleLarge?.color),
               ),
               const SizedBox(height: 4),
               Text(
                 'What will you use the app mostly for?',
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size13,
-                  color: theme.textTheme.bodySmall?.color,
-                ),
+                style: AppTextStyles.bodySmall.copyWith(color: theme.textTheme.bodySmall?.color),
               ),
               const SizedBox(height: 20),
 

@@ -1,8 +1,7 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class ReportTile extends StatelessWidget {
   final ReportItem item;
@@ -45,19 +44,15 @@ class ReportTile extends StatelessWidget {
                 children: [
                   Text(
                     item.title,
-                    style: GoogleFonts.workSans(
-                      fontSize: AppFontSizes.size14,
-                      fontWeight: FontWeight.w600,
+                    style: AppTextStyles.bodyBold.copyWith(
                       color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     item.subtitle,
-                    style: GoogleFonts.workSans(
-                      fontSize: AppFontSizes.size11,
+                    style: AppTextStyles.caption.copyWith(
                       color: isDark ? Colors.white60 : Colors.grey.shade500,
-                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ],

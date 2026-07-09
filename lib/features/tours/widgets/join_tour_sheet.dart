@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class JoinTourSheet extends StatefulWidget {
   const JoinTourSheet({super.key});
@@ -83,18 +84,14 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
               const SizedBox(height: 20),
               Text(
                 'Join a Tour',
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size18,
-                  fontWeight: FontWeight.w700,
+                style: AppTextStyles.h2.copyWith(
                   color: theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 6),
               Text(
                 'Enter the code shared by your tour host',
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size13,
-                  fontWeight: FontWeight.w400,
+                style: AppTextStyles.bodySmall.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
               ),
@@ -182,9 +179,9 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
                         )
                       : Text(
                           'Join Tour',
-                          style: GoogleFonts.workSans(
-                            fontSize: AppFontSizes.size15,
+                          style: AppTextStyles.reportTileTitle.copyWith(
                             fontWeight: FontWeight.w700,
+                            color: Colors.white,
                           ),
                         ),
                 ),

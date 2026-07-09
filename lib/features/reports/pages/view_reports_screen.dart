@@ -8,8 +8,8 @@ import 'package:expense_tracker/features/reports/pages/parties_report_screen.dar
 import 'package:expense_tracker/features/reports/pages/party_statement_screen.dart';
 import 'package:expense_tracker/features/reports/widgets/report_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class ViewReportsScreen extends StatelessWidget {
   const ViewReportsScreen({super.key});
@@ -27,9 +27,7 @@ class ViewReportsScreen extends StatelessWidget {
         leading: BackButton(color: theme.appBarTheme.iconTheme?.color),
         title: Text(
           'Reports',
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size18,
-            fontWeight: FontWeight.w700,
+          style: AppTextStyles.h2.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
             letterSpacing: -0.3,
           ),
@@ -65,17 +63,14 @@ class ViewReportsScreen extends StatelessWidget {
                       children: [
                         Text(
                           'Financial Reports',
-                          style: GoogleFonts.workSans(
-                            fontSize: AppFontSizes.size15,
-                            fontWeight: FontWeight.w700,
+                          style: AppTextStyles.reportTransactionTitle.copyWith(
                             color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Track, analyze & export your data',
-                          style: GoogleFonts.workSans(
-                            fontSize: AppFontSizes.size11,
+                          style: AppTextStyles.caption.copyWith(
                             color: Colors.white70,
                           ),
                         ),
@@ -156,9 +151,9 @@ class ViewReportsScreen extends StatelessWidget {
       padding: const EdgeInsets.only(left: 2.0),
       child: Text(
         label,
-        style: GoogleFonts.workSans(
+        style: AppTextStyles.caption.copyWith(
           fontSize: AppFontSizes.size10,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.bold,
           color: Theme.of(context).brightness == Brightness.dark ? Colors.white38 : Colors.grey.shade500,
           letterSpacing: 1.2,
         ),

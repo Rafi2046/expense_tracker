@@ -1,6 +1,5 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
@@ -11,7 +10,7 @@ import 'package:expense_tracker/features/dashboard/widgets/account_balance_heade
 import 'package:expense_tracker/features/dashboard/widgets/account_date_selector.dart';
 import 'package:expense_tracker/features/dashboard/widgets/account_search_bar.dart';
 import 'package:expense_tracker/features/dashboard/widgets/adjust_balance_actions.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+
 
 class AccountDetailsScreen extends StatefulWidget {
   final String accountType; // 'Cash' or 'Bank'
@@ -172,8 +171,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         ),
         title: Text(
           widget.accountType == 'Cash' ? 'Cash' : 'Bank Account',
-          style: AppTextStyles.reportAppBarTitle.copyWith(
-            fontSize: AppFontSizes.size16,
+          style: AppTextStyles.h3.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
           ),
         ),
@@ -232,10 +230,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                     ? Center(
                         child: Text(
                           'No transactions found',
-                          style: GoogleFonts.workSans(
-                            color: theme.colorScheme.onSurfaceVariant,
-                            fontSize: AppFontSizes.size13,
-                          ),
+                          style: AppTextStyles.bodySmall.copyWith(color: theme.colorScheme.onSurfaceVariant),
                         ),
                       )
                     : ListView.builder(
@@ -263,11 +258,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                   ),
                   child: Text(
                     'Adjust Balance',
-                    style: GoogleFonts.workSans(
-                      fontSize: AppFontSizes.size14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                    style: AppTextStyles.bodyBold.copyWith(color: Colors.white),
                   ),
                 ),
               ),

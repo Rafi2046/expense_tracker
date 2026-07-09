@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AccountCard extends StatelessWidget {
@@ -66,19 +67,12 @@ class AccountCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size14,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onSurface,
-                      ),
+                      style: AppTextStyles.bodyBold.copyWith(color: theme.colorScheme.onSurface),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size11,
-                        color: AppColors.textMuted,
-                      ),
+                      style: AppTextStyles.label.copyWith(fontSize: AppFontSizes.size11),
                     ),
                   ],
                 ),

@@ -8,10 +8,9 @@ import 'package:expense_tracker/features/analytics/widgets/top_spending_categori
 import 'package:expense_tracker/features/analytics/widgets/top_spending_category_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -161,8 +160,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         scrolledUnderElevation: 0,
         title: Text(
           context.translate('analytics'),
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size18,
+          style: AppTextStyles.h2.copyWith(
             fontWeight: FontWeight.w700,
             color: onSurface,
             letterSpacing: -0.3,
@@ -202,11 +200,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     totalAmount: PrivacyMaskedText(
                       amount: totalExpense,
                       isMasked: _localMasked,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size14,
-                        fontWeight: FontWeight.w700,
-                        color: onSurface,
-                      ),
+                      style: AppTextStyles.bodyBold.copyWith(color: onSurface),
                     ),
                     items: spendingItems,
                   ),

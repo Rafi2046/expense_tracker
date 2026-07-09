@@ -2,6 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
@@ -23,11 +24,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
         ),
         title: Text(
           context.translate('privacy_policy'),
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size20,
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
+          style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
@@ -68,22 +65,17 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 Center(
                   child: Text(
                     'Privacy Summary',
-                    style: GoogleFonts.workSans(
-                      fontSize: AppFontSizes.size22,
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSurface,
-                    ),
+                  style: AppTextStyles.profileTitle.copyWith(color: theme.colorScheme.onSurface),
                   ),
                 ),
                 const SizedBox(height: 6),
                 Center(
                   child: Text(
                     'How we handle your data',
-                    style: GoogleFonts.workSans(
-                      fontSize: AppFontSizes.size14,
-                      fontWeight: FontWeight.w400,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
+                  style: AppTextStyles.body.copyWith(
+                    fontFamily: GoogleFonts.workSans().fontFamily,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                   ),
                 ),
                 const SizedBox(height: 28),
@@ -128,10 +120,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 icon: const Icon(Symbols.description_rounded, size: 18),
                 label: Text(
                   'Read Full Legal Policy',
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size14,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTextStyles.bodyBold,
                 ),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: const Color(0xFF6A53A1),
@@ -197,18 +186,12 @@ class _PrivacyTile extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size15,
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface,
-                  ),
+                style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size13,
-                    fontWeight: FontWeight.w400,
+                  style: AppTextStyles.bodySmall.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                     height: 1.45,
                   ),

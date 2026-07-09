@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/app_lock_provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class LockScreenOverlay extends StatefulWidget {
@@ -113,8 +114,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
             const SizedBox(height: 32),
             Text(
               'App Locked',
-              style: TextStyle(
-                fontSize: AppFontSizes.size22,
+              style: AppTextStyles.profileTitle.copyWith(
                 fontWeight: FontWeight.w700,
                 color: theme.colorScheme.onSurface,
                 letterSpacing: 0.3,
@@ -123,8 +123,8 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
             const SizedBox(height: 8),
             Text(
               'Authenticate to access your data',
-              style: TextStyle(
-                fontSize: AppFontSizes.size14,
+              style: AppTextStyles.body.copyWith(
+                fontFamily: 'WorkSans',
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
             ),
@@ -134,10 +134,8 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
                 padding: const EdgeInsets.only(bottom: 20),
                 child: Text(
                   _errorMessage,
-                  style: const TextStyle(
-                    color: Color(0xFFE53935),
-                    fontSize: AppFontSizes.size14,
-                    fontWeight: FontWeight.w500,
+                  style: AppTextStyles.bodyBold.copyWith(
+                    color: const Color(0xFFE53935),
                   ),
                 ),
               ),
@@ -153,9 +151,8 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
                 alignment: Alignment.center,
                 child: Text(
                   'Tap to Unlock',
-                  style: TextStyle(
+                  style: AppTextStyles.reportTileTitle.copyWith(
                     color: theme.colorScheme.onPrimary,
-                    fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

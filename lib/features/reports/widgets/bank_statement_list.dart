@@ -46,7 +46,7 @@ class BankStatementList extends StatelessWidget {
       children: [
         Text(
           'Transaction Lists',
-          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: AppFontSizes.size15, color: theme.colorScheme.onSurface),
+          style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
         ),
         const SizedBox(height: 10),
         ListView.separated(

@@ -2,6 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class HelpCenterScreen extends StatelessWidget {
@@ -42,11 +43,7 @@ class HelpCenterScreen extends StatelessWidget {
         ),
         title: Text(
           context.translate('help_center'),
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size20,
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
+          style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
@@ -100,18 +97,13 @@ class HelpCenterScreen extends StatelessWidget {
                       ),
                       title: Text(
                         faq.question,
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size15,
-                          fontWeight: FontWeight.w600,
-                          color: theme.colorScheme.onSurface,
-                        ),
+                        style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
                       ),
                       children: [
                         Text(
                           faq.answer,
-                          style: GoogleFonts.workSans(
-                            fontSize: AppFontSizes.size14,
-                            fontWeight: FontWeight.w400,
+                          style: AppTextStyles.body.copyWith(
+                            fontFamily: GoogleFonts.workSans().fontFamily,
                             color: theme.colorScheme.onSurfaceVariant,
                             height: 1.5,
                           ),
@@ -143,10 +135,7 @@ class HelpCenterScreen extends StatelessWidget {
                 icon: const Icon(Symbols.mail_rounded, size: 18),
                 label: Text(
                   'Contact Support',
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size15,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTextStyles.reportTileTitle.copyWith(fontWeight: FontWeight.w600),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6A53A1),

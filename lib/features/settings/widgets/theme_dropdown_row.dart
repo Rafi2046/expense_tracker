@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class ThemeDropdownRow extends StatefulWidget {
@@ -75,8 +76,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
                 Expanded(
                   child: Text(
                     context.translate('Change Theme'),
-                    style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size12,
+                    style: AppTextStyles.label.copyWith(
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                     ),
@@ -87,8 +87,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
                 if (!_isExpanded) ...[
                   Text(
                     currentThemeLabel,
-                    style: GoogleFonts.workSans(
-                      fontSize: AppFontSizes.size11,
+                    style: AppTextStyles.caption.copyWith(
                       color: isDark
                           ? theme.colorScheme.onSurface.withValues(alpha: 0.6)
                           : const Color(0xFF888888),
@@ -166,8 +165,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
             Expanded(
               child: Text(
                 label,
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size12,
+                style: AppTextStyles.label.copyWith(
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   color: theme.colorScheme.onSurface,
                 ),

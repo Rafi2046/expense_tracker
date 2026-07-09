@@ -7,11 +7,11 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
@@ -64,7 +64,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           child: Text(
             label,
             textAlign: TextAlign.center,
-            style: GoogleFonts.workSans(
+            style: AppTextStyles.bodyBold.copyWith(
               fontSize: AppFontSizes.size13,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
               color: isSelected ? Colors.white : (isDark ? Colors.white60 : const Color(0xFF6B7280)),
@@ -146,21 +146,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             ? TextField(
                 controller: _searchController,
                 autofocus: true,
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size16,
+                style: AppTextStyles.h3.copyWith(
                   color: onSurface,
                 ),
                 decoration: InputDecoration(
                   hintText: context.translate('search_hint'),
-                  hintStyle: GoogleFonts.workSans(color: isDark ? Colors.white38 : Colors.grey.shade400),
+                  hintStyle: AppTextStyles.bodyBold.copyWith(fontWeight: FontWeight.w400, color: isDark ? Colors.white38 : Colors.grey.shade400),
                   border: InputBorder.none,
                 ),
                 onChanged: (val) => provider.updateSearchQuery(val),
               )
             : Text(
                 context.translate('transactions'),
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size20,
+                style: AppTextStyles.h2.copyWith(
                   fontWeight: FontWeight.bold,
                   color: onSurface,
                 ),
@@ -297,17 +295,14 @@ class _AddOptionTile extends StatelessWidget {
                   children: [
                     Text(
                       label,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size15,
-                        fontWeight: FontWeight.w600,
+                      style: AppTextStyles.reportTileTitle.copyWith(
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size12,
+                      style: AppTextStyles.reportTransactionSubtitle.copyWith(
                         color: Colors.grey.shade500,
                       ),
                     ),

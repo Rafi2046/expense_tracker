@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/app_lock_provider.dart';
 import 'package:expense_tracker/core/widgets/lock_screen_overlay.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AppLockManager extends StatefulWidget {
@@ -91,11 +92,8 @@ class _AppLockManagerState extends State<AppLockManager> with WidgetsBindingObse
                       const SizedBox(height: 16),
                       Text(
                         'App Locked',
-                        style: TextStyle(
+                        style: AppTextStyles.h2.copyWith(
                           color: Colors.white,
-                          fontSize: AppFontSizes.size18,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
                         ),
                       ),
                     ],

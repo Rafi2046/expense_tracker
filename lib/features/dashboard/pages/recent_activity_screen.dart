@@ -3,10 +3,10 @@ import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/recent_activity_date_header.dart';
 import 'package:expense_tracker/features/dashboard/widgets/recent_activity_item_card.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class RecentActivityScreen extends StatelessWidget {
   const RecentActivityScreen({super.key});
@@ -22,7 +22,7 @@ class RecentActivityScreen extends StatelessWidget {
         backgroundColor: t.appBarTheme.backgroundColor,
         elevation: 0, scrolledUnderElevation: 0,
         leading: BackButton(color: t.appBarTheme.iconTheme?.color),
-        title: Text('Recent Activity', style: TextStyle(fontSize: AppFontSizes.size16, fontWeight: FontWeight.w700, color: t.colorScheme.onSurface)),
+        title: Text('Recent Activity', style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700, color: t.colorScheme.onSurface)),
         centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
@@ -30,7 +30,7 @@ class RecentActivityScreen extends StatelessWidget {
         ),
       ),
       body: groups.isEmpty
-          ? Center(child: Text(context.translate('no_transactions'), style: TextStyle(fontSize: AppFontSizes.size14, color: Colors.grey.shade400)))
+          ? Center(child: Text(context.translate('no_transactions'), style: AppTextStyles.body.copyWith(color: Colors.grey.shade400)))
           : ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               itemCount: groups.length,

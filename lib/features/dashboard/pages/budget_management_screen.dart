@@ -37,7 +37,9 @@ class BudgetManagementScreen extends StatelessWidget {
         leading: const BackButton(),
         title: Text(
           'Budget Management',
-          style: AppTextStyles.reportAppBarTitle,
+          style: AppTextStyles.reportAppBarTitle.copyWith(
+            color: theme.colorScheme.onSurface,
+          ),
         ),
       ),
       body: SingleChildScrollView(

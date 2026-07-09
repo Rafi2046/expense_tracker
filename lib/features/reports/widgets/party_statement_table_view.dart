@@ -158,10 +158,8 @@ class PartyStatementTableView extends StatelessWidget {
                   children: [
                     Text(
                       'Transactions',
-                      style: AppTextStyles.reportStatLabel.copyWith(
-                        color: theme.colorScheme.onSurface,
-                        fontSize: AppFontSizes.size11,
-                        fontWeight: FontWeight.bold,
+                    style: AppTextStyles.reportStatLabel.copyWith(
+                      color: theme.colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -184,8 +182,6 @@ class PartyStatementTableView extends StatelessWidget {
                       'Debit',
                       style: AppTextStyles.reportStatLabel.copyWith(
                         color: AppColors.activeGreen,
-                        fontSize: AppFontSizes.size11,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -210,8 +206,6 @@ class PartyStatementTableView extends StatelessWidget {
                       'Credit',
                       style: AppTextStyles.reportStatLabel.copyWith(
                         color: AppColors.activeRed,
-                        fontSize: AppFontSizes.size11,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 4),

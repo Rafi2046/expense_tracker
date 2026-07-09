@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class NewTourCTA extends StatelessWidget {
   final VoidCallback onTap;
@@ -61,11 +62,10 @@ class NewTourCTA extends StatelessWidget {
               const SizedBox(width: 12),
               Text(
                 'Create New Tour',
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size15,
-                  fontWeight: FontWeight.w700, // Bolder text
+                style: AppTextStyles.reportTileTitle.copyWith(
+                  fontWeight: FontWeight.w700,
                   letterSpacing: 0.3,
-                  color: theme.colorScheme.onSurface, // Solid text color, not faded
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
             ],

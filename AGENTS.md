@@ -23,6 +23,7 @@ Build premium Tour/Group Bill Splitting feature and complete all account/profile
 - **SelectCategorySheet bottom padding fixed** (`select_category_sheet.dart:251-256`): Changed `EdgeInsets.only(bottom: viewInsets)` to include `bottomInset` — "Add New Category" button no longer hidden behind bottom nav.
 - **Profile switcher bug fixed**: The `ProfileSwitchSheet` had a subtle state issue. Added debug prints to diagnose, and the issue resolved after investigation. (User confirmed working.)
 - **Typography unified**: Created `AppFontSizes` with a clean scale (6–40), rewrote `AppTextStyles` (removed fractional sizes, aligned to scale), replaced 620+ hardcoded inline `fontSize:` values across 182 files with `AppFontSizes.*` constants. Zero analyzer errors.
+- **Inline TextStyles → AppTextStyles migration complete**: Replaced all remaining inline `TextStyle(…)` / `GoogleFonts.*(…)` using `AppFontSizes.*` with equivalent `AppTextStyles.*` semantic styles across 9 directories (settings, analytics, notes, calculators, login, onboarding, bottom_navigation, core/widgets, core/theme). 48 files processed. Zero remaining `AppFontSizes.size` references in inline TextStyles within these directories.
 
 ## In Progress
 - (none)

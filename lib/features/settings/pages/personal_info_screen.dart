@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PersonalInfoScreen extends StatefulWidget {
@@ -232,11 +233,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         ),
         title: Text(
           _isEditing ? 'Edit Profile' : 'Profile Details',
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size20,
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
+          style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
         ),
         actions: [
           if (!_isEditing)
@@ -245,10 +242,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               icon: Icon(Symbols.edit_rounded, size: 16, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1)),
               label: Text(
                 'Edit',
-                style: GoogleFonts.workSans(
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1),
-                ),
+              style: AppTextStyles.bodyBold.copyWith(
+                color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1),
+              ),
               ),
             )
         ],

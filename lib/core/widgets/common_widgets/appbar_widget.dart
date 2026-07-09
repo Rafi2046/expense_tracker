@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class HomepageAppbarWidget extends StatelessWidget
@@ -66,12 +67,7 @@ class HomepageAppbarWidget extends StatelessWidget
                       child: _resolveImage(photoUrl) == null
                           ? Text(
                               initials,
-                              style: TextStyle(
-                                color: theme.colorScheme.onSurface,
-                                fontWeight: FontWeight.bold,
-                                fontSize: AppFontSizes.size14,
-                                fontFamily: GoogleFonts.workSans().fontFamily,
-                              ),
+                              style: AppTextStyles.bodyBold.copyWith(color: theme.colorScheme.onSurface),
                             )
                           : null,
                     ),
@@ -81,12 +77,7 @@ class HomepageAppbarWidget extends StatelessWidget
                         displayName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: theme.colorScheme.onSurface,
-                          fontWeight: FontWeight.w600,
-                          fontSize: AppFontSizes.size16,
-                          fontFamily: GoogleFonts.workSans().fontFamily,
-                        ),
+                        style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
                       ),
                     ),
                     const SizedBox(width: 4),

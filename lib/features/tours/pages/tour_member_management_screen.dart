@@ -72,10 +72,8 @@ class _TourMemberManagementScreenState
               onPressed: () => Navigator.pop(context),
               child: Text(
                 'Done',
-                style: TextStyle(
+                style: AppTextStyles.h3.copyWith(
                   color: AppColors.activeGreen,
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppFontSizes.size16,
                 ),
               ),
             ),

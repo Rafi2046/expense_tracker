@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class InviteCodeCard extends StatelessWidget {
   final String inviteCode;
@@ -62,8 +63,7 @@ class InviteCodeCard extends StatelessWidget {
               children: [
                 Text(
                   'Invite Code',
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size11,
+                  style: AppTextStyles.caption.copyWith(
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                   ),

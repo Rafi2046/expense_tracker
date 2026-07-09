@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class DeleteAccountDialog extends StatefulWidget {
   const DeleteAccountDialog({super.key});
@@ -176,21 +177,17 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
 
               Text(
                 'Delete Account',
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size22,
-                  fontWeight: FontWeight.w800,
-                  color: theme.colorScheme.onSurface,
-                ),
+                style: AppTextStyles.h1.copyWith(fontSize: AppFontSizes.size22, fontWeight: FontWeight.w800, color: theme.colorScheme.onSurface),
               ),
               const SizedBox(height: 12),
 
               if (!_reauthMode) ...[
                 Text(
-                  'Are you absolutely sure? This action cannot be undone.\n'
+'Are you absolutely sure? This action cannot be undone.\n'
                   'It will permanently delete your account,\n'
                   'cloud backups, and all local data.',
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.workSans(
+                  style: AppTextStyles.bodySmall.copyWith(
                     fontSize: AppFontSizes.size14,
                     color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                     height: 1.5,
@@ -200,12 +197,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
 
                 Text(
                   'Type DELETE to confirm',
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size12,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.activeRed,
-                    letterSpacing: 0.5,
-                  ),
+                  style: AppTextStyles.label.copyWith(color: AppColors.activeRed, fontWeight: FontWeight.w700, letterSpacing: 0.5),
                 ),
                 const SizedBox(height: 8),
 
@@ -268,8 +260,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                     onTap: () => Navigator.pop(context),
                     child: Text(
                       'Cancel',
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size13,
+                      style: AppTextStyles.bodySmall.copyWith(
                         fontWeight: FontWeight.w600,
                         color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                         decoration: TextDecoration.underline,
@@ -280,15 +271,15 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
               ],
 
               if (_reauthMode) ...[
-                Text(
+Text(
                   'Please verify your identity\nto delete your account.',
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.workSans(
+                  style: AppTextStyles.bodySmall.copyWith(
                     fontSize: AppFontSizes.size14,
                     color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                     height: 1.5,
                   ),
-                ),
+                  ),
                 const SizedBox(height: 20),
 
                 if (_isPasswordUser) ...[
@@ -297,16 +288,10 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                     obscureText: true,
                     textAlign: TextAlign.center,
                     autofocus: true,
-                    style: GoogleFonts.workSans(
-                      fontSize: AppFontSizes.size15,
-                      color: theme.colorScheme.onSurface,
-                    ),
+                    style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface),
                     decoration: InputDecoration(
                       hintText: 'Enter your password',
-                      hintStyle: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size15,
-                        color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
-                      ),
+                      hintStyle: AppTextStyles.body.copyWith(color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(color: borderColor),
@@ -344,8 +329,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                       onTap: () => Navigator.pop(context),
                       child: Text(
                         'Cancel',
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size13,
+                        style: AppTextStyles.bodySmall.copyWith(
                           fontWeight: FontWeight.w600,
                           color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                           decoration: TextDecoration.underline,
@@ -376,8 +360,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                       onTap: () => Navigator.pop(context),
                       child: Text(
                         'Cancel',
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size13,
+                        style: AppTextStyles.bodySmall.copyWith(
                           fontWeight: FontWeight.w600,
                           color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                           decoration: TextDecoration.underline,

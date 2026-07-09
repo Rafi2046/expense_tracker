@@ -7,6 +7,7 @@ import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_scre
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class SyncLoadingOverlay extends StatefulWidget {
@@ -109,8 +110,7 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
                 const SizedBox(height: 24),
                 Text(
                   _hasError ? 'Sync Failed' : 'Restoring Your Data',
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size20,
+                  style: AppTextStyles.h1.copyWith(
                     fontWeight: FontWeight.w700,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -121,8 +121,8 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
                       ? _errorMessage ?? 'An unexpected error occurred.'
                       : _statusText,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size14,
+                  style: AppTextStyles.body.copyWith(
+                    fontFamily: GoogleFonts.workSans().fontFamily,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),

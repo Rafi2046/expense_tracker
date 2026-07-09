@@ -37,21 +37,21 @@ class _NotebookScreenState extends State<NotebookScreen> {
         ),
         content: Text(
           'Are you sure you want to delete this note permanently?',
-          style: TextStyle(fontSize: AppFontSizes.size14, color: theme.colorScheme.onSurface),
+          style: AppTextStyles.body.copyWith(fontFamily: GoogleFonts.workSans().fontFamily, color: theme.colorScheme.onSurface),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text(
               'Cancel',
-              style: TextStyle(color: Colors.grey.shade600),
+              style: AppTextStyles.body.copyWith(fontFamily: GoogleFonts.workSans().fontFamily, color: Colors.grey.shade600),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text(
+            child: Text(
               'Delete',
-              style: TextStyle(color: Colors.red),
+              style: AppTextStyles.body.copyWith(fontFamily: GoogleFonts.workSans().fontFamily, color: Colors.red),
             ),
           ),
         ],
@@ -91,11 +91,9 @@ class _NotebookScreenState extends State<NotebookScreen> {
       ),
       child: Text(
         category,
-        style: TextStyle(
-          fontSize: AppFontSizes.size11,
+        style: AppTextStyles.caption.copyWith(
           fontWeight: FontWeight.w600,
           color: fg,
-          fontFamily: GoogleFonts.workSans().fontFamily,
         ),
       ),
     );
@@ -154,14 +152,14 @@ class _NotebookScreenState extends State<NotebookScreen> {
                   _searchQuery = val;
                 });
               },
-              style: TextStyle(
+              style: AppTextStyles.body.copyWith(
                 fontSize: AppFontSizes.size15,
                 color: theme.colorScheme.onSurface,
                 fontFamily: GoogleFonts.workSans().fontFamily,
               ),
               decoration: InputDecoration(
                 hintText: 'Search notes...',
-                hintStyle: TextStyle(
+                hintStyle: AppTextStyles.body.copyWith(
                   color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                   fontSize: AppFontSizes.size15,
                   fontFamily: GoogleFonts.workSans().fontFamily,
@@ -208,11 +206,8 @@ class _NotebookScreenState extends State<NotebookScreen> {
                               const SizedBox(height: 16),
                               Text(
                                 _searchQuery.isEmpty ? 'No notes yet' : 'No matching notes found',
-                                style: TextStyle(
-                                  fontSize: AppFontSizes.size16,
-                                  fontWeight: FontWeight.w600,
+                                style: AppTextStyles.h3.copyWith(
                                   color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                                  fontFamily: GoogleFonts.workSans().fontFamily,
                                 ),
                               ),
                               const SizedBox(height: 6),
@@ -221,10 +216,8 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                     ? 'Tap the "+" button to add your business plans or general notes.'
                                     : 'Try searching for different keywords.',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: AppFontSizes.size13,
+                                style: AppTextStyles.bodySmall.copyWith(
                                   color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
-                                  fontFamily: GoogleFonts.workSans().fontFamily,
                                 ),
                               ),
                             ],
@@ -253,11 +246,8 @@ class _NotebookScreenState extends State<NotebookScreen> {
                             children: [
                               Text(
                                 'Swipe to delete',
-                                style: TextStyle(
-                                  color: isDark ? Colors.red.shade400 : const Color(0xFFB91C1C), // Tailwind red-700
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: AppFontSizes.size14,
-                                  fontFamily: GoogleFonts.workSans().fontFamily,
+                                style: AppTextStyles.bodyBold.copyWith(
+                                  color: isDark ? Colors.red.shade400 : const Color(0xFFB91C1C),
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -325,11 +315,9 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                       Expanded(
                                         child: Text(
                                           note.title,
-                                          style: TextStyle(
-                                            fontSize: AppFontSizes.size16,
+                                          style: AppTextStyles.h3.copyWith(
                                             fontWeight: FontWeight.bold,
                                             color: theme.colorScheme.onSurface,
-                                            fontFamily: GoogleFonts.workSans().fontFamily,
                                           ),
                                         ),
                                       ),
@@ -372,11 +360,9 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                     note.content,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: AppFontSizes.size14,
+                                    style: AppTextStyles.body.copyWith(
                                       height: 1.4,
                                       color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                                      fontFamily: GoogleFonts.inter().fontFamily,
                                     ),
                                   ),
                                   const SizedBox(height: 16),
@@ -387,10 +373,9 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                     children: [
                                       Text(
                                         _formatDate(note.createdAt),
-                                        style: TextStyle(
-                                          fontSize: AppFontSizes.size12,
+                                        style: AppTextStyles.label.copyWith(
+                                          fontWeight: FontWeight.w400,
                                           color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
-                                          fontFamily: GoogleFonts.workSans().fontFamily,
                                         ),
                                       ),
                                       _buildCategoryBadge(context, note.category),

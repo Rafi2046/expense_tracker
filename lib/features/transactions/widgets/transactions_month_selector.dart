@@ -3,9 +3,9 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransactionsMonthSelector extends StatefulWidget {
@@ -103,8 +103,7 @@ class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
                       Expanded(
                         child: Text(
                           title,
-                          style: GoogleFonts.workSans(
-                            fontSize: AppFontSizes.size14,
+                          style: AppTextStyles.bodyBold.copyWith(
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                             color: isSelected ? accentColor : (isDarkItem ? Colors.white70 : Colors.black87),
                           ),
@@ -155,9 +154,7 @@ class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
                     children: [
                       Text(
                         context.translate('sort_transactions'),
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size16,
-                          fontWeight: FontWeight.bold,
+                        style: AppTextStyles.sectionHeaderTitle.copyWith(
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
@@ -271,8 +268,7 @@ class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
                       children: [
                         Text(
                           DateFormat('MMM', locale).format(month).toUpperCase(),
-                          style: GoogleFonts.workSans(
-                            fontSize: AppFontSizes.size12,
+                          style: AppTextStyles.label.copyWith(
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                             color: isSelected ? Colors.white : (isDarkSlider ? Colors.white70 : Colors.black87),
                             letterSpacing: 0.5,
@@ -281,7 +277,7 @@ class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
                         const SizedBox(height: 1),
                         Text(
                           DateFormat('yyyy', locale).format(month),
-                          style: GoogleFonts.workSans(
+                          style: AppTextStyles.caption.copyWith(
                             fontSize: AppFontSizes.size9,
                             fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
                             color: isSelected ? Colors.white70 : (isDarkSlider ? Colors.grey.shade400 : Colors.grey.shade500),

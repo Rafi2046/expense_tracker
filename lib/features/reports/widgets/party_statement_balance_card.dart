@@ -78,7 +78,6 @@ class PartyStatementBalanceCard extends StatelessWidget {
                   netBalance >= 0 ? 'RECEIVABLE' : 'PAYABLE',
                   style: AppTextStyles.reportStatLabel.copyWith(
                     color: netBalance >= 0 ? AppColors.activeGreen : AppColors.activeRed,
-                    fontSize: AppFontSizes.size11,
                   ),
                 ),
               ),

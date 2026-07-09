@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PersonalInfoView extends StatelessWidget {
@@ -62,24 +63,21 @@ class PersonalInfoView extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size11,
-                    fontWeight: FontWeight.w500,
-                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
-                  ),
+                style: AppTextStyles.caption.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
+                ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   value.isEmpty ? 'Not set' : value,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size15,
-                    fontWeight: FontWeight.w600,
-                    color: value.isEmpty 
-                        ? (isDark ? Colors.grey.shade600 : Colors.grey.shade400) 
-                        : Theme.of(context).colorScheme.onSurface,
-                  ),
+                style: AppTextStyles.reportTileTitle.copyWith(
+                  color: value.isEmpty 
+                      ? (isDark ? Colors.grey.shade600 : Colors.grey.shade400) 
+                      : Theme.of(context).colorScheme.onSurface,
+                ),
                 ),
               ],
             ),
@@ -154,22 +152,17 @@ class PersonalInfoView extends StatelessWidget {
               Text(
                 displayName,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size20,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
-                ),
+                style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
               ),
               if (occupation.isNotEmpty) ...[
                 const SizedBox(height: 4),
                 Text(
                   occupation,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size13,
-                    fontWeight: FontWeight.w600,
-                    color: primaryColor,
-                  ),
+                style: AppTextStyles.bodySmall.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: primaryColor,
+                ),
                 ),
               ],
             ],
@@ -180,8 +173,7 @@ class PersonalInfoView extends StatelessWidget {
         // Info List Section
         Text(
           'PERSONAL DETAILS',
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size11,
+          style: AppTextStyles.caption.copyWith(
             fontWeight: FontWeight.bold,
             color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
             letterSpacing: 1.2,

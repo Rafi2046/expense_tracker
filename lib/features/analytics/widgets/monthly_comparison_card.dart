@@ -2,8 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class MonthlyComparisonCard extends StatelessWidget {
   final double currentAmount;
@@ -64,11 +63,7 @@ class MonthlyComparisonCard extends StatelessWidget {
               const SizedBox(width: 10),
               Text(
                 'Monthly Comparison',
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size16,
-                  fontWeight: FontWeight.w700,
-                  color: onSurface,
-                ),
+                style: AppTextStyles.h2.copyWith(color: onSurface),
               ),
             ],
           ),
@@ -115,11 +110,10 @@ class MonthlyComparisonCard extends StatelessWidget {
               children: [
                 Text(
                   'Net Change',
-                  style: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size13,
-                    fontWeight: FontWeight.w600,
-                    color: changeColor,
-                  ),
+                style: AppTextStyles.bodySmall.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: changeColor,
+                ),
                 ),
                 Row(
                   children: [
@@ -131,8 +125,7 @@ class MonthlyComparisonCard extends StatelessWidget {
                     const SizedBox(width: 6),
                     Text(
                       netChangeText,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size14,
+                      style: AppTextStyles.bodyBold.copyWith(
                         fontWeight: FontWeight.w800,
                         color: changeColor,
                       ),
@@ -188,8 +181,7 @@ class _MonthCard extends StatelessWidget {
         children: [
           Text(
             label,
-            style: GoogleFonts.workSans(
-              fontSize: AppFontSizes.size11,
+            style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w500,
               color: Colors.grey.shade500,
             ),
@@ -201,8 +193,7 @@ class _MonthCard extends StatelessWidget {
             child: PrivacyMaskedText(
               amount: amount,
               isMasked: isMasked,
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size18,
+              style: AppTextStyles.h2.copyWith(
                 fontWeight: FontWeight.w800,
                 color: onSurface,
               ),

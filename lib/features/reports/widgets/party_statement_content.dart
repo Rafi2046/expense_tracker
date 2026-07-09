@@ -5,7 +5,6 @@ import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_card_view.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_table_view.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -133,9 +132,9 @@ class _DummyCardView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Total Receivables', style: GoogleFonts.workSans(fontSize: AppFontSizes.size12, fontWeight: FontWeight.w600)),
+              Text('Total Receivables', style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600)),
               const SizedBox(height: 6),
-              Text('৳ 5,300', style: GoogleFonts.workSans(fontSize: AppFontSizes.size24, fontWeight: FontWeight.bold)),
+              Text('৳ 5,300', style: AppTextStyles.displayMedium),
             ],
           ),
         ),
@@ -153,9 +152,9 @@ class _DummyCardView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Money In', style: GoogleFonts.workSans(fontSize: AppFontSizes.size11, fontWeight: FontWeight.w600)),
+                    Text('Money In', style: AppTextStyles.reportStatLabel.copyWith(fontWeight: FontWeight.w600)),
                     const SizedBox(height: 4),
-                    Text('৳ 0,000', style: GoogleFonts.workSans(fontSize: AppFontSizes.size14, fontWeight: FontWeight.bold)),
+                    Text('৳ 0,000', style: AppTextStyles.bodyBold),
                   ],
                 ),
               ),
@@ -172,9 +171,9 @@ class _DummyCardView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Money Out', style: GoogleFonts.workSans(fontSize: AppFontSizes.size11, fontWeight: FontWeight.w600)),
+                    Text('Money Out', style: AppTextStyles.reportStatLabel.copyWith(fontWeight: FontWeight.w600)),
                     const SizedBox(height: 4),
-                    Text('৳ 0,000', style: GoogleFonts.workSans(fontSize: AppFontSizes.size14, fontWeight: FontWeight.bold)),
+                    Text('৳ 0,000', style: AppTextStyles.bodyBold),
                   ],
                 ),
               ),
@@ -182,7 +181,7 @@ class _DummyCardView extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 28),
-        Text('Transactions', style: GoogleFonts.workSans(fontSize: AppFontSizes.size15, fontWeight: FontWeight.w700)),
+        Text('Transactions', style: AppTextStyles.reportTransactionTitle),
         const SizedBox(height: 14),
         ...entries.map((e) => Padding(
           padding: const EdgeInsets.only(bottom: 10),
@@ -215,16 +214,16 @@ class _DummyCardView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(e.description, maxLines: 1, overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.workSans(fontSize: AppFontSizes.size14, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface)),
+                        style: AppTextStyles.bodyBold.copyWith(color: theme.colorScheme.onSurface)),
                       const SizedBox(height: 5),
                       Text(DateFormat('dd MMM yyyy').format(e.dateTime),
-                        style: GoogleFonts.workSans(fontSize: AppFontSizes.size11, fontWeight: FontWeight.w400, color: isDark ? Colors.white38 : Colors.grey.shade500)),
+                        style: AppTextStyles.caption.copyWith(color: isDark ? Colors.white38 : Colors.grey.shade500)),
                     ],
                   ),
                 ),
                 Text(
                   '${e.isInflow ? '+' : '−'} ৳ ${e.amount.toStringAsFixed(0)}',
-                  style: GoogleFonts.workSans(fontSize: AppFontSizes.size15, fontWeight: FontWeight.w700,
+                  style: AppTextStyles.reportTransactionTitle.copyWith(
                     color: e.isInflow ? AppColors.activeGreen : AppColors.activeRed),
                 ),
               ],
@@ -259,9 +258,9 @@ class _DummyTableView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Net Balance', style: GoogleFonts.workSans(fontSize: AppFontSizes.size12, fontWeight: FontWeight.w600)),
+              Text('Net Balance', style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600)),
               const SizedBox(height: 6),
-              Text('৳ 5,300', style: GoogleFonts.workSans(fontSize: AppFontSizes.size24, fontWeight: FontWeight.bold)),
+              Text('৳ 5,300', style: AppTextStyles.displayMedium),
             ],
           ),
         ),
@@ -271,23 +270,23 @@ class _DummyTableView extends StatelessWidget {
             Expanded(flex: 2, child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Transactions', style: GoogleFonts.workSans(fontSize: AppFontSizes.size11, fontWeight: FontWeight.bold)),
+                Text('Transactions', style: AppTextStyles.reportStatLabel),
                 const SizedBox(height: 4),
-                Text('5 entries', style: GoogleFonts.workSans(fontSize: AppFontSizes.size11)),
+                Text('5 entries', style: AppTextStyles.caption),
               ],
             )),
             Expanded(flex: 1, child: Column(
               children: [
-                Text('Debit', style: GoogleFonts.workSans(fontSize: AppFontSizes.size11, fontWeight: FontWeight.bold, color: AppColors.activeGreen)),
+                Text('Debit', style: AppTextStyles.reportStatLabel.copyWith(color: AppColors.activeGreen)),
                 const SizedBox(height: 4),
-                Text('৳ 0,000', style: GoogleFonts.workSans(fontSize: AppFontSizes.size11, color: AppColors.activeGreen)),
+                Text('৳ 0,000', style: AppTextStyles.caption.copyWith(color: AppColors.activeGreen)),
               ],
             )),
             Expanded(flex: 1, child: Column(
               children: [
-                Text('Credit', style: GoogleFonts.workSans(fontSize: AppFontSizes.size11, fontWeight: FontWeight.bold, color: AppColors.activeRed)),
+                Text('Credit', style: AppTextStyles.reportStatLabel.copyWith(color: AppColors.activeRed)),
                 const SizedBox(height: 4),
-                Text('৳ 0,000', style: GoogleFonts.workSans(fontSize: AppFontSizes.size11, color: AppColors.activeRed)),
+                Text('৳ 0,000', style: AppTextStyles.caption.copyWith(color: AppColors.activeRed)),
               ],
             )),
           ],
@@ -308,9 +307,9 @@ class _DummyTableView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(e.description, style: GoogleFonts.workSans(fontSize: AppFontSizes.size13, fontWeight: FontWeight.w600)),
+                    Text(e.description, style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600)),
                     const SizedBox(height: 4),
-                    Text(DateFormat('dd MMM yyyy').format(e.dateTime), style: GoogleFonts.workSans(fontSize: AppFontSizes.size10)),
+                    Text(DateFormat('dd MMM yyyy').format(e.dateTime), style: AppTextStyles.caption.copyWith(fontSize: AppFontSizes.size10)),
                   ],
                 ),
               ),
@@ -325,7 +324,7 @@ class _DummyTableView extends StatelessWidget {
                           border: Border.all(color: const Color(0xFFD1F2E5)),
                         ),
                         child: Text('৳ ${e.amount.toStringAsFixed(0)}', textAlign: TextAlign.center,
-                          style: GoogleFonts.workSans(fontSize: AppFontSizes.size12, fontWeight: FontWeight.bold, color: AppColors.activeGreen)),
+                          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: AppFontSizes.size12, color: AppColors.activeGreen)),
                       )
                     : const SizedBox.shrink(),
               ),
@@ -340,7 +339,7 @@ class _DummyTableView extends StatelessWidget {
                           border: Border.all(color: const Color(0xFFFAD1D1)),
                         ),
                         child: Text('৳ ${e.amount.toStringAsFixed(0)}', textAlign: TextAlign.center,
-                          style: GoogleFonts.workSans(fontSize: AppFontSizes.size12, fontWeight: FontWeight.bold, color: AppColors.activeRed)),
+                          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: AppFontSizes.size12, color: AppColors.activeRed)),
                       )
                     : const SizedBox.shrink(),
               ),

@@ -15,6 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -40,8 +41,7 @@ class SettingsScreen extends StatelessWidget {
         scrolledUnderElevation: 0,
         title: Text(
           context.translate('settings'),
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size18,
+          style: AppTextStyles.h2.copyWith(
             fontWeight: FontWeight.w700,
             color: theme.colorScheme.onSurface,
             letterSpacing: -0.3,
@@ -153,8 +153,7 @@ class SettingsScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Delete Account',
-                            style: GoogleFonts.workSans(
-                              fontSize: AppFontSizes.size12,
+                            style: AppTextStyles.label.copyWith(
                               fontWeight: FontWeight.w600,
                               color: const Color(0xFFDC3545),
                             ),
@@ -163,7 +162,7 @@ class SettingsScreen extends StatelessWidget {
                             'Permanently remove your account and data',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.workSans(
+                            style: AppTextStyles.caption.copyWith(
                               fontSize: AppFontSizes.size9,
                               color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                             ),
@@ -218,8 +217,7 @@ class SettingsScreen extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         context.translate('logout'),
-                        style: GoogleFonts.workSans(
-                          fontSize: AppFontSizes.size12,
+                        style: AppTextStyles.label.copyWith(
                           fontWeight: FontWeight.w600,
                           color: const Color(0xFFE53935),
                         ),

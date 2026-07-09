@@ -6,6 +6,7 @@ import 'package:expense_tracker/features/tours/utils/tour_invoice_generator.dart
 import 'package:expense_tracker/features/tours/pages/tour_invoice_screen.dart';
 import 'package:expense_tracker/core/utils/debt_simplifier.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class TourExportOptionsSheet extends StatelessWidget {
   final String tourId;
@@ -62,8 +63,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                 ),
                 Text(
                   'Export Report',
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size20,
+                  style: AppTextStyles.h1.copyWith(
                     fontWeight: FontWeight.w700,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -71,8 +71,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   'Choose how to share your tour details',
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size13,
+                  style: AppTextStyles.bodySmall.copyWith(
                     color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
                   ),
                 ),
@@ -184,17 +183,14 @@ class _ExportOptionTile extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyle(
-                        fontSize: AppFontSizes.size15,
-                        fontWeight: FontWeight.w600,
+                      style: AppTextStyles.reportTileTitle.copyWith(
                         color: theme.colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style: TextStyle(
-                        fontSize: AppFontSizes.size12,
+                      style: AppTextStyles.label.copyWith(
                         color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
                       ),
                     ),
