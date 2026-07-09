@@ -46,7 +46,7 @@ class IncomeQuarterlySection extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (_) => IncomeTransactionListScreen(
-                  title: 'Quarterly Earnings ($quarterTitle)',
+                  title: 'Quarterly Earnings',
                   transactions: quarterlyTransactions,
                   isMasked: isMasked,
                 ),

@@ -71,6 +71,7 @@ class IncomeMonthlySection extends StatelessWidget {
                 child: Center(child: Text('No income transactions this month')),
               )
             : ListView.separated(
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: monthlyTransactions.length,

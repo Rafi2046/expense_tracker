@@ -88,6 +88,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
 
           // Items list
           ListView.separated(
+            padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,

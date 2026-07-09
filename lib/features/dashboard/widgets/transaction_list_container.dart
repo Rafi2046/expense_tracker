@@ -64,6 +64,7 @@ class TransactionListContainer extends StatelessWidget {
                 : AppColors.dividerColor.withValues(alpha: 0.5),
           ),
           ListView.separated(
+            padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: children.length,
