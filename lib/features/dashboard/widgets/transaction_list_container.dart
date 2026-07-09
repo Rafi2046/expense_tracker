@@ -35,7 +35,7 @@ class TransactionListContainer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 12.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,

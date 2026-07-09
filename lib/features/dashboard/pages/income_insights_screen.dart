@@ -44,21 +44,27 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
           bottomContent: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Vs Yesterday',
-style: AppTextStyles.bodySmall
-              ),
+              Text('Vs Yesterday', style: AppTextStyles.bodySmall),
               Row(
                 children: [
                   Icon(
-                    isPositive ? LucideIcons.trendingUp : LucideIcons.trendingDown,
-                    color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
+                    isPositive
+                        ? LucideIcons.trendingUp
+                        : LucideIcons.trendingDown,
+                    color: isPositive
+                        ? AppColors.activeGreen
+                        : AppColors.activeRed,
                     size: 16,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     '$sign${change.toStringAsFixed(1)}%',
-                    style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold, color: isPositive ? AppColors.activeGreen : AppColors.activeRed),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: isPositive
+                          ? AppColors.activeGreen
+                          : AppColors.activeRed,
+                    ),
                   ),
                 ],
               ),
@@ -87,12 +93,19 @@ style: AppTextStyles.bodySmall
                 children: [
                   Text(
                     'Avg. Daily',
-                    style: AppTextStyles.bodySmall.copyWith(color: Theme.of(context).brightness == Brightness.light ? AppColors.loginSubTitle : Colors.white70),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? AppColors.loginSubTitle
+                          : Colors.white70,
+                    ),
                   ),
                   PrivacyMaskedText(
                     amount: avgDaily,
                     isMasked: _localMasked,
-                    style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                 ],
               ),
@@ -102,19 +115,32 @@ style: AppTextStyles.bodySmall
                 children: [
                   Text(
                     'Vs Last Week',
-                    style: AppTextStyles.bodySmall.copyWith(color: Theme.of(context).brightness == Brightness.light ? AppColors.loginSubTitle : Colors.white70),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? AppColors.loginSubTitle
+                          : Colors.white70,
+                    ),
                   ),
                   Row(
                     children: [
                       Icon(
-                        isPositive ? LucideIcons.trendingUp : LucideIcons.trendingDown,
-                        color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
+                        isPositive
+                            ? LucideIcons.trendingUp
+                            : LucideIcons.trendingDown,
+                        color: isPositive
+                            ? AppColors.activeGreen
+                            : AppColors.activeRed,
                         size: 16,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         '$sign${change.toStringAsFixed(1)}%',
-                        style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold, color: isPositive ? AppColors.activeGreen : AppColors.activeRed),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: isPositive
+                              ? AppColors.activeGreen
+                              : AppColors.activeRed,
+                        ),
                       ),
                     ],
                   ),
@@ -153,12 +179,19 @@ style: AppTextStyles.bodySmall
                 children: [
                   Text(
                     'Projected Year End',
-                    style: AppTextStyles.bodySmall.copyWith(color: Theme.of(context).brightness == Brightness.light ? AppColors.loginSubTitle : Colors.white70),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? AppColors.loginSubTitle
+                          : Colors.white70,
+                    ),
                   ),
                   PrivacyMaskedText(
                     amount: projectedYearEnd,
                     isMasked: _localMasked,
-                    style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                 ],
               ),
@@ -167,7 +200,8 @@ style: AppTextStyles.bodySmall
                 borderRadius: BorderRadius.circular(100),
                 child: LinearProgressIndicator(
                   value: progress.clamp(0.0, 1.0),
-                  backgroundColor: Theme.of(context).brightness == Brightness.light
+                  backgroundColor:
+                      Theme.of(context).brightness == Brightness.light
                       ? const Color(0xFFE0E0E0)
                       : Colors.white12,
                   valueColor: const AlwaysStoppedAnimation<Color>(
@@ -220,7 +254,10 @@ style: AppTextStyles.bodySmall
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(LucideIcons.arrowLeft, color: theme.appBarTheme.iconTheme?.color),
+          icon: Icon(
+            LucideIcons.arrowLeft,
+            color: theme.appBarTheme.iconTheme?.color,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -265,7 +302,16 @@ style: AppTextStyles.bodySmall
               const SizedBox(height: 16),
 
               // Bottom Banner
-              const FinancialHealthBanner(),
+              FinancialHealthBanner(
+                percentageChange: _selectedTimeFrame == 'Daily'
+                    ? analytics.dailyPercentageChange
+                    : _selectedTimeFrame == 'Weekly'
+                    ? analytics.weeklyPercentageChange
+                    : _selectedTimeFrame == 'Quarterly'
+                    ? analytics.quarterlyPercentageChange
+                    : analytics.monthlyPercentageChange,
+                period: _selectedTimeFrame.toLowerCase(),
+              ),
               SizedBox(height: 24 + MediaQuery.of(context).padding.bottom),
             ],
           ),

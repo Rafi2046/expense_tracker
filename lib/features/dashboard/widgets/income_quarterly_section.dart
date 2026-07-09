@@ -69,7 +69,7 @@ class IncomeQuarterlySection extends StatelessWidget {
                     child: Center(child: Text('No income transactions this quarter')),
                   )
                 ]
-              : quarterlyTransactions.map((tx) {
+              : quarterlyTransactions.take(5).map((tx) {
                   IconData icon;
                   final categoryLower = tx.category.toLowerCase();
                   if (categoryLower.contains('salary')) {
