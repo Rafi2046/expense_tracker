@@ -93,7 +93,8 @@ class LedgerTransactionList extends StatelessWidget {
           child: Text(
             dateHeader.toUpperCase(),
             style: AppTextStyles.reportStatLabel.copyWith(
-              color: Colors.grey.shade400,
+              color: Colors.grey.shade800,
+              fontWeight: FontWeight.w800,
               letterSpacing: 1.0,
             ),
           ),

@@ -56,8 +56,7 @@ class AccountBalanceHeaderCard extends StatelessWidget {
           ),
           OutlinedButton.icon(
             onPressed: () {
-              Navigator.push(
-                context,
+              Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(
                   builder: (context) => accountType == 'Cash'
                       ? const CashInHandStatementScreen()
