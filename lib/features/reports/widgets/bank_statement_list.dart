@@ -18,7 +18,6 @@ class BankStatementList extends StatelessWidget {
     final reportsProvider = context.watch<ReportsProvider>();
     final filtered = reportsProvider.bankStatementTransactions;
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     if (filtered.isEmpty) {
       return Center(
@@ -84,32 +83,27 @@ class BankStatementList extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 6),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: isDark ? theme.cardColor : const Color(0xFFE8F8F5),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Bal: ',
-                                style: AppTextStyles.reportStatLabel.copyWith(
-                                  color: theme.primaryColor,
-                                  fontSize: AppFontSizes.size10,
-                                ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Bal: ',
+                              style: AppTextStyles.reportStatLabel.copyWith(
+                                color: theme.primaryColor,
+                                fontSize: AppFontSizes.size11,
+                                fontWeight: FontWeight.w600,
                               ),
-                              PrivacyMaskedText(
-                                amount: tx.runningBalance,
-                                style: AppTextStyles.reportStatLabel.copyWith(
-                                  color: theme.primaryColor,
-                                  fontSize: AppFontSizes.size10,
-                                ),
-                                isMasked: isMasked,
+                            ),
+                            PrivacyMaskedText(
+                              amount: tx.runningBalance,
+                              style: AppTextStyles.reportStatLabel.copyWith(
+                                color: theme.primaryColor,
+                                fontSize: AppFontSizes.size11,
+                                fontWeight: FontWeight.w600,
                               ),
-                            ],
-                          ),
+                              isMasked: isMasked,
+                            ),
+                          ],
                         ),
                       ],
                     ),
