@@ -86,10 +86,74 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   }
 
   Future<void> _pickImage() async {
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: Theme.of(context).cardColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        final isDark = Theme.of(ctx).brightness == Brightness.dark;
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Choose Option', style: AppTextStyles.h2.copyWith(color: Theme.of(ctx).colorScheme.onSurface)),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(ctx, ImageSource.gallery),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.grey.shade800 : const Color(0xFFF3E8FF),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Icon(LucideIcons.image, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1), size: 28),
+                          ),
+                          const SizedBox(height: 8),
+                          Text('Gallery', style: AppTextStyles.label.copyWith(color: Theme.of(ctx).colorScheme.onSurface)),
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(ctx, ImageSource.camera),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.grey.shade800 : const Color(0xFFF3E8FF),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Icon(LucideIcons.camera, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1), size: 28),
+                          ),
+                          const SizedBox(height: 8),
+                          Text('Camera', style: AppTextStyles.label.copyWith(color: Theme.of(ctx).colorScheme.onSurface)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (source == null) return;
+
     final ImagePicker picker = ImagePicker();
     try {
       final XFile? image = await picker.pickImage(
-        source: ImageSource.gallery,
+        source: source,
         maxWidth: 512,
         maxHeight: 512,
         imageQuality: 85,
