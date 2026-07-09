@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +9,15 @@ import '../models/tour_expense.dart';
 import '../models/tour_expense_share.dart';
 import '../models/tour_settlement.dart';
 import '../utils/database_helper.dart';
+import '../constants/app_constants.dart';
+import '../services/invite_code_service.dart';
+import '../services/tour_local_service.dart';
 
 class TourProvider extends ChangeNotifier {
+  static void Function(String message)? onNotification;
+
   final DatabaseHelper _db = DatabaseHelper.instance;
+  final InviteCodeService _inviteCodeService = InviteCodeService();
 
   String _activeProfileId;
   bool _isLoading = true;
@@ -22,6 +29,8 @@ class TourProvider extends ChangeNotifier {
   List<TourExpense> _expenses = [];
   List<TourExpenseShare> _shares = [];
   List<TourSettlement> _settlements = [];
+
+  final Map<String, List<StreamSubscription>> _tourSubscriptions = {};
 
   TourProvider({required String initialProfileId})
     : _activeProfileId = initialProfileId {
@@ -84,6 +93,9 @@ class TourProvider extends ChangeNotifier {
         orderBy: 'createdAt DESC',
       );
       _tours = maps.map((m) => Tour.fromJson(m)).toList();
+      for (final tour in _tours) {
+        _initRealTimeListenerForTour(tour.id);
+      }
     } catch (e) {
       debugPrint('TourProvider._loadTours error: $e');
     } finally {
@@ -99,15 +111,50 @@ class TourProvider extends ChangeNotifier {
   }
 
   Future<void> createTour(Tour tour) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+
+    final code = uid != null ? await _inviteCodeService.generateUniqueCode() : null;
+
+    final enriched = tour.copyWith(
+      inviteCode: code,
+      ownerUid: uid,
+      memberUids: uid != null ? [uid] : [],
+    );
+
     final db = await _db.database;
     await db.insert(
       'tours',
-      tour.toJson(),
+      enriched.toJson(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    _tours.insert(0, tour);
+    _tours.insert(0, enriched);
+    _selectedTourId = tour.id;
+    _participants.clear();
+
+    // Auto-create creator as participant
+    if (uid != null) {
+      final creator = TourParticipant(
+        id: '${tour.id}_creator',
+        tourId: tour.id,
+        name: FirebaseAuth.instance.currentUser?.displayName ?? 'You',
+        joinedAt: DateTime.now(),
+        uid: uid,
+      );
+      await db.insert(
+        'tour_participants',
+        creator.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      if (_selectedTourId == tour.id) {
+        _participants.add(creator);
+      }
+      _syncParticipantToSharedCollection(creator);
+    }
+
     notifyListeners();
-    _syncTourToFirestore(tour);
+    _syncTourToSharedCollection(enriched);
+    _syncTourToFirestore(enriched);
+    _initRealTimeListenerForTour(tour.id);
   }
 
   Future<void> updateTour(Tour tour) async {
@@ -130,7 +177,16 @@ class TourProvider extends ChangeNotifier {
     _syncTourToFirestore(updated);
   }
 
-  Future<void> toggleTourCompletion(String tourId, bool completed) async {
+  Future<bool> toggleTourCompletion(String tourId, bool completed) async {
+    final tour = _tours.firstWhere(
+      (t) => t.id == tourId,
+      orElse: () => Tour(id: '', name: '', currency: '', createdAt: DateTime.now()),
+    );
+    if (tour.id.isEmpty) return false;
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    if (tour.ownerUid != null && currentUid != null && tour.ownerUid != currentUid) {
+      return false;
+    }
     final db = await _db.database;
     final now = DateTime.now().toIso8601String();
     await db.update(
@@ -147,6 +203,8 @@ class TourProvider extends ChangeNotifier {
       _selectedTourId = tourId;
     }
     notifyListeners();
+    await _syncTourToSharedCollection(tour);
+    return true;
   }
 
   Future<void> deleteTour(String tourId) async {
@@ -191,6 +249,137 @@ class TourProvider extends ChangeNotifier {
       _settlements.clear();
     }
     notifyListeners();
+  }
+
+  // ─── Join via code ──────────────────────────────────────────────────
+
+  Future<String> joinTourByCode(String code) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) throw Exception('You must be signed in to join a tour.');
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final tour = await _inviteCodeService.getTourByCode(code);
+      if (tour == null) {
+        throw Exception('Invalid or expired invite code.');
+      }
+
+      if (tour.memberUids.contains(uid)) {
+        throw Exception('You are already a member of this tour.');
+      }
+
+      final updatedUids = [...tour.memberUids, uid];
+      await _sharedToursCollection.doc(tour.id).update({
+        'memberUids': updatedUids,
+      });
+
+      // Fetch all existing participants first
+      List<TourParticipant> participants = [];
+      List<TourExpense> expenses = [];
+      List<TourExpenseShare> shares = [];
+      try {
+        final participantSnapshot = await _sharedToursCollection
+            .doc(tour.id)
+            .collection('participants')
+            .get();
+        participants = participantSnapshot.docs
+            .map((doc) => TourParticipant.fromMap(doc.id, doc.data()))
+            .toList();
+
+        final expenseSnapshot = await _sharedToursCollection
+            .doc(tour.id)
+            .collection('expenses')
+            .get();
+        expenses = expenseSnapshot.docs
+            .map((doc) => TourExpense.fromMap(doc.id, doc.data()))
+            .toList();
+
+        final expenseIds = expenses.map((e) => e.id).toList();
+        if (expenseIds.isNotEmpty) {
+          // Shares are embedded in each expense document
+          shares = expenses
+              .where((e) => e.shares != null)
+              .expand((e) => e.shares!)
+              .toList();
+        }
+      } catch (_) {
+        debugPrint('No participants/expenses found in shared_tours for ${tour.id}');
+      }
+
+      // Check if current user already has a participant entry (same uid)
+      final existing = participants.where((p) => p.uid == uid).toList();
+      if (existing.isNotEmpty) {
+        // Already a participant — just use existing data, no duplicate needed
+        debugPrint('User already has participant entry, skipping duplicate creation');
+      } else {
+        // Check if a dummy (uid=null) can be claimed
+        final dummy = participants.where((p) => p.uid == null).toList();
+        if (dummy.isNotEmpty) {
+          // Claim the first uid-less dummy — update their uid and name
+          final claimed = dummy.first;
+          final currentUser = FirebaseAuth.instance.currentUser;
+          await _sharedToursCollection
+              .doc(tour.id)
+              .collection('participants')
+              .doc(claimed.id)
+              .update({
+            'uid': uid,
+            'name': currentUser?.displayName ?? claimed.name,
+          });
+          // Fix local list to reflect the update
+          final idx = participants.indexWhere((p) => p.id == claimed.id);
+          if (idx != -1) {
+            participants[idx] = claimed.copyWith(
+              uid: uid,
+              name: currentUser?.displayName ?? claimed.name,
+            );
+          }
+          debugPrint('Claimed dummy participant ${claimed.id} for uid $uid');
+        } else {
+          // No existing match — create a brand new participant entry
+          final currentUser = FirebaseAuth.instance.currentUser;
+          final joiner = TourParticipant(
+            id: '${tour.id}_member_${DateTime.now().microsecondsSinceEpoch}',
+            tourId: tour.id,
+            name: currentUser?.displayName ?? 'New Member',
+            joinedAt: DateTime.now(),
+            uid: uid,
+          );
+          await _sharedToursCollection
+              .doc(tour.id)
+              .collection('participants')
+              .doc(joiner.id)
+              .set(joiner.toMap());
+          participants.add(joiner);
+          debugPrint('Created new participant entry for uid $uid');
+        }
+      }
+
+      final updatedTour = tour.copyWith(
+        memberUids: updatedUids,
+        profileId: _activeProfileId,
+      );
+
+      final db = await _db.database;
+      final localService = TourLocalService(db);
+      await localService.saveJoinedTourLocally(
+        updatedTour,
+        participants,
+        expenses: expenses,
+        shares: shares,
+      );
+
+      _tours.insert(0, updatedTour);
+      notifyListeners();
+      _initRealTimeListenerForTour(tour.id);
+
+      return updatedTour.name;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   // ─── Tour detail loading ────────────────────────────────────────────
@@ -245,11 +434,70 @@ class TourProvider extends ChangeNotifier {
       _settlements = settlementMaps
           .map((m) => TourSettlement.fromJson(m))
           .toList();
+
+      // Reconcile participants AFTER all data is loaded so
+      // paidBy/participantId reassignments actually take effect.
+      _reconcileParticipants(tourId);
     } catch (e) {
       debugPrint('TourProvider._loadTourDetails error: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  /// Merges participants that share the same non-null [uid] so the same
+  /// real person doesn't appear as two separate balance entries.
+  /// Keeps the first participant, reassigns all expense/settlement references
+  /// to that survivor, and removes the duplicates from memory.
+  void _reconcileParticipants(String tourId) {
+    final uidToParticipants = <String, List<int>>{};
+    for (var i = 0; i < _participants.length; i++) {
+      final u = _participants[i].uid;
+      if (u == null) continue;
+      uidToParticipants.putIfAbsent(u, () => []).add(i);
+    }
+
+    for (final entry in uidToParticipants.entries) {
+      final indices = entry.value;
+      if (indices.length < 2) continue;
+
+      // Keep the first participant, merge others into it
+      final keepIdx = indices.first;
+      final keep = _participants[keepIdx];
+      final removeIds = indices.skip(1).map((i) => _participants[i].id).toSet();
+
+      // Reassign paidBy in expenses
+      for (var i = 0; i < _expenses.length; i++) {
+        if (removeIds.contains(_expenses[i].paidBy)) {
+          _expenses[i] = _expenses[i].copyWith(paidBy: keep.id);
+        }
+      }
+
+      // Reassign participantId in shares
+      for (var i = 0; i < _shares.length; i++) {
+        if (removeIds.contains(_shares[i].participantId)) {
+          _shares[i] = _shares[i].copyWith(participantId: keep.id);
+        }
+      }
+
+      // Reassign settlements
+      for (var i = 0; i < _settlements.length; i++) {
+        if (removeIds.contains(_settlements[i].fromParticipant)) {
+          _settlements[i] = _settlements[i].copyWith(fromParticipant: keep.id);
+        }
+        if (removeIds.contains(_settlements[i].toParticipant)) {
+          _settlements[i] = _settlements[i].copyWith(toParticipant: keep.id);
+        }
+      }
+
+      // Remove duplicate participants (descending to preserve indices)
+      final toRemove = indices.skip(1).toList()..sort((a, b) => b.compareTo(a));
+      for (final idx in toRemove) {
+        _participants.removeAt(idx);
+      }
+
+      debugPrint('Reconciled ${removeIds.length} duplicate(s) into ${keep.id} (uid: ${entry.key})');
     }
   }
 
@@ -286,6 +534,7 @@ class TourProvider extends ChangeNotifier {
       notifyListeners();
     }
     _syncParticipantToFirestore(participant);
+    _syncParticipantToSharedCollection(participant);
   }
 
   Future<void> updateParticipant(TourParticipant participant) async {
@@ -306,6 +555,7 @@ class TourProvider extends ChangeNotifier {
       notifyListeners();
     }
     _syncParticipantToFirestore(participant);
+    _syncParticipantToSharedCollection(participant);
   }
 
   Future<void> removeParticipant(String participantId) async {
@@ -330,18 +580,34 @@ class TourProvider extends ChangeNotifier {
     }
     if (tourId != null) {
       _softDeleteDoc(tourId, 'participants', participantId, now);
+      _sharedToursCollection
+          .doc(tourId)
+          .collection('participants')
+          .doc(participantId)
+          .set({
+        'isDeleted': 1,
+        'lastModified': now,
+      }, SetOptions(merge: true));
     }
   }
 
   // ─── Expense CRUD ───────────────────────────────────────────────────
 
-  Future<void> addExpense(
+  Future<bool> addExpense(
     TourExpense expense,
     List<TourExpenseShare> shares,
   ) async {
     if (shares.isEmpty) {
       debugPrint('ERROR: addExpense called with zero shares — aborting');
-      return;
+      return false;
+    }
+    final tour = _tours.firstWhere(
+      (t) => t.id == expense.tourId,
+      orElse: () => Tour(id: '', name: '', currency: '', createdAt: DateTime.now()),
+    );
+    if (tour.isCompleted) {
+      debugPrint('ERROR: cannot add expense to a completed tour');
+      return false;
     }
     final db = await _db.database;
     await db.transaction((txn) async {
@@ -360,12 +626,21 @@ class TourProvider extends ChangeNotifier {
     });
     await refreshTourData();
     _syncExpenseToFirestore(expense, shares);
+    return true;
   }
 
-  Future<void> updateExpense(
+  Future<bool> updateExpense(
     TourExpense expense,
     List<TourExpenseShare> shares,
   ) async {
+    final tour = _tours.firstWhere(
+      (t) => t.id == expense.tourId,
+      orElse: () => Tour(id: '', name: '', currency: '', createdAt: DateTime.now()),
+    );
+    if (tour.isCompleted) {
+      debugPrint('ERROR: cannot update expense in a completed tour');
+      return false;
+    }
     final db = await _db.database;
     await db.transaction((txn) async {
       await txn.update(
@@ -389,6 +664,7 @@ class TourProvider extends ChangeNotifier {
     });
     await refreshTourData();
     _syncExpenseToFirestore(expense, shares);
+    return true;
   }
 
   Future<void> deleteExpense(String expenseId) async {
@@ -472,6 +748,7 @@ class TourProvider extends ChangeNotifier {
       case 'exact':
         for (final p in included) {
           final value = customValues?[p.id] ?? 0;
+          debugPrint('CALCULATE_SHARES_DEBUG: p=${p.id} value=$value');
           result.add(
             TourExpenseShare(
               id: 'share_${shareId}_${p.id}',
@@ -485,6 +762,7 @@ class TourProvider extends ChangeNotifier {
         break;
 
       case 'percentage':
+        debugPrint('CALCULATE_SHARES_DEBUG: case=percentage');
         for (final p in included) {
           final pct = customValues?[p.id] ?? 0;
           final amount = expense.amount * pct / 100;
@@ -787,6 +1065,13 @@ class TourProvider extends ChangeNotifier {
         .collection('tours');
   }
 
+  CollectionReference get _sharedToursCollection =>
+      FirebaseFirestore.instance.collection(AppConstants.toursCollection);
+
+  Future<void> _syncTourToSharedCollection(Tour tour) async {
+    await _sharedToursCollection.doc(tour.id).set(tour.toMap());
+  }
+
   Future<void> _syncTourToFirestore(Tour tour) async {
     final col = _toursCollection;
     if (col == null) return;
@@ -797,25 +1082,15 @@ class TourProvider extends ChangeNotifier {
     TourExpense expense,
     List<TourExpenseShare> shares,
   ) async {
-    final col = _toursCollection;
-    if (col == null) return;
-    await col
+    await _sharedToursCollection
         .doc(expense.tourId)
         .collection('expenses')
         .doc(expense.id)
-        .set(expense.toMap());
-    final batch = FirebaseFirestore.instance.batch();
-    for (final share in shares) {
-      final ref = col.doc(expense.tourId).collection('shares').doc(share.id);
-      batch.set(ref, share.toMap());
-    }
-    await batch.commit();
+        .set(expense.copyWith(shares: shares).toMap());
   }
 
   Future<void> _syncSettlementToFirestore(TourSettlement settlement) async {
-    final col = _toursCollection;
-    if (col == null) return;
-    await col
+    await _sharedToursCollection
         .doc(settlement.tourId)
         .collection('settlements')
         .doc(settlement.id)
@@ -826,6 +1101,14 @@ class TourProvider extends ChangeNotifier {
     final col = _toursCollection;
     if (col == null) return;
     await col
+        .doc(participant.tourId)
+        .collection('participants')
+        .doc(participant.id)
+        .set(participant.toMap());
+  }
+
+  Future<void> _syncParticipantToSharedCollection(TourParticipant participant) async {
+    await _sharedToursCollection
         .doc(participant.tourId)
         .collection('participants')
         .doc(participant.id)
@@ -846,9 +1129,89 @@ class TourProvider extends ChangeNotifier {
     }, SetOptions(merge: true));
   }
 
+  // ─── Real-time Firestore listener ──────────────────────────────────
+
+  void _initRealTimeListenerForTour(String tourId) {
+    if (_tourSubscriptions.containsKey(tourId)) return;
+
+    final docRef = _sharedToursCollection.doc(tourId);
+    final participantsRef = docRef.collection('participants');
+    final expensesRef = docRef.collection('expenses');
+
+    final subs = <StreamSubscription>[
+      docRef.snapshots().listen((snapshot) async {
+        if (!snapshot.exists) return;
+        final data = snapshot.data();
+        if (data == null) return;
+        final tour = Tour.fromMap(snapshot.id, data as Map<String, dynamic>);
+        final localService = TourLocalService(await _db.database);
+        await localService.upsertTour(tour);
+        final idx = _tours.indexWhere((t) => t.id == tourId);
+        if (idx != -1) {
+          _tours[idx] = tour;
+          notifyListeners();
+        }
+      }, onError: (e) => debugPrint('Tour stream error: $e')),
+
+      participantsRef.snapshots().listen((snapshot) async {
+        final localService = TourLocalService(await _db.database);
+        final currentUid = FirebaseAuth.instance.currentUser?.uid;
+        for (final change in snapshot.docChanges) {
+          if (change.type == DocumentChangeType.removed) continue;
+          final data = change.doc.data();
+          if (data == null) continue;
+          final participant = TourParticipant.fromMap(change.doc.id, data);
+          await localService.upsertParticipant(participant);
+
+          if (change.type == DocumentChangeType.added &&
+              participant.uid != null &&
+              participant.uid != currentUid) {
+            final notif = TourProvider.onNotification;
+            notif?.call('${participant.name} joined the tour!');
+          }
+        }
+        if (_selectedTourId == tourId) {
+          await _loadTourDetails(tourId);
+        }
+      }, onError: (e) => debugPrint('Participants stream error: $e')),
+
+      expensesRef.snapshots().listen((snapshot) async {
+        final localService = TourLocalService(await _db.database);
+        for (final change in snapshot.docChanges) {
+          if (change.type == DocumentChangeType.removed) continue;
+          final data = change.doc.data();
+          if (data == null) continue;
+          final expense = TourExpense.fromMap(change.doc.id, data);
+          final shares = expense.shares ?? [];
+          await localService.upsertExpenseWithShares(expense, shares);
+        }
+        if (_selectedTourId == tourId) {
+          await _loadTourDetails(tourId);
+        }
+      }, onError: (e) => debugPrint('Expenses stream error: $e')),
+    ];
+
+    _tourSubscriptions[tourId] = subs;
+  }
+
+  void disposeTourListener(String tourId) {
+    final subs = _tourSubscriptions.remove(tourId);
+    if (subs != null) {
+      for (final sub in subs) {
+        sub.cancel();
+      }
+    }
+  }
+
   // ─── Lifecycle ──────────────────────────────────────────────────────
 
   void clear() {
+    for (final subs in _tourSubscriptions.values) {
+      for (final sub in subs) {
+        sub.cancel();
+      }
+    }
+    _tourSubscriptions.clear();
     _tours.clear();
     _selectedTourId = null;
     _participants.clear();

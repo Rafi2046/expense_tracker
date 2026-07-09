@@ -17,6 +17,7 @@ import 'package:expense_tracker/features/tours/widgets/tour_expense_details_shee
 import 'package:expense_tracker/features/tours/widgets/tour_export_options_sheet.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_member_required_dialog.dart';
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
+import 'package:expense_tracker/features/tours/widgets/invite_code_card.dart';
 
 class TourDashboardScreen extends StatefulWidget {
   final String tourId;
@@ -211,6 +212,13 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               outstandingText: outstandingText,
               isSettled: isSettled,
             ),
+            if (tour.inviteCode != null && tour.inviteCode!.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              InviteCodeCard(
+                inviteCode: tour.inviteCode!,
+                tourName: tour.name,
+              ),
+            ],
             if (participants.isNotEmpty) ...[
               const SizedBox(height: 12),
               TourMemberBalances(
@@ -251,6 +259,15 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         child: FloatingActionButton.extended(
           heroTag: 'tour_dashboard_fab',
           onPressed: () {
+            if (tour.isCompleted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Tour is completed — cannot add expenses'),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              return;
+            }
             if (_ensureMinimumMembers()) {
               AddExpenseSheet.show(
                 context,
@@ -260,17 +277,21 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               );
             }
           },
-          backgroundColor: AppColors.activeGreen,
-          icon: const Icon(Icons.add_rounded, color: AppColors.white, size: 20),
-          label: const Text(
+          backgroundColor: tour.isCompleted
+              ? AppColors.activeGreen.withValues(alpha: 0.35)
+              : AppColors.activeGreen,
+          icon: Icon(Icons.add_rounded,
+              color: AppColors.white.withValues(alpha: tour.isCompleted ? 0.5 : 1),
+              size: 20),
+          label: Text(
             'Add Expense',
             style: TextStyle(
               fontWeight: FontWeight.w600,
-              color: AppColors.white,
+              color: AppColors.white.withValues(alpha: tour.isCompleted ? 0.5 : 1),
               fontSize: 12,
             ),
           ),
-          elevation: 4,
+          elevation: tour.isCompleted ? 0 : 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.r8),
           ),

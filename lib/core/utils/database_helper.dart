@@ -43,7 +43,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 13,
+      version: 15,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -142,7 +142,10 @@ class DatabaseHelper {
         syncStatus TEXT NOT NULL DEFAULT 'synced',
         isDeleted INTEGER NOT NULL DEFAULT 0,
         isCompleted INTEGER NOT NULL DEFAULT 0,
-        lastModified TEXT NOT NULL
+        lastModified TEXT NOT NULL,
+        inviteCode TEXT,
+        ownerUid TEXT,
+        memberUids TEXT
       )
     ''');
     await db.execute('''
@@ -156,7 +159,8 @@ class DatabaseHelper {
         isActive INTEGER NOT NULL DEFAULT 1,
         syncStatus TEXT NOT NULL DEFAULT 'synced',
         isDeleted INTEGER NOT NULL DEFAULT 0,
-        lastModified TEXT NOT NULL
+        lastModified TEXT NOT NULL,
+        uid TEXT
       )
     ''');
     await db.execute('''
@@ -476,6 +480,18 @@ class DatabaseHelper {
       final hasCompleted = columns.any((col) => col['name'] == 'isCompleted');
       if (!hasCompleted) {
         await db.execute('ALTER TABLE tours ADD COLUMN isCompleted INTEGER NOT NULL DEFAULT 0');
+      }
+    }
+    if (oldVersion < 14) {
+      await db.execute('ALTER TABLE tours ADD COLUMN inviteCode TEXT');
+      await db.execute('ALTER TABLE tours ADD COLUMN ownerUid TEXT');
+      await db.execute('ALTER TABLE tour_participants ADD COLUMN uid TEXT');
+    }
+    if (oldVersion < 15) {
+      final columns = await db.rawQuery('PRAGMA table_info(tours)');
+      final hasMemberUids = columns.any((col) => col['name'] == 'memberUids');
+      if (!hasMemberUids) {
+        await db.execute('ALTER TABLE tours ADD COLUMN memberUids TEXT');
       }
     }
   }

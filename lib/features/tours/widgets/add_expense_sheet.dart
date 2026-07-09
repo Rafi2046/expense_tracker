@@ -518,10 +518,19 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           : null,
     );
 
-    if (isEdit) {
-      await provider.updateExpense(expense, shares);
-    } else {
-      await provider.addExpense(expense, shares);
+    final success = isEdit
+        ? await provider.updateExpense(expense, shares)
+        : await provider.addExpense(expense, shares);
+    if (!success) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Cannot modify expense — tour is completed'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      return;
     }
     if (mounted) Navigator.of(context).pop();
   }

@@ -68,15 +68,11 @@ class _TourMemberManagementScreenState
         actions: [
           if (widget.isInitialSetup)
             TextButton(
-              onPressed: participants.length >= 2
-                  ? () => Navigator.pop(context)
-                  : null,
+              onPressed: () => Navigator.pop(context),
               child: Text(
                 'Done',
                 style: TextStyle(
-                  color: participants.length >= 2
-                      ? AppColors.activeGreen
-                      : AppColors.textMuted,
+                  color: AppColors.activeGreen,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -185,23 +181,23 @@ class _TourMemberManagementScreenState
 
           // Data Integrity Warning
           if (participants.length < 2)
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSpacing.p16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
               child: Row(
                 children: [
                   Icon(
-                    Icons.info_outline_rounded,
-                    color: AppColors.activeRed,
+                    Icons.lightbulb_outline_rounded,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                     size: 16,
                   ),
-                  SizedBox(width: AppSpacing.w8),
+                  const SizedBox(width: AppSpacing.w8),
                   Flexible(
                     child: Text(
-                      'At least 2 members are required to split expenses.',
+                      'Add buddies manually for offline tracking, or skip this and share the invite code later for real-time syncing!',
                       style: TextStyle(
-                        color: AppColors.activeRed,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -275,18 +271,31 @@ class _TourMemberManagementScreenState
   }
 
   void _addMember() {
-    if (_nameController.text.trim().isEmpty) return;
+    final name = _nameController.text.trim();
+    if (name.isEmpty) return;
+
+    final provider = context.read<TourProvider>();
+    final exists = provider.participants.any(
+      (p) => p.name.toLowerCase() == name.toLowerCase(),
+    );
+    if (exists) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$name is already added')),
+      );
+      return;
+    }
+
     final int memberColor = _presetColors[_selectedColorIndex].toARGB32();
 
     final member = TourParticipant(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       tourId: widget.tourId,
-      name: _nameController.text.trim(),
+      name: name,
       avatarColor: memberColor,
       joinedAt: DateTime.now(),
     );
 
-    context.read<TourProvider>().addParticipant(member);
+    provider.addParticipant(member);
     _nameController.clear();
   }
 

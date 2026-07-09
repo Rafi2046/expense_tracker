@@ -3,11 +3,17 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
+import 'package:expense_tracker/features/tours/widgets/join_tour_sheet.dart';
 
 class TourListEmptyState extends StatelessWidget {
   final VoidCallback onCreateTour;
+  final VoidCallback? onJoinTour;
 
-  const TourListEmptyState({super.key, required this.onCreateTour});
+  const TourListEmptyState({
+    super.key,
+    required this.onCreateTour,
+    this.onJoinTour,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +49,13 @@ class TourListEmptyState extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.s8),
               Text(
-                'Create a tour to split group expenses\nseamlessly with your travel buddies.',
+                'Create a new tour or join an existing one\nto seamlessly split expenses with your buddies.',
                 textAlign: TextAlign.center,
                 style: AppTextStyles.dialogBody.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               FilledButton.icon(
                 onPressed: onCreateTour,
                 icon: const Icon(Icons.add_rounded, size: 20),
@@ -66,10 +72,38 @@ class TourListEmptyState extends StatelessWidget {
                   elevation: 0,
                 ),
               ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: onJoinTour ?? () => _showJoinSheet(context),
+                icon: const Icon(Icons.qr_code_scanner_rounded, size: 18),
+                label: const Text('Join with Invite Code'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.activeGreen,
+                  side: BorderSide(
+                    color: AppColors.activeGreen.withValues(alpha: 0.3),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 42,
+                    vertical: 14,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void _showJoinSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const JoinTourSheet(),
     );
   }
 }

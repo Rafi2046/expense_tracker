@@ -11,11 +11,9 @@ import 'package:expense_tracker/features/tours/pages/tour_dashboard_screen.dart'
 import 'package:expense_tracker/core/providers/session_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
-
-// Extracted Widgets (আপনার পাথ অনুযায়ী মিলিয়ে নিন)
 import 'package:expense_tracker/features/tours/widgets/tour_list_header.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_list_empty_state.dart';
-import 'package:expense_tracker/features/tours/widgets/new_tour_cta.dart';
+import 'package:expense_tracker/features/tours/widgets/quick_action_hub.dart';
 
 class TourListScreen extends StatefulWidget {
   const TourListScreen({super.key});
@@ -60,11 +58,19 @@ class _TourListScreenState extends State<TourListScreen> {
     );
   }
 
-  void _toggleCompleteTour(Tour tour) {
-    context.read<TourProvider>().toggleTourCompletion(
+  Future<void> _toggleCompleteTour(Tour tour) async {
+    final success = await context.read<TourProvider>().toggleTourCompletion(
       tour.id,
       !tour.isCompleted,
     );
+    if (!success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Only the tour creator can mark completion status'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   final Map<String, double> _totalSpent = {};
@@ -76,11 +82,24 @@ class _TourListScreenState extends State<TourListScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(viewportFraction: 0.85);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _loadCounts());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadCounts();
+      TourProvider.onNotification = (msg) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('$msg'),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      };
+    });
   }
 
   @override
   void dispose() {
+    TourProvider.onNotification = null;
     _pageController.dispose();
     super.dispose();
   }
@@ -202,22 +221,7 @@ class _TourListScreenState extends State<TourListScreen> {
                           child: TourListEmptyState(onCreateTour: _openCreateTourSheet),
                         ),
                       )
-                    : Column(
-                        children: [
-                          // Scrollable List
-                          Expanded(
-                            child: _buildTourListContent(Theme.of(context), tours),
-                          ),
-                          // Fixed Bottom Button
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 8.0,
-                              bottom: 16.0,
-                            ),
-                            child: NewTourCTA(onTap: _openCreateTourSheet),
-                          ),
-                        ],
-                      ),
+                    : _buildTourListContent(Theme.of(context), tours),
               ),
             ),
           ],
@@ -230,7 +234,10 @@ class _TourListScreenState extends State<TourListScreen> {
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.only(top: 4, bottom: 24),
+        padding: EdgeInsets.only(
+          top: 4,
+          bottom: MediaQuery.of(context).padding.bottom + 24,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -296,6 +303,41 @@ class _TourListScreenState extends State<TourListScreen> {
                     ),
                   );
                 }).toList(),
+              ),
+              const SizedBox(height: AppSpacing.s20),
+              QuickActionHub(
+                onCreateNew: _openCreateTourSheet,
+                onViewAll: () {
+                  final names = tours.map((t) => t.name).toList();
+                  if (names.isEmpty) return;
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      backgroundColor: theme.colorScheme.surface,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      title: Text(
+                        'All Tours (${names.length})',
+                        style: TextStyle(color: theme.colorScheme.onSurface),
+                      ),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: names.map((n) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Text(n, style: TextStyle(color: theme.colorScheme.onSurface)),
+                        )).toList(),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx),
+                          child: Text('Close', style: TextStyle(color: AppColors.activeGreen)),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ],
           ),

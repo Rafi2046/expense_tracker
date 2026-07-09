@@ -1,3 +1,5 @@
+import 'tour_expense_share.dart';
+
 class TourExpense {
   final String id;
   final String tourId;
@@ -13,6 +15,7 @@ class TourExpense {
   final String syncStatus;
   final bool isDeleted;
   final DateTime lastModified;
+  final List<TourExpenseShare>? shares;
 
   TourExpense({
     required this.id,
@@ -29,6 +32,7 @@ class TourExpense {
     this.syncStatus = 'synced',
     this.isDeleted = false,
     DateTime? lastModified,
+    this.shares,
   }) : createdAt = createdAt ?? date,
        lastModified = lastModified ?? DateTime.now();
 
@@ -47,6 +51,7 @@ class TourExpense {
     String? syncStatus,
     bool? isDeleted,
     DateTime? lastModified,
+    List<TourExpenseShare>? shares,
   }) =>
       TourExpense(
         id: id ?? this.id,
@@ -63,6 +68,7 @@ class TourExpense {
         syncStatus: syncStatus ?? this.syncStatus,
         isDeleted: isDeleted ?? this.isDeleted,
         lastModified: lastModified ?? this.lastModified,
+        shares: shares ?? this.shares,
       );
 
   Map<String, dynamic> toMap() => {
@@ -76,24 +82,32 @@ class TourExpense {
     'date': date.toIso8601String(),
     'receiptPath': receiptPath,
     'createdAt': createdAt.toIso8601String(),
+    if (shares != null)
+      'shares': shares!.map((s) => s.toMap()).toList(),
   };
 
-  factory TourExpense.fromMap(String id, Map<String, dynamic> map) =>
-      TourExpense(
-        id: id,
-        tourId: map['tourId'] as String,
-        title: map['title'] as String,
-        amount: (map['amount'] as num).toDouble(),
-        paidBy: map['paidBy'] as String,
-        splitType: map['splitType'] as String? ?? 'equal',
-        category: map['category'] as String?,
-        note: map['note'] as String?,
-        date: DateTime.parse(map['date'] as String),
-        receiptPath: map['receiptPath'] as String?,
-        createdAt: map['createdAt'] != null
-            ? DateTime.parse(map['createdAt'] as String)
-            : null,
-      );
+  factory TourExpense.fromMap(String id, Map<String, dynamic> map) {
+    final shareMaps = (map['shares'] as List<dynamic>?)
+        ?.cast<Map<String, dynamic>>();
+    return TourExpense(
+      id: id,
+      tourId: map['tourId'] as String,
+      title: map['title'] as String,
+      amount: (map['amount'] as num).toDouble(),
+      paidBy: map['paidBy'] as String,
+      splitType: map['splitType'] as String? ?? 'equal',
+      category: map['category'] as String?,
+      note: map['note'] as String?,
+      date: DateTime.parse(map['date'] as String),
+      receiptPath: map['receiptPath'] as String?,
+      createdAt: map['createdAt'] != null
+          ? DateTime.parse(map['createdAt'] as String)
+          : null,
+      shares: shareMaps
+          ?.map((s) => TourExpenseShare.fromEmbeddedMap(s))
+          .toList(),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     'id': id,

@@ -256,7 +256,15 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                       FilledButton(
                         onPressed: () {
                           final name = nameController.text.trim();
-                          if (name.isEmpty) return;
+                          if (name.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please enter a tour name'),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                            return;
+                          }
                           final tour = Tour(
                             id: DateTime.now().microsecondsSinceEpoch.toString(),
                             name: name,
