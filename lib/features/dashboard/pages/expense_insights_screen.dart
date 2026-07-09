@@ -65,7 +65,12 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.fromLTRB(
+            16.0,
+            16.0,
+            16.0,
+            16.0 + MediaQuery.of(context).padding.bottom + 80,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

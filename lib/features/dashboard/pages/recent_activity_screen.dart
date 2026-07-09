@@ -32,7 +32,12 @@ class RecentActivityScreen extends StatelessWidget {
       body: groups.isEmpty
           ? Center(child: Text(context.translate('no_transactions'), style: AppTextStyles.body.copyWith(color: Colors.grey.shade400)))
           : ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              padding: EdgeInsets.fromLTRB(
+                16,
+                20,
+                16,
+                20 + MediaQuery.of(context).padding.bottom + 80,
+              ),
               itemCount: groups.length,
               itemBuilder: (_, i) => _buildGroup(context, groups[i]),
             ),

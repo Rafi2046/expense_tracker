@@ -277,7 +277,12 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.fromLTRB(
+            16.0,
+            16.0,
+            16.0,
+            16.0 + MediaQuery.of(context).padding.bottom + 80,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -312,7 +317,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                     : analytics.monthlyPercentageChange,
                 period: _selectedTimeFrame.toLowerCase(),
               ),
-              SizedBox(height: 24 + MediaQuery.of(context).padding.bottom),
+              const SizedBox(height: 8),
             ],
           ),
         ),

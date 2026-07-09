@@ -179,10 +179,10 @@ class _ExpenseCategoriesBreakdownCardState
               const SizedBox(width: 14),
               Expanded(
                 flex: 10,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 190),
-                  child: ListView(
-                    children: displayList.map((item) {
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: displayList.map((item) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: Row(
@@ -242,13 +242,12 @@ class _ExpenseCategoriesBreakdownCardState
                     }).toList(),
                   ),
                 ),
-              ),
             ],
           ),
 
           // Expand / Collapse button
           if (showExpandButton) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Align(
               alignment: Alignment.centerLeft,
               child: TextButton(
