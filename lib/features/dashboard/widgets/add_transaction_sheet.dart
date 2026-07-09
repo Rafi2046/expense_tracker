@@ -216,7 +216,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
               ],
             ),
           );
-          if (proceed != true) return;
+          if (proceed != true || !context.mounted) return;
         }
       }
 
@@ -280,6 +280,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         ),
       );
     } catch (e) {
+      if (!context.mounted) return;
       showDialog(
         context: context,
         builder: (_) => const ErrorDialog(

@@ -36,52 +36,50 @@ class PersonalInfoView extends StatelessWidget {
     required IconData icon,
     required String label,
     required String value,
-    Color iconColor = const Color(0xFF6A53A1),
-    Color iconBgColor = const Color(0xFFF3E8FF),
-    Widget? trailing,
+    IconData? trailingIcon,
+    VoidCallback? onTap,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final resolvedIconBg = isDark ? iconColor.withValues(alpha: 0.15) : iconBgColor;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: resolvedIconBg,
-              borderRadius: BorderRadius.circular(10),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: InkWell(
+        onTap: onTap,
+        child: Row(
+          children: [
+            Icon(icon, color: isDark ? Colors.white70 : Colors.grey.shade600, size: 22),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: AppTextStyles.caption.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: isDark ? Colors.grey.shade500 : Colors.grey.shade500,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    value.isEmpty ? 'Not set' : value,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.label.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: value.isEmpty
+                          ? (isDark ? Colors.grey.shade600 : Colors.grey.shade400)
+                          : Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            child: Icon(icon, color: iconColor, size: 18),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                style: AppTextStyles.caption.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
-                ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  value.isEmpty ? 'Not set' : value,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.reportTileTitle.copyWith(
-                  color: value.isEmpty 
-                      ? (isDark ? Colors.grey.shade600 : Colors.grey.shade400) 
-                      : Theme.of(context).colorScheme.onSurface,
-                ),
-                ),
-              ],
-            ),
-          ),
-          trailing ?? const SizedBox.shrink(),
-        ],
+            if (trailingIcon != null) ...[
+              const SizedBox(width: 6),
+              Icon(trailingIcon, color: isDark ? Colors.white60 : Colors.grey.shade400, size: 14),
+            ],
+          ],
+        ),
       ),
     );
   }
@@ -197,20 +195,16 @@ class PersonalInfoView extends StatelessWidget {
             children: [
               _buildInfoRow(
                 context,
-                icon: LucideIcons.phone,
+                icon: LucideIcons.phoneCall,
                 label: 'Phone Number',
                 value: phone,
-                iconColor: const Color(0xFF1E88E5),
-                iconBgColor: const Color(0xFFE3F2FD),
               ),
               Divider(height: 1, color: borderColor),
               _buildInfoRow(
                 context,
-                icon: LucideIcons.cake,
+                icon: LucideIcons.calendar,
                 label: 'Date of Birth',
                 value: dob,
-                iconColor: const Color(0xFFD81B60),
-                iconBgColor: const Color(0xFFFCE4EC),
               ),
               Divider(height: 1, color: borderColor),
               _buildInfoRow(
@@ -218,8 +212,6 @@ class PersonalInfoView extends StatelessWidget {
                 icon: gender == 'Male' ? LucideIcons.mars : LucideIcons.venus,
                 label: 'Gender',
                 value: gender,
-                iconColor: gender == 'Male' ? const Color(0xFF1E88E5) : const Color(0xFFD81B60),
-                iconBgColor: gender == 'Male' ? const Color(0xFFE3F2FD) : const Color(0xFFFCE4EC),
               ),
               Divider(height: 1, color: borderColor),
               _buildInfoRow(
@@ -227,8 +219,6 @@ class PersonalInfoView extends StatelessWidget {
                 icon: LucideIcons.mail,
                 label: 'Email Address',
                 value: user.email ?? '',
-                iconColor: const Color(0xFF43A047),
-                iconBgColor: const Color(0xFFE8F5E9),
               ),
             ],
           ),

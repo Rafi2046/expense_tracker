@@ -377,13 +377,13 @@ class TransactionProvider extends ChangeNotifier {
   double get monthlyIncome {
     return monthlyTransactions
         .where((tx) => tx.isIncome)
-        .fold(0.0, (sum, tx) => sum + tx.amount);
+        .fold(0.0, (total, tx) => total + tx.amount);
   }
 
   double get monthlyExpense {
     return monthlyTransactions
         .where((tx) => !tx.isIncome)
-        .fold(0.0, (sum, tx) => sum + tx.amount);
+        .fold(0.0, (total, tx) => total + tx.amount);
   }
 
   double get monthlyNetBalance => monthlyIncome - monthlyExpense;

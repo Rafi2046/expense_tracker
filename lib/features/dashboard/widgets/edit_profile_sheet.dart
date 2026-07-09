@@ -92,7 +92,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
       final provider = context.read<ProfileProvider>();
       await provider.deleteProfile(widget.profile.id);
 
-      if (context.mounted) {
+      if (mounted) {
         Navigator.pop(context);
       }
     }
@@ -101,13 +101,14 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
   Future<void> _saveName() async {
     final newName = _nameController.text.trim();
     if (newName.isEmpty) {
+      if (!mounted) return;
       Navigator.pop(context);
       return;
     }
 
     final provider = context.read<ProfileProvider>();
     await provider.updateProfileName(widget.profile.id, newName);
-    if (context.mounted) {
+    if (mounted) {
       Navigator.pop(context);
     }
   }

@@ -87,7 +87,7 @@ class PersonalInfoEdit extends StatelessWidget {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
+              borderSide: BorderSide(color: isDark ? Colors.grey.shade700 : Colors.transparent, width: 1),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -209,7 +209,7 @@ class PersonalInfoEdit extends StatelessWidget {
           label: 'Phone Number',
           hintText: 'Enter phone number',
           controller: phoneController,
-          prefixIcon: LucideIcons.phone,
+          prefixIcon: LucideIcons.phoneCall,
           keyboardType: TextInputType.phone,
         ),
         const SizedBox(height: 20),
@@ -235,7 +235,7 @@ class PersonalInfoEdit extends StatelessWidget {
                 filled: true,
                 fillColor: inputBg,
                 prefixIcon: Icon(
-                  LucideIcons.cake,
+                  LucideIcons.calendar,
                   color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                   size: 18,
                 ),
@@ -248,7 +248,7 @@ class PersonalInfoEdit extends StatelessWidget {
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+                  borderSide: BorderSide(color: isDark ? Colors.grey.shade700 : Colors.transparent, width: 1),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -393,7 +393,7 @@ class PersonalInfoEdit extends StatelessWidget {
               child: CustomButton(
                 text: isLoading ? 'Saving...' : 'Save',
                 onPressed: isLoading ? () {} : onSave,
-                backgroundColor: isDark ? const Color(0xFF0C4E3C) : const Color(0xFF0C4E3C),
+                backgroundColor: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1),
                 textColor: Colors.white,
               ),
             ),

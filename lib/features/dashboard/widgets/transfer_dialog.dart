@@ -214,7 +214,7 @@ class _TransferDialogState extends State<TransferDialog> {
                     ],
                   ),
                 );
-                if (proceed != true) return;
+                if (proceed != true || !context.mounted) return;
               }
               context.read<TransactionProvider>().transferBalance(
                     amount,

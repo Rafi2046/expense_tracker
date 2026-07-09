@@ -51,6 +51,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
           onCategorySelected: (cat) async {
             Navigator.pop(ctx);
             final newProfile = await provider.finalizeProfileCreation();
+            if (!context.mounted) return;
             if (newProfile == null) {
               _showPremiumUpgrade(context);
               return;
@@ -106,7 +107,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
                 backgroundColor: const Color(0xFF2EBD85),
                 onPressed: _isCreating
                     ? () {}
-                    : () {
+                    : () async {
                   final name = _nameController.text.trim();
                   if (name.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -121,15 +122,15 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
                   if (widget.isBusiness) {
                     _showCategoryBottomSheet(context, provider);
                   } else {
-                    provider.finalizeProfileCreation().then((newProfile) {
-                      if (newProfile == null) {
-                        _showPremiumUpgrade(context);
-                        return;
-                      }
-                      _isCreating = false;
-                      context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
-                      Navigator.pop(context, newProfile);
-                    });
+                    final newProfile = await provider.finalizeProfileCreation();
+                    if (!context.mounted) return;
+                    if (newProfile == null) {
+                      _showPremiumUpgrade(context);
+                      return;
+                    }
+                    _isCreating = false;
+                    context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
+                    Navigator.pop(context, newProfile);
                   }
                 },
               ),
