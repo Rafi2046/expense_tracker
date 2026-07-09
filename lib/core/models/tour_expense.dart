@@ -82,6 +82,8 @@ class TourExpense {
     'date': date.toIso8601String(),
     'receiptPath': receiptPath,
     'createdAt': createdAt.toIso8601String(),
+    'isDeleted': isDeleted,
+    'lastModified': lastModified.toIso8601String(),
     if (shares != null)
       'shares': shares!.map((s) => s.toMap()).toList(),
   };
@@ -102,6 +104,10 @@ class TourExpense {
       receiptPath: map['receiptPath'] as String?,
       createdAt: map['createdAt'] != null
           ? DateTime.parse(map['createdAt'] as String)
+          : null,
+      isDeleted: map['isDeleted'] == true,
+      lastModified: map['lastModified'] != null
+          ? DateTime.parse(map['lastModified'] as String)
           : null,
       shares: shareMaps
           ?.map((s) => TourExpenseShare.fromEmbeddedMap(s))

@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_expense_share.dart';
@@ -139,6 +140,8 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     final totalSpentText = _formatAmount(totalSpent, tour.currency);
     final outstandingText = _formatAmount(totalOutstanding, tour.currency);
     final isSettled = totalOutstanding == 0;
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    final isOwner = tour.ownerUid != null && currentUid != null && tour.ownerUid == currentUid;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -250,6 +253,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 shares,
                 participants,
                 tour.currency,
+                isOwner,
               ),
           ],
         ),
@@ -343,6 +347,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     List<TourExpenseShare> shares,
     List participants,
     String currency,
+    bool isOwner,
   ) {
     final allParticipants = participants.cast<TourParticipant>();
     return Column(
@@ -378,6 +383,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               expense,
               payer.name,
               currency,
+              isOwner,
             ),
           ),
         );
@@ -401,6 +407,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     TourExpense expense,
     String payerName,
     String currency,
+    bool isOwner,
   ) {
     showModalBottomSheet(
       context: context,
@@ -412,6 +419,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           payerName: payerName,
           currency: currency,
           formatAmount: _formatAmount,
+          showDelete: isOwner,
           onDelete: () {
             Navigator.pop(ctx);
             _confirmDeleteExpense(context, expense.id);
@@ -464,22 +472,24 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           TextButton(
             onPressed: () async {
               Navigator.pop(ctx);
-              final scaffoldMessenger = ScaffoldMessenger.of(context);
-              try {
-                await context.read<TourProvider>().deleteExpense(expenseId);
-                scaffoldMessenger.showSnackBar(
-                  const SnackBar(
-                    content: Text('Expense deleted successfully'),
-                    backgroundColor: AppColors.activeGreen,
-                  ),
-                );
-              } catch (e) {
-                scaffoldMessenger.showSnackBar(
-                  SnackBar(
-                    content: Text('Error deleting expense: $e'),
-                    backgroundColor: AppColors.activeRed,
-                  ),
-                );
+              final success = await context.read<TourProvider>().deleteExpense(expenseId);
+              if (mounted) {
+                final scaffoldMessenger = ScaffoldMessenger.of(context);
+                if (success) {
+                  scaffoldMessenger.showSnackBar(
+                    const SnackBar(
+                      content: Text('Expense deleted successfully'),
+                      backgroundColor: AppColors.activeGreen,
+                    ),
+                  );
+                } else {
+                  scaffoldMessenger.showSnackBar(
+                    const SnackBar(
+                      content: Text('Only the tour creator can delete expenses'),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
               }
             },
             child: const Text(

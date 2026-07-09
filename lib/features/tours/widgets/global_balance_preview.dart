@@ -1,0 +1,118 @@
+import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
+
+class GlobalBalancePreview extends StatelessWidget {
+  const GlobalBalancePreview({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final borderColor = isDark
+        ? Colors.white.withValues(alpha: 0.08)
+        : Colors.black.withValues(alpha: 0.06);
+
+    final labelColor = isDark
+        ? Colors.white.withValues(alpha: 0.5)
+        : Colors.black.withValues(alpha: 0.45);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.04)
+              : Colors.black.withValues(alpha: 0.03),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: borderColor),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.account_balance_wallet_rounded,
+                    size: 16, color: AppColors.activeGreen),
+                const SizedBox(width: 8),
+                Text(
+                  'Across All Tours',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: labelColor,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: _BalanceTile(
+                    label: 'You Owe',
+                    amount: '\$340.00',
+                    isNegative: true,
+                    labelColor: labelColor,
+                  ),
+                ),
+                Container(width: 1, height: 40,
+                    color: borderColor),
+                Expanded(
+                  child: _BalanceTile(
+                    label: 'You are Owed',
+                    amount: '\$890.50',
+                    isNegative: false,
+                    labelColor: labelColor,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BalanceTile extends StatelessWidget {
+  final String label;
+  final String amount;
+  final bool isNegative;
+  final Color labelColor;
+
+  const _BalanceTile({
+    required this.label,
+    required this.amount,
+    required this.isNegative,
+    required this.labelColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: labelColor,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          amount,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            color: isNegative
+                ? const Color(0xFFEF4444)
+                : const Color(0xFF2EBD85),
+          ),
+        ),
+      ],
+    );
+  }
+}

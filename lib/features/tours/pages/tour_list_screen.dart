@@ -224,6 +224,41 @@ class _TourListScreenState extends State<TourListScreen> {
                     : _buildTourListContent(Theme.of(context), tours),
               ),
             ),
+            QuickActionHub(
+              onCreateNew: _openCreateTourSheet,
+              onViewAll: () {
+                final names = tours.map((t) => t.name).toList();
+                if (names.isEmpty) return;
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    title: Text(
+                      'All Tours (${names.length})',
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                    ),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: names.map((n) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Text(n, style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+                      )).toList(),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(ctx),
+                        child: const Text('Close', style: TextStyle(color: AppColors.activeGreen)),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            SizedBox(height: MediaQuery.of(context).padding.bottom + 24),
           ],
         ),
       ),
@@ -231,117 +266,89 @@ class _TourListScreenState extends State<TourListScreen> {
   }
 
   Widget _buildTourListContent(ThemeData theme, List<Tour> tours) {
-    return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      child: Padding(
-        padding: EdgeInsets.only(
-          top: 4,
-          bottom: MediaQuery.of(context).padding.bottom + 24,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-              SizedBox(
-                height: 220,
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: tours.length,
-                  onPageChanged: (index) {
-                    setState(() => _currentPageIndex = index);
-                  },
-                  itemBuilder: (context, index) {
-                    final tour = tours[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: TourCard(
-                        tour: tour,
-                        memberCount: _memberCounts[tour.id] ?? 0,
-                        totalSpent: _totalSpent[tour.id] ?? 0,
-                        index: index,
-                        onDelete: () => _confirmDeleteTour(context, tour),
-                        onToggleComplete: () => _toggleCompleteTour(tour),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondary) =>
-                                  TourDashboardScreen(tourId: tour.id),
-                              transitionsBuilder:
-                                  (context, animation, secondary, child) =>
-                                  FadeTransition(
-                                    opacity: animation,
-                                    child: child,
-                                  ),
-                              transitionDuration:
-                              const Duration(milliseconds: 300),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: 4,
+                bottom: MediaQuery.of(context).padding.bottom + 16,
               ),
-              const SizedBox(height: AppSpacing.s14),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: tours.asMap().entries.map((entry) {
-                  final i = entry.key;
-                  final isActive = i == _currentPageIndex;
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    margin: const EdgeInsets.symmetric(horizontal: 3),
-                    width: isActive ? 24 : 6,
-                    height: 6,
-                    decoration: BoxDecoration(
-                      color: isActive
-                          ? AppColors.activeGreen
-                          : AppColors.activeGreen.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(3),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 220,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: tours.length,
+                      onPageChanged: (index) {
+                        setState(() => _currentPageIndex = index);
+                      },
+                      itemBuilder: (context, index) {
+                        final tour = tours[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: TourCard(
+                            tour: tour,
+                            memberCount: _memberCounts[tour.id] ?? 0,
+                            totalSpent: _totalSpent[tour.id] ?? 0,
+                            index: index,
+                            onDelete: () => _confirmDeleteTour(context, tour),
+                            onToggleComplete: () => _toggleCompleteTour(tour),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (context, animation, secondary) =>
+                                      TourDashboardScreen(tourId: tour.id),
+                                  transitionsBuilder:
+                                      (context, animation, secondary, child) =>
+                                      FadeTransition(
+                                        opacity: animation,
+                                        child: child,
+                                      ),
+                                  transitionDuration:
+                                  const Duration(milliseconds: 300),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: AppSpacing.s20),
-              QuickActionHub(
-                onCreateNew: _openCreateTourSheet,
-                onViewAll: () {
-                  final names = tours.map((t) => t.name).toList();
-                  if (names.isEmpty) return;
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      backgroundColor: theme.colorScheme.surface,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      title: Text(
-                        'All Tours (${names.length})',
-                        style: TextStyle(color: theme.colorScheme.onSurface),
-                      ),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: names.map((n) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Text(n, style: TextStyle(color: theme.colorScheme.onSurface)),
-                        )).toList(),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(ctx),
-                          child: Text('Close', style: TextStyle(color: AppColors.activeGreen)),
+                  ),
+                  const SizedBox(height: AppSpacing.s14),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: tours.asMap().entries.map((entry) {
+                      final i = entry.key;
+                      final isActive = i == _currentPageIndex;
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        width: isActive ? 24 : 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: isActive
+                              ? AppColors.activeGreen
+                              : AppColors.activeGreen.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(3),
                         ),
-                      ],
-                    ),
-                  );
-                },
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 24),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      );
+        );
+      },
+    );
   }
 }

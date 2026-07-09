@@ -203,7 +203,9 @@ class TourProvider extends ChangeNotifier {
       _selectedTourId = tourId;
     }
     notifyListeners();
-    await _syncTourToSharedCollection(tour);
+    if (idx != -1) {
+      await _syncTourToSharedCollection(_tours[idx]);
+    }
     return true;
   }
 
@@ -667,11 +669,22 @@ class TourProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<void> deleteExpense(String expenseId) async {
-    final now = DateTime.now().toIso8601String();
+  Future<bool> deleteExpense(String expenseId) async {
     final idx = _expenses.indexWhere((e) => e.id == expenseId);
     final String? tourId = idx != -1 ? _expenses[idx].tourId : null;
+    if (tourId == null) return false;
 
+    final tour = _tours.firstWhere(
+      (t) => t.id == tourId,
+      orElse: () => Tour(id: '', name: '', currency: '', createdAt: DateTime.now()),
+    );
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    if (tour.ownerUid != null && currentUid != null && tour.ownerUid != currentUid) {
+      return false;
+    }
+
+    final original = _expenses[idx];
+    final now = DateTime.now().toIso8601String();
     final db = await _db.database;
     await db.transaction((txn) async {
       await txn.update(
@@ -687,16 +700,20 @@ class TourProvider extends ChangeNotifier {
         whereArgs: [expenseId],
       );
     });
-    if (tourId != null && _selectedTourId == tourId) {
+    if (_selectedTourId == tourId) {
       await refreshTourData();
     } else {
       _expenses.removeWhere((e) => e.id == expenseId);
       _shares.removeWhere((s) => s.expenseId == expenseId);
       notifyListeners();
     }
-    if (tourId != null) {
-      _softDeleteDoc(tourId, 'expenses', expenseId, now);
-    }
+    final deleted = original.copyWith(isDeleted: true, lastModified: DateTime.now());
+    await _sharedToursCollection
+        .doc(tourId)
+        .collection('expenses')
+        .doc(expenseId)
+        .set(deleted.toMap());
+    return true;
   }
 
   /// Pure calculation of shares for a given expense and active participants.
@@ -1148,8 +1165,16 @@ class TourProvider extends ChangeNotifier {
         await localService.upsertTour(tour);
         final idx = _tours.indexWhere((t) => t.id == tourId);
         if (idx != -1) {
+          final old = _tours[idx];
           _tours[idx] = tour;
           notifyListeners();
+          final currentUid = FirebaseAuth.instance.currentUser?.uid;
+          if (tour.isCompleted && !old.isCompleted &&
+              tour.ownerUid != null && currentUid != null &&
+              tour.ownerUid != currentUid) {
+            final notif = TourProvider.onNotification;
+            notif?.call('Tour marked as completed by the creator');
+          }
         }
       }, onError: (e) => debugPrint('Tour stream error: $e')),
 
@@ -1177,13 +1202,29 @@ class TourProvider extends ChangeNotifier {
 
       expensesRef.snapshots().listen((snapshot) async {
         final localService = TourLocalService(await _db.database);
+        final currentUid = FirebaseAuth.instance.currentUser?.uid;
+        final tourOwnerUid = _tours
+            .firstWhere((t) => t.id == tourId, orElse: () => Tour(id: '', name: '', currency: '', createdAt: DateTime.now()))
+            .ownerUid;
         for (final change in snapshot.docChanges) {
           if (change.type == DocumentChangeType.removed) continue;
-          final data = change.doc.data();
-          if (data == null) continue;
-          final expense = TourExpense.fromMap(change.doc.id, data);
-          final shares = expense.shares ?? [];
-          await localService.upsertExpenseWithShares(expense, shares);
+          try {
+            final data = change.doc.data();
+            if (data == null) continue;
+            final expense = TourExpense.fromMap(change.doc.id, data);
+            final shares = expense.shares ?? [];
+            await localService.upsertExpenseWithShares(expense, shares);
+            if (change.type == DocumentChangeType.modified &&
+                expense.isDeleted &&
+                tourOwnerUid != null &&
+                currentUid != null &&
+                tourOwnerUid != currentUid) {
+              final notif = TourProvider.onNotification;
+              notif?.call('An expense was deleted by the tour creator');
+            }
+          } catch (e) {
+            debugPrint('Expenses listener error: $e');
+          }
         }
         if (_selectedTourId == tourId) {
           await _loadTourDetails(tourId);

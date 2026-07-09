@@ -11,6 +11,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
   final String Function(double, String) formatAmount;
   final VoidCallback onDelete;
   final VoidCallback? onEdit;
+  final bool showDelete;
 
   const TourExpenseDetailsSheet({
     super.key,
@@ -20,6 +21,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
     required this.formatAmount,
     required this.onDelete,
     this.onEdit,
+    this.showDelete = true,
   });
 
   @override
@@ -210,8 +212,9 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                       ),
                     ),
                   ),
-                ElevatedButton.icon(
-                  onPressed: onDelete,
+                if (showDelete)
+                  ElevatedButton.icon(
+                    onPressed: onDelete,
                   icon: const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 18),
                   label: const Text(
                     'Delete Expense',
