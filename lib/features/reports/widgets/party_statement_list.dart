@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PartyStatementList extends StatelessWidget {
   const PartyStatementList({super.key});
@@ -50,7 +51,7 @@ class PartyStatementList extends StatelessWidget {
           child: Text(
             'No transactions in this period',
             style: AppTextStyles.reportTransactionSubtitle.copyWith(
-              fontSize: 14,
+              fontSize: AppFontSizes.size14,
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
@@ -65,7 +66,7 @@ class PartyStatementList extends StatelessWidget {
           'Transaction Lists',
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.w700,
-            fontSize: 15,
+            fontSize: AppFontSizes.size15,
             color: theme.colorScheme.onSurface,
             letterSpacing: -0.2,
           ),
@@ -152,7 +153,7 @@ class PartyStatementList extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.workSans(
-                            fontSize: 14,
+                            fontSize: AppFontSizes.size14,
                             fontWeight: FontWeight.w600,
                             color: theme.colorScheme.onSurface,
                             letterSpacing: -0.15,
@@ -162,7 +163,7 @@ class PartyStatementList extends StatelessWidget {
                         Text(
                           DateFormat('dd MMM yyyy').format(entry.dateTime),
                           style: GoogleFonts.workSans(
-                            fontSize: 11,
+                            fontSize: AppFontSizes.size11,
                             fontWeight: FontWeight.w400,
                             color: isDark ? Colors.white38 : Colors.grey.shade500,
                           ),
@@ -176,7 +177,7 @@ class PartyStatementList extends StatelessWidget {
                   Text(
                     '${isInflow ? '+' : '−'} $currencySymbol ${entry.amount.toStringAsFixed(0)}',
                     style: GoogleFonts.workSans(
-                      fontSize: 14.5,
+                      fontSize: AppFontSizes.size15,
                       fontWeight: FontWeight.w700,
                       color: typeColor,
                       letterSpacing: -0.2,

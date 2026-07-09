@@ -9,6 +9,7 @@ import 'package:expense_tracker/features/dashboard/pages/create_profile_name_scr
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class SelectProfileScreen extends StatelessWidget {
   const SelectProfileScreen({super.key});
@@ -39,7 +40,7 @@ class SelectProfileScreen extends StatelessWidget {
               Text(
                 'Select Your Profile',
                 style: GoogleFonts.workSans(
-                  fontSize: 20,
+                  fontSize: AppFontSizes.size20,
                   fontWeight: FontWeight.w800,
                   color: theme.textTheme.titleLarge?.color,
                 ),
@@ -48,7 +49,7 @@ class SelectProfileScreen extends StatelessWidget {
               Text(
                 'What will you use the app mostly for?',
                 style: GoogleFonts.workSans(
-                  fontSize: 13,
+                  fontSize: AppFontSizes.size13,
                   color: theme.textTheme.bodySmall?.color,
                 ),
               ),

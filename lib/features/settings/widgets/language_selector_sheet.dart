@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class LanguageSelectorSheet extends StatelessWidget {
   const LanguageSelectorSheet({super.key});
@@ -80,7 +81,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                       Text(
                         context.translate('change_language'),
                         style: GoogleFonts.workSans(
-                          fontSize: 18,
+                          fontSize: AppFontSizes.size18,
                           fontWeight: FontWeight.bold,
                           color: theme.colorScheme.onSurface,
                         ),
@@ -89,7 +90,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                       Text(
                         'Select your preferred interface language',
                         style: GoogleFonts.workSans(
-                          fontSize: 12.5,
+                          fontSize: AppFontSizes.size12,
                           color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                           fontWeight: FontWeight.w400,
                         ),
@@ -177,7 +178,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                 // Flag display
                 Text(
                   lang.flag,
-                  style: const TextStyle(fontSize: 34),
+                  style: const TextStyle(fontSize: AppFontSizes.size36),
                 ),
                 const SizedBox(height: 14),
                 
@@ -186,7 +187,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                   lang.name,
                   style: GoogleFonts.workSans(
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                    fontSize: 15.5,
+                    fontSize: AppFontSizes.size16,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -196,7 +197,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                 Text(
                   _getNativeName(lang.code),
                   style: GoogleFonts.workSans(
-                    fontSize: 12.5,
+                    fontSize: AppFontSizes.size12,
                     color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                     fontWeight: FontWeight.w400,
                   ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourExpenseTile extends StatelessWidget {
   final ThemeData theme;
@@ -75,7 +76,7 @@ class TourExpenseTile extends StatelessWidget {
                     payerName.isNotEmpty ? payerName[0].toUpperCase() : '?',
                     style: const TextStyle(
                       color: AppColors.white,
-                      fontSize: 14,
+                      fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -90,7 +91,7 @@ class TourExpenseTile extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: AppFontSizes.size15,
                           fontWeight: FontWeight.w600,
                           color: theme.colorScheme.onSurface,
                         ),
@@ -101,7 +102,7 @@ class TourExpenseTile extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: AppFontSizes.size12,
                           color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
                         ),
                       ),
@@ -112,7 +113,7 @@ class TourExpenseTile extends StatelessWidget {
                 Text(
                   formatAmount(expense.amount),
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: AppFontSizes.size16,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                   ),

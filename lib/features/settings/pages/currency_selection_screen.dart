@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class CurrencySelectionScreen extends StatefulWidget {
   const CurrencySelectionScreen({super.key});
@@ -36,7 +37,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
       child: Text(
         flagEmoji,
         style: const TextStyle(
-          fontSize: 22,
+          fontSize: AppFontSizes.size22,
           height: 1.25,
         ),
       ),
@@ -116,12 +117,12 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                         autofocus: true,
                         style: GoogleFonts.workSans(
                           color: theme.colorScheme.onSurface,
-                          fontSize: 14,
+                          fontSize: AppFontSizes.size14,
                           fontWeight: FontWeight.w500,
                         ),
                         decoration: InputDecoration(
                           hintText: 'Search currency...',
-                          hintStyle: GoogleFonts.workSans(color: isDark ? Colors.grey.shade600 : const Color(0xFF9CA3AF), fontSize: 14),
+                          hintStyle: GoogleFonts.workSans(color: isDark ? Colors.grey.shade600 : const Color(0xFF9CA3AF), fontSize: AppFontSizes.size14),
                           border: InputBorder.none,
                           isDense: true,
                         ),
@@ -140,7 +141,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                 style: GoogleFonts.workSans(
                   color: theme.colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
-                  fontSize: 17,
+                  fontSize: AppFontSizes.size18,
                 ),
               ),
         centerTitle: true,
@@ -174,7 +175,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
               Text(
                 'CURRENT CURRENCY',
                 style: GoogleFonts.workSans(
-                  fontSize: 11,
+                  fontSize: AppFontSizes.size11,
                   fontWeight: FontWeight.w800,
                   color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF),
                   letterSpacing: 1.2,
@@ -207,7 +208,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                                 Text(
                                   selectedCurrency.name,
                                   style: GoogleFonts.workSans(
-                                    fontSize: 15,
+                                    fontSize: AppFontSizes.size15,
                                     color: theme.colorScheme.onSurface,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -216,7 +217,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                                 Text(
                                   selectedCurrency.code,
                                   style: GoogleFonts.workSans(
-                                    fontSize: 12,
+                                    fontSize: AppFontSizes.size12,
                                     color: isDark ? Colors.grey.shade400 : const Color(0xFF6B7280),
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -227,7 +228,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                           Text(
                             selectedCurrency.symbol,
                             style: GoogleFonts.workSans(
-                              fontSize: 16,
+                              fontSize: AppFontSizes.size16,
                               fontWeight: FontWeight.w700,
                               color: activeGreenColor,
                             ),
@@ -254,7 +255,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                 child: Center(
                   child: Text(
                     'No currencies found',
-                    style: GoogleFonts.workSans(color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF), fontSize: 15),
+                    style: GoogleFonts.workSans(color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF), fontSize: AppFontSizes.size15),
                   ),
                 ),
               )
@@ -265,7 +266,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                   child: Text(
                     region,
                     style: GoogleFonts.workSans(
-                      fontSize: 11,
+                      fontSize: AppFontSizes.size11,
                       fontWeight: FontWeight.w800,
                       color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF),
                       letterSpacing: 1.5,
@@ -304,7 +305,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                                   Text(
                                     currency.name,
                                     style: GoogleFonts.workSans(
-                                      fontSize: 15,
+                                      fontSize: AppFontSizes.size15,
                                       color: theme.colorScheme.onSurface,
                                       fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w400,
                                     ),
@@ -313,7 +314,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                                   Text(
                                     currency.code,
                                     style: GoogleFonts.workSans(
-                                      fontSize: 12,
+                                      fontSize: AppFontSizes.size12,
                                       color: isDark ? Colors.grey.shade400 : const Color(0xFF6B7280),
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -324,7 +325,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                             Text(
                               currency.symbol,
                               style: GoogleFonts.workSans(
-                                fontSize: 16,
+                                fontSize: AppFontSizes.size16,
                                 fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w500,
                                 color: isCurrent ? activeGreenColor : (isDark ? Colors.grey.shade400 : const Color(0xFF6B7280)),
                               ),

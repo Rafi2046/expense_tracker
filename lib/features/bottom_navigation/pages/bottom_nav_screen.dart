@@ -8,6 +8,7 @@ import 'package:expense_tracker/features/settings/pages/settings_screen.dart';
 import 'package:expense_tracker/features/tours/pages/tour_list_screen.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class BottomNavScreen extends StatefulWidget {
   const BottomNavScreen({super.key});
@@ -189,7 +190,7 @@ class _AppBottomNavState extends State<BottomNavScreen> {
                     Text(
                       context.translate(item.title.toLowerCase()),
                       style: TextStyle(
-                        fontSize: 10.5,
+                        fontSize: AppFontSizes.size10,
                         fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
                         fontWeight: FontWeight.w600,
                         color: activeColor,

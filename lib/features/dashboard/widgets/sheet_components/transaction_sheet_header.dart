@@ -1,6 +1,7 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransactionSheetHeader extends StatelessWidget {
   final bool isEditing;
@@ -52,7 +53,7 @@ class TransactionSheetHeader extends StatelessWidget {
                   Text(
                     title,
                     style: GoogleFonts.workSans(
-                      fontSize: 20,
+                      fontSize: AppFontSizes.size20,
                       fontWeight: FontWeight.w800,
                       color: theme.colorScheme.onSurface,
                       letterSpacing: -0.3,
@@ -62,7 +63,7 @@ class TransactionSheetHeader extends StatelessWidget {
                   Text(
                     subtitle,
                     style: GoogleFonts.workSans(
-                      fontSize: 12,
+                      fontSize: AppFontSizes.size12,
                       fontWeight: FontWeight.w400,
                       color: isDark ? Colors.white38 : Colors.grey.shade500,
                     ),

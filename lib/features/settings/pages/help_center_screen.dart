@@ -2,6 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class HelpCenterScreen extends StatelessWidget {
   const HelpCenterScreen({super.key});
@@ -42,7 +43,7 @@ class HelpCenterScreen extends StatelessWidget {
         title: Text(
           context.translate('help_center'),
           style: GoogleFonts.workSans(
-            fontSize: 20,
+            fontSize: AppFontSizes.size20,
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.onSurface,
           ),
@@ -100,7 +101,7 @@ class HelpCenterScreen extends StatelessWidget {
                       title: Text(
                         faq.question,
                         style: GoogleFonts.workSans(
-                          fontSize: 14.5,
+                          fontSize: AppFontSizes.size15,
                           fontWeight: FontWeight.w600,
                           color: theme.colorScheme.onSurface,
                         ),
@@ -109,7 +110,7 @@ class HelpCenterScreen extends StatelessWidget {
                         Text(
                           faq.answer,
                           style: GoogleFonts.workSans(
-                            fontSize: 13.5,
+                            fontSize: AppFontSizes.size14,
                             fontWeight: FontWeight.w400,
                             color: theme.colorScheme.onSurfaceVariant,
                             height: 1.5,
@@ -143,7 +144,7 @@ class HelpCenterScreen extends StatelessWidget {
                 label: Text(
                   'Contact Support',
                   style: GoogleFonts.workSans(
-                    fontSize: 15,
+                    fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

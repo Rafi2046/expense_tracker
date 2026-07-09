@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class CategorySelectionSheetContent extends StatelessWidget {
   final Function(String) onCategorySelected;
@@ -43,7 +44,7 @@ class CategorySelectionSheetContent extends StatelessWidget {
           Text(
             'Select Business Category',
             style: GoogleFonts.workSans(
-              fontSize: 20,
+              fontSize: AppFontSizes.size20,
               fontWeight: FontWeight.w800,
               color: theme.textTheme.titleLarge?.color,
             ),
@@ -52,7 +53,7 @@ class CategorySelectionSheetContent extends StatelessWidget {
 
           TextField(
             style: GoogleFonts.workSans(
-              fontSize: 15,
+              fontSize: AppFontSizes.size15,
               color: theme.textTheme.bodyLarge?.color,
             ),
             decoration: InputDecoration(
@@ -103,7 +104,7 @@ class CategorySelectionSheetContent extends StatelessWidget {
                   title: Text(
                     cat,
                     style: GoogleFonts.workSans(
-                      fontSize: 15,
+                      fontSize: AppFontSizes.size15,
                       color: theme.textTheme.bodyLarge?.color,
                     ),
                   ),

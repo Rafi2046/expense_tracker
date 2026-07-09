@@ -4,6 +4,7 @@ import 'package:expense_tracker/features/reports/widgets/select_date_input_dialo
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class DateRangePickerSheet extends StatefulWidget {
   final DateTimeRange? initialSelectedRange;
@@ -134,7 +135,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                   'Select Date',
                   style: GoogleFonts.workSans(
                     fontWeight: FontWeight.w600,
-                    fontSize: 15,
+                    fontSize: AppFontSizes.size15,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -155,7 +156,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                     Text(
                       _rangeText,
                       style: GoogleFonts.workSans(
-                        fontSize: 18,
+                        fontSize: AppFontSizes.size18,
                         fontWeight: FontWeight.w600,
                         color: theme.colorScheme.onSurface,
                       ),
@@ -202,7 +203,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                       style: GoogleFonts.workSans(
                         color: theme.colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
-                        fontSize: 12,
+                        fontSize: AppFontSizes.size12,
                       ),
                     ),
                   ),
@@ -246,7 +247,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                     style: GoogleFonts.workSans(
                       color: AppColors.activeGreen,
                       fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                      fontSize: AppFontSizes.size14,
                     ),
                   ),
                 ),
@@ -276,7 +277,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                           ? (isDark ? Colors.white24 : Colors.grey.shade400)
                           : Colors.white,
                       fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                      fontSize: AppFontSizes.size14,
                     ),
                   ),
                 ),
@@ -306,7 +307,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
           child: Text(
             monthName,
             style: GoogleFonts.workSans(
-              fontSize: 15,
+              fontSize: AppFontSizes.size15,
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
             ),
@@ -379,7 +380,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                                   : theme.colorScheme.onSurface),
                           fontWeight:
                               isSelected || isInRange ? FontWeight.bold : FontWeight.w500,
-                          fontSize: 14,
+                          fontSize: AppFontSizes.size14,
                         ),
                       ),
                     ),

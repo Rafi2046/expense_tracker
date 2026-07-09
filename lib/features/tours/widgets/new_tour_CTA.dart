@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class NewTourCTA extends StatelessWidget {
   final VoidCallback onTap;
@@ -61,7 +62,7 @@ class NewTourCTA extends StatelessWidget {
               Text(
                 'Create New Tour',
                 style: GoogleFonts.workSans(
-                  fontSize: 15,
+                  fontSize: AppFontSizes.size15,
                   fontWeight: FontWeight.w700, // Bolder text
                   letterSpacing: 0.3,
                   color: theme.colorScheme.onSurface, // Solid text color, not faded

@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransferDialog extends StatefulWidget {
   final String? initialFromAccount;
@@ -45,7 +46,7 @@ class _TransferDialogState extends State<TransferDialog> {
         'Transfer Balance',
         style: GoogleFonts.workSans(
           fontWeight: FontWeight.bold,
-          fontSize: 16.5,
+          fontSize: AppFontSizes.size16,
         ),
       ),
       content: Form(
@@ -111,7 +112,7 @@ class _TransferDialogState extends State<TransferDialog> {
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              style: GoogleFonts.workSans(fontSize: 14),
+              style: GoogleFonts.workSans(fontSize: AppFontSizes.size14),
               decoration: InputDecoration(
                 labelText: 'Transfer Amount',
                 prefixText: '${context.currencySymbol} ',
@@ -144,7 +145,7 @@ class _TransferDialogState extends State<TransferDialog> {
             'Cancel',
             style: GoogleFonts.workSans(
               color: Colors.grey,
-              fontSize: 13,
+              fontSize: AppFontSizes.size13,
             ),
           ),
         ),
@@ -171,7 +172,7 @@ class _TransferDialogState extends State<TransferDialog> {
                       'Balance Will Go Negative',
                       style: GoogleFonts.workSans(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: AppFontSizes.size16,
                         color: theme.colorScheme.onSurface,
                       ),
                     ),
@@ -180,7 +181,7 @@ class _TransferDialogState extends State<TransferDialog> {
                       '$formattedProjected.\n\n'
                       'Are you sure you want to proceed?',
                       style: GoogleFonts.workSans(
-                        fontSize: 14,
+                        fontSize: AppFontSizes.size14,
                         color: theme.colorScheme.onSurfaceVariant,
                         height: 1.45,
                       ),
@@ -242,7 +243,7 @@ class _TransferDialogState extends State<TransferDialog> {
             style: GoogleFonts.workSans(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 13,
+              fontSize: AppFontSizes.size13,
             ),
           ),
         ),

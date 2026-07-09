@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class IncomeMonthlySection extends StatelessWidget {
   final bool isMasked;
@@ -17,7 +18,7 @@ class IncomeMonthlySection extends StatelessWidget {
   const IncomeMonthlySection({super.key, required this.isMasked});
 
   TextStyle get _amountStyle => TextStyle(
-    fontSize: 15,
+    fontSize: AppFontSizes.size15,
     fontWeight: FontWeight.bold,
     color: const Color(0xFF2EBD85),
     fontFamily: GoogleFonts.workSans().fontFamily,

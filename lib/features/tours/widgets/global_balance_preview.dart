@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class GlobalBalancePreview extends StatelessWidget {
   const GlobalBalancePreview({super.key});
@@ -39,7 +40,7 @@ class GlobalBalancePreview extends StatelessWidget {
                 Text(
                   'Across All Tours',
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.w600,
                     color: labelColor,
                   ),
@@ -96,7 +97,7 @@ class _BalanceTile extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: 12,
+            fontSize: AppFontSizes.size12,
             fontWeight: FontWeight.w500,
             color: labelColor,
           ),
@@ -105,7 +106,7 @@ class _BalanceTile extends StatelessWidget {
         Text(
           amount,
           style: TextStyle(
-            fontSize: 22,
+            fontSize: AppFontSizes.size22,
             fontWeight: FontWeight.w700,
             color: isNegative
                 ? const Color(0xFFEF4444)

@@ -13,6 +13,7 @@ import 'package:expense_tracker/features/dashboard/widgets/time_frame_selector.d
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class IncomeInsightsScreen extends StatefulWidget {
   const IncomeInsightsScreen({super.key});
@@ -48,7 +49,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
               Text(
                 'Vs Yesterday',
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: AppFontSizes.size13,
                   color: Theme.of(context).brightness == Brightness.light
                       ? AppColors.loginSubTitle
                       : Colors.white70,
@@ -66,7 +67,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                   Text(
                     '$sign${change.toStringAsFixed(1)}%',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: AppFontSizes.size13,
                       fontWeight: FontWeight.bold,
                       color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
                       fontFamily: GoogleFonts.workSans().fontFamily,
@@ -100,7 +101,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                   Text(
                     'Avg. Daily',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: AppFontSizes.size13,
                       color: Theme.of(context).brightness == Brightness.light
                           ? AppColors.loginSubTitle
                           : Colors.white70,
@@ -111,7 +112,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                     amount: avgDaily,
                     isMasked: _localMasked,
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: AppFontSizes.size13,
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,
@@ -126,7 +127,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                   Text(
                     'Vs Last Week',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: AppFontSizes.size13,
                       color: Theme.of(context).brightness == Brightness.light
                           ? AppColors.loginSubTitle
                           : Colors.white70,
@@ -144,7 +145,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                       Text(
                         '$sign${change.toStringAsFixed(1)}%',
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: AppFontSizes.size13,
                           fontWeight: FontWeight.bold,
                           color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
                           fontFamily: GoogleFonts.workSans().fontFamily,
@@ -188,7 +189,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                   Text(
                     'Projected Year End',
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: AppFontSizes.size13,
                       color: Theme.of(context).brightness == Brightness.light
                           ? AppColors.loginSubTitle
                           : Colors.white70,
@@ -199,7 +200,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                     amount: projectedYearEnd,
                     isMasked: _localMasked,
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: AppFontSizes.size13,
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,

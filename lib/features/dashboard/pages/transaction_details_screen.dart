@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_detail_cards.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransactionDetailsScreen extends StatelessWidget {
   final TransactionItem transaction;
@@ -29,7 +30,7 @@ class TransactionDetailsScreen extends StatelessWidget {
         title: Text(
           isIncome ? 'Income Details' : 'Expense Details',
           style: AppTextStyles.reportAppBarTitle.copyWith(
-            fontSize: 16.5,
+            fontSize: AppFontSizes.size16,
             color: theme.colorScheme.onSurface,
           ),
         ),
@@ -96,19 +97,19 @@ class TransactionDetailsScreen extends StatelessWidget {
             'Delete Transaction',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: AppFontSizes.size16,
             ),
           ),
           content: const Text(
             'Are you sure you want to delete this transaction? This action cannot be undone.',
-            style: TextStyle(fontSize: 13.5),
+            style: TextStyle(fontSize: AppFontSizes.size14),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
               child: const Text(
                 'Cancel',
-                style: TextStyle(color: Colors.grey, fontSize: 13),
+                style: TextStyle(color: Colors.grey, fontSize: AppFontSizes.size13),
               ),
             ),
             ElevatedButton(
@@ -133,7 +134,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 13,
+                  fontSize: AppFontSizes.size13,
                 ),
               ),
             ),

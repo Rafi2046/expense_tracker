@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class CashStatementList extends StatelessWidget {
   final bool isMasked;
@@ -30,7 +31,7 @@ class CashStatementList extends StatelessWidget {
               Text(
                 'No cash transactions found',
                 style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                  fontSize: 14,
+                  fontSize: AppFontSizes.size14,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
@@ -45,7 +46,7 @@ class CashStatementList extends StatelessWidget {
       children: [
         Text(
           'Transaction Lists',
-          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 14.5, color: theme.colorScheme.onSurface),
+          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: AppFontSizes.size15, color: theme.colorScheme.onSurface),
         ),
         const SizedBox(height: 10),
         ListView.separated(
@@ -72,13 +73,13 @@ class CashStatementList extends StatelessWidget {
                       children: [
                         Text(
                           tx.title,
-                          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 13.5, color: theme.colorScheme.onSurface),
+                          style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: AppFontSizes.size14, color: theme.colorScheme.onSurface),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           '${tx.subtitle}\n${DateFormat('dd MMM yyyy').format(tx.dateTime)}',
                           style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                            fontSize: 11,
+                            fontSize: AppFontSizes.size11,
                             height: 1.25,
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
@@ -97,14 +98,14 @@ class CashStatementList extends StatelessWidget {
                                 'Bal: ',
                                 style: AppTextStyles.reportStatLabel.copyWith(
                                   color: theme.primaryColor,
-                                  fontSize: 10,
+                                  fontSize: AppFontSizes.size10,
                                 ),
                               ),
                               PrivacyMaskedText(
                                 amount: tx.runningBalance,
                                 style: AppTextStyles.reportStatLabel.copyWith(
                                   color: theme.primaryColor,
-                                  fontSize: 10,
+                                  fontSize: AppFontSizes.size10,
                                 ),
                                 isMasked: isMasked,
                               ),
@@ -117,7 +118,7 @@ class CashStatementList extends StatelessWidget {
                   PrivacyMaskedText(
                     amount: tx.amount,
                     style: AppTextStyles.reportTransactionTitle.copyWith(
-                      fontSize: 14,
+                      fontSize: AppFontSizes.size14,
                       color: tx.isCredit ? theme.primaryColor : AppColors.activeRed,
                     ),
                     isMasked: isMasked,

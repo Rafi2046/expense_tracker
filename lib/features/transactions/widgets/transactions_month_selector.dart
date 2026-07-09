@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransactionsMonthSelector extends StatefulWidget {
   const TransactionsMonthSelector({super.key});
@@ -103,7 +104,7 @@ class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
                         child: Text(
                           title,
                           style: GoogleFonts.workSans(
-                            fontSize: 14,
+                            fontSize: AppFontSizes.size14,
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                             color: isSelected ? accentColor : (isDarkItem ? Colors.white70 : Colors.black87),
                           ),
@@ -155,7 +156,7 @@ class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
                       Text(
                         context.translate('sort_transactions'),
                         style: GoogleFonts.workSans(
-                          fontSize: 16,
+                          fontSize: AppFontSizes.size16,
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
@@ -271,7 +272,7 @@ class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
                         Text(
                           DateFormat('MMM', locale).format(month).toUpperCase(),
                           style: GoogleFonts.workSans(
-                            fontSize: 12,
+                            fontSize: AppFontSizes.size12,
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                             color: isSelected ? Colors.white : (isDarkSlider ? Colors.white70 : Colors.black87),
                             letterSpacing: 0.5,
@@ -281,7 +282,7 @@ class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
                         Text(
                           DateFormat('yyyy', locale).format(month),
                           style: GoogleFonts.workSans(
-                            fontSize: 9,
+                            fontSize: AppFontSizes.size9,
                             fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
                             color: isSelected ? Colors.white70 : (isDarkSlider ? Colors.grey.shade400 : Colors.grey.shade500),
                           ),

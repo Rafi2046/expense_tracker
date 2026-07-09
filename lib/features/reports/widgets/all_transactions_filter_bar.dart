@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_select_sheet.dart';
 import 'package:expense_tracker/features/reports/widgets/transaction_type_select_sheet.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AllTransactionsFilterBar extends StatefulWidget {
   const AllTransactionsFilterBar({super.key});
@@ -46,7 +47,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
           style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: 'Search Transactions...',
-            hintStyle: AppTextStyles.partyFormHint.copyWith(fontSize: 14, color: isDark ? Colors.white30 : null),
+            hintStyle: AppTextStyles.partyFormHint.copyWith(fontSize: AppFontSizes.size14, color: isDark ? Colors.white30 : null),
             prefixIcon: Icon(Symbols.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
             filled: true,
             fillColor: theme.cardColor,
@@ -94,7 +95,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                     children: [
                       Text(
                         reportsProvider.selectedType,
-                        style: AppTextStyles.reportTileTitle.copyWith(fontSize: 11.5, color: theme.colorScheme.onSurface),
+                        style: AppTextStyles.reportTileTitle.copyWith(fontSize: AppFontSizes.size11, color: theme.colorScheme.onSurface),
                       ),
                       Icon(Symbols.arrow_drop_down, color: theme.colorScheme.onSurface),
                     ],
@@ -130,7 +131,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                     children: [
                       Text(
                         reportsProvider.selectedPartyName ?? 'Select Party',
-                        style: AppTextStyles.reportTileTitle.copyWith(fontSize: 11.5, color: theme.colorScheme.onSurface),
+                        style: AppTextStyles.reportTileTitle.copyWith(fontSize: AppFontSizes.size11, color: theme.colorScheme.onSurface),
                       ),
                       Icon(Symbols.arrow_drop_down, color: theme.colorScheme.onSurface),
                     ],

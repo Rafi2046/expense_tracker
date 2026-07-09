@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransactionTypeSelectSheet extends StatelessWidget {
   final String selectedType;
@@ -67,7 +68,7 @@ class TransactionTypeSelectSheet extends StatelessWidget {
               'Select Transaction Type',
               style: GoogleFonts.workSans(
                 fontWeight: FontWeight.w600,
-                fontSize: 16,
+                fontSize: AppFontSizes.size16,
                 color: theme.colorScheme.onSurface,
               ),
             ),
@@ -95,7 +96,7 @@ class TransactionTypeSelectSheet extends StatelessWidget {
                   style: GoogleFonts.workSans(
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     color: theme.colorScheme.onSurface,
-                    fontSize: 14,
+                    fontSize: AppFontSizes.size14,
                   ),
                 ),
                 trailing: Container(

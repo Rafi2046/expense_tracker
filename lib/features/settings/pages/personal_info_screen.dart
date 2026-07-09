@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PersonalInfoScreen extends StatefulWidget {
   const PersonalInfoScreen({super.key});
@@ -232,7 +233,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         title: Text(
           _isEditing ? 'Edit Profile' : 'Profile Details',
           style: GoogleFonts.workSans(
-            fontSize: 20,
+            fontSize: AppFontSizes.size20,
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.onSurface,
           ),

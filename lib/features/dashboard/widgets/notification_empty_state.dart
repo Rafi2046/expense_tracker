@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class NotificationEmptyState extends StatelessWidget {
   const NotificationEmptyState({super.key});
@@ -36,7 +37,7 @@ class NotificationEmptyState extends StatelessWidget {
             Text(
               context.translate('no_notifications'),
               style: GoogleFonts.workSans(
-                fontSize: 18,
+                fontSize: AppFontSizes.size18,
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
               ),
@@ -46,7 +47,7 @@ class NotificationEmptyState extends StatelessWidget {
               context.translate('all_caught_up'),
               textAlign: TextAlign.center,
               style: GoogleFonts.workSans(
-                fontSize: 14,
+                fontSize: AppFontSizes.size14,
                 color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
                 height: 1.4,
               ),

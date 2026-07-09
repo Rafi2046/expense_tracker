@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class _DonutItem {
   final String label;
@@ -60,7 +61,7 @@ class DashboardSpendingCategories extends StatelessWidget {
             child: Text(
               context.translate('top_spending_categories').toUpperCase(),
               style: TextStyle(
-                fontSize: 11,
+                fontSize: AppFontSizes.size11,
                 fontWeight: FontWeight.bold,
                 color: isDark ? Colors.white60 : AppColors.loginSubTitle.withValues(alpha: 0.8),
                 fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
@@ -100,7 +101,7 @@ class DashboardSpendingCategories extends StatelessWidget {
                       Text(
                         '${percentage.toStringAsFixed(0)}%',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: AppFontSizes.size20,
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.onSurface,
                           fontFamily: GoogleFonts.workSans().fontFamily,
@@ -110,7 +111,7 @@ class DashboardSpendingCategories extends StatelessWidget {
                       Text(
                         context.translate(categoryName.toLowerCase()),
                         style: TextStyle(
-                          fontSize: 11,
+                          fontSize: AppFontSizes.size11,
                           color: AppColors.textMuted,
                           fontWeight: FontWeight.w500,
                           fontFamily: GoogleFonts.workSans().fontFamily,

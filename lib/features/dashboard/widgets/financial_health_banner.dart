@@ -1,6 +1,7 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class FinancialHealthBanner extends StatelessWidget {
   const FinancialHealthBanner({super.key});
@@ -33,7 +34,7 @@ class FinancialHealthBanner extends StatelessWidget {
                 Text(
                   'Financial Health',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                     fontFamily: GoogleFonts.workSans().fontFamily,
@@ -43,7 +44,7 @@ class FinancialHealthBanner extends StatelessWidget {
                 Text(
                   'Your income has increased by 8% this quarter.',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: AppFontSizes.size12,
                     color: Colors.white.withValues(alpha: 0.85),
                     fontFamily: GoogleFonts.workSans().fontFamily,
                     height: 1.3,

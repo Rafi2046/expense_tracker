@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PersonalInfoView extends StatelessWidget {
   final User user;
@@ -62,7 +63,7 @@ class PersonalInfoView extends StatelessWidget {
                 Text(
                   label,
                   style: GoogleFonts.workSans(
-                    fontSize: 11.5,
+                    fontSize: AppFontSizes.size11,
                     fontWeight: FontWeight.w500,
                     color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
                   ),
@@ -73,7 +74,7 @@ class PersonalInfoView extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.workSans(
-                    fontSize: 14.5,
+                    fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.w600,
                     color: value.isEmpty 
                         ? (isDark ? Colors.grey.shade600 : Colors.grey.shade400) 
@@ -154,7 +155,7 @@ class PersonalInfoView extends StatelessWidget {
                 displayName,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.workSans(
-                  fontSize: 19,
+                  fontSize: AppFontSizes.size20,
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
                 ),
@@ -165,7 +166,7 @@ class PersonalInfoView extends StatelessWidget {
                   occupation,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.workSans(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.w600,
                     color: primaryColor,
                   ),
@@ -180,7 +181,7 @@ class PersonalInfoView extends StatelessWidget {
         Text(
           'PERSONAL DETAILS',
           style: GoogleFonts.workSans(
-            fontSize: 11,
+            fontSize: AppFontSizes.size11,
             fontWeight: FontWeight.bold,
             color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
             letterSpacing: 1.2,

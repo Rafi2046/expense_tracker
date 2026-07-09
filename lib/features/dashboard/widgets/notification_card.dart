@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class NotificationCard extends StatelessWidget {
   final NotificationItem item;
@@ -116,7 +117,7 @@ class NotificationCard extends StatelessWidget {
                                 fontWeight: item.isRead
                                     ? FontWeight.w600
                                     : FontWeight.bold,
-                                fontSize: 14.5,
+                                fontSize: AppFontSizes.size15,
                                 color: theme.colorScheme.onSurface,
                               ),
                             ),
@@ -125,7 +126,7 @@ class NotificationCard extends StatelessWidget {
                           Text(
                             _getTimeAgo(item.dateTime),
                             style: GoogleFonts.workSans(
-                              fontSize: 11,
+                              fontSize: AppFontSizes.size11,
                               color: isDark ? Colors.grey.shade500 : AppColors.textMuted,
                               fontWeight: FontWeight.w500,
                             ),
@@ -138,7 +139,7 @@ class NotificationCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.workSans(
-                          fontSize: 13,
+                          fontSize: AppFontSizes.size13,
                           color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                           height: 1.4,
                         ),

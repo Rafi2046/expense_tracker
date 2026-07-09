@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourStatsRow extends StatelessWidget {
   final int totalTours;
@@ -99,7 +100,7 @@ class _StatCard extends StatelessWidget {
               child: Text(
                 label,
                 style: GoogleFonts.workSans(
-                  fontSize: 14,
+                  fontSize: AppFontSizes.size14,
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                 ),

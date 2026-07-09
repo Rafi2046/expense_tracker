@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AccountCard extends StatelessWidget {
   final String title;
@@ -66,7 +67,7 @@ class AccountCard extends StatelessWidget {
                     Text(
                       title,
                       style: GoogleFonts.workSans(
-                        fontSize: 13.5,
+                        fontSize: AppFontSizes.size14,
                         fontWeight: FontWeight.bold,
                         color: theme.colorScheme.onSurface,
                       ),
@@ -75,7 +76,7 @@ class AccountCard extends StatelessWidget {
                     Text(
                       subtitle,
                       style: GoogleFonts.workSans(
-                        fontSize: 11,
+                        fontSize: AppFontSizes.size11,
                         color: AppColors.textMuted,
                       ),
                     ),

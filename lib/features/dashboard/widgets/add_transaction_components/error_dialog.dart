@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class ErrorDialog extends StatelessWidget {
   final String message;
@@ -21,12 +22,12 @@ class ErrorDialog extends StatelessWidget {
             'Missing Info',
             style: GoogleFonts.workSans(
               fontWeight: FontWeight.bold,
-              fontSize: 18,
+              fontSize: AppFontSizes.size18,
             ),
           ),
         ],
       ),
-      content: Text(message, style: GoogleFonts.workSans(fontSize: 16)),
+      content: Text(message, style: GoogleFonts.workSans(fontSize: AppFontSizes.size16)),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
@@ -34,7 +35,7 @@ class ErrorDialog extends StatelessWidget {
             'OK',
             style: GoogleFonts.workSans(
               fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: AppFontSizes.size16,
             ),
           ),
         ),

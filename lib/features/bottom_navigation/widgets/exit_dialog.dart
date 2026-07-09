@@ -4,6 +4,7 @@ import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class ExitDialog extends StatelessWidget {
   const ExitDialog({super.key});
@@ -42,7 +43,7 @@ class ExitDialog extends StatelessWidget {
             Text(
               'Exit App',
               style: TextStyle(
-                fontSize: 22,
+                fontSize: AppFontSizes.size22,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
                 fontFamily: GoogleFonts.workSans().fontFamily,
@@ -55,7 +56,7 @@ class ExitDialog extends StatelessWidget {
               'Are you sure you want to exit the application?',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: AppFontSizes.size14,
                 color: AppColors.loginSubTitle,
                 fontFamily: GoogleFonts.workSans().fontFamily,
                 height: 1.4,

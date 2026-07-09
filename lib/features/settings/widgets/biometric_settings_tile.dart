@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class BiometricSettingsTile extends StatefulWidget {
   const BiometricSettingsTile({super.key});
@@ -109,7 +110,7 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
                 Text(
                   'Biometric Login',
                   style: GoogleFonts.workSans(
-                    fontSize: 12,
+                    fontSize: AppFontSizes.size12,
                     fontWeight: FontWeight.w600,
                     color: isAvailable
                         ? theme.colorScheme.onSurface
@@ -124,7 +125,7 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
                           ? 'Use Face ID / Fingerprint on app restart'
                           : 'Not available on this device'),
                   style: GoogleFonts.workSans(
-                    fontSize: 9,
+                    fontSize: AppFontSizes.size9,
                     color: _isProcessing
                         ? theme.primaryColor
                         : (isAvailable

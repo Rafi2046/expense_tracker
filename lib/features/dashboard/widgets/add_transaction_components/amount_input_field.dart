@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AmountInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -25,20 +26,20 @@ class AmountInputField extends StatelessWidget {
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           textAlign: TextAlign.center,
           style: GoogleFonts.workSans(
-            fontSize: 36,
+            fontSize: AppFontSizes.size36,
             fontWeight: FontWeight.bold,
             color: themeColor,
           ),
           decoration: InputDecoration(
             prefixText: '$currencySymbol ',
             prefixStyle: GoogleFonts.workSans(
-              fontSize: 32,
+              fontSize: AppFontSizes.size32,
               fontWeight: FontWeight.bold,
               color: themeColor.withValues(alpha: 0.6),
             ),
             hintText: '0.00',
             hintStyle: GoogleFonts.workSans(
-              fontSize: 36,
+              fontSize: AppFontSizes.size36,
               fontWeight: FontWeight.bold,
               color: isDark ? Colors.white12 : Colors.grey.shade300,
             ),

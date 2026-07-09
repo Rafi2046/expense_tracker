@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class BudgetCategoryItem {
   final String name;
@@ -173,7 +174,7 @@ class _CategoryProgressRow extends StatelessWidget {
                                 Text(
                                   item.name,
                                   style: AppTextStyles.reportTileTitle.copyWith(
-                                    fontSize: 15,
+                                    fontSize: AppFontSizes.size15,
                                     color: isDark
                                         ? Colors.white
                                         : const Color(0xFF1A1A2E),
@@ -185,7 +186,7 @@ class _CategoryProgressRow extends StatelessWidget {
                                 Text(
                                   '${item.percentage.toStringAsFixed(1)}% of total',
                                   style: AppTextStyles.cardStatusText.copyWith(
-                                    fontSize: 11,
+                                    fontSize: AppFontSizes.size11,
                                     color: AppColors.textMuted,
                                   ),
                                 ),
@@ -198,7 +199,7 @@ class _CategoryProgressRow extends StatelessWidget {
                               Text(
                                 '${currency} ${_formatAmount(item.amount)}',
                                 style: AppTextStyles.reportTileTitle.copyWith(
-                                  fontSize: 16,
+                                  fontSize: AppFontSizes.size16,
                                   fontWeight: FontWeight.w700,
                                   color: isDark
                                       ? Colors.white
@@ -209,7 +210,7 @@ class _CategoryProgressRow extends StatelessWidget {
                               Text(
                                 '${barPct.toStringAsFixed(1)}% ${hasBudget ? "of budget" : "of spending"}',
                                 style: AppTextStyles.cardStatusText.copyWith(
-                                  fontSize: 11,
+                                  fontSize: AppFontSizes.size11,
                                   color: item.color,
                                   fontWeight: FontWeight.w600,
                                 ),

@@ -19,6 +19,7 @@ import 'package:expense_tracker/features/tours/widgets/tour_export_options_sheet
 import 'package:expense_tracker/features/tours/widgets/tour_member_required_dialog.dart';
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
 import 'package:expense_tracker/features/tours/widgets/invite_code_card.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourDashboardScreen extends StatefulWidget {
   final String tourId;
@@ -292,7 +293,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
             style: TextStyle(
               fontWeight: FontWeight.w600,
               color: AppColors.white.withValues(alpha: tour.isCompleted ? 0.5 : 1),
-              fontSize: 12,
+              fontSize: AppFontSizes.size12,
             ),
           ),
           elevation: tour.isCompleted ? 0 : 4,
@@ -313,7 +314,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           Text(
             'Expenses',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: AppFontSizes.size18,
               fontWeight: FontWeight.w700,
               color: theme.colorScheme.onSurface,
             ),
@@ -328,7 +329,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
             child: Text(
               '$count',
               style: TextStyle(
-                fontSize: 11,
+                fontSize: AppFontSizes.size11,
                 fontWeight: FontWeight.w700,
                 color: isDark
                     ? const Color(0xFF9CA3AF)
@@ -445,14 +446,14 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           'Delete Expense',
           style: TextStyle(
             fontWeight: FontWeight.w700,
-            fontSize: 17,
+            fontSize: AppFontSizes.size18,
             color: theme.colorScheme.onSurface,
           ),
         ),
         content: Text(
           'Are you sure you want to delete this expense? This action cannot be undone.',
           style: TextStyle(
-            fontSize: 14,
+            fontSize: AppFontSizes.size14,
             color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF4B5563),
           ),
         ),
@@ -536,7 +537,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
             Text(
               'No expenses yet',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: AppFontSizes.size16,
                 fontWeight: FontWeight.w700,
                 color: theme.colorScheme.onSurface,
               ),
@@ -545,7 +546,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
             Text(
               'Tap + to add the first expense',
               style: TextStyle(
-                fontSize: 13,
+                fontSize: AppFontSizes.size13,
                 color: isDark
                     ? const Color(0xFF9CA3AF)
                     : const Color(0xFF6B7280),

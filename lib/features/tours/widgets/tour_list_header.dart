@@ -8,6 +8,7 @@ import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourListHeader extends StatelessWidget {
   final UserProfile currentProfile;
@@ -65,7 +66,7 @@ class TourListHeader extends StatelessWidget {
                   child: Text(
                     'WHERE TO NEXT?',
                     style: GoogleFonts.workSans(
-                      fontSize: 10,
+                      fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.w500,
                       letterSpacing: 1.5,
                       color: AppColors.activeGreen.withValues(alpha: 0.9),
@@ -79,7 +80,7 @@ class TourListHeader extends StatelessWidget {
                     Text(
                       'Your Tours',
                       style: GoogleFonts.workSans(
-                        fontSize: 28,
+                        fontSize: AppFontSizes.size28,
                         fontWeight: FontWeight.w800,
                         letterSpacing: -0.8,
                         color: theme.colorScheme.onSurface,
@@ -96,7 +97,7 @@ class TourListHeader extends StatelessWidget {
                         child: Text(
                           'View All',
                           style: GoogleFonts.workSans(
-                            fontSize: 13,
+                            fontSize: AppFontSizes.size13,
                             fontWeight: FontWeight.w600,
                             color: AppColors.activeGreen,
                           ),
@@ -109,7 +110,7 @@ class TourListHeader extends StatelessWidget {
                   Text(
                     '$totalTours tour${totalTours == 1 ? '' : 's'} · $totalBuddies ${totalBuddies == 1 ? 'buddy' : 'buddies'}',
                     style: GoogleFonts.workSans(
-                      fontSize: 13,
+                      fontSize: AppFontSizes.size13,
                       fontWeight: FontWeight.w500,
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
@@ -169,7 +170,7 @@ class TourListHeader extends StatelessWidget {
                   style: TextStyle(
                     color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w700,
-                    fontSize: 16,
+                    fontSize: AppFontSizes.size16,
                     fontFamily: GoogleFonts.workSans().fontFamily,
                   ),
                 )

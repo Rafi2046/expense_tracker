@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class WeeklyChartData {
   final String dayLabel;
@@ -38,7 +39,7 @@ class WeeklyTrendChart extends StatelessWidget {
               Text(
                 '7-Day Trend',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: AppFontSizes.size18,
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
                   fontFamily: GoogleFonts.workSans().fontFamily,
@@ -58,7 +59,7 @@ class WeeklyTrendChart extends StatelessWidget {
                   Text(
                     'Income (${context.currencySymbol})',
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: AppFontSizes.size11,
                       color: AppColors.textMuted,
                       fontWeight: FontWeight.w500,
                       fontFamily: GoogleFonts.workSans().fontFamily,
@@ -84,7 +85,7 @@ class WeeklyTrendChart extends StatelessWidget {
                   return ChartAxisLabel(
                     details.text,
                     TextStyle(
-                      fontSize: 11,
+                      fontSize: AppFontSizes.size11,
                       color: isCurrent ? theme.colorScheme.onSurface : AppColors.textMuted,
                       fontWeight: isCurrent ? FontWeight.bold : FontWeight.w600,
                       fontFamily: GoogleFonts.workSans().fontFamily,

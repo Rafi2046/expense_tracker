@@ -13,6 +13,7 @@ import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourExportService {
   static Future<void> shareReport(BuildContext context, String tourId) async {
@@ -142,7 +143,7 @@ class TourExportService {
               Text(
                 'SETTLEMENT REPORT',
                 style: GoogleFonts.jetBrainsMono(
-                  fontSize: 10,
+                  fontSize: AppFontSizes.size10,
                   fontWeight: FontWeight.w800,
                   color: AppColors.white,
                   letterSpacing: 3.0,
@@ -156,7 +157,7 @@ class TourExportService {
           tour.name,
           textAlign: TextAlign.center,
           style: GoogleFonts.workSans(
-            fontSize: 28,
+            fontSize: AppFontSizes.size28,
             fontWeight: FontWeight.w800,
             color: const Color(0xFF111827),
             letterSpacing: -0.5,
@@ -193,7 +194,7 @@ class TourExportService {
           Text(
             _formatAmount(totalSpent, currency),
             style: GoogleFonts.jetBrainsMono(
-              fontSize: 32,
+              fontSize: AppFontSizes.size32,
               fontWeight: FontWeight.w800,
               color: const Color(0xFF059669),
               letterSpacing: -1.0,
@@ -223,7 +224,7 @@ class TourExportService {
     return Text(
       label,
       style: GoogleFonts.jetBrainsMono(
-        fontSize: 10,
+        fontSize: AppFontSizes.size10,
         fontWeight: FontWeight.w700,
         color: const Color(0xFF9CA3AF),
         letterSpacing: 2.0,
@@ -253,7 +254,7 @@ class TourExportService {
           Text(
             'All settled up',
             style: GoogleFonts.workSans(
-              fontSize: 18,
+              fontSize: AppFontSizes.size18,
               fontWeight: FontWeight.w700,
               color: const Color(0xFF065F46),
             ),
@@ -262,7 +263,7 @@ class TourExportService {
           Text(
             'No payments needed \u2014 everyone is even',
             style: GoogleFonts.workSans(
-              fontSize: 13,
+              fontSize: AppFontSizes.size13,
               fontWeight: FontWeight.w500,
               color: const Color(0xFF6B7280),
             ),
@@ -313,7 +314,7 @@ class TourExportService {
                     Text(
                       _formatAmount(s.amount, currency),
                       style: GoogleFonts.jetBrainsMono(
-                        fontSize: 16,
+                        fontSize: AppFontSizes.size16,
                         fontWeight: FontWeight.w800,
                         color: AppColors.activeGreen,
                       ),
@@ -345,7 +346,7 @@ class TourExportService {
           child: Text(
             name.isNotEmpty ? name[0].toUpperCase() : '?',
             style: GoogleFonts.workSans(
-              fontSize: 14,
+              fontSize: AppFontSizes.size14,
               fontWeight: FontWeight.w700,
               color: textColor,
             ),
@@ -359,7 +360,7 @@ class TourExportService {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.workSans(
-              fontSize: 13,
+              fontSize: AppFontSizes.size13,
               fontWeight: FontWeight.w600,
               color: const Color(0xFF374151),
             ),
@@ -383,7 +384,7 @@ class TourExportService {
           child: Text(
             'Generated via Expense Tracker  \u2022  Shared Expenses Simplified',
             style: GoogleFonts.workSans(
-              fontSize: 9.5,
+              fontSize: AppFontSizes.size9,
               color: Colors.grey.shade400,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.3,

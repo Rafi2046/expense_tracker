@@ -9,6 +9,7 @@ import 'package:expense_tracker/features/reports/pages/party_statement_screen.da
 import 'package:expense_tracker/features/reports/widgets/report_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class ViewReportsScreen extends StatelessWidget {
   const ViewReportsScreen({super.key});
@@ -27,7 +28,7 @@ class ViewReportsScreen extends StatelessWidget {
         title: Text(
           'Reports',
           style: GoogleFonts.workSans(
-            fontSize: 17,
+            fontSize: AppFontSizes.size18,
             fontWeight: FontWeight.w700,
             color: theme.appBarTheme.titleTextStyle?.color,
             letterSpacing: -0.3,
@@ -65,7 +66,7 @@ class ViewReportsScreen extends StatelessWidget {
                         Text(
                           'Financial Reports',
                           style: GoogleFonts.workSans(
-                            fontSize: 15,
+                            fontSize: AppFontSizes.size15,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
                           ),
@@ -74,7 +75,7 @@ class ViewReportsScreen extends StatelessWidget {
                         Text(
                           'Track, analyze & export your data',
                           style: GoogleFonts.workSans(
-                            fontSize: 11.5,
+                            fontSize: AppFontSizes.size11,
                             color: Colors.white70,
                           ),
                         ),
@@ -156,7 +157,7 @@ class ViewReportsScreen extends StatelessWidget {
       child: Text(
         label,
         style: GoogleFonts.workSans(
-          fontSize: 10.5,
+          fontSize: AppFontSizes.size10,
           fontWeight: FontWeight.w700,
           color: Theme.of(context).brightness == Brightness.dark ? Colors.white38 : Colors.grey.shade500,
           letterSpacing: 1.2,

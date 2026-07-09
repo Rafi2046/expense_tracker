@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PersonalInfoEdit extends StatelessWidget {
   final TextEditingController firstNameController;
@@ -60,7 +61,7 @@ class PersonalInfoEdit extends StatelessWidget {
         Text(
           label,
           style: GoogleFonts.workSans(
-            fontSize: 13,
+            fontSize: AppFontSizes.size13,
             fontWeight: FontWeight.w600,
             color: isDark ? Colors.grey.shade400 : Colors.black54,
           ),
@@ -69,7 +70,7 @@ class PersonalInfoEdit extends StatelessWidget {
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
-          style: GoogleFonts.workSans(fontSize: 14.5, color: theme.colorScheme.onSurface),
+          style: GoogleFonts.workSans(fontSize: AppFontSizes.size15, color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
             filled: true,
             fillColor: isDark ? theme.cardColor : const Color(0xFFF5F6F8),
@@ -79,7 +80,7 @@ class PersonalInfoEdit extends StatelessWidget {
               size: 18,
             ),
             hintText: hintText,
-            hintStyle: GoogleFonts.workSans(fontSize: 14, color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
+            hintStyle: GoogleFonts.workSans(fontSize: AppFontSizes.size14, color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -221,7 +222,7 @@ class PersonalInfoEdit extends StatelessWidget {
             Text(
               'Date of Birth',
               style: GoogleFonts.workSans(
-                fontSize: 13,
+                fontSize: AppFontSizes.size13,
                 fontWeight: FontWeight.w600,
                 color: isDark ? Colors.grey.shade400 : Colors.black54,
               ),
@@ -231,7 +232,7 @@ class PersonalInfoEdit extends StatelessWidget {
               controller: dobController,
               readOnly: true,
               onTap: onSelectDate,
-              style: GoogleFonts.workSans(fontSize: 14.5, color: theme.colorScheme.onSurface),
+              style: GoogleFonts.workSans(fontSize: AppFontSizes.size15, color: theme.colorScheme.onSurface),
               decoration: InputDecoration(
                 filled: true,
                 fillColor: inputBg,
@@ -241,7 +242,7 @@ class PersonalInfoEdit extends StatelessWidget {
                   size: 18,
                 ),
                 hintText: 'DD/MM/YYYY',
-                hintStyle: GoogleFonts.workSans(fontSize: 14, color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
+                hintStyle: GoogleFonts.workSans(fontSize: AppFontSizes.size14, color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -273,7 +274,7 @@ class PersonalInfoEdit extends StatelessWidget {
             Text(
               'Gender',
               style: GoogleFonts.workSans(
-                fontSize: 13,
+                fontSize: AppFontSizes.size13,
                 fontWeight: FontWeight.w600,
                 color: isDark ? Colors.grey.shade400 : Colors.black54,
               ),
@@ -319,7 +320,7 @@ class PersonalInfoEdit extends StatelessWidget {
                             style: GoogleFonts.workSans(
                               color: isSelected ? Colors.white : theme.colorScheme.onSurface,
                               fontWeight: FontWeight.w600,
-                              fontSize: 14,
+                              fontSize: AppFontSizes.size14,
                             ),
                           ),
                         ],
@@ -350,7 +351,7 @@ class PersonalInfoEdit extends StatelessWidget {
             Text(
               'Email Address',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: AppFontSizes.size14,
                 fontWeight: FontWeight.w500,
                 color: isDark ? Colors.grey.shade400 : AppColors.loginLabelColor,
                 fontFamily: GoogleFonts.workSans().fontFamily,
@@ -373,7 +374,7 @@ class PersonalInfoEdit extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.workSans(
-                        fontSize: 15,
+                        fontSize: AppFontSizes.size15,
                         color: isDark ? Colors.grey.shade400 : Colors.black54,
                         fontWeight: FontWeight.w500,
                       ),

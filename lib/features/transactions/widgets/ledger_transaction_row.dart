@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/utils/category_utils.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class LedgerTransactionRow extends StatelessWidget {
   final String title;
@@ -92,7 +93,7 @@ class LedgerTransactionRow extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.workSans(
-                        fontSize: 14.5,
+                        fontSize: AppFontSizes.size15,
                         fontWeight: FontWeight.w600,
                         color: isDark ? Colors.white70 : const Color(0xFF1F2937),
                       ),
@@ -101,7 +102,7 @@ class LedgerTransactionRow extends StatelessWidget {
                     Text(
                       title.isNotEmpty ? '$title  •  $dateText' : dateText,
                       style: GoogleFonts.workSans(
-                        fontSize: 12,
+                        fontSize: AppFontSizes.size12,
                         color: AppColors.textMuted,
                         fontWeight: FontWeight.w400,
                       ),
@@ -112,7 +113,7 @@ class LedgerTransactionRow extends StatelessWidget {
               Text(
                 amountPrefix,
                 style: GoogleFonts.workSans(
-                  fontSize: 15,
+                  fontSize: AppFontSizes.size15,
                   fontWeight: FontWeight.bold,
                   color: amountColor,
                 ),
@@ -121,7 +122,7 @@ class LedgerTransactionRow extends StatelessWidget {
                 amount: amount,
                 isMasked: isMasked,
                 style: GoogleFonts.workSans(
-                  fontSize: 15,
+                  fontSize: AppFontSizes.size15,
                   fontWeight: FontWeight.bold,
                   color: amountColor,
                 ),

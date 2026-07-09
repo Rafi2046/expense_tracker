@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class CategoryBreakdownItem {
   final String name;
@@ -89,7 +90,7 @@ class _ExpenseCategoriesBreakdownCardState
               Text(
                 'Categories Breakdown',
                 style: GoogleFonts.workSans(
-                  fontSize: 16,
+                  fontSize: AppFontSizes.size16,
                   fontWeight: FontWeight.w700,
                   color: onSurface,
                 ),
@@ -102,7 +103,7 @@ class _ExpenseCategoriesBreakdownCardState
             child: Text(
               widget.suffixText,
               style: GoogleFonts.workSans(
-                fontSize: 12,
+                fontSize: AppFontSizes.size12,
                 color: Colors.grey.shade500,
               ),
             ),
@@ -156,7 +157,7 @@ class _ExpenseCategoriesBreakdownCardState
                                       Text(
                                         'Total',
                                         style: GoogleFonts.workSans(
-                                          fontSize: 11,
+                                          fontSize: AppFontSizes.size11,
                                           color: Colors.grey.shade500,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -202,7 +203,7 @@ class _ExpenseCategoriesBreakdownCardState
                                   Text(
                                     item.name,
                                     style: GoogleFonts.workSans(
-                                      fontSize: 11.5,
+                                      fontSize: AppFontSizes.size11,
                                       fontWeight: FontWeight.w600,
                                       color: onSurface,
                                     ),
@@ -230,7 +231,7 @@ class _ExpenseCategoriesBreakdownCardState
                                   ? '${item.percentage.toStringAsFixed(1)}%'
                                   : '${item.percentage.toStringAsFixed(0)}%',
                               style: GoogleFonts.workSans(
-                                fontSize: 11,
+                                fontSize: AppFontSizes.size11,
                                 fontWeight: FontWeight.w700,
                                 color: onSurface.withValues(alpha: 0.7),
                               ),
@@ -260,7 +261,7 @@ class _ExpenseCategoriesBreakdownCardState
                 child: Text(
                   _isExpanded ? 'View Less' : 'View All Category',
                   style: GoogleFonts.workSans(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.w600,
                     color: AppColors.activeGreen,
                   ),

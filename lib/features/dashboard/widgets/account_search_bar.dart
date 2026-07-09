@@ -1,6 +1,7 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AccountSearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -39,10 +40,10 @@ class AccountSearchBar extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     controller: controller,
-                    style: GoogleFonts.workSans(fontSize: 13, color: theme.colorScheme.onSurface),
+                    style: GoogleFonts.workSans(fontSize: AppFontSizes.size13, color: theme.colorScheme.onSurface),
                     decoration: const InputDecoration(
                       hintText: 'Search Transactions...',
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
+                      hintStyle: TextStyle(color: Colors.grey, fontSize: AppFontSizes.size13),
                       border: InputBorder.none,
                       isDense: true,
                     ),

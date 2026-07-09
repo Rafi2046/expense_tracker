@@ -2,6 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class SortBySheet extends StatelessWidget {
   final ReportSortOption currentOption;
@@ -53,7 +54,7 @@ class SortBySheet extends StatelessWidget {
             child: Text(
               'Sort By:',
               style: AppTextStyles.dialogTitle.copyWith(
-                fontSize: 16,
+                fontSize: AppFontSizes.size16,
                 fontWeight: FontWeight.w600,
                 color: theme.colorScheme.onSurface,
               ),
@@ -115,7 +116,7 @@ class SortBySheet extends StatelessWidget {
               child: Text(
                 title,
                 style: AppTextStyles.reportTileTitle.copyWith(
-                  fontSize: 14,
+                  fontSize: AppFontSizes.size14,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   color: isSelected ? theme.colorScheme.onSurface : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),

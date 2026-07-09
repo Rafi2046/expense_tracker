@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/utils/category_utils.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransactionInfoRow extends StatelessWidget {
   final TransactionItem transaction;
@@ -38,7 +39,7 @@ class TransactionInfoRow extends StatelessWidget {
                 Text(
                   isIncome ? 'Income Number' : 'Expense Number',
                   style: GoogleFonts.workSans(
-                    fontSize: 11,
+                    fontSize: AppFontSizes.size11,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     fontWeight: FontWeight.w500,
                   ),
@@ -49,7 +50,7 @@ class TransactionInfoRow extends StatelessWidget {
                       ? transaction.id.substring(transaction.id.length - 4)
                       : transaction.id,
                   style: GoogleFonts.workSans(
-                    fontSize: 14.5,
+                    fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -77,7 +78,7 @@ class TransactionInfoRow extends StatelessWidget {
                 Text(
                   'Date',
                   style: GoogleFonts.workSans(
-                    fontSize: 11,
+                    fontSize: AppFontSizes.size11,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     fontWeight: FontWeight.w500,
                   ),
@@ -86,7 +87,7 @@ class TransactionInfoRow extends StatelessWidget {
                 Text(
                   DateFormat('dd Jun yyyy').format(transaction.dateTime),
                   style: GoogleFonts.workSans(
-                    fontSize: 14.5,
+                    fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -140,7 +141,7 @@ class CategoryDetailCard extends StatelessWidget {
           Text(
             category,
             style: GoogleFonts.workSans(
-              fontSize: 14.5,
+              fontSize: AppFontSizes.size15,
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
             ),
@@ -189,7 +190,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
               Text(
                 'Total Amount',
                 style: GoogleFonts.workSans(
-                  fontSize: 13.5,
+                  fontSize: AppFontSizes.size14,
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                 ),
@@ -197,7 +198,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
               Text(
                 context.formatAmount(transaction.amount),
                 style: GoogleFonts.workSans(
-                  fontSize: 16.5,
+                  fontSize: AppFontSizes.size16,
                   fontWeight: FontWeight.bold,
                   color: isIncome ? const Color(0xFF006C49) : const Color(0xFFDC3545),
                 ),
@@ -218,7 +219,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
               Text(
                 'Payment Mode',
                 style: GoogleFonts.workSans(
-                  fontSize: 13.5,
+                  fontSize: AppFontSizes.size14,
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                 ),
@@ -228,7 +229,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
                   Text(
                     transaction.paymentMethod,
                     style: GoogleFonts.workSans(
-                      fontSize: 13.5,
+                      fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
@@ -277,7 +278,7 @@ class MemoDetailCard extends StatelessWidget {
           Text(
             'Memo / Detail',
             style: GoogleFonts.workSans(
-              fontSize: 11,
+              fontSize: AppFontSizes.size11,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               fontWeight: FontWeight.w500,
             ),
@@ -286,7 +287,7 @@ class MemoDetailCard extends StatelessWidget {
           Text(
             note,
             style: GoogleFonts.workSans(
-              fontSize: 13.5,
+              fontSize: AppFontSizes.size14,
               color: theme.colorScheme.onSurface,
               height: 1.3,
             ),
@@ -331,7 +332,7 @@ class SyncStatusCard extends StatelessWidget {
             child: Text(
               'Entry is synced successfully!',
               style: GoogleFonts.workSans(
-                fontSize: 12,
+                fontSize: AppFontSizes.size12,
                 color: isDark ? Colors.white60 : AppColors.textMuted,
                 fontWeight: FontWeight.w500,
               ),

@@ -15,6 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -40,7 +41,7 @@ class SettingsScreen extends StatelessWidget {
         title: Text(
           context.translate('settings'),
           style: GoogleFonts.workSans(
-            fontSize: 17,
+            fontSize: AppFontSizes.size18,
             fontWeight: FontWeight.w700,
             color: theme.colorScheme.onSurface,
             letterSpacing: -0.3,
@@ -153,7 +154,7 @@ class SettingsScreen extends StatelessWidget {
                           Text(
                             'Delete Account',
                             style: GoogleFonts.workSans(
-                              fontSize: 12,
+                              fontSize: AppFontSizes.size12,
                               fontWeight: FontWeight.w600,
                               color: const Color(0xFFDC3545),
                             ),
@@ -163,7 +164,7 @@ class SettingsScreen extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.workSans(
-                              fontSize: 9,
+                              fontSize: AppFontSizes.size9,
                               color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                             ),
                           ),
@@ -218,7 +219,7 @@ class SettingsScreen extends StatelessWidget {
                       Text(
                         context.translate('logout'),
                         style: GoogleFonts.workSans(
-                          fontSize: 12,
+                          fontSize: AppFontSizes.size12,
                           fontWeight: FontWeight.w600,
                           color: const Color(0xFFE53935),
                         ),

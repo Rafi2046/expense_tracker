@@ -10,6 +10,7 @@ import 'package:expense_tracker/features/dashboard/pages/add_party_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class DashboardShortcutsCard extends StatelessWidget {
   const DashboardShortcutsCard({super.key});
@@ -115,7 +116,7 @@ class DashboardShortcutsCard extends StatelessWidget {
               Text(
                 context.translate('quick_actions'),
                 style: GoogleFonts.workSans(
-                  fontSize: 15,
+                  fontSize: AppFontSizes.size15,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.2,
                   color: Theme.of(context).colorScheme.onSurface,
@@ -127,7 +128,7 @@ class DashboardShortcutsCard extends StatelessWidget {
                 child: Text(
                   context.translate('edit_menu'),
                   style: GoogleFonts.workSans(
-                    fontSize: 12,
+                    fontSize: AppFontSizes.size12,
                     fontWeight: FontWeight.w600,
                     color: labelColor,
                   ),
@@ -188,7 +189,7 @@ class DashboardShortcutsCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: GoogleFonts.workSans(
-              fontSize: 10.5,
+              fontSize: AppFontSizes.size10,
               fontWeight: FontWeight.w600,
               color: labelColor,
             ),
@@ -225,14 +226,14 @@ class DashboardShortcutsCard extends StatelessWidget {
                 Text(
                   context.translate(item.id),
                   style: GoogleFonts.workSans(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 Text(
                   context.translate('always_on'),
-                  style: GoogleFonts.workSans(fontSize: 10.5, color: subLabelColor),
+                  style: GoogleFonts.workSans(fontSize: AppFontSizes.size10, color: subLabelColor),
                 ),
               ],
             ),

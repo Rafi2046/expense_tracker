@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/reports/pages/bank_statement_screen.dart';
 import 'package:expense_tracker/features/reports/pages/cash_in_hand_statement_screen.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AccountBalanceHeaderCard extends StatelessWidget {
   final String accountType;
@@ -44,7 +45,7 @@ class AccountBalanceHeaderCard extends StatelessWidget {
               Text(
                 'Current Balance',
                 style: GoogleFonts.workSans(
-                  fontSize: 12,
+                  fontSize: AppFontSizes.size12,
                   color: AppColors.textMuted,
                   fontWeight: FontWeight.w500,
                 ),
@@ -53,7 +54,7 @@ class AccountBalanceHeaderCard extends StatelessWidget {
               PrivacyMaskedText(
                 amount: balance,
                 style: GoogleFonts.workSans(
-                  fontSize: 20,
+                  fontSize: AppFontSizes.size20,
                   fontWeight: FontWeight.bold,
                   color: primaryColor,
                 ),
@@ -75,7 +76,7 @@ class AccountBalanceHeaderCard extends StatelessWidget {
             label: Text(
               'View Report',
               style: GoogleFonts.workSans(
-                fontSize: 11.5,
+                fontSize: AppFontSizes.size11,
                 fontWeight: FontWeight.bold,
                 color: primaryColor,
               ),

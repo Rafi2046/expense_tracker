@@ -11,6 +11,7 @@ import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/utils/debt_simplifier.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 
 class TourInvoiceScreen extends StatefulWidget {
@@ -162,17 +163,17 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('INVOICE', style: GoogleFonts.jetBrainsMono(fontSize: 10, fontWeight: FontWeight.w800, color: AppColors.activeGreen, letterSpacing: 3)),
+                Text('INVOICE', style: GoogleFonts.jetBrainsMono(fontSize: AppFontSizes.size10, fontWeight: FontWeight.w800, color: AppColors.activeGreen, letterSpacing: 3)),
                 const SizedBox(height: 6),
-                Text(tour.name, style: GoogleFonts.workSans(fontSize: 26, fontWeight: FontWeight.w800, color: theme.colorScheme.onSurface, letterSpacing: -0.5)),
+                Text(tour.name, style: GoogleFonts.workSans(fontSize: AppFontSizes.size28, fontWeight: FontWeight.w800, color: theme.colorScheme.onSurface, letterSpacing: -0.5)),
               ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(_formatDate(tour.createdAt), style: GoogleFonts.workSans(fontSize: 11, color: theme.colorScheme.onSurface.withValues(alpha: 0.4))),
+                Text(_formatDate(tour.createdAt), style: GoogleFonts.workSans(fontSize: AppFontSizes.size11, color: theme.colorScheme.onSurface.withValues(alpha: 0.4))),
                 const SizedBox(height: 2),
-                Text(tour.currency, style: GoogleFonts.workSans(fontSize: 11, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5))),
+                Text(tour.currency, style: GoogleFonts.workSans(fontSize: AppFontSizes.size11, fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface.withValues(alpha: 0.5))),
               ],
             ),
           ],
@@ -192,16 +193,16 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
       ),
       child: Column(
         children: [
-          Text('TOTAL SPENT', style: GoogleFonts.jetBrainsMono(fontSize: 10, fontWeight: FontWeight.w700, color: isDark ? const Color(0xFF6EE7B7) : const Color(0xFF6B7280), letterSpacing: 2)),
+          Text('TOTAL SPENT', style: GoogleFonts.jetBrainsMono(fontSize: AppFontSizes.size10, fontWeight: FontWeight.w700, color: isDark ? const Color(0xFF6EE7B7) : const Color(0xFF6B7280), letterSpacing: 2)),
           const SizedBox(height: 8),
-          Text(_formatAmount(totalSpent, currency), style: GoogleFonts.jetBrainsMono(fontSize: 34, fontWeight: FontWeight.w800, color: AppColors.activeGreen, letterSpacing: -1)),
+          Text(_formatAmount(totalSpent, currency), style: GoogleFonts.jetBrainsMono(fontSize: AppFontSizes.size36, fontWeight: FontWeight.w800, color: AppColors.activeGreen, letterSpacing: -1)),
         ],
       ),
     );
   }
 
   Widget _buildSectionTitle(String title) {
-    return Text(title, style: GoogleFonts.jetBrainsMono(fontSize: 10, fontWeight: FontWeight.w700, color: const Color(0xFF9CA3AF), letterSpacing: 2));
+    return Text(title, style: GoogleFonts.jetBrainsMono(fontSize: AppFontSizes.size10, fontWeight: FontWeight.w700, color: const Color(0xFF9CA3AF), letterSpacing: 2));
   }
 
   List<Widget> _buildSettlementList(List<SimplifiedSettlement> settlements, Map<String, String> pById, String currency, bool isDark) {
@@ -225,7 +226,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
               children: [
                 _buildPersonChip(from, isDark: isDark, color: AppColors.activeRed),
                 const Spacer(),
-                Text('pays', style: GoogleFonts.workSans(fontSize: 12, color: const Color(0xFF9CA3AF))),
+                Text('pays', style: GoogleFonts.workSans(fontSize: AppFontSizes.size12, color: const Color(0xFF9CA3AF))),
                 const Spacer(),
                 _buildPersonChip(to, isDark: isDark, color: AppColors.activeGreen),
               ],
@@ -239,7 +240,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
               ),
               child: Text(
                 _formatAmount(s.amount, currency),
-                style: GoogleFonts.jetBrainsMono(fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.activeGreen),
+                style: GoogleFonts.jetBrainsMono(fontSize: AppFontSizes.size18, fontWeight: FontWeight.w800, color: AppColors.activeGreen),
               ),
             ),
           ],
@@ -257,13 +258,13 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
           backgroundColor: color.withValues(alpha: isDark ? 0.2 : 0.1),
           child: Text(
             name.isNotEmpty ? name[0].toUpperCase() : '?',
-            style: GoogleFonts.workSans(fontSize: 14, fontWeight: FontWeight.w700, color: color),
+            style: GoogleFonts.workSans(fontSize: AppFontSizes.size14, fontWeight: FontWeight.w700, color: color),
           ),
         ),
         const SizedBox(width: 8),
         Flexible(
           child: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.workSans(fontSize: 14, fontWeight: FontWeight.w600, color: isDark ? Colors.white : const Color(0xFF374151)),
+            style: GoogleFonts.workSans(fontSize: AppFontSizes.size14, fontWeight: FontWeight.w600, color: isDark ? Colors.white : const Color(0xFF374151)),
           ),
         ),
       ],
@@ -283,9 +284,9 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
         children: [
           Icon(Icons.check_circle_rounded, color: AppColors.activeGreen, size: 44),
           const SizedBox(height: 12),
-          Text('All settled up', style: GoogleFonts.workSans(fontSize: 18, fontWeight: FontWeight.w700, color: isDark ? const Color(0xFF6EE7B7) : const Color(0xFF065F46))),
+          Text('All settled up', style: GoogleFonts.workSans(fontSize: AppFontSizes.size18, fontWeight: FontWeight.w700, color: isDark ? const Color(0xFF6EE7B7) : const Color(0xFF065F46))),
           const SizedBox(height: 4),
-          Text('No payments needed — everyone is even', style: GoogleFonts.workSans(fontSize: 13, fontWeight: FontWeight.w500, color: isDark ? const Color(0xFF6EE7B7).withValues(alpha: 0.7) : const Color(0xFF6B7280))),
+          Text('No payments needed — everyone is even', style: GoogleFonts.workSans(fontSize: AppFontSizes.size13, fontWeight: FontWeight.w500, color: isDark ? const Color(0xFF6EE7B7).withValues(alpha: 0.7) : const Color(0xFF6B7280))),
         ],
       ),
     );
@@ -317,8 +318,8 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(e.key, style: GoogleFonts.workSans(fontSize: 13, fontWeight: FontWeight.w600, color: isDark ? const Color(0xFFD1D5DB) : const Color(0xFF374151))),
-                      Text(_formatAmount(e.value, currency), style: GoogleFonts.jetBrainsMono(fontSize: 13, fontWeight: FontWeight.w700, color: isDark ? Colors.white : const Color(0xFF111827))),
+                      Text(e.key, style: GoogleFonts.workSans(fontSize: AppFontSizes.size13, fontWeight: FontWeight.w600, color: isDark ? const Color(0xFFD1D5DB) : const Color(0xFF374151))),
+                      Text(_formatAmount(e.value, currency), style: GoogleFonts.jetBrainsMono(fontSize: AppFontSizes.size13, fontWeight: FontWeight.w700, color: isDark ? Colors.white : const Color(0xFF111827))),
                     ],
                   ),
                   const SizedBox(height: 6),
@@ -387,7 +388,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
       flex: flex,
       child: Text(text, textAlign: align,
         style: GoogleFonts.workSans(
-          fontSize: 11,
+          fontSize: AppFontSizes.size11,
           fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
           color: isHeader ? Colors.white : (bold ? const Color(0xFF111827) : const Color(0xFF6B7280)),
         ),
@@ -453,10 +454,10 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(e.title, maxLines: 1, overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.workSans(fontSize: 12, fontWeight: FontWeight.w600, color: isDark ? Colors.white : const Color(0xFF374151)),
+                  style: GoogleFonts.workSans(fontSize: AppFontSizes.size12, fontWeight: FontWeight.w600, color: isDark ? Colors.white : const Color(0xFF374151)),
                 ),
                 const SizedBox(height: 2),
-                Text(_formatShortDate(e.date), style: GoogleFonts.workSans(fontSize: 10, color: isDark ? const Color(0xFF6B7280) : const Color(0xFF9CA3AF))),
+                Text(_formatShortDate(e.date), style: GoogleFonts.workSans(fontSize: AppFontSizes.size10, color: isDark ? const Color(0xFF6B7280) : const Color(0xFF9CA3AF))),
               ],
             ),
           ),
@@ -472,7 +473,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
         children: [
           Icon(Icons.account_balance_wallet_rounded, size: 13, color: Colors.grey.shade400),
           const SizedBox(width: 6),
-          Text('Generated via Expense Tracker', style: GoogleFonts.workSans(fontSize: 9.5, color: Colors.grey.shade400, fontWeight: FontWeight.w500)),
+          Text('Generated via Expense Tracker', style: GoogleFonts.workSans(fontSize: AppFontSizes.size9, color: Colors.grey.shade400, fontWeight: FontWeight.w500)),
         ],
       ),
     );

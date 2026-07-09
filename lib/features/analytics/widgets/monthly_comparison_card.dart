@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class MonthlyComparisonCard extends StatelessWidget {
   final double currentAmount;
@@ -64,7 +65,7 @@ class MonthlyComparisonCard extends StatelessWidget {
               Text(
                 'Monthly Comparison',
                 style: GoogleFonts.workSans(
-                  fontSize: 16,
+                  fontSize: AppFontSizes.size16,
                   fontWeight: FontWeight.w700,
                   color: onSurface,
                 ),
@@ -115,7 +116,7 @@ class MonthlyComparisonCard extends StatelessWidget {
                 Text(
                   'Net Change',
                   style: GoogleFonts.workSans(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.w600,
                     color: changeColor,
                   ),
@@ -131,7 +132,7 @@ class MonthlyComparisonCard extends StatelessWidget {
                     Text(
                       netChangeText,
                       style: GoogleFonts.workSans(
-                        fontSize: 14,
+                        fontSize: AppFontSizes.size14,
                         fontWeight: FontWeight.w800,
                         color: changeColor,
                       ),
@@ -188,7 +189,7 @@ class _MonthCard extends StatelessWidget {
           Text(
             label,
             style: GoogleFonts.workSans(
-              fontSize: 11,
+              fontSize: AppFontSizes.size11,
               fontWeight: FontWeight.w500,
               color: Colors.grey.shade500,
             ),
@@ -201,7 +202,7 @@ class _MonthCard extends StatelessWidget {
               amount: amount,
               isMasked: isMasked,
               style: GoogleFonts.workSans(
-                fontSize: 18,
+                fontSize: AppFontSizes.size18,
                 fontWeight: FontWeight.w800,
                 color: onSurface,
               ),

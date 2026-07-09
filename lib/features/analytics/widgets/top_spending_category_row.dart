@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TopSpendingCategoryItem {
   final String title;
@@ -82,7 +83,7 @@ class TopSpendingCategoryRow extends StatelessWidget {
                     Text(
                       item.title,
                       style: GoogleFonts.workSans(
-                        fontSize: 14,
+                        fontSize: AppFontSizes.size14,
                         fontWeight: FontWeight.w600,
                         color: onSurface,
                       ),
@@ -112,7 +113,7 @@ class TopSpendingCategoryRow extends StatelessWidget {
                       amount: item.amount,
                       isMasked: isMasked,
                       style: GoogleFonts.workSans(
-                        fontSize: 13,
+                        fontSize: AppFontSizes.size13,
                         fontWeight: FontWeight.w700,
                         color: onSurface,
                       ),
@@ -130,7 +131,7 @@ class TopSpendingCategoryRow extends StatelessWidget {
                           ? '${item.percentage.toStringAsFixed(1)}%'
                           : '${item.percentage.toStringAsFixed(0)}%',
                       style: GoogleFonts.workSans(
-                        fontSize: 10,
+                        fontSize: AppFontSizes.size10,
                         fontWeight: FontWeight.w700,
                         color: AppColors.activeRed,
                       ),

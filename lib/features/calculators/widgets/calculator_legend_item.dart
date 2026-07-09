@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class CalculatorLegendItem extends StatelessWidget {
   final String label;
@@ -30,7 +31,7 @@ class CalculatorLegendItem extends StatelessWidget {
         Text(
           '$label (${(ratio * 100).toStringAsFixed(0)}%)',
           style: GoogleFonts.workSans(
-            fontSize: 12,
+            fontSize: AppFontSizes.size12,
             fontWeight: FontWeight.w500,
             color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
           ),

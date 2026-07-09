@@ -9,6 +9,7 @@ import 'package:expense_tracker/features/dashboard/widgets/account_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/overall_balance_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/adjust_balance_actions.dart';
 import 'account_details_screen.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TotalBalanceScreen extends StatefulWidget {
   const TotalBalanceScreen({super.key});
@@ -43,7 +44,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
         title: Text(
           'Cash & Bank Accounts',
           style: AppTextStyles.reportAppBarTitle.copyWith(
-            fontSize: 16.5,
+            fontSize: AppFontSizes.size16,
             color: theme.appBarTheme.titleTextStyle?.color,
           ),
         ),
@@ -73,7 +74,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                   Text(
                     'All Accounts',
                     style: GoogleFonts.workSans(
-                      fontSize: 14.5,
+                      fontSize: AppFontSizes.size15,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
@@ -88,7 +89,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                     label: Text(
                       'New Account',
                       style: GoogleFonts.workSans(
-                        fontSize: 12.5,
+                        fontSize: AppFontSizes.size12,
                         fontWeight: FontWeight.w600,
                         color: theme.primaryColor,
                       ),
@@ -114,7 +115,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                         amount: cashBalance,
                         isMasked: _localMasked,
                         style: GoogleFonts.workSans(
-                          fontSize: 14,
+                          fontSize: AppFontSizes.size14,
                           fontWeight: FontWeight.bold,
                           color: theme.primaryColor,
                         ),
@@ -139,7 +140,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                         amount: bankBalance,
                         isMasked: _localMasked,
                         style: GoogleFonts.workSans(
-                          fontSize: 14,
+                          fontSize: AppFontSizes.size14,
                           fontWeight: FontWeight.bold,
                           color: theme.primaryColor,
                         ),
@@ -178,7 +179,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                   child: Text(
                     'Adjust Balance',
                     style: GoogleFonts.workSans(
-                      fontSize: 14,
+                      fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),

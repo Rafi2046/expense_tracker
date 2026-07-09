@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PartyStatementProfileHeader extends StatelessWidget {
   const PartyStatementProfileHeader({super.key});
@@ -119,7 +120,7 @@ class PartyStatementProfileHeader extends StatelessWidget {
                     child: Text(
                       initial,
                       style: GoogleFonts.workSans(
-                        fontSize: 28,
+                        fontSize: AppFontSizes.size28,
                         fontWeight: FontWeight.w700,
                         color: primaryColor,
                       ),
@@ -135,7 +136,7 @@ class PartyStatementProfileHeader extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.workSans(
-                    fontSize: 20,
+                    fontSize: AppFontSizes.size20,
                     fontWeight: FontWeight.w700,
                     color: theme.colorScheme.onSurface,
                     letterSpacing: -0.3,
@@ -148,7 +149,7 @@ class PartyStatementProfileHeader extends StatelessWidget {
                 Text(
                   'Party Account',
                   style: GoogleFonts.workSans(
-                    fontSize: 12,
+                    fontSize: AppFontSizes.size12,
                     fontWeight: FontWeight.w500,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                     letterSpacing: 0.8,
@@ -316,7 +317,7 @@ class _ContactChip extends StatelessWidget {
                 Text(
                   data.title,
                   style: GoogleFonts.workSans(
-                    fontSize: 10,
+                    fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.38),
                     letterSpacing: 0.4,
@@ -328,7 +329,7 @@ class _ContactChip extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.workSans(
-                    fontSize: 12.5,
+                    fontSize: AppFontSizes.size12,
                     fontWeight: FontWeight.w500,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),

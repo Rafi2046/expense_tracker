@@ -5,6 +5,7 @@ import 'package:expense_tracker/features/login/pages/login_screen.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({super.key});
@@ -47,7 +48,7 @@ class LogoutDialog extends StatelessWidget {
             Text(
               'Logout',
               style: TextStyle(
-                fontSize: 22,
+                fontSize: AppFontSizes.size22,
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
                 fontFamily: GoogleFonts.workSans().fontFamily,
@@ -60,7 +61,7 @@ class LogoutDialog extends StatelessWidget {
               'Are you sure you want to logout?\nYou will need to login again to access your account.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: AppFontSizes.size14,
                 color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                 fontFamily: GoogleFonts.workSans().fontFamily,
                 height: 1.4,

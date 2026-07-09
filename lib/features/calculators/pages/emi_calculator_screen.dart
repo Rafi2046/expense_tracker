@@ -9,6 +9,7 @@ import 'package:expense_tracker/features/calculators/widgets/calculator_result_c
 import 'package:expense_tracker/features/calculators/widgets/calculator_result_item.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class EmiCalculatorScreen extends StatefulWidget {
   const EmiCalculatorScreen({super.key});
@@ -151,7 +152,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 controller: _amountController,
                 prefix: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 8),
-                  child: Text(symbol, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
+                  child: Text(symbol, style: TextStyle(fontSize: AppFontSizes.size16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -162,7 +163,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 controller: _rateController,
                 suffix: Padding(
                   padding: const EdgeInsets.only(left: 8, right: 16),
-                  child: Text('%', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
+                  child: Text('%', style: TextStyle(fontSize: AppFontSizes.size16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -173,7 +174,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 controller: _tenureController,
                 suffix: Padding(
                   padding: const EdgeInsets.only(left: 8, right: 16),
-                  child: Text(context.translate('years_label'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: primaryCalcColor)),
+                  child: Text(context.translate('years_label'), style: TextStyle(fontSize: AppFontSizes.size14, fontWeight: FontWeight.bold, color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 24),

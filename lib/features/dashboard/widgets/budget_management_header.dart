@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class BudgetManagementHeader extends StatelessWidget {
   final double monthlyExpense;
@@ -67,7 +68,7 @@ class BudgetManagementHeader extends StatelessWidget {
                 'Budget Overview',
                 style: AppTextStyles.cardTitle.copyWith(
                   color: Colors.white,
-                  fontSize: 13,
+                  fontSize: AppFontSizes.size13,
                 ),
               ),
               const Spacer(),
@@ -92,7 +93,7 @@ class BudgetManagementHeader extends StatelessWidget {
                         'Edit',
                         style: AppTextStyles.cardStatusText.copyWith(
                           color: Colors.white,
-                          fontSize: 12,
+                          fontSize: AppFontSizes.size12,
                         ),
                       ),
                     ],
@@ -143,7 +144,7 @@ class BudgetManagementHeader extends StatelessWidget {
               '${percentage.toStringAsFixed(1)}% used',
               style: AppTextStyles.cardStatusText.copyWith(
                 color: Colors.white70,
-                fontSize: 11,
+                fontSize: AppFontSizes.size11,
               ),
             ),
           ],
@@ -162,7 +163,7 @@ class BudgetManagementHeader extends StatelessWidget {
                   'Set Monthly Budget',
                   style: AppTextStyles.cardStatusText.copyWith(
                     color: Colors.white,
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                   ),
                 ),
               ),
@@ -202,7 +203,7 @@ class _HeaderStat extends StatelessWidget {
           label.toUpperCase(),
           style: AppTextStyles.cardTitle.copyWith(
             color: Colors.white60,
-            fontSize: 9,
+            fontSize: AppFontSizes.size9,
             letterSpacing: 1.2,
           ),
         ),
@@ -211,7 +212,7 @@ class _HeaderStat extends StatelessWidget {
           value,
           style: AppTextStyles.cardValueGreen.copyWith(
             color: color,
-            fontSize: 16,
+            fontSize: AppFontSizes.size16,
           ),
         ),
       ],

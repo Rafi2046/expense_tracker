@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'transfer_dialog.dart';
 import 'new_account_dialog.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 /// Central helper function to show the overall Adjust Balance Bottom Sheet.
 void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}) {
@@ -42,7 +43,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
             Text(
               'Adjust Balance',
               style: GoogleFonts.workSans(
-                fontSize: 16,
+                fontSize: AppFontSizes.size16,
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
               ),
@@ -127,7 +128,7 @@ Widget _buildAdjustOptionTile({
                   Text(
                     title,
                     style: GoogleFonts.workSans(
-                      fontSize: 13.5,
+                      fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
@@ -136,7 +137,7 @@ Widget _buildAdjustOptionTile({
                   Text(
                     subtitle,
                     style: GoogleFonts.workSans(
-                      fontSize: 11.5,
+                      fontSize: AppFontSizes.size11,
                       color: AppColors.textMuted,
                     ),
                   ),
@@ -185,7 +186,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
             Text(
               'Choose Transaction Type',
               style: GoogleFonts.workSans(
-                fontSize: 16,
+                fontSize: AppFontSizes.size16,
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
               ),
@@ -205,7 +206,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                       label: Text(
                         'Add Income',
                         style: GoogleFonts.workSans(
-                          fontSize: 13,
+                          fontSize: AppFontSizes.size13,
                           fontWeight: FontWeight.bold,
                           color: isDark ? theme.primaryColor : const Color(0xFF006C49),
                         ),
@@ -242,7 +243,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                       label: Text(
                         'Add Expense',
                         style: GoogleFonts.workSans(
-                          fontSize: 13,
+                          fontSize: AppFontSizes.size13,
                           fontWeight: FontWeight.bold,
                           color: isDark ? AppColors.activeRed : const Color(0xFFD9383A),
                         ),

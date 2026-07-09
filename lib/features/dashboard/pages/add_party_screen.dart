@@ -10,6 +10,7 @@ import 'package:expense_tracker/features/dashboard/widgets/additional_details_fo
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AddPartyScreen extends StatelessWidget {
   const AddPartyScreen({super.key});
@@ -54,7 +55,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
             color: theme.appBarTheme.titleTextStyle?.color,
-            fontSize: 18,
+            fontSize: AppFontSizes.size18,
           ),
         ),
         centerTitle: true,
@@ -277,7 +278,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
                       child: Text(
                         'Add New Party',
                         style: AppTextStyles.partySubmitButtonText.copyWith(
-                          fontSize: 15,
+                          fontSize: AppFontSizes.size15,
                           color: provider.isNameNotEmpty
                               ? Colors.white
                               : (isDark ? Colors.white30 : const Color(0xFFC1C7D0)),

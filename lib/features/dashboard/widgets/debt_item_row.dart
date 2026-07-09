@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class DebtItemRow extends StatelessWidget {
   final DebtItem item;
@@ -108,7 +109,7 @@ class DebtItemRow extends StatelessWidget {
               style: GoogleFonts.workSans(
                 color: themeColor,
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: AppFontSizes.size14,
               ),
             ),
             const SizedBox(width: 8),
@@ -187,7 +188,7 @@ class DebtItemRow extends StatelessWidget {
                   child: Text(
                     _getInitials(item.name),
                     style: GoogleFonts.workSans(
-                      fontSize: 14,
+                      fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.bold,
                       color: _getAvatarFg(context, item.name),
                     ),
@@ -196,7 +197,7 @@ class DebtItemRow extends StatelessWidget {
                 title: Text(
                   item.name,
                   style: GoogleFonts.workSans(
-                    fontSize: 15,
+                    fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -206,7 +207,7 @@ class DebtItemRow extends StatelessWidget {
                   child: Text(
                     item.detail,
                     style: GoogleFonts.inter(
-                      fontSize: 13,
+                      fontSize: AppFontSizes.size13,
                       color: AppColors.textMuted,
                     ),
                   ),
@@ -218,7 +219,7 @@ class DebtItemRow extends StatelessWidget {
                       amount: item.amount,
                       isMasked: isMasked,
                       style: GoogleFonts.workSans(
-                        fontSize: 15,
+                        fontSize: AppFontSizes.size15,
                         fontWeight: FontWeight.bold,
                         color: themeColor,
                       ),

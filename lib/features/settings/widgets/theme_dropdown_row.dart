@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class ThemeDropdownRow extends StatefulWidget {
   final Function(String) onSnackBar;
@@ -75,7 +76,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
                   child: Text(
                     context.translate('Change Theme'),
                     style: GoogleFonts.workSans(
-                  fontSize: 12,
+                  fontSize: AppFontSizes.size12,
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                     ),
@@ -87,7 +88,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
                   Text(
                     currentThemeLabel,
                     style: GoogleFonts.workSans(
-                      fontSize: 11,
+                      fontSize: AppFontSizes.size11,
                       color: isDark
                           ? theme.colorScheme.onSurface.withValues(alpha: 0.6)
                           : const Color(0xFF888888),
@@ -166,7 +167,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
               child: Text(
                 label,
                 style: GoogleFonts.workSans(
-                  fontSize: 12,
+                  fontSize: AppFontSizes.size12,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   color: theme.colorScheme.onSurface,
                 ),

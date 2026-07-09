@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class EditProfileSheet extends StatefulWidget {
   final UserProfile profile;
@@ -48,7 +49,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
           title: Text(
             'Delete Profile?',
             style: GoogleFonts.workSans(
-              fontSize: 18,
+              fontSize: AppFontSizes.size18,
               fontWeight: FontWeight.w800,
               color: theme.textTheme.titleLarge?.color,
             ),
@@ -56,7 +57,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
           content: Text(
             'Are you sure? All data in this profile will be permanently lost.',
             style: GoogleFonts.workSans(
-              fontSize: 14,
+              fontSize: AppFontSizes.size14,
               color: theme.textTheme.bodySmall?.color,
               height: 1.4,
             ),
@@ -146,7 +147,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                       child: Text(
                         'Edit Profile',
                         style: GoogleFonts.workSans(
-                          fontSize: 20,
+                          fontSize: AppFontSizes.size20,
                           fontWeight: FontWeight.w800,
                           color: theme.textTheme.titleLarge?.color,
                         ),
@@ -156,13 +157,13 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                     TextField(
                       controller: _nameController,
                       style: GoogleFonts.workSans(
-                        fontSize: 15,
+                        fontSize: AppFontSizes.size15,
                         color: theme.textTheme.bodyLarge?.color,
                       ),
                       decoration: InputDecoration(
                         labelText: 'Profile Name',
                         labelStyle: GoogleFonts.workSans(
-                          fontSize: 13,
+                          fontSize: AppFontSizes.size13,
                           color: theme.textTheme.bodySmall?.color,
                         ),
                         border: OutlineInputBorder(
@@ -200,7 +201,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                         child: Text(
                           'Save',
                           style: GoogleFonts.workSans(
-                            fontSize: 16,
+                            fontSize: AppFontSizes.size16,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
                           ),
@@ -222,7 +223,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                           Text(
                             'DANGER ZONE',
                             style: GoogleFonts.workSans(
-                              fontSize: 12,
+                              fontSize: AppFontSizes.size12,
                               fontWeight: FontWeight.w800,
                               color: const Color(0xFFDC3545),
                               letterSpacing: 1.2,
@@ -235,7 +236,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                         'Once you delete a profile, there is no going back. '
                         'Please be certain.',
                         style: GoogleFonts.workSans(
-                          fontSize: 12,
+                          fontSize: AppFontSizes.size12,
                           color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                           height: 1.4,
                         ),
@@ -250,7 +251,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                           label: Text(
                             'Delete Profile',
                             style: GoogleFonts.workSans(
-                              fontSize: 15,
+                              fontSize: AppFontSizes.size15,
                               fontWeight: FontWeight.w600,
                               color: const Color(0xFFDC3545),
                             ),

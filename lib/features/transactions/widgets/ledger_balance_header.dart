@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class LedgerBalanceHeader extends StatelessWidget {
   final String balance;
@@ -22,7 +23,7 @@ class LedgerBalanceHeader extends StatelessWidget {
         Text(
           context.translate('total_balance').toUpperCase(),
           style: TextStyle(
-            fontSize: 11,
+            fontSize: AppFontSizes.size11,
             fontWeight: FontWeight.bold,
             color: AppColors.loginSubTitle.withValues(alpha: 0.8),
             fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
@@ -39,7 +40,7 @@ class LedgerBalanceHeader extends StatelessWidget {
             Text(
               balance,
               style: TextStyle(
-                fontSize: 32,
+                fontSize: AppFontSizes.size32,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
                 fontFamily: GoogleFonts.workSans().fontFamily,
@@ -49,7 +50,7 @@ class LedgerBalanceHeader extends StatelessWidget {
             Text(
               trendPercentage,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: AppFontSizes.size14,
                 fontWeight: FontWeight.bold,
                 color: AppColors.activeGreen,
                 fontFamily: GoogleFonts.workSans().fontFamily,

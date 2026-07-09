@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourMemberRequiredDialog extends StatelessWidget {
   final String tourId;
@@ -22,14 +23,14 @@ class TourMemberRequiredDialog extends StatelessWidget {
         'Members Required',
         style: TextStyle(
           fontWeight: FontWeight.w600,
-          fontSize: 17,
+          fontSize: AppFontSizes.size18,
           color: theme.colorScheme.onSurface,
         ),
       ),
       content: Text(
         'You need at least 2 members in the tour to add expenses or settle up.',
         style: TextStyle(
-          fontSize: 14,
+          fontSize: AppFontSizes.size14,
           color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
         ),
       ),

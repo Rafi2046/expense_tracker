@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class DebtTotalCard extends StatelessWidget {
   final String title;
@@ -63,7 +64,7 @@ class DebtTotalCard extends StatelessWidget {
                       Text(
                         title.toUpperCase(),
                         style: GoogleFonts.jetBrainsMono(
-                          fontSize: 11,
+                          fontSize: AppFontSizes.size11,
                           fontWeight: FontWeight.bold,
                           color: Colors.white70,
                           letterSpacing: 1.0,
@@ -74,7 +75,7 @@ class DebtTotalCard extends StatelessWidget {
                         amount: amount,
                         isMasked: isMasked,
                         style: GoogleFonts.workSans(
-                          fontSize: 32,
+                          fontSize: AppFontSizes.size32,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -135,7 +136,7 @@ class DebtTotalCard extends StatelessWidget {
                               child: Text(
                                 guideText,
                                 style: GoogleFonts.inter(
-                                  fontSize: 12,
+                                  fontSize: AppFontSizes.size12,
                                   color: Colors.white.withValues(alpha: 0.9),
                                   height: 1.4,
                                 ),

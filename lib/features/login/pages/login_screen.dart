@@ -17,6 +17,7 @@ import 'package:expense_tracker/features/login/widgets/sync_loading_overlay.dart
 import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'create_account_screen.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool biometricMode;
@@ -344,7 +345,7 @@ class _LoginScreenState extends State<LoginScreen>
                               : 'Tap to unlock',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: AppFontSizes.size13,
                             color: _biometricFailed
                                 ? const Color(0xFFE53935)
                                 : theme.primaryColor.withValues(alpha: 0.7),
@@ -356,7 +357,7 @@ class _LoginScreenState extends State<LoginScreen>
                             'Or enter your password',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: AppFontSizes.size12,
                               color: Colors.grey.shade500,
                             ),
                           ),
@@ -372,7 +373,7 @@ class _LoginScreenState extends State<LoginScreen>
                               'Switch Account',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: AppFontSizes.size14,
                                 color: theme.primaryColor,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -492,7 +493,7 @@ class _LoginScreenState extends State<LoginScreen>
                             'Switch Account',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: AppFontSizes.size14,
                               color: theme.primaryColor,
                               fontWeight: FontWeight.w600,
                             ),

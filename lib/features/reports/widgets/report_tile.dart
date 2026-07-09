@@ -2,6 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class ReportTile extends StatelessWidget {
   final ReportItem item;
@@ -45,7 +46,7 @@ class ReportTile extends StatelessWidget {
                   Text(
                     item.title,
                     style: GoogleFonts.workSans(
-                      fontSize: 13.5,
+                      fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.w600,
                       color: theme.colorScheme.onSurface,
                     ),
@@ -54,7 +55,7 @@ class ReportTile extends StatelessWidget {
                   Text(
                     item.subtitle,
                     style: GoogleFonts.workSans(
-                      fontSize: 11,
+                      fontSize: AppFontSizes.size11,
                       color: isDark ? Colors.white60 : Colors.grey.shade500,
                       fontWeight: FontWeight.w400,
                     ),

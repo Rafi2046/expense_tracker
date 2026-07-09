@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/providers/note_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AddNoteScreen extends StatefulWidget {
   final NoteItem? note;
@@ -119,7 +120,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                 Text(
                   'CATEGORY',
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: AppFontSizes.size11,
                     fontWeight: FontWeight.bold,
                     color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                     letterSpacing: 1.0,
@@ -153,7 +154,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                         label: Text(
                           cat,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: AppFontSizes.size13,
                             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                             color: textColor,
                             fontFamily: GoogleFonts.workSans().fontFamily,
@@ -190,7 +191,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                 TextFormField(
                   controller: _titleController,
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: AppFontSizes.size20,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                     fontFamily: GoogleFonts.workSans().fontFamily,
@@ -198,7 +199,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                   decoration: InputDecoration(
                     hintText: 'Note Title',
                     hintStyle: TextStyle(
-                      fontSize: 20,
+                      fontSize: AppFontSizes.size20,
                       fontWeight: FontWeight.bold,
                       color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                       fontFamily: GoogleFonts.workSans().fontFamily,
@@ -227,7 +228,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     expands: true,
                     keyboardType: TextInputType.multiline,
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: AppFontSizes.size15,
                       height: 1.5,
                       color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.inter().fontFamily,
@@ -235,7 +236,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     decoration: InputDecoration(
                       hintText: 'Start writing your note here...',
                       hintStyle: TextStyle(
-                        fontSize: 15,
+                        fontSize: AppFontSizes.size15,
                         color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                         fontFamily: GoogleFonts.inter().fontFamily,
                       ),

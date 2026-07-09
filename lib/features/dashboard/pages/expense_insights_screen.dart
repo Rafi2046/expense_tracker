@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class ExpenseInsightsScreen extends StatefulWidget {
   const ExpenseInsightsScreen({super.key});
@@ -89,7 +90,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                     amount: provider.todayExpense,
                     isMasked: _localMasked,
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: AppFontSizes.size28,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,
@@ -105,7 +106,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                     amount: provider.currentWeekExpense,
                     isMasked: _localMasked,
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: AppFontSizes.size28,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,
@@ -123,7 +124,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                     amount: provider.currentMonthExpense,
                     isMasked: _localMasked,
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: AppFontSizes.size28,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,
@@ -141,7 +142,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                     amount: provider.currentQuarterExpense,
                     isMasked: _localMasked,
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: AppFontSizes.size28,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,
@@ -160,7 +161,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                     amount: provider.currentMonthExpense,
                     isMasked: _localMasked,
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: AppFontSizes.size15,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,
@@ -177,7 +178,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                     amount: provider.currentQuarterExpense,
                     isMasked: _localMasked,
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: AppFontSizes.size15,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,

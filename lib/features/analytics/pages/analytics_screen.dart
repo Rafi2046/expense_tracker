@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -161,7 +162,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         title: Text(
           context.translate('analytics'),
           style: GoogleFonts.workSans(
-            fontSize: 17,
+            fontSize: AppFontSizes.size18,
             fontWeight: FontWeight.w700,
             color: onSurface,
             letterSpacing: -0.3,
@@ -202,7 +203,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       amount: totalExpense,
                       isMasked: _localMasked,
                       style: GoogleFonts.workSans(
-                        fontSize: 14,
+                        fontSize: AppFontSizes.size14,
                         fontWeight: FontWeight.w700,
                         color: onSurface,
                       ),

@@ -7,6 +7,7 @@ import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_scre
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class SyncLoadingOverlay extends StatefulWidget {
   final SyncService syncService;
@@ -109,7 +110,7 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
                 Text(
                   _hasError ? 'Sync Failed' : 'Restoring Your Data',
                   style: GoogleFonts.workSans(
-                    fontSize: 20,
+                    fontSize: AppFontSizes.size20,
                     fontWeight: FontWeight.w700,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -121,7 +122,7 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
                       : _statusText,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.workSans(
-                    fontSize: 14,
+                    fontSize: AppFontSizes.size14,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),

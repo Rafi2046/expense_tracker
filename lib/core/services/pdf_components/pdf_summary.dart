@@ -1,6 +1,7 @@
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'pdf_theme.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PdfSummaryBuilder {
   static pw.Widget build(PdfSummaryData data, pw.TextStyle baseStyle) {
@@ -71,7 +72,7 @@ class PdfSummaryBuilder {
                 pw.Text(
                   label.toUpperCase(),
                   style: base.copyWith(
-                    fontSize: 7,
+                    fontSize: AppFontSizes.size7,
                     color: PdfTheme.mutedText,
                     letterSpacing: 0.6,
                   ),
@@ -80,7 +81,7 @@ class PdfSummaryBuilder {
                 pw.Text(
                   value,
                   style: base.copyWith(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     fontWeight: pw.FontWeight.bold,
                     color: isBold ? accentColor : PdfTheme.dark,
                   ),

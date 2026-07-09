@@ -9,6 +9,7 @@ import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/utils/debt_simplifier.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourInvoiceGenerator {
   TourInvoiceGenerator._();
@@ -130,11 +131,11 @@ class TourInvoiceGenerator {
         children: [
           pw.Text(
             tour.name,
-            style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
+            style: pw.TextStyle(fontSize: AppFontSizes.size10, color: PdfColors.grey600),
           ),
           pw.Text(
             'Expense Tracker',
-            style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
+            style: pw.TextStyle(fontSize: AppFontSizes.size10, color: PdfColors.grey600),
           ),
         ],
       ),
@@ -154,7 +155,7 @@ class TourInvoiceGenerator {
         children: [
           pw.Text(
             'Generated via Expense Tracker - Shared Expenses Simplified',
-            style: pw.TextStyle(fontSize: 8, color: PdfColors.grey500),
+            style: pw.TextStyle(fontSize: AppFontSizes.size8, color: PdfColors.grey500),
           ),
         ],
       ),
@@ -177,7 +178,7 @@ class TourInvoiceGenerator {
                 pw.Text(
                   'INVOICE',
                   style: pw.TextStyle(
-                    fontSize: 10,
+                    fontSize: AppFontSizes.size10,
                     fontWeight: pw.FontWeight.bold,
                     color: PdfColors.teal700,
                     letterSpacing: 3,
@@ -187,7 +188,7 @@ class TourInvoiceGenerator {
                 pw.Text(
                   tour.name,
                   style: pw.TextStyle(
-                    fontSize: 28,
+                    fontSize: AppFontSizes.size28,
                     fontWeight: pw.FontWeight.bold,
                     color: PdfColors.grey900,
                   ),
@@ -199,12 +200,12 @@ class TourInvoiceGenerator {
               children: [
                 pw.Text(
                   _formatDate(tour.createdAt),
-                  style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
+                  style: pw.TextStyle(fontSize: AppFontSizes.size10, color: PdfColors.grey600),
                 ),
                 pw.SizedBox(height: 4),
                 pw.Text(
                   'Currency: ${tour.currency}',
-                  style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
+                  style: pw.TextStyle(fontSize: AppFontSizes.size10, color: PdfColors.grey600),
                 ),
               ],
             ),
@@ -224,7 +225,7 @@ class TourInvoiceGenerator {
               pw.Text(
                 'TOTAL SPENT',
                 style: pw.TextStyle(
-                  fontSize: 10,
+                  fontSize: AppFontSizes.size10,
                   fontWeight: pw.FontWeight.bold,
                   color: PdfColors.grey600,
                   letterSpacing: 1,
@@ -233,7 +234,7 @@ class TourInvoiceGenerator {
               pw.Text(
                 _formatAmount(totalSpent, tour.currency),
                 style: pw.TextStyle(
-                  fontSize: 32,
+                  fontSize: AppFontSizes.size32,
                   fontWeight: pw.FontWeight.bold,
                   color: PdfColor.fromInt(0xFF059669),
                 ),
@@ -277,11 +278,11 @@ class TourInvoiceGenerator {
           pw.SizedBox(height: 16),
           pw.TableHelper.fromTextArray(
             headerStyle: pw.TextStyle(
-              fontSize: 9,
+              fontSize: AppFontSizes.size9,
               fontWeight: pw.FontWeight.bold,
               color: PdfColors.grey600,
             ),
-            cellStyle: pw.TextStyle(fontSize: 10, color: PdfColors.grey800),
+            cellStyle: pw.TextStyle(fontSize: AppFontSizes.size10, color: PdfColors.grey800),
             headerDecoration: const pw.BoxDecoration(
               border: pw.Border(
                 bottom: pw.BorderSide(color: PdfColors.grey300),
@@ -320,7 +321,7 @@ class TourInvoiceGenerator {
     return pw.Text(
       title,
       style: pw.TextStyle(
-        fontSize: 9,
+        fontSize: AppFontSizes.size9,
         fontWeight: pw.FontWeight.bold,
         color: PdfColors.grey500,
         letterSpacing: 2,
@@ -340,14 +341,14 @@ class TourInvoiceGenerator {
 
     return pw.TableHelper.fromTextArray(
       headerStyle: pw.TextStyle(
-        fontSize: 9,
+        fontSize: AppFontSizes.size9,
         fontWeight: pw.FontWeight.bold,
         color: PdfColors.white,
       ),
       headerDecoration: const pw.BoxDecoration(
         color: PdfColor.fromInt(0xFF0F766E),
       ),
-      cellStyle: pw.TextStyle(fontSize: 9, color: PdfColors.grey800),
+      cellStyle: pw.TextStyle(fontSize: AppFontSizes.size9, color: PdfColors.grey800),
       cellAlignments: {
         0: pw.Alignment.centerLeft,
         1: pw.Alignment.centerLeft,
@@ -414,7 +415,7 @@ class TourInvoiceGenerator {
               child: pw.Text(
                 'v',
                 style: pw.TextStyle(
-                  fontSize: 18,
+                  fontSize: AppFontSizes.size18,
                   fontWeight: pw.FontWeight.bold,
                   color: PdfColors.white,
                 ),
@@ -425,7 +426,7 @@ class TourInvoiceGenerator {
           pw.Text(
             'All settled up',
             style: pw.TextStyle(
-              fontSize: 16,
+              fontSize: AppFontSizes.size16,
               fontWeight: pw.FontWeight.bold,
               color: PdfColor.fromInt(0xFF065F46),
             ),
@@ -433,7 +434,7 @@ class TourInvoiceGenerator {
           pw.SizedBox(height: 4),
           pw.Text(
             'No payments needed - everyone is even',
-            style: pw.TextStyle(fontSize: 11, color: PdfColors.grey600),
+            style: pw.TextStyle(fontSize: AppFontSizes.size11, color: PdfColors.grey600),
           ),
         ],
       ),
@@ -462,7 +463,7 @@ class TourInvoiceGenerator {
             pw.Text(
               to,
               style: pw.TextStyle(
-                fontSize: 11,
+                fontSize: AppFontSizes.size11,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColor.fromInt(0xFF2EBD85),
               ),
@@ -470,25 +471,25 @@ class TourInvoiceGenerator {
             pw.SizedBox(width: 6),
             pw.Text(
               'gets',
-              style: const pw.TextStyle(fontSize: 11, color: PdfColors.grey600),
+              style: const pw.TextStyle(fontSize: AppFontSizes.size11, color: PdfColors.grey600),
             ),
             pw.SizedBox(width: 6),
             pw.Text(
               _formatAmount(s.amount, currency),
               style: pw.TextStyle(
-                fontSize: 13,
+                fontSize: AppFontSizes.size13,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColor.fromInt(0xFF2EBD85),
               ),
             ),
             pw.Text(
               ' from ',
-              style: const pw.TextStyle(fontSize: 11, color: PdfColors.grey600),
+              style: const pw.TextStyle(fontSize: AppFontSizes.size11, color: PdfColors.grey600),
             ),
             pw.Text(
               from,
               style: pw.TextStyle(
-                fontSize: 11,
+                fontSize: AppFontSizes.size11,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColor.fromInt(0xFFDC3545),
               ),

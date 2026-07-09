@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AddTransactionSheet extends StatefulWidget {
   final bool isIncome;
@@ -173,7 +174,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 'Balance Will Go Negative',
                 style: GoogleFonts.workSans(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: AppFontSizes.size16,
                   color: theme.colorScheme.onSurface,
                 ),
               ),
@@ -182,7 +183,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 '${context.formatAmount(projected, listen: false)}.\n\n'
                 'Are you sure you want to proceed?',
                 style: GoogleFonts.workSans(
-                  fontSize: 14,
+                  fontSize: AppFontSizes.size14,
                   color: theme.colorScheme.onSurfaceVariant,
                   height: 1.45,
                 ),

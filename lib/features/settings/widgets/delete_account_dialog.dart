@@ -7,6 +7,7 @@ import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class DeleteAccountDialog extends StatefulWidget {
   const DeleteAccountDialog({super.key});
@@ -176,7 +177,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
               Text(
                 'Delete Account',
                 style: GoogleFonts.workSans(
-                  fontSize: 22,
+                  fontSize: AppFontSizes.size22,
                   fontWeight: FontWeight.w800,
                   color: theme.colorScheme.onSurface,
                 ),
@@ -190,7 +191,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                   'cloud backups, and all local data.',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.workSans(
-                    fontSize: 13.5,
+                    fontSize: AppFontSizes.size14,
                     color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                     height: 1.5,
                   ),
@@ -200,7 +201,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                 Text(
                   'Type DELETE to confirm',
                   style: GoogleFonts.workSans(
-                    fontSize: 12,
+                    fontSize: AppFontSizes.size12,
                     fontWeight: FontWeight.w700,
                     color: AppColors.activeRed,
                     letterSpacing: 0.5,
@@ -212,7 +213,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                   controller: _deleteController,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.jetBrainsMono(
-                    fontSize: 18,
+                    fontSize: AppFontSizes.size18,
                     fontWeight: FontWeight.w800,
                     color: AppColors.activeRed,
                     letterSpacing: 4,
@@ -220,7 +221,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                   decoration: InputDecoration(
                     hintText: 'DELETE',
                     hintStyle: GoogleFonts.jetBrainsMono(
-                      fontSize: 18,
+                      fontSize: AppFontSizes.size18,
                       fontWeight: FontWeight.w800,
                       color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                       letterSpacing: 4,
@@ -268,7 +269,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                     child: Text(
                       'Cancel',
                       style: GoogleFonts.workSans(
-                        fontSize: 13,
+                        fontSize: AppFontSizes.size13,
                         fontWeight: FontWeight.w600,
                         color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                         decoration: TextDecoration.underline,
@@ -283,7 +284,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                   'Please verify your identity\nto delete your account.',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.workSans(
-                    fontSize: 13.5,
+                    fontSize: AppFontSizes.size14,
                     color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                     height: 1.5,
                   ),
@@ -297,13 +298,13 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                     textAlign: TextAlign.center,
                     autofocus: true,
                     style: GoogleFonts.workSans(
-                      fontSize: 15,
+                      fontSize: AppFontSizes.size15,
                       color: theme.colorScheme.onSurface,
                     ),
                     decoration: InputDecoration(
                       hintText: 'Enter your password',
                       hintStyle: GoogleFonts.workSans(
-                        fontSize: 15,
+                        fontSize: AppFontSizes.size15,
                         color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                       ),
                       border: OutlineInputBorder(
@@ -344,7 +345,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                       child: Text(
                         'Cancel',
                         style: GoogleFonts.workSans(
-                          fontSize: 13,
+                          fontSize: AppFontSizes.size13,
                           fontWeight: FontWeight.w600,
                           color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                           decoration: TextDecoration.underline,
@@ -376,7 +377,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                       child: Text(
                         'Cancel',
                         style: GoogleFonts.workSans(
-                          fontSize: 13,
+                          fontSize: AppFontSizes.size13,
                           fontWeight: FontWeight.w600,
                           color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                           decoration: TextDecoration.underline,

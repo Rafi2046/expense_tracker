@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourMemberManagementScreen extends StatefulWidget {
   final String tourId;
@@ -74,7 +75,7 @@ class _TourMemberManagementScreenState
                 style: TextStyle(
                   color: AppColors.activeGreen,
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: AppFontSizes.size16,
                 ),
               ),
             ),
@@ -196,7 +197,7 @@ class _TourMemberManagementScreenState
                       'Add buddies manually for offline tracking, or skip this and share the invite code later for real-time syncing!',
                       style: TextStyle(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                        fontSize: 12,
+                        fontSize: AppFontSizes.size12,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -247,7 +248,7 @@ class _TourMemberManagementScreenState
                           member.name,
                           style: AppTextStyles.cardTitle.copyWith(
                             color: theme.colorScheme.onSurface,
-                            fontSize: 16,
+                            fontSize: AppFontSizes.size16,
                             letterSpacing: 0,
                           ),
                         ),

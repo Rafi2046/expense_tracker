@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class OverallBalanceCard extends StatelessWidget {
   final double totalBalance;
@@ -45,7 +46,7 @@ class OverallBalanceCard extends StatelessWidget {
                 child: Text(
                   'Overall Account Balance',
                   style: GoogleFonts.workSans(
-                    fontSize: 12,
+                    fontSize: AppFontSizes.size12,
                     fontWeight: FontWeight.w500,
                     color: Colors.white70,
                     letterSpacing: 0.3,
@@ -70,7 +71,7 @@ class OverallBalanceCard extends StatelessWidget {
             amount: totalBalance,
             isMasked: isMasked,
             style: GoogleFonts.workSans(
-              fontSize: 24,
+              fontSize: AppFontSizes.size24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),

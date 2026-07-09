@@ -7,6 +7,7 @@ import 'package:expense_tracker/features/dashboard/widgets/income_transaction_ro
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class IncomeTransactionListScreen extends StatelessWidget {
   final String title;
@@ -50,7 +51,7 @@ class IncomeTransactionListScreen extends StatelessWidget {
               child: Text(
                 'No transactions found',
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: AppFontSizes.size15,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                   fontFamily: GoogleFonts.workSans().fontFamily,
                 ),
@@ -81,7 +82,7 @@ class IncomeTransactionListScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text('+ ', style: TextStyle(
-                        fontSize: 15,
+                        fontSize: AppFontSizes.size15,
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF2EBD85),
                         fontFamily: GoogleFonts.workSans().fontFamily,
@@ -90,7 +91,7 @@ class IncomeTransactionListScreen extends StatelessWidget {
                         amount: tx.amount,
                         isMasked: isMasked,
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: AppFontSizes.size15,
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFF2EBD85),
                           fontFamily: GoogleFonts.workSans().fontFamily,

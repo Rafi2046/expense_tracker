@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class IncomeSummaryCard extends StatelessWidget {
   final String label;
@@ -86,7 +87,7 @@ class IncomeSummaryCard extends StatelessWidget {
                 Text(
                   compareText!,
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     color: isDark ? Colors.white70 : AppColors.loginSubTitle,
                     fontFamily: GoogleFonts.workSans().fontFamily,
                   ),
@@ -106,7 +107,7 @@ class IncomeSummaryCard extends StatelessWidget {
                 Text(
                   percentageText!,
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.bold,
                     color: AppColors.activeGreen,
                     fontFamily: GoogleFonts.workSans().fontFamily,

@@ -2,6 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class CreditInfoForm extends StatelessWidget {
   final TextEditingController balanceController;
@@ -80,14 +81,14 @@ class CreditInfoForm extends StatelessWidget {
                 controller: dateController,
                 readOnly: true,
                 style: AppTextStyles.partyFormInput.copyWith(
-                  fontSize: 12.0,
+                  fontSize: AppFontSizes.size12,
                   color: theme.colorScheme.onSurface,
                 ),
                 onTap: onSelectDate,
                 decoration: InputDecoration(
                   labelText: 'As of Date',
                   labelStyle: AppTextStyles.partyFormLabel.copyWith(
-                    fontSize: 12,
+                    fontSize: AppFontSizes.size12,
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
@@ -180,7 +181,7 @@ class CreditInfoForm extends StatelessWidget {
           child: Text(
             label,
             style: GoogleFonts.workSans(
-              fontSize: 12.0,
+              fontSize: AppFontSizes.size12,
               fontWeight: FontWeight.w600,
               color: isActive ? Colors.white : (isDark ? Colors.white60 : const Color(0xFF31394D)),
             ),

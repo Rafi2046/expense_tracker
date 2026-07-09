@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class SettingsProfileCard extends StatelessWidget {
   final String name;
@@ -73,7 +74,7 @@ class SettingsProfileCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.workSans(
-                    fontSize: 16,
+                    fontSize: AppFontSizes.size16,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
@@ -84,7 +85,7 @@ class SettingsProfileCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.workSans(
-                    fontSize: 12,
+                    fontSize: AppFontSizes.size12,
                     color: Colors.white.withValues(alpha: 0.75),
                     fontWeight: FontWeight.w400,
                   ),

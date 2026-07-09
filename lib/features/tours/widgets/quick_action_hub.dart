@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/tours/widgets/join_tour_sheet.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class QuickActionHub extends StatelessWidget {
   final VoidCallback? onCreateNew;
@@ -110,7 +111,7 @@ class _ActionItem extends StatelessWidget {
             Text(
               label,
               style: GoogleFonts.workSans(
-                fontSize: 12,
+                fontSize: AppFontSizes.size12,
                 fontWeight: FontWeight.w600,
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.85)

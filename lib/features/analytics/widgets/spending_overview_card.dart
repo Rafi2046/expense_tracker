@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class SpendingDistributionItem {
   final String category;
@@ -69,7 +70,7 @@ class SpendingOverviewCard extends StatelessWidget {
               Text(
                 context.translate('distribution'),
                 style: GoogleFonts.workSans(
-                  fontSize: 16,
+                  fontSize: AppFontSizes.size16,
                   fontWeight: FontWeight.w700,
                   color: onSurface,
                 ),
@@ -82,7 +83,7 @@ class SpendingOverviewCard extends StatelessWidget {
             child: Text(
               context.translate('current_month_distribution'),
               style: GoogleFonts.workSans(
-                fontSize: 12,
+                fontSize: AppFontSizes.size12,
                 color: Colors.grey.shade500,
               ),
             ),
@@ -135,7 +136,7 @@ class SpendingOverviewCard extends StatelessWidget {
                                       Text(
                                         context.translate('total'),
                                         style: GoogleFonts.workSans(
-                                          fontSize: 11,
+                                          fontSize: AppFontSizes.size11,
                                           color: Colors.grey.shade500,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -181,7 +182,7 @@ class SpendingOverviewCard extends StatelessWidget {
                                   Text(
                                     item.category,
                                     style: GoogleFonts.workSans(
-                                      fontSize: 11.5,
+                                      fontSize: AppFontSizes.size11,
                                       fontWeight: FontWeight.w600,
                                       color: onSurface,
                                     ),
@@ -209,7 +210,7 @@ class SpendingOverviewCard extends StatelessWidget {
                                   ? '${item.percentage.toStringAsFixed(1)}%'
                                   : '${item.percentage.toStringAsFixed(0)}%',
                               style: GoogleFonts.workSans(
-                                fontSize: 11,
+                                fontSize: AppFontSizes.size11,
                                 fontWeight: FontWeight.w700,
                                 color: onSurface.withValues(alpha: 0.7),
                               ),

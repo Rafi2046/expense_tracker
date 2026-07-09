@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_page.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -217,7 +218,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                             child: Text(
                               context.translate('onboarding_skip'),
                               style: GoogleFonts.inter(
-                                fontSize: 13,
+                                fontSize: AppFontSizes.size13,
                                 fontWeight: FontWeight.w500,
                                 color: Theme.of(context)
                                     .colorScheme
@@ -307,7 +308,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                         'onboarding_get_started')
                                     : context.translate('onboarding_next'),
                                 style: GoogleFonts.workSans(
-                                  fontSize: 15,
+                                  fontSize: AppFontSizes.size15,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,
                                 ),

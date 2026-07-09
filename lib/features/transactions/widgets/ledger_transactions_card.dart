@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class LedgerTransactionsCard extends StatelessWidget {
   final List<Widget> children;
@@ -56,7 +57,7 @@ class LedgerTransactionsCard extends StatelessWidget {
                 Text(
                   'Recent Transactions',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: AppFontSizes.size16,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                     fontFamily: GoogleFonts.workSans().fontFamily,
@@ -67,7 +68,7 @@ class LedgerTransactionsCard extends StatelessWidget {
                   child: Text(
                     'Filter',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.w600,
                       color: AppColors.activeGreen,
                       fontFamily: GoogleFonts.workSans().fontFamily,

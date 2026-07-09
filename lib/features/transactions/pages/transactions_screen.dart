@@ -11,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
@@ -64,7 +65,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             label,
             textAlign: TextAlign.center,
             style: GoogleFonts.workSans(
-              fontSize: 13,
+              fontSize: AppFontSizes.size13,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
               color: isSelected ? Colors.white : (isDark ? Colors.white60 : const Color(0xFF6B7280)),
             ),
@@ -146,7 +147,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 controller: _searchController,
                 autofocus: true,
                 style: GoogleFonts.workSans(
-                  fontSize: 16,
+                  fontSize: AppFontSizes.size16,
                   color: onSurface,
                 ),
                 decoration: InputDecoration(
@@ -159,7 +160,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             : Text(
                 context.translate('transactions'),
                 style: GoogleFonts.workSans(
-                  fontSize: 20,
+                  fontSize: AppFontSizes.size20,
                   fontWeight: FontWeight.bold,
                   color: onSurface,
                 ),
@@ -297,7 +298,7 @@ class _AddOptionTile extends StatelessWidget {
                     Text(
                       label,
                       style: GoogleFonts.workSans(
-                        fontSize: 15,
+                        fontSize: AppFontSizes.size15,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
@@ -306,7 +307,7 @@ class _AddOptionTile extends StatelessWidget {
                     Text(
                       subtitle,
                       style: GoogleFonts.workSans(
-                        fontSize: 12,
+                        fontSize: AppFontSizes.size12,
                         color: Colors.grey.shade500,
                       ),
                     ),

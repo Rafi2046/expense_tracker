@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class MemberAvatarStack extends StatelessWidget {
   final List<TourParticipant> participants;
@@ -66,7 +67,7 @@ class MemberAvatarStack extends StatelessWidget {
                     '+$overflow',
                     style: TextStyle(
                       color: AppColors.textMuted.withValues(alpha: 0.7),
-                      fontSize: 11,
+                      fontSize: AppFontSizes.size11,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -120,7 +121,7 @@ class _SingleAvatar extends StatelessWidget {
                 _initials,
                 style: const TextStyle(
                   color: AppColors.white,
-                  fontSize: 12,
+                  fontSize: AppFontSizes.size12,
                   fontWeight: FontWeight.w600,
                 ),
               ),

@@ -6,6 +6,7 @@ import 'package:expense_tracker/features/notes/pages/add_note_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class NotebookScreen extends StatefulWidget {
   const NotebookScreen({super.key});
@@ -36,7 +37,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
         ),
         content: Text(
           'Are you sure you want to delete this note permanently?',
-          style: TextStyle(fontSize: 14, color: theme.colorScheme.onSurface),
+          style: TextStyle(fontSize: AppFontSizes.size14, color: theme.colorScheme.onSurface),
         ),
         actions: [
           TextButton(
@@ -91,7 +92,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
       child: Text(
         category,
         style: TextStyle(
-          fontSize: 11,
+          fontSize: AppFontSizes.size11,
           fontWeight: FontWeight.w600,
           color: fg,
           fontFamily: GoogleFonts.workSans().fontFamily,
@@ -154,7 +155,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                 });
               },
               style: TextStyle(
-                fontSize: 15,
+                fontSize: AppFontSizes.size15,
                 color: theme.colorScheme.onSurface,
                 fontFamily: GoogleFonts.workSans().fontFamily,
               ),
@@ -162,7 +163,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                 hintText: 'Search notes...',
                 hintStyle: TextStyle(
                   color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
-                  fontSize: 15,
+                  fontSize: AppFontSizes.size15,
                   fontFamily: GoogleFonts.workSans().fontFamily,
                 ),
                 prefixIcon: Icon(Symbols.search, color: isDark ? Colors.grey.shade500 : Colors.grey.shade400, size: 20),
@@ -208,7 +209,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                               Text(
                                 _searchQuery.isEmpty ? 'No notes yet' : 'No matching notes found',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: AppFontSizes.size16,
                                   fontWeight: FontWeight.w600,
                                   color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                                   fontFamily: GoogleFonts.workSans().fontFamily,
@@ -221,7 +222,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                     : 'Try searching for different keywords.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 13,
+                                  fontSize: AppFontSizes.size13,
                                   color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                                   fontFamily: GoogleFonts.workSans().fontFamily,
                                 ),
@@ -255,7 +256,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                 style: TextStyle(
                                   color: isDark ? Colors.red.shade400 : const Color(0xFFB91C1C), // Tailwind red-700
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 14,
+                                  fontSize: AppFontSizes.size14,
                                   fontFamily: GoogleFonts.workSans().fontFamily,
                                 ),
                               ),
@@ -325,7 +326,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                         child: Text(
                                           note.title,
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: AppFontSizes.size16,
                                             fontWeight: FontWeight.bold,
                                             color: theme.colorScheme.onSurface,
                                             fontFamily: GoogleFonts.workSans().fontFamily,
@@ -372,7 +373,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: AppFontSizes.size14,
                                       height: 1.4,
                                       color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                                       fontFamily: GoogleFonts.inter().fontFamily,
@@ -387,7 +388,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                       Text(
                                         _formatDate(note.createdAt),
                                         style: TextStyle(
-                                          fontSize: 12,
+                                          fontSize: AppFontSizes.size12,
                                           color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                                           fontFamily: GoogleFonts.workSans().fontFamily,
                                         ),

@@ -14,6 +14,7 @@ import 'package:expense_tracker/features/tours/pages/tour_member_management_scre
 import 'package:expense_tracker/features/tours/widgets/tour_list_header.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_list_empty_state.dart';
 import 'package:expense_tracker/features/tours/widgets/join_tour_sheet.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourListScreen extends StatefulWidget {
   const TourListScreen({super.key});
@@ -33,10 +34,10 @@ class _TourListScreenState extends State<TourListScreen> {
             borderRadius: BorderRadius.circular(16)),
         backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
         title: const Text('Delete Tour',
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17)),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: AppFontSizes.size18)),
         content: const Text(
           'This action cannot be undone.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
+          style: TextStyle(fontSize: AppFontSizes.size14, color: Color(0xFF6B7280)),
         ),
         actions: [
           TextButton(
@@ -207,7 +208,7 @@ class _TourListScreenState extends State<TourListScreen> {
                   'Create a New Tour',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                    fontSize: AppFontSizes.size16,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -231,7 +232,7 @@ class _TourListScreenState extends State<TourListScreen> {
                   'Join with Invite Code',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                    fontSize: AppFontSizes.size16,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),

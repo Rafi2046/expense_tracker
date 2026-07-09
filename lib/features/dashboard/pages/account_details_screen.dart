@@ -11,6 +11,7 @@ import 'package:expense_tracker/features/dashboard/widgets/account_balance_heade
 import 'package:expense_tracker/features/dashboard/widgets/account_date_selector.dart';
 import 'package:expense_tracker/features/dashboard/widgets/account_search_bar.dart';
 import 'package:expense_tracker/features/dashboard/widgets/adjust_balance_actions.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AccountDetailsScreen extends StatefulWidget {
   final String accountType; // 'Cash' or 'Bank'
@@ -172,7 +173,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         title: Text(
           widget.accountType == 'Cash' ? 'Cash' : 'Bank Account',
           style: AppTextStyles.reportAppBarTitle.copyWith(
-            fontSize: 16.5,
+            fontSize: AppFontSizes.size16,
             color: theme.appBarTheme.titleTextStyle?.color,
           ),
         ),
@@ -233,7 +234,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                           'No transactions found',
                           style: GoogleFonts.workSans(
                             color: theme.colorScheme.onSurfaceVariant,
-                            fontSize: 13,
+                            fontSize: AppFontSizes.size13,
                           ),
                         ),
                       )
@@ -263,7 +264,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                   child: Text(
                     'Adjust Balance',
                     style: GoogleFonts.workSans(
-                      fontSize: 14,
+                      fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),

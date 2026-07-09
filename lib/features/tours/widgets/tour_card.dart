@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourCard extends StatelessWidget {
   final Tour tour;
@@ -143,7 +144,7 @@ class TourCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.workSans(
                           color: Colors.white,
-                          fontSize: 24,
+                          fontSize: AppFontSizes.size24,
                           fontWeight: FontWeight.w800,
                           height: 1.15,
                           letterSpacing: -0.3,
@@ -166,7 +167,7 @@ class TourCard extends StatelessWidget {
                                 '$memberCount ${memberCount == 1 ? 'member' : 'members'}',
                                 style: GoogleFonts.workSans(
                                   color: Colors.white.withValues(alpha: 0.7),
-                                  fontSize: 13,
+                                  fontSize: AppFontSizes.size13,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -179,7 +180,7 @@ class TourCard extends StatelessWidget {
                                 'Total spent',
                                 style: GoogleFonts.workSans(
                                   color: Colors.white.withValues(alpha: 0.5),
-                                  fontSize: 10,
+                                  fontSize: AppFontSizes.size10,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0.8,
                                 ),
@@ -189,7 +190,7 @@ class TourCard extends StatelessWidget {
                                 _formatAmount(totalSpent, tour.currency),
                                 style: GoogleFonts.workSans(
                                   color: Colors.white,
-                                  fontSize: 24,
+                                  fontSize: AppFontSizes.size24,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: -0.5,
                                   height: 1.1,
@@ -261,7 +262,7 @@ class _StatusBadge extends StatelessWidget {
             label,
             style: GoogleFonts.workSans(
               color: Colors.white.withValues(alpha: isCompleted ? 0.6 : 0.9),
-              fontSize: 11,
+              fontSize: AppFontSizes.size11,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.3,
             ),

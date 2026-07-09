@@ -5,6 +5,7 @@ import 'package:expense_tracker/features/tours/utils/tour_export_service.dart';
 import 'package:expense_tracker/features/tours/utils/tour_invoice_generator.dart';
 import 'package:expense_tracker/features/tours/pages/tour_invoice_screen.dart';
 import 'package:expense_tracker/core/utils/debt_simplifier.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourExportOptionsSheet extends StatelessWidget {
   final String tourId;
@@ -62,7 +63,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                 Text(
                   'Export Report',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: AppFontSizes.size20,
                     fontWeight: FontWeight.w700,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -71,7 +72,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                 Text(
                   'Choose how to share your tour details',
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
                   ),
                 ),
@@ -184,7 +185,7 @@ class _ExportOptionTile extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                        fontSize: 15,
+                        fontSize: AppFontSizes.size15,
                         fontWeight: FontWeight.w600,
                         color: theme.colorScheme.onSurface,
                       ),
@@ -193,7 +194,7 @@ class _ExportOptionTile extends StatelessWidget {
                     Text(
                       subtitle,
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: AppFontSizes.size12,
                         color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
                       ),
                     ),

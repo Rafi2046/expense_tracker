@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransactionsStatsCards extends StatelessWidget {
   final bool isMasked;
@@ -55,7 +56,7 @@ class TransactionsStatsCards extends StatelessWidget {
                 child: Text(
                   context.translate('total_balance').toUpperCase(),
                   style: GoogleFonts.workSans(
-                    fontSize: 11,
+                    fontSize: AppFontSizes.size11,
                     fontWeight: FontWeight.bold,
                     color: Colors.white70,
                     letterSpacing: 1.0,
@@ -74,7 +75,7 @@ class TransactionsStatsCards extends StatelessWidget {
                 child: Text(
                   provider.selectedMonth.year.toString(),
                   style: GoogleFonts.workSans(
-                    fontSize: 10,
+                    fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -101,7 +102,7 @@ class TransactionsStatsCards extends StatelessWidget {
             amount: netBalance,
             isMasked: isMasked,
             style: GoogleFonts.workSans(
-              fontSize: 26,
+              fontSize: AppFontSizes.size28,
               fontWeight: FontWeight.bold,
               color: Colors.white,
               letterSpacing: -0.5,
@@ -139,7 +140,7 @@ class TransactionsStatsCards extends StatelessWidget {
                           Text(
                             context.translate('income'),
                             style: GoogleFonts.workSans(
-                              fontSize: 11,
+                              fontSize: AppFontSizes.size11,
                               color: Colors.white70,
                               fontWeight: FontWeight.w500,
                             ),
@@ -149,7 +150,7 @@ class TransactionsStatsCards extends StatelessWidget {
                             amount: totalIncome,
                             isMasked: isMasked,
                             style: GoogleFonts.workSans(
-                              fontSize: 13,
+                              fontSize: AppFontSizes.size13,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -191,7 +192,7 @@ class TransactionsStatsCards extends StatelessWidget {
                           Text(
                             context.translate('expense'),
                             style: GoogleFonts.workSans(
-                              fontSize: 11,
+                              fontSize: AppFontSizes.size11,
                               color: Colors.white70,
                               fontWeight: FontWeight.w500,
                             ),
@@ -201,7 +202,7 @@ class TransactionsStatsCards extends StatelessWidget {
                             amount: totalExpense,
                             isMasked: isMasked,
                             style: GoogleFonts.workSans(
-                              fontSize: 13,
+                              fontSize: AppFontSizes.size13,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),

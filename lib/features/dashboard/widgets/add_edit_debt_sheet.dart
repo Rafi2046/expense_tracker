@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AddEditDebtSheet extends StatefulWidget {
   final DebtItem? item;
@@ -84,11 +85,11 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
         : (widget.isReceive ? 'Edit Owed Entry' : 'Edit Owed Entry (To Give)');
 
     final inputStyle = GoogleFonts.inter(
-      fontSize: 14,
+      fontSize: AppFontSizes.size14,
       color: theme.colorScheme.onSurface,
     );
     final labelStyle = GoogleFonts.inter(
-      fontSize: 14,
+      fontSize: AppFontSizes.size14,
       color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
     );
     final enabledBorderSide = BorderSide(
@@ -130,7 +131,7 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                     Text(
                       titleText,
                       style: GoogleFonts.workSans(
-                        fontSize: 18,
+                        fontSize: AppFontSizes.size18,
                         fontWeight: FontWeight.bold,
                         color: theme.colorScheme.onSurface,
                       ),
@@ -293,7 +294,7 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                     child: Text(
                       widget.item == null ? 'Save Entry' : 'Update Entry',
                       style: GoogleFonts.workSans(
-                        fontSize: 15,
+                        fontSize: AppFontSizes.size15,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),

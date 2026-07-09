@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class HomepageAppbarWidget extends StatelessWidget
     implements PreferredSizeWidget {
@@ -68,7 +69,7 @@ class HomepageAppbarWidget extends StatelessWidget
                               style: TextStyle(
                                 color: theme.colorScheme.onSurface,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                                fontSize: AppFontSizes.size14,
                                 fontFamily: GoogleFonts.workSans().fontFamily,
                               ),
                             )
@@ -83,7 +84,7 @@ class HomepageAppbarWidget extends StatelessWidget
                         style: TextStyle(
                           color: theme.colorScheme.onSurface,
                           fontWeight: FontWeight.w600,
-                          fontSize: 16,
+                          fontSize: AppFontSizes.size16,
                           fontFamily: GoogleFonts.workSans().fontFamily,
                         ),
                       ),

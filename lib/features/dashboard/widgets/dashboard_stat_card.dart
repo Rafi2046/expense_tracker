@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class DashboardStatCard extends StatelessWidget {
   final String title;
@@ -65,7 +66,7 @@ class DashboardStatCard extends StatelessWidget {
                       title,
                       style: AppTextStyles.cardTitle.copyWith(
                         color: AppColors.textMuted,
-                        fontSize: 10,
+                        fontSize: AppFontSizes.size10,
                         letterSpacing: 0,
                       ),
                       maxLines: 1,
@@ -91,7 +92,7 @@ class DashboardStatCard extends StatelessWidget {
                                 style: (isPositive
                                         ? AppTextStyles.cardTrendGreen
                                         : AppTextStyles.cardTrendRed)
-                                    .copyWith(fontSize: 10.5),
+                                    .copyWith(fontSize: AppFontSizes.size10),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),

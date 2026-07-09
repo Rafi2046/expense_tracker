@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/models/transaction_models.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class RecentActivityItem {
   final String title;
@@ -53,7 +54,7 @@ class DashboardRecentActivity extends StatelessWidget {
               Text(
                 context.translate('recent_activity'),
                 style: GoogleFonts.workSans(
-                  fontSize: 14,
+                  fontSize: AppFontSizes.size14,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
@@ -64,7 +65,7 @@ class DashboardRecentActivity extends StatelessWidget {
                 child: Text(
                   context.translate('view_all'),
                   style: GoogleFonts.workSans(
-                    fontSize: 11.5,
+                    fontSize: AppFontSizes.size11,
                     fontWeight: FontWeight.w600,
                     color: AppColors.activeGreen,
                   ),
@@ -153,7 +154,7 @@ class DashboardRecentActivity extends StatelessWidget {
                       Text(
                         item.title,
                         style: GoogleFonts.workSans(
-                          fontSize: 13,
+                          fontSize: AppFontSizes.size13,
                           fontWeight: FontWeight.w600,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
@@ -162,7 +163,7 @@ class DashboardRecentActivity extends StatelessWidget {
                       Text(
                         '${context.translate(item.category.toLowerCase())}  •  ${item.timeText}',
                         style: GoogleFonts.workSans(
-                          fontSize: 10.5,
+                          fontSize: AppFontSizes.size10,
                           color: Colors.grey.shade400,
                           fontWeight: FontWeight.w400,
                         ),
@@ -178,7 +179,7 @@ class DashboardRecentActivity extends StatelessWidget {
                     Text(
                       isInc ? '+' : '-',
                       style: GoogleFonts.workSans(
-                        fontSize: 12.5,
+                        fontSize: AppFontSizes.size12,
                         fontWeight: FontWeight.w700,
                         color: isInc
                             ? AppColors.activeGreen
@@ -188,7 +189,7 @@ class DashboardRecentActivity extends StatelessWidget {
                     PrivacyMaskedText(
                       amount: item.amount,
                       style: GoogleFonts.workSans(
-                        fontSize: 12.5,
+                        fontSize: AppFontSizes.size12,
                         fontWeight: FontWeight.w700,
                         color: isInc
                             ? AppColors.activeGreen

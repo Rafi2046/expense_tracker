@@ -6,6 +6,7 @@ import 'package:expense_tracker/features/dashboard/widgets/edit_profile_sheet.da
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class UserProfile {
   final String id;
@@ -95,7 +96,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
             Text(
               'Switch Profile',
               style: GoogleFonts.workSans(
-                fontSize: 20,
+                fontSize: AppFontSizes.size20,
                 fontWeight: FontWeight.w800,
                 color: theme.textTheme.titleLarge?.color,
               ),
@@ -104,7 +105,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
             Text(
               'Choose a profile to manage',
               style: GoogleFonts.workSans(
-                fontSize: 13,
+                fontSize: AppFontSizes.size13,
                 color: theme.textTheme.bodySmall?.color,
               ),
             ),
@@ -135,7 +136,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                       style: TextStyle(
                         color: theme.textTheme.titleLarge?.color,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: AppFontSizes.size18,
                       ),
                     ),
                   ),
@@ -155,7 +156,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                       Text(
                         _profileLabel(profile),
                         style: GoogleFonts.workSans(
-                          fontSize: 12,
+                          fontSize: AppFontSizes.size12,
                           color: profile.id == 'default_profile'
                               ? const Color(0xFFF59E0B)
                               : theme.textTheme.bodySmall?.color,
@@ -223,7 +224,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                 label: Text(
                   'Create New Profile',
                   style: GoogleFonts.workSans(
-                    fontSize: 15,
+                    fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF00BFA5),
                   ),

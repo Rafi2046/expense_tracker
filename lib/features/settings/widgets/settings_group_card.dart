@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class SettingsGroupCard extends StatelessWidget {
   final String title;
@@ -43,7 +44,7 @@ class SettingsGroupCard extends StatelessWidget {
           child: Text(
             title.toUpperCase(),
             style: GoogleFonts.workSans(
-              fontSize: 10.5,
+              fontSize: AppFontSizes.size10,
               fontWeight: FontWeight.w700,
               color: isDark ? const Color(0xFFB39DDB) : const Color(0xFF6A53A1),
               letterSpacing: 1.2,

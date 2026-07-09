@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class JoinTourSheet extends StatefulWidget {
   const JoinTourSheet({super.key});
@@ -83,7 +84,7 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
               Text(
                 'Join a Tour',
                 style: GoogleFonts.workSans(
-                  fontSize: 18,
+                  fontSize: AppFontSizes.size18,
                   fontWeight: FontWeight.w700,
                   color: theme.colorScheme.onSurface,
                 ),
@@ -92,7 +93,7 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
               Text(
                 'Enter the code shared by your tour host',
                 style: GoogleFonts.workSans(
-                  fontSize: 13,
+                  fontSize: AppFontSizes.size13,
                   fontWeight: FontWeight.w400,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
@@ -109,7 +110,7 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
                   UpperCaseTextFormatter(),
                 ],
                 style: GoogleFonts.jetBrainsMono(
-                  fontSize: 28,
+                  fontSize: AppFontSizes.size28,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 2.0,
                   color: theme.colorScheme.onSurface,
@@ -118,7 +119,7 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
                   counterText: '',
                   hintText: 'ENTER 6-DIGIT CODE',
                   hintStyle: GoogleFonts.jetBrainsMono(
-                    fontSize: 15,
+                    fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.w500,
                     letterSpacing: 1.5,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
@@ -182,7 +183,7 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
                       : Text(
                           'Join Tour',
                           style: GoogleFonts.workSans(
-                            fontSize: 15,
+                            fontSize: AppFontSizes.size15,
                             fontWeight: FontWeight.w700,
                           ),
                         ),

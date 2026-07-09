@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransactionContainerRow extends StatelessWidget {
   final IconData icon;
@@ -50,7 +51,7 @@ class TransactionContainerRow extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: AppFontSizes.size15,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,
@@ -60,7 +61,7 @@ class TransactionContainerRow extends StatelessWidget {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: AppFontSizes.size12,
                       color: isDark ? Colors.white60 : Colors.grey.shade600,
                       fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
@@ -78,7 +79,7 @@ class TransactionContainerRow extends StatelessWidget {
                   Text(
                     subAmountLabel!,
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: AppFontSizes.size11,
                       fontWeight: FontWeight.w500,
                       color: isDark ? Colors.white38 : Colors.grey.shade500,
                       fontFamily: GoogleFonts.workSans().fontFamily,

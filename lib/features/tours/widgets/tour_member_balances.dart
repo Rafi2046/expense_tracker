@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourMemberBalances extends StatelessWidget {
   final List<TourParticipant> participants;
@@ -49,7 +50,7 @@ class TourMemberBalances extends StatelessWidget {
           child: Text(
             'Balances',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: AppFontSizes.size18,
               fontWeight: FontWeight.w700,
               color: theme.colorScheme.onSurface,
             ),
@@ -131,7 +132,7 @@ class TourMemberBalances extends StatelessWidget {
                         Text(
                           'Settle Up Balances',
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: AppFontSizes.size13,
                             fontWeight: FontWeight.w700,
                             color: Color(0xFF10B981),
                           ),
@@ -169,7 +170,7 @@ class TourMemberBalances extends StatelessWidget {
               p.name.isNotEmpty ? p.name[0].toUpperCase() : '?',
               style: const TextStyle(
                 color: AppColors.white,
-                fontSize: 13,
+                fontSize: AppFontSizes.size13,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -179,7 +180,7 @@ class TourMemberBalances extends StatelessWidget {
             child: Text(
               p.name,
               style: TextStyle(
-                fontSize: 15,
+                fontSize: AppFontSizes.size15,
                 fontWeight: FontWeight.w600,
                 color: theme.colorScheme.onSurface,
               ),
@@ -198,7 +199,7 @@ class TourMemberBalances extends StatelessWidget {
               child: const Text(
                 'Settled',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: AppFontSizes.size11,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFF9CA3AF),
                 ),
@@ -217,7 +218,7 @@ class TourMemberBalances extends StatelessWidget {
               child: Text(
                 'Gets back ${formatAmount(balance)}',
                 style: const TextStyle(
-                  fontSize: 11,
+                  fontSize: AppFontSizes.size11,
                   fontWeight: FontWeight.w700,
                   color: AppColors.activeGreen,
                 ),
@@ -236,7 +237,7 @@ class TourMemberBalances extends StatelessWidget {
               child: Text(
                 'Owes ${formatAmount(balance.abs())}',
                 style: const TextStyle(
-                  fontSize: 11,
+                  fontSize: AppFontSizes.size11,
                   fontWeight: FontWeight.w700,
                   color: AppColors.activeRed,
                 ),

@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class EditShortcutsSheet extends StatefulWidget {
   const EditShortcutsSheet({super.key});
@@ -112,7 +113,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                   Text(
                     context.translate('edit_quick_actions'),
                     style: GoogleFonts.workSans(
-                      fontSize: 17,
+                      fontSize: AppFontSizes.size18,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
@@ -121,7 +122,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                   Text(
                     context.translate('drag_to_reorder_toggle_to_show'),
                     style: GoogleFonts.workSans(
-                      fontSize: 12.5,
+                      fontSize: AppFontSizes.size12,
                       color: Colors.grey.shade500,
                     ),
                   ),
@@ -189,7 +190,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                               child: Text(
                                 context.translate(item.id),
                                 style: GoogleFonts.workSans(
-                                  fontSize: 14,
+                                  fontSize: AppFontSizes.size14,
                                   fontWeight: FontWeight.w500,
                                   color: Theme.of(context).colorScheme.onSurface,
                                 ),
@@ -205,7 +206,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                                 child: Text(
                                   context.translate('always_on'),
                                   style: GoogleFonts.workSans(
-                                    fontSize: 10.5,
+                                    fontSize: AppFontSizes.size10,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.grey.shade500,
                                   ),

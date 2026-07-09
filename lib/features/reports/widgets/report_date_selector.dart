@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/select_date_option_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class ReportDateSelector extends StatelessWidget {
   const ReportDateSelector({super.key});
@@ -38,12 +39,12 @@ class ReportDateSelector extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: 13.5, color: theme.colorScheme.onSurface),
+                    style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: AppFontSizes.size14, color: theme.colorScheme.onSurface),
                   ),
                   Text(
                     subtitle,
                     style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                      fontSize: 11,
+                      fontSize: AppFontSizes.size11,
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
@@ -68,7 +69,7 @@ class ReportDateSelector extends StatelessWidget {
               'CHANGE',
               style: AppTextStyles.reportSectionHeader.copyWith(
                 color: theme.primaryColor,
-                fontSize: 11,
+                fontSize: AppFontSizes.size11,
               ),
             ),
           ),

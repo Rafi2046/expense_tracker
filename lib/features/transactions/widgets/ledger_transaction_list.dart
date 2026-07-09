@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class LedgerTransactionList extends StatelessWidget {
   final bool isMasked;
@@ -93,7 +94,7 @@ class LedgerTransactionList extends StatelessWidget {
           child: Text(
             dateHeader.toUpperCase(),
             style: GoogleFonts.workSans(
-              fontSize: 11,
+              fontSize: AppFontSizes.size11,
               fontWeight: FontWeight.bold,
               color: Colors.grey.shade400,
               letterSpacing: 1.0,

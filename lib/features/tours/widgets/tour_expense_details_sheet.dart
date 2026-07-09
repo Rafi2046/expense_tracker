@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourExpenseDetailsSheet extends StatelessWidget {
   final TourExpense expense;
@@ -92,7 +93,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                       Text(
                         expense.title,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: AppFontSizes.size20,
                           fontWeight: FontWeight.bold,
                           color: theme.colorScheme.onSurface,
                         ),
@@ -108,7 +109,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                           child: Text(
                             expense.category!,
                             style: TextStyle(
-                              fontSize: 11,
+                              fontSize: AppFontSizes.size11,
                               fontWeight: FontWeight.w600,
                               color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF475569),
                             ),
@@ -121,7 +122,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                 Text(
                   formatAmount(expense.amount, currency),
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: AppFontSizes.size24,
                     fontWeight: FontWeight.w800,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -172,7 +173,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                         const SizedBox(width: 12),
                         const Text(
                           'Receipt image path not found',
-                          style: TextStyle(fontSize: 13, color: Color(0xFF9CA3AF)),
+                          style: TextStyle(fontSize: AppFontSizes.size13, color: Color(0xFF9CA3AF)),
                         ),
                       ],
                     ),
@@ -198,7 +199,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
-                          fontSize: 14,
+                          fontSize: AppFontSizes.size14,
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
@@ -221,7 +222,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
-                      fontSize: 14,
+                      fontSize: AppFontSizes.size14,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -252,7 +253,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: AppFontSizes.size13,
               fontWeight: FontWeight.w600,
               color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
             ),
@@ -262,7 +263,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
           child: Text(
             value,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: AppFontSizes.size13,
               fontWeight: FontWeight.w600,
               color: theme.colorScheme.onSurface,
             ),

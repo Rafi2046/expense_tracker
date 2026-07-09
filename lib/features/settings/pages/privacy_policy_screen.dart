@@ -2,6 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
@@ -23,7 +24,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
         title: Text(
           context.translate('privacy_policy'),
           style: GoogleFonts.workSans(
-            fontSize: 20,
+            fontSize: AppFontSizes.size20,
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.onSurface,
           ),
@@ -68,7 +69,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   child: Text(
                     'Privacy Summary',
                     style: GoogleFonts.workSans(
-                      fontSize: 22,
+                      fontSize: AppFontSizes.size22,
                       fontWeight: FontWeight.w700,
                       color: theme.colorScheme.onSurface,
                     ),
@@ -79,7 +80,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   child: Text(
                     'How we handle your data',
                     style: GoogleFonts.workSans(
-                      fontSize: 13.5,
+                      fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.w400,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -128,7 +129,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 label: Text(
                   'Read Full Legal Policy',
                   style: GoogleFonts.workSans(
-                    fontSize: 14,
+                    fontSize: AppFontSizes.size14,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -197,7 +198,7 @@ class _PrivacyTile extends StatelessWidget {
                 Text(
                   title,
                   style: GoogleFonts.workSans(
-                    fontSize: 15,
+                    fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -206,7 +207,7 @@ class _PrivacyTile extends StatelessWidget {
                 Text(
                   subtitle,
                   style: GoogleFonts.workSans(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.w400,
                     color: theme.colorScheme.onSurfaceVariant,
                     height: 1.45,

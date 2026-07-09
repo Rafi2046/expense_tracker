@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/app_lock_provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class LockScreenOverlay extends StatefulWidget {
   const LockScreenOverlay({super.key});
@@ -113,7 +114,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
             Text(
               'App Locked',
               style: TextStyle(
-                fontSize: 22,
+                fontSize: AppFontSizes.size22,
                 fontWeight: FontWeight.w700,
                 color: theme.colorScheme.onSurface,
                 letterSpacing: 0.3,
@@ -123,7 +124,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
             Text(
               'Authenticate to access your data',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: AppFontSizes.size14,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
             ),
@@ -135,7 +136,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
                   _errorMessage,
                   style: const TextStyle(
                     color: Color(0xFFE53935),
-                    fontSize: 14,
+                    fontSize: AppFontSizes.size14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -154,7 +155,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
                   'Tap to Unlock',
                   style: TextStyle(
                     color: theme.colorScheme.onPrimary,
-                    fontSize: 15,
+                    fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

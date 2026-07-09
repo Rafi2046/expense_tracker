@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PartyStatementBalanceCard extends StatelessWidget {
   const PartyStatementBalanceCard({super.key});
@@ -41,7 +42,7 @@ class PartyStatementBalanceCard extends StatelessWidget {
           Text(
             partyName,
             style: AppTextStyles.reportTransactionTitle.copyWith(
-              fontSize: 18,
+              fontSize: AppFontSizes.size18,
               color: theme.colorScheme.onSurface,
             ),
           ),
@@ -77,7 +78,7 @@ class PartyStatementBalanceCard extends StatelessWidget {
                   netBalance >= 0 ? 'RECEIVABLE' : 'PAYABLE',
                   style: AppTextStyles.reportStatLabel.copyWith(
                     color: netBalance >= 0 ? AppColors.activeGreen : AppColors.activeRed,
-                    fontSize: 11,
+                    fontSize: AppFontSizes.size11,
                   ),
                 ),
               ),

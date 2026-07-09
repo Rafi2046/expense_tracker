@@ -2,6 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PrivacyToggleSection extends StatelessWidget {
   final bool isMasked;
@@ -49,7 +50,7 @@ class PrivacyToggleSection extends StatelessWidget {
             child: Text(
               isMasked ? 'Amounts hidden' : 'Amounts visible',
               style: GoogleFonts.workSans(
-                fontSize: 13,
+                fontSize: AppFontSizes.size13,
                 fontWeight: FontWeight.w600,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
               ),

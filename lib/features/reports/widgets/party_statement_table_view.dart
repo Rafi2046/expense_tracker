@@ -9,6 +9,7 @@ import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.d
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PartyStatementTableView extends StatelessWidget {
   final bool isMasked;
@@ -119,7 +120,7 @@ class PartyStatementTableView extends StatelessWidget {
                                             ? AppColors.activeRed
                                             : const Color(0xFFDC3545))
                                         .withValues(alpha: 0.7),
-                              fontSize: 12,
+                              fontSize: AppFontSizes.size12,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.5,
                             ),
@@ -130,7 +131,7 @@ class PartyStatementTableView extends StatelessWidget {
                             isMasked: isMasked,
                             style: AppTextStyles.reportLargeValue.copyWith(
                               color: cardAccentColor,
-                              fontSize: 24,
+                              fontSize: AppFontSizes.size24,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -159,7 +160,7 @@ class PartyStatementTableView extends StatelessWidget {
                       'Transactions',
                       style: AppTextStyles.reportStatLabel.copyWith(
                         color: theme.colorScheme.onSurface,
-                        fontSize: 11,
+                        fontSize: AppFontSizes.size11,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -167,7 +168,7 @@ class PartyStatementTableView extends StatelessWidget {
                     Text(
                       '${transactions.length} entries',
                       style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                        fontSize: 11,
+                        fontSize: AppFontSizes.size11,
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
@@ -183,7 +184,7 @@ class PartyStatementTableView extends StatelessWidget {
                       'Debit',
                       style: AppTextStyles.reportStatLabel.copyWith(
                         color: AppColors.activeGreen,
-                        fontSize: 11,
+                        fontSize: AppFontSizes.size11,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -193,7 +194,7 @@ class PartyStatementTableView extends StatelessWidget {
                       isMasked: isMasked,
                       style: AppTextStyles.reportTransactionSubtitle.copyWith(
                         color: AppColors.activeGreen,
-                        fontSize: 11,
+                        fontSize: AppFontSizes.size11,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -209,7 +210,7 @@ class PartyStatementTableView extends StatelessWidget {
                       'Credit',
                       style: AppTextStyles.reportStatLabel.copyWith(
                         color: AppColors.activeRed,
-                        fontSize: 11,
+                        fontSize: AppFontSizes.size11,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -219,7 +220,7 @@ class PartyStatementTableView extends StatelessWidget {
                       isMasked: isMasked,
                       style: AppTextStyles.reportTransactionSubtitle.copyWith(
                         color: AppColors.activeRed,
-                        fontSize: 11,
+                        fontSize: AppFontSizes.size11,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -302,7 +303,7 @@ class PartyStatementTableView extends StatelessWidget {
                               entry.description,
                               style: AppTextStyles.reportTransactionTitle
                                   .copyWith(
-                                    fontSize: 13,
+                                    fontSize: AppFontSizes.size13,
                                     fontWeight: FontWeight.w600,
                                     color: theme.colorScheme.onSurface,
                                   ),
@@ -314,7 +315,7 @@ class PartyStatementTableView extends StatelessWidget {
                               ).format(entry.dateTime),
                               style: AppTextStyles.reportTransactionSubtitle
                                   .copyWith(
-                                    fontSize: 10.5,
+                                    fontSize: AppFontSizes.size10,
                                     color: theme.colorScheme.onSurfaceVariant,
                                   ),
                             ),
@@ -354,7 +355,7 @@ class PartyStatementTableView extends StatelessWidget {
                                   isMasked: isMasked,
                                   style: AppTextStyles.reportTransactionTitle
                                       .copyWith(
-                                        fontSize: 12.5,
+                                        fontSize: AppFontSizes.size12,
                                         fontWeight: FontWeight.bold,
                                         color: AppColors.activeGreen,
                                       ),
@@ -395,7 +396,7 @@ class PartyStatementTableView extends StatelessWidget {
                                   isMasked: isMasked,
                                   style: AppTextStyles.reportTransactionTitle
                                       .copyWith(
-                                        fontSize: 12.5,
+                                        fontSize: AppFontSizes.size12,
                                         fontWeight: FontWeight.bold,
                                         color: AppColors.activeRed,
                                       ),

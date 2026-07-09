@@ -8,6 +8,7 @@ import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class CreateProfileNameScreen extends StatefulWidget {
   final bool isBusiness;
@@ -89,7 +90,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
               Text(
                 'Create an Account',
                 style: GoogleFonts.workSans(
-                  fontSize: 20,
+                  fontSize: AppFontSizes.size20,
                   fontWeight: FontWeight.w800,
                   color: theme.textTheme.titleLarge?.color,
                 ),
@@ -98,7 +99,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
               Text(
                 'Please enter the following details to get started',
                 style: GoogleFonts.workSans(
-                  fontSize: 13,
+                  fontSize: AppFontSizes.size13,
                   color: theme.textTheme.bodySmall?.color,
                 ),
               ),

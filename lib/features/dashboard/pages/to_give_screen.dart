@@ -9,6 +9,7 @@ import 'package:expense_tracker/features/dashboard/widgets/debt_total_card.dart'
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class ToGiveScreen extends StatefulWidget {
   const ToGiveScreen({super.key});
@@ -96,7 +97,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                         Text(
                           'Active Payables',
                           style: GoogleFonts.workSans(
-                            fontSize: 16,
+                            fontSize: AppFontSizes.size16,
                             fontWeight: FontWeight.bold,
                             color: theme.colorScheme.onSurface,
                           ),
@@ -114,7 +115,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                           child: Text(
                             '${items.length}',
                             style: GoogleFonts.workSans(
-                              fontSize: 12,
+                              fontSize: AppFontSizes.size12,
                               fontWeight: FontWeight.bold,
                               color: AppColors.activeRed,
                             ),
@@ -157,7 +158,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                           Text(
                             'No pending debts!',
                             style: GoogleFonts.workSans(
-                              fontSize: 15,
+                              fontSize: AppFontSizes.size15,
                               fontWeight: FontWeight.w600,
                               color: Colors.grey.shade500,
                             ),

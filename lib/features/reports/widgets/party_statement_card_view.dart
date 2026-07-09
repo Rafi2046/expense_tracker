@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PartyStatementCardView extends StatelessWidget {
   final bool isMasked;
@@ -132,7 +133,7 @@ class PartyStatementCardView extends StatelessWidget {
                                             ? AppColors.activeRed
                                             : const Color(0xFFDC3545))
                                         .withValues(alpha: 0.7),
-                              fontSize: 12,
+                              fontSize: AppFontSizes.size12,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.5,
                             ),
@@ -143,7 +144,7 @@ class PartyStatementCardView extends StatelessWidget {
                             isMasked: isMasked,
                             style: AppTextStyles.reportLargeValue.copyWith(
                               color: cardAccentColor,
-                              fontSize: 24,
+                              fontSize: AppFontSizes.size24,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -208,7 +209,7 @@ class PartyStatementCardView extends StatelessWidget {
                                           ? AppColors.activeGreen
                                           : const Color(0xFF146C48))
                                       .withValues(alpha: 0.7),
-                              fontSize: 11,
+                              fontSize: AppFontSizes.size11,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -218,7 +219,7 @@ class PartyStatementCardView extends StatelessWidget {
                             isMasked: isMasked,
                             style: AppTextStyles.reportTransactionTitle
                                 .copyWith(
-                                  fontSize: 14.5,
+                                  fontSize: AppFontSizes.size15,
                                   fontWeight: FontWeight.bold,
                                   color: theme.colorScheme.onSurface,
                                 ),
@@ -278,7 +279,7 @@ class PartyStatementCardView extends StatelessWidget {
                                           ? AppColors.activeRed
                                           : const Color(0xFFDC3545))
                                       .withValues(alpha: 0.7),
-                              fontSize: 11,
+                              fontSize: AppFontSizes.size11,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -288,7 +289,7 @@ class PartyStatementCardView extends StatelessWidget {
                             isMasked: isMasked,
                             style: AppTextStyles.reportTransactionTitle
                                 .copyWith(
-                                  fontSize: 14.5,
+                                  fontSize: AppFontSizes.size15,
                                   fontWeight: FontWeight.bold,
                                   color: theme.colorScheme.onSurface,
                                 ),
@@ -309,7 +310,7 @@ class PartyStatementCardView extends StatelessWidget {
           'Transactions',
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.w700,
-            fontSize: 15,
+            fontSize: AppFontSizes.size15,
             color: theme.colorScheme.onSurface,
             letterSpacing: -0.2,
           ),
@@ -478,7 +479,7 @@ class _PremiumTransactionTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.workSans(
-                        fontSize: 14,
+                        fontSize: AppFontSizes.size14,
                         fontWeight: FontWeight.w600,
                         color: theme.colorScheme.onSurface,
                         letterSpacing: -0.15,
@@ -488,7 +489,7 @@ class _PremiumTransactionTile extends StatelessWidget {
                     Text(
                       DateFormat('dd MMM yyyy • h:mm a').format(dateTime),
                       style: GoogleFonts.workSans(
-                        fontSize: 11,
+                        fontSize: AppFontSizes.size11,
                         fontWeight: FontWeight.w400,
                         color: isDark ? Colors.white38 : Colors.grey.shade500,
                       ),
@@ -507,7 +508,7 @@ class _PremiumTransactionTile extends StatelessWidget {
                       Text(
                         isInflow ? '+ ' : '− ',
                         style: GoogleFonts.workSans(
-                          fontSize: 14.5,
+                          fontSize: AppFontSizes.size15,
                           fontWeight: FontWeight.w700,
                           color: typeColor,
                           letterSpacing: -0.2,
@@ -517,7 +518,7 @@ class _PremiumTransactionTile extends StatelessWidget {
                         amount: amount,
                         isMasked: isMasked,
                         style: GoogleFonts.workSans(
-                          fontSize: 14.5,
+                          fontSize: AppFontSizes.size15,
                           fontWeight: FontWeight.w700,
                           color: typeColor,
                           letterSpacing: -0.2,
@@ -538,7 +539,7 @@ class _PremiumTransactionTile extends StatelessWidget {
                       child: Text(
                         'Opening',
                         style: GoogleFonts.workSans(
-                          fontSize: 10,
+                          fontSize: AppFontSizes.size10,
                           fontWeight: FontWeight.w600,
                           color: theme.colorScheme.primary,
                         ),

@@ -1,6 +1,7 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class CategoryInputRow extends StatelessWidget {
   final TextEditingController controller;
@@ -36,13 +37,13 @@ class CategoryInputRow extends StatelessWidget {
               textInputAction: TextInputAction.done,
               style: GoogleFonts.workSans(
                 color: theme.colorScheme.onSurface,
-                fontSize: 14.5,
+                fontSize: AppFontSizes.size15,
               ),
               decoration: InputDecoration(
                 hintText: 'Enter category name, then tap +',
                 hintStyle: GoogleFonts.workSans(
                   color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
-                  fontSize: 14,
+                  fontSize: AppFontSizes.size14,
                 ),
                 border: InputBorder.none,
                 isDense: true,

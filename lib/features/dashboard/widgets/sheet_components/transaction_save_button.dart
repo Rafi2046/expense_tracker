@@ -1,6 +1,7 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransactionSaveButton extends StatefulWidget {
   final VoidCallback onPressed;
@@ -92,7 +93,7 @@ class _TransactionSaveButtonState extends State<TransactionSaveButton>
               Text(
                 widget.title,
                 style: GoogleFonts.workSans(
-                  fontSize: 16,
+                  fontSize: AppFontSizes.size16,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                   letterSpacing: 0.2,

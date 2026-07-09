@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class SaveTransactionButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -35,7 +36,7 @@ class SaveTransactionButton extends StatelessWidget {
               ? (isIncome ? 'Update Income' : 'Update Expense')
               : (isIncome ? 'Save Income' : 'Save Expense'),
           style: GoogleFonts.workSans(
-            fontSize: 16,
+            fontSize: AppFontSizes.size16,
             fontWeight: FontWeight.bold,
           ),
         ),

@@ -1,6 +1,7 @@
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'pdf_theme.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PdfTableBuilder {
   static pw.Widget build(
@@ -26,7 +27,7 @@ class PdfTableBuilder {
               child: pw.Text(
                 h,
                 style: baseStyle.copyWith(
-                  fontSize: 8,
+                  fontSize: AppFontSizes.size8,
                   fontWeight: pw.FontWeight.bold,
                   color: PdfTheme.white,
                   letterSpacing: 0.4,
@@ -81,7 +82,7 @@ class PdfTableBuilder {
                 child: pw.Text(
                   cellValue,
                   style: baseStyle.copyWith(
-                    fontSize: 8,
+                    fontSize: AppFontSizes.size8,
                     fontWeight: fontWeight,
                     color: textColor,
                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class NewAccountDialog extends StatefulWidget {
   const NewAccountDialog({super.key});
@@ -32,7 +33,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
         'Create Account',
         style: GoogleFonts.workSans(
           fontWeight: FontWeight.bold,
-          fontSize: 16.5,
+          fontSize: AppFontSizes.size16,
         ),
       ),
       content: Form(
@@ -42,7 +43,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
           children: [
             TextFormField(
               controller: _nameController,
-              style: GoogleFonts.workSans(fontSize: 14),
+              style: GoogleFonts.workSans(fontSize: AppFontSizes.size14),
               decoration: InputDecoration(
                 labelText: 'Account Name',
                 hintText: 'e.g. Bkash, DBBL, Cash In Hand',
@@ -64,7 +65,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              style: GoogleFonts.workSans(fontSize: 14),
+              style: GoogleFonts.workSans(fontSize: AppFontSizes.size14),
               decoration: InputDecoration(
                 labelText: 'Initial Balance',
                 prefixText: '${context.currencySymbol} ',
@@ -94,7 +95,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
                   'Account Type:',
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    fontSize: 13.5,
+                    fontSize: AppFontSizes.size14,
                   ),
                 ),
                 DropdownButton<String>(
@@ -104,14 +105,14 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
                       value: 'Cash',
                       child: Text(
                         'Cash',
-                        style: TextStyle(fontSize: 13.5),
+                        style: TextStyle(fontSize: AppFontSizes.size14),
                       ),
                     ),
                     DropdownMenuItem(
                       value: 'Bank',
                       child: Text(
                         'Bank',
-                        style: TextStyle(fontSize: 13.5),
+                        style: TextStyle(fontSize: AppFontSizes.size14),
                       ),
                     ),
                   ],
@@ -135,7 +136,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
             'Cancel',
             style: GoogleFonts.workSans(
               color: Colors.grey,
-              fontSize: 13,
+              fontSize: AppFontSizes.size13,
             ),
           ),
         ),
@@ -164,7 +165,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
             style: GoogleFonts.workSans(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 13,
+              fontSize: AppFontSizes.size13,
             ),
           ),
         ),

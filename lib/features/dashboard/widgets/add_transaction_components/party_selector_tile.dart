@@ -2,6 +2,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PartySelectorTile extends StatelessWidget {
   final String? selectedPartyName;
@@ -70,7 +71,7 @@ class PartySelectorTile extends StatelessWidget {
                   Text(
                     'Party',
                     style: GoogleFonts.workSans(
-                      fontSize: 10.5,
+                      fontSize: AppFontSizes.size10,
                       color: isDark ? Colors.white38 : Colors.grey.shade500,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.3,
@@ -80,7 +81,7 @@ class PartySelectorTile extends StatelessWidget {
                   Text(
                     selectedPartyName ?? 'Link to Party (Optional)',
                     style: GoogleFonts.workSans(
-                      fontSize: 14.5,
+                      fontSize: AppFontSizes.size15,
                       fontWeight: hasValue ? FontWeight.w600 : FontWeight.w400,
                       color: hasValue
                           ? theme.colorScheme.onSurface

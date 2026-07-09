@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PartySelectSheet extends StatefulWidget {
   final String? selectedPartyName;
@@ -111,7 +112,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                     'Select Party to View Report',
                     style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                      fontSize: AppFontSizes.size16,
                       color: theme.colorScheme.onSurface,
                     ),
                   ),
@@ -129,7 +130,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                     style: GoogleFonts.workSans(
                       color: AppColors.activeRed,
                       fontWeight: FontWeight.w600,
-                      fontSize: 12,
+                      fontSize: AppFontSizes.size12,
                     ),
                   ),
                 ),
@@ -148,10 +149,10 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                   _searchQuery = val;
                 });
               },
-              style: GoogleFonts.workSans(fontSize: 14, color: theme.colorScheme.onSurface),
+              style: GoogleFonts.workSans(fontSize: AppFontSizes.size14, color: theme.colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: 'Search parties...',
-                hintStyle: GoogleFonts.workSans(fontSize: 14, color: isDark ? Colors.white30 : Colors.grey.shade400),
+                hintStyle: GoogleFonts.workSans(fontSize: AppFontSizes.size14, color: isDark ? Colors.white30 : Colors.grey.shade400),
                 prefixIcon: Icon(Symbols.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
                 filled: true,
                 fillColor: isDark ? theme.colorScheme.onSurface.withValues(alpha: 0.05) : const Color(0xFFF8FAFC),
@@ -186,7 +187,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                           style: GoogleFonts.workSans(
                             color: isDark ? Colors.white60 : Colors.grey.shade500,
                             fontWeight: FontWeight.w500,
-                            fontSize: 15,
+                            fontSize: AppFontSizes.size15,
                           ),
                         ),
                       ],
@@ -222,7 +223,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                               style: GoogleFonts.workSans(
                                 color: theme.colorScheme.onSurface,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 13,
+                                fontSize: AppFontSizes.size13,
                               ),
                             ),
                           ),
@@ -232,14 +233,14 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                           style: GoogleFonts.workSans(
                             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                             color: theme.colorScheme.onSurface,
-                            fontSize: 14,
+                            fontSize: AppFontSizes.size14,
                           ),
                         ),
                         subtitle: Text(
                           party.phone ?? 'No phone number',
                           style: GoogleFonts.workSans(
                             color: isDark ? Colors.white60 : Colors.grey.shade500,
-                            fontSize: 12,
+                            fontSize: AppFontSizes.size12,
                           ),
                         ),
                         trailing: isSelected

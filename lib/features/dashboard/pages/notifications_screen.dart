@@ -7,6 +7,7 @@ import 'package:expense_tracker/features/dashboard/widgets/notification_empty_st
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -54,7 +55,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 item.title,
                 style: GoogleFonts.workSans(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: AppFontSizes.size16,
                   color: theme.colorScheme.onSurface,
                 ),
               ),
@@ -64,7 +65,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         content: Text(
           item.description,
           style: GoogleFonts.workSans(
-            fontSize: 14,
+            fontSize: AppFontSizes.size14,
             color: isDark ? Colors.grey.shade300 : AppColors.loginTitle,
             height: 1.4,
           ),
@@ -134,7 +135,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.onSurface,
-            fontSize: 18,
+            fontSize: AppFontSizes.size18,
           ),
         ),
         centerTitle: true,
@@ -147,7 +148,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 style: GoogleFonts.workSans(
                   fontWeight: FontWeight.w600,
                   color: AppColors.activeGreen,
-                  fontSize: 14,
+                  fontSize: AppFontSizes.size14,
                 ),
               ),
             ),
@@ -257,7 +258,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       labelStyle: GoogleFonts.workSans(
         color: isSelected ? primaryColor : (isDark ? Colors.grey.shade400 : Colors.grey.shade600),
         fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-        fontSize: 13,
+        fontSize: AppFontSizes.size13,
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),

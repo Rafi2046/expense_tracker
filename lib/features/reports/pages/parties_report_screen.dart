@@ -9,6 +9,7 @@ import 'package:expense_tracker/features/reports/pages/party_statement_screen.da
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PartiesReportScreen extends StatefulWidget {
   const PartiesReportScreen({super.key});
@@ -97,7 +98,7 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
                     decoration: InputDecoration(
                       hintText: 'Search parties...',
                       hintStyle: AppTextStyles.partyFormHint.copyWith(
-                        fontSize: 14,
+                        fontSize: AppFontSizes.size14,
                         color: isDark ? Colors.white30 : null,
                       ),
                       prefixIcon: Icon(
@@ -157,7 +158,7 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
                                   'No parties found',
                                   style: AppTextStyles.reportTransactionSubtitle
                                       .copyWith(
-                                        fontSize: 14,
+                                        fontSize: AppFontSizes.size14,
                                         color: theme.colorScheme.onSurface
                                             .withValues(alpha: 0.6),
                                       ),

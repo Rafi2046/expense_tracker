@@ -11,6 +11,7 @@ import 'package:expense_tracker/features/calculators/widgets/calculator_text_fie
 import 'package:expense_tracker/features/calculators/widgets/calculator_type_selector.dart';
 import 'package:expense_tracker/features/calculators/widgets/interest_frequency_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class InterestCalculatorScreen extends StatefulWidget {
   const InterestCalculatorScreen({super.key});
@@ -193,7 +194,7 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
                 controller: _principalController,
                 prefix: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 8),
-                  child: Text(symbol, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
+                  child: Text(symbol, style: TextStyle(fontSize: AppFontSizes.size16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -204,7 +205,7 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
                 controller: _rateController,
                 suffix: Padding(
                   padding: const EdgeInsets.only(left: 8, right: 16),
-                  child: Text('%', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
+                  child: Text('%', style: TextStyle(fontSize: AppFontSizes.size16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 16),

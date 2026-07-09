@@ -1,6 +1,7 @@
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class NoteInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -22,13 +23,13 @@ class NoteInputField extends StatelessWidget {
       controller: controller,
       maxLines: 2,
       style: GoogleFonts.workSans(
-        fontSize: 15,
+        fontSize: AppFontSizes.size15,
         color: theme.colorScheme.onSurface,
       ),
       decoration: InputDecoration(
         hintText: 'Add a note/detail (optional)...',
         hintStyle: GoogleFonts.workSans(
-          fontSize: 15,
+          fontSize: AppFontSizes.size15,
           color: isDark ? Colors.white30 : Colors.grey.shade400,
         ),
         prefixIcon: Icon(

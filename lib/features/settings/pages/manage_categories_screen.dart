@@ -8,6 +8,7 @@ import 'package:expense_tracker/features/dashboard/widgets/category_list_row.dar
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class ManageCategoriesScreen extends StatefulWidget {
   const ManageCategoriesScreen({super.key});
@@ -88,7 +89,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
           'Rename Category',
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: AppFontSizes.size16,
           ),
         ),
         content: TextField(
@@ -180,7 +181,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.onSurface,
-            fontSize: 18,
+            fontSize: AppFontSizes.size18,
           ),
         ),
         centerTitle: true,
@@ -191,7 +192,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
           indicatorColor: primaryTabColor,
           labelStyle: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
-            fontSize: 14,
+            fontSize: AppFontSizes.size14,
           ),
           tabs: [
             Tab(text: context.translate('expense')),
@@ -251,7 +252,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
                           context.translate('no_categories_yet'),
                           style: GoogleFonts.workSans(
                             color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
-                            fontSize: 14,
+                            fontSize: AppFontSizes.size14,
                           ),
                         ),
                       ],

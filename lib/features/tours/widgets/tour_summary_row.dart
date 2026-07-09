@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TourSummaryRow extends StatelessWidget {
   final String totalSpentText;
@@ -87,7 +88,7 @@ class TourSummaryRow extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.w700,
                     color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
                     letterSpacing: 1.0,
@@ -108,7 +109,7 @@ class TourSummaryRow extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: AppFontSizes.size18,
               fontWeight: FontWeight.w800,
               color: valueColor,
               letterSpacing: -0.5,

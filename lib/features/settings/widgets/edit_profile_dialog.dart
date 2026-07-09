@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class EditProfileDialog extends StatefulWidget {
   const EditProfileDialog({super.key});
@@ -148,7 +149,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                 'Edit Profile',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: AppFontSizes.size20,
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
                   fontFamily: GoogleFonts.workSans().fontFamily,

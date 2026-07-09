@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/models/transaction_models.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class RecentActivityItemCard extends StatelessWidget {
   final TransactionItem transaction;
@@ -56,7 +57,7 @@ class RecentActivityItemCard extends StatelessWidget {
                   Text(
                     tx.note.isEmpty ? tx.category : tx.note,
                     style: GoogleFonts.workSans(
-                      fontSize: 13,
+                      fontSize: AppFontSizes.size13,
                       fontWeight: FontWeight.w600,
                       color: theme.colorScheme.onSurface,
                     ),
@@ -65,7 +66,7 @@ class RecentActivityItemCard extends StatelessWidget {
                   Text(
                     '${tx.category}  •  ${_formatTime(tx.dateTime)}',
                     style: GoogleFonts.workSans(
-                      fontSize: 10.5,
+                      fontSize: AppFontSizes.size10,
                       color: Colors.grey.shade400,
                       fontWeight: FontWeight.w400,
                     ),
@@ -79,7 +80,7 @@ class RecentActivityItemCard extends StatelessWidget {
                 Text(
                   isInc ? '+' : '-',
                   style: GoogleFonts.workSans(
-                    fontSize: 12.5,
+                    fontSize: AppFontSizes.size12,
                     fontWeight: FontWeight.w700,
                     color: isInc ? AppColors.activeGreen : AppColors.expensePink,
                   ),
@@ -87,7 +88,7 @@ class RecentActivityItemCard extends StatelessWidget {
                 PrivacyMaskedText(
                   amount: tx.amount,
                   style: GoogleFonts.workSans(
-                    fontSize: 12.5,
+                    fontSize: AppFontSizes.size12,
                     fontWeight: FontWeight.w700,
                     color: isInc ? AppColors.activeGreen : AppColors.expensePink,
                   ),

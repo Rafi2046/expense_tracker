@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class OnboardingPage extends StatelessWidget {
   final IconData icon;
@@ -63,7 +64,7 @@ class OnboardingPage extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             style: GoogleFonts.workSans(
-              fontSize: 22,
+              fontSize: AppFontSizes.size22,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.onSurface,
               height: 1.2,
@@ -74,7 +75,7 @@ class OnboardingPage extends StatelessWidget {
             subtitle,
             textAlign: TextAlign.center,
             style: GoogleFonts.inter(
-              fontSize: 13,
+              fontSize: AppFontSizes.size13,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.onSurface.withValues(
                     alpha: 0.55,
@@ -132,7 +133,7 @@ class _FeatureRow extends StatelessWidget {
             child: Text(
               context.translate(item.labelKey),
               style: GoogleFonts.inter(
-                fontSize: 12.5,
+                fontSize: AppFontSizes.size12,
                 fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.onSurface.withValues(
                       alpha: 0.7,
