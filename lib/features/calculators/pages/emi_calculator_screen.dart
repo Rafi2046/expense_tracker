@@ -8,7 +8,6 @@ import 'package:expense_tracker/features/calculators/widgets/calculator_result_c
 import 'package:expense_tracker/features/calculators/widgets/calculator_result_item.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class EmiCalculatorScreen extends StatefulWidget {

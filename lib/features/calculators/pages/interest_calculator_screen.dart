@@ -10,7 +10,6 @@ import 'package:expense_tracker/features/calculators/widgets/calculator_text_fie
 import 'package:expense_tracker/features/calculators/widgets/calculator_type_selector.dart';
 import 'package:expense_tracker/features/calculators/widgets/interest_frequency_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class InterestCalculatorScreen extends StatefulWidget {

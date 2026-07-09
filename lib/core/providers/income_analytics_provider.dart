@@ -11,7 +11,6 @@ class IncomeAnalyticsProvider extends ChangeNotifier {
   List<TransactionItem> _incomeTransactions = [];
 
   String? _currentProfileId;
-  User? _firebaseUser;
   StreamSubscription<User?>? _authSubscription;
 
   IncomeAnalyticsProvider() {
@@ -21,7 +20,6 @@ class IncomeAnalyticsProvider extends ChangeNotifier {
   }
 
   void _onAuthChanged(User? newUser) {
-    _firebaseUser = newUser;
     if (newUser == null) {
       _incomeTransactions = [];
       _currentProfileId = null;
@@ -313,7 +311,6 @@ class IncomeAnalyticsProvider extends ChangeNotifier {
 
   void clear() {
     _incomeTransactions = [];
-    _firebaseUser = null;
     notifyListeners();
   }
 
