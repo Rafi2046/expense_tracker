@@ -10,6 +10,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SettleUpScreen extends StatefulWidget {
   final String tourId;
@@ -170,7 +171,7 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
         bottom: BorderSide(color: theme.colorScheme.onSurface.withValues(alpha: 0.08)),
       ),
       leading: IconButton(
-        icon: Icon(Icons.arrow_back_rounded, color: theme.colorScheme.onSurface),
+        icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface),
         onPressed: () => Navigator.pop(context),
       ),
       title: Text('Settle Up', style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface)),
@@ -277,7 +278,7 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
                 color: AppColors.activeGreen.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.check_circle_rounded, size: 44, color: AppColors.activeGreen),
+              child: Icon(LucideIcons.checkCircle, size: 44, color: AppColors.activeGreen),
             ),
             const SizedBox(height: AppSpacing.h20),
             Text('All Settled Up!', style: AppTextStyles.cardValueGreen),
@@ -387,7 +388,7 @@ class _SettlementCard extends StatelessWidget {
           Expanded(
             child: Column(
               children: [
-                Icon(Icons.swap_horiz_rounded, size: 18, color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
+                Icon(LucideIcons.arrowLeftRight, size: 18, color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
                 const SizedBox(height: 2),
                 Text(
                   amount,
@@ -553,7 +554,7 @@ class _SettlementDetailSheet extends StatelessWidget {
                       color: AppColors.activeGreen.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(Icons.arrow_forward_rounded, color: AppColors.activeGreen, size: 24),
+                    child: Icon(LucideIcons.arrowRight, color: AppColors.activeGreen, size: 24),
                   ),
                   const SizedBox(width: 16),
                   // To

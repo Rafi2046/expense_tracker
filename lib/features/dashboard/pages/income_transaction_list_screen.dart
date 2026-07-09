@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/models/transaction_models.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
@@ -6,6 +5,7 @@ import 'package:expense_tracker/features/dashboard/pages/transaction_details_scr
 import 'package:expense_tracker/features/dashboard/widgets/income_transaction_row.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class IncomeTransactionListScreen extends StatelessWidget {
   final String title;
@@ -26,7 +26,7 @@ class IncomeTransactionListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -60,13 +60,13 @@ class IncomeTransactionListScreen extends StatelessWidget {
                 final categoryLower = tx.category.toLowerCase();
                 IconData icon;
                 if (categoryLower.contains('salary')) {
-                  icon = Symbols.account_balance;
+                  icon = LucideIcons.landmark;
                 } else if (categoryLower.contains('freelance') || categoryLower.contains('business') || categoryLower.contains('work')) {
-                  icon = Symbols.work_outline_rounded;
+                  icon = LucideIcons.briefcase;
                 } else if (categoryLower.contains('dividend') || categoryLower.contains('invest') || categoryLower.contains('saving')) {
-                  icon = Symbols.show_chart_rounded;
+                  icon = LucideIcons.lineChart;
                 } else {
-                  icon = Symbols.home_work;
+                  icon = LucideIcons.building2;
                 }
                 return IncomeTransactionRow(
                   icon: icon,

@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -23,6 +22,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AddTransactionSheet extends StatefulWidget {
   final bool isIncome;
@@ -265,7 +265,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         SnackBar(
           content: Row(
             children: [
-              const Icon(Symbols.check_circle_outline, color: Colors.white),
+              Icon(LucideIcons.checkCircle, color: Colors.white),
               const SizedBox(width: AppSpacing.w8),
               Text(
                 '${widget.isIncome ? "Income" : "Expense"} $action: ${context.formatAmount(amount, listen: false)}',

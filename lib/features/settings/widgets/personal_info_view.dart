@@ -1,11 +1,9 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PersonalInfoView extends StatelessWidget {
   final User user;
@@ -199,7 +197,7 @@ class PersonalInfoView extends StatelessWidget {
             children: [
               _buildInfoRow(
                 context,
-                icon: Symbols.phone,
+                icon: LucideIcons.phone,
                 label: 'Phone Number',
                 value: phone,
                 iconColor: const Color(0xFF1E88E5),
@@ -208,7 +206,7 @@ class PersonalInfoView extends StatelessWidget {
               Divider(height: 1, color: borderColor),
               _buildInfoRow(
                 context,
-                icon: Symbols.cake,
+                icon: LucideIcons.cake,
                 label: 'Date of Birth',
                 value: dob,
                 iconColor: const Color(0xFFD81B60),
@@ -217,7 +215,7 @@ class PersonalInfoView extends StatelessWidget {
               Divider(height: 1, color: borderColor),
               _buildInfoRow(
                 context,
-                icon: gender == 'Male' ? Symbols.male : Symbols.female,
+                icon: gender == 'Male' ? LucideIcons.mars : LucideIcons.venus,
                 label: 'Gender',
                 value: gender,
                 iconColor: gender == 'Male' ? const Color(0xFF1E88E5) : const Color(0xFFD81B60),
@@ -226,7 +224,7 @@ class PersonalInfoView extends StatelessWidget {
               Divider(height: 1, color: borderColor),
               _buildInfoRow(
                 context,
-                icon: Symbols.mail_outline_rounded,
+                icon: LucideIcons.mail,
                 label: 'Email Address',
                 value: user.email ?? '',
                 iconColor: const Color(0xFF43A047),

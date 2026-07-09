@@ -1,10 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/reports/models/select_date_input_dialog_result.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SelectDateInputDialog extends StatefulWidget {
   final DateTimeRange initialRange;
@@ -143,7 +143,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Symbols.calendar_today, color: theme.colorScheme.onSurface),
+                    icon: Icon(LucideIcons.calendar, color: theme.colorScheme.onSurface),
                     onPressed: () {
                       final currentStart = _startDate ?? widget.initialRange.start;
                       final currentEnd = _endDate ?? widget.initialRange.end;

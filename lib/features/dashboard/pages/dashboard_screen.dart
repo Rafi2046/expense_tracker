@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -33,6 +32,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -374,35 +374,35 @@ class DashboardScreen extends StatelessWidget {
       case 'food':
       case 'dining':
       case 'restaurant':
-        return Symbols.restaurant;
+        return LucideIcons.utensilsCrossed;
       case 'income':
       case 'salary':
-        return Symbols.payments;
+        return LucideIcons.creditCard;
       case 'transport':
       case 'fuel':
       case 'travel':
-        return Symbols.directions_car;
+        return LucideIcons.car;
       case 'shopping':
       case 'clothing':
       case 'electronics':
-        return Symbols.shopping_bag;
+        return LucideIcons.shoppingBag;
       case 'entertainment':
       case 'movie':
-        return Symbols.movie;
+        return LucideIcons.clapperboard;
       case 'utilities':
       case 'bills':
       case 'rent':
-        return Symbols.receipt_long;
+        return LucideIcons.receipt;
       case 'health':
       case 'medical':
-        return Symbols.local_hospital;
+        return LucideIcons.heartPulse;
       case 'education':
       case 'school':
-        return Symbols.school;
+        return LucideIcons.graduationCap;
       case 'transfer':
-        return Symbols.swap_horiz;
+        return LucideIcons.arrowLeftRight;
       default:
-        return Symbols.receipt_long;
+        return LucideIcons.receipt;
     }
   }
 }

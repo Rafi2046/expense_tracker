@@ -1,7 +1,6 @@
 import 'package:expense_tracker/features/transactions/widgets/transactions_month_selector.dart';
 import 'package:expense_tracker/features/transactions/widgets/ledger_stats_cards.dart';
 import 'package:expense_tracker/features/transactions/widgets/ledger_transaction_list.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -12,6 +11,7 @@ import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
@@ -98,7 +98,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             ),
             const SizedBox(height: 24),
             _AddOptionTile(
-              icon: Symbols.account_balance_wallet,
+              icon: LucideIcons.wallet,
               label: 'Add Income',
               subtitle: 'Record money received',
               color: AppColors.activeGreen,
@@ -110,7 +110,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             ),
             const SizedBox(height: 12),
             _AddOptionTile(
-              icon: Symbols.payments,
+              icon: LucideIcons.creditCard,
               label: 'Add Expense',
               subtitle: 'Record money spent',
               color: AppColors.expensePink,
@@ -166,7 +166,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              isSearching ? Symbols.close_rounded : Symbols.search_rounded,
+              isSearching ? LucideIcons.x : LucideIcons.search,
               color: isDark ? Colors.white70 : const Color(0xFF31394D),
             ),
             onPressed: () {
@@ -191,7 +191,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         child: FloatingActionButton(
           heroTag: 'ledger_fab',
           onPressed: () => _showAddOptions(context),
-          child: const Icon(Symbols.add_rounded),
+          child: Icon(LucideIcons.plus),
         ),
       ),
       body: SafeArea(
@@ -309,7 +309,7 @@ class _AddOptionTile extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(Symbols.chevron_right_rounded, color: Colors.grey.shade400, size: 20),
+              Icon(LucideIcons.chevronRight, color: Colors.grey.shade400, size: 20),
             ],
           ),
         ),

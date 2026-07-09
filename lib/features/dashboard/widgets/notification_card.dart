@@ -1,9 +1,9 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class NotificationCard extends StatelessWidget {
   final NotificationItem item;
@@ -27,13 +27,13 @@ class NotificationCard extends StatelessWidget {
   IconData _getTypeIcon(NotificationType type) {
     switch (type) {
       case NotificationType.alert:
-        return Symbols.warning_amber_rounded;
+        return LucideIcons.alertTriangle;
       case NotificationType.credit:
-        return Symbols.account_balance_wallet;
+        return LucideIcons.wallet;
       case NotificationType.update:
-        return Symbols.auto_awesome;
+        return LucideIcons.sparkles;
       case NotificationType.system:
-        return Symbols.info;
+        return LucideIcons.info;
     }
   }
 

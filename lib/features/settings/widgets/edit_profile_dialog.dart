@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
@@ -7,11 +6,10 @@ import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class EditProfileDialog extends StatefulWidget {
   const EditProfileDialog({super.key});
@@ -185,7 +183,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
-                          Symbols.camera_alt,
+                          LucideIcons.camera,
                           color: Colors.white,
                           size: 16,
                         ),

@@ -1,9 +1,8 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
@@ -19,7 +18,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.colorScheme.onSurface, size: 20),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -55,7 +54,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(22),
                     ),
                     child: const Icon(
-                      Symbols.shield_rounded,
+                      LucideIcons.shield,
                       color: Colors.white,
                       size: 40,
                     ),
@@ -80,19 +79,19 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 28),
                 _PrivacyTile(
-                  icon: Symbols.devices_rounded,
+                  icon: LucideIcons.smartphone,
                   title: 'Data Stays with You',
                   subtitle: 'Your financial data is processed securely on your device. Nothing is shared without your explicit consent.',
                 ),
                 const SizedBox(height: 10),
                 _PrivacyTile(
-                  icon: Symbols.block_rounded,
+                  icon: LucideIcons.ban,
                   title: 'No Data Selling',
                   subtitle: 'We never sell, rent, or trade your personal information to third parties. Your trust matters.',
                 ),
                 const SizedBox(height: 10),
                 _PrivacyTile(
-                  icon: Symbols.fingerprint_rounded,
+                  icon: LucideIcons.fingerprint,
                   title: 'Biometric Security',
                   subtitle: 'Protected by your device\'s native secure enclave. Your biometric data never leaves your phone.',
                 ),
@@ -101,7 +100,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+            padding: EdgeInsets.fromLTRB(16, 4, 16, MediaQuery.of(context).padding.bottom),
             decoration: BoxDecoration(
               color: theme.scaffoldBackgroundColor,
               boxShadow: [
@@ -117,7 +116,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               height: 48,
               child: OutlinedButton.icon(
                 onPressed: () {},
-                icon: const Icon(Symbols.description_rounded, size: 18),
+                icon: Icon(LucideIcons.fileText, size: 18),
                 label: Text(
                   'Read Full Legal Policy',
                   style: AppTextStyles.bodyBold,

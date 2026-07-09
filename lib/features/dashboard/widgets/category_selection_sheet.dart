@@ -1,10 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CategorySelectionSheetContent extends StatelessWidget {
   final Function(String) onCategorySelected;
@@ -60,7 +60,7 @@ class CategorySelectionSheetContent extends StatelessWidget {
               hintText: 'Search Category',
               hintStyle: TextStyle(color: theme.textTheme.bodySmall?.color),
               prefixIcon: Icon(
-                Symbols.search,
+                LucideIcons.search,
                 color: theme.textTheme.bodySmall?.color,
               ),
               contentPadding: const EdgeInsets.symmetric(vertical: 12),
@@ -110,8 +110,8 @@ class CategorySelectionSheetContent extends StatelessWidget {
                   ),
                   trailing: Icon(
                     isSelected
-                        ? Symbols.radio_button_checked
-                        : Symbols.radio_button_unchecked,
+                        ? LucideIcons.circleDot
+                        : LucideIcons.circle,
                     color: isSelected
                         ? AppColors.activeGreen
                         : (isDark

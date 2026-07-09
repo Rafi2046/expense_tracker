@@ -1,7 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CategoryInputRow extends StatelessWidget {
   final TextEditingController controller;
@@ -55,7 +55,7 @@ class CategoryInputRow extends StatelessWidget {
           ),
           IconButton(
             onPressed: onAddPressed,
-            icon: Icon(Symbols.add_circle, color: themeColor, size: 30),
+            icon: Icon(LucideIcons.plusCircle, color: themeColor, size: 30),
             padding: const EdgeInsets.all(8),
             constraints: const BoxConstraints(),
             splashRadius: 24,

@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
@@ -11,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ExpenseInsightsScreen extends StatefulWidget {
   const ExpenseInsightsScreen({super.key});
@@ -32,7 +32,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -52,7 +52,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
               setState(() => _localMasked = !_localMasked);
             },
             icon: Icon(
-              _localMasked ? Symbols.visibility_off : Symbols.visibility,
+              _localMasked ? LucideIcons.eyeOff : LucideIcons.eye,
               color: AppColors.notificationIcon,
               size: 26,
             ),

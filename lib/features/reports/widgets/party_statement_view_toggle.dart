@@ -1,7 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PartyStatementViewToggle extends StatelessWidget {
   const PartyStatementViewToggle({super.key});
@@ -27,13 +27,13 @@ class PartyStatementViewToggle extends StatelessWidget {
           _buildTab(
             context: context,
             isActive: mode == PartyStatementViewMode.card,
-            icon: Symbols.layers,
+            icon: LucideIcons.layers,
             onTap: () => reportsProvider.setPartyStatementViewMode(PartyStatementViewMode.card),
           ),
           _buildTab(
             context: context,
             isActive: mode == PartyStatementViewMode.table,
-            icon: Symbols.insert_chart_rounded,
+            icon: LucideIcons.barChart,
             onTap: () => reportsProvider.setPartyStatementViewMode(PartyStatementViewMode.table),
           ),
         ],

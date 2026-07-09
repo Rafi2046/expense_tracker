@@ -1,9 +1,9 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class OverallBalanceCard extends StatelessWidget {
   final double totalBalance;
@@ -57,7 +57,7 @@ class OverallBalanceCard extends StatelessWidget {
                   onToggleMask();
                 },
                 child: Icon(
-                  isMasked ? Symbols.visibility_off : Symbols.visibility,
+                  isMasked ? LucideIcons.eyeOff : LucideIcons.eye,
                   size: 18,
                   color: Colors.white38,
                 ),

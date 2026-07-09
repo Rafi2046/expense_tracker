@@ -1,5 +1,4 @@
 import 'package:expense_tracker/core/constants/app_images.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';

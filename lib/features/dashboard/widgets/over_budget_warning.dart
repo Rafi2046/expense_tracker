@@ -1,9 +1,9 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class OverBudgetWarning extends StatelessWidget {
   final double excessAmount;
@@ -27,7 +27,7 @@ class OverBudgetWarning extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            Symbols.warning_amber_rounded,
+            LucideIcons.alertTriangle,
             color: AppColors.activeRed,
             size: 20,
           ),

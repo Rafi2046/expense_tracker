@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BudgetCategoryItem {
   final String name;
@@ -42,7 +43,7 @@ class BudgetCategoryProgressList extends StatelessWidget {
           child: Column(
             children: [
               Icon(
-                Icons.pie_chart_outline,
+                LucideIcons.pieChart,
                 size: 48,
                 color: AppColors.textMuted.withValues(alpha: 0.4),
               ),

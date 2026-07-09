@@ -1,8 +1,8 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PartySelectorTile extends StatelessWidget {
   final String? selectedPartyName;
@@ -56,7 +56,7 @@ class PartySelectorTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppSpacing.br12),
               ),
               child: Icon(
-                Symbols.group_rounded,
+                LucideIcons.users,
                 size: 19,
                 color: hasValue
                     ? themeColor
@@ -104,13 +104,13 @@ class PartySelectorTile extends StatelessWidget {
                   ? GestureDetector(
                       onTap: onClear,
                       child: Icon(
-                        Symbols.close_rounded,
+                        LucideIcons.x,
                         size: 14,
                         color: isDark ? Colors.white38 : Colors.grey.shade500,
                       ),
                     )
                   : Icon(
-                      Symbols.arrow_forward_ios_rounded,
+                      LucideIcons.arrowRight,
                       size: 14,
                       color: isDark ? Colors.white30 : Colors.grey.shade400,
                     ),

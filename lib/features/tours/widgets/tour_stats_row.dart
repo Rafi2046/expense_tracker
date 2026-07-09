@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourStatsRow extends StatelessWidget {
   final int totalTours;
@@ -28,7 +29,7 @@ class TourStatsRow extends StatelessWidget {
             child: _StatCard(
               isDark: isDark,
               theme: theme,
-              icon: Icons.map_outlined,
+              icon: LucideIcons.map,
               label: '$totalTours ${totalTours == 1 ? 'tour' : 'tours'}',
             ),
           ),
@@ -37,7 +38,7 @@ class TourStatsRow extends StatelessWidget {
             child: _StatCard(
               isDark: isDark,
               theme: theme,
-              icon: Icons.people_outline,
+              icon: LucideIcons.users,
               label: '$totalBuddies ${totalBuddies == 1 ? 'buddy' : 'buddies'}',
             ),
           ),

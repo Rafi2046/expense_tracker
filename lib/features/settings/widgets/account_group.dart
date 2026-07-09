@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/dashboard/pages/notifications_screen.dart';
 import 'package:expense_tracker/features/settings/pages/personal_info_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
@@ -10,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'biometric_settings_tile.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AccountGroup extends StatefulWidget {
   final Function(String) onSnackBar;
@@ -43,9 +43,7 @@ class _AccountGroupState extends State<AccountGroup> {
       title: context.translate('account'),
       children: [
         SettingsOptionRow(
-          icon: Symbols.person_rounded,
-          iconBgColor: const Color(0xFFE3F2FD),
-          iconColor: const Color(0xFF1E88E5),
+          icon: LucideIcons.user,
           title: context.translate('personal_info'),
           onTap: () {
             Navigator.push(
@@ -59,13 +57,11 @@ class _AccountGroupState extends State<AccountGroup> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SettingsOptionRow(
-              icon: Symbols.lock_rounded,
-              iconBgColor: const Color(0xFFFFF3E0),
-              iconColor: const Color(0xFFFB8C00),
+              icon: LucideIcons.lock,
               title: context.translate('password_change'),
               trailingIcon: _isSecurityExpanded 
-                  ? Symbols.keyboard_arrow_down_rounded 
-                  : Symbols.chevron_right_rounded,
+                  ? LucideIcons.chevronDown 
+                  : LucideIcons.chevronRight,
               onTap: () {
                 setState(() {
                   _isSecurityExpanded = !_isSecurityExpanded;
@@ -104,9 +100,7 @@ class _AccountGroupState extends State<AccountGroup> {
         ),
         BiometricSettingsTile(),
         SettingsOptionRow(
-          icon: Symbols.notifications_rounded,
-          iconBgColor: const Color(0xFFFCE4EC),
-          iconColor: const Color(0xFFD81B60),
+          icon: LucideIcons.bell,
           title: context.translate('notifications'),
           onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsScreen()))
         ),

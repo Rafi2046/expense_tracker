@@ -1,9 +1,8 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class InlinePasswordForm extends StatefulWidget {
   final VoidCallback onSuccess;
@@ -144,7 +143,7 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
               suffixIcon: IconButton(
                 onPressed: onToggleObscure,
                 icon: Icon(
-                  obscureText ? Symbols.visibility_off : Symbols.visibility,
+                  obscureText ? LucideIcons.eyeOff : LucideIcons.eye,
                   color: theme.colorScheme.onSurfaceVariant,
                   size: 20,
                 ),

@@ -14,8 +14,9 @@ import 'package:expense_tracker/features/tours/pages/tour_member_management_scre
 import 'package:expense_tracker/features/tours/widgets/tour_list_header.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_list_empty_state.dart';
 import 'package:expense_tracker/features/tours/widgets/join_tour_sheet.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourListScreen extends StatefulWidget {
   const TourListScreen({super.key});
@@ -34,16 +35,16 @@ class _TourListScreenState extends State<TourListScreen> {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16)),
         backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
-        title: Text('Delete Tour',
+        title: Text(context.translate('delete_tour'),
             style: AppTextStyles.h2),
         content: Text(
-          'This action cannot be undone.',
+          context.translate('this_action_cannot_be_undone'),
           style: AppTextStyles.profileSubtitle.copyWith(color: const Color(0xFF6B7280)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel',
+            child: Text(context.translate('cancel'),
                 style: AppTextStyles.label.copyWith(color: const Color(0xFF6B7280))),
           ),
           TextButton(
@@ -51,7 +52,7 @@ class _TourListScreenState extends State<TourListScreen> {
               Navigator.pop(ctx);
               context.read<TourProvider>().deleteTour(tour.id);
             },
-            child: Text('Delete',
+            child: Text(context.translate('delete'),
                 style: AppTextStyles.label.copyWith(
                     color: const Color(0xFFDC2626), fontWeight: FontWeight.w600)),
           ),
@@ -90,7 +91,7 @@ class _TourListScreenState extends State<TourListScreen> {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('$msg'),
+            content: Text(msg),
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 3),
           ),
@@ -202,11 +203,11 @@ class _TourListScreenState extends State<TourListScreen> {
                     color: AppColors.activeGreen.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.add_circle_outline,
+                  child: Icon(LucideIcons.plusCircle,
                       color: AppColors.activeGreen, size: 24),
                 ),
                 title: Text(
-                  'Create a New Tour',
+                  context.translate('create_new_tour'),
                   style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
                 ),
                 onTap: () {
@@ -222,11 +223,11 @@ class _TourListScreenState extends State<TourListScreen> {
                     color: AppColors.activeGreen.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.qr_code_scanner_rounded,
+                  child: Icon(LucideIcons.qrCode,
                       color: AppColors.activeGreen, size: 24),
                 ),
                 title: Text(
-                  'Join with Invite Code',
+                  context.translate('join_invite_code'),
                   style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
                 ),
                 onTap: () {
@@ -257,7 +258,7 @@ class _TourListScreenState extends State<TourListScreen> {
         backgroundColor: theme.colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
-          'All Tours (${names.length})',
+          '${context.translate('all_tours')} (${names.length})',
           style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface),
         ),
         content: Column(
@@ -273,7 +274,7 @@ class _TourListScreenState extends State<TourListScreen> {
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child:
-                Text('Close', style: AppTextStyles.viewAllText),
+                Text(context.translate('close'), style: AppTextStyles.viewAllText),
           ),
         ],
       ),
@@ -316,7 +317,7 @@ class _TourListScreenState extends State<TourListScreen> {
                 foregroundColor: AppColors.white,
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                child: const Icon(Icons.add_rounded, size: 28),
+                child: Icon(LucideIcons.plus, size: 28),
               ),
             )
           : null,

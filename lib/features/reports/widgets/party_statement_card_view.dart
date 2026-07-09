@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
@@ -11,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PartyStatementCardView extends StatelessWidget {
   final bool isMasked;
@@ -190,7 +190,7 @@ class PartyStatementCardView extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Symbols.arrow_downward_rounded,
+                        LucideIcons.arrowDown,
                         color: AppColors.activeGreen,
                         size: 18,
                       ),
@@ -257,7 +257,7 @@ class PartyStatementCardView extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Symbols.arrow_upward_rounded,
+                        LucideIcons.arrowUp,
                         color: AppColors.activeRed,
                         size: 18,
                       ),
@@ -372,19 +372,19 @@ class _PremiumTransactionTile extends StatelessWidget {
     final Color iconFgColor;
 
     if (isOpeningBalance) {
-      leadingIcon = Symbols.account_balance_wallet_rounded;
+      leadingIcon = LucideIcons.wallet;
       iconBgColor = isDark
           ? theme.colorScheme.primary.withValues(alpha: 0.12)
           : theme.colorScheme.primary.withValues(alpha: 0.08);
       iconFgColor = theme.colorScheme.primary;
     } else if (isInflow) {
-      leadingIcon = Symbols.south_west_rounded;
+      leadingIcon = LucideIcons.arrowDownLeft;
       iconBgColor = isDark
           ? AppColors.activeGreen.withValues(alpha: 0.14)
           : const Color(0xFFE6F9F0);
       iconFgColor = AppColors.activeGreen;
     } else {
-      leadingIcon = Symbols.north_east_rounded;
+      leadingIcon = LucideIcons.arrowUpRight;
       iconBgColor = isDark
           ? AppColors.activeRed.withValues(alpha: 0.14)
           : const Color(0xFFFDE9EB);

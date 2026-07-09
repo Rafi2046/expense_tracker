@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +6,7 @@ import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/utils/category_utils.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TransactionInfoRow extends StatelessWidget {
   final TransactionItem transaction;
@@ -236,7 +236,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   const Icon(
-                    Symbols.arrow_forward_ios_rounded,
+                    LucideIcons.arrowRight,
                     size: 10,
                     color: Colors.grey,
                   ),
@@ -323,7 +323,7 @@ class SyncStatusCard extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            Symbols.cloud_done,
+            LucideIcons.cloud,
             color: isDark ? Colors.white38 : Colors.grey,
             size: 18,
           ),

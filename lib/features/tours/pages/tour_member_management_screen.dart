@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourMemberManagementScreen extends StatefulWidget {
   final String tourId;
@@ -60,7 +61,7 @@ class _TourMemberManagementScreenState
             ? const SizedBox.shrink()
             : IconButton(
                 icon: Icon(
-                  Icons.arrow_back_ios_new_rounded,
+                  LucideIcons.arrowLeft,
                   color: theme.colorScheme.onSurface,
                   size: 20,
                 ),
@@ -185,7 +186,7 @@ class _TourMemberManagementScreenState
               child: Row(
                 children: [
                   Icon(
-                    Icons.lightbulb_outline_rounded,
+                    LucideIcons.lightbulb,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                     size: 16,
                   ),
@@ -253,7 +254,7 @@ class _TourMemberManagementScreenState
                       ),
                       IconButton(
                         icon: Icon(
-                          Icons.remove_circle_outline_rounded,
+                          LucideIcons.minusCircle,
                           color: AppColors.activeRed.withValues(alpha: 0.8),
                         ),
                         onPressed: () => _removeMember(member.id),

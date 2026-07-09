@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
@@ -12,6 +11,7 @@ import 'package:expense_tracker/features/dashboard/widgets/income_summary_card.d
 import 'package:expense_tracker/features/dashboard/widgets/time_frame_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class IncomeInsightsScreen extends StatefulWidget {
   const IncomeInsightsScreen({super.key});
@@ -51,7 +51,7 @@ style: AppTextStyles.bodySmall
               Row(
                 children: [
                   Icon(
-                    isPositive ? Symbols.trending_up : Symbols.trending_down,
+                    isPositive ? LucideIcons.trendingUp : LucideIcons.trendingDown,
                     color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
                     size: 16,
                   ),
@@ -107,7 +107,7 @@ style: AppTextStyles.bodySmall
                   Row(
                     children: [
                       Icon(
-                        isPositive ? Symbols.trending_up : Symbols.trending_down,
+                        isPositive ? LucideIcons.trendingUp : LucideIcons.trendingDown,
                         color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
                         size: 16,
                       ),
@@ -220,7 +220,7 @@ style: AppTextStyles.bodySmall
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(

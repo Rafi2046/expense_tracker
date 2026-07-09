@@ -1,10 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DebtTotalCard extends StatelessWidget {
   final String title;
@@ -93,7 +93,7 @@ class DebtTotalCard extends StatelessWidget {
                         onToggleMask();
                       },
                       child: Icon(
-                        isMasked ? Symbols.visibility_off : Symbols.visibility,
+                        isMasked ? LucideIcons.eyeOff : LucideIcons.eye,
                         size: 22,
                         color: Colors.white60,
                       ),
@@ -127,7 +127,7 @@ class DebtTotalCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Icon(
-                              Symbols.lightbulb_outline_rounded,
+                              LucideIcons.lightbulb,
                               color: Colors.white,
                               size: 18,
                             ),
@@ -152,7 +152,7 @@ class DebtTotalCard extends StatelessWidget {
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
-                                  Symbols.close_rounded,
+                                  LucideIcons.x,
                                   color: Colors.white70,
                                   size: 14,
                                 ),

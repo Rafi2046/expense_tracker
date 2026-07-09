@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
@@ -10,6 +9,7 @@ import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TourListHeader extends StatelessWidget {
   final UserProfile currentProfile;
@@ -65,7 +65,7 @@ class TourListHeader extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    'WHERE TO NEXT?',
+                    context.translate('where_to_next'),
                     style: AppTextStyles.caption.copyWith(
                       fontSize: AppFontSizes.size10,
                       fontWeight: FontWeight.w500,
@@ -79,7 +79,7 @@ class TourListHeader extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Your Tours',
+                      context.translate('your_tours'),
                       style: AppTextStyles.displayLarge.copyWith(
                         fontWeight: FontWeight.w800,
                         letterSpacing: -0.8,
@@ -95,7 +95,7 @@ class TourListHeader extends StatelessWidget {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         child: Text(
-                          'View All',
+                          context.translate('view_all'),
                           style: AppTextStyles.bodySmall.copyWith(
                             fontWeight: FontWeight.w600,
                             color: AppColors.activeGreen,

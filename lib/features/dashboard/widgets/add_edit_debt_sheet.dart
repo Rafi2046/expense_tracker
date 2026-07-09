@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AddEditDebtSheet extends StatefulWidget {
   final DebtItem? item;
@@ -138,7 +138,7 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                     ),
                     IconButton(
                       icon: Icon(
-                        Symbols.close,
+                        LucideIcons.x,
                         color: theme.colorScheme.onSurface,
                       ),
                       onPressed: () => Navigator.of(context).pop(),

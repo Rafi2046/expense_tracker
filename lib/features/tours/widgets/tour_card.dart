@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourCard extends StatelessWidget {
   final Tour tour;
@@ -158,13 +159,13 @@ class TourCard extends StatelessWidget {
                           Row(
                             children: [
                               Icon(
-                                Icons.people_alt_rounded,
+                                LucideIcons.users,
                                 color: Colors.white.withValues(alpha: 0.7),
                                 size: 16,
                               ),
                               const SizedBox(width: AppSpacing.s6),
                               Text(
-                                '$memberCount ${memberCount == 1 ? 'member' : 'members'}',
+                                '$memberCount ${memberCount == 1 ? context.translate('member') : context.translate('members')}',
                                 style: AppTextStyles.bodySmall.copyWith(
                                   color: Colors.white.withValues(alpha: 0.7),
                                   fontWeight: FontWeight.w500,
@@ -176,7 +177,7 @@ class TourCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                'Total spent',
+                                context.translate('total_spent'),
                                 style: AppTextStyles.caption.copyWith(
                                   color: Colors.white.withValues(alpha: 0.5),
                                   fontSize: AppFontSizes.size10,
@@ -232,7 +233,7 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dotColor = isCompleted ? const Color(0xFF9CA3AF) : const Color(0xFF4ADE80);
-    final label = isCompleted ? 'Completed' : 'Active';
+    final label = isCompleted ? context.translate('completed') : context.translate('active');
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -299,13 +300,13 @@ class _CardMenuButton extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  isCompleted ? Icons.radio_button_unchecked_rounded : Icons.check_circle_outline_rounded,
+                  isCompleted ? LucideIcons.circle : LucideIcons.checkCircle,
                   size: 18,
                   color: isCompleted ? const Color(0xFF6B7280) : const Color(0xFF4ADE80),
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  isCompleted ? 'Mark as Active' : 'Mark as Completed',
+                  isCompleted ? context.translate('mark_as_active') : context.translate('mark_as_completed'),
                   style: TextStyle(
                     color: isCompleted ? const Color(0xFF6B7280) : const Color(0xFF4ADE80),
                   ),
@@ -314,14 +315,14 @@ class _CardMenuButton extends StatelessWidget {
             ),
           ),
         if (onDelete != null)
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'delete',
             child: Row(
               children: [
-                Icon(Icons.delete_outline_rounded, size: 18, color: Color(0xFFDC2626)),
-                SizedBox(width: 8),
-                Text('Delete Tour',
-                    style: TextStyle(color: Color(0xFFDC2626))),
+                const Icon(LucideIcons.trash, size: 18, color: Color(0xFFDC2626)),
+                const SizedBox(width: 8),
+                Text(context.translate('delete_tour'),
+                    style: const TextStyle(color: Color(0xFFDC2626))),
               ],
             ),
           ),
@@ -337,7 +338,7 @@ class _CardMenuButton extends StatelessWidget {
           ),
         ),
         child: const Icon(
-          Icons.more_horiz_rounded,
+          LucideIcons.moreHorizontal,
           size: 16,
           color: Colors.white,
         ),

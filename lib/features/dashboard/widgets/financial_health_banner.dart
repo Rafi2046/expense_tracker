@@ -1,7 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class FinancialHealthBanner extends StatelessWidget {
   const FinancialHealthBanner({super.key});
@@ -21,7 +21,7 @@ class FinancialHealthBanner extends StatelessWidget {
             bottom: -20,
             right: -20,
             child: Icon(
-              Symbols.trending_up_rounded,
+              LucideIcons.trendingUp,
               color: Colors.white.withValues(alpha: 0.08),
               size: 140,
             ),

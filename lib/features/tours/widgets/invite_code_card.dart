@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class InviteCodeCard extends StatelessWidget {
   final String inviteCode;
@@ -83,13 +84,13 @@ class InviteCodeCard extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           _IconButton(
-            icon: Icons.copy_rounded,
+            icon: LucideIcons.copy,
             onTap: () => _onCopy(context),
             tooltip: 'Copy',
           ),
           const SizedBox(width: 8),
           _IconButton(
-            icon: Icons.share_rounded,
+            icon: LucideIcons.share,
             onTap: _onShare,
             tooltip: 'Share',
           ),

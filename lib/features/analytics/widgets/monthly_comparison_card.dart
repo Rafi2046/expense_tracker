@@ -1,8 +1,8 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class MonthlyComparisonCard extends StatelessWidget {
   final double currentAmount;
@@ -118,7 +118,7 @@ class MonthlyComparisonCard extends StatelessWidget {
                 Row(
                   children: [
                     Icon(
-                      isUp ? Symbols.trending_up : Symbols.trending_down,
+                      isUp ? LucideIcons.trendingUp : LucideIcons.trendingDown,
                       color: changeColor,
                       size: 16,
                     ),

@@ -1,7 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ProfileInfoBanner extends StatelessWidget {
   const ProfileInfoBanner({super.key});
@@ -22,7 +22,7 @@ class ProfileInfoBanner extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(
-            Symbols.info,
+            LucideIcons.info,
             color: theme.textTheme.bodySmall?.color,
             size: 18,
           ),

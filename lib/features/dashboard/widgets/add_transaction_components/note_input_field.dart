@@ -1,7 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class NoteInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -33,7 +33,7 @@ class NoteInputField extends StatelessWidget {
           color: isDark ? Colors.white30 : Colors.grey.shade400,
         ),
         prefixIcon: Icon(
-          Symbols.notes_rounded,
+          LucideIcons.notepadText,
           color: isDark ? Colors.white30 : Colors.grey.shade400,
           size: 22,
         ),

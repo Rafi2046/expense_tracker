@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/features/tours/widgets/join_tour_sheet.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourListEmptyState extends StatelessWidget {
   final VoidCallback onCreateTour;
@@ -33,7 +34,7 @@ class TourListEmptyState extends StatelessWidget {
                 height: 200,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) => Icon(
-                  Icons.explore_rounded,
+                  LucideIcons.compass,
                   size: 150,
                   color: isDark
                       ? AppColors.white.withValues(alpha: 0.3)
@@ -58,7 +59,7 @@ class TourListEmptyState extends StatelessWidget {
               const SizedBox(height: 24),
               FilledButton.icon(
                 onPressed: onCreateTour,
-                icon: const Icon(Icons.add_rounded, size: 20),
+                icon: Icon(LucideIcons.plus, size: 20),
                 label: const Text('Create your first tour'),
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.activeGreen,
@@ -75,7 +76,7 @@ class TourListEmptyState extends StatelessWidget {
               const SizedBox(height: 12),
               OutlinedButton.icon(
                 onPressed: onJoinTour ?? () => _showJoinSheet(context),
-                icon: const Icon(Icons.qr_code_scanner_rounded, size: 18),
+                icon: Icon(LucideIcons.qrCode, size: 18),
                 label: const Text('Join with Invite Code'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.activeGreen,

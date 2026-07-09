@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TransactionsStatsCards extends StatelessWidget {
   final bool isMasked;
@@ -86,7 +86,7 @@ class TransactionsStatsCards extends StatelessWidget {
                   onToggleMask();
                 },
                 child: Icon(
-                  isMasked ? Symbols.visibility_off : Symbols.visibility,
+                  isMasked ? LucideIcons.eyeOff : LucideIcons.eye,
                   size: 20,
                   color: Colors.white60,
                 ),
@@ -123,7 +123,7 @@ class TransactionsStatsCards extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Symbols.arrow_downward_rounded,
+                        LucideIcons.arrowDown,
                         color: Color(0xFF2ECC71),
                         size: 14,
                       ),
@@ -173,7 +173,7 @@ class TransactionsStatsCards extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Symbols.arrow_upward_rounded,
+                        LucideIcons.arrowUp,
                         color: Color(0xFFF1948A),
                         size: 14,
                       ),

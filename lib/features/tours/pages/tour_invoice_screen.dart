@@ -13,6 +13,7 @@ import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 
 class TourInvoiceScreen extends StatefulWidget {
@@ -63,7 +64,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
                     height: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : const Icon(Icons.ios_share_rounded),
+                : Icon(LucideIcons.share),
             onPressed: _isSharing ? null : () => _shareInvoice(tour, participants, expenses, settlements, totalSpent, totalOutstanding),
           ),
           const SizedBox(width: 4),
@@ -283,7 +284,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
       ),
       child: Column(
         children: [
-          Icon(Icons.check_circle_rounded, color: AppColors.activeGreen, size: 44),
+          Icon(LucideIcons.checkCircle, color: AppColors.activeGreen, size: 44),
           const SizedBox(height: 12),
           Text('All settled up', style: AppTextStyles.h2.copyWith(color: isDark ? const Color(0xFF6EE7B7) : const Color(0xFF065F46))),
           const SizedBox(height: 4),
@@ -443,7 +444,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
                 height: 180,
                 color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6),
                 child: Center(
-                  child: Icon(Icons.broken_image_rounded, color: isDark ? const Color(0xFF4B5563) : const Color(0xFFD1D5DB), size: 36),
+                  child: Icon(LucideIcons.imageOff, color: isDark ? const Color(0xFF4B5563) : const Color(0xFFD1D5DB), size: 36),
                 ),
               ),
             ),
@@ -471,7 +472,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.account_balance_wallet_rounded, size: 13, color: Colors.grey.shade400),
+          Icon(LucideIcons.wallet, size: 13, color: Colors.grey.shade400),
           const SizedBox(width: 6),
           Text('Generated via Expense Tracker', style: AppTextStyles.caption.copyWith(fontSize: AppFontSizes.size9, color: Colors.grey.shade400, fontWeight: FontWeight.w500)),
         ],

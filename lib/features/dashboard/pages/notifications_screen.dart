@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -8,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -93,13 +93,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   IconData _getTypeIcon(NotificationType type) {
     switch (type) {
       case NotificationType.alert:
-        return Symbols.warning_amber_rounded;
+        return LucideIcons.alertTriangle;
       case NotificationType.credit:
-        return Symbols.account_balance_wallet;
+        return LucideIcons.wallet;
       case NotificationType.update:
-        return Symbols.auto_awesome;
+        return LucideIcons.sparkles;
       case NotificationType.system:
-        return Symbols.info;
+        return LucideIcons.info;
     }
   }
 
@@ -118,7 +118,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.colorScheme.onSurface),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -186,7 +186,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: const Icon(
-                            Symbols.delete_outline,
+                            LucideIcons.trash,
                             color: AppColors.activeRed,
                           ),
                         ),

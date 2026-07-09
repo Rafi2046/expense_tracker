@@ -1,30 +1,30 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CategoryUtils {
   static IconData getIcon(String category) {
     switch (category.toLowerCase()) {
       case 'dining':
       case 'food':
-        return Symbols.restaurant_rounded;
+        return LucideIcons.utensilsCrossed;
       case 'transport':
-        return Symbols.directions_bus_rounded;
+        return LucideIcons.bus;
       case 'medicine':
-        return Symbols.medical_services_rounded;
+        return LucideIcons.heartPulse;
       case 'salary':
-        return Symbols.payments_rounded;
+        return LucideIcons.creditCard;
       case 'freelance':
-        return Symbols.work_rounded;
+        return LucideIcons.briefcase;
       case 'entertainment':
-        return Symbols.sports_esports_rounded;
+        return LucideIcons.gamepad2;
       case 'shopping':
-        return Symbols.shopping_bag_rounded;
+        return LucideIcons.shoppingBag;
       case 'investment':
-        return Symbols.trending_up_rounded;
+        return LucideIcons.trendingUp;
       case 'rent':
-        return Symbols.home_rounded;
+        return LucideIcons.home;
       default:
-        return Symbols.category_rounded;
+        return LucideIcons.grid;
     }
   }
 

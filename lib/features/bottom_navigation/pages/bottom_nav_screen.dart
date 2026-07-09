@@ -1,7 +1,6 @@
 import 'package:expense_tracker/features/transactions/pages/transactions_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
-import 'package:expense_tracker/core/constants/app_images.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/features/bottom_navigation/widgets/exit_dialog.dart';
 import 'package:expense_tracker/features/dashboard/pages/dashboard_screen.dart';
 import 'package:expense_tracker/features/settings/pages/settings_screen.dart';
@@ -36,10 +35,10 @@ class _AppBottomNavState extends State<BottomNavScreen> {
   ];
 
   final List<NavItem> _navItems = const [
-    NavItem(title: 'Home', icon: AppImages.homeIcon),
-    NavItem(title: 'Transactions', icon: AppImages.ledgerIcon),
-    NavItem(title: 'Tours', icon: null, iconData: Symbols.groups),
-    NavItem(title: 'Settings', icon: AppImages.settingsIcon),
+    NavItem(title: 'Home', iconData: LucideIcons.home),
+    NavItem(title: 'Transactions', iconData: LucideIcons.arrowLeftRight),
+    NavItem(title: 'Tours', iconData: LucideIcons.users),
+    NavItem(title: 'Settings', iconData: LucideIcons.settings),
   ];
 
   @override
@@ -135,9 +134,8 @@ class _AppBottomNavState extends State<BottomNavScreen> {
     required int index,
     required bool isSelected,
   }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final activeColor = Theme.of(context).primaryColor;
-    final inactiveColor = isDark ? Colors.white54 : const Color(0xFF31394D);
+    final inactiveColor = Colors.grey.shade400;
     final indicatorColor = Theme.of(context).primaryColor;
 
     return Expanded(
@@ -173,18 +171,11 @@ class _AppBottomNavState extends State<BottomNavScreen> {
                     const SizedBox(height: 3),
                   ],
 
-                  item.iconData != null
-                      ? Icon(
-                          item.iconData,
-                          size: 24,
-                          color: isSelected ? activeColor : inactiveColor,
-                        )
-                      : Image.asset(
-                          item.icon!,
-                          width: 18,
-                          height: 18,
-                          color: isSelected ? activeColor : inactiveColor,
-                        ),
+                  Icon(
+                    item.iconData,
+                    size: 24,
+                    color: isSelected ? activeColor : inactiveColor,
+                  ),
 
                   if (isSelected) ...[
                     const SizedBox(height: 2),
@@ -210,8 +201,7 @@ class _AppBottomNavState extends State<BottomNavScreen> {
 
 class NavItem {
   final String title;
-  final String? icon;
-  final IconData? iconData;
+  final IconData iconData;
 
-  const NavItem({required this.title, this.icon, this.iconData});
+  const NavItem({required this.title, required this.iconData});
 }

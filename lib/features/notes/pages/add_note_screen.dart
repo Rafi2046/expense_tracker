@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/note_provider.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AddNoteScreen extends StatefulWidget {
   final NoteItem? note;
@@ -89,7 +89,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.colorScheme.onSurface),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -102,7 +102,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Symbols.check, color: activeGreenColor, size: 28),
+            icon: Icon(LucideIcons.check, color: activeGreenColor, size: 28),
             onPressed: _saveNote,
           ),
           const SizedBox(width: 8),

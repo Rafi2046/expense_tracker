@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/shortcut_provider.dart';
@@ -11,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DashboardShortcutsCard extends StatelessWidget {
   const DashboardShortcutsCard({super.key});
@@ -63,16 +63,16 @@ class DashboardShortcutsCard extends StatelessWidget {
   IconData _icon(String id) {
     switch (id) {
       case 'income':
-        return Symbols.arrow_downward_rounded;
+        return LucideIcons.arrowDown;
       case 'expense':
-        return Symbols.arrow_upward_rounded;
+        return LucideIcons.arrowUp;
       case 'payment_in':
       case 'payment_out':
-        return Symbols.account_balance_wallet_rounded;
+        return LucideIcons.wallet;
       case 'add_party':
-        return Symbols.person_add_rounded;
+        return LucideIcons.userPlus;
       default:
-        return Symbols.help_outline_rounded;
+        return LucideIcons.helpCircle;
     }
   }
 
@@ -238,7 +238,7 @@ class DashboardShortcutsCard extends StatelessWidget {
               ],
             ),
           ),
-          Icon(Symbols.chevron_right_rounded, size: 18, color: Colors.grey.shade400),
+          Icon(LucideIcons.chevronRight, size: 18, color: Colors.grey.shade400),
         ],
       ),
     );

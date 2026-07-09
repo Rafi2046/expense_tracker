@@ -1,11 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LanguageSelectorSheet extends StatelessWidget {
   const LanguageSelectorSheet({super.key});
@@ -14,6 +13,7 @@ class LanguageSelectorSheet extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useRootNavigator: false,
       backgroundColor: Colors.transparent,
       builder: (context) => const LanguageSelectorSheet(),
     );
@@ -41,7 +41,7 @@ class LanguageSelectorSheet extends StatelessWidget {
             topRight: Radius.circular(28),
           ),
         ),
-        padding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 32.0),
+        padding: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 32.0 + MediaQuery.of(context).padding.bottom),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +69,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Symbols.translate_rounded,
+                    LucideIcons.languages,
                     color: iconColor,
                     size: 22,
                   ),
@@ -203,7 +203,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                 top: 0,
                 right: 0,
                 child: Icon(
-                  Symbols.check_circle_rounded,
+                  LucideIcons.checkCircle,
                   color: activeGreenColor,
                   size: 20,
                 ),

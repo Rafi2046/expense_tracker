@@ -1,10 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class EditProfileSheet extends StatefulWidget {
   final UserProfile profile;
@@ -215,7 +215,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                       Row(
                         children: [
                           Icon(
-                            Symbols.warning_rounded,
+                            LucideIcons.alertTriangle,
                             color: const Color(0xFFDC3545),
                             size: 18,
                           ),
@@ -247,7 +247,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                         height: 48,
                         child: OutlinedButton.icon(
                           onPressed: _confirmDelete,
-                          icon: const Icon(Symbols.delete_forever_rounded, color: Color(0xFFDC3545)),
+                          icon: Icon(LucideIcons.trash, color: Color(0xFFDC3545)),
                           label: Text(
                             'Delete Profile',
                             style: GoogleFonts.workSans(

@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SelectCategorySheet extends StatefulWidget {
   final bool isIncome;
@@ -331,7 +331,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                     color: isDark ? Colors.white38 : Colors.grey.shade400,
                   ),
                   prefixIcon: Icon(
-                    Symbols.search_rounded,
+                    LucideIcons.search,
                     color: isDark ? Colors.white38 : Colors.grey.shade400,
                     size: 20,
                   ),
@@ -379,7 +379,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                 width: double.infinity,
                 height: 48,
                 child: OutlinedButton.icon(
-                  icon: const Icon(Symbols.add, size: 18),
+                  icon: Icon(LucideIcons.plus, size: 18),
                   label: const Text('Add New Category'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: theme.colorScheme.onSurface,

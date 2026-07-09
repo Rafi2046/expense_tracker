@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class NewTourCTA extends StatelessWidget {
   final VoidCallback onTap;
@@ -54,7 +55,7 @@ class NewTourCTA extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(
-                  Icons.add_rounded,
+                  LucideIcons.plus,
                   size: 18,
                   color: AppColors.activeGreen,
                 ),

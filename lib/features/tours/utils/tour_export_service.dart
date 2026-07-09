@@ -14,6 +14,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourExportService {
   static Future<void> shareReport(BuildContext context, String tourId) async {
@@ -135,7 +136,7 @@ class TourExportService {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                Icons.receipt_long_rounded,
+                LucideIcons.receipt,
                 size: 16,
                 color: AppColors.white,
               ),
@@ -245,7 +246,7 @@ class TourExportService {
       child: Column(
         children: [
           Icon(
-            Icons.check_circle_rounded,
+            LucideIcons.checkCircle,
             color: AppColors.activeGreen,
             size: 40,
           ),
@@ -303,7 +304,7 @@ class TourExportService {
                 Column(
                   children: [
                     Icon(
-                      Icons.arrow_downward_rounded,
+                      LucideIcons.arrowDown,
                       size: 18,
                       color: AppColors.activeGreen,
                     ),
@@ -369,7 +370,7 @@ class TourExportService {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
-          Icons.account_balance_wallet_rounded,
+          LucideIcons.wallet,
           size: 14,
           color: Colors.grey.shade400,
         ),

@@ -1,10 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PartyStatementProfileHeader extends StatelessWidget {
   const PartyStatementProfileHeader({super.key});
@@ -32,28 +32,28 @@ class PartyStatementProfileHeader extends StatelessWidget {
     if (partyItem != null) {
       if (partyItem.phone != null && partyItem.phone!.trim().isNotEmpty) {
         contactDetails.add(_ContactChipData(
-          icon: Symbols.call,
+          icon: LucideIcons.phoneCall,
           label: partyItem.phone!,
           title: 'Phone',
         ));
       }
       if (partyItem.email != null && partyItem.email!.trim().isNotEmpty) {
         contactDetails.add(_ContactChipData(
-          icon: Symbols.mail,
+          icon: LucideIcons.mail,
           label: partyItem.email!,
           title: 'Email',
         ));
       }
       if (partyItem.address != null && partyItem.address!.trim().isNotEmpty) {
         contactDetails.add(_ContactChipData(
-          icon: Symbols.location_on,
+          icon: LucideIcons.mapPin,
           label: partyItem.address!,
           title: 'Address',
         ));
       }
       if (partyItem.vat != null && partyItem.vat!.trim().isNotEmpty) {
         contactDetails.add(_ContactChipData(
-          icon: Symbols.description,
+          icon: LucideIcons.fileText,
           label: partyItem.vat!,
           title: 'VAT / Tax ID',
         ));

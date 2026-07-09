@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/expense_trend_chart_card.dart' show ExpenseChartData;
 import 'package:expense_tracker/features/dashboard/widgets/expense_categories_breakdown_card.dart' show CategoryBreakdownItem;
 import 'package:expense_tracker/features/dashboard/widgets/expense_breakdown_card.dart' show ExpenseBreakdownItem;
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ExpenseAnalyticsProvider extends ChangeNotifier {
   List<TransactionItem> _expenseTransactions = [];
@@ -412,7 +412,7 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
         title: 'Cash',
         subtitle: '$cashCount transactions',
         amount: cashAmount.toStringAsFixed(0),
-        icon: Symbols.payments,
+        icon: LucideIcons.creditCard,
       ));
     }
 
@@ -421,7 +421,7 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
         title: 'Bank',
         subtitle: '$bankCount transactions',
         amount: bankAmount.toStringAsFixed(0),
-        icon: Symbols.account_balance,
+        icon: LucideIcons.landmark,
       ));
     }
 

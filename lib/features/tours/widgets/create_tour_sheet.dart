@@ -8,6 +8,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CreateTourSheet extends StatefulWidget {
   final Function(Tour tour) onTourCreated;
@@ -192,12 +193,12 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                     ),
                                     const SizedBox(height: 20),
                                     ListTile(
-                                      leading: const Icon(Icons.camera_alt_rounded),
+                                      leading: Icon(LucideIcons.camera),
                                       title: Text('Take Photo', style: AppTextStyles.reportTileTitle.copyWith(fontWeight: FontWeight.w400)),
                                       onTap: () => Navigator.pop(sCtx, ImageSource.camera),
                                     ),
                                     ListTile(
-                                      leading: const Icon(Icons.photo_library_rounded),
+                                      leading: Icon(LucideIcons.image),
                                       title: Text('Choose from Gallery', style: AppTextStyles.reportTileTitle.copyWith(fontWeight: FontWeight.w400)),
                                       onTap: () => Navigator.pop(sCtx, ImageSource.gallery),
                                     ),
@@ -236,7 +237,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.add_photo_alternate_outlined,
+                                      Icon(LucideIcons.imagePlus,
                                         color: theme.colorScheme.onSurface.withValues(alpha: 0.35), size: 22),
                                       const SizedBox(width: 8),
                                       Text('Add cover photo',

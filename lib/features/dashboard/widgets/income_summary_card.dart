@@ -1,10 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class IncomeSummaryCard extends StatelessWidget {
   final String label;
@@ -54,7 +54,7 @@ class IncomeSummaryCard extends StatelessWidget {
                   onToggleMask();
                 },
                 child: Icon(
-                  isMasked ? Symbols.visibility_off : Symbols.visibility,
+                  isMasked ? LucideIcons.eyeOff : LucideIcons.eye,
                   size: 18,
                   color: isDark ? Colors.white38 : AppColors.textMuted,
                 ),
@@ -99,7 +99,7 @@ class IncomeSummaryCard extends StatelessWidget {
             Row(
               children: [
                 const Icon(
-                  Symbols.trending_up,
+                  LucideIcons.trendingUp,
                   color: AppColors.activeGreen,
                   size: 16,
                 ),

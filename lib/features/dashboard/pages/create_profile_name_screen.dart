@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_selection_sheet.dart';
@@ -8,6 +7,7 @@ import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CreateProfileNameScreen extends StatefulWidget {
   final bool isBusiness;
@@ -73,7 +73,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.iconTheme.color),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.iconTheme.color),
           onPressed: () => Navigator.pop(context),
         ),
         backgroundColor: theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface,

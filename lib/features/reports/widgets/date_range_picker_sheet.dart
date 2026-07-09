@@ -1,10 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/reports/widgets/select_date_input_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DateRangePickerSheet extends StatefulWidget {
   final DateTimeRange? initialSelectedRange;
@@ -128,7 +128,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: Icon(Symbols.close_rounded, color: theme.colorScheme.onSurfaceVariant),
+                  icon: Icon(LucideIcons.x, color: theme.colorScheme.onSurfaceVariant),
                   onPressed: () => Navigator.pop(context),
                 ),
                 Text(
@@ -160,7 +160,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                     ),
                     const SizedBox(width: 6),
                     IconButton(
-                      icon: Icon(Symbols.edit, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5), size: 18),
+                      icon: Icon(LucideIcons.edit, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5), size: 18),
                       onPressed: () async {
                         final result = await SelectDateInputDialog.show(
                           context,

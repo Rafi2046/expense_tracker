@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -10,6 +9,7 @@ import 'package:expense_tracker/features/dashboard/widgets/account_balance_heade
 import 'package:expense_tracker/features/dashboard/widgets/account_date_selector.dart';
 import 'package:expense_tracker/features/dashboard/widgets/account_search_bar.dart';
 import 'package:expense_tracker/features/dashboard/widgets/adjust_balance_actions.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 
 class AccountDetailsScreen extends StatefulWidget {
@@ -166,7 +166,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color, size: 20),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.appBarTheme.iconTheme?.color, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(

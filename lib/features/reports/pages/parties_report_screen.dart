@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
@@ -10,6 +9,7 @@ import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.d
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PartiesReportScreen extends StatefulWidget {
   const PartiesReportScreen({super.key});
@@ -102,7 +102,7 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
                         color: isDark ? Colors.white30 : null,
                       ),
                       prefixIcon: Icon(
-                        Symbols.search,
+                        LucideIcons.search,
                         color: isDark ? Colors.white30 : Colors.grey.shade400,
                         size: 20,
                       ),
@@ -147,7 +147,7 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
                             child: Column(
                               children: [
                                 Icon(
-                                  Symbols.people_outline_rounded,
+                                  LucideIcons.users,
                                   color: isDark
                                       ? Colors.white24
                                       : Colors.grey.shade300,

@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -6,6 +5,7 @@ import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_detail_cards.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TransactionDetailsScreen extends StatelessWidget {
   final TransactionItem transaction;
@@ -24,7 +24,7 @@ class TransactionDetailsScreen extends StatelessWidget {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.colorScheme.onSurface, size: 20),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -35,7 +35,7 @@ class TransactionDetailsScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(
-              Symbols.edit,
+              LucideIcons.edit,
               color: theme.colorScheme.onSurface,
               size: 20,
             ),
@@ -43,7 +43,7 @@ class TransactionDetailsScreen extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(
-              Symbols.delete_outline_rounded,
+              LucideIcons.trash,
               color: Colors.redAccent,
               size: 20,
             ),

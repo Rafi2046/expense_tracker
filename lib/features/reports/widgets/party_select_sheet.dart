@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PartySelectSheet extends StatefulWidget {
   final String? selectedPartyName;
@@ -152,7 +152,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
               decoration: InputDecoration(
                 hintText: 'Search parties...',
                 hintStyle: GoogleFonts.workSans(fontSize: AppFontSizes.size14, color: isDark ? Colors.white30 : Colors.grey.shade400),
-                prefixIcon: Icon(Symbols.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
+                prefixIcon: Icon(LucideIcons.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
                 filled: true,
                 fillColor: isDark ? theme.colorScheme.onSurface.withValues(alpha: 0.05) : const Color(0xFFF8FAFC),
                 contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
@@ -179,7 +179,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Symbols.people_outline_rounded, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
+                        Icon(LucideIcons.users, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
                         const SizedBox(height: 12),
                         Text(
                           'No parties found',
@@ -241,7 +241,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                         ),
                         trailing: isSelected
                             ? Icon(
-                                Symbols.check_circle_rounded,
+                                LucideIcons.checkCircle,
                                 color: theme.primaryColor,
                                 size: 18,
                               )

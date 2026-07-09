@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
@@ -11,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class IncomeMonthlySection extends StatelessWidget {
   final bool isMasked;
@@ -80,13 +80,13 @@ class IncomeMonthlySection extends StatelessWidget {
                   IconData icon;
                   final categoryLower = tx.category.toLowerCase();
                   if (categoryLower.contains('salary')) {
-                    icon = Symbols.account_balance;
+                    icon = LucideIcons.landmark;
                   } else if (categoryLower.contains('freelance') || categoryLower.contains('business') || categoryLower.contains('work')) {
-                    icon = Symbols.work_outline_rounded;
+                    icon = LucideIcons.briefcase;
                   } else if (categoryLower.contains('dividend') || categoryLower.contains('invest') || categoryLower.contains('saving')) {
-                    icon = Symbols.show_chart_rounded;
+                    icon = LucideIcons.lineChart;
                   } else {
-                    icon = Symbols.home_work;
+                    icon = LucideIcons.building2;
                   }
                   return IncomeTransactionRow(
                     icon: icon,

@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
@@ -8,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class UserProfile {
   final String id;
@@ -143,7 +143,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                   subtitle: Row(
                     children: [
                       if (profile.id == 'default_profile') ...[
-                        Icon(Symbols.star_rounded, size: 13, color: const Color(0xFFF59E0B)),
+                        Icon(LucideIcons.star, size: 13, color: const Color(0xFFF59E0B)),
                         const SizedBox(width: 4),
                       ],
                       Text(
@@ -163,7 +163,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                       if (profile.id != 'default_profile')
                         IconButton(
                           icon: Icon(
-                            Symbols.edit_rounded,
+                            LucideIcons.edit,
                             color: theme.textTheme.bodySmall?.color,
                             size: 20,
                           ),
@@ -185,8 +185,8 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                         ),
                       const SizedBox(width: 8),
                       isSelected
-                          ? const Icon(Symbols.radio_button_checked, color: AppColors.selectedColor)
-                          : Icon(Symbols.radio_button_unchecked, color: theme.textTheme.bodySmall?.color),
+                          ? Icon(LucideIcons.circleDot, color: AppColors.selectedColor)
+                          : Icon(LucideIcons.circle, color: theme.textTheme.bodySmall?.color),
                     ],
                   ),
                   onTap: () {
@@ -212,7 +212,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                   Navigator.pop(context);
                   widget.onCreateNewTap();
                 },
-                icon: const Icon(Symbols.add, color: Color(0xFF00BFA5)),
+                icon: Icon(LucideIcons.plus, color: Color(0xFF00BFA5)),
                 label: Text(
                   'Create New Profile',
                   style: AppTextStyles.reportTileTitle.copyWith(

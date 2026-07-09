@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,6 +5,7 @@ import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/select_date_option_sheet.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AccountDateSelector extends StatelessWidget {
   final DateRangeOption selectedOption;
@@ -52,7 +52,7 @@ class AccountDateSelector extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            Symbols.calendar_today,
+            LucideIcons.calendar,
             size: 14,
             color: isDark ? Colors.white60 : const Color(0xFF565E74),
           ),

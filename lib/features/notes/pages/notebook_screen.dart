@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/note_provider.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class NotebookScreen extends StatefulWidget {
   const NotebookScreen({super.key});
@@ -113,7 +113,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.colorScheme.onSurface),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -136,7 +136,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
           },
           backgroundColor: AppColors.activeGreen,
           elevation: 2,
-          child: const Icon(Symbols.add, color: Colors.white, size: 28),
+          child: Icon(LucideIcons.plus, color: Colors.white, size: 28),
         ),
       ),
       body: Column(
@@ -160,14 +160,14 @@ class _NotebookScreenState extends State<NotebookScreen> {
               decoration: InputDecoration(
                 hintText: 'Search notes...',
                 hintStyle: AppTextStyles.body.copyWith(
-                  color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
+                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade400,
                   fontSize: AppFontSizes.size15,
                   fontFamily: GoogleFonts.workSans().fontFamily,
                 ),
-                prefixIcon: Icon(Symbols.search, color: isDark ? Colors.grey.shade500 : Colors.grey.shade400, size: 20),
+                prefixIcon: Icon(LucideIcons.search, color: isDark ? Colors.grey.shade400 : Colors.grey.shade400, size: 20),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Symbols.clear, size: 18),
+                        icon: Icon(LucideIcons.x, size: 18),
                         onPressed: () {
                           _searchController.clear();
                           setState(() {
@@ -177,7 +177,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                       )
                     : null,
                 filled: true,
-                fillColor: isDark ? theme.cardColor : const Color(0xFFF5F5F5),
+                fillColor: isDark ? Colors.grey.shade800 : const Color(0xFFF5F5F5),
                 contentPadding: const EdgeInsets.symmetric(vertical: 10),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -202,7 +202,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Symbols.note_alt, size: 64, color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
+                              Icon(LucideIcons.stickyNote, size: 64, color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
                               const SizedBox(height: 16),
                               Text(
                                 _searchQuery.isEmpty ? 'No notes yet' : 'No matching notes found',
@@ -252,7 +252,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                               ),
                               const SizedBox(width: 8),
                               Icon(
-                                Symbols.delete_outline_rounded,
+                                LucideIcons.trash,
                                 color: isDark ? Colors.red.shade400 : const Color(0xFFB91C1C), // Tailwind red-700
                                 size: 24,
                               ),
@@ -346,7 +346,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                                           }
                                         },
                                         child: Icon(
-                                          Symbols.delete_outline_rounded,
+                                          LucideIcons.trash,
                                           color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                                           size: 20,
                                         ),

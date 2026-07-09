@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/calculators/pages/emi_calculator_screen.dart';
 import 'package:expense_tracker/features/calculators/pages/interest_calculator_screen.dart';
 import 'package:expense_tracker/features/calculators/pages/tax_calculator_screen.dart';
@@ -6,6 +5,7 @@ import 'package:expense_tracker/features/settings/widgets/settings_group_card.da
 import 'package:expense_tracker/features/settings/widgets/settings_option_row.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CalculatorsGroup extends StatelessWidget {
   const CalculatorsGroup({super.key});
@@ -17,9 +17,7 @@ class CalculatorsGroup extends StatelessWidget {
       children: [
         // EMI Calculator
         SettingsOptionRow(
-          icon: Symbols.calculate_rounded,
-          iconBgColor: const Color(0xFFE6F3EE),
-          iconColor: const Color(0xFF006C49),
+          icon: LucideIcons.calculator,
           title: context.translate('emi_calculator'),
           onTap: () {
             Navigator.push(
@@ -33,9 +31,7 @@ class CalculatorsGroup extends StatelessWidget {
 
         // Interest Calculator
         SettingsOptionRow(
-          icon: Symbols.percent_rounded,
-          iconBgColor: const Color(0xFFF3EFFF),
-          iconColor: const Color(0xFF6A53A1),
+          icon: LucideIcons.percent,
           title: context.translate('interest_calculator'),
           onTap: () {
             Navigator.push(
@@ -49,9 +45,7 @@ class CalculatorsGroup extends StatelessWidget {
 
         // Tax Calculator
         SettingsOptionRow(
-          icon: Symbols.receipt_long_rounded,
-          iconBgColor: const Color(0xFFFDECEC),
-          iconColor: const Color(0xFFD9383A),
+          icon: LucideIcons.receipt,
           title: context.translate('tax_calculator'),
           onTap: () {
             Navigator.push(

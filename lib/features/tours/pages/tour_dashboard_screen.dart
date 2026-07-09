@@ -20,6 +20,7 @@ import 'package:expense_tracker/features/tours/widgets/tour_member_required_dial
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
 import 'package:expense_tracker/features/tours/widgets/invite_code_card.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourDashboardScreen extends StatefulWidget {
   final String tourId;
@@ -175,7 +176,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 borderRadius: BorderRadius.circular(AppSpacing.r10),
               ),
               child: const Icon(
-                Icons.person_add_alt_rounded,
+                LucideIcons.userPlus,
                 size: 20,
                 color: AppColors.activeGreen,
               ),
@@ -194,7 +195,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 borderRadius: BorderRadius.circular(AppSpacing.r10),
               ),
               child: const Icon(
-                Icons.ios_share_rounded,
+                LucideIcons.share,
                 size: 20,
                 color: AppColors.activeGreen,
               ),
@@ -285,7 +286,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           backgroundColor: tour.isCompleted
               ? AppColors.activeGreen.withValues(alpha: 0.35)
               : AppColors.activeGreen,
-          icon: Icon(Icons.add_rounded,
+          icon: Icon(LucideIcons.plus,
               color: AppColors.white.withValues(alpha: tour.isCompleted ? 0.5 : 1),
               size: 20),
           label: Text(

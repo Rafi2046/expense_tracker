@@ -1,10 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 String _getInitials(String name) {
   if (name.trim().isEmpty) return '?';
@@ -140,7 +140,7 @@ class PartySelectorSheet extends StatelessWidget {
                         )
                       : null,
                   trailing: isSelected
-                      ? Icon(Symbols.check_circle, color: accentColor)
+                      ? Icon(LucideIcons.checkCircle, color: accentColor)
                       : null,
                   onTap: () => onSelect(name),
                 );

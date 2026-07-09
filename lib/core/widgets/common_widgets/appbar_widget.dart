@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/privacy_provider.dart';
 import 'package:expense_tracker/core/providers/session_provider.dart';
@@ -11,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class HomepageAppbarWidget extends StatelessWidget
     implements PreferredSizeWidget {
@@ -82,7 +82,7 @@ class HomepageAppbarWidget extends StatelessWidget
                     ),
                     const SizedBox(width: 4),
                     Icon(
-                      Symbols.keyboard_arrow_down,
+                      LucideIcons.chevronDown,
                       color: theme.colorScheme.onSurface,
                       size: 20,
                     ),
@@ -100,7 +100,7 @@ class HomepageAppbarWidget extends StatelessWidget
                   context.read<PrivacyProvider>().toggle();
                 },
                 icon: Icon(
-                  isMasked ? Symbols.visibility_off : Symbols.visibility,
+                  isMasked ? LucideIcons.eyeOff : LucideIcons.eye,
                   color: AppColors.notificationIcon,
                   size: 26,
                 ),
@@ -108,7 +108,7 @@ class HomepageAppbarWidget extends StatelessWidget
               IconButton(
                 onPressed: notificationOnTap,
                 icon: const Icon(
-                  Symbols.notifications_none,
+                  LucideIcons.bellOff,
                   color: AppColors.notificationIcon,
                   size: 26,
                 ),

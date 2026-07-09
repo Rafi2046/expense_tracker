@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -8,6 +7,7 @@ import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_scre
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_page.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -51,66 +51,66 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   List<_OnboardingSlide> _buildSlides() {
     return [
       _OnboardingSlide(
-        icon: Symbols.account_balance_wallet,
+        icon: LucideIcons.wallet,
         iconColor: AppColors.activeGreen,
         titleKey: 'onboarding_welcome_title',
         subtitleKey: 'onboarding_welcome_subtitle',
         features: [],
       ),
       _OnboardingSlide(
-        icon: Symbols.swap_vert,
+        icon: LucideIcons.arrowUpDown,
         iconColor: const Color(0xFF4CAF50),
         titleKey: 'onboarding_track_title',
         subtitleKey: 'onboarding_track_subtitle',
         features: [
           OnboardingFeatureItem(
-            icon: Symbols.arrow_downward,
+            icon: LucideIcons.arrowDown,
             labelKey: 'onboarding_track_feature_income',
             color: const Color(0xFF4CAF50),
           ),
           OnboardingFeatureItem(
-            icon: Symbols.arrow_upward,
+            icon: LucideIcons.arrowUp,
             labelKey: 'onboarding_track_feature_expense',
             color: AppColors.expensePink,
           ),
           OnboardingFeatureItem(
-            icon: Symbols.bolt,
+            icon: LucideIcons.zap,
             labelKey: 'onboarding_track_feature_quick',
             color: const Color(0xFFFFA726),
           ),
         ],
       ),
       _OnboardingSlide(
-        icon: Symbols.group,
+        icon: LucideIcons.users,
         iconColor: const Color(0xFF42A5F5),
         titleKey: 'onboarding_payment_title',
         subtitleKey: 'onboarding_payment_subtitle',
         features: [
           OnboardingFeatureItem(
-            icon: Symbols.call_received,
+            icon: LucideIcons.arrowDownLeft,
             labelKey: 'onboarding_payment_feature_in',
             color: const Color(0xFF4CAF50),
           ),
           OnboardingFeatureItem(
-            icon: Symbols.call_made,
+            icon: LucideIcons.arrowUpRight,
             labelKey: 'onboarding_payment_feature_out',
             color: AppColors.activeRed,
           ),
         ],
       ),
       _OnboardingSlide(
-        icon: Symbols.bar_chart,
+        icon: LucideIcons.barChart,
         iconColor: const Color(0xFFAB47BC),
         titleKey: 'onboarding_budget_title',
         subtitleKey: 'onboarding_budget_subtitle',
         features: [
           OnboardingFeatureItem(
-            icon: Symbols.savings,
+            icon: LucideIcons.piggyBank,
             labelKey: 'onboarding_budget_feature_budget',
             color: const Color(0xFFFFA726),
           ),
           OnboardingFeatureItem(
-            icon: Symbols.analytics,
+            icon: LucideIcons.barChart,
             labelKey: 'onboarding_budget_feature_reports',
             color: const Color(0xFFAB47BC),
           ),
@@ -315,8 +315,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                               const SizedBox(width: 8),
                               Icon(
                                 isLastPage
-                                    ? Symbols.rocket_launch
-                                    : Symbols.arrow_forward,
+                                    ? LucideIcons.rocket
+                                    : LucideIcons.arrowRight,
                                 size: 18,
                                 color: Colors.white,
                               ),

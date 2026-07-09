@@ -1,6 +1,6 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ShareReportSheet extends StatelessWidget {
   const ShareReportSheet({super.key});
@@ -67,7 +67,7 @@ class ShareReportSheet extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                Symbols.image,
+                LucideIcons.image,
                 color: theme.primaryColor,
                 size: 18,
               ),
@@ -92,7 +92,7 @@ class ShareReportSheet extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                Symbols.picture_as_pdf,
+                LucideIcons.file,
                 color: theme.primaryColor,
                 size: 18,
               ),

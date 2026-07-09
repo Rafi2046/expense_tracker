@@ -7,6 +7,7 @@ import 'package:expense_tracker/features/tours/pages/tour_invoice_screen.dart';
 import 'package:expense_tracker/core/utils/debt_simplifier.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourExportOptionsSheet extends StatelessWidget {
   final String tourId;
@@ -77,7 +78,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 _ExportOptionTile(
-                  icon: Icons.image_rounded,
+                  icon: LucideIcons.image,
                   title: 'Share Balances Image',
                   subtitle: 'A snapshot showing who owes whom',
                   gradientColors: const [Color(0xFF059669), Color(0xFF0F766E)],
@@ -88,7 +89,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 _ExportOptionTile(
-                  icon: Icons.description_rounded,
+                  icon: LucideIcons.fileText,
                   title: 'View Detailed Invoice',
                   subtitle: 'Full report with category breakdown & ledger table',
                   gradientColors: const [Color(0xFF2563EB), Color(0xFF1D4ED8)],
@@ -103,7 +104,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 _ExportOptionTile(
-                  icon: Icons.picture_as_pdf_rounded,
+                  icon: LucideIcons.file,
                   title: 'Download Detailed Invoice (PDF)',
                   subtitle: 'Export as PDF file to share or print',
                   gradientColors: const [Color(0xFFDC2626), Color(0xFFB91C1C)],
@@ -198,7 +199,7 @@ class _ExportOptionTile extends StatelessWidget {
                 ),
               ),
               Icon(
-                Icons.chevron_right_rounded,
+                LucideIcons.chevronRight,
                 color: isDark ? const Color(0xFF4B5563) : const Color(0xFF9CA3AF),
                 size: 20,
               ),

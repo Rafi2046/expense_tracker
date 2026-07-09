@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -7,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TransactionsMonthSelector extends StatefulWidget {
   const TransactionsMonthSelector({super.key});
@@ -111,7 +111,7 @@ class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
                       ),
                       if (isSelected)
                         Icon(
-                          Symbols.check_circle_rounded,
+                          LucideIcons.checkCircle,
                           color: accentColor,
                           size: 18,
                         ),
@@ -167,7 +167,7 @@ class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            Symbols.close,
+                            LucideIcons.x,
                             size: 18,
                             color: isDarkSheet ? Colors.white70 : Colors.grey.shade600,
                           ),
@@ -178,11 +178,11 @@ class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
                   const SizedBox(height: 16),
 
                   // Options list
-                  buildSortItem(context.translate('sort_latest'), TransactionSortOption.latest, Symbols.calendar_today_rounded),
+                  buildSortItem(context.translate('sort_latest'), TransactionSortOption.latest, LucideIcons.calendar),
                   const SizedBox(height: 8),
-                  buildSortItem(context.translate('sort_amount_high_low'), TransactionSortOption.amountHighToLow, Symbols.trending_down_rounded),
+                  buildSortItem(context.translate('sort_amount_high_low'), TransactionSortOption.amountHighToLow, LucideIcons.trendingDown),
                   const SizedBox(height: 8),
-                  buildSortItem(context.translate('sort_amount_low_high'), TransactionSortOption.amountLowToHigh, Symbols.trending_up_rounded),
+                  buildSortItem(context.translate('sort_amount_low_high'), TransactionSortOption.amountLowToHigh, LucideIcons.trendingUp),
                   const SizedBox(height: 8),
                 ],
               ),
@@ -315,7 +315,7 @@ class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
             ],
           ),
           child: IconButton(
-            icon: const Icon(Symbols.tune_rounded, size: 18),
+            icon: Icon(LucideIcons.slidersHorizontal, size: 18),
             color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : const Color(0xFF31394D),
             onPressed: () => _showSortBottomSheet(context),
           ),

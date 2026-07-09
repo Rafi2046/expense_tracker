@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +6,7 @@ import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TransferDialog extends StatefulWidget {
   final String? initialFromAccount;
@@ -79,7 +79,7 @@ class _TransferDialogState extends State<TransferDialog> {
                   },
                 ),
                 const Icon(
-                  Symbols.arrow_forward_rounded,
+                  LucideIcons.arrowRight,
                   color: Colors.grey,
                   size: 18,
                 ),

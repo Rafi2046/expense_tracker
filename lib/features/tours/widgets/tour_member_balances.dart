@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourMemberBalances extends StatelessWidget {
   final List<TourParticipant> participants;
@@ -121,7 +122,7 @@ class TourMemberBalances extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.handshake_outlined,
+                          LucideIcons.handshake,
                           size: 16,
                           color: Color(0xFF10B981),
                         ),

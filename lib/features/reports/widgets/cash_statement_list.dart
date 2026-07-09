@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +6,7 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CashStatementList extends StatelessWidget {
   final bool isMasked;
@@ -26,7 +26,7 @@ class CashStatementList extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 40.0),
           child: Column(
             children: [
-              Icon(Symbols.wallet_rounded, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
+              Icon(LucideIcons.wallet, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
               const SizedBox(height: 12),
               Text(
                 'No cash transactions found',

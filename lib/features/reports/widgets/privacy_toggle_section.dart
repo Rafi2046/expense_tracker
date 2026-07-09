@@ -1,8 +1,8 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PrivacyToggleSection extends StatelessWidget {
   final bool isMasked;
@@ -40,7 +40,7 @@ class PrivacyToggleSection extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
-              isMasked ? Symbols.lock_rounded : Symbols.lock_open_rounded,
+              isMasked ? LucideIcons.lock : LucideIcons.lockOpen,
               size: 16,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
             ),
@@ -69,7 +69,7 @@ class PrivacyToggleSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
-                isMasked ? Symbols.visibility_off : Symbols.visibility,
+                isMasked ? LucideIcons.eyeOff : LucideIcons.eye,
                 size: 20,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),

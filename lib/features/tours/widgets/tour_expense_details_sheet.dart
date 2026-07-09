@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourExpenseDetailsSheet extends StatelessWidget {
   final TourExpense expense;
@@ -167,7 +168,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                     color: isDark ? const Color(0xFF1E1E2E) : const Color(0xFFF8F9FA),
                     child: Row(
                       children: [
-                        Icon(Icons.image_not_supported_outlined, color: Colors.grey.shade400),
+                        Icon(LucideIcons.imageOff, color: Colors.grey.shade400),
                         const SizedBox(width: 12),
                         Text(
                           'Receipt image path not found',
@@ -191,7 +192,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 12),
                     child: ElevatedButton.icon(
                       onPressed: onEdit,
-                      icon: const Icon(Icons.edit_outlined, color: Colors.white, size: 18),
+                      icon: Icon(LucideIcons.edit, color: Colors.white, size: 18),
                       label: Text(
                         'Edit Expense',
                         style: AppTextStyles.bodyBold.copyWith(color: Colors.white),
@@ -210,7 +211,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                 if (showDelete)
                   ElevatedButton.icon(
                     onPressed: onDelete,
-                  icon: const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 18),
+                  icon: Icon(LucideIcons.trash, color: Colors.white, size: 18),
                   label: Text(
                     'Delete Expense',
                     style: AppTextStyles.bodyBold.copyWith(color: Colors.white),

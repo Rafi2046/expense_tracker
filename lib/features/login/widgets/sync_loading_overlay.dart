@@ -9,6 +9,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SyncLoadingOverlay extends StatefulWidget {
   final SyncService syncService;
@@ -95,7 +96,7 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (!_hasError)
-                  Icon(Icons.cloud_sync, size: 80, color: Colors.greenAccent)
+                  Icon(LucideIcons.cloud, size: 80, color: Colors.greenAccent)
                     .animate(onPlay: (controller) => controller.repeat())
                     .shimmer(duration: 1200.ms, color: Colors.white)
                     .scaleXY(end: 1.1, duration: 600.ms)
@@ -103,7 +104,7 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
                     .scaleXY(end: 1.0 / 1.1)
                 else
                   Icon(
-                    Icons.cloud_off_rounded,
+                    LucideIcons.cloudOff,
                     size: 64,
                     color: const Color(0xFFE53935),
                   ),

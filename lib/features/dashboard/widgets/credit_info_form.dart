@@ -1,8 +1,8 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CreditInfoForm extends StatelessWidget {
   final TextEditingController balanceController;
@@ -100,7 +100,7 @@ class CreditInfoForm extends StatelessWidget {
                   filled: true,
                   fillColor: theme.cardColor,
                   suffixIcon: Icon(
-                    Symbols.calendar_month_rounded,
+                    LucideIcons.calendar,
                     color: isDark ? Colors.white38 : Colors.grey.shade400,
                     size: 18,
                   ),

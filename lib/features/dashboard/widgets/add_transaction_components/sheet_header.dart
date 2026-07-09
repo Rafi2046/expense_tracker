@@ -1,7 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SheetHeader extends StatelessWidget {
   final bool isEditing;
@@ -55,7 +55,7 @@ class SheetHeader extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Symbols.close,
+                  LucideIcons.x,
                   size: 20,
                   color: isDark ? Colors.white60 : Colors.grey.shade600,
                 ),

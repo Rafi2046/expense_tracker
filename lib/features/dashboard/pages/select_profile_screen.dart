@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/premium_upgrade_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_info_banner.dart';
@@ -9,6 +8,7 @@ import 'package:expense_tracker/features/dashboard/pages/create_profile_name_scr
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SelectProfileScreen extends StatelessWidget {
   const SelectProfileScreen({super.key});
@@ -23,7 +23,7 @@ class SelectProfileScreen extends StatelessWidget {
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.iconTheme.color),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.iconTheme.color),
           onPressed: () => Navigator.pop(context),
         ),
         backgroundColor: theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface,
@@ -48,7 +48,7 @@ class SelectProfileScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               ProfileTypeCard(
-                icon: Symbols.storefront,
+                icon: LucideIcons.store,
                 title: 'Business Management',
                 subtitle: 'Manage your business accounting and inventory easily.',
                 isSelected: false,
@@ -58,7 +58,7 @@ class SelectProfileScreen extends StatelessWidget {
               const SizedBox(height: 14),
 
               ProfileTypeCard(
-                icon: Symbols.person,
+                icon: LucideIcons.user,
                 title: 'Personal Finance',
                 subtitle: 'Track your expenses and maintain your credits with friends.',
                 isSelected: !isBusiness,

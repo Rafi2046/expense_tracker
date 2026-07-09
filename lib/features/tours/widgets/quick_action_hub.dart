@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/tours/widgets/join_tour_sheet.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class QuickActionHub extends StatelessWidget {
   final VoidCallback? onCreateNew;
@@ -38,13 +39,13 @@ class QuickActionHub extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               _ActionItem(
-                icon: Icons.add_rounded,
+                icon: LucideIcons.plus,
                 label: 'Create',
                 onTap: () => onCreateNew?.call(),
               ),
               _divider(),
               _ActionItem(
-                icon: Icons.qr_code_scanner_rounded,
+                icon: LucideIcons.qrCode,
                 label: 'Join',
                 onTap: () {
                   if (onJoinTour != null) {
@@ -56,7 +57,7 @@ class QuickActionHub extends StatelessWidget {
               ),
               _divider(),
               _ActionItem(
-                icon: Icons.grid_view_rounded,
+                icon: LucideIcons.grid,
                 label: 'View All',
                 onTap: () => onViewAll?.call(),
               ),

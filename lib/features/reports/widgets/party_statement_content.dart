@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
@@ -11,6 +10,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/model/party_statement_entry.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PartyStatementContent extends StatelessWidget {
   final bool isMasked;
@@ -63,7 +63,7 @@ class PartyStatementContent extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Symbols.receipt_long_rounded, color: theme.brightness == Brightness.dark ? Colors.white12 : Colors.grey.shade200, size: 72),
+              Icon(LucideIcons.receipt, color: theme.brightness == Brightness.dark ? Colors.white12 : Colors.grey.shade200, size: 72),
               const SizedBox(height: 16),
               Text(
                 'No Transactions Found',
@@ -203,7 +203,7 @@ class _DummyCardView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(13),
                   ),
                   child: Icon(
-                    e.isInflow ? Symbols.south_west_rounded : Symbols.north_east_rounded,
+                    e.isInflow ? LucideIcons.arrowDownLeft : LucideIcons.arrowUpRight,
                     color: e.isInflow ? AppColors.activeGreen : AppColors.activeRed,
                     size: 20,
                   ),

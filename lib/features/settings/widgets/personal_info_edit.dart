@@ -1,12 +1,11 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PersonalInfoEdit extends StatelessWidget {
   final TextEditingController firstNameController;
@@ -166,7 +165,7 @@ class PersonalInfoEdit extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
-                      Symbols.camera_alt,
+                      LucideIcons.camera,
                       color: Colors.white,
                       size: 16,
                     ),
@@ -187,7 +186,7 @@ class PersonalInfoEdit extends StatelessWidget {
                 label: 'First Name',
                 hintText: 'First Name',
                 controller: firstNameController,
-                prefixIcon: Symbols.person_outline_rounded,
+                prefixIcon: LucideIcons.user,
               ),
             ),
             const SizedBox(width: 16),
@@ -197,7 +196,7 @@ class PersonalInfoEdit extends StatelessWidget {
                 label: 'Last Name',
                 hintText: 'Last Name',
                 controller: lastNameController,
-                prefixIcon: Symbols.person_outline_rounded,
+                prefixIcon: LucideIcons.user,
               ),
             ),
           ],
@@ -210,7 +209,7 @@ class PersonalInfoEdit extends StatelessWidget {
           label: 'Phone Number',
           hintText: 'Enter phone number',
           controller: phoneController,
-          prefixIcon: Symbols.phone,
+          prefixIcon: LucideIcons.phone,
           keyboardType: TextInputType.phone,
         ),
         const SizedBox(height: 20),
@@ -236,7 +235,7 @@ class PersonalInfoEdit extends StatelessWidget {
                 filled: true,
                 fillColor: inputBg,
                 prefixIcon: Icon(
-                  Symbols.cake,
+                  LucideIcons.cake,
                   color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                   size: 18,
                 ),
@@ -256,7 +255,7 @@ class PersonalInfoEdit extends StatelessWidget {
                   borderSide: BorderSide(color: primaryColor, width: 1.5),
                 ),
                 suffixIcon: Icon(
-                  Symbols.calendar_today_rounded,
+                  LucideIcons.calendar,
                   color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
                   size: 18,
                 ),
@@ -281,7 +280,7 @@ class PersonalInfoEdit extends StatelessWidget {
             Row(
               children: ['Male', 'Female'].map((gender) {
                 final isSelected = selectedGender == gender;
-                final genderIcon = gender == 'Male' ? Symbols.male_rounded : Symbols.female_rounded;
+                final genderIcon = gender == 'Male' ? LucideIcons.mars : LucideIcons.venus;
                 final activeColor = gender == 'Male' ? const Color(0xFF1E88E5) : const Color(0xFFD81B60);
 
                 return Expanded(
@@ -336,7 +335,7 @@ class PersonalInfoEdit extends StatelessWidget {
           label: 'Occupation',
           hintText: 'e.g. Software Engineer',
           controller: occupationController,
-          prefixIcon: Symbols.work_outline_rounded,
+          prefixIcon: LucideIcons.briefcase,
         ),
         const SizedBox(height: 20),
 

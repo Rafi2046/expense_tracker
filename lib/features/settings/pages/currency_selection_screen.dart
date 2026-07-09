@@ -1,10 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CurrencySelectionScreen extends StatefulWidget {
   const CurrencySelectionScreen({super.key});
@@ -87,7 +87,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.colorScheme.onSurface, size: 20),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () {
             if (_isSearching) {
               setState(() {
@@ -110,7 +110,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Row(
                   children: [
-                    Icon(Symbols.search, color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF), size: 18),
+                    Icon(LucideIcons.search, color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF), size: 18),
                     const SizedBox(width: 8),
                     Expanded(
                       child: TextField(
@@ -140,7 +140,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(_isSearching ? Symbols.close : Symbols.search, color: theme.colorScheme.onSurface, size: 20),
+            icon: Icon(_isSearching ? LucideIcons.x : LucideIcons.search, color: theme.colorScheme.onSurface, size: 20),
             onPressed: () {
               setState(() {
                 if (_isSearching) {
@@ -218,7 +218,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                           ),
                           const SizedBox(width: 14),
                           Icon(
-                            Symbols.check_circle_rounded,
+                            LucideIcons.checkCircle,
                             color: activeGreenColor,
                             size: 22,
                           ),
@@ -309,7 +309,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                             if (isCurrent) ...[
                               const SizedBox(width: 14),
                               Icon(
-                                Symbols.check_circle_rounded,
+                                LucideIcons.checkCircle,
                                 color: activeGreenColor,
                                 size: 22,
                               ),

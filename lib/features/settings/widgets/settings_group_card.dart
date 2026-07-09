@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
@@ -45,9 +44,9 @@ class SettingsGroupCard extends StatelessWidget {
           child: Text(
             title.toUpperCase(),
             style: AppTextStyles.caption.copyWith(
-              fontSize: AppFontSizes.size10,
+              fontSize: AppFontSizes.size12,
               fontWeight: FontWeight.w700,
-              color: isDark ? const Color(0xFFB39DDB) : const Color(0xFF6A53A1),
+              color: Colors.grey.shade500,
               letterSpacing: 1.2,
             ),
           ),

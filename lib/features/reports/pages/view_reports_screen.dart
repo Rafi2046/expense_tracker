@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:expense_tracker/features/reports/pages/all_transactions_report_screen.dart';
 import 'package:expense_tracker/features/reports/pages/bank_statement_screen.dart';
@@ -10,6 +9,7 @@ import 'package:expense_tracker/features/reports/widgets/report_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ViewReportsScreen extends StatelessWidget {
   const ViewReportsScreen({super.key});
@@ -83,7 +83,7 @@ class ViewReportsScreen extends StatelessWidget {
                       color: Colors.white.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Symbols.bar_chart_rounded, color: Colors.white, size: 22),
+                    child: Icon(LucideIcons.barChart, color: Colors.white, size: 22),
                   ),
                 ],
               ),
@@ -95,25 +95,25 @@ class ViewReportsScreen extends StatelessWidget {
 
             _buildReportCard(context, items: [
               const ReportItem(
-                icon: Symbols.receipt_long_rounded,
+                icon: LucideIcons.receipt,
                 title: 'All Transactions',
                 subtitle: 'Complete transaction history',
                 destination: AllTransactionsReportScreen(),
               ),
               const ReportItem(
-                icon: Symbols.people_alt,
+                icon: LucideIcons.users,
                 title: 'Party Statement',
                 subtitle: 'View per-party ledger',
                 destination: PartyStatementScreen(),
               ),
               const ReportItem(
-                icon: Symbols.account_balance_wallet,
+                icon: LucideIcons.wallet,
                 title: 'Cash In Hand',
                 subtitle: 'Track your cash balance',
                 destination: CashInHandStatementScreen(),
               ),
               const ReportItem(
-                icon: Symbols.account_balance,
+                icon: LucideIcons.landmark,
                 title: 'Bank Statement',
                 subtitle: 'Bank account summary',
                 destination: BankStatementScreen(),
@@ -126,13 +126,13 @@ class ViewReportsScreen extends StatelessWidget {
 
             _buildReportCard(context, items: [
               const ReportItem(
-                icon: Symbols.people_outline_rounded,
+                icon: LucideIcons.users,
                 title: 'Parties Report',
                 subtitle: 'Payable & receivable overview',
                 destination: PartiesReportScreen(),
               ),
               const ReportItem(
-                icon: Symbols.trending_up_rounded,
+                icon: LucideIcons.trendingUp,
                 title: 'Income & Expense',
                 subtitle: 'Profit/loss breakdown',
                 destination: IncomeExpenseReportScreen(),

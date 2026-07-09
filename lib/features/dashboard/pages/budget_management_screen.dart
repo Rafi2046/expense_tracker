@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -11,6 +10,7 @@ import 'package:expense_tracker/features/dashboard/widgets/set_budget_dialog.dar
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BudgetManagementScreen extends StatelessWidget {
   const BudgetManagementScreen({super.key});
@@ -83,7 +83,7 @@ class BudgetManagementScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Icon(
-                        Symbols.receipt_long,
+                        LucideIcons.receipt,
                         size: 48,
                         color: AppColors.textMuted.withValues(alpha: 0.3),
                       ),

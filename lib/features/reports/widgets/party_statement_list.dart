@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -8,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PartyStatementList extends StatelessWidget {
   const PartyStatementList({super.key});
@@ -86,13 +86,13 @@ class PartyStatementList extends StatelessWidget {
             final Color iconFgColor;
 
             if (isInflow) {
-              leadingIcon = Symbols.south_west_rounded;
+              leadingIcon = LucideIcons.arrowDownLeft;
               iconBgColor = isDark
                   ? AppColors.activeGreen.withValues(alpha: 0.14)
                   : const Color(0xFFE6F9F0);
               iconFgColor = AppColors.activeGreen;
             } else {
-              leadingIcon = Symbols.north_east_rounded;
+              leadingIcon = LucideIcons.arrowUpRight;
               iconBgColor = isDark
                   ? AppColors.activeRed.withValues(alpha: 0.14)
                   : const Color(0xFFFDE9EB);

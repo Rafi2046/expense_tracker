@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
@@ -6,11 +5,10 @@ import 'package:expense_tracker/features/settings/widgets/personal_info_view.dar
 import 'package:expense_tracker/features/settings/widgets/personal_info_edit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PersonalInfoScreen extends StatefulWidget {
   const PersonalInfoScreen({super.key});
@@ -228,7 +226,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back_ios_new_rounded, color: theme.colorScheme.onSurface, size: 20),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -239,7 +237,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           if (!_isEditing)
             TextButton.icon(
               onPressed: () => setState(() => _isEditing = true),
-              icon: Icon(Symbols.edit_rounded, size: 16, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1)),
+              icon: Icon(LucideIcons.edit, size: 16, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1)),
               label: Text(
                 'Edit',
               style: AppTextStyles.bodyBold.copyWith(

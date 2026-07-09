@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BudgetManagementHeader extends StatelessWidget {
   final double monthlyExpense;
@@ -58,7 +59,7 @@ class BudgetManagementHeader extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSpacing.br10),
                 ),
                 child: const Icon(
-                  Icons.account_balance_wallet_rounded,
+                  LucideIcons.wallet,
                   color: Colors.white,
                   size: 20,
                 ),
@@ -87,7 +88,7 @@ class BudgetManagementHeader extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.edit, color: Colors.white, size: 14),
+                      Icon(LucideIcons.edit, color: Colors.white, size: 14),
                       const SizedBox(width: AppSpacing.w4),
                       Text(
                         'Edit',
@@ -155,7 +156,7 @@ class BudgetManagementHeader extends StatelessWidget {
               child: TextButton.icon(
                 onPressed: onEditBudget,
                 icon: const Icon(
-                  Icons.add_circle_outline,
+                  LucideIcons.plusCircle,
                   color: Colors.white,
                   size: 18,
                 ),

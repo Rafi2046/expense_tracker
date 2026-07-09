@@ -1,10 +1,8 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SettingsProfileCard extends StatelessWidget {
   final String name;
@@ -26,18 +24,11 @@ class SettingsProfileCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [
-            Color(0xFF32235B), // Deep royal purple
-            Color(0xFF6A53A1), // Soft premium violet
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: const Color(0xFF1E293B),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6A53A1).withValues(alpha: 0.15),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -45,11 +36,11 @@ class SettingsProfileCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Circle Avatar with glowing white ring
+          // Circle Avatar with subtle ring
           Container(
             padding: const EdgeInsets.all(1.5),
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: CircleAvatar(
@@ -103,7 +94,7 @@ class SettingsProfileCard extends StatelessWidget {
             child: IconButton(
               onPressed: onEditTap,
               icon: const Icon(
-                Symbols.edit,
+                LucideIcons.edit,
                 color: Colors.white,
                 size: 16,
               ),

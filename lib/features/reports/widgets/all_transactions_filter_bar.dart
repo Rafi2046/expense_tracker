@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -6,6 +5,7 @@ import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_select_sheet.dart';
 import 'package:expense_tracker/features/reports/widgets/transaction_type_select_sheet.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AllTransactionsFilterBar extends StatefulWidget {
   const AllTransactionsFilterBar({super.key});
@@ -48,7 +48,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
           decoration: InputDecoration(
             hintText: 'Search Transactions...',
             hintStyle: AppTextStyles.partyFormHint.copyWith(fontSize: AppFontSizes.size14, color: isDark ? Colors.white30 : null),
-            prefixIcon: Icon(Symbols.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
+            prefixIcon: Icon(LucideIcons.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
             filled: true,
             fillColor: theme.cardColor,
             contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
@@ -97,7 +97,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                         reportsProvider.selectedType,
                         style: AppTextStyles.reportTileTitle.copyWith(fontSize: AppFontSizes.size11, color: theme.colorScheme.onSurface),
                       ),
-                      Icon(Symbols.arrow_drop_down, color: theme.colorScheme.onSurface),
+                      Icon(LucideIcons.chevronDown, color: theme.colorScheme.onSurface),
                     ],
                   ),
                 ),
@@ -133,7 +133,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                         reportsProvider.selectedPartyName ?? 'Select Party',
                         style: AppTextStyles.reportTileTitle.copyWith(fontSize: AppFontSizes.size11, color: theme.colorScheme.onSurface),
                       ),
-                      Icon(Symbols.arrow_drop_down, color: theme.colorScheme.onSurface),
+                      Icon(LucideIcons.chevronDown, color: theme.colorScheme.onSurface),
                     ],
                   ),
                 ),

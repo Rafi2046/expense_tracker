@@ -1,7 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class InterestFrequencySelector extends StatelessWidget {
   final String value;
@@ -40,7 +40,7 @@ class InterestFrequencySelector extends StatelessWidget {
             underline: Container(),
             elevation: 2,
             dropdownColor: theme.cardColor,
-            icon: Icon(Symbols.keyboard_arrow_down_rounded, color: primaryCalcColor),
+            icon: Icon(LucideIcons.chevronDown, color: primaryCalcColor),
             style: AppTextStyles.calculatorLabel.copyWith(
               fontWeight: FontWeight.bold,
               color: primaryCalcColor,

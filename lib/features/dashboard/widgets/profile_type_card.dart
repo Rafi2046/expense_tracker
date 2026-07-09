@@ -1,7 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ProfileTypeCard extends StatelessWidget {
   final IconData icon;
@@ -87,7 +87,7 @@ class ProfileTypeCard extends StatelessWidget {
               ),
             ),
             if (isSelected)
-              const Icon(Symbols.check_circle, color: Color(0xFF2EBD85), size: 22),
+              Icon(LucideIcons.checkCircle, color: Color(0xFF2EBD85), size: 22),
           ],
         ),
       ),

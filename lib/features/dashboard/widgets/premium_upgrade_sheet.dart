@@ -1,7 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PremiumUpgradeSheet extends StatelessWidget {
   const PremiumUpgradeSheet({super.key});
@@ -70,7 +70,7 @@ class _PremiumHeader extends StatelessWidget {
           child: IconButton(
             onPressed: () => Navigator.pop(context),
             icon: Icon(
-              Symbols.close,
+              LucideIcons.x,
               color: Colors.white.withValues(alpha: 0.6),
               size: 24,
             ),
@@ -95,7 +95,7 @@ class _PremiumHeader extends StatelessWidget {
             ],
           ),
           child: const Icon(
-            Symbols.diamond_rounded,
+            LucideIcons.gem,
             color: Colors.white,
             size: 40,
             weight: 400,
@@ -128,11 +128,11 @@ class _FeatureList extends StatelessWidget {
   const _FeatureList();
 
   static const _features = [
-    (Symbols.group_add_rounded, 'Unlimited Profiles'),
-    (Symbols.analytics_rounded, 'Advanced Analytics & Reports'),
-    (Symbols.description_rounded, 'Export PDF Reports'),
-    (Symbols.cloud_sync_rounded, 'Priority Cloud Sync'),
-    (Symbols.support_agent_rounded, 'Priority Support'),
+    (LucideIcons.users, 'Unlimited Profiles'),
+    (LucideIcons.barChart, 'Advanced Analytics & Reports'),
+    (LucideIcons.fileText, 'Export PDF Reports'),
+    (LucideIcons.cloudSync, 'Priority Cloud Sync'),
+    (LucideIcons.headphones, 'Priority Support'),
   ];
 
   @override
