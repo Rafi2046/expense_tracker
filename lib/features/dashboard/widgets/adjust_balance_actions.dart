@@ -24,7 +24,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
             topRight: Radius.circular(20),
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(ctx).padding.bottom + 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +167,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
             topRight: Radius.circular(20),
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(ctx).padding.bottom + 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
