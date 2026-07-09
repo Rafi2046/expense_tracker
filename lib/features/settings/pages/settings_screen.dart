@@ -163,7 +163,7 @@ class SettingsScreen extends StatelessWidget {
                                 Text(
                                   context.translate('delete_account_subtitle'),
                                   style: AppTextStyles.caption.copyWith(
-                                    fontSize: AppFontSizes.size12,
+                                    fontSize: AppFontSizes.size10,
                                     color: Colors.red.shade300,
                                   ),
                                 ),

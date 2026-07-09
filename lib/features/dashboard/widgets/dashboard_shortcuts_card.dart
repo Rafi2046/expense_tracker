@@ -97,6 +97,10 @@ class DashboardShortcutsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: cardBg,
         borderRadius: BorderRadius.circular(AppSpacing.r8),
+        border: Border.all(
+          color: Theme.of(context).dividerTheme.color ?? AppColors.dividerColor,
+          width: AppSpacing.w1,
+        ),
         boxShadow: [
           BoxShadow(
             color: isDark
