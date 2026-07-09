@@ -12,7 +12,6 @@ class ProfileProvider extends ChangeNotifier {
   late UserProfile _currentProfile;
   bool _isPremium = false;
   bool _isReady = false;
-  bool _isCheckingUser = false;
 
   // Profile Creation Flow State
   String _creationProfileType = 'business'; // 'business' or 'personal'
@@ -61,71 +60,18 @@ class ProfileProvider extends ChangeNotifier {
     'Travel & Tourism',
   ];
 
-  static const String _lastUidKey = 'last_firebase_uid';
-  static const String _migrationKey = 'profile_uid_migration_done';
-
   ProfileProvider({required String initialProfileId})
       : _initialProfileId = initialProfileId {
     _initSync();
     _loadFromDb();
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
-        if (_isReady) {
-          _checkUserChanged(user.uid);
-        }
         final name = (user.displayName != null && user.displayName!.trim().isNotEmpty)
             ? user.displayName!.trim()
             : (user.email != null && user.email!.contains('@') ? user.email!.split('@').first : 'Personal Account');
         syncDefaultProfileName(name);
       }
     });
-  }
-
-  Future<void> _checkUserChanged(String uid) async {
-    if (_isCheckingUser) return;
-    _isCheckingUser = true;
-    try {
-      final migrationDone = SharedPrefsHelper.getBool(_migrationKey) ?? false;
-
-      if (!migrationDone) {
-        final allProfiles = await DatabaseHelper.instance.readAllProfiles();
-        if (allProfiles.any((p) => p['id'] != 'default_profile')) {
-          await _resetProfiles(uid);
-        }
-        await SharedPrefsHelper.setBool(_migrationKey, true);
-      }
-
-      await SharedPrefsHelper.setString(_lastUidKey, uid);
-    } finally {
-      _isCheckingUser = false;
-    }
-  }
-
-  Future<void> _resetProfiles(String uid) async {
-    debugPrint('ProfileProvider: clearing stale profiles for new user ($uid)');
-    final allProfiles = await DatabaseHelper.instance.readAllProfiles();
-    for (final p in allProfiles) {
-      if (p['id'] != 'default_profile') {
-        await DatabaseHelper.instance.deleteProfile(p['id'] as String);
-      }
-    }
-    await SharedPrefsHelper.remove('profiles_backup');
-    _profiles.clear();
-    final user = FirebaseAuth.instance.currentUser;
-    final displayName = (user?.displayName != null && user!.displayName!.trim().isNotEmpty)
-        ? user.displayName!.trim()
-        : (user?.email != null && user!.email!.contains('@') ? user.email!.split('@').first : 'Personal');
-    _profiles.add(UserProfile(id: 'default_profile', name: displayName, type: 'Personal', uid: uid));
-    _currentProfile = _profiles.first;
-    await DatabaseHelper.instance.insertProfile({
-      'id': 'default_profile',
-      'name': displayName,
-      'type': 'Personal',
-      'createdAt': DateTime.now().toIso8601String(),
-      'uid': uid,
-    });
-    await _saveProfilesToPrefs();
-    notifyListeners();
   }
 
   void _initSync() {
@@ -139,10 +85,6 @@ class ProfileProvider extends ChangeNotifier {
     try {
       var currentUser = FirebaseAuth.instance.currentUser;
       currentUser ??= await FirebaseAuth.instance.authStateChanges().first;
-
-      if (currentUser != null) {
-        await _checkUserChanged(currentUser.uid);
-      }
 
       _profiles.clear();
 
