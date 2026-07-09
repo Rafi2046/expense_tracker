@@ -205,7 +205,7 @@ class ReportBottomActions extends StatelessWidget {
               children: [
                 _buildActionItem(
                   context: context,
-                  icon: LucideIcons.download,
+                  icon: LucideIcons.downloadCloud,
                   label: 'Download',
                   onTap: () => _onDownload(context),
                 ),
@@ -217,13 +217,13 @@ class ReportBottomActions extends StatelessWidget {
                 ),
                 _buildActionItem(
                   context: context,
-                  icon: LucideIcons.table,
+                  icon: LucideIcons.fileText,
                   label: 'Excel',
                   onTap: () => _onExcel(context),
                 ),
                 _buildActionItem(
                   context: context,
-                  icon: LucideIcons.share,
+                  icon: LucideIcons.externalLink,
                   label: 'Share',
                   onTap: () => _onShare(context),
                 ),
