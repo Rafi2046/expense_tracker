@@ -15,6 +15,7 @@ class TourListHeader extends StatelessWidget {
   final String initials;
   final int totalTours;
   final int totalBuddies;
+  final VoidCallback? onViewAll;
 
   const TourListHeader({
     super.key,
@@ -23,6 +24,7 @@ class TourListHeader extends StatelessWidget {
     required this.initials,
     this.totalTours = 0,
     this.totalBuddies = 0,
+    this.onViewAll,
   });
 
   ImageProvider? _resolveImage(String? url) {
@@ -71,14 +73,36 @@ class TourListHeader extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.s8),
-                Text(
-                  'Your Tours',
-                  style: GoogleFonts.workSans(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.8,
-                    color: theme.colorScheme.onSurface,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Your Tours',
+                      style: GoogleFonts.workSans(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.8,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                    if (onViewAll != null && totalTours > 0)
+                      TextButton(
+                        onPressed: onViewAll,
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: Text(
+                          'View All',
+                          style: GoogleFonts.workSans(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.activeGreen,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
                 if (totalTours > 0) ...[
                   const SizedBox(height: 4),

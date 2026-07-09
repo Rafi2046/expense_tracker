@@ -13,7 +13,7 @@ import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_list_header.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_list_empty_state.dart';
-import 'package:expense_tracker/features/tours/widgets/quick_action_hub.dart';
+import 'package:expense_tracker/features/tours/widgets/join_tour_sheet.dart';
 
 class TourListScreen extends StatefulWidget {
   const TourListScreen({super.key});
@@ -167,6 +167,125 @@ class _TourListScreenState extends State<TourListScreen> {
     );
   }
 
+  void _showCreateJoinSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        final theme = Theme.of(context);
+        final bottomInset = MediaQuery.of(context).padding.bottom;
+        return Container(
+          decoration: BoxDecoration(
+            color: theme.scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          padding: EdgeInsets.fromLTRB(0, 16, 0, bottomInset + 80),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade400,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.activeGreen.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.add_circle_outline,
+                      color: AppColors.activeGreen, size: 24),
+                ),
+                title: Text(
+                  'Create a New Tour',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _openCreateTourSheet();
+                },
+              ),
+              const SizedBox(height: 4),
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.activeGreen.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.qr_code_scanner_rounded,
+                      color: AppColors.activeGreen, size: 24),
+                ),
+                title: Text(
+                  'Join with Invite Code',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => const JoinTourSheet(),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showViewAllDialog() {
+    final tours = context.read<TourProvider>().tours;
+    final names = tours.map((t) => t.name).toList();
+    if (names.isEmpty) return;
+    final theme = Theme.of(context);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: theme.colorScheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'All Tours (${names.length})',
+          style: TextStyle(color: theme.colorScheme.onSurface),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: names.map((n) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Text(n,
+                style: TextStyle(color: theme.colorScheme.onSurface)),
+          )).toList(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child:
+                const Text('Close', style: TextStyle(color: AppColors.activeGreen)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TourProvider>();
@@ -193,6 +312,20 @@ class _TourListScreenState extends State<TourListScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: tours.isNotEmpty
+          ? Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 4),
+              child: FloatingActionButton(
+                onPressed: _showCreateJoinSheet,
+                backgroundColor: AppColors.activeGreen,
+                foregroundColor: AppColors.white,
+                elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: const Icon(Icons.add_rounded, size: 28),
+              ),
+            )
+          : null,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,6 +336,7 @@ class _TourListScreenState extends State<TourListScreen> {
               initials: initials,
               totalTours: tours.length,
               totalBuddies: tours.fold<int>(0, (sum, t) => sum + (_memberCounts[t.id] ?? 0)),
+              onViewAll: _showViewAllDialog,
             ),
             const SizedBox(height: AppSpacing.s12),
 
@@ -224,41 +358,6 @@ class _TourListScreenState extends State<TourListScreen> {
                     : _buildTourListContent(Theme.of(context), tours),
               ),
             ),
-            QuickActionHub(
-              onCreateNew: _openCreateTourSheet,
-              onViewAll: () {
-                final names = tours.map((t) => t.name).toList();
-                if (names.isEmpty) return;
-                showDialog(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    title: Text(
-                      'All Tours (${names.length})',
-                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-                    ),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: names.map((n) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Text(n, style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
-                      )).toList(),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(ctx),
-                        child: const Text('Close', style: TextStyle(color: AppColors.activeGreen)),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-            SizedBox(height: MediaQuery.of(context).padding.bottom + 24),
           ],
         ),
       ),
