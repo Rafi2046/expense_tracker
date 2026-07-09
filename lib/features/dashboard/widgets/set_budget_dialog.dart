@@ -34,13 +34,17 @@ class _SetBudgetDialogState extends State<SetBudgetDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
+
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSpacing.br12),
       ),
       title: Text(
         widget.currentAmount > 0 ? 'Edit Monthly Budget' : 'Set Monthly Budget',
-        style: AppTextStyles.dialogTitle,
+        style: AppTextStyles.dialogTitle.copyWith(color: onSurface),
       ),
       content: Form(
         key: _formKey,
@@ -48,24 +52,25 @@ class _SetBudgetDialogState extends State<SetBudgetDialog> {
           controller: _controller,
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          style: TextStyle(color: onSurface),
           decoration: InputDecoration(
             labelText: 'Budget Amount (${context.currencySymbol})',
             hintText: 'Enter amount',
-            labelStyle: AppTextStyles.textFieldLabel,
-            hintStyle: AppTextStyles.textFieldHint,
+            labelStyle: AppTextStyles.textFieldLabel.copyWith(color: isDark ? Colors.grey.shade400 : null),
+            hintStyle: AppTextStyles.textFieldHint.copyWith(color: isDark ? Colors.grey.shade500 : null),
             prefixText: '${context.currencySymbol} ',
-            prefixStyle: AppTextStyles.calculatorInputText,
+            prefixStyle: AppTextStyles.calculatorInputText.copyWith(color: onSurface),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSpacing.br8),
-              borderSide: BorderSide(color: AppColors.borderColor),
+              borderSide: BorderSide(color: isDark ? Colors.grey.shade600 : AppColors.borderColor),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSpacing.br8),
-              borderSide: BorderSide(color: AppColors.borderColor.withValues(alpha: 0.5)),
+              borderSide: BorderSide(color: (isDark ? Colors.grey.shade600 : AppColors.borderColor).withValues(alpha: 0.5)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSpacing.br8),
-              borderSide: BorderSide(color: AppColors.buttonColor, width: 1.5),
+              borderSide: BorderSide(color: isDark ? const Color(0xFF8E75C8) : AppColors.buttonColor, width: 1.5),
             ),
           ),
           validator: (value) {
@@ -83,7 +88,7 @@ class _SetBudgetDialogState extends State<SetBudgetDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text('Cancel', style: AppTextStyles.dialogCloseButton.copyWith(color: AppColors.textMuted)),
+          child: Text('Cancel', style: AppTextStyles.dialogCloseButton.copyWith(color: isDark ? Colors.grey.shade400 : AppColors.textMuted)),
         ),
         TextButton(
           onPressed: () {
