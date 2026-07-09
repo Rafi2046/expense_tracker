@@ -85,7 +85,7 @@ class LedgerTransactionList extends StatelessWidget {
     }
 
     final List<Widget> listItems = [];
-    final _seenKeys = <String>{};
+    final seenKeys = <String>{};
     grouped.forEach((dateHeader, txs) {
       listItems.add(
         Padding(
@@ -102,7 +102,7 @@ class LedgerTransactionList extends StatelessWidget {
       );
       
       for (var tx in txs) {
-        if (!_seenKeys.add(tx.id)) continue;
+        if (!seenKeys.add(tx.id)) continue;
         listItems.add(
           Dismissible(
             key: ValueKey(tx.id),

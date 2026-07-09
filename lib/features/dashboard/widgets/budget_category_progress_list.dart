@@ -70,7 +70,7 @@ class BudgetCategoryProgressList extends StatelessWidget {
             children: [
               Text('CATEGORY BREAKDOWN', style: AppTextStyles.cardTitle),
               Text(
-                '${currency} ${_formatAmount(totalExpense)}',
+                '$currency ${_formatAmount(totalExpense)}',
                 style: AppTextStyles.cardStatusText.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -93,10 +93,15 @@ class BudgetCategoryProgressList extends StatelessWidget {
   }
 
   String _formatAmount(double amount) {
-    if (amount >= 10000000)
+    if (amount >= 10000000) {
       return '${(amount / 10000000).toStringAsFixed(1)}Cr';
-    if (amount >= 100000) return '${(amount / 100000).toStringAsFixed(1)}L';
-    if (amount >= 1000) return '${(amount / 1000).toStringAsFixed(1)}k';
+    }
+    if (amount >= 100000) {
+      return '${(amount / 100000).toStringAsFixed(1)}L';
+    }
+    if (amount >= 1000) {
+      return '${(amount / 1000).toStringAsFixed(1)}k';
+    }
     return amount.toStringAsFixed(0);
   }
 }
@@ -198,7 +203,7 @@ class _CategoryProgressRow extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                '${currency} ${_formatAmount(item.amount)}',
+                                '$currency ${_formatAmount(item.amount)}',
                                 style: AppTextStyles.reportTileTitle.copyWith(
                                   fontSize: AppFontSizes.size16,
                                   fontWeight: FontWeight.w700,

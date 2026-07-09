@@ -126,7 +126,7 @@ class ProfileProvider extends ChangeNotifier {
           'name': name,
           'type': 'Personal',
           'createdAt': DateTime.now().toIso8601String(),
-          if (currentUid != null) 'uid': currentUid,
+          'uid': ?currentUid,
         });
         await _profileDoc('default_profile')?.set({
           'name': name,
@@ -297,7 +297,7 @@ class ProfileProvider extends ChangeNotifier {
         'name': newProfile.name,
         'type': newProfile.type,
         'createdAt': DateTime.now().toIso8601String(),
-        if (currentUid != null) 'uid': currentUid,
+        'uid': ?currentUid,
       });
 
       final verify = await DatabaseHelper.instance.readAllProfiles();

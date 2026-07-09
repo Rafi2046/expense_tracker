@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
@@ -13,7 +12,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+
 
 class AddExpenseSheet extends StatefulWidget {
   final String tourId;
@@ -498,6 +497,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       receiptPath: await _persistReceipt(_receiptImage?.path),
     );
 
+    if (!mounted) return;
     final provider = context.read<TourProvider>();
 
     Map<String, double>? customValues;
@@ -1069,7 +1069,6 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     LucideIcons.fileText: 'document description file report text',
     LucideIcons.arrowLeftRight: 'swap transfer exchange switch change',
     LucideIcons.camera: 'camera photo image picture photography',
-    LucideIcons.image: 'gallery photo image picture library album',
     LucideIcons.info: 'info information help details notice',
     LucideIcons.trash: 'delete remove trash discard',
     LucideIcons.plus: 'add new create plus additional',
@@ -1085,9 +1084,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     LucideIcons.chevronDown: 'keyboard arrow down dropdown expand',
     LucideIcons.alertCircle: 'error warning alert problem issue',
     LucideIcons.minusCircle: 'remove circle delete clear cancel',
-    LucideIcons.arrowLeft: 'arrow back left previous return',
+    LucideIcons.arrowLeft: 'arrow back left previous return ios',
     LucideIcons.chevronRight: 'chevron right next forward continue',
-    LucideIcons.arrowLeft: 'arrow back left ios previous',
     LucideIcons.home: 'home house rent lodging accommodation',
     LucideIcons.pawPrint: 'pets animal dog cat pet veterinary',
     LucideIcons.heartPulse: 'health medical medicine hospital doctor pharmacy',

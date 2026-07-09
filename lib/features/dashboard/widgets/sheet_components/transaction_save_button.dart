@@ -46,8 +46,6 @@ class _TransactionSaveButtonState extends State<TransactionSaveButton>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     // Build gradient from the themeColor
     final gradientStart = widget.themeColor;
     final gradientEnd = HSLColor.fromColor(widget.themeColor)

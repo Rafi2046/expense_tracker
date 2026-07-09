@@ -5,7 +5,6 @@ import 'package:expense_tracker/features/tours/utils/tour_export_service.dart';
 import 'package:expense_tracker/features/tours/utils/tour_invoice_generator.dart';
 import 'package:expense_tracker/features/tours/pages/tour_invoice_screen.dart';
 import 'package:expense_tracker/core/utils/debt_simplifier.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 

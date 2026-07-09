@@ -20,7 +20,6 @@ class TransactionSheetHeader extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final accentColor = isIncome ? theme.primaryColor : const Color(0xFFDC3545);
     final title = isEditing
         ? (isIncome ? 'Edit Income' : 'Edit Expense')
         : (isIncome ? 'Add Income' : 'Add Expense');

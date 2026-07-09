@@ -16,6 +16,18 @@ Build premium Tour/Group Bill Splitting feature and complete all account/profile
 - Profile deletion: cascade delete all associated data, auto-switch to default
 
 ## Done
+- **All analyzer warnings eliminated**: Fixed unused imports (22 files, 27 lines), unused variables (`isDark` in `_SettlementDetailSheet`, `accentColor` in `TransactionSheetHeader`, `isDark` in `TransactionSaveButton`), equal map keys (2 duplicates in `add_expense_sheet.dart`), all `use_build_context_synchronously` (14 issues across 6 files), `curly_braces_in_flow_control_structures` (2), `unnecessary_brace_in_string_interps` (2), `no_leading_underscores_for_local_identifiers` (1), `unnecessary_underscores` (1), `file_names` (1), `avoid_types_as_parameter_names` (3). Zero errors, zero warnings — only 2 info-level lints remain (`use_null_aware_elements` in `profile_provider.dart` — cannot fix without introducing actual warnings).
+- **Settings danger zone cards restored**: Card containers with `BorderRadius.circular(14)`, red border (`Colors.red.shade200`, width 1.2), soft red background (alpha 0.05), subtitle at `AppFontSizes.size10`.
+- **Notebook search bar dark mode fix**: `fillColor` → `Colors.grey.shade800`, hint/icon → `grey.shade400`.
+- **Bangla/Hindi/Urdu translations added**: `delete_account`, `delete_account_subtitle`, plus 15 tour-related keys.
+- **Dashboard stat card overflow fixed**: Wrapped `FittedBox` in `Flexible` to prevent 1px bottom overflow in dark mode.
+- **Tours screen translations wired**: `context.translate()` across `tour_list_screen`, `tour_list_header`, `tour_card`; merged 15 translation keys into existing map.
+- **Privacy policy screen icons upgraded**: Premium Lucide variants (`shieldCheck`, `shieldOff`, `scanFace`) + `onTap` with snackbar via `InkWell` (replaced long-press dots menu).
+- **Eye→shield icon migration**: Changed `LucideIcons.eye/eyeOff` → `LucideIcons.shield/shieldOff` across all 10 files (dashboard, tour dashboard, total balance, settings, etc.).
+- **Dashboard notification icon**: `LucideIcons.bellOff` → `LucideIcons.megaphone`.
+- **Amount masking**: Replaced bullet dots with `***` (keeps currency symbol prefix, e.g., `$ ***`).
+- **Quick Actions card**: Added `Border.all` color matching other dashboard stat cards for dark mode visibility.
+- **Report bottom actions icons**: Updated to `downloadCloud`, `printer`, `fileText`, `externalLink`.
 - **AddEditDebtSheet fully fixed**: Removed `useRootNavigator: false` (crashed on system back), removed `PopScope`/`AnimatedPadding` (caused more crashes), restructured to outer `Padding(bottom: viewInsets)` + `ConstrainedBox` + `Container(clipBehavior, decoration)` + `Form`, inner padding `EdgeInsets.fromLTRB(20, 20, 20, bottomInset + 20)`, `maxHeight = (screenHeight - viewInsets) * 0.85`. Save button height set to 42.
 - **AddTransactionSheet fully fixed**: Changed from outer `Padding(bottom: keyboardPadding)` approach to `DraggableScrollableSheet(initialChildSize: 0.85, maxChildSize: 0.85, expand: true)` in `show()` method. Build method simplified: `Container(clipBehavior, decoration)` → `Form` → `Column` → `Expanded` → `SingleChildScrollView`. Removed all `Flexible`/`ConstrainedBox`/custom maxHeight from build. Save button wrapped in `Padding(fromLTRB(24, 0, 24, bottomInset))` — consistent horizontal padding with rest of content. Save button height set to 45.
 - **edit_shortcuts_sheet bottom padding fixed**: Changed `padding.only(bottom: viewInsets + 16)` to `padding.fromLTRB(16, 16, 16, viewInsets + padding.bottom + 16)` — buttons no longer behind bottom nav.

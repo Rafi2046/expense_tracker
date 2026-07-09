@@ -7,7 +7,6 @@ import 'package:expense_tracker/features/dashboard/widgets/account_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/overall_balance_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/adjust_balance_actions.dart';
 import 'account_details_screen.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TotalBalanceScreen extends StatefulWidget {

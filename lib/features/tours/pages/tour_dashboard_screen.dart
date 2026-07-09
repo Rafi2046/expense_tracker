@@ -19,7 +19,6 @@ import 'package:expense_tracker/features/tours/widgets/tour_export_options_sheet
 import 'package:expense_tracker/features/tours/widgets/tour_member_required_dialog.dart';
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
 import 'package:expense_tracker/features/tours/widgets/invite_code_card.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourDashboardScreen extends StatefulWidget {
@@ -468,7 +467,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
             onPressed: () async {
               Navigator.pop(ctx);
               final success = await context.read<TourProvider>().deleteExpense(expenseId);
-              if (mounted) {
+              if (context.mounted) {
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
                 if (success) {
                   scaffoldMessenger.showSnackBar(
