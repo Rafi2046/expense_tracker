@@ -100,7 +100,7 @@ class HomepageAppbarWidget extends StatelessWidget
                   context.read<PrivacyProvider>().toggle();
                 },
                 icon: Icon(
-                  isMasked ? LucideIcons.eyeOff : LucideIcons.eye,
+                  isMasked ? LucideIcons.shield : LucideIcons.shieldOff,
                   color: AppColors.notificationIcon,
                   size: 26,
                 ),
@@ -108,7 +108,7 @@ class HomepageAppbarWidget extends StatelessWidget
               IconButton(
                 onPressed: notificationOnTap,
                 icon: const Icon(
-                  LucideIcons.bellOff,
+                  LucideIcons.bell,
                   color: AppColors.notificationIcon,
                   size: 26,
                 ),

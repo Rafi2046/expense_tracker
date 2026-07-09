@@ -52,7 +52,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
               setState(() => _localMasked = !_localMasked);
             },
             icon: Icon(
-              _localMasked ? LucideIcons.eyeOff : LucideIcons.eye,
+              _localMasked ? LucideIcons.shield : LucideIcons.shieldOff,
               color: AppColors.notificationIcon,
               size: 26,
             ),

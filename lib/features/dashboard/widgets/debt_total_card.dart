@@ -93,7 +93,7 @@ class DebtTotalCard extends StatelessWidget {
                         onToggleMask();
                       },
                       child: Icon(
-                        isMasked ? LucideIcons.eyeOff : LucideIcons.eye,
+                        isMasked ? LucideIcons.shield : LucideIcons.shieldOff,
                         size: 22,
                         color: Colors.white60,
                       ),

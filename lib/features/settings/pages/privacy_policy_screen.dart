@@ -54,7 +54,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(22),
                     ),
                     child: const Icon(
-                      LucideIcons.shield,
+                      LucideIcons.shieldCheck,
                       color: Colors.white,
                       size: 40,
                     ),
@@ -79,21 +79,24 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 28),
                 _PrivacyTile(
-                  icon: LucideIcons.smartphone,
+                  icon: LucideIcons.shieldCheck,
                   title: 'Data Stays with You',
                   subtitle: 'Your financial data is processed securely on your device. Nothing is shared without your explicit consent.',
+                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('All data is stored locally on your device.'))),
                 ),
                 const SizedBox(height: 10),
                 _PrivacyTile(
-                  icon: LucideIcons.ban,
+                  icon: LucideIcons.shieldOff,
                   title: 'No Data Selling',
                   subtitle: 'We never sell, rent, or trade your personal information to third parties. Your trust matters.',
+                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Your data is yours — we never share it.'))),
                 ),
                 const SizedBox(height: 10),
                 _PrivacyTile(
-                  icon: LucideIcons.fingerprint,
+                  icon: LucideIcons.scanFace,
                   title: 'Biometric Security',
                   subtitle: 'Protected by your device\'s native secure enclave. Your biometric data never leaves your phone.',
+                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Biometric data stays on your device — never uploaded.'))),
                 ),
                 const SizedBox(height: 24),
               ],
@@ -141,64 +144,73 @@ class _PrivacyTile extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
+  final VoidCallback? onTap;
 
   const _PrivacyTile({
     required this.icon,
     required this.title,
     required this.subtitle,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: theme.brightness == Brightness.dark
-              ? const Color(0xFF2D2D2D)
-              : const Color(0xFFF1F1F1),
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF6A53A1), Color(0xFF32235B)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.cardColor,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: theme.brightness == Brightness.dark
+                  ? const Color(0xFF2D2D2D)
+                  : const Color(0xFFF1F1F1),
             ),
-            child: Icon(icon, color: Colors.white, size: 22),
           ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    height: 1.45,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF6A53A1), Color(0xFF32235B)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ],
-            ),
+                child: Icon(icon, color: Colors.white, size: 22),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                    style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        height: 1.45,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

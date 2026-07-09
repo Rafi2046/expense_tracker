@@ -169,7 +169,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              _localMasked ? LucideIcons.eyeOff : LucideIcons.eye,
+              _localMasked ? LucideIcons.shield : LucideIcons.shieldOff,
               size: 20,
             ),
             onPressed: () {

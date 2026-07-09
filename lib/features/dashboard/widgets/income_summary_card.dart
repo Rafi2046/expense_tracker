@@ -54,7 +54,7 @@ class IncomeSummaryCard extends StatelessWidget {
                   onToggleMask();
                 },
                 child: Icon(
-                  isMasked ? LucideIcons.eyeOff : LucideIcons.eye,
+                  isMasked ? LucideIcons.shield : LucideIcons.shieldOff,
                   size: 18,
                   color: isDark ? Colors.white38 : AppColors.textMuted,
                 ),

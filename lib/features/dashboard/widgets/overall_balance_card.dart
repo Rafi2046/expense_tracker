@@ -57,7 +57,7 @@ class OverallBalanceCard extends StatelessWidget {
                   onToggleMask();
                 },
                 child: Icon(
-                  isMasked ? LucideIcons.eyeOff : LucideIcons.eye,
+                  isMasked ? LucideIcons.shield : LucideIcons.shieldOff,
                   size: 18,
                   color: Colors.white38,
                 ),

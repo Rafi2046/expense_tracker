@@ -69,7 +69,7 @@ class PrivacyToggleSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
-                isMasked ? LucideIcons.eyeOff : LucideIcons.eye,
+                isMasked ? LucideIcons.shield : LucideIcons.shieldOff,
                 size: 20,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),

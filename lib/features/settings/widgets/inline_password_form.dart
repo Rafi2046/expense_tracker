@@ -143,7 +143,7 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
               suffixIcon: IconButton(
                 onPressed: onToggleObscure,
                 icon: Icon(
-                  obscureText ? LucideIcons.eyeOff : LucideIcons.eye,
+                  obscureText ? LucideIcons.shield : LucideIcons.shieldOff,
                   color: theme.colorScheme.onSurfaceVariant,
                   size: 20,
                 ),
