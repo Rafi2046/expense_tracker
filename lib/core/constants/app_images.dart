@@ -3,7 +3,6 @@ class AppImages {
 
   static const String splashLogo = 'assets/app_logo/splash_logo.png';
   static const String googleLogo = 'assets/app_logo/google_icon.webp';
-  static const String facebookLogo = 'assets/app_logo/facebook.png';
   static const String appleLogo = 'assets/app_logo/apple.webp';
   static const String forgetPassLogo = 'assets/app_logo/forget_password_img.png';
   static const String otpLogo = 'assets/app_logo/forgot_password_logo.png';

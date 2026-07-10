@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
@@ -108,6 +109,26 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     }
   }
 
+  Future<void> _handleAppleSignUp() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final userCredential = await _authService.signInWithApple();
+
+      if (userCredential != null && mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+              (route) => false,
+        );
+      }
+    } catch (e) {
+      _showErrorSnackBar(e.toString());
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   // Helper method for errors
   void _showErrorSnackBar(String message) {
     if (!mounted) return;
@@ -118,8 +139,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: LayoutBuilder(
@@ -142,13 +165,17 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       Text(
                         'Create Account',
                         textAlign: TextAlign.center,
-                        style: AppTextStyles.loginTitle,
+                        style: AppTextStyles.loginTitle.copyWith(
+                          color: isDark ? Colors.white : null,
+                        ),
                       ),
 
                       Text(
                         'Join us to manage your finances smarter.',
                         textAlign: TextAlign.center,
-                        style: AppTextStyles.loginSubTitle,
+                        style: AppTextStyles.loginSubTitle.copyWith(
+                          color: isDark ? Colors.grey.shade400 : null,
+                        ),
                       ),
 
                       // Controllers attached here
@@ -190,24 +217,24 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
                       Row(
                         children: [
-                          const Expanded(
+                          Expanded(
                             child: Divider(
-                              color: AppColors.dividerColor,
+                              color: isDark ? Colors.grey.shade700 : AppColors.dividerColor,
                               thickness: 2,
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: AppSpacing.p16,
                             ),
                             child: Text(
                               'Or sign up with',
-                              style: TextStyle(color: AppColors.dividerOrColor),
+                              style: TextStyle(color: isDark ? Colors.grey.shade400 : AppColors.dividerOrColor),
                             ),
                           ),
-                          const Expanded(
+                          Expanded(
                             child: Divider(
-                              color: AppColors.dividerColor,
+                              color: isDark ? Colors.grey.shade700 : AppColors.dividerColor,
                               thickness: 2,
                             ),
                           ),
@@ -217,26 +244,19 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // Action mapped to Google button
                           CustomRoundButton(
                             imagePath: AppImages.googleLogo,
                             onPressed: _isLoading ? () {} : _handleGoogleSignUp,
                           ),
 
-                          const SizedBox(width: 24),
-
-                          CustomRoundButton(
-                            imagePath: AppImages.appleLogo,
-                            iconSize: 26,
-                            onPressed: () {}, // To be implemented later
-                          ),
-
-                          const SizedBox(width: 24),
-
-                          CustomRoundButton(
-                            imagePath: AppImages.facebookLogo,
-                            onPressed: () {}, // To be implemented later
-                          ),
+                          if (Platform.isIOS || Platform.isMacOS) ...[
+                            const SizedBox(width: 24),
+                            CustomRoundButton(
+                              imagePath: AppImages.appleLogo,
+                              iconSize: 26,
+                              onPressed: _isLoading ? () {} : _handleAppleSignUp,
+                            ),
+                          ],
                         ],
                       ),
 
@@ -245,7 +265,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         children: [
                           Text(
                             "Already have an account? ",
-                            style: AppTextStyles.accountText,
+                            style: AppTextStyles.accountText.copyWith(
+                              color: isDark ? Colors.grey.shade400 : null,
+                            ),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -255,7 +277,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             },
                             child: Text(
                               'Log In',
-                              style: AppTextStyles.signUpText,
+                              style: AppTextStyles.signUpText.copyWith(
+                                color: isDark ? Colors.white : null,
+                              ),
                             ),
                           ),
                         ],

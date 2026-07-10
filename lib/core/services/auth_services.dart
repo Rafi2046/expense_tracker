@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
 
 class AuthService {
@@ -108,6 +109,38 @@ class AuthService {
       return await _auth.signInWithCredential(credential);
     } on GoogleSignInException catch (e) {
       if (e.code == GoogleSignInExceptionCode.canceled) {
+        return null;
+      }
+      throw Exception(_friendlyMessage(e));
+    } on SocketException {
+      throw Exception(
+        'No internet connection. Please check your network and try again.',
+      );
+    } on FirebaseAuthException catch (e) {
+      throw Exception(_friendlyMessage(e));
+    } catch (e) {
+      throw Exception(_friendlyMessage(e));
+    }
+  }
+
+  Future<UserCredential?> signInWithApple() async {
+    try {
+      final appleIdCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final oAuthProvider = OAuthProvider('apple.com');
+      final credential = oAuthProvider.credential(
+        idToken: appleIdCredential.identityToken,
+        accessToken: appleIdCredential.authorizationCode,
+      );
+
+      return await _auth.signInWithCredential(credential);
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code == AuthorizationErrorCode.canceled) {
         return null;
       }
       throw Exception(_friendlyMessage(e));

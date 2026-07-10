@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -207,6 +208,26 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
+  Future<void> _handleAppleLogin() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final cred = await _authService.signInWithApple();
+
+      if (cred != null && mounted) {
+        _navigateAfterAuth(cred);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   Future<void> _handleSwitchAccount() async {
     await FirebaseAuth.instance.signOut();
     if (!mounted) return;
@@ -241,9 +262,10 @@ class _LoginScreenState extends State<LoginScreen>
   Widget build(BuildContext context) {
     final biometricProvider = context.watch<BiometricAuthProvider>();
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? theme.scaffoldBackgroundColor : Colors.white,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: LayoutBuilder(
@@ -266,7 +288,9 @@ class _LoginScreenState extends State<LoginScreen>
                       Text(
                         widget.biometricMode ? 'Welcome Back' : 'Welcome Back',
                         textAlign: TextAlign.center,
-                        style: AppTextStyles.loginTitle,
+                        style: AppTextStyles.loginTitle.copyWith(
+                          color: isDark ? Colors.white : null,
+                        ),
                       ),
 
                       Text(
@@ -274,7 +298,9 @@ class _LoginScreenState extends State<LoginScreen>
                             ? 'Authenticate to continue your financial journey'
                             : 'Sign in to continue your financial journey',
                         textAlign: TextAlign.center,
-                        style: AppTextStyles.loginSubTitle,
+                        style: AppTextStyles.loginSubTitle.copyWith(
+                          color: isDark ? Colors.grey.shade400 : null,
+                        ),
                       ),
 
                       CustomTextFieldWidget(
@@ -303,7 +329,9 @@ class _LoginScreenState extends State<LoginScreen>
                                   },
                                   child: Text(
                                     'Forgot Password?',
-                                    style: AppTextStyles.textFieldLabelPassword,
+                                    style: AppTextStyles.textFieldLabelPassword.copyWith(
+                                      color: isDark ? Colors.grey.shade400 : null,
+                                    ),
                                   ),
                                 ),
                         ),
@@ -358,7 +386,7 @@ class _LoginScreenState extends State<LoginScreen>
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: AppFontSizes.size12,
-                              color: Colors.grey.shade500,
+                              color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
                             ),
                           ),
                         ],
@@ -396,9 +424,9 @@ class _LoginScreenState extends State<LoginScreen>
                       if (!widget.biometricMode) ...[
                         Row(
                           children: [
-                            const Expanded(
+                            Expanded(
                               child: Divider(
-                                color: AppColors.dividerColor,
+                                color: isDark ? Colors.grey.shade700 : AppColors.dividerColor,
                                 thickness: 2,
                               ),
                             ),
@@ -406,16 +434,16 @@ class _LoginScreenState extends State<LoginScreen>
                               padding: const EdgeInsets.symmetric(
                                 horizontal: AppSpacing.p16,
                               ),
-                              child: const Text(
+                              child: Text(
                                 'or',
                                 style: TextStyle(
-                                  color: AppColors.dividerOrColor,
+                                  color: isDark ? Colors.grey.shade400 : AppColors.dividerOrColor,
                                 ),
                               ),
                             ),
-                            const Expanded(
+                            Expanded(
                               child: Divider(
-                                color: AppColors.dividerColor,
+                                color: isDark ? Colors.grey.shade700 : AppColors.dividerColor,
                                 thickness: 2,
                               ),
                             ),
@@ -425,38 +453,31 @@ class _LoginScreenState extends State<LoginScreen>
                         CustomButton(
                           leading: Image.asset(AppImages.googleLogo),
                           showBorder: true,
-                          borderColor: AppColors.borderColor,
+                          borderColor: isDark ? Colors.grey.shade600 : AppColors.borderColor,
                           text: 'Continue with Google',
-                          textColor: AppColors.googleTextColor,
+                          textColor: isDark ? Colors.white : AppColors.googleTextColor,
                           fontFamily: GoogleFonts.inter().fontFamily,
                           onPressed: _isLoading ? () {} : _handleGoogleLogin,
-                          backgroundColor: AppColors.white,
+                          backgroundColor: isDark ? Colors.grey.shade800 : AppColors.white,
                         ),
 
-                        CustomButton(
-                          leading: Image.asset(AppImages.facebookLogo),
-                          showBorder: true,
-                          borderColor: AppColors.borderColor,
-                          text: 'Continue with Facebook',
-                          textColor: AppColors.black,
-                          fontFamily: GoogleFonts.inter().fontFamily,
-                          onPressed: () {},
-                          backgroundColor: AppColors.white,
-                        ),
-
-                        CustomButton(
-                          leading: Transform.scale(
-                            scale: 1.4,
-                            child: Image.asset(AppImages.appleLogo),
+                        if (Platform.isIOS || Platform.isMacOS)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: CustomButton(
+                              leading: Transform.scale(
+                                scale: 1.4,
+                                child: Image.asset(AppImages.appleLogo),
+                              ),
+                              showBorder: true,
+                              borderColor: isDark ? Colors.grey.shade600 : AppColors.borderColor,
+                              text: 'Continue with Apple',
+                              textColor: isDark ? Colors.white : AppColors.googleTextColor,
+                              fontFamily: GoogleFonts.inter().fontFamily,
+                              onPressed: _isLoading ? () {} : _handleAppleLogin,
+                              backgroundColor: isDark ? Colors.grey.shade800 : AppColors.white,
+                            ),
                           ),
-                          showBorder: true,
-                          borderColor: AppColors.borderColor,
-                          text: 'Continue with Apple',
-                          textColor: AppColors.googleTextColor,
-                          fontFamily: GoogleFonts.inter().fontFamily,
-                          onPressed: () {},
-                          backgroundColor: AppColors.white,
-                        ),
 
                         const SizedBox(height: 8),
                         Row(
@@ -464,7 +485,9 @@ class _LoginScreenState extends State<LoginScreen>
                           children: [
                             Text(
                               "Don't have an account? ",
-                              style: AppTextStyles.accountText,
+                              style: AppTextStyles.accountText.copyWith(
+                                color: isDark ? Colors.grey.shade400 : null,
+                              ),
                             ),
                             GestureDetector(
                               onTap: () {
@@ -478,7 +501,9 @@ class _LoginScreenState extends State<LoginScreen>
                               },
                               child: Text(
                                 'Sign Up',
-                                style: AppTextStyles.signUpText,
+                                style: AppTextStyles.signUpText.copyWith(
+                                  color: isDark ? Colors.white : null,
+                                ),
                               ),
                             ),
                           ],

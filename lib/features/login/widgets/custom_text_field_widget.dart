@@ -62,7 +62,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                       });
                     },
                     icon: Icon(
-                      _obscureText ? LucideIcons.shield : LucideIcons.shieldOff,
+                      _obscureText ? LucideIcons.eye : LucideIcons.eyeOff,
                     ),
                   )
                 : null,

@@ -13,7 +13,6 @@ class AppColors {
   static const Color dividerOrColor= Color(0xFF565E74);
   static const Color dividerColor= Color(0xFFBBCABF);
   static const Color googleTextColor= Color(0xFF1F2937);
-  static const Color facebookTextColor= Color(0xFF3177F1);
   static const Color black= Color(0xFF000000);
   static const Color containerColorGrey = Color(0xFFF5F5F5);
   static const Color notificationIcon = Color(0xFF146C48);
