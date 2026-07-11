@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
@@ -6,9 +5,10 @@ import 'package:expense_tracker/features/settings/widgets/personal_info_view.dar
 import 'package:expense_tracker/features/settings/widgets/personal_info_edit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PersonalInfoScreen extends StatefulWidget {
   const PersonalInfoScreen({super.key});
@@ -86,10 +86,74 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   }
 
   Future<void> _pickImage() async {
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: Theme.of(context).cardColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        final isDark = Theme.of(ctx).brightness == Brightness.dark;
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Choose Option', style: AppTextStyles.h2.copyWith(color: Theme.of(ctx).colorScheme.onSurface)),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(ctx, ImageSource.gallery),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.grey.shade800 : const Color(0xFFF3E8FF),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Icon(LucideIcons.image, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1), size: 28),
+                          ),
+                          const SizedBox(height: 8),
+                          Text('Gallery', style: AppTextStyles.label.copyWith(color: Theme.of(ctx).colorScheme.onSurface)),
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(ctx, ImageSource.camera),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.grey.shade800 : const Color(0xFFF3E8FF),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Icon(LucideIcons.camera, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1), size: 28),
+                          ),
+                          const SizedBox(height: 8),
+                          Text('Camera', style: AppTextStyles.label.copyWith(color: Theme.of(ctx).colorScheme.onSurface)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (source == null) return;
+
     final ImagePicker picker = ImagePicker();
     try {
       final XFile? image = await picker.pickImage(
-        source: ImageSource.gallery,
+        source: source,
         maxWidth: 512,
         maxHeight: 512,
         imageQuality: 85,
@@ -97,7 +161,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
 
       if (image != null) {
         final directory = await getApplicationDocumentsDirectory();
-        final localFile = await File(image.path).copy('${directory.path}/profile_${_user.uid}.jpg');
+        final localFile = await File(image.path).copy('${directory.path}/profile_${_user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg');
 
         setState(() {
           _localImageFile = localFile;
@@ -226,28 +290,23 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back_ios_new_rounded, color: theme.colorScheme.onSurface, size: 20),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           _isEditing ? 'Edit Profile' : 'Profile Details',
-          style: GoogleFonts.workSans(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
+          style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
         ),
         actions: [
           if (!_isEditing)
             TextButton.icon(
               onPressed: () => setState(() => _isEditing = true),
-              icon: Icon(Symbols.edit_rounded, size: 16, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1)),
+              icon: Icon(LucideIcons.edit, size: 16, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1)),
               label: Text(
                 'Edit',
-                style: GoogleFonts.workSans(
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1),
-                ),
+              style: AppTextStyles.bodyBold.copyWith(
+                color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1),
+              ),
               ),
             )
         ],

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-class NewTourCTA extends StatelessWidget {
+class NewTourCta extends StatelessWidget {
   final VoidCallback onTap;
 
-  const NewTourCTA({super.key, required this.onTap});
+  const NewTourCta({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +53,7 @@ class NewTourCTA extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(
-                  Icons.add_rounded,
+                  LucideIcons.plus,
                   size: 18,
                   color: AppColors.activeGreen,
                 ),
@@ -60,11 +61,10 @@ class NewTourCTA extends StatelessWidget {
               const SizedBox(width: 12),
               Text(
                 'Create New Tour',
-                style: GoogleFonts.workSans(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700, // Bolder text
+                style: AppTextStyles.reportTileTitle.copyWith(
+                  fontWeight: FontWeight.w700,
                   letterSpacing: 0.3,
-                  color: theme.colorScheme.onSurface, // Solid text color, not faded
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
             ],

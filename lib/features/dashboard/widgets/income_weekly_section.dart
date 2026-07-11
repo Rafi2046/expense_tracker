@@ -1,7 +1,8 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
+import 'package:expense_tracker/features/dashboard/pages/income_transaction_list_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/transaction_details_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_container_row.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_list_container.dart';
 import 'package:expense_tracker/features/dashboard/widgets/weekly_trend_chart.dart';
@@ -9,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class IncomeWeeklySection extends StatelessWidget {
   final bool isMasked;
@@ -16,7 +19,7 @@ class IncomeWeeklySection extends StatelessWidget {
   const IncomeWeeklySection({super.key, required this.isMasked});
 
   TextStyle get _amountStyle => TextStyle(
-    fontSize: 15,
+    fontSize: AppFontSizes.size15,
     fontWeight: FontWeight.bold,
     color: const Color(0xFF2EBD85),
     fontFamily: GoogleFonts.workSans().fontFamily,
@@ -35,7 +38,16 @@ class IncomeWeeklySection extends StatelessWidget {
         TransactionListContainer(
           title: 'Weekly Activity',
           trailing: TextButton(
-            onPressed: () {},
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => IncomeTransactionListScreen(
+                  title: 'Weekly Activity',
+                  transactions: weeklyTransactions,
+                  isMasked: isMasked,
+                ),
+              ),
+            ),
             style: TextButton.styleFrom(
               padding: EdgeInsets.zero,
               minimumSize: Size.zero,
@@ -54,13 +66,13 @@ class IncomeWeeklySection extends StatelessWidget {
                   IconData icon;
                   final categoryLower = tx.category.toLowerCase();
                   if (categoryLower.contains('salary')) {
-                    icon = Symbols.account_balance;
+                    icon = LucideIcons.landmark;
                   } else if (categoryLower.contains('freelance') || categoryLower.contains('business') || categoryLower.contains('work')) {
-                    icon = Symbols.work_outline;
+                    icon = LucideIcons.briefcase;
                   } else if (categoryLower.contains('dividend') || categoryLower.contains('invest') || categoryLower.contains('saving')) {
-                    icon = Symbols.savings;
+                    icon = LucideIcons.piggyBank;
                   } else {
-                    icon = Symbols.receipt_long;
+                    icon = LucideIcons.receipt;
                   }
                   return TransactionContainerRow(
                     icon: icon,
@@ -76,6 +88,12 @@ class IncomeWeeklySection extends StatelessWidget {
                           style: _amountStyle,
                         ),
                       ],
+                    ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TransactionDetailsScreen(transaction: tx),
+                      ),
                     ),
                   );
                 }).toList(),

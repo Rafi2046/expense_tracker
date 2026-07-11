@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/app_lock_provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LockScreenOverlay extends StatefulWidget {
   const LockScreenOverlay({super.key});
@@ -15,7 +17,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
     with SingleTickerProviderStateMixin {
   late final AnimationController _pulseController;
   late final Animation<double> _pulseAnimation;
-  IconData _biometricIcon = Icons.fingerprint;
+  IconData _biometricIcon = LucideIcons.fingerprint;
   bool _hasError = false;
   String _errorMessage = '';
 
@@ -45,9 +47,9 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
       final auth = LocalAuthentication();
       final available = await auth.getAvailableBiometrics();
       if (available.contains(BiometricType.face)) {
-        setState(() => _biometricIcon = Icons.face_rounded);
+        setState(() => _biometricIcon = LucideIcons.smile);
       } else if (available.contains(BiometricType.fingerprint)) {
-        setState(() => _biometricIcon = Icons.fingerprint);
+        setState(() => _biometricIcon = LucideIcons.fingerprint);
       }
     } catch (_) {}
   }
@@ -112,8 +114,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
             const SizedBox(height: 32),
             Text(
               'App Locked',
-              style: TextStyle(
-                fontSize: 22,
+              style: AppTextStyles.profileTitle.copyWith(
                 fontWeight: FontWeight.w700,
                 color: theme.colorScheme.onSurface,
                 letterSpacing: 0.3,
@@ -122,8 +123,8 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
             const SizedBox(height: 8),
             Text(
               'Authenticate to access your data',
-              style: TextStyle(
-                fontSize: 14,
+              style: AppTextStyles.body.copyWith(
+                fontFamily: 'WorkSans',
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
             ),
@@ -133,10 +134,8 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
                 padding: const EdgeInsets.only(bottom: 20),
                 child: Text(
                   _errorMessage,
-                  style: const TextStyle(
-                    color: Color(0xFFE53935),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                  style: AppTextStyles.bodyBold.copyWith(
+                    color: const Color(0xFFE53935),
                   ),
                 ),
               ),
@@ -152,9 +151,8 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
                 alignment: Alignment.center,
                 child: Text(
                   'Tap to Unlock',
-                  style: TextStyle(
+                  style: AppTextStyles.reportTileTitle.copyWith(
                     color: theme.colorScheme.onPrimary,
-                    fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

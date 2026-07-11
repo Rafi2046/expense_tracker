@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class DailyChartData {
   final String timeLabel;
@@ -37,7 +38,7 @@ class DailyDistributionChart extends StatelessWidget {
               Text(
                 'Distribution',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: AppFontSizes.size18,
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
                   fontFamily: GoogleFonts.workSans().fontFamily,
@@ -46,7 +47,7 @@ class DailyDistributionChart extends StatelessWidget {
               Text(
                 '24-Hour Period',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: AppFontSizes.size12,
                   color: AppColors.textMuted,
                   fontWeight: FontWeight.w500,
                   fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
@@ -64,7 +65,7 @@ class DailyDistributionChart extends StatelessWidget {
                 majorGridLines: const MajorGridLines(width: 0),
                 axisLine: const AxisLine(width: 0),
                 labelStyle: TextStyle(
-                  fontSize: 11,
+                  fontSize: AppFontSizes.size11,
                   color: AppColors.textMuted,
                   fontWeight: FontWeight.w600,
                   fontFamily: GoogleFonts.workSans().fontFamily,

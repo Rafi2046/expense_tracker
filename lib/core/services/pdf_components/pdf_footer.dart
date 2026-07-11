@@ -1,6 +1,7 @@
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'pdf_theme.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PdfFooterBuilder {
   static pw.Widget build(pw.Context context, pw.TextStyle baseStyle) {
@@ -24,7 +25,7 @@ class PdfFooterBuilder {
         children: [
           pw.Text(
             'Generated on $dateStr',
-            style: baseStyle.copyWith(fontSize: 7, color: PdfTheme.mutedText),
+            style: baseStyle.copyWith(fontSize: AppFontSizes.size7, color: PdfTheme.mutedText),
           ),
           pw.Row(children: [
             pw.Container(
@@ -39,7 +40,7 @@ class PdfFooterBuilder {
             pw.Text(
               'Expense Tracker',
               style: baseStyle.copyWith(
-                fontSize: 7,
+                fontSize: AppFontSizes.size7,
                 color: PdfTheme.brandPrimary,
                 fontWeight: pw.FontWeight.bold,
               ),
@@ -47,7 +48,7 @@ class PdfFooterBuilder {
           ]),
           pw.Text(
             'Page ${context.pageNumber} of ${context.pagesCount}',
-            style: baseStyle.copyWith(fontSize: 7, color: PdfTheme.mutedText),
+            style: baseStyle.copyWith(fontSize: AppFontSizes.size7, color: PdfTheme.mutedText),
           ),
         ],
       ),

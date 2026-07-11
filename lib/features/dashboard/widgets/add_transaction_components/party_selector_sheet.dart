@@ -1,9 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 String _getInitials(String name) {
   if (name.trim().isEmpty) return '?';
@@ -65,7 +66,7 @@ class PartySelectorSheet extends StatelessWidget {
               Text(
                 'Link to Party (Optional)',
                 style: GoogleFonts.workSans(
-                  fontSize: 18,
+                  fontSize: AppFontSizes.size18,
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
                 ),
@@ -111,7 +112,7 @@ class PartySelectorSheet extends StatelessWidget {
                     child: Text(
                       initials,
                       style: GoogleFonts.workSans(
-                        fontSize: 13,
+                        fontSize: AppFontSizes.size13,
                         fontWeight: FontWeight.w600,
                         color: isSelected
                             ? Colors.white
@@ -122,7 +123,7 @@ class PartySelectorSheet extends StatelessWidget {
                   title: Text(
                     name,
                     style: GoogleFonts.workSans(
-                      fontSize: 15,
+                      fontSize: AppFontSizes.size15,
                       fontWeight: isSelected
                           ? FontWeight.w600
                           : FontWeight.w400,
@@ -133,13 +134,13 @@ class PartySelectorSheet extends StatelessWidget {
                       ? Text(
                           party.phone!,
                           style: GoogleFonts.workSans(
-                            fontSize: 12,
+                            fontSize: AppFontSizes.size12,
                             color: isDark ? Colors.white38 : Colors.grey,
                           ),
                         )
                       : null,
                   trailing: isSelected
-                      ? Icon(Symbols.check_circle, color: accentColor)
+                      ? Icon(LucideIcons.checkCircle, color: accentColor)
                       : null,
                   onTap: () => onSelect(name),
                 );

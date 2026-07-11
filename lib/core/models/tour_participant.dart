@@ -9,6 +9,7 @@ class TourParticipant {
   final String syncStatus;
   final bool isDeleted;
   final DateTime lastModified;
+  final String? uid;
 
   TourParticipant({
     required this.id,
@@ -21,6 +22,7 @@ class TourParticipant {
     this.syncStatus = 'synced',
     this.isDeleted = false,
     DateTime? lastModified,
+    this.uid,
   }) : lastModified = lastModified ?? DateTime.now();
 
   TourParticipant copyWith({
@@ -34,6 +36,7 @@ class TourParticipant {
     String? syncStatus,
     bool? isDeleted,
     DateTime? lastModified,
+    String? uid,
   }) =>
       TourParticipant(
         id: id ?? this.id,
@@ -46,16 +49,18 @@ class TourParticipant {
         syncStatus: syncStatus ?? this.syncStatus,
         isDeleted: isDeleted ?? this.isDeleted,
         lastModified: lastModified ?? this.lastModified,
+        uid: uid ?? this.uid,
       );
 
   Map<String, dynamic> toMap() => {
-    'tourId': tourId,
-    'name': name,
-    'avatarColor': avatarColor,
-    'joinedAt': joinedAt.toIso8601String(),
-    'joinedExpenseId': joinedExpenseId,
-    'isActive': isActive,
-  };
+        'tourId': tourId,
+        'name': name,
+        'avatarColor': avatarColor,
+        'joinedAt': joinedAt.toIso8601String(),
+        'joinedExpenseId': joinedExpenseId,
+        'isActive': isActive,
+        'uid': uid,
+      };
 
   factory TourParticipant.fromMap(String id, Map<String, dynamic> map) =>
       TourParticipant(
@@ -66,20 +71,22 @@ class TourParticipant {
         joinedAt: DateTime.parse(map['joinedAt'] as String),
         joinedExpenseId: map['joinedExpenseId'] as String?,
         isActive: map['isActive'] as bool? ?? true,
+        uid: map['uid'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'tourId': tourId,
-    'name': name,
-    'avatarColor': avatarColor,
-    'joinedAt': joinedAt.toIso8601String(),
-    'joinedExpenseId': joinedExpenseId,
-    'isActive': isActive ? 1 : 0,
-    'syncStatus': syncStatus,
-    'isDeleted': isDeleted ? 1 : 0,
-    'lastModified': lastModified.toIso8601String(),
-  };
+        'id': id,
+        'tourId': tourId,
+        'name': name,
+        'avatarColor': avatarColor,
+        'joinedAt': joinedAt.toIso8601String(),
+        'joinedExpenseId': joinedExpenseId,
+        'isActive': isActive ? 1 : 0,
+        'syncStatus': syncStatus,
+        'isDeleted': isDeleted ? 1 : 0,
+        'lastModified': lastModified.toIso8601String(),
+        'uid': uid,
+      };
 
   factory TourParticipant.fromJson(Map<String, dynamic> json) =>
       TourParticipant(
@@ -95,5 +102,6 @@ class TourParticipant {
         lastModified: json['lastModified'] != null
             ? DateTime.parse(json['lastModified'] as String)
             : DateTime.now(),
+        uid: json['uid'] as String?,
       );
 }

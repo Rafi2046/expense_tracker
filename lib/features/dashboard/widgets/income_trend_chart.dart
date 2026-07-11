@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_trend_info_dialog.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'dart:math' show max;
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ChartData {
   final String month;
@@ -46,7 +47,7 @@ class IncomeTrendChart extends StatelessWidget {
               Text(
                 'Income Trend',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: AppFontSizes.size18,
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
                   fontFamily: GoogleFonts.workSans().fontFamily,
@@ -56,7 +57,7 @@ class IncomeTrendChart extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 icon: const Icon(
-                  Symbols.info,
+                  LucideIcons.info,
                   color: Colors.grey,
                   size: 20,
                 ),
@@ -79,7 +80,7 @@ class IncomeTrendChart extends StatelessWidget {
                 majorGridLines: const MajorGridLines(width: 0),
                 axisLine: const AxisLine(width: 0),
                 labelStyle: TextStyle(
-                  fontSize: 11,
+                  fontSize: AppFontSizes.size11,
                   color: AppColors.textMuted,
                   fontWeight: FontWeight.w600,
                   fontFamily: GoogleFonts.workSans().fontFamily,
@@ -97,7 +98,7 @@ class IncomeTrendChart extends StatelessWidget {
                 interval: computedInterval,
                 labelFormat: '{value}',
                 labelStyle: TextStyle(
-                  fontSize: 11,
+                  fontSize: AppFontSizes.size11,
                   color: AppColors.textMuted,
                   fontWeight: FontWeight.w600,
                   fontFamily: GoogleFonts.workSans().fontFamily,
@@ -112,7 +113,7 @@ class IncomeTrendChart extends StatelessWidget {
                   return ChartAxisLabel(
                     label,
                     TextStyle(
-                      fontSize: 11,
+                      fontSize: AppFontSizes.size11,
                       color: AppColors.textMuted,
                       fontWeight: FontWeight.w600,
                       fontFamily: GoogleFonts.workSans().fontFamily,

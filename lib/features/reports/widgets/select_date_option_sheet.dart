@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/date_range_picker_sheet.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class SelectDateOptionSheet extends StatelessWidget {
   final DateRangeOption currentOption;
@@ -65,9 +66,7 @@ class SelectDateOptionSheet extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
           child: Text(
             'Select Date',
-            style: AppTextStyles.dialogTitle.copyWith(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
+            style: AppTextStyles.h3.copyWith(
               color: theme.colorScheme.onSurface,
             ),
           ),
@@ -127,7 +126,7 @@ class SelectDateOptionSheet extends StatelessWidget {
                   Text(
                     title,
                     style: AppTextStyles.reportTileTitle.copyWith(
-                      fontSize: 14,
+                      fontSize: AppFontSizes.size14,
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                       color: isSelected ? theme.colorScheme.onSurface : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
@@ -137,7 +136,7 @@ class SelectDateOptionSheet extends StatelessWidget {
                     subtitle,
                     style: AppTextStyles.reportTransactionSubtitle.copyWith(
                       color: isDark ? Colors.white30 : Colors.grey.shade400,
-                      fontSize: 11,
+                      fontSize: AppFontSizes.size11,
                     ),
                   ),
                 ],

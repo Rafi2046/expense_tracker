@@ -1,6 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PremiumUpgradeSheet extends StatelessWidget {
   const PremiumUpgradeSheet({super.key});
@@ -69,7 +70,7 @@ class _PremiumHeader extends StatelessWidget {
           child: IconButton(
             onPressed: () => Navigator.pop(context),
             icon: Icon(
-              Symbols.close,
+              LucideIcons.x,
               color: Colors.white.withValues(alpha: 0.6),
               size: 24,
             ),
@@ -94,7 +95,7 @@ class _PremiumHeader extends StatelessWidget {
             ],
           ),
           child: const Icon(
-            Symbols.diamond_rounded,
+            LucideIcons.gem,
             color: Colors.white,
             size: 40,
             weight: 400,
@@ -104,7 +105,7 @@ class _PremiumHeader extends StatelessWidget {
         Text(
           'Go Premium',
           style: GoogleFonts.workSans(
-            fontSize: 26,
+            fontSize: AppFontSizes.size28,
             fontWeight: FontWeight.w800,
             color: Colors.white,
           ),
@@ -113,7 +114,7 @@ class _PremiumHeader extends StatelessWidget {
         Text(
           'Unlock the full power of your finance tracker',
           style: GoogleFonts.workSans(
-            fontSize: 14,
+            fontSize: AppFontSizes.size14,
             color: Colors.white.withValues(alpha: 0.7),
             fontWeight: FontWeight.w400,
           ),
@@ -127,11 +128,11 @@ class _FeatureList extends StatelessWidget {
   const _FeatureList();
 
   static const _features = [
-    (Symbols.group_add_rounded, 'Unlimited Profiles'),
-    (Symbols.analytics_rounded, 'Advanced Analytics & Reports'),
-    (Symbols.description_rounded, 'Export PDF Reports'),
-    (Symbols.cloud_sync_rounded, 'Priority Cloud Sync'),
-    (Symbols.support_agent_rounded, 'Priority Support'),
+    (LucideIcons.users, 'Unlimited Profiles'),
+    (LucideIcons.barChart, 'Advanced Analytics & Reports'),
+    (LucideIcons.fileText, 'Export PDF Reports'),
+    (LucideIcons.cloudSync, 'Priority Cloud Sync'),
+    (LucideIcons.headphones, 'Priority Support'),
   ];
 
   @override
@@ -172,7 +173,7 @@ class _FeatureItem extends StatelessWidget {
         Text(
           text,
           style: GoogleFonts.workSans(
-            fontSize: 15,
+            fontSize: AppFontSizes.size15,
             fontWeight: FontWeight.w500,
             color: Colors.white.withValues(alpha: 0.9),
           ),
@@ -244,7 +245,7 @@ class _PricingOption extends StatelessWidget {
         Text(
           amount,
           style: GoogleFonts.workSans(
-            fontSize: 24,
+            fontSize: AppFontSizes.size24,
             fontWeight: FontWeight.w800,
             color: color,
           ),
@@ -252,7 +253,7 @@ class _PricingOption extends StatelessWidget {
         Text(
           period,
           style: GoogleFonts.workSans(
-            fontSize: 13,
+            fontSize: AppFontSizes.size13,
             color: periodColor,
             fontWeight: highlighted ? FontWeight.w600 : FontWeight.w500,
           ),
@@ -317,7 +318,7 @@ class _CallToActionButtons extends StatelessWidget {
               child: Text(
                 'Upgrade to Premium',
                 style: GoogleFonts.workSans(
-                  fontSize: 17,
+                  fontSize: AppFontSizes.size18,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),
@@ -331,7 +332,7 @@ class _CallToActionButtons extends StatelessWidget {
           child: Text(
             'Maybe Later',
             style: GoogleFonts.workSans(
-              fontSize: 14,
+              fontSize: AppFontSizes.size14,
               fontWeight: FontWeight.w600,
               color: Colors.white.withValues(alpha: 0.5),
             ),

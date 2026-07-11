@@ -38,7 +38,8 @@ class ReportsProvider extends ChangeNotifier {
   TransactionProvider? _txProvider;
   DebtProvider? _debtProvider;
 
-  User? _firebaseUser;
+  String? _currentProfileId;
+
   StreamSubscription<User?>? _authSubscription;
 
   DateTimeRange? _selectedDateRange;
@@ -63,7 +64,6 @@ class ReportsProvider extends ChangeNotifier {
   }
 
   void _onAuthChanged(User? newUser) {
-    _firebaseUser = newUser;
     if (newUser == null) {
       _txProvider = null;
       _debtProvider = null;
@@ -76,6 +76,7 @@ class ReportsProvider extends ChangeNotifier {
       _selectedPartyNameForStatement = null;
       _partiesSearchQuery = '';
       _partyStatementViewMode = PartyStatementViewMode.card;
+      _currentProfileId = null;
       notifyListeners();
     }
   }
@@ -614,6 +615,9 @@ class ReportsProvider extends ChangeNotifier {
   }
 
   void updateProfileId(String newProfileId) {
+    if (_currentProfileId == newProfileId) return;
+    _currentProfileId = newProfileId;
+
     _txProvider = null;
     _debtProvider = null;
     _selectedDateRange = getDateTimeRangeForOption(DateRangeOption.thisMonth);
@@ -640,7 +644,6 @@ class ReportsProvider extends ChangeNotifier {
     _selectedPartyNameForStatement = null;
     _partiesSearchQuery = '';
     _partyStatementViewMode = PartyStatementViewMode.card;
-    _firebaseUser = null;
     notifyListeners();
   }
 

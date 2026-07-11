@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_selection_sheet.dart';
@@ -6,8 +5,9 @@ import 'package:expense_tracker/features/dashboard/widgets/premium_upgrade_sheet
 import 'package:expense_tracker/features/dashboard/widgets/profile_name_input_field.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CreateProfileNameScreen extends StatefulWidget {
   final bool isBusiness;
@@ -21,6 +21,7 @@ class CreateProfileNameScreen extends StatefulWidget {
 
 class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
   final TextEditingController _nameController = TextEditingController();
+  bool _isCreating = false;
 
   @override
   void dispose() {
@@ -29,6 +30,8 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
   }
 
   void _showPremiumUpgrade(BuildContext context) {
+    _isCreating = false;
+    if (mounted) setState(() {});
     PremiumUpgradeSheet.show(context);
   }
 
@@ -48,10 +51,12 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
           onCategorySelected: (cat) async {
             Navigator.pop(ctx);
             final newProfile = await provider.finalizeProfileCreation();
+            if (!context.mounted) return;
             if (newProfile == null) {
               _showPremiumUpgrade(context);
               return;
             }
+            _isCreating = false;
             context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
             Navigator.pop(context, newProfile);
           },
@@ -69,7 +74,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.iconTheme.color),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.iconTheme.color),
           onPressed: () => Navigator.pop(context),
         ),
         backgroundColor: theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface,
@@ -84,19 +89,12 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
             children: [
               Text(
                 'Create an Account',
-                style: GoogleFonts.workSans(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  color: theme.textTheme.titleLarge?.color,
-                ),
+                style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w800, color: theme.textTheme.titleLarge?.color),
               ),
               const SizedBox(height: 6),
               Text(
                 'Please enter the following details to get started',
-                style: GoogleFonts.workSans(
-                  fontSize: 13,
-                  color: theme.textTheme.bodySmall?.color,
-                ),
+                style: AppTextStyles.bodySmall.copyWith(color: theme.textTheme.bodySmall?.color),
               ),
               const SizedBox(height: 24),
 
@@ -105,9 +103,11 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
               const SizedBox(height: 24),
 
               CustomButton(
-                text: 'Continue',
+                text: _isCreating ? 'Creating…' : 'Continue',
                 backgroundColor: const Color(0xFF2EBD85),
-                onPressed: () async {
+                onPressed: _isCreating
+                    ? () {}
+                    : () async {
                   final name = _nameController.text.trim();
                   if (name.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -116,16 +116,19 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
                     return;
                   }
 
+                  setState(() => _isCreating = true);
                   provider.setCreationName(name);
 
                   if (widget.isBusiness) {
                     _showCategoryBottomSheet(context, provider);
                   } else {
                     final newProfile = await provider.finalizeProfileCreation();
+                    if (!context.mounted) return;
                     if (newProfile == null) {
                       _showPremiumUpgrade(context);
                       return;
                     }
+                    _isCreating = false;
                     context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
                     Navigator.pop(context, newProfile);
                   }

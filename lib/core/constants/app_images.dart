@@ -3,7 +3,6 @@ class AppImages {
 
   static const String splashLogo = 'assets/app_logo/splash_logo.png';
   static const String googleLogo = 'assets/app_logo/google_icon.webp';
-  static const String facebookLogo = 'assets/app_logo/facebook.png';
   static const String appleLogo = 'assets/app_logo/apple.webp';
   static const String forgetPassLogo = 'assets/app_logo/forget_password_img.png';
   static const String otpLogo = 'assets/app_logo/forgot_password_logo.png';
@@ -24,6 +23,8 @@ class AppImages {
   static const String notifications = 'assets/app_icons/notifications.png';
   static const String pendingPayments = 'assets/app_icons/pending_payments.png';
   static const String editIcon= 'assets/app_icons/edit_icon.webp';
+  static const String noTransactions= 'assets/app_icons/no_transaction.png';
+
 
   //tour
   static const String tour= 'assets/app_icons/tour .webp';

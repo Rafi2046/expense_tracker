@@ -1,10 +1,11 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'transfer_dialog.dart';
 import 'new_account_dialog.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// Central helper function to show the overall Adjust Balance Bottom Sheet.
 void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}) {
@@ -23,7 +24,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
             topRight: Radius.circular(20),
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(ctx).padding.bottom + 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +43,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
             Text(
               'Adjust Balance',
               style: GoogleFonts.workSans(
-                fontSize: 16,
+                fontSize: AppFontSizes.size16,
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
               ),
@@ -54,7 +55,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
               context: context,
               title: 'Add/Reduce Money',
               subtitle: 'Record income or expense to adjust a single account\'s balance',
-              icon: Symbols.add,
+              icon: LucideIcons.plus,
               iconBg: isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFDECEC),
               iconColor: AppColors.activeRed,
               onTap: () {
@@ -69,7 +70,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
               context: context,
               title: 'Transfer Balance',
               subtitle: 'Move money between Cash and Bank accounts',
-              icon: Symbols.swap_horiz_rounded,
+              icon: LucideIcons.arrowLeftRight,
               iconBg: isDark ? const Color(0xFF2980B9).withValues(alpha: 0.15) : const Color(0xFFEBF3F9),
               iconColor: const Color(0xFF2980B9),
               onTap: () {
@@ -127,7 +128,7 @@ Widget _buildAdjustOptionTile({
                   Text(
                     title,
                     style: GoogleFonts.workSans(
-                      fontSize: 13.5,
+                      fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
@@ -136,7 +137,7 @@ Widget _buildAdjustOptionTile({
                   Text(
                     subtitle,
                     style: GoogleFonts.workSans(
-                      fontSize: 11.5,
+                      fontSize: AppFontSizes.size11,
                       color: AppColors.textMuted,
                     ),
                   ),
@@ -166,7 +167,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
             topRight: Radius.circular(20),
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(ctx).padding.bottom + 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,7 +186,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
             Text(
               'Choose Transaction Type',
               style: GoogleFonts.workSans(
-                fontSize: 16,
+                fontSize: AppFontSizes.size16,
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
               ),
@@ -198,14 +199,14 @@ void showAddReduceChoiceSheet(BuildContext context) {
                     height: 46,
                     child: TextButton.icon(
                       icon: Icon(
-                        Symbols.arrow_downward,
+                        LucideIcons.arrowDown,
                         size: 16,
                         color: isDark ? theme.primaryColor : const Color(0xFF006C49),
                       ),
                       label: Text(
                         'Add Income',
                         style: GoogleFonts.workSans(
-                          fontSize: 13,
+                          fontSize: AppFontSizes.size13,
                           fontWeight: FontWeight.bold,
                           color: isDark ? theme.primaryColor : const Color(0xFF006C49),
                         ),
@@ -235,14 +236,14 @@ void showAddReduceChoiceSheet(BuildContext context) {
                     height: 46,
                     child: TextButton.icon(
                       icon: Icon(
-                        Symbols.arrow_upward,
+                        LucideIcons.arrowUp,
                         size: 16,
                         color: isDark ? AppColors.activeRed : const Color(0xFFD9383A),
                       ),
                       label: Text(
                         'Add Expense',
                         style: GoogleFonts.workSans(
-                          fontSize: 13,
+                          fontSize: AppFontSizes.size13,
                           fontWeight: FontWeight.bold,
                           color: isDark ? AppColors.activeRed : const Color(0xFFD9383A),
                         ),

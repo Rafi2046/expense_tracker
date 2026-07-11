@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class BudgetStatusItem {
   final String categoryName;
@@ -57,7 +58,7 @@ class DashboardBudgetStatus extends StatelessWidget {
               child: Text(
                 context.translate('budget_status').toUpperCase(),
                 style: TextStyle(
-                  fontSize: 10.5,
+                  fontSize: AppFontSizes.size10,
                   fontWeight: FontWeight.bold,
                   color: isDark
                       ? Colors.white60
@@ -91,7 +92,7 @@ class DashboardBudgetStatus extends StatelessWidget {
                           Text(
                             context.translate(item.categoryName.toLowerCase()),
                             style: TextStyle(
-                              fontSize: 12.5,
+                              fontSize: AppFontSizes.size12,
                               fontWeight: FontWeight.w600,
                               color: labelColor,
                               fontFamily: GoogleFonts.workSans().fontFamily,
@@ -100,7 +101,7 @@ class DashboardBudgetStatus extends StatelessWidget {
                           Text(
                             '${item.percentage.toStringAsFixed(0)}%',
                             style: TextStyle(
-                              fontSize: 12.5,
+                              fontSize: AppFontSizes.size12,
                               fontWeight: FontWeight.bold,
                               color: labelColor,
                               fontFamily: GoogleFonts.workSans().fontFamily,

@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_expense_share.dart';
@@ -17,6 +18,8 @@ import 'package:expense_tracker/features/tours/widgets/tour_expense_details_shee
 import 'package:expense_tracker/features/tours/widgets/tour_export_options_sheet.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_member_required_dialog.dart';
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
+import 'package:expense_tracker/features/tours/widgets/invite_code_card.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourDashboardScreen extends StatefulWidget {
   final String tourId;
@@ -138,6 +141,8 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     final totalSpentText = _formatAmount(totalSpent, tour.currency);
     final outstandingText = _formatAmount(totalOutstanding, tour.currency);
     final isSettled = totalOutstanding == 0;
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    final isOwner = tour.ownerUid != null && currentUid != null && tour.ownerUid == currentUid;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -170,7 +175,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 borderRadius: BorderRadius.circular(AppSpacing.r10),
               ),
               child: const Icon(
-                Icons.person_add_alt_rounded,
+                LucideIcons.userPlus,
                 size: 20,
                 color: AppColors.activeGreen,
               ),
@@ -189,7 +194,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 borderRadius: BorderRadius.circular(AppSpacing.r10),
               ),
               child: const Icon(
-                Icons.ios_share_rounded,
+                LucideIcons.share,
                 size: 20,
                 color: AppColors.activeGreen,
               ),
@@ -198,53 +203,76 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           ),
         ],
       ),
-      body: ListView(
-        padding: EdgeInsets.fromLTRB(16, 16, 16, bottomInset + 100),
-        children: [
-          TourSummaryRow(
-            totalSpentText: totalSpentText,
-            outstandingText: outstandingText,
-            isSettled: isSettled,
-          ),
-          if (participants.isNotEmpty) ...[
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await context.read<TourProvider>().refreshTourData();
+        },
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.fromLTRB(16, 16, 16, bottomInset + 100),
+          children: [
+            TourSummaryRow(
+              totalSpentText: totalSpentText,
+              outstandingText: outstandingText,
+              isSettled: isSettled,
+            ),
+            if (tour.inviteCode != null && tour.inviteCode!.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              InviteCodeCard(
+                inviteCode: tour.inviteCode!,
+                tourName: tour.name,
+              ),
+            ],
+            if (participants.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              TourMemberBalances(
+                participants: participants,
+                balances: netBalances,
+                currency: tour.currency,
+                outstanding: totalOutstanding,
+                formatAmount: (val) => _formatAmount(val, tour.currency),
+                onSettleUp: () {
+                  if (_ensureMinimumMembers()) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => SettleUpScreen(tourId: widget.tourId),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
             const SizedBox(height: 12),
-            TourMemberBalances(
-              participants: participants,
-              balances: netBalances,
-              currency: tour.currency,
-              outstanding: totalOutstanding,
-              formatAmount: (val) => _formatAmount(val, tour.currency),
-              onSettleUp: () {
-                if (_ensureMinimumMembers()) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => SettleUpScreen(tourId: widget.tourId),
-                    ),
-                  );
-                }
-              },
-            ),
+            _buildExpensesHeader(theme, expenses.length),
+            if (expenses.isEmpty)
+              _buildEmptyState(theme)
+            else
+              _buildExpenseList(
+                theme,
+                expenses,
+                shares,
+                participants,
+                tour.currency,
+                isOwner,
+              ),
           ],
-          const SizedBox(height: 12),
-          _buildExpensesHeader(theme, expenses.length),
-          if (expenses.isEmpty)
-            _buildEmptyState(theme)
-          else
-            _buildExpenseList(
-              theme,
-              expenses,
-              shares,
-              participants,
-              tour.currency,
-            ),
-        ],
+        ),
       ),
       floatingActionButton: Padding(
         padding: EdgeInsets.only(bottom: bottomInset + 0),
         child: FloatingActionButton.extended(
           heroTag: 'tour_dashboard_fab',
           onPressed: () {
+            if (tour.isCompleted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Tour is completed — cannot add expenses'),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+              return;
+            }
             if (_ensureMinimumMembers()) {
               AddExpenseSheet.show(
                 context,
@@ -254,17 +282,20 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               );
             }
           },
-          backgroundColor: AppColors.activeGreen,
-          icon: const Icon(Icons.add_rounded, color: AppColors.white, size: 20),
-          label: const Text(
+          backgroundColor: tour.isCompleted
+              ? AppColors.activeGreen.withValues(alpha: 0.35)
+              : AppColors.activeGreen,
+          icon: Icon(LucideIcons.plus,
+              color: AppColors.white.withValues(alpha: tour.isCompleted ? 0.5 : 1),
+              size: 20),
+          label: Text(
             'Add Expense',
-            style: TextStyle(
+            style: AppTextStyles.label.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.white,
-              fontSize: 12,
+              color: AppColors.white.withValues(alpha: tour.isCompleted ? 0.5 : 1),
             ),
           ),
-          elevation: 4,
+          elevation: tour.isCompleted ? 0 : 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.r8),
           ),
@@ -281,9 +312,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         children: [
           Text(
             'Expenses',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
+            style: AppTextStyles.h2.copyWith(
               color: theme.colorScheme.onSurface,
             ),
           ),
@@ -296,8 +325,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
             ),
             child: Text(
               '$count',
-              style: TextStyle(
-                fontSize: 11,
+              style: AppTextStyles.caption.copyWith(
                 fontWeight: FontWeight.w700,
                 color: isDark
                     ? const Color(0xFF9CA3AF)
@@ -316,6 +344,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     List<TourExpenseShare> shares,
     List participants,
     String currency,
+    bool isOwner,
   ) {
     final allParticipants = participants.cast<TourParticipant>();
     return Column(
@@ -351,6 +380,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               expense,
               payer.name,
               currency,
+              isOwner,
             ),
           ),
         );
@@ -374,6 +404,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     TourExpense expense,
     String payerName,
     String currency,
+    bool isOwner,
   ) {
     showModalBottomSheet(
       context: context,
@@ -385,6 +416,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           payerName: payerName,
           currency: currency,
           formatAmount: _formatAmount,
+          showDelete: isOwner,
           onDelete: () {
             Navigator.pop(ctx);
             _confirmDeleteExpense(context, expense.id);
@@ -408,16 +440,13 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         backgroundColor: theme.cardColor,
         title: Text(
           'Delete Expense',
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 17,
+          style: AppTextStyles.dialogTitle.copyWith(
             color: theme.colorScheme.onSurface,
           ),
         ),
         content: Text(
           'Are you sure you want to delete this expense? This action cannot be undone.',
-          style: TextStyle(
-            fontSize: 14,
+          style: AppTextStyles.body.copyWith(
             color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF4B5563),
           ),
         ),
@@ -437,22 +466,24 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           TextButton(
             onPressed: () async {
               Navigator.pop(ctx);
-              final scaffoldMessenger = ScaffoldMessenger.of(context);
-              try {
-                await context.read<TourProvider>().deleteExpense(expenseId);
-                scaffoldMessenger.showSnackBar(
-                  const SnackBar(
-                    content: Text('Expense deleted successfully'),
-                    backgroundColor: AppColors.activeGreen,
-                  ),
-                );
-              } catch (e) {
-                scaffoldMessenger.showSnackBar(
-                  SnackBar(
-                    content: Text('Error deleting expense: $e'),
-                    backgroundColor: AppColors.activeRed,
-                  ),
-                );
+              final success = await context.read<TourProvider>().deleteExpense(expenseId);
+              if (context.mounted) {
+                final scaffoldMessenger = ScaffoldMessenger.of(context);
+                if (success) {
+                  scaffoldMessenger.showSnackBar(
+                    const SnackBar(
+                      content: Text('Expense deleted successfully'),
+                      backgroundColor: AppColors.activeGreen,
+                    ),
+                  );
+                } else {
+                  scaffoldMessenger.showSnackBar(
+                    const SnackBar(
+                      content: Text('Only the tour creator can delete expenses'),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
               }
             },
             child: const Text(
@@ -498,17 +529,14 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
 
             Text(
               'No expenses yet',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
+              style: AppTextStyles.h3.copyWith(
                 color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               'Tap + to add the first expense',
-              style: TextStyle(
-                fontSize: 13,
+              style: AppTextStyles.bodySmall.copyWith(
                 color: isDark
                     ? const Color(0xFF9CA3AF)
                     : const Color(0xFF6B7280),

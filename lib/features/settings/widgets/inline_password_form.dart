@@ -1,7 +1,8 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class InlinePasswordForm extends StatefulWidget {
   final VoidCallback onSuccess;
@@ -116,8 +117,7 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
       children: [
         Text(
           label,
-          style: GoogleFonts.workSans(
-            fontSize: 13,
+          style: AppTextStyles.bodySmall.copyWith(
             fontWeight: FontWeight.w600,
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -131,14 +131,11 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
           child: TextFormField(
             controller: controller,
             obscureText: obscureText,
-            style: GoogleFonts.workSans(
-              fontSize: 14.5,
-              color: theme.colorScheme.onSurface,
-            ),
+            style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: GoogleFonts.workSans(
-                fontSize: 14,
+              hintStyle: AppTextStyles.body.copyWith(
+                fontFamily: GoogleFonts.workSans().fontFamily,
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
               border: InputBorder.none,
@@ -146,7 +143,7 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
               suffixIcon: IconButton(
                 onPressed: onToggleObscure,
                 icon: Icon(
-                  obscureText ? Symbols.visibility_off : Symbols.visibility,
+                  obscureText ? LucideIcons.shield : LucideIcons.shieldOff,
                   color: theme.colorScheme.onSurfaceVariant,
                   size: 20,
                 ),
@@ -221,10 +218,7 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
                 )
               : Text(
                   'Update Password',
-                  style: GoogleFonts.workSans(
-                    fontSize: 14.5,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTextStyles.reportTileTitle.copyWith(fontWeight: FontWeight.bold),
                 ),
         ),
       ],

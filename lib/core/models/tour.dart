@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Tour {
   final String id;
   final String name;
@@ -9,6 +11,9 @@ class Tour {
   final bool isDeleted;
   final bool isCompleted;
   final DateTime lastModified;
+  final String? inviteCode;
+  final String? ownerUid;
+  final List<String> memberUids;
 
   Tour({
     required this.id,
@@ -21,7 +26,11 @@ class Tour {
     this.isDeleted = false,
     this.isCompleted = false,
     DateTime? lastModified,
-  }) : lastModified = lastModified ?? createdAt;
+    this.inviteCode,
+    this.ownerUid,
+    List<String>? memberUids,
+  })  : lastModified = lastModified ?? createdAt,
+        memberUids = memberUids ?? [];
 
   Tour copyWith({
     String? id,
@@ -34,6 +43,9 @@ class Tour {
     bool? isDeleted,
     bool? isCompleted,
     DateTime? lastModified,
+    String? inviteCode,
+    String? ownerUid,
+    List<String>? memberUids,
   }) =>
       Tour(
         id: id ?? this.id,
@@ -46,50 +58,79 @@ class Tour {
         isDeleted: isDeleted ?? this.isDeleted,
         isCompleted: isCompleted ?? this.isCompleted,
         lastModified: lastModified ?? this.lastModified,
+        inviteCode: inviteCode ?? this.inviteCode,
+        ownerUid: ownerUid ?? this.ownerUid,
+        memberUids: memberUids ?? this.memberUids,
       );
 
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'coverPhoto': coverPhoto,
-    'currency': currency,
-    'createdAt': createdAt.toIso8601String(),
-    'profileId': profileId,
-  };
+        'name': name,
+        'coverPhoto': coverPhoto,
+        'currency': currency,
+        'createdAt': createdAt.toIso8601String(),
+        'profileId': profileId,
+        'inviteCode': inviteCode,
+        'ownerUid': ownerUid,
+        'memberUids': memberUids,
+        'isCompleted': isCompleted,
+        'lastModified': lastModified.toIso8601String(),
+        'syncStatus': syncStatus,
+        'isDeleted': isDeleted,
+      };
 
   factory Tour.fromMap(String id, Map<String, dynamic> map) => Tour(
-    id: id,
-    name: map['name'] as String,
-    coverPhoto: map['coverPhoto'] as String?,
-    currency: map['currency'] as String? ?? 'USD',
-    createdAt: DateTime.parse(map['createdAt'] as String),
-    profileId: map['profileId'] as String? ?? 'default_profile',
-  );
+        id: id,
+        name: map['name'] as String,
+        coverPhoto: map['coverPhoto'] as String?,
+        currency: map['currency'] as String? ?? 'USD',
+        createdAt: DateTime.parse(map['createdAt'] as String),
+        profileId: map['profileId'] as String? ?? 'default_profile',
+        inviteCode: map['inviteCode'] as String?,
+        ownerUid: map['ownerUid'] as String?,
+        memberUids: map['memberUids'] != null
+            ? List<String>.from(map['memberUids'] as List)
+            : [],
+        isCompleted: map['isCompleted'] == true,
+        lastModified: map['lastModified'] != null
+            ? DateTime.parse(map['lastModified'] as String)
+            : null,
+        syncStatus: map['syncStatus'] as String? ?? 'synced',
+        isDeleted: map['isDeleted'] == true,
+      );
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'coverPhoto': coverPhoto,
-    'currency': currency,
-    'createdAt': createdAt.toIso8601String(),
-    'profileId': profileId,
-    'syncStatus': syncStatus,
-    'isDeleted': isDeleted ? 1 : 0,
-    'isCompleted': isCompleted ? 1 : 0,
-    'lastModified': lastModified.toIso8601String(),
-  };
+        'id': id,
+        'name': name,
+        'coverPhoto': coverPhoto,
+        'currency': currency,
+        'createdAt': createdAt.toIso8601String(),
+        'profileId': profileId,
+        'syncStatus': syncStatus,
+        'isDeleted': isDeleted ? 1 : 0,
+        'isCompleted': isCompleted ? 1 : 0,
+        'lastModified': lastModified.toIso8601String(),
+        'inviteCode': inviteCode,
+        'ownerUid': ownerUid,
+        'memberUids': jsonEncode(memberUids),
+      };
 
   factory Tour.fromJson(Map<String, dynamic> json) => Tour(
-    id: json['id'] as String,
-    name: json['name'] as String,
-    coverPhoto: json['coverPhoto'] as String?,
-    currency: json['currency'] as String? ?? 'USD',
-    createdAt: DateTime.parse(json['createdAt'] as String),
-    profileId: json['profileId'] as String? ?? 'default_profile',
-    syncStatus: json['syncStatus'] as String? ?? 'synced',
-    isDeleted: (json['isDeleted'] as int? ?? 0) == 1,
-    isCompleted: (json['isCompleted'] as int? ?? 0) == 1,
-    lastModified: json['lastModified'] != null
-        ? DateTime.parse(json['lastModified'] as String)
-        : null,
-  );
+        id: json['id'] as String,
+        name: json['name'] as String,
+        coverPhoto: json['coverPhoto'] as String?,
+        currency: json['currency'] as String? ?? 'USD',
+        createdAt: DateTime.parse(json['createdAt'] as String),
+        profileId: json['profileId'] as String? ?? 'default_profile',
+        syncStatus: json['syncStatus'] as String? ?? 'synced',
+        isDeleted: (json['isDeleted'] as int? ?? 0) == 1,
+        isCompleted: (json['isCompleted'] as int? ?? 0) == 1,
+        lastModified: json['lastModified'] != null
+            ? DateTime.parse(json['lastModified'] as String)
+            : null,
+        inviteCode: json['inviteCode'] as String?,
+        ownerUid: json['ownerUid'] as String?,
+        memberUids: json['memberUids'] != null
+            ? List<String>.from(jsonDecode(json['memberUids'] as String) as List)
+            : [],
+      );
 }

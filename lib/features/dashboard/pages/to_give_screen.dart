@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart' show AppImages;
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -9,6 +8,7 @@ import 'package:expense_tracker/features/dashboard/widgets/debt_total_card.dart'
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ToGiveScreen extends StatefulWidget {
   const ToGiveScreen({super.key});
@@ -33,7 +33,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -57,7 +57,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
           ),
           backgroundColor: theme.primaryColor,
           elevation: 2,
-          child: const Icon(Symbols.add, color: Colors.white, size: 28),
+          child: Icon(LucideIcons.plus, color: Colors.white, size: 28),
         ),
       ),
       body: SafeArea(
@@ -77,7 +77,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                     _showGuide = false;
                   });
                 },
-                cardIcon: Symbols.arrow_upward_rounded,
+                cardIcon: LucideIcons.arrowUp,
                 isMasked: _localMasked,
                 onToggleMask: () => setState(() => _localMasked = !_localMasked),
               ),
@@ -95,11 +95,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                       children: [
                         Text(
                           'Active Payables',
-                          style: GoogleFonts.workSans(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onSurface,
-                          ),
+                          style: AppTextStyles.sectionHeaderTitle.copyWith(color: theme.colorScheme.onSurface),
                         ),
                         const SizedBox(width: 8),
                         Container(
@@ -113,11 +109,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                           ),
                           child: Text(
                             '${items.length}',
-                            style: GoogleFonts.workSans(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.activeRed,
-                            ),
+                            style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold, color: AppColors.activeRed),
                           ),
                         ),
                       ],
@@ -127,7 +119,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                         constraints: const BoxConstraints(),
                         padding: EdgeInsets.zero,
                         icon: Icon(
-                          Symbols.info_rounded,
+                          LucideIcons.info,
                           color: Colors.grey.shade400,
                           size: 20,
                         ),
@@ -156,11 +148,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                           const SizedBox(height: 12),
                           Text(
                             'No pending debts!',
-                            style: GoogleFonts.workSans(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey.shade500,
-                            ),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: Colors.grey.shade500),
                           ),
                         ],
                       ),

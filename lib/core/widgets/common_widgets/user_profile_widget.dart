@@ -1,18 +1,19 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/edit_profile_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class UserProfile {
   final String id;
   final String name;
   final String type;
+  final String? uid;
 
-  UserProfile({required this.id, required this.name, required this.type});
+  UserProfile({required this.id, required this.name, required this.type, this.uid});
 }
 
 class ProfileSwitchSheet extends StatefulWidget {
@@ -20,6 +21,7 @@ class ProfileSwitchSheet extends StatefulWidget {
   final List<UserProfile> profiles;
   final Function(UserProfile) onProfileSelected;
   final VoidCallback onCreateNewTap;
+  final double maxHeight;
 
   const ProfileSwitchSheet({
     super.key,
@@ -27,6 +29,7 @@ class ProfileSwitchSheet extends StatefulWidget {
     required this.profiles,
     required this.onProfileSelected,
     required this.onCreateNewTap,
+    this.maxHeight = 500,
   });
 
   static void show({
@@ -36,15 +39,21 @@ class ProfileSwitchSheet extends StatefulWidget {
     required Function(UserProfile) onProfileSelected,
     required VoidCallback onCreateNewTap,
   }) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final viewInsets = MediaQuery.of(context).viewInsets.bottom;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (_) => ProfileSwitchSheet(
-        currentProfileId: currentProfileId,
-        profiles: profiles,
-        onProfileSelected: onProfileSelected,
-        onCreateNewTap: onCreateNewTap,
+      builder: (_) => Padding(
+        padding: EdgeInsets.only(bottom: viewInsets),
+        child: ProfileSwitchSheet(
+          currentProfileId: currentProfileId,
+          profiles: profiles,
+          onProfileSelected: onProfileSelected,
+          onCreateNewTap: onCreateNewTap,
+          maxHeight: (screenHeight - viewInsets) * 0.55,
+        ),
       ),
     );
   }
@@ -75,6 +84,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         child: Container(
           color: theme.colorScheme.surface,
+          constraints: BoxConstraints(maxHeight: widget.maxHeight),
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -84,8 +94,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
           children: [
             Text(
               'Switch Profile',
-              style: GoogleFonts.workSans(
-                fontSize: 20,
+              style: AppTextStyles.h1.copyWith(
                 fontWeight: FontWeight.w800,
                 color: theme.textTheme.titleLarge?.color,
               ),
@@ -93,10 +102,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
             const SizedBox(height: 4),
             Text(
               'Choose a profile to manage',
-              style: GoogleFonts.workSans(
-                fontSize: 13,
-                color: theme.textTheme.bodySmall?.color,
-              ),
+              style: AppTextStyles.bodySmall.copyWith(color: theme.textTheme.bodySmall?.color),
             ),
             const SizedBox(height: 20),
 
@@ -106,11 +112,10 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                 child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
               )
             else
-              ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: profiles.length,
-              itemBuilder: (context, index) {
+              Expanded(
+                child: ListView.builder(
+                  itemCount: profiles.length,
+                  itemBuilder: (context, index) {
                 final profile = profiles[index];
                 final isSelected = profile.id == selectedId;
 
@@ -123,16 +128,12 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                     radius: 24,
                     child: Text(
                       profile.name.substring(0, 1).toUpperCase(),
-                      style: TextStyle(
-                        color: theme.textTheme.titleLarge?.color,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
+                      style: AppTextStyles.h2.copyWith(color: theme.textTheme.titleLarge?.color),
                     ),
                   ),
                   title: Text(
                     profile.name,
-                    style: GoogleFonts.workSans(
+                    style: AppTextStyles.reportTileTitle.copyWith(
                       fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                       color: theme.textTheme.titleMedium?.color,
                     ),
@@ -140,13 +141,12 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                   subtitle: Row(
                     children: [
                       if (profile.id == 'default_profile') ...[
-                        Icon(Symbols.star_rounded, size: 13, color: const Color(0xFFF59E0B)),
+                        Icon(LucideIcons.star, size: 13, color: const Color(0xFFF59E0B)),
                         const SizedBox(width: 4),
                       ],
                       Text(
                         _profileLabel(profile),
-                        style: GoogleFonts.workSans(
-                          fontSize: 12,
+                        style: AppTextStyles.label.copyWith(
                           color: profile.id == 'default_profile'
                               ? const Color(0xFFF59E0B)
                               : theme.textTheme.bodySmall?.color,
@@ -161,7 +161,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                       if (profile.id != 'default_profile')
                         IconButton(
                           icon: Icon(
-                            Symbols.edit_rounded,
+                            LucideIcons.edit,
                             color: theme.textTheme.bodySmall?.color,
                             size: 20,
                           ),
@@ -183,8 +183,8 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                         ),
                       const SizedBox(width: 8),
                       isSelected
-                          ? const Icon(Symbols.radio_button_checked, color: AppColors.selectedColor)
-                          : Icon(Symbols.radio_button_unchecked, color: theme.textTheme.bodySmall?.color),
+                          ? Icon(LucideIcons.circleDot, color: AppColors.selectedColor)
+                          : Icon(LucideIcons.circle, color: theme.textTheme.bodySmall?.color),
                     ],
                   ),
                   onTap: () {
@@ -196,10 +196,11 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                     });
                   },
                 );
-              },
-            ),
+                  },
+                ),
+              ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
             SizedBox(
               width: double.infinity,
@@ -209,11 +210,10 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                   Navigator.pop(context);
                   widget.onCreateNewTap();
                 },
-                icon: const Icon(Symbols.add, color: Color(0xFF00BFA5)),
+                icon: Icon(LucideIcons.plus, color: Color(0xFF00BFA5)),
                 label: Text(
                   'Create New Profile',
-                  style: GoogleFonts.workSans(
-                    fontSize: 15,
+                  style: AppTextStyles.reportTileTitle.copyWith(
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF00BFA5),
                   ),

@@ -1,9 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/reports/widgets/select_date_input_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DateRangePickerSheet extends StatefulWidget {
   final DateTimeRange? initialSelectedRange;
@@ -127,14 +128,12 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: Icon(Symbols.close_rounded, color: theme.colorScheme.onSurfaceVariant),
+                  icon: Icon(LucideIcons.x, color: theme.colorScheme.onSurfaceVariant),
                   onPressed: () => Navigator.pop(context),
                 ),
                 Text(
                   'Select Date',
-                  style: GoogleFonts.workSans(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
+                  style: AppTextStyles.reportTileTitle.copyWith(
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -154,15 +153,14 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                   children: [
                     Text(
                       _rangeText,
-                      style: GoogleFonts.workSans(
-                        fontSize: 18,
+                      style: AppTextStyles.h2.copyWith(
                         fontWeight: FontWeight.w600,
                         color: theme.colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(width: 6),
                     IconButton(
-                      icon: Icon(Symbols.edit, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5), size: 18),
+                      icon: Icon(LucideIcons.edit, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5), size: 18),
                       onPressed: () async {
                         final result = await SelectDateInputDialog.show(
                           context,
@@ -199,10 +197,9 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                   child: Center(
                     child: Text(
                       day,
-                      style: GoogleFonts.workSans(
+                      style: AppTextStyles.label.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
-                        fontSize: 12,
                       ),
                     ),
                   ),
@@ -243,10 +240,8 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                   ),
                   child: Text(
                     'Cancel',
-                    style: GoogleFonts.workSans(
+                    style: AppTextStyles.bodyBold.copyWith(
                       color: AppColors.activeGreen,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
                     ),
                   ),
                 ),
@@ -271,12 +266,10 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                   ),
                   child: Text(
                     'Ok',
-                    style: GoogleFonts.workSans(
+                    style: AppTextStyles.bodyBold.copyWith(
                       color: _startDate == null || _endDate == null
                           ? (isDark ? Colors.white24 : Colors.grey.shade400)
                           : Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
                     ),
                   ),
                 ),
@@ -305,9 +298,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
           padding: const EdgeInsets.symmetric(vertical: 12.0),
           child: Text(
             monthName,
-            style: GoogleFonts.workSans(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
+            style: AppTextStyles.reportTransactionTitle.copyWith(
               color: theme.colorScheme.onSurface,
             ),
           ),
@@ -371,7 +362,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                     child: Center(
                       child: Text(
                         '$day',
-                        style: GoogleFonts.workSans(
+                        style: AppTextStyles.bodyBold.copyWith(
                           color: isSelected
                               ? Colors.white
                               : (isInRange
@@ -379,7 +370,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                                   : theme.colorScheme.onSurface),
                           fontWeight:
                               isSelected || isInRange ? FontWeight.bold : FontWeight.w500,
-                          fontSize: 14,
+                          fontSize: AppFontSizes.size14,
                         ),
                       ),
                     ),

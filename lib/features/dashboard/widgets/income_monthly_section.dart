@@ -1,13 +1,16 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
+import 'package:expense_tracker/features/dashboard/pages/income_transaction_list_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/transaction_details_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_transaction_row.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_trend_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class IncomeMonthlySection extends StatelessWidget {
   final bool isMasked;
@@ -15,7 +18,7 @@ class IncomeMonthlySection extends StatelessWidget {
   const IncomeMonthlySection({super.key, required this.isMasked});
 
   TextStyle get _amountStyle => TextStyle(
-    fontSize: 15,
+    fontSize: AppFontSizes.size15,
     fontWeight: FontWeight.bold,
     color: const Color(0xFF2EBD85),
     fontFamily: GoogleFonts.workSans().fontFamily,
@@ -42,7 +45,16 @@ class IncomeMonthlySection extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => IncomeTransactionListScreen(
+                    title: 'All Monthly Income',
+                    transactions: monthlyTransactions,
+                    isMasked: isMasked,
+                  ),
+                ),
+              ),
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
                 minimumSize: Size.zero,
@@ -59,6 +71,7 @@ class IncomeMonthlySection extends StatelessWidget {
                 child: Center(child: Text('No income transactions this month')),
               )
             : ListView.separated(
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: monthlyTransactions.length,
@@ -68,13 +81,13 @@ class IncomeMonthlySection extends StatelessWidget {
                   IconData icon;
                   final categoryLower = tx.category.toLowerCase();
                   if (categoryLower.contains('salary')) {
-                    icon = Symbols.account_balance;
+                    icon = LucideIcons.landmark;
                   } else if (categoryLower.contains('freelance') || categoryLower.contains('business') || categoryLower.contains('work')) {
-                    icon = Symbols.work_outline_rounded;
+                    icon = LucideIcons.briefcase;
                   } else if (categoryLower.contains('dividend') || categoryLower.contains('invest') || categoryLower.contains('saving')) {
-                    icon = Symbols.show_chart_rounded;
+                    icon = LucideIcons.lineChart;
                   } else {
-                    icon = Symbols.home_work;
+                    icon = LucideIcons.building2;
                   }
                   return IncomeTransactionRow(
                     icon: icon,
@@ -92,6 +105,12 @@ class IncomeMonthlySection extends StatelessWidget {
                       ],
                     ),
                     status: 'completed',
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TransactionDetailsScreen(transaction: tx),
+                      ),
+                    ),
                   );
                 },
               ),

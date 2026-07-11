@@ -1,9 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CategorySelectionSheetContent extends StatelessWidget {
   final Function(String) onCategorySelected;
@@ -43,7 +44,7 @@ class CategorySelectionSheetContent extends StatelessWidget {
           Text(
             'Select Business Category',
             style: GoogleFonts.workSans(
-              fontSize: 20,
+              fontSize: AppFontSizes.size20,
               fontWeight: FontWeight.w800,
               color: theme.textTheme.titleLarge?.color,
             ),
@@ -52,14 +53,14 @@ class CategorySelectionSheetContent extends StatelessWidget {
 
           TextField(
             style: GoogleFonts.workSans(
-              fontSize: 15,
+              fontSize: AppFontSizes.size15,
               color: theme.textTheme.bodyLarge?.color,
             ),
             decoration: InputDecoration(
               hintText: 'Search Category',
               hintStyle: TextStyle(color: theme.textTheme.bodySmall?.color),
               prefixIcon: Icon(
-                Symbols.search,
+                LucideIcons.search,
                 color: theme.textTheme.bodySmall?.color,
               ),
               contentPadding: const EdgeInsets.symmetric(vertical: 12),
@@ -103,14 +104,14 @@ class CategorySelectionSheetContent extends StatelessWidget {
                   title: Text(
                     cat,
                     style: GoogleFonts.workSans(
-                      fontSize: 15,
+                      fontSize: AppFontSizes.size15,
                       color: theme.textTheme.bodyLarge?.color,
                     ),
                   ),
                   trailing: Icon(
                     isSelected
-                        ? Symbols.radio_button_checked
-                        : Symbols.radio_button_unchecked,
+                        ? LucideIcons.circleDot
+                        : LucideIcons.circle,
                     color: isSelected
                         ? AppColors.activeGreen
                         : (isDark

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourSummaryRow extends StatelessWidget {
   final String totalSpentText;
@@ -24,7 +27,7 @@ class TourSummaryRow extends StatelessWidget {
             theme: theme,
             label: 'Total spent',
             value: totalSpentText,
-            icon: Icons.payments_outlined,
+            icon: LucideIcons.creditCard,
             iconColor: isDark ? const Color(0xFF818CF8) : const Color(0xFF4F46E5),
             iconBgColor: isDark ? const Color(0xFF1E1E3F) : const Color(0xFFEEF2FF),
             valueColor: theme.colorScheme.onSurface,
@@ -36,7 +39,7 @@ class TourSummaryRow extends StatelessWidget {
             theme: theme,
             label: isSettled ? 'All settled' : 'Outstanding',
             value: isSettled ? '✓' : outstandingText,
-            icon: isSettled ? Icons.check_circle_outline_rounded : Icons.swap_horizontal_circle_outlined,
+            icon: isSettled ? LucideIcons.checkCircle : LucideIcons.arrowLeftRight,
             iconColor: isSettled ? const Color(0xFF10B981) : const Color(0xFFEF4444),
             iconBgColor: isSettled
                 ? (isDark ? const Color(0xFF064E3B) : const Color(0xFFECFDF5))
@@ -86,8 +89,8 @@ class TourSummaryRow extends StatelessWidget {
                   label.toUpperCase(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 10,
+                  style: AppTextStyles.caption.copyWith(
+                    fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.w700,
                     color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
                     letterSpacing: 1.0,
@@ -107,8 +110,7 @@ class TourSummaryRow extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             value,
-            style: TextStyle(
-              fontSize: 18,
+            style: AppTextStyles.h2.copyWith(
               fontWeight: FontWeight.w800,
               color: valueColor,
               letterSpacing: -0.5,

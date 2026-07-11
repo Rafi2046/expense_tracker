@@ -306,14 +306,14 @@ class DebtProvider extends ChangeNotifier {
   List<DebtItem> get toReceiveSettled =>
       _items.where((i) => i.isReceive && i.isSettled).toList();
   double get totalToReceive =>
-      toReceiveUnpaid.fold(0.0, (sum, i) => sum + i.amount);
+      toReceiveUnpaid.fold(0.0, (total, i) => total + i.amount);
 
   List<DebtItem> get toGiveUnpaid =>
       _items.where((i) => !i.isReceive && !i.isSettled).toList();
   List<DebtItem> get toGiveSettled =>
       _items.where((i) => !i.isReceive && i.isSettled).toList();
   double get totalToGive =>
-      toGiveUnpaid.fold(0.0, (sum, i) => sum + i.amount);
+      toGiveUnpaid.fold(0.0, (total, i) => total + i.amount);
 
   void clear() {
     _firestoreSubscription?.cancel();

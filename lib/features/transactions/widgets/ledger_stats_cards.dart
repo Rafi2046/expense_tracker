@@ -1,17 +1,18 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-class LedgerStatsCards extends StatelessWidget {
+class TransactionsStatsCards extends StatelessWidget {
   final bool isMasked;
   final VoidCallback onToggleMask;
 
-  const LedgerStatsCards({
+  const TransactionsStatsCards({
     super.key,
     required this.isMasked,
     required this.onToggleMask,
@@ -52,15 +53,13 @@ class LedgerStatsCards extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  context.translate('total_balance').toUpperCase(),
-                  style: GoogleFonts.workSans(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white70,
-                    letterSpacing: 1.0,
+                  child: Text(
+                    context.translate('total_balance').toUpperCase(),
+                    style: AppTextStyles.reportStatLabel.copyWith(
+                      color: Colors.white70,
+                      letterSpacing: 1.0,
+                    ),
                   ),
-                ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(
@@ -73,8 +72,8 @@ class LedgerStatsCards extends StatelessWidget {
                 ),
                 child: Text(
                   provider.selectedMonth.year.toString(),
-                  style: GoogleFonts.workSans(
-                    fontSize: 10,
+                  style: AppTextStyles.caption.copyWith(
+                    fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -87,7 +86,7 @@ class LedgerStatsCards extends StatelessWidget {
                   onToggleMask();
                 },
                 child: Icon(
-                  isMasked ? Symbols.visibility_off : Symbols.visibility,
+                  isMasked ? LucideIcons.shield : LucideIcons.shieldOff,
                   size: 20,
                   color: Colors.white60,
                 ),
@@ -100,9 +99,7 @@ class LedgerStatsCards extends StatelessWidget {
           PrivacyMaskedText(
             amount: netBalance,
             isMasked: isMasked,
-            style: GoogleFonts.workSans(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
+            style: AppTextStyles.reportLargeValue.copyWith(
               color: Colors.white,
               letterSpacing: -0.5,
             ),
@@ -126,7 +123,7 @@ class LedgerStatsCards extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Symbols.arrow_downward_rounded,
+                        LucideIcons.arrowDown,
                         color: Color(0xFF2ECC71),
                         size: 14,
                       ),
@@ -138,8 +135,7 @@ class LedgerStatsCards extends StatelessWidget {
                         children: [
                           Text(
                             context.translate('income'),
-                            style: GoogleFonts.workSans(
-                              fontSize: 11,
+                            style: AppTextStyles.caption.copyWith(
                               color: Colors.white70,
                               fontWeight: FontWeight.w500,
                             ),
@@ -148,8 +144,7 @@ class LedgerStatsCards extends StatelessWidget {
                           PrivacyMaskedText(
                             amount: totalIncome,
                             isMasked: isMasked,
-                            style: GoogleFonts.workSans(
-                              fontSize: 13,
+                            style: AppTextStyles.bodySmall.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -178,7 +173,7 @@ class LedgerStatsCards extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
-                        Symbols.arrow_upward_rounded,
+                        LucideIcons.arrowUp,
                         color: Color(0xFFF1948A),
                         size: 14,
                       ),
@@ -190,8 +185,7 @@ class LedgerStatsCards extends StatelessWidget {
                         children: [
                           Text(
                             context.translate('expense'),
-                            style: GoogleFonts.workSans(
-                              fontSize: 11,
+                            style: AppTextStyles.caption.copyWith(
                               color: Colors.white70,
                               fontWeight: FontWeight.w500,
                             ),
@@ -200,8 +194,7 @@ class LedgerStatsCards extends StatelessWidget {
                           PrivacyMaskedText(
                             amount: totalExpense,
                             isMasked: isMasked,
-                            style: GoogleFonts.workSans(
-                              fontSize: 13,
+                            style: AppTextStyles.bodySmall.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),

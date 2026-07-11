@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class ExpenseBreakdownItem {
   final String title;
@@ -65,7 +66,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
           RichText(
             text: TextSpan(
               style: TextStyle(
-                fontSize: 16,
+                fontSize: AppFontSizes.size16,
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
                 fontFamily: GoogleFonts.workSans().fontFamily,
@@ -75,7 +76,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                 TextSpan(
                   text: suffixText,
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.w400,
                     color: AppColors.textMuted,
                   ),
@@ -87,6 +88,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
 
           // Items list
           ListView.separated(
+            padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
@@ -120,7 +122,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                         Text(
                           item.title,
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: AppFontSizes.size15,
                             fontWeight: FontWeight.bold,
                             color: theme.colorScheme.onSurface,
                             fontFamily: GoogleFonts.workSans().fontFamily,
@@ -130,7 +132,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                         Text(
                           item.subtitle,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: AppFontSizes.size12,
                             color: AppColors.textMuted,
                             fontFamily: GoogleFonts.workSans().fontFamily,
                           ),
@@ -144,7 +146,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                     amount: rawAmount,
                     isMasked: isMasked,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.w600,
                       color: theme.colorScheme.onSurface,
                       fontFamily: GoogleFonts.workSans().fontFamily,

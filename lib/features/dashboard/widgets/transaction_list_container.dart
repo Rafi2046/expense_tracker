@@ -29,13 +29,13 @@ class TransactionListContainer extends StatelessWidget {
               : AppColors.dividerColor,
           width: 1.0,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 12.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,6 +64,7 @@ class TransactionListContainer extends StatelessWidget {
                 : AppColors.dividerColor.withValues(alpha: 0.5),
           ),
           ListView.separated(
+            padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: children.length,

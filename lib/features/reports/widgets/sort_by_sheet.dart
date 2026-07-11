@@ -1,7 +1,8 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SortBySheet extends StatelessWidget {
   final ReportSortOption currentOption;
@@ -52,11 +53,9 @@ class SortBySheet extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
             child: Text(
               'Sort By:',
-              style: AppTextStyles.dialogTitle.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface,
-              ),
+            style: AppTextStyles.h3.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
             ),
           ),
           Divider(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), height: 1),
@@ -64,25 +63,25 @@ class SortBySheet extends StatelessWidget {
             context: context,
             title: 'Latest',
             option: ReportSortOption.latest,
-            icon: Symbols.swap_vert_rounded,
+            icon: LucideIcons.arrowUpDown,
           ),
           _buildOption(
             context: context,
             title: 'Oldest',
             option: ReportSortOption.oldest,
-            icon: Symbols.swap_vert_rounded,
+            icon: LucideIcons.arrowUpDown,
           ),
           _buildOption(
             context: context,
             title: 'Amount: High to Low',
             option: ReportSortOption.amountHighToLow,
-            icon: Symbols.sort_rounded,
+            icon: LucideIcons.arrowUpDown,
           ),
           _buildOption(
             context: context,
             title: 'Amount: Low to High',
             option: ReportSortOption.amountLowToHigh,
-            icon: Symbols.sort_rounded,
+            icon: LucideIcons.arrowUpDown,
           ),
         ],
       ),
@@ -115,7 +114,7 @@ class SortBySheet extends StatelessWidget {
               child: Text(
                 title,
                 style: AppTextStyles.reportTileTitle.copyWith(
-                  fontSize: 14,
+                  fontSize: AppFontSizes.size14,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   color: isSelected ? theme.colorScheme.onSurface : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),

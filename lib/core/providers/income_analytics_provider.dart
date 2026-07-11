@@ -10,7 +10,7 @@ import 'package:expense_tracker/features/dashboard/widgets/quarterly_trend_chart
 class IncomeAnalyticsProvider extends ChangeNotifier {
   List<TransactionItem> _incomeTransactions = [];
 
-  User? _firebaseUser;
+  String? _currentProfileId;
   StreamSubscription<User?>? _authSubscription;
 
   IncomeAnalyticsProvider() {
@@ -20,9 +20,9 @@ class IncomeAnalyticsProvider extends ChangeNotifier {
   }
 
   void _onAuthChanged(User? newUser) {
-    _firebaseUser = newUser;
     if (newUser == null) {
       _incomeTransactions = [];
+      _currentProfileId = null;
       notifyListeners();
     }
   }
@@ -303,13 +303,14 @@ class IncomeAnalyticsProvider extends ChangeNotifier {
   }
 
   void updateProfileId(String newProfileId) {
+    if (_currentProfileId == newProfileId) return;
+    _currentProfileId = newProfileId;
     _incomeTransactions = [];
     notifyListeners();
   }
 
   void clear() {
     _incomeTransactions = [];
-    _firebaseUser = null;
     notifyListeners();
   }
 

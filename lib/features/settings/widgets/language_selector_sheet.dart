@@ -1,9 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LanguageSelectorSheet extends StatelessWidget {
   const LanguageSelectorSheet({super.key});
@@ -12,6 +13,7 @@ class LanguageSelectorSheet extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useRootNavigator: false,
       backgroundColor: Colors.transparent,
       builder: (context) => const LanguageSelectorSheet(),
     );
@@ -39,7 +41,7 @@ class LanguageSelectorSheet extends StatelessWidget {
             topRight: Radius.circular(28),
           ),
         ),
-        padding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 32.0),
+        padding: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 32.0 + MediaQuery.of(context).padding.bottom),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +69,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Symbols.translate_rounded,
+                    LucideIcons.languages,
                     color: iconColor,
                     size: 22,
                   ),
@@ -79,17 +81,12 @@ class LanguageSelectorSheet extends StatelessWidget {
                     children: [
                       Text(
                         context.translate('change_language'),
-                        style: GoogleFonts.workSans(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onSurface,
-                        ),
+                        style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         'Select your preferred interface language',
-                        style: GoogleFonts.workSans(
-                          fontSize: 12.5,
+                        style: AppTextStyles.label.copyWith(
                           color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                           fontWeight: FontWeight.w400,
                         ),
@@ -177,16 +174,15 @@ class LanguageSelectorSheet extends StatelessWidget {
                 // Flag display
                 Text(
                   lang.flag,
-                  style: const TextStyle(fontSize: 34),
+                  style: const TextStyle(fontSize: AppFontSizes.size36),
                 ),
                 const SizedBox(height: 14),
                 
                 // Name
                 Text(
                   lang.name,
-                  style: GoogleFonts.workSans(
+                  style: AppTextStyles.h3.copyWith(
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                    fontSize: 15.5,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -195,8 +191,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                 // Native Subtitle
                 Text(
                   _getNativeName(lang.code),
-                  style: GoogleFonts.workSans(
-                    fontSize: 12.5,
+                  style: AppTextStyles.label.copyWith(
                     color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                     fontWeight: FontWeight.w400,
                   ),
@@ -208,7 +203,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                 top: 0,
                 right: 0,
                 child: Icon(
-                  Symbols.check_circle_rounded,
+                  LucideIcons.checkCircle,
                   color: activeGreenColor,
                   size: 20,
                 ),

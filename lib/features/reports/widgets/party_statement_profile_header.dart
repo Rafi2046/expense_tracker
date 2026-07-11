@@ -1,9 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PartyStatementProfileHeader extends StatelessWidget {
   const PartyStatementProfileHeader({super.key});
@@ -31,28 +32,28 @@ class PartyStatementProfileHeader extends StatelessWidget {
     if (partyItem != null) {
       if (partyItem.phone != null && partyItem.phone!.trim().isNotEmpty) {
         contactDetails.add(_ContactChipData(
-          icon: Symbols.call,
+          icon: LucideIcons.phoneCall,
           label: partyItem.phone!,
           title: 'Phone',
         ));
       }
       if (partyItem.email != null && partyItem.email!.trim().isNotEmpty) {
         contactDetails.add(_ContactChipData(
-          icon: Symbols.mail,
+          icon: LucideIcons.mail,
           label: partyItem.email!,
           title: 'Email',
         ));
       }
       if (partyItem.address != null && partyItem.address!.trim().isNotEmpty) {
         contactDetails.add(_ContactChipData(
-          icon: Symbols.location_on,
+          icon: LucideIcons.mapPin,
           label: partyItem.address!,
           title: 'Address',
         ));
       }
       if (partyItem.vat != null && partyItem.vat!.trim().isNotEmpty) {
         contactDetails.add(_ContactChipData(
-          icon: Symbols.description,
+          icon: LucideIcons.fileText,
           label: partyItem.vat!,
           title: 'VAT / Tax ID',
         ));
@@ -118,9 +119,7 @@ class PartyStatementProfileHeader extends StatelessWidget {
                         : primaryColor.withValues(alpha: 0.08),
                     child: Text(
                       initial,
-                      style: GoogleFonts.workSans(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
+                      style: AppTextStyles.reportLargeValue.copyWith(
                         color: primaryColor,
                       ),
                     ),
@@ -134,9 +133,8 @@ class PartyStatementProfileHeader extends StatelessWidget {
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.workSans(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
+                  style: AppTextStyles.h1.copyWith(
+                    fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                     letterSpacing: -0.3,
                     height: 1.25,
@@ -147,9 +145,7 @@ class PartyStatementProfileHeader extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   'Party Account',
-                  style: GoogleFonts.workSans(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  style: AppTextStyles.label.copyWith(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                     letterSpacing: 0.8,
                   ),
@@ -315,8 +311,8 @@ class _ContactChip extends StatelessWidget {
               children: [
                 Text(
                   data.title,
-                  style: GoogleFonts.workSans(
-                    fontSize: 10,
+                  style: AppTextStyles.caption.copyWith(
+                    fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.38),
                     letterSpacing: 0.4,
@@ -327,9 +323,7 @@ class _ContactChip extends StatelessWidget {
                   data.label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.workSans(
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w500,
+                  style: AppTextStyles.label.copyWith(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),

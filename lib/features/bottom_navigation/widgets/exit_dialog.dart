@@ -1,9 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ExitDialog extends StatelessWidget {
   const ExitDialog({super.key});
@@ -31,7 +32,7 @@ class ExitDialog extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: const Icon(
-                Symbols.exit_to_app_rounded,
+                LucideIcons.logOut,
                 color: AppColors.activeGreen,
                 size: 32,
               ),
@@ -41,12 +42,7 @@ class ExitDialog extends StatelessWidget {
             // Title
             Text(
               'Exit App',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-                fontFamily: GoogleFonts.workSans().fontFamily,
-              ),
+              style: AppTextStyles.profileTitle.copyWith(color: Colors.black87),
             ),
             const SizedBox(height: 12),
 
@@ -54,10 +50,9 @@ class ExitDialog extends StatelessWidget {
             Text(
               'Are you sure you want to exit the application?',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.loginSubTitle,
+              style: AppTextStyles.body.copyWith(
                 fontFamily: GoogleFonts.workSans().fontFamily,
+                color: AppColors.loginSubTitle,
                 height: 1.4,
               ),
             ),

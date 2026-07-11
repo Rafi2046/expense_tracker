@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -22,6 +21,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AddTransactionSheet extends StatefulWidget {
   final bool isIncome;
@@ -173,7 +174,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 'Balance Will Go Negative',
                 style: GoogleFonts.workSans(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: AppFontSizes.size16,
                   color: theme.colorScheme.onSurface,
                 ),
               ),
@@ -182,7 +183,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 '${context.formatAmount(projected, listen: false)}.\n\n'
                 'Are you sure you want to proceed?',
                 style: GoogleFonts.workSans(
-                  fontSize: 14,
+                  fontSize: AppFontSizes.size14,
                   color: theme.colorScheme.onSurfaceVariant,
                   height: 1.45,
                 ),
@@ -215,7 +216,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
               ],
             ),
           );
-          if (proceed != true) return;
+          if (proceed != true || !context.mounted) return;
         }
       }
 
@@ -257,6 +258,13 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         );
       }
 
+      final monthIdx = provider.availableMonths.indexWhere(
+        (m) => m.year == _selectedDate.year && m.month == _selectedDate.month,
+      );
+      if (monthIdx >= 0) {
+        provider.selectMonthIndex(monthIdx);
+      }
+
       Navigator.pop(context);
 
       final action = existing != null ? 'updated' : 'added';
@@ -264,7 +272,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         SnackBar(
           content: Row(
             children: [
-              const Icon(Symbols.check_circle_outline, color: Colors.white),
+              Icon(LucideIcons.checkCircle, color: Colors.white),
               const SizedBox(width: AppSpacing.w8),
               Text(
                 '${widget.isIncome ? "Income" : "Expense"} $action: ${context.formatAmount(amount, listen: false)}',
@@ -279,6 +287,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         ),
       );
     } catch (e) {
+      if (!context.mounted) return;
       showDialog(
         context: context,
         builder: (_) => const ErrorDialog(
@@ -460,7 +469,12 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         months: provider.availableMonths,
         selectedMonth: _selectedIncomeMonth,
         onSelect: (label) {
-          setState(() => _selectedIncomeMonth = label);
+          setState(() {
+            _selectedIncomeMonth = label;
+            try {
+              _selectedDate = DateFormat('MMMM yyyy').parse(label);
+            } catch (_) {}
+          });
           Navigator.pop(ctx);
         },
       ),

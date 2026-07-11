@@ -1,8 +1,8 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class OverallBalanceCard extends StatelessWidget {
   final double totalBalance;
@@ -44,9 +44,7 @@ class OverallBalanceCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Overall Account Balance',
-                  style: GoogleFonts.workSans(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  style: AppTextStyles.label.copyWith(
                     color: Colors.white70,
                     letterSpacing: 0.3,
                   ),
@@ -58,7 +56,7 @@ class OverallBalanceCard extends StatelessWidget {
                   onToggleMask();
                 },
                 child: Icon(
-                  isMasked ? Symbols.visibility_off : Symbols.visibility,
+                  isMasked ? LucideIcons.shield : LucideIcons.shieldOff,
                   size: 18,
                   color: Colors.white38,
                 ),
@@ -69,9 +67,7 @@ class OverallBalanceCard extends StatelessWidget {
           PrivacyMaskedText(
             amount: totalBalance,
             isMasked: isMasked,
-            style: GoogleFonts.workSans(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+            style: AppTextStyles.displayMedium.copyWith(
               color: Colors.white,
             ),
           ),

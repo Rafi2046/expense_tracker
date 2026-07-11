@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
@@ -9,9 +8,9 @@ import 'package:expense_tracker/features/dashboard/widgets/expense_time_frame_se
 import 'package:expense_tracker/features/dashboard/widgets/expense_trend_chart_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ExpenseInsightsScreen extends StatefulWidget {
   const ExpenseInsightsScreen({super.key});
@@ -33,7 +32,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -53,7 +52,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
               setState(() => _localMasked = !_localMasked);
             },
             icon: Icon(
-              _localMasked ? Symbols.visibility_off : Symbols.visibility,
+              _localMasked ? LucideIcons.shield : LucideIcons.shieldOff,
               color: AppColors.notificationIcon,
               size: 26,
             ),
@@ -66,7 +65,12 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.fromLTRB(
+            16.0,
+            16.0,
+            16.0,
+            16.0 + MediaQuery.of(context).padding.bottom + 80,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -88,12 +92,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                   amount: PrivacyMaskedText(
                     amount: provider.todayExpense,
                     isMasked: _localMasked,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
-                    ),
+                    style: AppTextStyles.displayLarge.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   chartData: provider.dailyChartData,
                 )
@@ -104,12 +103,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                   amount: PrivacyMaskedText(
                     amount: provider.currentWeekExpense,
                     isMasked: _localMasked,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
-                    ),
+                    style: AppTextStyles.displayLarge.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   trendPercentage:
                       '${provider.weeklyPercentageChange.toStringAsFixed(2)}% This Week',
@@ -122,12 +116,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                   amount: PrivacyMaskedText(
                     amount: provider.currentMonthExpense,
                     isMasked: _localMasked,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
-                    ),
+                    style: AppTextStyles.displayLarge.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   trendPercentage:
                       '${provider.monthlyPercentageChange.toStringAsFixed(2)}% This Month',
@@ -140,12 +129,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                   amount: PrivacyMaskedText(
                     amount: provider.currentQuarterExpense,
                     isMasked: _localMasked,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
-                    ),
+                    style: AppTextStyles.displayLarge.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   trendPercentage:
                       '${provider.quarterlyPercentageChange.toStringAsFixed(2)}% This Quarter',
@@ -159,12 +143,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                   totalAmount: PrivacyMaskedText(
                     amount: provider.currentMonthExpense,
                     isMasked: _localMasked,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
-                    ),
+                    style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   categories: provider.monthlyCategories,
                   isMasked: _localMasked,
@@ -176,12 +155,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                   totalAmount: PrivacyMaskedText(
                     amount: provider.currentQuarterExpense,
                     isMasked: _localMasked,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
-                    ),
+                    style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   categories: provider.quarterlyCategories,
                   isMasked: _localMasked,

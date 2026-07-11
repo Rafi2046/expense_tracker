@@ -1,9 +1,9 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PersonalInfoView extends StatelessWidget {
   final User user;
@@ -36,55 +36,50 @@ class PersonalInfoView extends StatelessWidget {
     required IconData icon,
     required String label,
     required String value,
-    Color iconColor = const Color(0xFF6A53A1),
-    Color iconBgColor = const Color(0xFFF3E8FF),
-    Widget? trailing,
+    IconData? trailingIcon,
+    VoidCallback? onTap,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final resolvedIconBg = isDark ? iconColor.withValues(alpha: 0.15) : iconBgColor;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: resolvedIconBg,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, color: iconColor, size: 18),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: GoogleFonts.workSans(
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w500,
-                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: InkWell(
+        onTap: onTap,
+        child: Row(
+          children: [
+            Icon(icon, color: isDark ? Colors.white70 : Colors.grey.shade600, size: 22),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: AppTextStyles.caption.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: isDark ? Colors.grey.shade500 : Colors.grey.shade500,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  value.isEmpty ? 'Not set' : value,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.workSans(
-                    fontSize: 14.5,
-                    fontWeight: FontWeight.w600,
-                    color: value.isEmpty 
-                        ? (isDark ? Colors.grey.shade600 : Colors.grey.shade400) 
-                        : Theme.of(context).colorScheme.onSurface,
+                  const SizedBox(height: 2),
+                  Text(
+                    value.isEmpty ? 'Not set' : value,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.label.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: value.isEmpty
+                          ? (isDark ? Colors.grey.shade600 : Colors.grey.shade400)
+                          : Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          trailing ?? const SizedBox.shrink(),
-        ],
+            if (trailingIcon != null) ...[
+              const SizedBox(width: 6),
+              Icon(trailingIcon, color: isDark ? Colors.white60 : Colors.grey.shade400, size: 14),
+            ],
+          ],
+        ),
       ),
     );
   }
@@ -153,22 +148,17 @@ class PersonalInfoView extends StatelessWidget {
               Text(
                 displayName,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.workSans(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
-                ),
+                style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
               ),
               if (occupation.isNotEmpty) ...[
                 const SizedBox(height: 4),
                 Text(
                   occupation,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.workSans(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: primaryColor,
-                  ),
+                style: AppTextStyles.bodySmall.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: primaryColor,
+                ),
                 ),
               ],
             ],
@@ -179,8 +169,7 @@ class PersonalInfoView extends StatelessWidget {
         // Info List Section
         Text(
           'PERSONAL DETAILS',
-          style: GoogleFonts.workSans(
-            fontSize: 11,
+          style: AppTextStyles.caption.copyWith(
             fontWeight: FontWeight.bold,
             color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
             letterSpacing: 1.2,
@@ -206,38 +195,30 @@ class PersonalInfoView extends StatelessWidget {
             children: [
               _buildInfoRow(
                 context,
-                icon: Symbols.phone,
+                icon: LucideIcons.phoneCall,
                 label: 'Phone Number',
                 value: phone,
-                iconColor: const Color(0xFF1E88E5),
-                iconBgColor: const Color(0xFFE3F2FD),
               ),
               Divider(height: 1, color: borderColor),
               _buildInfoRow(
                 context,
-                icon: Symbols.cake,
+                icon: LucideIcons.calendar,
                 label: 'Date of Birth',
                 value: dob,
-                iconColor: const Color(0xFFD81B60),
-                iconBgColor: const Color(0xFFFCE4EC),
               ),
               Divider(height: 1, color: borderColor),
               _buildInfoRow(
                 context,
-                icon: gender == 'Male' ? Symbols.male : Symbols.female,
+                icon: gender == 'Male' ? LucideIcons.mars : LucideIcons.venus,
                 label: 'Gender',
                 value: gender,
-                iconColor: gender == 'Male' ? const Color(0xFF1E88E5) : const Color(0xFFD81B60),
-                iconBgColor: gender == 'Male' ? const Color(0xFFE3F2FD) : const Color(0xFFFCE4EC),
               ),
               Divider(height: 1, color: borderColor),
               _buildInfoRow(
                 context,
-                icon: Symbols.mail_outline_rounded,
+                icon: LucideIcons.mail,
                 label: 'Email Address',
                 value: user.email ?? '',
-                iconColor: const Color(0xFF43A047),
-                iconBgColor: const Color(0xFFE8F5E9),
               ),
             ],
           ),

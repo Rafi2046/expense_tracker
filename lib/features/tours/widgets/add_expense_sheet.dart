@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
 
 class AddExpenseSheet extends StatefulWidget {
   final String tourId;
@@ -54,6 +56,7 @@ class AddExpenseSheet extends StatefulWidget {
 class _AddExpenseSheetState extends State<AddExpenseSheet> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+  final _amountFocusNode = FocusNode();
   final _noteController = TextEditingController();
   final _customValues = <String, TextEditingController>{};
   final _picker = ImagePicker();
@@ -72,16 +75,16 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   XFile? _receiptImage;
 
   static const _categories = [
-    ('Food', Symbols.restaurant),
-    ('Transport', Symbols.directions_car),
-    ('Accommodation', Symbols.hotel),
-    ('Activities', Symbols.hiking),
-    ('Shopping', Symbols.shopping_bag),
-    ('Drinks', Symbols.local_bar),
-    ('Groceries', Symbols.shopping_cart),
-    ('Fuel', Symbols.local_gas_station),
-    ('Tickets', Symbols.confirmation_number),
-    ('Other', Symbols.more_horiz),
+    ('Food', LucideIcons.utensilsCrossed),
+    ('Transport', LucideIcons.car),
+    ('Accommodation', LucideIcons.hotel),
+    ('Activities', LucideIcons.mountain),
+    ('Shopping', LucideIcons.shoppingBag),
+    ('Drinks', LucideIcons.beer),
+    ('Groceries', LucideIcons.shoppingCart),
+    ('Fuel', LucideIcons.fuel),
+    ('Tickets', LucideIcons.ticket),
+    ('Other', LucideIcons.moreHorizontal),
   ];
 
   static const _avatarColors = [
@@ -130,6 +133,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   void dispose() {
     _titleController.dispose();
     _amountController.dispose();
+    _amountFocusNode.dispose();
     _noteController.dispose();
     for (final c in _customValues.values) {
       c.dispose();
@@ -383,15 +387,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             const SizedBox(height: 20),
             Text(
               'Attach Receipt',
-              style: GoogleFonts.workSans(
-                fontSize: 17, fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface,
-              ),
+              style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
             ),
             const SizedBox(height: 20),
-            _buildReceiptOption(ctx, theme, Icons.camera_alt_rounded, 'Take Photo', ImageSource.camera),
+            _buildReceiptOption(ctx, theme, LucideIcons.camera, 'Take Photo', ImageSource.camera),
             const SizedBox(height: 4),
-            _buildReceiptOption(ctx, theme, Icons.photo_library_rounded, 'Choose from Gallery', ImageSource.gallery),
+            _buildReceiptOption(ctx, theme, LucideIcons.image, 'Choose from Gallery', ImageSource.gallery),
             const SizedBox(height: 8),
           ],
         ),
@@ -410,7 +411,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         ),
         child: Icon(icon, color: AppColors.activeGreen, size: 20),
       ),
-      title: Text(label, style: GoogleFonts.workSans(fontSize: 14, fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface)),
+      title: Text(label, style: AppTextStyles.bodyBold.copyWith(fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface)),
       onTap: () {
         Navigator.pop(ctx);
         _pickReceipt(source);
@@ -496,6 +497,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       receiptPath: await _persistReceipt(_receiptImage?.path),
     );
 
+    if (!mounted) return;
     final provider = context.read<TourProvider>();
 
     Map<String, double>? customValues;
@@ -516,10 +518,19 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           : null,
     );
 
-    if (isEdit) {
-      await provider.updateExpense(expense, shares);
-    } else {
-      await provider.addExpense(expense, shares);
+    final success = isEdit
+        ? await provider.updateExpense(expense, shares)
+        : await provider.addExpense(expense, shares);
+    if (!success) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Cannot modify expense — tour is completed'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      return;
     }
     if (mounted) Navigator.of(context).pop();
   }
@@ -528,14 +539,15 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   // BUILD
   // ═══════════════════════════════════════════════════════════════════════
 
-  static const Color _sectionBg = Color(0xFFF8F9FA);
+  Color _sectionBg(ThemeData theme) =>
+      theme.brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA);
 
-  Widget _sectionWrapper(Widget child) {
+  Widget _sectionWrapper(ThemeData theme, Widget child) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.p20),
       decoration: BoxDecoration(
-        color: _sectionBg,
+        color: _sectionBg(theme),
         borderRadius: BorderRadius.circular(AppSpacing.r16),
       ),
       child: child,
@@ -547,8 +559,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       padding: const EdgeInsets.only(left: 2, bottom: AppSpacing.s12),
       child: Text(
         label,
-        style: GoogleFonts.workSans(
-          fontSize: 11,
+        style: AppTextStyles.caption.copyWith(
           fontWeight: FontWeight.w700,
           color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
           letterSpacing: 1.2,
@@ -565,12 +576,13 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     final percentageError = _splitType == 'percentage' && (_percentageTotal * 100).round() != 10000;
     final exactExceedsError = _exactAmountsExceed;
 
+    final double maxHeight = (MediaQuery.of(context).size.height - bottom) * 0.85;
+
     return Padding(
       padding: EdgeInsets.only(bottom: bottom),
-      child: Container(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.92,
-        ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: maxHeight),
+        child: Container(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -597,7 +609,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     // Paid By section
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _sectionWrapper(
+                      child: _sectionWrapper(theme,
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -611,7 +623,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     // Split section
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _sectionWrapper(
+                      child: _sectionWrapper(theme,
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -627,22 +639,14 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                               const SizedBox(height: AppSpacing.s8),
                               Text(
                                 'Sum must be 100%',
-                                style: GoogleFonts.workSans(
-                                  fontSize: 12,
-                                  color: AppColors.activeRed,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: AppTextStyles.label.copyWith(color: AppColors.activeRed),
                               ),
                             ],
                             if (exactExceedsError) ...[
                               const SizedBox(height: AppSpacing.s8),
                               Text(
                                 'Amounts exceed total',
-                                style: GoogleFonts.workSans(
-                                  fontSize: 12,
-                                  color: AppColors.activeRed,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: AppTextStyles.label.copyWith(color: AppColors.activeRed),
                               ),
                             ],
                           ],
@@ -653,7 +657,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     // Notes section
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _sectionWrapper(
+                      child: _sectionWrapper(theme,
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -676,12 +680,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.error_outline_rounded, size: 16, color: AppColors.activeRed.withValues(alpha: 0.8)),
+                              Icon(LucideIcons.alertCircle, size: 16, color: AppColors.activeRed.withValues(alpha: 0.8)),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   _validationError!,
-                                  style: GoogleFonts.workSans(color: AppColors.activeRed, fontSize: 12, fontWeight: FontWeight.w500),
+                                  style: AppTextStyles.label.copyWith(color: AppColors.activeRed),
                                 ),
                               ),
                             ],
@@ -698,6 +702,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             _buildSaveButton(theme, bottomInset, percentageError || exactExceedsError),
           ],
         ),
+      ),
       ),
     );
   }
@@ -748,8 +753,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             children: [
               Text(
                 _sym,
-                style: GoogleFonts.workSans(
-                  fontSize: 28,
+                style: AppTextStyles.displayLarge.copyWith(
                   fontWeight: FontWeight.w300,
                   color: AppColors.activeGreen.withValues(alpha: 0.5),
                 ),
@@ -760,22 +764,27 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   constraints: const BoxConstraints(minWidth: 60, maxWidth: 200),
                   child: TextField(
                     controller: _amountController,
+                    focusNode: _amountFocusNode,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
                     ],
                     textAlign: TextAlign.center,
                     onChanged: (_) => setState(() => _validationError = null),
-                    style: GoogleFonts.workSans(
-                      fontSize: 38,
+                    style: AppTextStyles.displayLarge.copyWith(
+                      fontSize: AppFontSizes.size36,
                       fontWeight: FontWeight.w700,
                       color: theme.colorScheme.onSurface,
                       height: 1.2,
                     ),
+                    autofocus: true,
+                    cursorColor: AppColors.activeGreen,
+                    cursorWidth: 3,
+                    cursorHeight: 44,
                     decoration: InputDecoration(
-                      hintText: '0',
-                      hintStyle: GoogleFonts.workSans(
-                        fontSize: 38,
+                      hintText: '0.00',
+                      hintStyle: AppTextStyles.displayLarge.copyWith(
+                        fontSize: AppFontSizes.size36,
                         fontWeight: FontWeight.w300,
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
                       ),
@@ -796,7 +805,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p14, vertical: AppSpacing.p12),
             decoration: BoxDecoration(
-              color: _sectionBg,
+              color: _sectionBg(theme),
               borderRadius: BorderRadius.circular(AppSpacing.r10),
               border: Border.all(
                 color: theme.dividerColor.withValues(alpha: 0.1),
@@ -807,15 +816,15 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               controller: _titleController,
               textAlign: TextAlign.start,
               onChanged: (_) => setState(() => _validationError = null),
-              style: GoogleFonts.workSans(
-                fontSize: 15,
+              style: AppTextStyles.bodyBold.copyWith(
+                fontSize: AppFontSizes.size15,
                 color: theme.colorScheme.onSurface,
                 fontWeight: FontWeight.w500,
               ),
               decoration: InputDecoration(
-                hintText: 'What was the expense for?',
-                hintStyle: GoogleFonts.workSans(
-                  fontSize: 15,
+                hintText: 'e.g. Kacchi Bhai Dinner',
+                hintStyle: AppTextStyles.bodyBold.copyWith(
+                  fontSize: AppFontSizes.size15,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
                   fontWeight: FontWeight.w400,
                 ),
@@ -833,231 +842,263 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   // ─── Category Chips (inline) ─────────────────────────────────────────
 
   Widget _buildCategoryChips(ThemeData theme) {
-    final totalItems = _categories.length + _customCategories.length + 1;
+    final isDark = theme.brightness == Brightness.dark;
 
-    return SizedBox(
-      height: 36,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        itemCount: totalItems,
-        separatorBuilder: (_, __) => const SizedBox(width: 6),
-        itemBuilder: (context, index) {
-          if (index < _categories.length) {
-            final (label, icon) = _categories[index];
-            final isSelected = _selectedCategory == label;
-            return GestureDetector(
-              onTap: () => setState(() {
-                _selectedCategory = isSelected ? null : label;
-              }),
-              child: _buildChip(label, icon, isSelected, theme),
-            );
-          }
-
-          if (index < _categories.length + _customCategories.length) {
-            final cat = _customCategories[index - _categories.length];
-            final isSelected = _selectedCategory == cat['name'];
-            return GestureDetector(
-              onTap: () => setState(() {
-                _selectedCategory = isSelected ? null : cat['name'];
-              }),
-              child: _buildChip(cat['name'] as String, cat['icon'] as IconData, isSelected, theme),
-            );
-          }
-
-          return GestureDetector(
-            onTap: () => _showAddCategoryDialog(),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3F4F6),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0xFFD1D5DB), width: 1),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.add_rounded,
-                    size: 14,
-                    color: const Color(0xFF6B7280),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Add',
-                    style: GoogleFonts.workSans(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF6B7280),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildChip(String label, IconData icon, bool isSelected, ThemeData theme) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       decoration: BoxDecoration(
-        color: isSelected
-            ? AppColors.activeGreen.withValues(alpha: 0.12)
-            : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(20),
+        color: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isSelected
-              ? AppColors.activeGreen.withValues(alpha: 0.3)
-              : Colors.transparent,
-          width: 1,
+          color: theme.dividerColor.withValues(alpha: 0.1),
         ),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            size: 14,
-            color: isSelected
-                ? AppColors.activeGreen
-                : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-          ),
-          const SizedBox(width: 5),
           Text(
-            label,
-            style: GoogleFonts.workSans(
-              fontSize: 12,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-              color: isSelected
-                  ? AppColors.activeGreen
-                  : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+            'CATEGORY',
+            style: AppTextStyles.caption.copyWith(
+              fontSize: AppFontSizes.size10,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.5,
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
+          ),
+          const SizedBox(height: 8),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              crossAxisSpacing: 6,
+              mainAxisSpacing: 6,
+              childAspectRatio: 1.3,
+            ),
+            itemCount: _categories.length + _customCategories.length + 1,
+            itemBuilder: (context, index) {
+              if (index < _categories.length) {
+                final (label, icon) = _categories[index];
+                return _buildCategoryGridItem(theme, label, icon, _selectedCategory == label);
+              }
+              final ci = index - _categories.length;
+              if (ci < _customCategories.length) {
+                final cat = _customCategories[ci];
+                return _buildCategoryGridItem(
+                  theme, cat['name'] as String, cat['icon'] as IconData,
+                  _selectedCategory == cat['name'],
+                  onTap: () => setState(() {
+                    _selectedCategory = _selectedCategory == cat['name'] ? null : cat['name'];
+                  }),
+                );
+              }
+              return _buildAddGridItem(theme);
+            },
           ),
         ],
       ),
     );
   }
 
+  Widget _buildCategoryGridItem(ThemeData theme, String label, IconData icon, bool selected, {VoidCallback? onTap}) {
+    final isDark = theme.brightness == Brightness.dark;
+    return GestureDetector(
+      onTap: onTap ?? () => setState(() => _selectedCategory = selected ? null : label),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          color: selected
+              ? AppColors.activeGreen.withValues(alpha: 0.12)
+              : (isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFF0F0F0)),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: selected
+                ? AppColors.activeGreen.withValues(alpha: 0.3)
+                : (isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFE5E5E5)),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: selected
+                  ? AppColors.activeGreen
+                  : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+            ),
+            const SizedBox(height: 3),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.caption.copyWith(
+                fontSize: AppFontSizes.size9,
+                fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                color: selected
+                    ? AppColors.activeGreen
+                    : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddGridItem(ThemeData theme) {
+    final isDark = theme.brightness == Brightness.dark;
+    return GestureDetector(
+      onTap: () => _showAddCategoryDialog(),
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFF0F0F0),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFE5E5E5),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              LucideIcons.plus,
+              size: 16,
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+            ),
+            const SizedBox(height: 3),
+            Text(
+              'Add',
+              style: AppTextStyles.caption.copyWith(
+                fontSize: AppFontSizes.size9,
+                fontWeight: FontWeight.w500,
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   static final _categoryIcons = <IconData>[
-    Symbols.label,
-    Symbols.restaurant,
-    Symbols.coffee,
-    Symbols.smoking_rooms,
-    Symbols.water_drop,
-    Symbols.directions_car,
-    Symbols.hotel,
-    Symbols.hiking,
-    Symbols.shopping_bag,
-    Symbols.local_bar,
-    Symbols.shopping_cart,
-    Symbols.local_gas_station,
-    Symbols.confirmation_number,
-    Symbols.more_horiz,
-    Symbols.flight,
-    Symbols.music_note,
-    Symbols.check_circle,
-    Symbols.arrow_downward,
-    Symbols.people_alt,
-    Symbols.explore,
-    Symbols.image,
-    Symbols.description,
-    Symbols.swap_horiz,
-    Symbols.camera_alt,
-    Symbols.photo_library,
-    Symbols.info,
-    Symbols.delete_outline,
-    Symbols.add,
-    Symbols.close,
-    Symbols.drag_handle,
-    Symbols.pin,
-    Symbols.percent,
-    Symbols.person_off,
-    Symbols.check,
-    Symbols.calendar_today,
-    Symbols.receipt_long,
-    Symbols.account_balance_wallet,
-    Symbols.keyboard_arrow_down,
-    Symbols.error_outline,
-    Symbols.remove_circle_outline,
-    Symbols.arrow_back,
-    Symbols.chevron_right,
-    Symbols.arrow_back_ios,
-    Symbols.home,
-    Symbols.pets,
-    Symbols.health_and_safety,
-    Symbols.flash_on,
-    Symbols.celebration,
-    Symbols.cake,
-    Symbols.card_giftcard,
-    Symbols.wifi,
-    Symbols.phone,
-    Symbols.construction,
-    Symbols.brush,
-    Symbols.forest,
-    Symbols.beach_access,
+    LucideIcons.tag,
+    LucideIcons.utensilsCrossed,
+    LucideIcons.coffee,
+    LucideIcons.cigarette,
+    LucideIcons.droplets,
+    LucideIcons.car,
+    LucideIcons.hotel,
+    LucideIcons.mountain,
+    LucideIcons.shoppingBag,
+    LucideIcons.beer,
+    LucideIcons.shoppingCart,
+    LucideIcons.fuel,
+    LucideIcons.ticket,
+    LucideIcons.moreHorizontal,
+    LucideIcons.plane,
+    LucideIcons.music,
+    LucideIcons.checkCircle,
+    LucideIcons.arrowDown,
+    LucideIcons.users,
+    LucideIcons.compass,
+    LucideIcons.image,
+    LucideIcons.fileText,
+    LucideIcons.arrowLeftRight,
+    LucideIcons.camera,
+    LucideIcons.image,
+    LucideIcons.info,
+    LucideIcons.trash,
+    LucideIcons.plus,
+    LucideIcons.x,
+    LucideIcons.gripHorizontal,
+    LucideIcons.pin,
+    LucideIcons.percent,
+    LucideIcons.user,
+    LucideIcons.check,
+    LucideIcons.calendar,
+    LucideIcons.receipt,
+    LucideIcons.wallet,
+    LucideIcons.chevronDown,
+    LucideIcons.alertCircle,
+    LucideIcons.minusCircle,
+    LucideIcons.arrowLeft,
+    LucideIcons.chevronRight,
+    LucideIcons.arrowLeft,
+    LucideIcons.home,
+    LucideIcons.pawPrint,
+    LucideIcons.heartPulse,
+    LucideIcons.zap,
+    LucideIcons.sparkles,
+    LucideIcons.cake,
+    LucideIcons.gift,
+    LucideIcons.wifi,
+    LucideIcons.phone,
+    LucideIcons.hardHat,
+    LucideIcons.paintbrush,
+    LucideIcons.trees,
+    LucideIcons.umbrella,
   ];
 
   static final _iconSearchData = <IconData, String>{
-    Symbols.label: 'label tag category other misc general',
-    Symbols.restaurant: 'food restaurant dining meal eat dinner lunch',
-    Symbols.coffee: 'coffee tea breakfast cafe drink beverage morning',
-    Symbols.smoking_rooms: 'cigarette smoking tobacco cigar',
-    Symbols.water_drop: 'water drink hydration bottle liquid',
-    Symbols.directions_car: 'transport car vehicle travel drive ride',
-    Symbols.hotel: 'hotel accommodation stay lodging room',
-    Symbols.hiking: 'activity outdoor adventure sport hiking trek',
-    Symbols.shopping_bag: 'shopping bag purchase retail store',
-    Symbols.local_bar: 'bar drink alcohol beer wine cocktail party',
-    Symbols.shopping_cart: 'grocery supermarket food shopping cart',
-    Symbols.local_gas_station: 'fuel gas station petrol car vehicle',
-    Symbols.confirmation_number: 'ticket ticket booking event movie show',
-    Symbols.more_horiz: 'more other misc extra additional',
-    Symbols.flight: 'flight plane travel airport trip vacation',
-    Symbols.music_note: 'music song entertainment party concert',
-    Symbols.check_circle: 'check done complete confirm yes verified',
-    Symbols.arrow_downward: 'down arrow download receive incoming',
-    Symbols.people_alt: 'people group team friends family members',
-    Symbols.explore: 'explore adventure discover compass navigate',
-    Symbols.image: 'photo image picture gallery photography',
-    Symbols.description: 'document description file report text',
-    Symbols.swap_horiz: 'swap transfer exchange switch change',
-    Symbols.camera_alt: 'camera photo image picture photography',
-    Symbols.photo_library: 'gallery photo image picture library album',
-    Symbols.info: 'info information help details notice',
-    Symbols.delete_outline: 'delete remove trash discard',
-    Symbols.add: 'add new create plus additional',
-    Symbols.close: 'close cancel exit remove stop',
-    Symbols.drag_handle: 'drag handle move reorder',
-    Symbols.pin: 'pin save bookmark important',
-    Symbols.percent: 'percent percentage discount offer sale',
-    Symbols.person_off: 'person user people individual',
-    Symbols.check: 'check done yes confirm verify',
-    Symbols.calendar_today: 'calendar date event schedule appointment',
-    Symbols.receipt_long: 'receipt bill invoice payment transaction',
-    Symbols.account_balance_wallet: 'wallet account balance finance money bank payment',
-    Symbols.keyboard_arrow_down: 'keyboard arrow down dropdown expand',
-    Symbols.error_outline: 'error warning alert problem issue',
-    Symbols.remove_circle_outline: 'remove circle delete clear cancel',
-    Symbols.arrow_back: 'arrow back left previous return',
-    Symbols.chevron_right: 'chevron right next forward continue',
-    Symbols.arrow_back_ios: 'arrow back left ios previous',
-    Symbols.home: 'home house rent lodging accommodation',
-    Symbols.pets: 'pets animal dog cat pet veterinary',
-    Symbols.health_and_safety: 'health medical medicine hospital doctor pharmacy',
-    Symbols.flash_on: 'flash electricity power energy utility bill',
-    Symbols.celebration: 'celebration party event occasion festival',
-    Symbols.cake: 'cake dessert birthday sweet bakery',
-    Symbols.card_giftcard: 'gift present card giftcard occasion',
-    Symbols.wifi: 'wifi internet network connection data',
-    Symbols.phone: 'phone mobile call communication mobile',
-    Symbols.construction: 'construction repair maintenance tool fix',
-    Symbols.brush: 'paint color decoration design art renovate brush',
-    Symbols.forest: 'forest nature tree park outdoor environment',
-    Symbols.beach_access: 'beach ocean sea water vacation holiday',
+    LucideIcons.tag: 'label tag category other misc general',
+    LucideIcons.utensilsCrossed: 'food restaurant dining meal eat dinner lunch',
+    LucideIcons.coffee: 'coffee tea breakfast cafe drink beverage morning',
+    LucideIcons.cigarette: 'cigarette smoking tobacco cigar',
+    LucideIcons.droplets: 'water drink hydration bottle liquid',
+    LucideIcons.car: 'transport car vehicle travel drive ride',
+    LucideIcons.hotel: 'hotel accommodation stay lodging room',
+    LucideIcons.mountain: 'activity outdoor adventure sport hiking trek',
+    LucideIcons.shoppingBag: 'shopping bag purchase retail store',
+    LucideIcons.beer: 'bar drink alcohol beer wine cocktail party',
+    LucideIcons.shoppingCart: 'grocery supermarket food shopping cart',
+    LucideIcons.fuel: 'fuel gas station petrol car vehicle',
+    LucideIcons.ticket: 'ticket ticket booking event movie show',
+    LucideIcons.moreHorizontal: 'more other misc extra additional',
+    LucideIcons.plane: 'flight plane travel airport trip vacation',
+    LucideIcons.music: 'music song entertainment party concert',
+    LucideIcons.checkCircle: 'check done complete confirm yes verified',
+    LucideIcons.arrowDown: 'down arrow download receive incoming',
+    LucideIcons.users: 'people group team friends family members',
+    LucideIcons.compass: 'explore adventure discover compass navigate',
+    LucideIcons.image: 'photo image picture gallery photography',
+    LucideIcons.fileText: 'document description file report text',
+    LucideIcons.arrowLeftRight: 'swap transfer exchange switch change',
+    LucideIcons.camera: 'camera photo image picture photography',
+    LucideIcons.info: 'info information help details notice',
+    LucideIcons.trash: 'delete remove trash discard',
+    LucideIcons.plus: 'add new create plus additional',
+    LucideIcons.x: 'close cancel exit remove stop',
+    LucideIcons.gripHorizontal: 'drag handle move reorder',
+    LucideIcons.pin: 'pin save bookmark important',
+    LucideIcons.percent: 'percent percentage discount offer sale',
+    LucideIcons.user: 'person user people individual',
+    LucideIcons.check: 'check done yes confirm verify',
+    LucideIcons.calendar: 'calendar date event schedule appointment',
+    LucideIcons.receipt: 'receipt bill invoice payment transaction',
+    LucideIcons.wallet: 'wallet account balance finance money bank payment',
+    LucideIcons.chevronDown: 'keyboard arrow down dropdown expand',
+    LucideIcons.alertCircle: 'error warning alert problem issue',
+    LucideIcons.minusCircle: 'remove circle delete clear cancel',
+    LucideIcons.arrowLeft: 'arrow back left previous return ios',
+    LucideIcons.chevronRight: 'chevron right next forward continue',
+    LucideIcons.home: 'home house rent lodging accommodation',
+    LucideIcons.pawPrint: 'pets animal dog cat pet veterinary',
+    LucideIcons.heartPulse: 'health medical medicine hospital doctor pharmacy',
+    LucideIcons.zap: 'flash electricity power energy utility bill',
+    LucideIcons.sparkles: 'celebration party event occasion festival',
+    LucideIcons.cake: 'cake dessert birthday sweet bakery',
+    LucideIcons.gift: 'gift present card giftcard occasion',
+    LucideIcons.wifi: 'wifi internet network connection data',
+    LucideIcons.phone: 'phone mobile call communication mobile',
+    LucideIcons.hardHat: 'construction repair maintenance tool fix',
+    LucideIcons.paintbrush: 'paint color decoration design art renovate brush',
+    LucideIcons.trees: 'forest nature tree park outdoor environment',
+    LucideIcons.umbrella: 'beach ocean sea water vacation holiday',
   };
 
   Future<void> _showAddCategoryDialog() async {
@@ -1072,10 +1113,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.r16),
           ),
-          backgroundColor: AppColors.white,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           title: const Text(
             'New Category',
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: AppFontSizes.size18),
           ),
           content: SizedBox(
             width: double.maxFinite,
@@ -1105,11 +1146,11 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       }
                     },
                   ),
-                  const SizedBox(height: 8),
+          const SizedBox(height: 6),
                   const Text(
                     'Choose an icon',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: AppFontSizes.size12,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF6B7280),
                     ),
@@ -1199,7 +1240,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
-          _buildMetaChip(theme, Icons.calendar_today_rounded, _formatDate(_selectedDate), _pickDate),
+          _buildMetaChip(theme, LucideIcons.calendar, _formatDate(_selectedDate), _pickDate),
         ],
       ),
     );
@@ -1225,14 +1266,13 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             const SizedBox(width: 6),
             Text(
               text,
-              style: GoogleFonts.workSans(
-                fontSize: 13,
-                color: theme.colorScheme.onSurface,
+              style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.w500,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(width: 4),
-            Icon(Icons.keyboard_arrow_down_rounded, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
+            Icon(LucideIcons.chevronDown, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
           ],
         ),
       ),
@@ -1266,15 +1306,14 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.receipt_long_outlined, size: 18,
+            Icon(LucideIcons.receipt, size: 18,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
             const SizedBox(width: 8),
             Text(
               'Add Receipt',
-              style: GoogleFonts.workSans(
-                fontSize: 13,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
+              style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.w500,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
               ),
             ),
           ],
@@ -1308,7 +1347,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 _receiptImage!.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.workSans(fontSize: 13, color: theme.colorScheme.onSurface),
+                style: AppTextStyles.bodySmall.copyWith(color: theme.colorScheme.onSurface),
               ),
             ),
             GestureDetector(
@@ -1319,7 +1358,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   color: AppColors.activeRed.withValues(alpha: 0.08),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.close_rounded, size: 14, color: AppColors.activeRed.withValues(alpha: 0.7)),
+                child: Icon(LucideIcons.x, size: 14, color: AppColors.activeRed.withValues(alpha: 0.7)),
               ),
             ),
           ],
@@ -1372,22 +1411,21 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               child: Text(
                 p.name.isNotEmpty ? p.name[0].toUpperCase() : '?',
                 style: const TextStyle(
-                  color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600,
+                  color: Colors.white, fontSize: AppFontSizes.size11, fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            if (selected) ...[
-              const SizedBox(width: 6),
-              Text(
-                p.name.split(' ').first,
-                style: GoogleFonts.workSans(
-                  fontSize: 12,
-                  color: theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
+            const SizedBox(width: 6),
+            Text(
+              p.name.split(' ').first,
+              style: AppTextStyles.label.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface.withValues(alpha: selected ? 1 : 0.6),
               ),
+            ),
+            if (selected) ...[
               const SizedBox(width: 4),
-              const Icon(Icons.check_circle_rounded, size: 14, color: AppColors.activeGreen),
+              Icon(LucideIcons.checkCircle, size: 14, color: AppColors.activeGreen),
             ],
           ],
         ),
@@ -1400,7 +1438,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   Widget _buildSplitTypePills(ThemeData theme) {
     final types = ['equal', 'exact', 'percentage', 'exclusion'];
     final labels = ['Equal', 'Exact', 'Percent', 'Exclude'];
-    final icons = [Icons.drag_handle_rounded, Icons.pin_rounded, Icons.percent_rounded, Icons.person_off_rounded];
+    final icons = [LucideIcons.gripHorizontal, LucideIcons.pin, LucideIcons.percent, LucideIcons.userX];
 
     return Container(
       padding: const EdgeInsets.all(4),
@@ -1445,8 +1483,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       const SizedBox(height: 2),
                       Text(
                         labels[i],
-                        style: GoogleFonts.workSans(
-                          fontSize: 10,
+                        style: AppTextStyles.caption.copyWith(
+                          fontSize: AppFontSizes.size10,
                           fontWeight: active ? FontWeight.w600 : FontWeight.w500,
                           color: active ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.4),
                         ),
@@ -1474,12 +1512,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.activeGreen),
+          Icon(LucideIcons.info, size: 14, color: AppColors.activeGreen),
           const SizedBox(width: 6),
           Expanded(
             child: Text(
               '$names joined after ${_formatDate(_selectedDate)} — unchecked by default.',
-              style: GoogleFonts.workSans(fontSize: 11, color: AppColors.activeGreen),
+              style: AppTextStyles.caption.copyWith(color: AppColors.activeGreen),
             ),
           ),
         ],
@@ -1505,7 +1543,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p10),
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(AppSpacing.r10),
                 border: Border.all(
                   color: excluded
@@ -1548,7 +1586,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       p.name[0].toUpperCase(),
                       style: TextStyle(
                         color: excluded ? theme.colorScheme.onSurface.withValues(alpha: 0.3) : Colors.white,
-                        fontSize: 10, fontWeight: FontWeight.w600,
+                        fontSize: AppFontSizes.size10, fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -1560,8 +1598,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       children: [
                         Text(
                           p.name,
-                          style: GoogleFonts.workSans(
-                            fontSize: 13, fontWeight: FontWeight.w500,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            fontWeight: FontWeight.w500,
                             color: excluded
                                 ? theme.colorScheme.onSurface.withValues(alpha: 0.35)
                                 : theme.colorScheme.onSurface,
@@ -1570,8 +1608,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                         if (_hadNotJoinedYet(p))
                           Text(
                             'Joined later',
-                            style: GoogleFonts.workSans(
-                              fontSize: 10,
+                            style: AppTextStyles.caption.copyWith(
+                              fontSize: AppFontSizes.size10,
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                             ),
                           ),
@@ -1581,8 +1619,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   if (preview != null)
                     Text(
                       preview,
-                      style: GoogleFonts.workSans(
-                        fontSize: 13, fontWeight: FontWeight.w600,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        fontWeight: FontWeight.w600,
                         color: excluded
                             ? theme.colorScheme.onSurface.withValues(alpha: 0.2)
                             : AppColors.activeGreen,
@@ -1611,7 +1649,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p10),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: theme.colorScheme.surface,
                   borderRadius: BorderRadius.circular(AppSpacing.r10),
                   border: Border.all(
                     color: theme.dividerColor.withValues(alpha: 0.15),
@@ -1626,7 +1664,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       child: Text(
                         p.name[0].toUpperCase(),
                         style: const TextStyle(
-                          color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600,
+                          color: Colors.white, fontSize: AppFontSizes.size10, fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -1638,18 +1676,17 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                         children: [
                           Text(
                             p.name,
-                            style: GoogleFonts.workSans(
-                              fontSize: 13, fontWeight: FontWeight.w500,
+                            style: AppTextStyles.bodySmall.copyWith(
+                              fontWeight: FontWeight.w500,
                               color: theme.colorScheme.onSurface,
                             ),
                           ),
                           if (preview != null && (isPercentage || isExact))
                             Text(
                               preview,
-                              style: GoogleFonts.workSans(
-                                fontSize: 11,
-                                color: AppColors.activeGreen,
+                              style: AppTextStyles.caption.copyWith(
                                 fontWeight: FontWeight.w600,
+                                color: AppColors.activeGreen,
                               ),
                             ),
                         ],
@@ -1677,15 +1714,14 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                             setState(() {});
                           }
                         },
-                        style: GoogleFonts.workSans(
-                          fontSize: 13, fontWeight: FontWeight.w600,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          fontWeight: FontWeight.w600,
                           color: theme.colorScheme.onSurface,
                         ),
                         decoration: InputDecoration(
                           hintText: '0',
                           suffixText: suffix,
-                          suffixStyle: GoogleFonts.workSans(
-                            fontSize: 12,
+                          suffixStyle: AppTextStyles.label.copyWith(
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                           ),
                           border: OutlineInputBorder(
@@ -1718,10 +1754,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   ),
                   child: Text(
                     'Reset split',
-                    style: GoogleFonts.workSans(
-                      fontSize: 12,
-                      color: AppColors.activeGreen,
+                    style: AppTextStyles.label.copyWith(
                       fontWeight: FontWeight.w600,
+                      color: AppColors.activeGreen,
                     ),
                   ),
                 ),
@@ -1741,19 +1776,16 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     return TextField(
       controller: _noteController,
       maxLines: 1,
-      style: GoogleFonts.workSans(fontSize: 14, color: theme.colorScheme.onSurface),
+      style: AppTextStyles.bodyBold.copyWith(fontWeight: FontWeight.w400, color: theme.colorScheme.onSurface),
       decoration: InputDecoration(
         hintText: 'Add a note...',
-        hintStyle: GoogleFonts.workSans(
-          fontSize: 14,
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
-        ),
+        hintStyle: AppTextStyles.bodyBold.copyWith(fontWeight: FontWeight.w400, color: theme.colorScheme.onSurface.withValues(alpha: 0.25)),
         border: InputBorder.none,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(vertical: 2),
         prefixIcon: Padding(
           padding: const EdgeInsets.only(right: 8),
-          child: Icon(Icons.sticky_note_2_outlined, size: 18,
+          child: Icon(LucideIcons.stickyNote, size: 18,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.25)),
         ),
         prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
@@ -1795,12 +1827,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.check_rounded, size: 20, color: Colors.white),
+                    Icon(LucideIcons.check, size: 20, color: Colors.white),
                     const SizedBox(width: 8),
                     Text(
                       'Save Expense',
-                      style: GoogleFonts.workSans(
-                        fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white,
+                      style: AppTextStyles.bodyBold.copyWith(
+                        fontSize: AppFontSizes.size15, color: Colors.white,
                       ),
                     ),
                   ],

@@ -1,8 +1,9 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ExpenseChartData {
   final String label;
@@ -90,7 +91,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                         Text(
                           title!,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: AppFontSizes.size13,
                             fontWeight: FontWeight.w500,
                             color: AppColors.textMuted,
                             fontFamily: GoogleFonts.workSans().fontFamily,
@@ -112,7 +113,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(
-                        Symbols.arrow_downward,
+                        LucideIcons.arrowDown,
                         color: AppColors.expensePink,
                         size: 16,
                       ),
@@ -120,7 +121,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                       Text(
                         trendPercentage!,
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: AppFontSizes.size13,
                           fontWeight: FontWeight.bold,
                           color: AppColors.expensePink,
                           fontFamily: GoogleFonts.workSans().fontFamily,
@@ -143,7 +144,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                 axisLine: const AxisLine(width: 0),
                 labelRotation: -45,
                 labelStyle: TextStyle(
-                  fontSize: 10,
+                  fontSize: AppFontSizes.size10,
                   color: AppColors.textMuted,
                   fontWeight: FontWeight.w600,
                   fontFamily: GoogleFonts.workSans().fontFamily,
@@ -161,7 +162,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                 maximum: maximum,
                 interval: interval,
                 labelStyle: TextStyle(
-                  fontSize: 11,
+                  fontSize: AppFontSizes.size11,
                   color: AppColors.textMuted,
                   fontWeight: FontWeight.w500,
                   fontFamily: GoogleFonts.workSans().fontFamily,
@@ -177,7 +178,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                   return ChartAxisLabel(
                     labelText,
                     TextStyle(
-                      fontSize: 11,
+                      fontSize: AppFontSizes.size11,
                       color: AppColors.textMuted,
                       fontWeight: FontWeight.w500,
                       fontFamily: GoogleFonts.workSans().fontFamily,

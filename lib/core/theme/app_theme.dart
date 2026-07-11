@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AppTheme {
   // Brand Colors
@@ -36,7 +37,7 @@ class AppTheme {
         iconTheme: IconThemeData(color: Colors.black87),
         titleTextStyle: TextStyle(
           color: Colors.black87,
-          fontSize: 18,
+          fontSize: AppFontSizes.size18,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -53,7 +54,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       primaryColor: brandPrimaryDark,
-      scaffoldBackgroundColor: backgroundDark,
+      scaffoldBackgroundColor: surfaceDark,
       cardColor: surfaceDark,
       colorScheme: const ColorScheme.dark(
         primary: brandPrimaryDark,
@@ -72,7 +73,7 @@ class AppTheme {
         iconTheme: IconThemeData(color: Colors.white),
         titleTextStyle: TextStyle(
           color: Colors.white,
-          fontSize: 18,
+          fontSize: AppFontSizes.size18,
           fontWeight: FontWeight.bold,
         ),
       ),

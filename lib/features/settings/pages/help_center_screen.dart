@@ -1,7 +1,9 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class HelpCenterScreen extends StatelessWidget {
   const HelpCenterScreen({super.key});
@@ -36,16 +38,12 @@ class HelpCenterScreen extends StatelessWidget {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.colorScheme.onSurface, size: 20),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           context.translate('help_center'),
-          style: GoogleFonts.workSans(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
+          style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
@@ -92,25 +90,20 @@ class HelpCenterScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
-                          Symbols.help_rounded,
+                          LucideIcons.helpCircle,
                           color: theme.colorScheme.onSurfaceVariant,
                           size: 18,
                         ),
                       ),
                       title: Text(
                         faq.question,
-                        style: GoogleFonts.workSans(
-                          fontSize: 14.5,
-                          fontWeight: FontWeight.w600,
-                          color: theme.colorScheme.onSurface,
-                        ),
+                        style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
                       ),
                       children: [
                         Text(
                           faq.answer,
-                          style: GoogleFonts.workSans(
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.w400,
+                          style: AppTextStyles.body.copyWith(
+                            fontFamily: GoogleFonts.workSans().fontFamily,
                             color: theme.colorScheme.onSurfaceVariant,
                             height: 1.5,
                           ),
@@ -123,7 +116,7 @@ class HelpCenterScreen extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+            padding: EdgeInsets.fromLTRB(16, 4, 16, 24 + MediaQuery.of(context).padding.bottom),
             decoration: BoxDecoration(
               color: theme.scaffoldBackgroundColor,
               boxShadow: [
@@ -139,12 +132,12 @@ class HelpCenterScreen extends StatelessWidget {
               height: 50,
               child: ElevatedButton.icon(
                 onPressed: () {},
-                icon: const Icon(Symbols.mail_rounded, size: 18),
+                icon: Icon(LucideIcons.mail, size: 18),
                 label: Text(
                   'Contact Support',
-                  style: GoogleFonts.workSans(
-                    fontSize: 15,
+                  style: AppTextStyles.reportTileTitle.copyWith(
                     fontWeight: FontWeight.w600,
+                    color: Colors.white,
                   ),
                 ),
                 style: ElevatedButton.styleFrom(

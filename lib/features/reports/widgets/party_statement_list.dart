@@ -1,13 +1,13 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PartyStatementList extends StatelessWidget {
   const PartyStatementList({super.key});
@@ -50,7 +50,7 @@ class PartyStatementList extends StatelessWidget {
           child: Text(
             'No transactions in this period',
             style: AppTextStyles.reportTransactionSubtitle.copyWith(
-              fontSize: 14,
+              fontSize: AppFontSizes.size14,
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
@@ -63,9 +63,7 @@ class PartyStatementList extends StatelessWidget {
       children: [
         Text(
           'Transaction Lists',
-          style: GoogleFonts.workSans(
-            fontWeight: FontWeight.w700,
-            fontSize: 15,
+          style: AppTextStyles.reportTransactionTitle.copyWith(
             color: theme.colorScheme.onSurface,
             letterSpacing: -0.2,
           ),
@@ -88,13 +86,13 @@ class PartyStatementList extends StatelessWidget {
             final Color iconFgColor;
 
             if (isInflow) {
-              leadingIcon = Symbols.south_west_rounded;
+              leadingIcon = LucideIcons.arrowDownLeft;
               iconBgColor = isDark
                   ? AppColors.activeGreen.withValues(alpha: 0.14)
                   : const Color(0xFFE6F9F0);
               iconFgColor = AppColors.activeGreen;
             } else {
-              leadingIcon = Symbols.north_east_rounded;
+              leadingIcon = LucideIcons.arrowUpRight;
               iconBgColor = isDark
                   ? AppColors.activeRed.withValues(alpha: 0.14)
                   : const Color(0xFFFDE9EB);
@@ -151,9 +149,7 @@ class PartyStatementList extends StatelessWidget {
                           entry.description,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.workSans(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                          style: AppTextStyles.bodyBold.copyWith(
                             color: theme.colorScheme.onSurface,
                             letterSpacing: -0.15,
                           ),
@@ -161,9 +157,7 @@ class PartyStatementList extends StatelessWidget {
                         const SizedBox(height: 5),
                         Text(
                           DateFormat('dd MMM yyyy').format(entry.dateTime),
-                          style: GoogleFonts.workSans(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w400,
+                          style: AppTextStyles.caption.copyWith(
                             color: isDark ? Colors.white38 : Colors.grey.shade500,
                           ),
                         ),
@@ -173,15 +167,13 @@ class PartyStatementList extends StatelessWidget {
                   const SizedBox(width: 10),
 
                   // ── Trailing: Amount ──
-                  Text(
-                    '${isInflow ? '+' : '−'} $currencySymbol ${entry.amount.toStringAsFixed(0)}',
-                    style: GoogleFonts.workSans(
-                      fontSize: 14.5,
-                      fontWeight: FontWeight.w700,
-                      color: typeColor,
-                      letterSpacing: -0.2,
+                    Text(
+                      '${isInflow ? '+' : '−'} $currencySymbol ${entry.amount.toStringAsFixed(0)}',
+                      style: AppTextStyles.reportTransactionTitle.copyWith(
+                        color: typeColor,
+                        letterSpacing: -0.2,
+                      ),
                     ),
-                  ),
                 ],
               ),
             );

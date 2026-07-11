@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:printing/printing.dart';
 import 'package:expense_tracker/core/services/export_service.dart';
@@ -6,6 +5,8 @@ import 'package:expense_tracker/core/services/pdf_export_service.dart';
 import 'package:expense_tracker/features/reports/widgets/share_report_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ReportBottomActions extends StatelessWidget {
   final String reportName;
@@ -141,7 +142,7 @@ class ReportBottomActions extends StatelessWidget {
           const Flexible(
             child: Text(
               'Generating report...',
-              style: TextStyle(color: Colors.white, fontSize: 14),
+              style: TextStyle(color: Colors.white, fontSize: AppFontSizes.size14),
             ),
           ),
         ],
@@ -157,12 +158,12 @@ class ReportBottomActions extends StatelessWidget {
     return SnackBar(
       content: Row(
         children: [
-          const Icon(Symbols.error_outline, color: Colors.white, size: 20),
+          Icon(LucideIcons.alertCircle, color: Colors.white, size: 20),
           const SizedBox(width: 10),
           Flexible(
             child: Text(
               message,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
+              style: const TextStyle(color: Colors.white, fontSize: AppFontSizes.size14),
             ),
           ),
         ],
@@ -204,25 +205,25 @@ class ReportBottomActions extends StatelessWidget {
               children: [
                 _buildActionItem(
                   context: context,
-                  icon: Symbols.download,
+                  icon: LucideIcons.downloadCloud,
                   label: 'Download',
                   onTap: () => _onDownload(context),
                 ),
                 _buildActionItem(
                   context: context,
-                  icon: Symbols.print,
+                  icon: LucideIcons.printer,
                   label: 'Print PDF',
                   onTap: () => _onPrint(context),
                 ),
                 _buildActionItem(
                   context: context,
-                  icon: Symbols.table_chart,
+                  icon: LucideIcons.fileText,
                   label: 'Excel',
                   onTap: () => _onExcel(context),
                 ),
                 _buildActionItem(
                   context: context,
-                  icon: Symbols.share,
+                  icon: LucideIcons.externalLink,
                   label: 'Share',
                   onTap: () => _onShare(context),
                 ),
@@ -254,7 +255,7 @@ class ReportBottomActions extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: AppFontSizes.size10,
                 fontFamily: GoogleFonts.workSans().fontFamily,
                 fontWeight: FontWeight.w600,
                 color: theme.colorScheme.onSurface,

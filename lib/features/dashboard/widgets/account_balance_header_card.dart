@@ -1,10 +1,9 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/reports/pages/bank_statement_screen.dart';
 import 'package:expense_tracker/features/reports/pages/cash_in_hand_statement_screen.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AccountBalanceHeaderCard extends StatelessWidget {
   final String accountType;
@@ -43,27 +42,18 @@ class AccountBalanceHeaderCard extends StatelessWidget {
             children: [
               Text(
                 'Current Balance',
-                style: GoogleFonts.workSans(
-                  fontSize: 12,
-                  color: AppColors.textMuted,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: AppTextStyles.label,
               ),
               const SizedBox(height: 4),
               PrivacyMaskedText(
                 amount: balance,
-                style: GoogleFonts.workSans(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: primaryColor,
-                ),
+                style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.bold, color: primaryColor),
               ),
             ],
           ),
           OutlinedButton.icon(
             onPressed: () {
-              Navigator.push(
-                context,
+              Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(
                   builder: (context) => accountType == 'Cash'
                       ? const CashInHandStatementScreen()
@@ -71,14 +61,10 @@ class AccountBalanceHeaderCard extends StatelessWidget {
                 ),
               );
             },
-            icon: Icon(Symbols.description, size: 14, color: primaryColor),
+            icon: Icon(LucideIcons.fileText, size: 14, color: primaryColor),
             label: Text(
               'View Report',
-              style: GoogleFonts.workSans(
-                fontSize: 11.5,
-                fontWeight: FontWeight.bold,
-                color: primaryColor,
-              ),
+              style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.bold, color: primaryColor),
             ),
             style: OutlinedButton.styleFrom(
               side: BorderSide(color: primaryColor.withValues(alpha: 0.15)),

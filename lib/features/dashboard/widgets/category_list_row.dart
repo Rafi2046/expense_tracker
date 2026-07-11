@@ -1,6 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CategoryListRow extends StatelessWidget {
   final String categoryName;
@@ -43,7 +44,7 @@ class CategoryListRow extends StatelessWidget {
               child: Row(
                 children: [
                   if (showLeadingIcon) ...[
-                    Icon(Symbols.label_outline_rounded, color: themeColor),
+                    Icon(LucideIcons.tag, color: themeColor),
                     const SizedBox(width: 12),
                   ],
                   Expanded(
@@ -51,7 +52,7 @@ class CategoryListRow extends StatelessWidget {
                       categoryName,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.workSans(
-                        fontSize: 15,
+                        fontSize: AppFontSizes.size15,
                         fontWeight: isSelected
                             ? FontWeight.w600
                             : FontWeight.w400,
@@ -82,7 +83,7 @@ class CategoryListRow extends StatelessWidget {
         if (onEdit != null)
           IconButton(
             icon: Icon(
-              Symbols.edit,
+              LucideIcons.edit,
               color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
               size: 20,
             ),
@@ -90,7 +91,7 @@ class CategoryListRow extends StatelessWidget {
           ),
         IconButton(
           icon: Icon(
-            Symbols.delete_outline_rounded,
+            LucideIcons.trash,
             color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
             size: 20,
           ),

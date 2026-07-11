@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
@@ -11,8 +10,8 @@ import 'package:expense_tracker/features/dashboard/widgets/income_quarterly_sect
 import 'package:expense_tracker/features/dashboard/widgets/income_summary_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/time_frame_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class IncomeInsightsScreen extends StatefulWidget {
   const IncomeInsightsScreen({super.key});
@@ -45,31 +44,26 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
           bottomContent: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Vs Yesterday',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? AppColors.loginSubTitle
-                      : Colors.white70,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
-                ),
-              ),
+              Text('Vs Yesterday', style: AppTextStyles.bodySmall),
               Row(
                 children: [
                   Icon(
-                    isPositive ? Symbols.trending_up : Symbols.trending_down,
-                    color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
+                    isPositive
+                        ? LucideIcons.trendingUp
+                        : LucideIcons.trendingDown,
+                    color: isPositive
+                        ? AppColors.activeGreen
+                        : AppColors.activeRed,
                     size: 16,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     '$sign${change.toStringAsFixed(1)}%',
-                    style: TextStyle(
-                      fontSize: 13,
+                    style: AppTextStyles.bodySmall.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
+                      color: isPositive
+                          ? AppColors.activeGreen
+                          : AppColors.activeRed,
                     ),
                   ),
                 ],
@@ -99,22 +93,18 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                 children: [
                   Text(
                     'Avg. Daily',
-                    style: TextStyle(
-                      fontSize: 13,
+                    style: AppTextStyles.bodySmall.copyWith(
                       color: Theme.of(context).brightness == Brightness.light
                           ? AppColors.loginSubTitle
                           : Colors.white70,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
                   PrivacyMaskedText(
                     amount: avgDaily,
                     isMasked: _localMasked,
-                    style: TextStyle(
-                      fontSize: 13,
+                    style: AppTextStyles.bodySmall.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.onSurface,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
                 ],
@@ -125,29 +115,31 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                 children: [
                   Text(
                     'Vs Last Week',
-                    style: TextStyle(
-                      fontSize: 13,
+                    style: AppTextStyles.bodySmall.copyWith(
                       color: Theme.of(context).brightness == Brightness.light
                           ? AppColors.loginSubTitle
                           : Colors.white70,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
                   Row(
                     children: [
                       Icon(
-                        isPositive ? Symbols.trending_up : Symbols.trending_down,
-                        color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
+                        isPositive
+                            ? LucideIcons.trendingUp
+                            : LucideIcons.trendingDown,
+                        color: isPositive
+                            ? AppColors.activeGreen
+                            : AppColors.activeRed,
                         size: 16,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         '$sign${change.toStringAsFixed(1)}%',
-                        style: TextStyle(
-                          fontSize: 13,
+                        style: AppTextStyles.bodySmall.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: isPositive ? AppColors.activeGreen : AppColors.activeRed,
-                          fontFamily: GoogleFonts.workSans().fontFamily,
+                          color: isPositive
+                              ? AppColors.activeGreen
+                              : AppColors.activeRed,
                         ),
                       ),
                     ],
@@ -187,22 +179,18 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                 children: [
                   Text(
                     'Projected Year End',
-                    style: TextStyle(
-                      fontSize: 13,
+                    style: AppTextStyles.bodySmall.copyWith(
                       color: Theme.of(context).brightness == Brightness.light
                           ? AppColors.loginSubTitle
                           : Colors.white70,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
                   PrivacyMaskedText(
                     amount: projectedYearEnd,
                     isMasked: _localMasked,
-                    style: TextStyle(
-                      fontSize: 13,
+                    style: AppTextStyles.bodySmall.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.onSurface,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
                     ),
                   ),
                 ],
@@ -212,7 +200,8 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                 borderRadius: BorderRadius.circular(100),
                 child: LinearProgressIndicator(
                   value: progress.clamp(0.0, 1.0),
-                  backgroundColor: Theme.of(context).brightness == Brightness.light
+                  backgroundColor:
+                      Theme.of(context).brightness == Brightness.light
                       ? const Color(0xFFE0E0E0)
                       : Colors.white12,
                   valueColor: const AlwaysStoppedAnimation<Color>(
@@ -265,7 +254,10 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color),
+          icon: Icon(
+            LucideIcons.arrowLeft,
+            color: theme.appBarTheme.iconTheme?.color,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -285,13 +277,18 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.fromLTRB(
+            16.0,
+            16.0,
+            16.0,
+            16.0 + MediaQuery.of(context).padding.bottom + 80,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Summary card
               _buildSummaryCard(analytics),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
               // Timeframe selector
               TimeFrameSelector(
@@ -303,15 +300,24 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
               // Timeframe-dependent content
               _buildTimeFrameContent(),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
 
               // Bottom Banner
-              const FinancialHealthBanner(),
-              const SizedBox(height: 16),
+              FinancialHealthBanner(
+                percentageChange: _selectedTimeFrame == 'Daily'
+                    ? analytics.dailyPercentageChange
+                    : _selectedTimeFrame == 'Weekly'
+                    ? analytics.weeklyPercentageChange
+                    : _selectedTimeFrame == 'Quarterly'
+                    ? analytics.quarterlyPercentageChange
+                    : analytics.monthlyPercentageChange,
+                period: _selectedTimeFrame.toLowerCase(),
+              ),
+              const SizedBox(height: 8),
             ],
           ),
         ),

@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
@@ -9,6 +8,7 @@ import 'package:expense_tracker/features/calculators/widgets/calculator_result_c
 import 'package:expense_tracker/features/calculators/widgets/calculator_result_item.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class EmiCalculatorScreen extends StatefulWidget {
   const EmiCalculatorScreen({super.key});
@@ -98,7 +98,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back_ios_new_rounded, color: theme.colorScheme.onSurface, size: 20),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -151,7 +151,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 controller: _amountController,
                 prefix: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 8),
-                  child: Text(symbol, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
+                  child: Text(symbol, style: AppTextStyles.h3.copyWith(color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -162,7 +162,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 controller: _rateController,
                 suffix: Padding(
                   padding: const EdgeInsets.only(left: 8, right: 16),
-                  child: Text('%', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryCalcColor)),
+                  child: Text('%', style: AppTextStyles.h3.copyWith(color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -173,7 +173,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 controller: _tenureController,
                 suffix: Padding(
                   padding: const EdgeInsets.only(left: 8, right: 16),
-                  child: Text(context.translate('years_label'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: primaryCalcColor)),
+                  child: Text(context.translate('years_label'), style: AppTextStyles.bodyBold.copyWith(color: primaryCalcColor)),
                 ),
               ),
               const SizedBox(height: 24),

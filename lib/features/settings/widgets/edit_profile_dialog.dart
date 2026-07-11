@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
@@ -7,9 +6,10 @@ import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class EditProfileDialog extends StatefulWidget {
   const EditProfileDialog({super.key});
@@ -49,20 +49,89 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
   }
 
   Future<void> _pickProfileImage() async {
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: Theme.of(context).cardColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        final isDark = Theme.of(ctx).brightness == Brightness.dark;
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Choose Option',
+                  style: AppTextStyles.h1.copyWith(
+                    color: Theme.of(ctx).colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(ctx, ImageSource.gallery),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.grey.shade800 : const Color(0xFFF3E8FF),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Icon(LucideIcons.image, size: 32),
+                          ),
+                          const SizedBox(height: 8),
+                          Text('Gallery', style: AppTextStyles.label),
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(ctx, ImageSource.camera),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.grey.shade800 : const Color(0xFFF3E8FF),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Icon(LucideIcons.camera, size: 32),
+                          ),
+                          const SizedBox(height: 8),
+                          Text('Camera', style: AppTextStyles.label),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (source == null) return;
+
     final ImagePicker picker = ImagePicker();
     try {
       final XFile? image = await picker.pickImage(
-        source: ImageSource.gallery,
+        source: source,
         maxWidth: 512,
         maxHeight: 512,
         imageQuality: 85,
       );
 
       if (image != null) {
-        // Copy the image permanently to the application documents directory
         final directory = await getApplicationDocumentsDirectory();
         final user = FirebaseAuth.instance.currentUser;
-        final localFile = await File(image.path).copy('${directory.path}/profile_${user?.uid}.jpg');
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        final localFile = await File(image.path).copy('${directory.path}/profile_${user?.uid}_$timestamp.jpg');
 
         setState(() {
           _localImageFile = localFile;
@@ -91,12 +160,13 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
       final newName = _nameController.text.trim();
       final newPhotoUrl = _photoUrlController.text.trim();
 
+      // Save to SharedPrefs first so the settings screen picks it up
+      // even if the StreamBuilder rebuilds before the dialog closes.
+      await SharedPrefsHelper.setString('local_profile_photo_${user.uid}', newPhotoUrl);
+
       await user.updateDisplayName(newName);
       await user.updatePhotoURL(newPhotoUrl);
       await user.reload();
-
-      // Backup local path in SharedPreferences for this specific user
-      await SharedPrefsHelper.setString('local_profile_photo_${user.uid}', newPhotoUrl);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -147,12 +217,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               Text(
                 'Edit Profile',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
-                ),
+              style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
               ),
               const SizedBox(height: 20),
 
@@ -188,7 +253,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
-                          Symbols.camera_alt,
+                          LucideIcons.camera,
                           color: Colors.white,
                           size: 16,
                         ),

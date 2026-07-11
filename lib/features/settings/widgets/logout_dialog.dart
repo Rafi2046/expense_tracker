@@ -1,10 +1,11 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/features/login/pages/login_screen.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({super.key});
@@ -36,7 +37,7 @@ class LogoutDialog extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: const Icon(
-                Symbols.logout,
+                LucideIcons.logOut,
                 color: AppColors.activeRed, // Red exit arrow
                 size: 32,
               ),
@@ -46,12 +47,7 @@ class LogoutDialog extends StatelessWidget {
             // Title
             Text(
               'Logout',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-                fontFamily: GoogleFonts.workSans().fontFamily,
-              ),
+              style: AppTextStyles.profileTitle.copyWith(color: theme.colorScheme.onSurface),
             ),
             const SizedBox(height: 12),
 
@@ -59,10 +55,9 @@ class LogoutDialog extends StatelessWidget {
             Text(
               'Are you sure you want to logout?\nYou will need to login again to access your account.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
+              style: AppTextStyles.body.copyWith(
                 fontFamily: GoogleFonts.workSans().fontFamily,
+                color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                 height: 1.4,
               ),
             ),

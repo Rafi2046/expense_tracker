@@ -1,7 +1,8 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
@@ -17,16 +18,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.colorScheme.onSurface, size: 20),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           context.translate('privacy_policy'),
-          style: GoogleFonts.workSans(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
+          style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
@@ -57,7 +54,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(22),
                     ),
                     child: const Icon(
-                      Symbols.shield_rounded,
+                      LucideIcons.shieldCheck,
                       color: Colors.white,
                       size: 40,
                     ),
@@ -67,48 +64,46 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 Center(
                   child: Text(
                     'Privacy Summary',
-                    style: GoogleFonts.workSans(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSurface,
-                    ),
+                  style: AppTextStyles.profileTitle.copyWith(color: theme.colorScheme.onSurface),
                   ),
                 ),
                 const SizedBox(height: 6),
                 Center(
                   child: Text(
                     'How we handle your data',
-                    style: GoogleFonts.workSans(
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w400,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
+                  style: AppTextStyles.body.copyWith(
+                    fontFamily: GoogleFonts.workSans().fontFamily,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                   ),
                 ),
                 const SizedBox(height: 28),
                 _PrivacyTile(
-                  icon: Symbols.devices_rounded,
+                  icon: LucideIcons.shieldCheck,
                   title: 'Data Stays with You',
                   subtitle: 'Your financial data is processed securely on your device. Nothing is shared without your explicit consent.',
+                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('All data is stored locally on your device.'))),
                 ),
                 const SizedBox(height: 10),
                 _PrivacyTile(
-                  icon: Symbols.block_rounded,
+                  icon: LucideIcons.shieldOff,
                   title: 'No Data Selling',
                   subtitle: 'We never sell, rent, or trade your personal information to third parties. Your trust matters.',
+                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Your data is yours — we never share it.'))),
                 ),
                 const SizedBox(height: 10),
                 _PrivacyTile(
-                  icon: Symbols.fingerprint_rounded,
+                  icon: LucideIcons.scanFace,
                   title: 'Biometric Security',
                   subtitle: 'Protected by your device\'s native secure enclave. Your biometric data never leaves your phone.',
+                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Biometric data stays on your device — never uploaded.'))),
                 ),
                 const SizedBox(height: 24),
               ],
             ),
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+            padding: EdgeInsets.fromLTRB(16, 4, 16, MediaQuery.of(context).padding.bottom),
             decoration: BoxDecoration(
               color: theme.scaffoldBackgroundColor,
               boxShadow: [
@@ -124,13 +119,10 @@ class PrivacyPolicyScreen extends StatelessWidget {
               height: 48,
               child: OutlinedButton.icon(
                 onPressed: () {},
-                icon: const Icon(Symbols.description_rounded, size: 18),
+                icon: Icon(LucideIcons.fileText, size: 18),
                 label: Text(
                   'Read Full Legal Policy',
-                  style: GoogleFonts.workSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTextStyles.bodyBold,
                 ),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: const Color(0xFF6A53A1),
@@ -152,70 +144,73 @@ class _PrivacyTile extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
+  final VoidCallback? onTap;
 
   const _PrivacyTile({
     required this.icon,
     required this.title,
     required this.subtitle,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: theme.brightness == Brightness.dark
-              ? const Color(0xFF2D2D2D)
-              : const Color(0xFFF1F1F1),
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF6A53A1), Color(0xFF32235B)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.cardColor,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: theme.brightness == Brightness.dark
+                  ? const Color(0xFF2D2D2D)
+                  : const Color(0xFFF1F1F1),
+            ),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF6A53A1), Color(0xFF32235B)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: Colors.white, size: 22),
               ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: Colors.white, size: 22),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.workSans(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.onSurface,
-                  ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                    style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        height: 1.45,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: GoogleFonts.workSans(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: theme.colorScheme.onSurfaceVariant,
-                    height: 1.45,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

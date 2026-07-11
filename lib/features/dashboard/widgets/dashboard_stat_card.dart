@@ -2,6 +2,8 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DashboardStatCard extends StatelessWidget {
   final String title;
@@ -54,19 +56,21 @@ class DashboardStatCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      clipBehavior: Clip.hardEdge,
-                      child: value,
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        clipBehavior: Clip.hardEdge,
+                        child: value,
+                      ),
                     ),
                     SizedBox(height: AppSpacing.h2),
                     Text(
                       title,
-                      style: AppTextStyles.cardTitle.copyWith(
+                      style: AppTextStyles.caption.copyWith(
+                        fontSize: AppFontSizes.size10,
+                        fontWeight: FontWeight.bold,
                         color: AppColors.textMuted,
-                        fontSize: 10,
-                        letterSpacing: 0,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -78,7 +82,7 @@ class DashboardStatCard extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              isPositive ? Icons.trending_up : Icons.trending_down,
+                              isPositive ? LucideIcons.trendingUp : LucideIcons.trendingDown,
                               color: isPositive
                                   ? AppColors.activeGreen
                                   : AppColors.activeRed,
@@ -91,7 +95,7 @@ class DashboardStatCard extends StatelessWidget {
                                 style: (isPositive
                                         ? AppTextStyles.cardTrendGreen
                                         : AppTextStyles.cardTrendRed)
-                                    .copyWith(fontSize: 10.5),
+                                    .copyWith(fontSize: AppFontSizes.size10),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -112,7 +116,7 @@ class DashboardStatCard extends StatelessWidget {
               ),
               SizedBox(width: AppSpacing.p8),
               Icon(
-                Icons.chevron_right_rounded,
+                LucideIcons.chevronRight,
                 color: AppColors.textMuted,
                 size: 20,
               ),

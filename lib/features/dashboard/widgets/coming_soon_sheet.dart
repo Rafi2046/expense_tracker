@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ComingSoonSheet extends StatelessWidget {
   const ComingSoonSheet({super.key});
@@ -23,19 +25,19 @@ class ComingSoonSheet extends StatelessWidget {
               color: const Color(0xFF7C3AED).withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.rocket_launch_rounded, size: 40, color: Color(0xFF7C3AED)),
+            child: Icon(LucideIcons.rocket, size: 40, color: Color(0xFF7C3AED)),
           ),
           const SizedBox(height: 20),
           const Text(
             'Business Management\nis Coming Soon!',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            style: TextStyle(fontSize: AppFontSizes.size18, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 12),
           const Text(
             'We\'re working hard to bring you business management features. Stay tuned!',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
+            style: TextStyle(fontSize: AppFontSizes.size13, color: Color(0xFF6B7280)),
           ),
           const SizedBox(height: 24),
           SizedBox(

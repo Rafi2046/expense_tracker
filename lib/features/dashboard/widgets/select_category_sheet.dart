@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -6,6 +5,8 @@ import 'package:expense_tracker/features/dashboard/widgets/category_list_row.dar
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SelectCategorySheet extends StatefulWidget {
   final bool isIncome;
@@ -70,7 +71,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
               : 'Add New Expense Category',
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: AppFontSizes.size16,
           ),
         ),
         content: TextField(
@@ -166,7 +167,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
           'Rename Category',
           style: GoogleFonts.workSans(
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: AppFontSizes.size16,
           ),
         ),
         content: TextField(
@@ -309,7 +310,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                     ? 'Select Category for Income'
                     : 'Select Category for Expense',
                 style: GoogleFonts.workSans(
-                  fontSize: 18,
+                  fontSize: AppFontSizes.size18,
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
                 ),
@@ -320,17 +321,17 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
               TextField(
                 controller: _searchController,
                 style: GoogleFonts.workSans(
-                  fontSize: 15,
+                  fontSize: AppFontSizes.size15,
                   color: theme.colorScheme.onSurface,
                 ),
                 decoration: InputDecoration(
                   hintText: 'Search Category...',
                   hintStyle: GoogleFonts.workSans(
-                    fontSize: 15,
+                    fontSize: AppFontSizes.size15,
                     color: isDark ? Colors.white38 : Colors.grey.shade400,
                   ),
                   prefixIcon: Icon(
-                    Symbols.search_rounded,
+                    LucideIcons.search,
                     color: isDark ? Colors.white38 : Colors.grey.shade400,
                     size: 20,
                   ),
@@ -378,7 +379,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                 width: double.infinity,
                 height: 48,
                 child: OutlinedButton.icon(
-                  icon: const Icon(Symbols.add, size: 18),
+                  icon: Icon(LucideIcons.plus, size: 18),
                   label: const Text('Add New Category'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: theme.colorScheme.onSurface,
@@ -393,7 +394,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                     ),
                     textStyle: GoogleFonts.workSans(
                       fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                      fontSize: AppFontSizes.size14,
                     ),
                   ),
                   onPressed: () => _showAddNewCategoryDialog(context, provider),
@@ -414,7 +415,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                             'No categories found.',
                             style: GoogleFonts.workSans(
                               color: isDark ? Colors.white38 : Colors.grey.shade400,
-                              fontSize: 14,
+                              fontSize: AppFontSizes.size14,
                             ),
                           ),
                         ),

@@ -86,6 +86,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -108,12 +110,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 Text(
                   'Forgot password?',
                   textAlign: TextAlign.center,
-                  style: AppTextStyles.loginTitle,
+                  style: AppTextStyles.loginTitle.copyWith(
+                    color: isDark ? Colors.white : null,
+                  ),
                 ),
                 Text(
                   'No worries, it happens! Just enter your email address associated with your account.',
                   textAlign: TextAlign.center,
-                  style: AppTextStyles.loginSubTitle,
+                  style: AppTextStyles.loginSubTitle.copyWith(
+                    color: isDark ? Colors.grey.shade400 : null,
+                  ),
                 ),
 
                 CustomTextFieldWidget(
@@ -130,7 +136,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   children: [
                     Text(
                       "Remember password? ",
-                      style: AppTextStyles.accountText,
+                      style: AppTextStyles.accountText.copyWith(
+                        color: isDark ? Colors.grey.shade400 : null,
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -141,7 +149,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                         );
                       },
-                      child: Text('Log in', style: AppTextStyles.signUpText),
+                      child: Text(
+                        'Log in',
+                        style: AppTextStyles.signUpText.copyWith(
+                          color: isDark ? Colors.white : null,
+                        ),
+                      ),
                     ),
                   ],
                 ),

@@ -75,58 +75,71 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   void _initSync() {
-    _loadProfilesFromPrefs();
-    if (_profiles.isEmpty) {
-      final user = FirebaseAuth.instance.currentUser;
-      final name = (user?.displayName != null && user!.displayName!.trim().isNotEmpty)
-          ? user.displayName!.trim()
-          : (user?.email != null && user!.email!.contains('@') ? user.email!.split('@').first : 'Personal Account');
-      _profiles.add(UserProfile(id: 'default_profile', name: name, type: 'Personal'));
-    }
+    _profiles.clear();
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    _profiles.add(UserProfile(id: 'default_profile', name: 'Personal', type: 'Personal', uid: uid));
     _currentProfile = _profiles.first;
   }
 
   Future<void> _loadFromDb() async {
     try {
-      final dbProfiles = await DatabaseHelper.instance.readAllProfiles();
-      debugPrint('ProfileProvider._loadFromDb: found ${dbProfiles.length} profiles in DB');
-      for (final p in dbProfiles) {
-        debugPrint('  -> id=${p['id']} name=${p['name']} type=${p['type']}');
+      var currentUser = FirebaseAuth.instance.currentUser;
+      currentUser ??= await FirebaseAuth.instance.authStateChanges().first;
+
+      _profiles.clear();
+
+      final currentUid = currentUser?.uid;
+
+      final allProfiles = await DatabaseHelper.instance.readAllProfiles();
+      debugPrint('ProfileProvider._loadFromDb: DB has ${allProfiles.length} profiles');
+      for (final row in allProfiles) {
+        final id = row['id'] as String;
+        var rowUid = row['uid'] as String?;
+        if (rowUid == null && currentUid != null) {
+          final db = await DatabaseHelper.instance.database;
+          await db.update('profiles', {'uid': currentUid}, where: 'id = ?', whereArgs: [id]);
+          rowUid = currentUid;
+        }
+        if (rowUid != currentUid) continue;
+        _profiles.add(UserProfile(
+          id: id,
+          name: row['name'] as String,
+          type: row['type'] as String,
+          uid: currentUid ?? rowUid,
+        ));
+        debugPrint('ProfileProvider._loadFromDb: added from DB -> $id');
       }
 
-      if (dbProfiles.isEmpty || !dbProfiles.any((p) => p['id'] == 'default_profile')) {
-        final name = _profiles.isNotEmpty ? _profiles[0].name : 'Personal';
+      _profiles.sort((a, b) => a.id == 'default_profile' ? -1 : b.id == 'default_profile' ? 1 : 0);
+
+      if (_profiles.isEmpty) {
+        final name = currentUser != null
+            ? (currentUser.displayName?.trim().isNotEmpty == true
+                ? currentUser.displayName!.trim()
+                : (currentUser.email?.contains('@') == true
+                    ? currentUser.email!.split('@').first
+                    : 'Personal'))
+            : 'Personal';
+        _profiles.add(UserProfile(id: 'default_profile', name: name, type: 'Personal', uid: currentUid));
+        _currentProfile = _profiles.first;
         await DatabaseHelper.instance.insertProfile({
           'id': 'default_profile',
           'name': name,
           'type': 'Personal',
           'createdAt': DateTime.now().toIso8601String(),
+          'uid': ?currentUid,
         });
         await _profileDoc('default_profile')?.set({
           'name': name,
           'type': 'Personal',
           'createdAt': DateTime.now().toIso8601String(),
         });
-      }
-
-      final allProfiles = await DatabaseHelper.instance.readAllProfiles();
-      debugPrint('ProfileProvider._loadFromDb: DB has ${allProfiles.length} profiles');
-      for (final row in allProfiles) {
-        final id = row['id'] as String;
-        if (!_profiles.any((p) => p.id == id)) {
-          _profiles.add(UserProfile(
-            id: id,
-            name: row['name'] as String,
-            type: row['type'] as String,
-          ));
-          debugPrint('ProfileProvider._loadFromDb: added from DB -> $id');
-        }
-      }
-      if (_profiles.isNotEmpty) {
+      } else {
         final match = _profiles.where((p) => p.id == _initialProfileId);
         _currentProfile = match.isNotEmpty ? match.first : _profiles.first;
-        _saveProfilesToPrefs();
       }
+
+      await _saveProfilesToPrefs();
     } catch (e) {
       debugPrint('ProfileProvider._loadFromDb error: $e');
     }
@@ -139,7 +152,7 @@ class ProfileProvider extends ChangeNotifier {
     if (idx != -1) {
       final old = _profiles[idx];
       if (old.name != name) {
-        _profiles[idx] = UserProfile(id: old.id, name: name, type: old.type);
+        _profiles[idx] = UserProfile(id: old.id, name: name, type: old.type, uid: old.uid);
         DatabaseHelper.instance.updateProfile('default_profile', {'name': name});
         _profileDoc('default_profile')?.set({'name': name}, SetOptions(merge: true));
         if (_currentProfile.id == 'default_profile') {
@@ -213,7 +226,7 @@ class ProfileProvider extends ChangeNotifier {
     if (index == -1) return;
 
     final old = _profiles[index];
-    _profiles[index] = UserProfile(id: old.id, name: newName, type: old.type);
+    _profiles[index] = UserProfile(id: old.id, name: newName, type: old.type, uid: old.uid);
 
     if (_currentProfile.id == profileId) {
       _currentProfile = _profiles[index];
@@ -252,33 +265,14 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _saveProfilesToPrefs() {
+  Future<void> _saveProfilesToPrefs() async {
     final data = _profiles.map((p) => {
       'id': p.id,
       'name': p.name,
       'type': p.type,
+      if (p.uid != null) 'uid': p.uid,
     }).toList();
-    SharedPrefsHelper.setString('profiles_backup', jsonEncode(data));
-  }
-
-  void _loadProfilesFromPrefs() {
-    final raw = SharedPrefsHelper.getString('profiles_backup');
-    if (raw == null || raw.isEmpty) return;
-    try {
-      final List<dynamic> data = jsonDecode(raw);
-      final loaded = data.map((e) => UserProfile(
-        id: e['id'] as String,
-        name: e['name'] as String,
-        type: e['type'] as String,
-      )).toList();
-      if (loaded.isNotEmpty) {
-        _profiles
-          ..clear()
-          ..addAll(loaded);
-        final match = _profiles.where((p) => p.id == _initialProfileId);
-        _currentProfile = match.isNotEmpty ? match.first : _profiles.first;
-      }
-    } catch (_) {}
+    await SharedPrefsHelper.setString('profiles_backup', jsonEncode(data));
   }
 
   Future<UserProfile?> finalizeProfileCreation() async {
@@ -286,12 +280,14 @@ class ProfileProvider extends ChangeNotifier {
       return null;
     }
 
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
     final newProfile = UserProfile(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: _creationName.trim(),
       type: _creationProfileType == 'business'
           ? 'Business ($_selectedCategory)'
           : 'Personal',
+      uid: currentUid,
     );
 
     debugPrint('ProfileProvider.finalizeProfileCreation: saving ${newProfile.name} (${newProfile.id})');
@@ -302,6 +298,7 @@ class ProfileProvider extends ChangeNotifier {
         'name': newProfile.name,
         'type': newProfile.type,
         'createdAt': DateTime.now().toIso8601String(),
+        'uid': ?currentUid,
       });
 
       final verify = await DatabaseHelper.instance.readAllProfiles();
@@ -326,7 +323,7 @@ class ProfileProvider extends ChangeNotifier {
 
     _profiles.add(newProfile);
     _currentProfile = newProfile;
-    _saveProfilesToPrefs();
+    await _saveProfilesToPrefs();
     resetCreationState();
     notifyListeners();
     return newProfile;
@@ -347,7 +344,7 @@ class ProfileProvider extends ChangeNotifier {
       final defaultProfile = _profiles.firstWhere(
         (p) => p.id == 'default_profile',
         orElse: () => _profiles.isNotEmpty ? _profiles.first : UserProfile(
-          id: 'default_profile', name: 'Personal', type: 'Personal',
+          id: 'default_profile', name: 'Personal', type: 'Personal', uid: FirebaseAuth.instance.currentUser?.uid,
         ),
       );
       _currentProfile = defaultProfile;

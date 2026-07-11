@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BiometricAuthProvider extends ChangeNotifier {
   static const String _enabledKey = 'biometric_login_enabled';
   static const String _emailKey = 'biometric_login_email';
 
   bool _isEnabled = false;
-  IconData _icon = Icons.fingerprint;
+  IconData _icon = LucideIcons.fingerprint;
 
   bool get isEnabled => _isEnabled;
   IconData get icon => _icon;
@@ -30,18 +31,21 @@ class BiometricAuthProvider extends ChangeNotifier {
       final localAuth = LocalAuthentication();
       final available = await localAuth.getAvailableBiometrics();
       if (available.contains(BiometricType.face)) {
-        _icon = Icons.face_rounded;
+        _icon = LucideIcons.smile;
         notifyListeners();
       }
     } catch (_) {}
   }
 
   Future<bool> authenticate({String localizedReason = 'Use biometrics to unlock your expense tracker'}) async {
-    final localAuth = LocalAuthentication();
-    return await localAuth.authenticate(
-      localizedReason: localizedReason,
-      biometricOnly: true,
-    );
+    try {
+      final localAuth = LocalAuthentication();
+      return await localAuth.authenticate(
+        localizedReason: localizedReason,
+      );
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<void> setEnabled(bool value, {String? email}) async {

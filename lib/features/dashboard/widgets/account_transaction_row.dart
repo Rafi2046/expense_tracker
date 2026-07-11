@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/pages/transaction_details_screen.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class AccountTransactionRow extends StatelessWidget {
   final Map<String, dynamic> item;
@@ -71,7 +72,7 @@ class AccountTransactionRow extends StatelessWidget {
                   Text(
                     isIncome ? 'Income #1' : 'Expense #1',
                     style: GoogleFonts.workSans(
-                      fontSize: 10,
+                      fontSize: AppFontSizes.size10,
                       fontWeight: FontWeight.w600,
                       color: isIncome
                           ? const Color(0xFF2EBD85)
@@ -84,7 +85,7 @@ class AccountTransactionRow extends StatelessWidget {
                       Text(
                         amountPrefix,
                         style: GoogleFonts.workSans(
-                          fontSize: 14,
+                          fontSize: AppFontSizes.size14,
                           fontWeight: FontWeight.bold,
                           color: amountColor,
                         ),
@@ -92,7 +93,7 @@ class AccountTransactionRow extends StatelessWidget {
                       PrivacyMaskedText(
                         amount: amount,
                         style: GoogleFonts.workSans(
-                          fontSize: 14,
+                          fontSize: AppFontSizes.size14,
                           fontWeight: FontWeight.bold,
                           color: amountColor,
                         ),
@@ -112,7 +113,7 @@ class AccountTransactionRow extends StatelessWidget {
                     child: Text(
                       title,
                       style: GoogleFonts.workSans(
-                        fontSize: 13.5,
+                        fontSize: AppFontSizes.size14,
                         fontWeight: FontWeight.bold,
                         color: theme.colorScheme.onSurface,
                       ),
@@ -133,7 +134,7 @@ class AccountTransactionRow extends StatelessWidget {
                         Text(
                           'Bal: ',
                           style: GoogleFonts.workSans(
-                            fontSize: 10,
+                            fontSize: AppFontSizes.size10,
                             fontWeight: FontWeight.w600,
                             color: isDark ? theme.primaryColor : const Color(0xFF006C49),
                           ),
@@ -141,7 +142,7 @@ class AccountTransactionRow extends StatelessWidget {
                         PrivacyMaskedText(
                           amount: runningBal,
                           style: GoogleFonts.workSans(
-                            fontSize: 10,
+                            fontSize: AppFontSizes.size10,
                             fontWeight: FontWeight.w600,
                             color: isDark ? theme.primaryColor : const Color(0xFF006C49),
                           ),
@@ -160,14 +161,14 @@ class AccountTransactionRow extends StatelessWidget {
                   Text(
                     DateFormat('dd MMM yyyy • h:mm a').format(dateTime),
                     style: GoogleFonts.workSans(
-                      fontSize: 11,
+                      fontSize: AppFontSizes.size11,
                       color: AppColors.textMuted,
                     ),
                   ),
                   Text(
                     category,
                     style: GoogleFonts.workSans(
-                      fontSize: 10.5,
+                      fontSize: AppFontSizes.size10,
                       color: AppColors.textMuted,
                       fontWeight: FontWeight.w500,
                     ),

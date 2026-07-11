@@ -1,7 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SettingsDropdownOptionRow<T> extends StatelessWidget {
   final IconData icon;
@@ -26,14 +26,12 @@ class SettingsDropdownOptionRow<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textStyle = GoogleFonts.workSans(
-      fontSize: 12,
+    final textStyle = AppTextStyles.label.copyWith(
       fontWeight: FontWeight.w600,
       color: theme.colorScheme.onSurface,
     );
 
-    final dropdownStyle = GoogleFonts.workSans(
-      fontSize: 11,
+    final dropdownStyle = AppTextStyles.caption.copyWith(
       color: theme.brightness == Brightness.dark
           ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
           : AppColors.textMuted,
@@ -80,7 +78,7 @@ class SettingsDropdownOptionRow<T> extends StatelessWidget {
               items: items,
               onChanged: onChanged,
               icon: Icon(
-                Symbols.keyboard_arrow_down_rounded,
+                LucideIcons.chevronDown,
                 color: theme.brightness == Brightness.dark
                     ? Colors.white60
                     : Colors.grey.shade400,

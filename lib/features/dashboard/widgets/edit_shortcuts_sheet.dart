@@ -1,10 +1,11 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/shortcut_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class EditShortcutsSheet extends StatefulWidget {
   const EditShortcutsSheet({super.key});
@@ -54,16 +55,16 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
   IconData _icon(String id) {
     switch (id) {
       case 'income':
-        return Symbols.arrow_downward_rounded;
+        return LucideIcons.arrowDown;
       case 'expense':
-        return Symbols.arrow_upward_rounded;
+        return LucideIcons.arrowUp;
       case 'payment_in':
       case 'payment_out':
-        return Symbols.account_balance_wallet_rounded;
+        return LucideIcons.wallet;
       case 'add_party':
-        return Symbols.person_add_rounded;
+        return LucideIcons.userPlus;
       default:
-        return Symbols.help_outline_rounded;
+        return LucideIcons.helpCircle;
     }
   }
 
@@ -112,7 +113,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                   Text(
                     context.translate('edit_quick_actions'),
                     style: GoogleFonts.workSans(
-                      fontSize: 17,
+                      fontSize: AppFontSizes.size18,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
@@ -121,7 +122,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                   Text(
                     context.translate('drag_to_reorder_toggle_to_show'),
                     style: GoogleFonts.workSans(
-                      fontSize: 12.5,
+                      fontSize: AppFontSizes.size12,
                       color: Colors.grey.shade500,
                     ),
                   ),
@@ -169,10 +170,10 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                         child: Row(
                           children: [
                             isLocked
-                                ? Icon(Symbols.drag_indicator, size: 18, color: Colors.grey.shade300)
+                                ? Icon(LucideIcons.gripHorizontal, size: 18, color: Colors.grey.shade300)
                                 : ReorderableDragStartListener(
                               index: index,
-                              child: Icon(Symbols.drag_indicator, size: 18, color: Colors.grey.shade400),
+                              child: Icon(LucideIcons.gripHorizontal, size: 18, color: Colors.grey.shade400),
                             ),
                             const SizedBox(width: 12),
                             Container(
@@ -189,7 +190,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                               child: Text(
                                 context.translate(item.id),
                                 style: GoogleFonts.workSans(
-                                  fontSize: 14,
+                                  fontSize: AppFontSizes.size14,
                                   fontWeight: FontWeight.w500,
                                   color: Theme.of(context).colorScheme.onSurface,
                                 ),
@@ -205,7 +206,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                                 child: Text(
                                   context.translate('always_on'),
                                   style: GoogleFonts.workSans(
-                                    fontSize: 10.5,
+                                    fontSize: AppFontSizes.size10,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.grey.shade500,
                                   ),
@@ -271,6 +272,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
               ),
             ),
           ],
+
         ),
       ),
     );

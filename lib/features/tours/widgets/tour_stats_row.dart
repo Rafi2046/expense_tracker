@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourStatsRow extends StatelessWidget {
   final int totalTours;
@@ -26,7 +27,7 @@ class TourStatsRow extends StatelessWidget {
             child: _StatCard(
               isDark: isDark,
               theme: theme,
-              icon: Icons.map_outlined,
+              icon: LucideIcons.map,
               label: '$totalTours ${totalTours == 1 ? 'tour' : 'tours'}',
             ),
           ),
@@ -35,7 +36,7 @@ class TourStatsRow extends StatelessWidget {
             child: _StatCard(
               isDark: isDark,
               theme: theme,
-              icon: Icons.people_outline,
+              icon: LucideIcons.users,
               label: '$totalBuddies ${totalBuddies == 1 ? 'buddy' : 'buddies'}',
             ),
           ),
@@ -96,14 +97,12 @@ class _StatCard extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               alignment: Alignment.centerLeft,
-              child: Text(
-                label,
-                style: GoogleFonts.workSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                child: Text(
+                  label,
+                  style: AppTextStyles.bodyBold.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                  ),
                 ),
-              ),
             ),
           ),
         ],

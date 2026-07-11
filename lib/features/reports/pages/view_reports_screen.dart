@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:expense_tracker/features/reports/pages/all_transactions_report_screen.dart';
 import 'package:expense_tracker/features/reports/pages/bank_statement_screen.dart';
@@ -8,7 +7,9 @@ import 'package:expense_tracker/features/reports/pages/parties_report_screen.dar
 import 'package:expense_tracker/features/reports/pages/party_statement_screen.dart';
 import 'package:expense_tracker/features/reports/widgets/report_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ViewReportsScreen extends StatelessWidget {
   const ViewReportsScreen({super.key});
@@ -26,9 +27,7 @@ class ViewReportsScreen extends StatelessWidget {
         leading: BackButton(color: theme.appBarTheme.iconTheme?.color),
         title: Text(
           'Reports',
-          style: GoogleFonts.workSans(
-            fontSize: 17,
-            fontWeight: FontWeight.w700,
+          style: AppTextStyles.h2.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
             letterSpacing: -0.3,
           ),
@@ -64,17 +63,14 @@ class ViewReportsScreen extends StatelessWidget {
                       children: [
                         Text(
                           'Financial Reports',
-                          style: GoogleFonts.workSans(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
+                          style: AppTextStyles.reportTransactionTitle.copyWith(
                             color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Track, analyze & export your data',
-                          style: GoogleFonts.workSans(
-                            fontSize: 11.5,
+                          style: AppTextStyles.caption.copyWith(
                             color: Colors.white70,
                           ),
                         ),
@@ -87,7 +83,7 @@ class ViewReportsScreen extends StatelessWidget {
                       color: Colors.white.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Symbols.bar_chart_rounded, color: Colors.white, size: 22),
+                    child: Icon(LucideIcons.barChart, color: Colors.white, size: 22),
                   ),
                 ],
               ),
@@ -99,25 +95,25 @@ class ViewReportsScreen extends StatelessWidget {
 
             _buildReportCard(context, items: [
               const ReportItem(
-                icon: Symbols.receipt_long_rounded,
+                icon: LucideIcons.receipt,
                 title: 'All Transactions',
                 subtitle: 'Complete transaction history',
                 destination: AllTransactionsReportScreen(),
               ),
               const ReportItem(
-                icon: Symbols.people_alt,
+                icon: LucideIcons.users,
                 title: 'Party Statement',
                 subtitle: 'View per-party ledger',
                 destination: PartyStatementScreen(),
               ),
               const ReportItem(
-                icon: Symbols.account_balance_wallet,
+                icon: LucideIcons.wallet,
                 title: 'Cash In Hand',
                 subtitle: 'Track your cash balance',
                 destination: CashInHandStatementScreen(),
               ),
               const ReportItem(
-                icon: Symbols.account_balance,
+                icon: LucideIcons.landmark,
                 title: 'Bank Statement',
                 subtitle: 'Bank account summary',
                 destination: BankStatementScreen(),
@@ -130,13 +126,13 @@ class ViewReportsScreen extends StatelessWidget {
 
             _buildReportCard(context, items: [
               const ReportItem(
-                icon: Symbols.people_outline_rounded,
+                icon: LucideIcons.users,
                 title: 'Parties Report',
                 subtitle: 'Payable & receivable overview',
                 destination: PartiesReportScreen(),
               ),
               const ReportItem(
-                icon: Symbols.trending_up_rounded,
+                icon: LucideIcons.trendingUp,
                 title: 'Income & Expense',
                 subtitle: 'Profit/loss breakdown',
                 destination: IncomeExpenseReportScreen(),
@@ -155,9 +151,9 @@ class ViewReportsScreen extends StatelessWidget {
       padding: const EdgeInsets.only(left: 2.0),
       child: Text(
         label,
-        style: GoogleFonts.workSans(
-          fontSize: 10.5,
-          fontWeight: FontWeight.w700,
+        style: AppTextStyles.caption.copyWith(
+          fontSize: AppFontSizes.size10,
+          fontWeight: FontWeight.bold,
           color: Theme.of(context).brightness == Brightness.dark ? Colors.white38 : Colors.grey.shade500,
           letterSpacing: 1.2,
         ),

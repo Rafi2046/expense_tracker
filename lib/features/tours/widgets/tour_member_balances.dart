@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourMemberBalances extends StatelessWidget {
   final List<TourParticipant> participants;
@@ -48,11 +51,7 @@ class TourMemberBalances extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 12),
           child: Text(
             'Balances',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: theme.colorScheme.onSurface,
-            ),
+            style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
           ),
         ),
         Container(
@@ -119,22 +118,18 @@ class TourMemberBalances extends StatelessWidget {
                         bottomRight: Radius.circular(16),
                       ),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.handshake_outlined,
+                          LucideIcons.handshake,
                           size: 16,
                           color: Color(0xFF10B981),
                         ),
                         SizedBox(width: 8),
                         Text(
                           'Settle Up Balances',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF10B981),
-                          ),
+                          style: AppTextStyles.cardTrendGreen,
                         ),
                       ],
                     ),
@@ -167,10 +162,9 @@ class TourMemberBalances extends StatelessWidget {
             backgroundColor: _avatarColor(index),
             child: Text(
               p.name.isNotEmpty ? p.name[0].toUpperCase() : '?',
-              style: const TextStyle(
-                color: AppColors.white,
-                fontSize: 13,
+              style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.w600,
+                color: AppColors.white,
               ),
             ),
           ),
@@ -178,9 +172,8 @@ class TourMemberBalances extends StatelessWidget {
           Expanded(
             child: Text(
               p.name,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
+              style: AppTextStyles.bodyBold.copyWith(
+                fontSize: AppFontSizes.size15,
                 color: theme.colorScheme.onSurface,
               ),
             ),
@@ -195,12 +188,11 @@ class TourMemberBalances extends StatelessWidget {
                 color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFF3F4F6),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Text(
+              child: Text(
                 'Settled',
-                style: TextStyle(
-                  fontSize: 11,
+                style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF9CA3AF),
+                  color: const Color(0xFF9CA3AF),
                 ),
               ),
             )
@@ -216,8 +208,7 @@ class TourMemberBalances extends StatelessWidget {
               ),
               child: Text(
                 'Gets back ${formatAmount(balance)}',
-                style: const TextStyle(
-                  fontSize: 11,
+                style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w700,
                   color: AppColors.activeGreen,
                 ),
@@ -235,8 +226,7 @@ class TourMemberBalances extends StatelessWidget {
               ),
               child: Text(
                 'Owes ${formatAmount(balance.abs())}',
-                style: const TextStyle(
-                  fontSize: 11,
+                style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w700,
                   color: AppColors.activeRed,
                 ),

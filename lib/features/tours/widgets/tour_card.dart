@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourCard extends StatelessWidget {
   final Tour tour;
@@ -61,7 +64,7 @@ class TourCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.18),
@@ -71,7 +74,7 @@ class TourCard extends StatelessWidget {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(16),
           child: Stack(
             children: [
               // Background: cover photo or gradient
@@ -141,9 +144,8 @@ class TourCard extends StatelessWidget {
                         tour.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.workSans(
+                        style: AppTextStyles.displayMedium.copyWith(
                           color: Colors.white,
-                          fontSize: 24,
                           fontWeight: FontWeight.w800,
                           height: 1.15,
                           letterSpacing: -0.3,
@@ -157,16 +159,15 @@ class TourCard extends StatelessWidget {
                           Row(
                             children: [
                               Icon(
-                                Icons.people_alt_rounded,
+                                LucideIcons.users,
                                 color: Colors.white.withValues(alpha: 0.7),
                                 size: 16,
                               ),
                               const SizedBox(width: AppSpacing.s6),
                               Text(
-                                '$memberCount ${memberCount == 1 ? 'member' : 'members'}',
-                                style: GoogleFonts.workSans(
+                                '$memberCount ${memberCount == 1 ? context.translate('member') : context.translate('members')}',
+                                style: AppTextStyles.bodySmall.copyWith(
                                   color: Colors.white.withValues(alpha: 0.7),
-                                  fontSize: 13,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -176,10 +177,10 @@ class TourCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                'Total spent',
-                                style: GoogleFonts.workSans(
+                                context.translate('total_spent'),
+                                style: AppTextStyles.caption.copyWith(
                                   color: Colors.white.withValues(alpha: 0.5),
-                                  fontSize: 10,
+                                  fontSize: AppFontSizes.size10,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0.8,
                                 ),
@@ -187,9 +188,8 @@ class TourCard extends StatelessWidget {
                               const SizedBox(height: 2),
                               Text(
                                 _formatAmount(totalSpent, tour.currency),
-                                style: GoogleFonts.workSans(
+                                style: AppTextStyles.displayMedium.copyWith(
                                   color: Colors.white,
-                                  fontSize: 24,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: -0.5,
                                   height: 1.1,
@@ -233,7 +233,7 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dotColor = isCompleted ? const Color(0xFF9CA3AF) : const Color(0xFF4ADE80);
-    final label = isCompleted ? 'Completed' : 'Active';
+    final label = isCompleted ? context.translate('completed') : context.translate('active');
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -259,9 +259,8 @@ class _StatusBadge extends StatelessWidget {
           const SizedBox(width: 5),
           Text(
             label,
-            style: GoogleFonts.workSans(
+            style: AppTextStyles.caption.copyWith(
               color: Colors.white.withValues(alpha: isCompleted ? 0.6 : 0.9),
-              fontSize: 11,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.3,
             ),
@@ -301,13 +300,13 @@ class _CardMenuButton extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  isCompleted ? Icons.radio_button_unchecked_rounded : Icons.check_circle_outline_rounded,
+                  isCompleted ? LucideIcons.circle : LucideIcons.checkCircle,
                   size: 18,
                   color: isCompleted ? const Color(0xFF6B7280) : const Color(0xFF4ADE80),
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  isCompleted ? 'Mark as Active' : 'Mark as Completed',
+                  isCompleted ? context.translate('mark_as_active') : context.translate('mark_as_completed'),
                   style: TextStyle(
                     color: isCompleted ? const Color(0xFF6B7280) : const Color(0xFF4ADE80),
                   ),
@@ -316,14 +315,14 @@ class _CardMenuButton extends StatelessWidget {
             ),
           ),
         if (onDelete != null)
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'delete',
             child: Row(
               children: [
-                Icon(Icons.delete_outline_rounded, size: 18, color: Color(0xFFDC2626)),
-                SizedBox(width: 8),
-                Text('Delete Tour',
-                    style: TextStyle(color: Color(0xFFDC2626))),
+                const Icon(LucideIcons.trash, size: 18, color: Color(0xFFDC2626)),
+                const SizedBox(width: 8),
+                Text(context.translate('delete_tour'),
+                    style: const TextStyle(color: Color(0xFFDC2626))),
               ],
             ),
           ),
@@ -339,7 +338,7 @@ class _CardMenuButton extends StatelessWidget {
           ),
         ),
         child: const Icon(
-          Icons.more_horiz_rounded,
+          LucideIcons.moreHorizontal,
           size: 16,
           color: Colors.white,
         ),

@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
@@ -8,9 +7,10 @@ import 'package:expense_tracker/features/analytics/widgets/top_spending_categori
 import 'package:expense_tracker/features/analytics/widgets/top_spending_category_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -60,16 +60,16 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   };
 
   static const _namedCategoryIcons = <String, IconData>{
-    'housing': Symbols.home,
-    'food': Symbols.restaurant,
-    'transport': Symbols.directions_car,
-    'utilities': Symbols.flash_on,
-    'entertainment': Symbols.movie,
-    'shopping': Symbols.shopping_bag,
-    'health': Symbols.health_and_safety,
-    'education': Symbols.school,
-    'salary': Symbols.payments,
-    'investment': Symbols.trending_up,
+    'housing': LucideIcons.home,
+    'food': LucideIcons.utensilsCrossed,
+    'transport': LucideIcons.car,
+    'utilities': LucideIcons.zap,
+    'entertainment': LucideIcons.clapperboard,
+    'shopping': LucideIcons.shoppingBag,
+    'health': LucideIcons.heartPulse,
+    'education': LucideIcons.graduationCap,
+    'salary': LucideIcons.creditCard,
+    'investment': LucideIcons.trendingUp,
   };
 
   Color _categoryColor(String category, int index) {
@@ -78,7 +78,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   }
 
   IconData _categoryIcon(String category) {
-    return _namedCategoryIcons[category.toLowerCase()] ?? Symbols.receipt_long;
+    return _namedCategoryIcons[category.toLowerCase()] ?? LucideIcons.receipt;
   }
 
   @override
@@ -160,8 +160,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         scrolledUnderElevation: 0,
         title: Text(
           context.translate('analytics'),
-          style: GoogleFonts.workSans(
-            fontSize: 17,
+          style: AppTextStyles.h2.copyWith(
             fontWeight: FontWeight.w700,
             color: onSurface,
             letterSpacing: -0.3,
@@ -170,7 +169,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              _localMasked ? Symbols.visibility_off : Symbols.visibility,
+              _localMasked ? LucideIcons.shield : LucideIcons.shieldOff,
               size: 20,
             ),
             onPressed: () {
@@ -201,11 +200,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     totalAmount: PrivacyMaskedText(
                       amount: totalExpense,
                       isMasked: _localMasked,
-                      style: GoogleFonts.workSans(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: onSurface,
-                      ),
+                      style: AppTextStyles.bodyBold.copyWith(color: onSurface),
                     ),
                     items: spendingItems,
                   ),

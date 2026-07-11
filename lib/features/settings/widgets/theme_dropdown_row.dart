@@ -1,9 +1,9 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ThemeDropdownRow extends StatefulWidget {
   final Function(String) onSnackBar;
@@ -55,27 +55,19 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             child: Row(
               children: [
-                // Squircle moon icon
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFE8EAF6),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Symbols.dark_mode,
-                    color: isDark ? Colors.white70 : const Color(0xFF3F51B5),
-                    size: 14,
-                  ),
+                // Moon icon
+                Icon(
+                  LucideIcons.moon,
+                  color: isDark ? Colors.white70 : Colors.grey.shade600,
+                  size: 22,
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 16),
                 
                 // Title
                 Expanded(
                   child: Text(
                     context.translate('Change Theme'),
-                    style: GoogleFonts.workSans(
-                  fontSize: 12,
+                    style: AppTextStyles.label.copyWith(
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                     ),
@@ -86,8 +78,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
                 if (!_isExpanded) ...[
                   Text(
                     currentThemeLabel,
-                    style: GoogleFonts.workSans(
-                      fontSize: 11,
+                    style: AppTextStyles.caption.copyWith(
                       color: isDark
                           ? theme.colorScheme.onSurface.withValues(alpha: 0.6)
                           : const Color(0xFF888888),
@@ -100,8 +91,8 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
                 // Expand / Collapse Chevron
                 Icon(
                   _isExpanded
-                      ? Symbols.keyboard_arrow_up_rounded
-                      : Symbols.keyboard_arrow_down_rounded,
+                      ? LucideIcons.chevronUp
+                      : LucideIcons.chevronDown,
                   color: isDark ? Colors.white60 : Colors.grey.shade400,
                   size: 14,
                 ),
@@ -165,8 +156,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
             Expanded(
               child: Text(
                 label,
-                style: GoogleFonts.workSans(
-                  fontSize: 12,
+                style: AppTextStyles.label.copyWith(
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   color: theme.colorScheme.onSurface,
                 ),
@@ -187,7 +177,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
               ),
               child: isSelected
                   ? const Icon(
-                      Symbols.check,
+                      LucideIcons.check,
                       color: Colors.white,
                       size: 12,
                     )

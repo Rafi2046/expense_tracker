@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -8,6 +7,8 @@ import 'package:expense_tracker/features/dashboard/widgets/category_list_row.dar
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ManageCategoriesScreen extends StatefulWidget {
   const ManageCategoriesScreen({super.key});
@@ -86,10 +87,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
         ),
         title: Text(
           'Rename Category',
-          style: GoogleFonts.workSans(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+          style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold),
         ),
         content: TextField(
           controller: controller,
@@ -115,10 +113,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
             onPressed: () => Navigator.pop(ctx),
             child: Text(
               'Cancel',
-              style: GoogleFonts.workSans(
-                color: Colors.grey.shade600,
-                fontWeight: FontWeight.w600,
-              ),
+              style: AppTextStyles.bodyBold.copyWith(color: Colors.grey.shade600),
             ),
           ),
           ElevatedButton(
@@ -147,10 +142,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
             },
             child: Text(
               'Rename',
-              style: GoogleFonts.workSans(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppTextStyles.bodyBold.copyWith(color: Colors.white),
             ),
           ),
         ],
@@ -172,16 +164,12 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.colorScheme.onSurface),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           context.translate('manage_categories'),
-          style: GoogleFonts.workSans(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-            fontSize: 18,
-          ),
+          style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
         ),
         centerTitle: true,
         bottom: TabBar(
@@ -189,10 +177,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
           labelColor: primaryTabColor,
           unselectedLabelColor: Colors.grey,
           indicatorColor: primaryTabColor,
-          labelStyle: GoogleFonts.workSans(
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-          ),
+          labelStyle: AppTextStyles.bodyBold,
           tabs: [
             Tab(text: context.translate('expense')),
             Tab(text: context.translate('income')),
@@ -249,9 +234,9 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
                         const SizedBox(height: 8),
                         Text(
                           context.translate('no_categories_yet'),
-                          style: GoogleFonts.workSans(
+                          style: AppTextStyles.body.copyWith(
+                            fontFamily: GoogleFonts.workSans().fontFamily,
                             color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
-                            fontSize: 14,
                           ),
                         ),
                       ],

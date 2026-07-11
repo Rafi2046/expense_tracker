@@ -45,6 +45,7 @@ class TourExpenseShare {
       );
 
   Map<String, dynamic> toMap() => {
+    'id': id,
     'expenseId': expenseId,
     'participantId': participantId,
     'shareAmount': shareAmount,
@@ -55,6 +56,17 @@ class TourExpenseShare {
   factory TourExpenseShare.fromMap(String id, Map<String, dynamic> map) =>
       TourExpenseShare(
         id: id,
+        expenseId: map['expenseId'] as String,
+        participantId: map['participantId'] as String,
+        shareAmount: (map['shareAmount'] as num).toDouble(),
+        customValue: (map['customValue'] as num?)?.toDouble(),
+        isExcluded: map['isExcluded'] as bool? ?? false,
+      );
+
+  /// Parses a share embedded within an expense document (id is read from the map).
+  factory TourExpenseShare.fromEmbeddedMap(Map<String, dynamic> map) =>
+      TourExpenseShare(
+        id: map['id'] as String,
         expenseId: map['expenseId'] as String,
         participantId: map['participantId'] as String,
         shareAmount: (map['shareAmount'] as num).toDouble(),

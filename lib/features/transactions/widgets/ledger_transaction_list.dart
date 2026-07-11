@@ -1,14 +1,14 @@
-import 'package:material_symbols_icons/symbols.dart';
+import 'package:expense_tracker/features/transactions/widgets/ledger_transaction_row.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
-import 'package:expense_tracker/features/ledger/widgets/ledger_transaction_row.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LedgerTransactionList extends StatelessWidget {
   final bool isMasked;
@@ -46,7 +46,7 @@ class LedgerTransactionList extends StatelessWidget {
           category: 'Category',
           amount: 0.0,
           isIncome: i.isEven,
-          icon: i.isEven ? Symbols.arrow_downward : Symbols.arrow_upward,
+          icon: i.isEven ? LucideIcons.arrowDown : LucideIcons.arrowUp,
           isMasked: isMasked,
           onTap: () {},
         )),
@@ -85,17 +85,16 @@ class LedgerTransactionList extends StatelessWidget {
     }
 
     final List<Widget> listItems = [];
-    final _seenKeys = <String>{};
+    final seenKeys = <String>{};
     grouped.forEach((dateHeader, txs) {
       listItems.add(
         Padding(
           padding: const EdgeInsets.only(top: 20.0, bottom: 8.0, left: 4.0),
           child: Text(
             dateHeader.toUpperCase(),
-            style: GoogleFonts.workSans(
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey.shade400,
+            style: AppTextStyles.reportStatLabel.copyWith(
+              color: Colors.grey.shade800,
+              fontWeight: FontWeight.w800,
               letterSpacing: 1.0,
             ),
           ),
@@ -103,7 +102,7 @@ class LedgerTransactionList extends StatelessWidget {
       );
       
       for (var tx in txs) {
-        if (!_seenKeys.add(tx.id)) continue;
+        if (!seenKeys.add(tx.id)) continue;
         listItems.add(
           Dismissible(
             key: ValueKey(tx.id),
@@ -119,16 +118,16 @@ class LedgerTransactionList extends StatelessWidget {
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(ctx, false),
-                      child: Text('Cancel',
-                        style: GoogleFonts.workSans(color: AppColors.textMuted),
-                      ),
+                    child: Text('Cancel',
+                      style: AppTextStyles.bodyBold.copyWith(color: AppColors.textMuted),
                     ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(ctx, true),
-                      child: Text('Delete',
-                        style: GoogleFonts.workSans(color: AppColors.activeRed),
-                      ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx, true),
+                    child: Text('Delete',
+                      style: AppTextStyles.bodyBold.copyWith(color: AppColors.activeRed),
                     ),
+                  ),
                   ],
                 ),
               ) ?? false;
@@ -150,7 +149,7 @@ class LedgerTransactionList extends StatelessWidget {
                 color: AppColors.activeRed,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Icon(Symbols.delete_outline, color: Colors.white, size: 28),
+              child: Icon(LucideIcons.trash, color: Colors.white, size: 28),
             ),
             child: LedgerTransactionRow(
               title: tx.note.isNotEmpty ? tx.note : tx.category,
@@ -158,7 +157,7 @@ class LedgerTransactionList extends StatelessWidget {
               category: tx.category,
               amount: tx.amount,
               isIncome: tx.isIncome,
-              icon: tx.isIncome ? Symbols.arrow_downward : Symbols.arrow_upward,
+              icon: tx.isIncome ? LucideIcons.arrowDown : LucideIcons.arrowUp,
               incomeMonth: tx.incomeMonth,
               isMasked: isMasked,
               onTap: () {

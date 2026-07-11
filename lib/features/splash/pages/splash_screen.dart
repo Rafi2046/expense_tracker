@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
 import 'package:expense_tracker/features/login/pages/login_screen.dart';
+import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -37,12 +39,26 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         );
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const BottomNavScreen(),
-          ),
+        // Check if the user has completed onboarding
+        final onboardingDone = SharedPrefsHelper.getBool(
+          SharedPrefsHelper.onboardingCompleteKey,
         );
+
+        if (onboardingDone == true) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const BottomNavScreen(),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const OnboardingScreen(),
+            ),
+          );
+        }
       }
     } else {
       Navigator.pushReplacement(
@@ -81,3 +97,4 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+

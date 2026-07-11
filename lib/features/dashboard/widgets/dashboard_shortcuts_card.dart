@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/shortcut_provider.dart';
@@ -10,6 +9,8 @@ import 'package:expense_tracker/features/dashboard/pages/add_party_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DashboardShortcutsCard extends StatelessWidget {
   const DashboardShortcutsCard({super.key});
@@ -62,16 +63,16 @@ class DashboardShortcutsCard extends StatelessWidget {
   IconData _icon(String id) {
     switch (id) {
       case 'income':
-        return Symbols.arrow_downward_rounded;
+        return LucideIcons.arrowDown;
       case 'expense':
-        return Symbols.arrow_upward_rounded;
+        return LucideIcons.arrowUp;
       case 'payment_in':
       case 'payment_out':
-        return Symbols.account_balance_wallet_rounded;
+        return LucideIcons.wallet;
       case 'add_party':
-        return Symbols.person_add_rounded;
+        return LucideIcons.userPlus;
       default:
-        return Symbols.help_outline_rounded;
+        return LucideIcons.helpCircle;
     }
   }
 
@@ -91,73 +92,77 @@ class DashboardShortcutsCard extends StatelessWidget {
     final subLabelColor = AppColors.textMuted;
 
     return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          color: cardBg,
-          borderRadius: BorderRadius.circular(AppSpacing.r8),
-          boxShadow: [
-            BoxShadow(
-              color: isDark
-                  ? Colors.black.withValues(alpha: 0.25)
-                  : Colors.black.withValues(alpha: 0.045),
-              blurRadius: 20,
-              offset: const Offset(0, 4),
-            ),
-          ],
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(AppSpacing.r8),
+        border: Border.all(
+          color: Theme.of(context).dividerTheme.color ?? AppColors.dividerColor,
+          width: AppSpacing.w1,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  context.translate('quick_actions'),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.25)
+                : Colors.black.withValues(alpha: 0.045),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                context.translate('quick_actions'),
+                style: GoogleFonts.workSans(
+                  fontSize: AppFontSizes.size15,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+              GestureDetector(
+                onTap: () => EditShortcutsSheet.show(context),
+                behavior: HitTestBehavior.opaque,
+                child: Text(
+                  context.translate('edit_menu'),
                   style: GoogleFonts.workSans(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.2,
-                    color: Theme.of(context).colorScheme.onSurface,
+                    fontSize: AppFontSizes.size12,
+                    fontWeight: FontWeight.w600,
+                    color: labelColor,
                   ),
                 ),
-                GestureDetector(
-                  onTap: () => EditShortcutsSheet.show(context),
-                  behavior: HitTestBehavior.opaque,
-                  child: Text(
-                    context.translate('edit_menu'),
-                    style: GoogleFonts.workSans(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: labelColor,
-                    ),
-                  ),
-                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          if (gridItems.isEmpty)
+            for (final item in addParty)
+              _buildRowItem(context, item, isDark, subLabelColor)
+          else ...[
+            Row(
+              children: [
+                for (final item in gridItems) ...[
+                  Expanded(child: _buildGridItem(context, item, isDark, labelColor)),
+                ],
               ],
             ),
-            const SizedBox(height: 18),
-            if (gridItems.isEmpty)
-              for (final item in addParty)
-                _buildRowItem(context, item, isDark, subLabelColor)
-            else ...[
-              Row(
-                children: [
-                  for (final item in gridItems) ...[
-                    Expanded(child: _buildGridItem(context, item, isDark, labelColor)),
-                  ],
-                ],
+            if (addParty.isNotEmpty) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                child: Container(height: 1, color: dividerColor),
               ),
-              if (addParty.isNotEmpty) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  child: Container(height: 1, color: dividerColor),
-                ),
-                for (final item in addParty)
-                  _buildRowItem(context, item, isDark, subLabelColor),
-              ],
+              for (final item in addParty)
+                _buildRowItem(context, item, isDark, subLabelColor),
             ],
           ],
-        ),
+        ],
+      ),
     );
   }
 
@@ -188,7 +193,7 @@ class DashboardShortcutsCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: GoogleFonts.workSans(
-              fontSize: 10.5,
+              fontSize: AppFontSizes.size10,
               fontWeight: FontWeight.w600,
               color: labelColor,
             ),
@@ -225,19 +230,19 @@ class DashboardShortcutsCard extends StatelessWidget {
                 Text(
                   context.translate(item.id),
                   style: GoogleFonts.workSans(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 Text(
                   context.translate('always_on'),
-                  style: GoogleFonts.workSans(fontSize: 10.5, color: subLabelColor),
+                  style: GoogleFonts.workSans(fontSize: AppFontSizes.size10, color: subLabelColor),
                 ),
               ],
             ),
           ),
-          Icon(Symbols.chevron_right_rounded, size: 18, color: Colors.grey.shade400),
+          Icon(LucideIcons.chevronRight, size: 18, color: Colors.grey.shade400),
         ],
       ),
     );

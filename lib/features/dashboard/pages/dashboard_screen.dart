@@ -1,7 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
@@ -28,10 +28,11 @@ import 'package:expense_tracker/features/reports/pages/view_reports_screen.dart'
 import 'package:expense_tracker/features/dashboard/pages/total_balance_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/budget_management_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -86,31 +87,35 @@ class DashboardScreen extends StatelessWidget {
           );
         },
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(
-            16,
-            16,
-            16,
-            16 + MediaQuery.of(context).padding.bottom + 10,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Row 1: Income and Expense Card
-              Skeletonizer(
-                enabled: isLoading,
-                child: Row(
-                  children: [
+      body: RefreshIndicator(
+        onRefresh: () async {
+          txProvider.updateProfileId(currentProfile.id);
+          debtProvider.updateProfileId(currentProfile.id);
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              16 + MediaQuery.of(context).padding.bottom + 10,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Row 1: Income and Expense Card
+                Skeletonizer(
+                  enabled: isLoading,
+                  child: Row(
+                    children: [
                       Expanded(
                         child: DashboardStatCard(
                           title:
                               '${context.translate('income')} ($currentMonthName)',
                           value: PrivacyMaskedText(
                             amount: txProvider.calendarMonthIncome,
-                            style: AppTextStyles.cardValueGreen.copyWith(
-                              fontSize: 15,
-                            ),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeGreen),
                           ),
                           isPositive: txProvider.isCalendarIncomeTrendGood,
                           isTrend: false,
@@ -132,9 +137,7 @@ class DashboardScreen extends StatelessWidget {
                               '${context.translate('expense')} ($currentMonthName)',
                           value: PrivacyMaskedText(
                             amount: txProvider.calendarMonthExpense,
-                            style: AppTextStyles.cardValueRed.copyWith(
-                              fontSize: 15,
-                            ),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeRed),
                           ),
                           isPositive: txProvider.isCalendarExpenseTrendGood,
                           isTrend: false,
@@ -151,27 +154,25 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-              ),
-              const SizedBox(height: 8),
+                ),
+                const SizedBox(height: 8),
 
-              // Row 2: To Receive and To Give Card
-              Skeletonizer(
-                enabled: isLoading,
-                child: Row(
-                  children: [
-                    Expanded(
+                // Row 2: To Receive and To Give Card
+                Skeletonizer(
+                  enabled: isLoading,
+                  child: Row(
+                    children: [
+                      Expanded(
                         child: DashboardStatCard(
                           title: context.translate('to_receive'),
                           value: PrivacyMaskedText(
                             amount: debtProvider.totalToReceive,
-                            style: AppTextStyles.cardValueGreen.copyWith(
-                              fontSize: 15,
-                            ),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeGreen),
                           ),
                           statusText: Text(
                             '${debtProvider.toReceiveUnpaid.length} ${context.translate('pending')}',
-                            style: AppTextStyles.cardStatusText.copyWith(
-                              fontSize: 10.5,
+                            style: AppTextStyles.caption.copyWith(
+                              fontSize: AppFontSizes.size10,
                             ),
                           ),
                           isPositive: true,
@@ -192,14 +193,12 @@ class DashboardScreen extends StatelessWidget {
                           title: context.translate('to_give'),
                           value: PrivacyMaskedText(
                             amount: debtProvider.totalToGive,
-                            style: AppTextStyles.cardValueRed.copyWith(
-                              fontSize: 15,
-                            ),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeRed),
                           ),
                           statusText: Text(
                             '${debtProvider.toGiveUnpaid.length} ${context.translate('pending')}',
-                            style: AppTextStyles.cardStatusText.copyWith(
-                              fontSize: 10.5,
+                            style: AppTextStyles.caption.copyWith(
+                              fontSize: AppFontSizes.size10,
                             ),
                           ),
                           isPositive: false,
@@ -216,28 +215,26 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-              ),
-              const SizedBox(height: 8),
+                ),
+                const SizedBox(height: 8),
 
-              // Row 3: Total Balance and Reports Card
-              Skeletonizer(
-                enabled: isLoading,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: DashboardStatCard(
-                        title:
-                            '${context.translate('cash')} & ${context.translate('bank')}',
-                        value: Text(
-                          context.translate('total_balance'),
-                          style: AppTextStyles.cardValueGreen.copyWith(
-                            fontSize: 15,
-                          ),
+                // Row 3: Total Balance and Reports Card
+                Skeletonizer(
+                  enabled: isLoading,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: DashboardStatCard(
+                          title:
+                              '${context.translate('cash')} & ${context.translate('bank')}',
+                          value: Text(
+                            context.translate('total_balance'),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeGreen),
                           ),
                           statusText: PrivacyMaskedText(
                             amount: totalBalance,
-                            style: AppTextStyles.cardStatusText.copyWith(
-                              fontSize: 10.5,
+                            style: AppTextStyles.caption.copyWith(
+                              fontSize: AppFontSizes.size10,
                             ),
                           ),
                           isPositive: true,
@@ -259,9 +256,7 @@ class DashboardScreen extends StatelessWidget {
                           title: 'Transactions, Parties, In...',
                           value: Text(
                             context.translate('reports'),
-                            style: AppTextStyles.cardValueGreen.copyWith(
-                              fontSize: 15,
-                            ),
+                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeGreen),
                           ),
                           isPositive: true,
                           isTrend: false,
@@ -277,88 +272,89 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-              ),
-              const SizedBox(height: 8),
-              Skeletonizer(
-                enabled: isLoading,
-                child: BudgetSummaryCard(
-                  monthlyExpense: txProvider.monthlyExpense,
                 ),
-              ),
-              const SizedBox(height: 8),
-              const DashboardShortcutsCard(),
-              const SizedBox(height: 8),
-              if (isLoading)
-                _recentActivitySkeleton(context)
-              else
-                DashboardRecentActivity(
-                  items: txProvider.transactions.take(3).map((tx) {
-                    return RecentActivityItem(
-                      title: tx.note.isEmpty ? tx.category : tx.note,
-                      category: tx.category,
-                      timeText: _getRelativeTime(tx.dateTime),
-                      amount: tx.amount,
-                      isIncome: tx.isIncome,
-                      icon: _getCategoryIcon(tx.category),
-                      transaction: tx,
-                    );
-                  }).toList(),
-                  onViewAllTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const RecentActivityScreen(),
-                      ),
-                    );
-                  },
-                  onItemTap: (item) {
-                    final tx = item.transaction;
-                    if (tx != null) {
-                      AddTransactionSheet.show(
-                        context: context,
-                        isIncome: tx.isIncome,
-                        transaction: tx,
-                      );
-                    }
-                  },
-                ),
-              const SizedBox(height: 8),
-              DashboardSpendingCategories(
-                categoryName: expenseAnalytics.monthlyCategories.isNotEmpty
-                    ? expenseAnalytics.monthlyCategories.first.name
-                    : 'No Expenses',
-                percentage: expenseAnalytics.monthlyCategories.isNotEmpty
-                    ? ((expenseAnalytics.monthlyCategories.first.amount /
-                                  expenseAnalytics.currentMonthExpense) *
-                              100)
-                          .clamp(0, 100)
-                          .toDouble()
-                    : 0,
-              ),
-              const SizedBox(height: 8),
-              DashboardBudgetStatus(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const BudgetManagementScreen(),
+                const SizedBox(height: 8),
+                Skeletonizer(
+                  enabled: isLoading,
+                  child: BudgetSummaryCard(
+                    monthlyExpense: txProvider.monthlyExpense,
                   ),
                 ),
-                items: expenseAnalytics.monthlyCategories.take(3).map((cat) {
-                  final totalExpense = expenseAnalytics.currentMonthExpense;
-                  final pct = totalExpense > 0
-                      ? ((cat.amount / totalExpense) * 100)
+                const SizedBox(height: 8),
+                const DashboardShortcutsCard(),
+                const SizedBox(height: 8),
+                if (isLoading)
+                  _recentActivitySkeleton(context)
+                else
+                  DashboardRecentActivity(
+                    items: txProvider.transactions.take(3).map((tx) {
+                      return RecentActivityItem(
+                        title: tx.note.isEmpty ? tx.category : tx.note,
+                        category: tx.category,
+                        timeText: _getRelativeTime(tx.dateTime),
+                        amount: tx.amount,
+                        isIncome: tx.isIncome,
+                        icon: _getCategoryIcon(tx.category),
+                        transaction: tx,
+                      );
+                    }).toList(),
+                    onViewAllTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RecentActivityScreen(),
+                        ),
+                      );
+                    },
+                    onItemTap: (item) {
+                      final tx = item.transaction;
+                      if (tx != null) {
+                        AddTransactionSheet.show(
+                          context: context,
+                          isIncome: tx.isIncome,
+                          transaction: tx,
+                        );
+                      }
+                    },
+                  ),
+                const SizedBox(height: 8),
+                DashboardSpendingCategories(
+                  categoryName: expenseAnalytics.monthlyCategories.isNotEmpty
+                      ? expenseAnalytics.monthlyCategories.first.name
+                      : 'No Expenses',
+                  percentage: expenseAnalytics.monthlyCategories.isNotEmpty
+                      ? ((expenseAnalytics.monthlyCategories.first.amount /
+                                    expenseAnalytics.currentMonthExpense) *
+                                100)
                             .clamp(0, 100)
                             .toDouble()
-                      : cat.percentage;
-                  return BudgetStatusItem(
-                    categoryName: cat.name,
-                    percentage: pct,
-                    color: cat.color,
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 16),
-            ],
+                      : 0,
+                ),
+                const SizedBox(height: 8),
+                DashboardBudgetStatus(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const BudgetManagementScreen(),
+                    ),
+                  ),
+                  items: expenseAnalytics.monthlyCategories.take(3).map((cat) {
+                    final totalExpense = expenseAnalytics.currentMonthExpense;
+                    final pct = totalExpense > 0
+                        ? ((cat.amount / totalExpense) * 100)
+                              .clamp(0, 100)
+                              .toDouble()
+                        : cat.percentage;
+                    return BudgetStatusItem(
+                      categoryName: cat.name,
+                      percentage: pct,
+                      color: cat.color,
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),
@@ -378,35 +374,35 @@ class DashboardScreen extends StatelessWidget {
       case 'food':
       case 'dining':
       case 'restaurant':
-        return Symbols.restaurant;
+        return LucideIcons.utensilsCrossed;
       case 'income':
       case 'salary':
-        return Symbols.payments;
+        return LucideIcons.creditCard;
       case 'transport':
       case 'fuel':
       case 'travel':
-        return Symbols.directions_car;
+        return LucideIcons.car;
       case 'shopping':
       case 'clothing':
       case 'electronics':
-        return Symbols.shopping_bag;
+        return LucideIcons.shoppingBag;
       case 'entertainment':
       case 'movie':
-        return Symbols.movie;
+        return LucideIcons.clapperboard;
       case 'utilities':
       case 'bills':
       case 'rent':
-        return Symbols.receipt_long;
+        return LucideIcons.receipt;
       case 'health':
       case 'medical':
-        return Symbols.local_hospital;
+        return LucideIcons.heartPulse;
       case 'education':
       case 'school':
-        return Symbols.school;
+        return LucideIcons.graduationCap;
       case 'transfer':
-        return Symbols.swap_horiz;
+        return LucideIcons.arrowLeftRight;
       default:
-        return Symbols.receipt_long;
+        return LucideIcons.receipt;
     }
   }
 }
@@ -423,18 +419,11 @@ Widget _recentActivitySkeleton(BuildContext context) {
           children: [
             Text(
               'Recent Activity',
-              style: GoogleFonts.workSans(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: theme.colorScheme.onSurface,
-              ),
+              style: AppTextStyles.bodyBold.copyWith(color: theme.colorScheme.onSurface),
             ),
             Text(
               'View All',
-              style: GoogleFonts.workSans(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w600,
-              ),
+              style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -474,40 +463,24 @@ Widget _recentActivitySkeleton(BuildContext context) {
                         children: [
                           Text(
                             'Transaction Title',
-                            style: GoogleFonts.workSans(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.onSurface,
-                            ),
+                            style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             'Category  •  Today',
-                            style: GoogleFonts.workSans(
-                              fontSize: 10.5,
-                              fontWeight: FontWeight.w400,
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.5,
-                              ),
-                            ),
+                            style: AppTextStyles.caption.copyWith(fontSize: AppFontSizes.size10, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
                           ),
                         ],
                       ),
                     ),
                     Text(
                       '+৳0,000',
-                      style: GoogleFonts.workSans(
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w700,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.5,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
+                      style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+),
+                    ],
+                  ),
+                );
+              }),
           ),
         ),
       ),

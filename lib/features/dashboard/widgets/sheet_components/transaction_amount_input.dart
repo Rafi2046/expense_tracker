@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransactionAmountInput extends StatelessWidget {
   final TextEditingController controller;
@@ -47,7 +48,7 @@ class TransactionAmountInput extends StatelessWidget {
           Text(
             'AMOUNT',
             style: GoogleFonts.workSans(
-              fontSize: 10.5,
+              fontSize: AppFontSizes.size10,
               fontWeight: FontWeight.w700,
               color: themeColor.withValues(alpha: 0.5),
               letterSpacing: 1.5,
@@ -69,7 +70,7 @@ class TransactionAmountInput extends StatelessWidget {
                     child: Text(
                       currencySymbol,
                       style: GoogleFonts.workSans(
-                        fontSize: 28,
+                        fontSize: AppFontSizes.size28,
                         fontWeight: FontWeight.w700,
                         color: themeColor.withValues(alpha: 0.45),
                       ),
@@ -84,7 +85,7 @@ class TransactionAmountInput extends StatelessWidget {
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         textAlign: TextAlign.center,
                         style: GoogleFonts.workSans(
-                          fontSize: 40,
+                          fontSize: AppFontSizes.size40,
                           fontWeight: FontWeight.w800,
                           color: themeColor,
                           letterSpacing: -1,
@@ -92,7 +93,7 @@ class TransactionAmountInput extends StatelessWidget {
                         decoration: InputDecoration(
                           hintText: '0.00',
                           hintStyle: GoogleFonts.workSans(
-                            fontSize: 40,
+                            fontSize: AppFontSizes.size40,
                             fontWeight: FontWeight.w800,
                             color: isDark
                                 ? Colors.white.withValues(alpha: 0.08)

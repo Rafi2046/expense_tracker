@@ -1,6 +1,7 @@
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'pdf_theme.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PdfHeaderBuilder {
   static pw.Widget build(String title, String dateRange, pw.TextStyle baseStyle) {
@@ -27,7 +28,7 @@ class PdfHeaderBuilder {
               'ET',
               style: baseStyle.copyWith(
                 color: PdfTheme.white,
-                fontSize: 16,
+                fontSize: AppFontSizes.size16,
                 fontWeight: pw.FontWeight.bold,
               ),
             ),
@@ -40,7 +41,7 @@ class PdfHeaderBuilder {
                 pw.Text(
                   'Expense Tracker',
                   style: baseStyle.copyWith(
-                    fontSize: 10,
+                    fontSize: AppFontSizes.size10,
                     color: PdfTheme.mutedText,
                     letterSpacing: 0.8,
                   ),
@@ -49,7 +50,7 @@ class PdfHeaderBuilder {
                 pw.Text(
                   title,
                   style: baseStyle.copyWith(
-                    fontSize: 16,
+                    fontSize: AppFontSizes.size16,
                     fontWeight: pw.FontWeight.bold,
                     color: PdfTheme.dark,
                   ),
@@ -63,7 +64,7 @@ class PdfHeaderBuilder {
               pw.Text(
                 'FINANCIAL REPORT',
                 style: baseStyle.copyWith(
-                  fontSize: 8,
+                  fontSize: AppFontSizes.size8,
                   color: PdfTheme.brandPrimary,
                   fontWeight: pw.FontWeight.bold,
                   letterSpacing: 1.2,
@@ -86,7 +87,7 @@ class PdfHeaderBuilder {
                 child: pw.Text(
                   dateRange,
                   style: baseStyle.copyWith(
-                    fontSize: 8,
+                    fontSize: AppFontSizes.size8,
                     color: PdfTheme.dark,
                   ),
                 ),

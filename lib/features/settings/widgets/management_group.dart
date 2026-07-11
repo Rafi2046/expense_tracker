@@ -1,10 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/analytics/pages/analytics_screen.dart';
 import 'package:expense_tracker/features/settings/pages/manage_categories_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_group_card.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_option_row.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ManagementGroup extends StatelessWidget {
   final VoidCallback onShowReportSelector;
@@ -17,9 +17,7 @@ class ManagementGroup extends StatelessWidget {
       title: context.translate('management'),
       children: [
         SettingsOptionRow(
-          icon: Symbols.category_rounded,
-          iconBgColor: const Color(0xFFF3E5F5),
-          iconColor: const Color(0xFF8E24AA),
+          icon: LucideIcons.grid,
           title: context.translate('manage_categories'),
           onTap: () {
             Navigator.push(
@@ -31,9 +29,7 @@ class ManagementGroup extends StatelessWidget {
           },
         ),
         SettingsOptionRow(
-          icon: Symbols.analytics_rounded,
-          iconBgColor: const Color(0xFFE3F2FD),
-          iconColor: const Color(0xFF1E88E5),
+          icon: LucideIcons.barChart,
           title: context.translate('analytics'),
           onTap: () {
             Navigator.push(
@@ -45,9 +41,7 @@ class ManagementGroup extends StatelessWidget {
           },
         ),
         SettingsOptionRow(
-          icon: Symbols.bar_chart_rounded,
-          iconBgColor: const Color(0xFFE8F8F5),
-          iconColor: const Color(0xFF16A085),
+          icon: LucideIcons.fileText,
           title: context.translate('view_reports'),
           onTap: onShowReportSelector,
         ),

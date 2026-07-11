@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class CategoryBreakdownItem {
   final String name;
@@ -89,7 +90,7 @@ class _ExpenseCategoriesBreakdownCardState
               Text(
                 'Categories Breakdown',
                 style: GoogleFonts.workSans(
-                  fontSize: 16,
+                  fontSize: AppFontSizes.size16,
                   fontWeight: FontWeight.w700,
                   color: onSurface,
                 ),
@@ -102,7 +103,7 @@ class _ExpenseCategoriesBreakdownCardState
             child: Text(
               widget.suffixText,
               style: GoogleFonts.workSans(
-                fontSize: 12,
+                fontSize: AppFontSizes.size12,
                 color: Colors.grey.shade500,
               ),
             ),
@@ -124,13 +125,18 @@ class _ExpenseCategoriesBreakdownCardState
                         series: <CircularSeries<CategoryBreakdownItem, String>>[
                           DoughnutSeries<CategoryBreakdownItem, String>(
                             dataSource: widget.categories,
-                            xValueMapper: (CategoryBreakdownItem item, _) => item.name,
-                            yValueMapper: (CategoryBreakdownItem item, _) => item.amount,
-                            pointColorMapper: (CategoryBreakdownItem item, _) => item.color,
+                            xValueMapper: (CategoryBreakdownItem item, _) =>
+                                item.name,
+                            yValueMapper: (CategoryBreakdownItem item, _) =>
+                                item.amount,
+                            pointColorMapper: (CategoryBreakdownItem item, _) =>
+                                item.color,
                             innerRadius: '70%',
                             startAngle: 270,
                             endAngle: 270,
-                            dataLabelSettings: const DataLabelSettings(isVisible: false),
+                            dataLabelSettings: const DataLabelSettings(
+                              isVisible: false,
+                            ),
                             animationDuration: 1000,
                           ),
                         ],
@@ -139,8 +145,8 @@ class _ExpenseCategoriesBreakdownCardState
                         builder: (context, constraints) {
                           final chartSize =
                               constraints.maxWidth < constraints.maxHeight
-                                  ? constraints.maxWidth
-                                  : constraints.maxHeight;
+                              ? constraints.maxWidth
+                              : constraints.maxHeight;
                           final innerDiameter = chartSize * 0.55;
                           return SizedBox(
                             width: innerDiameter,
@@ -156,7 +162,7 @@ class _ExpenseCategoriesBreakdownCardState
                                       Text(
                                         'Total',
                                         style: GoogleFonts.workSans(
-                                          fontSize: 11,
+                                          fontSize: AppFontSizes.size11,
                                           color: Colors.grey.shade500,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -178,68 +184,69 @@ class _ExpenseCategoriesBreakdownCardState
               const SizedBox(width: 14),
               Expanded(
                 flex: 10,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 190),
-                  child: ListView(
-                    children: displayList.map((item) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 10,
-                              height: 10,
-                              decoration: BoxDecoration(
-                                color: item.color,
-                                borderRadius: BorderRadius.circular(3),
-                              ),
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: displayList.map((item) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: item.color,
+                              borderRadius: BorderRadius.circular(3),
                             ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.name,
-                                    style: GoogleFonts.workSans(
-                                      fontSize: 11.5,
-                                      fontWeight: FontWeight.w600,
-                                      color: onSurface,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.name,
+                                  style: GoogleFonts.workSans(
+                                    fontSize: AppFontSizes.size11,
+                                    fontWeight: FontWeight.w600,
+                                    color: onSurface,
                                   ),
-                                  const SizedBox(height: 2),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(2),
-                                    child: LinearProgressIndicator(
-                                      value: item.percentage / 100,
-                                      backgroundColor: isDark
-                                          ? Colors.white.withValues(alpha: 0.08)
-                                          : const Color(0xFFF0F0F0),
-                                      valueColor: AlwaysStoppedAnimation<Color>(item.color),
-                                      minHeight: 4,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 2),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(2),
+                                  child: LinearProgressIndicator(
+                                    value: item.percentage / 100,
+                                    backgroundColor: isDark
+                                        ? Colors.white.withValues(alpha: 0.08)
+                                        : const Color(0xFFF0F0F0),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      item.color,
                                     ),
+                                    minHeight: 4,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 6),
-                            Text(
-                              item.percentage < 1
-                                  ? '${item.percentage.toStringAsFixed(1)}%'
-                                  : '${item.percentage.toStringAsFixed(0)}%',
-                              style: GoogleFonts.workSans(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                color: onSurface.withValues(alpha: 0.7),
-                              ),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            item.percentage < 1
+                                ? '${item.percentage.toStringAsFixed(1)}%'
+                                : '${item.percentage.toStringAsFixed(0)}%',
+                            style: GoogleFonts.workSans(
+                              fontSize: AppFontSizes.size11,
+                              fontWeight: FontWeight.w700,
+                              color: onSurface.withValues(alpha: 0.7),
                             ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
             ],
@@ -247,7 +254,7 @@ class _ExpenseCategoriesBreakdownCardState
 
           // Expand / Collapse button
           if (showExpandButton) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Align(
               alignment: Alignment.centerLeft,
               child: TextButton(
@@ -260,7 +267,7 @@ class _ExpenseCategoriesBreakdownCardState
                 child: Text(
                   _isExpanded ? 'View Less' : 'View All Category',
                   style: GoogleFonts.workSans(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.w600,
                     color: AppColors.activeGreen,
                   ),

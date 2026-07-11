@@ -1,6 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TransactionSaveButton extends StatefulWidget {
   final VoidCallback onPressed;
@@ -45,8 +46,6 @@ class _TransactionSaveButtonState extends State<TransactionSaveButton>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     // Build gradient from the themeColor
     final gradientStart = widget.themeColor;
     final gradientEnd = HSLColor.fromColor(widget.themeColor)
@@ -83,8 +82,8 @@ class _TransactionSaveButtonState extends State<TransactionSaveButton>
             children: [
               Icon(
                 widget.title.contains('Update')
-                    ? Symbols.check_circle_rounded
-                    : Symbols.save_rounded,
+                    ? LucideIcons.checkCircle
+                    : LucideIcons.save,
                 color: Colors.white,
                 size: 20,
               ),
@@ -92,7 +91,7 @@ class _TransactionSaveButtonState extends State<TransactionSaveButton>
               Text(
                 widget.title,
                 style: GoogleFonts.workSans(
-                  fontSize: 16,
+                  fontSize: AppFontSizes.size16,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                   letterSpacing: 0.2,

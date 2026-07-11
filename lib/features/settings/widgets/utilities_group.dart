@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/notes/pages/notebook_screen.dart';
 import 'package:expense_tracker/features/calculators/pages/emi_calculator_screen.dart';
 import 'package:expense_tracker/features/calculators/pages/interest_calculator_screen.dart';
@@ -7,6 +6,7 @@ import 'package:expense_tracker/features/settings/widgets/settings_group_card.da
 import 'package:expense_tracker/features/settings/widgets/settings_option_row.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class UtilitiesGroup extends StatefulWidget {
   const UtilitiesGroup({super.key});
@@ -25,9 +25,7 @@ class _UtilitiesGroupState extends State<UtilitiesGroup> {
       children: [
         // Notebook
         SettingsOptionRow(
-          icon: Symbols.book_rounded,
-          iconBgColor: const Color(0xFFEFEBE9),
-          iconColor: const Color(0xFF6D4C41),
+          icon: LucideIcons.book,
           title: context.translate('notebook'),
           onTap: () {
             Navigator.push(
@@ -41,13 +39,11 @@ class _UtilitiesGroupState extends State<UtilitiesGroup> {
 
         // Collapsible Calculators Header Row
         SettingsOptionRow(
-          icon: Symbols.calculate_rounded,
-          iconBgColor: const Color(0xFFE6F3EE),
-          iconColor: const Color(0xFF006C49),
+          icon: LucideIcons.calculator,
           title: context.translate('calculators'),
           trailingIcon: _isCalculatorsExpanded
-              ? Symbols.keyboard_arrow_down_rounded
-              : Symbols.keyboard_arrow_right_rounded,
+              ? LucideIcons.chevronDown
+              : LucideIcons.chevronRight,
           onTap: () {
             setState(() {
               _isCalculatorsExpanded = !_isCalculatorsExpanded;
@@ -64,9 +60,7 @@ class _UtilitiesGroupState extends State<UtilitiesGroup> {
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
                 child: SettingsOptionRow(
-                  icon: Symbols.pie_chart_outline_rounded,
-                  iconBgColor: const Color(0xFFE6F3EE),
-                  iconColor: const Color(0xFF006C49),
+                  icon: LucideIcons.pieChart,
                   title: context.translate('emi_calculator'),
                   onTap: () {
                     Navigator.push(
@@ -83,9 +77,7 @@ class _UtilitiesGroupState extends State<UtilitiesGroup> {
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
                 child: SettingsOptionRow(
-                  icon: Symbols.percent_rounded,
-                  iconBgColor: const Color(0xFFF3EFFF),
-                  iconColor: const Color(0xFF6A53A1),
+                  icon: LucideIcons.percent,
                   title: context.translate('interest_calculator'),
                   onTap: () {
                     Navigator.push(
@@ -102,9 +94,7 @@ class _UtilitiesGroupState extends State<UtilitiesGroup> {
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
                 child: SettingsOptionRow(
-                  icon: Symbols.receipt_long_rounded,
-                  iconBgColor: const Color(0xFFFDECEC),
-                  iconColor: const Color(0xFFD9383A),
+                  icon: LucideIcons.receipt,
                   title: context.translate('tax_calculator'),
                   onTap: () {
                     Navigator.push(

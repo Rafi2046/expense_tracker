@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class BankStatementBalanceCard extends StatelessWidget {
   final bool isMasked;
@@ -38,7 +39,6 @@ class BankStatementBalanceCard extends StatelessWidget {
           Text(
             'Closing Balance',
             style: AppTextStyles.reportStatLabel.copyWith(
-              fontSize: 11,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
           ),
@@ -46,7 +46,7 @@ class BankStatementBalanceCard extends StatelessWidget {
           PrivacyMaskedText(
             amount: closingBalance,
             style: AppTextStyles.reportLargeValue.copyWith(
-              fontSize: 20,
+              fontSize: AppFontSizes.size20,
               color: closingBalance >= 0 ? theme.primaryColor : AppColors.activeRed,
             ),
             isMasked: isMasked,

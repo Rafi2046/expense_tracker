@@ -1,7 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -50,12 +50,8 @@ class CustomButton extends StatelessWidget {
               ? Center(
                   child: Text(
                     text,
-                    style: TextStyle(
+                    style: AppTextStyles.partySubmitButtonText.copyWith(
                       color: textColor ?? Colors.white,
-                      fontSize: 16,
-                      fontFamily:
-                          fontFamily ?? GoogleFonts.workSans().fontFamily,
-                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 )
@@ -76,12 +72,8 @@ class CustomButton extends StatelessWidget {
                       child: Text(
                         text,
                         textAlign: TextAlign.left,
-                        style: TextStyle(
+                        style: AppTextStyles.partySubmitButtonText.copyWith(
                           color: textColor ?? Colors.white,
-                          fontSize: 16,
-                          fontFamily:
-                              fontFamily ?? GoogleFonts.workSans().fontFamily,
-                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),

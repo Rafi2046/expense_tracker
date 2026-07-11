@@ -48,7 +48,6 @@ dependencies:
   firebase_auth: ^6.5.2
   cloud_firestore: ^6.5.0
   google_sign_in: ^7.2.0
-  flutter_facebook_auth: ^7.1.7
   sign_in_with_apple: ^8.1.0
   image_picker: ^1.2.3
   firebase_storage: ^13.4.2
@@ -66,6 +65,7 @@ dependencies:
   confetti: ^0.8.0
   screenshot: ^3.0.0
   carousel_slider: ^5.1.2
+  lucide_icons_flutter: ^3.1.14+2
 
 dev_dependencies:
   flutter_test:

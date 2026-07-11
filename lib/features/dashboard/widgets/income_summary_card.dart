@@ -1,9 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class IncomeSummaryCard extends StatelessWidget {
   final String label;
@@ -33,11 +34,11 @@ class IncomeSummaryCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: theme.cardColor,
         border: Border.all(color: theme.dividerTheme.color ?? AppColors.dividerColor, width: 1.0),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +54,7 @@ class IncomeSummaryCard extends StatelessWidget {
                   onToggleMask();
                 },
                 child: Icon(
-                  isMasked ? Symbols.visibility_off : Symbols.visibility,
+                  isMasked ? LucideIcons.shield : LucideIcons.shieldOff,
                   size: 18,
                   color: isDark ? Colors.white38 : AppColors.textMuted,
                 ),
@@ -86,7 +87,7 @@ class IncomeSummaryCard extends StatelessWidget {
                 Text(
                   compareText!,
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     color: isDark ? Colors.white70 : AppColors.loginSubTitle,
                     fontFamily: GoogleFonts.workSans().fontFamily,
                   ),
@@ -98,7 +99,7 @@ class IncomeSummaryCard extends StatelessWidget {
             Row(
               children: [
                 const Icon(
-                  Symbols.trending_up,
+                  LucideIcons.trendingUp,
                   color: AppColors.activeGreen,
                   size: 16,
                 ),
@@ -106,7 +107,7 @@ class IncomeSummaryCard extends StatelessWidget {
                 Text(
                   percentageText!,
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.bold,
                     color: AppColors.activeGreen,
                     fontFamily: GoogleFonts.workSans().fontFamily,

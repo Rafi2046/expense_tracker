@@ -1,9 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class MonthSelectorSheet extends StatelessWidget {
   final List<DateTime> months;
@@ -49,18 +50,15 @@ class MonthSelectorSheet extends StatelessWidget {
           Text(
             'Select Income Month',
             style: GoogleFonts.workSans(
-              fontSize: 18,
+              fontSize: AppFontSizes.size18,
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: AppSpacing.h16),
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.40,
-            ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.40,
             child: ListView.separated(
-              shrinkWrap: true,
               itemCount: months.length,
               separatorBuilder: (_, _) => Divider(
                 color: theme.dividerTheme.color ?? const Color(0xFFF5F5F5),
@@ -76,7 +74,7 @@ class MonthSelectorSheet extends StatelessWidget {
                   title: Text(
                     label,
                     style: GoogleFonts.workSans(
-                      fontSize: 15,
+                      fontSize: AppFontSizes.size15,
                       fontWeight: isSelected
                           ? FontWeight.w600
                           : FontWeight.w400,
@@ -85,7 +83,7 @@ class MonthSelectorSheet extends StatelessWidget {
                   ),
                   trailing: isSelected
                       ? const Icon(
-                          Symbols.check_circle,
+                          LucideIcons.checkCircle,
                           color: AppColors.activeGreen,
                         )
                       : null,

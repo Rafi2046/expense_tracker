@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/add_party_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
@@ -8,8 +7,9 @@ import 'package:expense_tracker/features/dashboard/widgets/party_segmented_tabs.
 import 'package:expense_tracker/features/dashboard/widgets/credit_info_form.dart';
 import 'package:expense_tracker/features/dashboard/widgets/additional_details_form.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AddPartyScreen extends StatelessWidget {
   const AddPartyScreen({super.key});
@@ -46,16 +46,12 @@ class _AddPartyFormState extends State<AddPartyForm> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.appBarTheme.iconTheme?.color),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Add New Party',
-          style: GoogleFonts.workSans(
-            fontWeight: FontWeight.bold,
-            color: theme.appBarTheme.titleTextStyle?.color,
-            fontSize: 18,
-          ),
+          style: AppTextStyles.h2.copyWith(color: theme.appBarTheme.titleTextStyle?.color),
         ),
         centerTitle: true,
         bottom: PreferredSize(
@@ -277,7 +273,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
                       child: Text(
                         'Add New Party',
                         style: AppTextStyles.partySubmitButtonText.copyWith(
-                          fontSize: 15,
+                          fontSize: AppFontSizes.size15,
                           color: provider.isNameNotEmpty
                               ? Colors.white
                               : (isDark ? Colors.white30 : const Color(0xFFC1C7D0)),

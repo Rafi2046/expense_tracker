@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +5,8 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/utils/category_utils.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TransactionInfoRow extends StatelessWidget {
   final TransactionItem transaction;
@@ -25,7 +26,7 @@ class TransactionInfoRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
               color: theme.cardColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: isDark
                     ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -38,7 +39,7 @@ class TransactionInfoRow extends StatelessWidget {
                 Text(
                   isIncome ? 'Income Number' : 'Expense Number',
                   style: GoogleFonts.workSans(
-                    fontSize: 11,
+                    fontSize: AppFontSizes.size11,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     fontWeight: FontWeight.w500,
                   ),
@@ -49,7 +50,7 @@ class TransactionInfoRow extends StatelessWidget {
                       ? transaction.id.substring(transaction.id.length - 4)
                       : transaction.id,
                   style: GoogleFonts.workSans(
-                    fontSize: 14.5,
+                    fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -64,7 +65,7 @@ class TransactionInfoRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
               color: theme.cardColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: isDark
                     ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -77,7 +78,7 @@ class TransactionInfoRow extends StatelessWidget {
                 Text(
                   'Date',
                   style: GoogleFonts.workSans(
-                    fontSize: 11,
+                    fontSize: AppFontSizes.size11,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     fontWeight: FontWeight.w500,
                   ),
@@ -86,7 +87,7 @@ class TransactionInfoRow extends StatelessWidget {
                 Text(
                   DateFormat('dd Jun yyyy').format(transaction.dateTime),
                   style: GoogleFonts.workSans(
-                    fontSize: 14.5,
+                    fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -117,7 +118,7 @@ class CategoryDetailCard extends StatelessWidget {
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -140,7 +141,7 @@ class CategoryDetailCard extends StatelessWidget {
           Text(
             category,
             style: GoogleFonts.workSans(
-              fontSize: 14.5,
+              fontSize: AppFontSizes.size15,
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
             ),
@@ -167,7 +168,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -189,7 +190,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
               Text(
                 'Total Amount',
                 style: GoogleFonts.workSans(
-                  fontSize: 13.5,
+                  fontSize: AppFontSizes.size14,
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                 ),
@@ -197,7 +198,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
               Text(
                 context.formatAmount(transaction.amount),
                 style: GoogleFonts.workSans(
-                  fontSize: 16.5,
+                  fontSize: AppFontSizes.size16,
                   fontWeight: FontWeight.bold,
                   color: isIncome ? const Color(0xFF006C49) : const Color(0xFFDC3545),
                 ),
@@ -218,7 +219,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
               Text(
                 'Payment Mode',
                 style: GoogleFonts.workSans(
-                  fontSize: 13.5,
+                  fontSize: AppFontSizes.size14,
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                 ),
@@ -228,14 +229,14 @@ class AmountPaymentDetailCard extends StatelessWidget {
                   Text(
                     transaction.paymentMethod,
                     style: GoogleFonts.workSans(
-                      fontSize: 13.5,
+                      fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(width: 4),
                   const Icon(
-                    Symbols.arrow_forward_ios_rounded,
+                    LucideIcons.arrowRight,
                     size: 10,
                     color: Colors.grey,
                   ),
@@ -264,7 +265,7 @@ class MemoDetailCard extends StatelessWidget {
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -277,7 +278,7 @@ class MemoDetailCard extends StatelessWidget {
           Text(
             'Memo / Detail',
             style: GoogleFonts.workSans(
-              fontSize: 11,
+              fontSize: AppFontSizes.size11,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               fontWeight: FontWeight.w500,
             ),
@@ -286,7 +287,7 @@ class MemoDetailCard extends StatelessWidget {
           Text(
             note,
             style: GoogleFonts.workSans(
-              fontSize: 13.5,
+              fontSize: AppFontSizes.size14,
               color: theme.colorScheme.onSurface,
               height: 1.3,
             ),
@@ -312,7 +313,7 @@ class SyncStatusCard extends StatelessWidget {
         color: isDark
             ? theme.colorScheme.onSurface.withValues(alpha: 0.04)
             : const Color(0xFFF9F9F9),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -322,7 +323,7 @@ class SyncStatusCard extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            Symbols.cloud_done,
+            LucideIcons.cloud,
             color: isDark ? Colors.white38 : Colors.grey,
             size: 18,
           ),
@@ -331,7 +332,7 @@ class SyncStatusCard extends StatelessWidget {
             child: Text(
               'Entry is synced successfully!',
               style: GoogleFonts.workSans(
-                fontSize: 12,
+                fontSize: AppFontSizes.size12,
                 color: isDark ? Colors.white60 : AppColors.textMuted,
                 fontWeight: FontWeight.w500,
               ),

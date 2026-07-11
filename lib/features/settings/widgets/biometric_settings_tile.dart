@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BiometricSettingsTile extends StatefulWidget {
   const BiometricSettingsTile({super.key});
@@ -47,20 +48,12 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
         );
         if (!verified) {
           messenger.showSnackBar(
-            const SnackBar(content: Text('Authentication failed or cancelled.')),
+            const SnackBar(content: Text('Biometric authentication failed. Please try again.')),
           );
           return;
         }
         final userEmail = FirebaseAuth.instance.currentUser?.email;
         await provider.setEnabled(true, email: userEmail);
-      } on PlatformException catch (e) {
-        messenger.showSnackBar(
-          SnackBar(content: Text('Error: ${e.message ?? e.code}')),
-        );
-      } catch (e) {
-        messenger.showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
       } finally {
         if (mounted) setState(() => _isProcessing = false);
       }
@@ -81,35 +74,21 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: isDark
-                  ? (isAvailable
-                      ? const Color(0xFF1A237E).withValues(alpha: 0.2)
-                      : Colors.white10)
-                  : (isAvailable
-                      ? const Color(0xFFE8EAF6)
-                      : const Color(0xFFF3F4F6)),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              Icons.fingerprint,
-              color: isAvailable
-                  ? (isDark ? Colors.white70 : const Color(0xFF3949AB))
-                  : (isDark ? Colors.white30 : const Color(0xFF9CA3AF)),
-              size: 14,
-            ),
+          Icon(
+            LucideIcons.fingerprint,
+            color: isAvailable
+                ? (isDark ? Colors.white70 : Colors.grey.shade700)
+                : (isDark ? Colors.white30 : Colors.grey.shade400),
+            size: 22,
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Biometric Login',
-                  style: GoogleFonts.workSans(
-                    fontSize: 12,
+                  style: AppTextStyles.label.copyWith(
                     fontWeight: FontWeight.w600,
                     color: isAvailable
                         ? theme.colorScheme.onSurface
@@ -123,8 +102,8 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
                       : (isAvailable
                           ? 'Use Face ID / Fingerprint on app restart'
                           : 'Not available on this device'),
-                  style: GoogleFonts.workSans(
-                    fontSize: 9,
+                  style: AppTextStyles.caption.copyWith(
+                    fontSize: AppFontSizes.size9,
                     color: _isProcessing
                         ? theme.primaryColor
                         : (isAvailable
@@ -140,7 +119,7 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
             Switch(
               value: provider.isEnabled && isAvailable,
               onChanged: isAvailable && !_isProcessing ? _onToggle : null,
-              activeColor: theme.primaryColor,
+              activeThumbColor: theme.primaryColor,
             )
           else
             const SizedBox(

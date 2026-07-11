@@ -1,20 +1,21 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-class LedgerMonthSelector extends StatefulWidget {
-  const LedgerMonthSelector({super.key});
+class TransactionsMonthSelector extends StatefulWidget {
+  const TransactionsMonthSelector({super.key});
 
   @override
-  State<LedgerMonthSelector> createState() => _LedgerMonthSelectorState();
+  State<TransactionsMonthSelector> createState() => _TransactionsMonthSelectorState();
 }
 
-class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
+class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -51,6 +52,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
   }
 
   void _showSortBottomSheet(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).padding.bottom;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -59,9 +61,9 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
           builder: (context, provider, child) {
             final activeOption = provider.sortOption;
 
-             Widget buildSortItem(String title, TransactionSortOption option, IconData icon) {
+              Widget buildSortItem(String title, TransactionSortOption option, IconData icon) {
               final isSelected = activeOption == option;
-              final accentColor = const Color(0xFF6A53A1); // premium purple/violet accent
+              final accentColor = const Color(0xFF6A53A1);
               final isDarkItem = Theme.of(context).brightness == Brightness.dark;
 
               return InkWell(
@@ -69,21 +71,22 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                   provider.updateSortOption(option);
                   Navigator.pop(context);
                 },
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                   decoration: BoxDecoration(
                     color: isSelected ? accentColor.withValues(alpha: 0.05) : Colors.transparent,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: isSelected ? accentColor.withValues(alpha: 0.15) : Colors.transparent,
                       width: 1.0,
                     ),
                   ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
                           color: isSelected
                               ? accentColor.withValues(alpha: 0.1)
@@ -96,12 +99,11 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                           color: isSelected ? accentColor : (isDarkItem ? Colors.white60 : Colors.grey.shade600),
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           title,
-                          style: GoogleFonts.workSans(
-                            fontSize: 14,
+                          style: AppTextStyles.bodyBold.copyWith(
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                             color: isSelected ? accentColor : (isDarkItem ? Colors.white70 : Colors.black87),
                           ),
@@ -109,7 +111,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                       ),
                       if (isSelected)
                         Icon(
-                          Symbols.check_circle_rounded,
+                          LucideIcons.checkCircle,
                           color: accentColor,
                           size: 18,
                         ),
@@ -128,7 +130,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                   topRight: Radius.circular(24),
                 ),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+              padding: EdgeInsets.fromLTRB(20, 16, 20, 16 + bottomInset),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +146,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
 
                   // Header
                   Row(
@@ -152,9 +154,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                     children: [
                       Text(
                         context.translate('sort_transactions'),
-                        style: GoogleFonts.workSans(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                        style: AppTextStyles.sectionHeaderTitle.copyWith(
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
@@ -167,7 +167,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            Symbols.close,
+                            LucideIcons.x,
                             size: 18,
                             color: isDarkSheet ? Colors.white70 : Colors.grey.shade600,
                           ),
@@ -175,15 +175,15 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
 
                   // Options list
-                  buildSortItem(context.translate('sort_latest'), TransactionSortOption.latest, Symbols.calendar_today_rounded),
-                  const SizedBox(height: 12),
-                  buildSortItem(context.translate('sort_amount_high_low'), TransactionSortOption.amountHighToLow, Symbols.trending_down_rounded),
-                  const SizedBox(height: 12),
-                  buildSortItem(context.translate('sort_amount_low_high'), TransactionSortOption.amountLowToHigh, Symbols.trending_up_rounded),
-                  const SizedBox(height: 12),
+                  buildSortItem(context.translate('sort_latest'), TransactionSortOption.latest, LucideIcons.calendar),
+                  const SizedBox(height: 8),
+                  buildSortItem(context.translate('sort_amount_high_low'), TransactionSortOption.amountHighToLow, LucideIcons.trendingDown),
+                  const SizedBox(height: 8),
+                  buildSortItem(context.translate('sort_amount_low_high'), TransactionSortOption.amountLowToHigh, LucideIcons.trendingUp),
+                  const SizedBox(height: 8),
                 ],
               ),
             );
@@ -268,8 +268,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                       children: [
                         Text(
                           DateFormat('MMM', locale).format(month).toUpperCase(),
-                          style: GoogleFonts.workSans(
-                            fontSize: 12,
+                          style: AppTextStyles.label.copyWith(
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                             color: isSelected ? Colors.white : (isDarkSlider ? Colors.white70 : Colors.black87),
                             letterSpacing: 0.5,
@@ -278,8 +277,8 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
                         const SizedBox(height: 1),
                         Text(
                           DateFormat('yyyy', locale).format(month),
-                          style: GoogleFonts.workSans(
-                            fontSize: 9,
+                          style: AppTextStyles.caption.copyWith(
+                            fontSize: AppFontSizes.size9,
                             fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
                             color: isSelected ? Colors.white70 : (isDarkSlider ? Colors.grey.shade400 : Colors.grey.shade500),
                           ),
@@ -316,7 +315,7 @@ class _LedgerMonthSelectorState extends State<LedgerMonthSelector> {
             ],
           ),
           child: IconButton(
-            icon: const Icon(Symbols.tune_rounded, size: 18),
+            icon: Icon(LucideIcons.slidersHorizontal, size: 18),
             color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : const Color(0xFF31394D),
             onPressed: () => _showSortBottomSheet(context),
           ),

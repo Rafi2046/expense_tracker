@@ -1,4 +1,3 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -11,6 +10,7 @@ import 'package:expense_tracker/features/dashboard/widgets/set_budget_dialog.dar
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BudgetManagementScreen extends StatelessWidget {
   const BudgetManagementScreen({super.key});
@@ -37,15 +37,17 @@ class BudgetManagementScreen extends StatelessWidget {
         leading: const BackButton(),
         title: Text(
           'Budget Management',
-          style: AppTextStyles.reportAppBarTitle,
+          style: AppTextStyles.reportAppBarTitle.copyWith(
+            color: theme.colorScheme.onSurface,
+          ),
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(
+        padding: EdgeInsets.fromLTRB(
           AppSpacing.p16,
           AppSpacing.p4,
           AppSpacing.p16,
-          AppSpacing.p24,
+          AppSpacing.p24 + MediaQuery.of(context).padding.bottom,
         ),
         child: Skeletonizer(
           enabled: isLoading,
@@ -81,7 +83,7 @@ class BudgetManagementScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Icon(
-                        Symbols.receipt_long,
+                        LucideIcons.receipt,
                         size: 48,
                         color: AppColors.textMuted.withValues(alpha: 0.3),
                       ),

@@ -1,6 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TransactionNoteInput extends StatelessWidget {
   final TextEditingController controller;
@@ -21,13 +22,13 @@ class TransactionNoteInput extends StatelessWidget {
       controller: controller,
       maxLines: 2,
       style: GoogleFonts.workSans(
-        fontSize: 14.5,
+        fontSize: AppFontSizes.size15,
         color: theme.colorScheme.onSurface,
       ),
       decoration: InputDecoration(
         hintText: 'Add a note or description...',
         hintStyle: GoogleFonts.workSans(
-          fontSize: 14,
+          fontSize: AppFontSizes.size14,
           color: isDark ? Colors.white24 : Colors.grey.shade400,
         ),
         prefixIcon: Padding(
@@ -40,7 +41,7 @@ class TransactionNoteInput extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
-              Symbols.notes_rounded,
+              LucideIcons.notepadText,
               color: themeColor.withValues(alpha: 0.6),
               size: 18,
             ),

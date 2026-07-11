@@ -1,6 +1,4 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
@@ -9,6 +7,7 @@ import 'package:expense_tracker/features/dashboard/widgets/account_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/overall_balance_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/adjust_balance_actions.dart';
 import 'account_details_screen.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TotalBalanceScreen extends StatefulWidget {
   const TotalBalanceScreen({super.key});
@@ -37,13 +36,12 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color, size: 20),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.appBarTheme.iconTheme?.color, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Cash & Bank Accounts',
-          style: AppTextStyles.reportAppBarTitle.copyWith(
-            fontSize: 16.5,
+          style: AppTextStyles.h2.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
           ),
         ),
@@ -72,26 +70,18 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                 children: [
                   Text(
                     'All Accounts',
-                    style: GoogleFonts.workSans(
-                      fontSize: 14.5,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                    ),
+                    style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   TextButton.icon(
                     onPressed: () => showNewAccountDialog(context),
                     icon: Icon(
-                      Symbols.add,
+                      LucideIcons.plus,
                       size: 14,
                       color: theme.primaryColor,
                     ),
                     label: Text(
                       'New Account',
-                      style: GoogleFonts.workSans(
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w600,
-                        color: theme.primaryColor,
-                      ),
+                      style: AppTextStyles.label.copyWith(color: theme.primaryColor),
                     ),
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
@@ -113,13 +103,9 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                       balance: PrivacyMaskedText(
                         amount: cashBalance,
                         isMasked: _localMasked,
-                        style: GoogleFonts.workSans(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: theme.primaryColor,
-                        ),
+                        style: AppTextStyles.bodyBold.copyWith(color: theme.primaryColor),
                       ),
-                      icon: Symbols.payments,
+                      icon: LucideIcons.creditCard,
                       iconBg: isDark ? Colors.white10 : const Color(0xFFE6F3EE),
                       iconColor: isDark ? theme.primaryColor : const Color(0xFF006C49),
                       onTap: () {
@@ -138,13 +124,9 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                       balance: PrivacyMaskedText(
                         amount: bankBalance,
                         isMasked: _localMasked,
-                        style: GoogleFonts.workSans(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: theme.primaryColor,
-                        ),
+                        style: AppTextStyles.bodyBold.copyWith(color: theme.primaryColor),
                       ),
-                      icon: Symbols.account_balance,
+                      icon: LucideIcons.landmark,
                       iconBg: isDark ? Colors.white10 : const Color(0xFFEBF3F9),
                       iconColor: const Color(0xFF2980B9),
                       onTap: () {
@@ -177,11 +159,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                   ),
                   child: Text(
                     'Adjust Balance',
-                    style: GoogleFonts.workSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                    style: AppTextStyles.bodyBold.copyWith(color: Colors.white),
                   ),
                 ),
               ),

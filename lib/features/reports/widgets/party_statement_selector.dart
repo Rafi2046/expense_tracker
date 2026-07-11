@@ -1,9 +1,10 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_select_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PartyStatementSelector extends StatelessWidget {
   const PartyStatementSelector({super.key});
@@ -43,14 +44,14 @@ class PartyStatementSelector extends StatelessWidget {
               Text(
                 partyName ?? 'Select Party',
                 style: AppTextStyles.reportTileTitle.copyWith(
-                  fontSize: 13.5,
+                  fontSize: AppFontSizes.size14,
                   color: isSelected ? Colors.white : theme.colorScheme.onSurface,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 ),
               ),
               const SizedBox(width: 4),
               Icon(
-                Symbols.keyboard_arrow_down,
+                LucideIcons.chevronDown,
                 color: isSelected ? Colors.white : theme.colorScheme.onSurface,
                 size: 18,
               ),

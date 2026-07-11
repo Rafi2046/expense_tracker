@@ -1,6 +1,4 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
@@ -11,6 +9,8 @@ import 'package:expense_tracker/features/dashboard/widgets/account_balance_heade
 import 'package:expense_tracker/features/dashboard/widgets/account_date_selector.dart';
 import 'package:expense_tracker/features/dashboard/widgets/account_search_bar.dart';
 import 'package:expense_tracker/features/dashboard/widgets/adjust_balance_actions.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
 
 class AccountDetailsScreen extends StatefulWidget {
   final String accountType; // 'Cash' or 'Bank'
@@ -166,13 +166,12 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(Symbols.arrow_back, color: theme.appBarTheme.iconTheme?.color, size: 20),
+          icon: Icon(LucideIcons.arrowLeft, color: theme.appBarTheme.iconTheme?.color, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           widget.accountType == 'Cash' ? 'Cash' : 'Bank Account',
-          style: AppTextStyles.reportAppBarTitle.copyWith(
-            fontSize: 16.5,
+          style: AppTextStyles.h3.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
           ),
         ),
@@ -231,10 +230,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                     ? Center(
                         child: Text(
                           'No transactions found',
-                          style: GoogleFonts.workSans(
-                            color: theme.colorScheme.onSurfaceVariant,
-                            fontSize: 13,
-                          ),
+                          style: AppTextStyles.bodySmall.copyWith(color: theme.colorScheme.onSurfaceVariant),
                         ),
                       )
                     : ListView.builder(
@@ -262,11 +258,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                   ),
                   child: Text(
                     'Adjust Balance',
-                    style: GoogleFonts.workSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                    style: AppTextStyles.bodyBold.copyWith(color: Colors.white),
                   ),
                 ),
               ),

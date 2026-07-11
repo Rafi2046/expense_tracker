@@ -1,6 +1,6 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ShareReportSheet extends StatelessWidget {
   const ShareReportSheet({super.key});
@@ -48,9 +48,7 @@ class ShareReportSheet extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
             child: Text(
               'Share Report',
-              style: GoogleFonts.workSans(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
+              style: AppTextStyles.h3.copyWith(
                 color: theme.colorScheme.onSurface,
               ),
             ),
@@ -69,17 +67,16 @@ class ShareReportSheet extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                Symbols.image,
+                LucideIcons.image,
                 color: theme.primaryColor,
                 size: 18,
               ),
             ),
             title: Text(
               'Share Image',
-              style: GoogleFonts.workSans(
+              style: AppTextStyles.bodyBold.copyWith(
                 fontWeight: FontWeight.w500,
                 color: theme.colorScheme.onSurface,
-                fontSize: 14,
               ),
             ),
           ),
@@ -95,17 +92,16 @@ class ShareReportSheet extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                Symbols.picture_as_pdf,
+                LucideIcons.file,
                 color: theme.primaryColor,
                 size: 18,
               ),
             ),
             title: Text(
               'Share PDF',
-              style: GoogleFonts.workSans(
+              style: AppTextStyles.bodyBold.copyWith(
                 fontWeight: FontWeight.w500,
                 color: theme.colorScheme.onSurface,
-                fontSize: 14,
               ),
             ),
           ),

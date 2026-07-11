@@ -3,6 +3,8 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BudgetCategoryItem {
   final String name;
@@ -41,7 +43,7 @@ class BudgetCategoryProgressList extends StatelessWidget {
           child: Column(
             children: [
               Icon(
-                Icons.pie_chart_outline,
+                LucideIcons.pieChart,
                 size: 48,
                 color: AppColors.textMuted.withValues(alpha: 0.4),
               ),
@@ -68,7 +70,7 @@ class BudgetCategoryProgressList extends StatelessWidget {
             children: [
               Text('CATEGORY BREAKDOWN', style: AppTextStyles.cardTitle),
               Text(
-                '${currency} ${_formatAmount(totalExpense)}',
+                '$currency ${_formatAmount(totalExpense)}',
                 style: AppTextStyles.cardStatusText.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -91,10 +93,15 @@ class BudgetCategoryProgressList extends StatelessWidget {
   }
 
   String _formatAmount(double amount) {
-    if (amount >= 10000000)
+    if (amount >= 10000000) {
       return '${(amount / 10000000).toStringAsFixed(1)}Cr';
-    if (amount >= 100000) return '${(amount / 100000).toStringAsFixed(1)}L';
-    if (amount >= 1000) return '${(amount / 1000).toStringAsFixed(1)}k';
+    }
+    if (amount >= 100000) {
+      return '${(amount / 100000).toStringAsFixed(1)}L';
+    }
+    if (amount >= 1000) {
+      return '${(amount / 1000).toStringAsFixed(1)}k';
+    }
     return amount.toStringAsFixed(0);
   }
 }
@@ -173,7 +180,7 @@ class _CategoryProgressRow extends StatelessWidget {
                                 Text(
                                   item.name,
                                   style: AppTextStyles.reportTileTitle.copyWith(
-                                    fontSize: 15,
+                                    fontSize: AppFontSizes.size15,
                                     color: isDark
                                         ? Colors.white
                                         : const Color(0xFF1A1A2E),
@@ -185,7 +192,7 @@ class _CategoryProgressRow extends StatelessWidget {
                                 Text(
                                   '${item.percentage.toStringAsFixed(1)}% of total',
                                   style: AppTextStyles.cardStatusText.copyWith(
-                                    fontSize: 11,
+                                    fontSize: AppFontSizes.size11,
                                     color: AppColors.textMuted,
                                   ),
                                 ),
@@ -196,9 +203,9 @@ class _CategoryProgressRow extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                '${currency} ${_formatAmount(item.amount)}',
+                                '$currency ${_formatAmount(item.amount)}',
                                 style: AppTextStyles.reportTileTitle.copyWith(
-                                  fontSize: 16,
+                                  fontSize: AppFontSizes.size16,
                                   fontWeight: FontWeight.w700,
                                   color: isDark
                                       ? Colors.white
@@ -209,7 +216,7 @@ class _CategoryProgressRow extends StatelessWidget {
                               Text(
                                 '${barPct.toStringAsFixed(1)}% ${hasBudget ? "of budget" : "of spending"}',
                                 style: AppTextStyles.cardStatusText.copyWith(
-                                  fontSize: 11,
+                                  fontSize: AppFontSizes.size11,
                                   color: item.color,
                                   fontWeight: FontWeight.w600,
                                 ),

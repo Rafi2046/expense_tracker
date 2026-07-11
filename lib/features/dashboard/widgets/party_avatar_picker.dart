@@ -1,9 +1,9 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PartyAvatarPicker extends StatefulWidget {
   final String? pickedImagePath;
@@ -93,7 +93,7 @@ class _PartyAvatarPickerState extends State<PartyAvatarPicker> {
                     ],
                   ),
                   child: const Icon(
-                    Symbols.camera_alt_rounded,
+                    LucideIcons.camera,
                     color: Colors.white,
                     size: 12,
                   ),
@@ -122,7 +122,7 @@ class _PartyAvatarPickerState extends State<PartyAvatarPicker> {
         height: 80,
       );
     } else {
-      return const Icon(Symbols.person_rounded, color: Colors.white, size: 44);
+      return Icon(LucideIcons.user, color: Colors.white, size: 44);
     }
   }
 }

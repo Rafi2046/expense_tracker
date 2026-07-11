@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourExpenseDetailsSheet extends StatelessWidget {
   final TourExpense expense;
@@ -11,6 +13,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
   final String Function(double, String) formatAmount;
   final VoidCallback onDelete;
   final VoidCallback? onEdit;
+  final bool showDelete;
 
   const TourExpenseDetailsSheet({
     super.key,
@@ -20,6 +23,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
     required this.formatAmount,
     required this.onDelete,
     this.onEdit,
+    this.showDelete = true,
   });
 
   @override
@@ -89,8 +93,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                     children: [
                       Text(
                         expense.title,
-                        style: TextStyle(
-                          fontSize: 20,
+                        style: AppTextStyles.h1.copyWith(
                           fontWeight: FontWeight.bold,
                           color: theme.colorScheme.onSurface,
                         ),
@@ -105,8 +108,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                           ),
                           child: Text(
                             expense.category!,
-                            style: TextStyle(
-                              fontSize: 11,
+                            style: AppTextStyles.caption.copyWith(
                               fontWeight: FontWeight.w600,
                               color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF475569),
                             ),
@@ -118,8 +120,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                 ),
                 Text(
                   formatAmount(expense.amount, currency),
-                  style: TextStyle(
-                    fontSize: 24,
+                  style: AppTextStyles.displayMedium.copyWith(
                     fontWeight: FontWeight.w800,
                     color: theme.colorScheme.onSurface,
                   ),
@@ -161,16 +162,16 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                   File(expense.receiptPath!),
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
+                  errorBuilder: (_, _, _) => Container(
                     padding: const EdgeInsets.all(16),
                     color: isDark ? const Color(0xFF1E1E2E) : const Color(0xFFF8F9FA),
                     child: Row(
                       children: [
-                        Icon(Icons.image_not_supported_outlined, color: Colors.grey.shade400),
+                        Icon(LucideIcons.imageOff, color: Colors.grey.shade400),
                         const SizedBox(width: 12),
-                        const Text(
+                        Text(
                           'Receipt image path not found',
-                          style: TextStyle(fontSize: 13, color: Color(0xFF9CA3AF)),
+                          style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF9CA3AF)),
                         ),
                       ],
                     ),
@@ -190,14 +191,10 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 12),
                     child: ElevatedButton.icon(
                       onPressed: onEdit,
-                      icon: const Icon(Icons.edit_outlined, color: Colors.white, size: 18),
-                      label: const Text(
+                      icon: Icon(LucideIcons.edit, color: Colors.white, size: 18),
+                      label: Text(
                         'Edit Expense',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
+                        style: AppTextStyles.bodyBold.copyWith(color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF4F46E5),
@@ -210,16 +207,13 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                       ),
                     ),
                   ),
-                ElevatedButton.icon(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 18),
-                  label: const Text(
+                if (showDelete)
+                  ElevatedButton.icon(
+                    onPressed: onDelete,
+                  icon: Icon(LucideIcons.trash, color: Colors.white, size: 18),
+                  label: Text(
                     'Delete Expense',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
+                    style: AppTextStyles.bodyBold.copyWith(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.activeRed,
@@ -248,8 +242,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
           width: 110,
           child: Text(
             label,
-            style: TextStyle(
-              fontSize: 13,
+            style: AppTextStyles.bodySmall.copyWith(
               fontWeight: FontWeight.w600,
               color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
             ),
@@ -258,8 +251,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
         Expanded(
           child: Text(
             value,
-            style: TextStyle(
-              fontSize: 13,
+            style: AppTextStyles.bodySmall.copyWith(
               fontWeight: FontWeight.w600,
               color: theme.colorScheme.onSurface,
             ),

@@ -1,25 +1,26 @@
-import 'package:material_symbols_icons/symbols.dart';
+import 'package:expense_tracker/features/transactions/widgets/transactions_month_selector.dart';
+import 'package:expense_tracker/features/transactions/widgets/ledger_stats_cards.dart';
+import 'package:expense_tracker/features/transactions/widgets/ledger_transaction_list.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
-import 'package:expense_tracker/features/ledger/widgets/ledger_month_selector.dart';
-import 'package:expense_tracker/features/ledger/widgets/ledger_stats_cards.dart';
-import 'package:expense_tracker/features/ledger/widgets/ledger_transaction_list.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-class LedgerScreen extends StatefulWidget {
-  const LedgerScreen({super.key});
+class TransactionsScreen extends StatefulWidget {
+  const TransactionsScreen({super.key});
 
   @override
-  State<LedgerScreen> createState() => _LedgerScreenState();
+  State<TransactionsScreen> createState() => _TransactionsScreenState();
 }
 
-class _LedgerScreenState extends State<LedgerScreen> {
+class _TransactionsScreenState extends State<TransactionsScreen> {
   static bool _localMasked = false;
   bool _isScreenLoading = true;
   final TextEditingController _searchController = TextEditingController();
@@ -47,7 +48,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
       case TransactionTypeFilter.expense:
         selectedColor = AppColors.expensePink;
       case TransactionTypeFilter.all:
-        selectedColor = isDark ? Colors.white.withValues(alpha: 0.25) : Colors.grey.shade500;
+        selectedColor = const Color(0xFF6A53A1);
     }
 
     return Expanded(
@@ -63,8 +64,8 @@ class _LedgerScreenState extends State<LedgerScreen> {
           child: Text(
             label,
             textAlign: TextAlign.center,
-            style: GoogleFonts.workSans(
-              fontSize: 13,
+            style: AppTextStyles.bodyBold.copyWith(
+              fontSize: AppFontSizes.size13,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
               color: isSelected ? Colors.white : (isDark ? Colors.white60 : const Color(0xFF6B7280)),
             ),
@@ -79,7 +80,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + MediaQuery.of(ctx).padding.bottom),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -97,7 +98,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
             ),
             const SizedBox(height: 24),
             _AddOptionTile(
-              icon: Symbols.account_balance_wallet,
+              icon: LucideIcons.wallet,
               label: 'Add Income',
               subtitle: 'Record money received',
               color: AppColors.activeGreen,
@@ -109,7 +110,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
             ),
             const SizedBox(height: 12),
             _AddOptionTile(
-              icon: Symbols.payments,
+              icon: LucideIcons.creditCard,
               label: 'Add Expense',
               subtitle: 'Record money spent',
               color: AppColors.expensePink,
@@ -145,21 +146,19 @@ class _LedgerScreenState extends State<LedgerScreen> {
             ? TextField(
                 controller: _searchController,
                 autofocus: true,
-                style: GoogleFonts.workSans(
-                  fontSize: 16,
+                style: AppTextStyles.h3.copyWith(
                   color: onSurface,
                 ),
                 decoration: InputDecoration(
                   hintText: context.translate('search_hint'),
-                  hintStyle: GoogleFonts.workSans(color: isDark ? Colors.white38 : Colors.grey.shade400),
+                  hintStyle: AppTextStyles.bodyBold.copyWith(fontWeight: FontWeight.w400, color: isDark ? Colors.white38 : Colors.grey.shade400),
                   border: InputBorder.none,
                 ),
                 onChanged: (val) => provider.updateSearchQuery(val),
               )
             : Text(
-                context.translate('ledger'),
-                style: GoogleFonts.workSans(
-                  fontSize: 20,
+                context.translate('transactions'),
+                style: AppTextStyles.h2.copyWith(
                   fontWeight: FontWeight.bold,
                   color: onSurface,
                 ),
@@ -167,7 +166,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              isSearching ? Symbols.close_rounded : Symbols.search_rounded,
+              isSearching ? LucideIcons.x : LucideIcons.search,
               color: isDark ? Colors.white70 : const Color(0xFF31394D),
             ),
             onPressed: () {
@@ -192,7 +191,7 @@ class _LedgerScreenState extends State<LedgerScreen> {
         child: FloatingActionButton(
           heroTag: 'ledger_fab',
           onPressed: () => _showAddOptions(context),
-          child: const Icon(Symbols.add_rounded),
+          child: Icon(LucideIcons.plus),
         ),
       ),
       body: SafeArea(
@@ -210,14 +209,14 @@ class _LedgerScreenState extends State<LedgerScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Stats Summary Cards (Income vs Expense + Net Balance)
-                LedgerStatsCards(
+                TransactionsStatsCards(
                   isMasked: _localMasked,
                   onToggleMask: () => setState(() => _localMasked = !_localMasked),
                 ),
                 const SizedBox(height: AppSpacing.s20),
 
                 // Month Selector Slider
-                const LedgerMonthSelector(),
+                const TransactionsMonthSelector(),
                 const SizedBox(height: 12),
 
                 // Filter: All / Income / Expense
@@ -296,24 +295,21 @@ class _AddOptionTile extends StatelessWidget {
                   children: [
                     Text(
                       label,
-                      style: GoogleFonts.workSans(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
+                      style: AppTextStyles.reportTileTitle.copyWith(
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style: GoogleFonts.workSans(
-                        fontSize: 12,
+                      style: AppTextStyles.reportTransactionSubtitle.copyWith(
                         color: Colors.grey.shade500,
                       ),
                     ),
                   ],
                 ),
               ),
-              Icon(Symbols.chevron_right_rounded, color: Colors.grey.shade400, size: 20),
+              Icon(LucideIcons.chevronRight, color: Colors.grey.shade400, size: 20),
             ],
           ),
         ),

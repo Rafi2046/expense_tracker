@@ -1,7 +1,7 @@
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ReportTile extends StatelessWidget {
   final ReportItem item;
@@ -11,15 +11,19 @@ class ReportTile extends StatelessWidget {
     required this.item,
   });
 
+  void _pushReport(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute(builder: (_) => item.destination),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
     return InkWell(
-      onTap: () => Navigator.of(context, rootNavigator: true).push(
-        MaterialPageRoute(builder: (_) => item.destination),
-      ),
+      onTap: () => _pushReport(context),
       borderRadius: BorderRadius.circular(16),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -44,19 +48,15 @@ class ReportTile extends StatelessWidget {
                 children: [
                   Text(
                     item.title,
-                    style: GoogleFonts.workSans(
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w600,
+                    style: AppTextStyles.bodyBold.copyWith(
                       color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     item.subtitle,
-                    style: GoogleFonts.workSans(
-                      fontSize: 11,
+                    style: AppTextStyles.caption.copyWith(
                       color: isDark ? Colors.white60 : Colors.grey.shade500,
-                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ],
@@ -72,7 +72,7 @@ class ReportTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
-                Symbols.arrow_forward_ios_rounded,
+                LucideIcons.arrowRight,
                 size: 11,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
