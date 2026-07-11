@@ -161,7 +161,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
 
       if (image != null) {
         final directory = await getApplicationDocumentsDirectory();
-        final localFile = await File(image.path).copy('${directory.path}/profile_${_user.uid}.jpg');
+        final localFile = await File(image.path).copy('${directory.path}/profile_${_user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg');
 
         setState(() {
           _localImageFile = localFile;

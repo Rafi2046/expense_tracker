@@ -17,13 +17,30 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  int _profileVersion = 0;
 
   void _showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), duration: const Duration(seconds: 1)),
     );
+  }
+
+  Future<void> _openEditProfile() async {
+    await showDialog(
+      context: context,
+      builder: (context) => const EditProfileDialog(),
+    );
+    if (mounted) {
+      setState(() => _profileVersion++);
+    }
   }
 
   @override
@@ -84,12 +101,7 @@ class SettingsScreen extends StatelessWidget {
                       name: displayName,
                       email: email,
                       photoUrl: photoUrl,
-                      onEditTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => const EditProfileDialog(),
-                        );
-                      },
+                      onEditTap: _openEditProfile,
                     );
                   },
                 ),
