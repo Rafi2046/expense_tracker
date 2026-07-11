@@ -125,13 +125,18 @@ class _ExpenseCategoriesBreakdownCardState
                         series: <CircularSeries<CategoryBreakdownItem, String>>[
                           DoughnutSeries<CategoryBreakdownItem, String>(
                             dataSource: widget.categories,
-                            xValueMapper: (CategoryBreakdownItem item, _) => item.name,
-                            yValueMapper: (CategoryBreakdownItem item, _) => item.amount,
-                            pointColorMapper: (CategoryBreakdownItem item, _) => item.color,
+                            xValueMapper: (CategoryBreakdownItem item, _) =>
+                                item.name,
+                            yValueMapper: (CategoryBreakdownItem item, _) =>
+                                item.amount,
+                            pointColorMapper: (CategoryBreakdownItem item, _) =>
+                                item.color,
                             innerRadius: '70%',
                             startAngle: 270,
                             endAngle: 270,
-                            dataLabelSettings: const DataLabelSettings(isVisible: false),
+                            dataLabelSettings: const DataLabelSettings(
+                              isVisible: false,
+                            ),
                             animationDuration: 1000,
                           ),
                         ],
@@ -140,8 +145,8 @@ class _ExpenseCategoriesBreakdownCardState
                         builder: (context, constraints) {
                           final chartSize =
                               constraints.maxWidth < constraints.maxHeight
-                                  ? constraints.maxWidth
-                                  : constraints.maxHeight;
+                              ? constraints.maxWidth
+                              : constraints.maxHeight;
                           final innerDiameter = chartSize * 0.55;
                           return SizedBox(
                             width: innerDiameter,
@@ -183,65 +188,67 @@ class _ExpenseCategoriesBreakdownCardState
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   children: displayList.map((item) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 10,
-                              height: 10,
-                              decoration: BoxDecoration(
-                                color: item.color,
-                                borderRadius: BorderRadius.circular(3),
-                              ),
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: item.color,
+                              borderRadius: BorderRadius.circular(3),
                             ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.name,
-                                    style: GoogleFonts.workSans(
-                                      fontSize: AppFontSizes.size11,
-                                      fontWeight: FontWeight.w600,
-                                      color: onSurface,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.name,
+                                  style: GoogleFonts.workSans(
+                                    fontSize: AppFontSizes.size11,
+                                    fontWeight: FontWeight.w600,
+                                    color: onSurface,
                                   ),
-                                  const SizedBox(height: 2),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(2),
-                                    child: LinearProgressIndicator(
-                                      value: item.percentage / 100,
-                                      backgroundColor: isDark
-                                          ? Colors.white.withValues(alpha: 0.08)
-                                          : const Color(0xFFF0F0F0),
-                                      valueColor: AlwaysStoppedAnimation<Color>(item.color),
-                                      minHeight: 4,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 2),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(2),
+                                  child: LinearProgressIndicator(
+                                    value: item.percentage / 100,
+                                    backgroundColor: isDark
+                                        ? Colors.white.withValues(alpha: 0.08)
+                                        : const Color(0xFFF0F0F0),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      item.color,
                                     ),
+                                    minHeight: 4,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 6),
-                            Text(
-                              item.percentage < 1
-                                  ? '${item.percentage.toStringAsFixed(1)}%'
-                                  : '${item.percentage.toStringAsFixed(0)}%',
-                              style: GoogleFonts.workSans(
-                                fontSize: AppFontSizes.size11,
-                                fontWeight: FontWeight.w700,
-                                color: onSurface.withValues(alpha: 0.7),
-                              ),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            item.percentage < 1
+                                ? '${item.percentage.toStringAsFixed(1)}%'
+                                : '${item.percentage.toStringAsFixed(0)}%',
+                            style: GoogleFonts.workSans(
+                              fontSize: AppFontSizes.size11,
+                              fontWeight: FontWeight.w700,
+                              color: onSurface.withValues(alpha: 0.7),
                             ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
                 ),
+              ),
             ],
           ),
 
