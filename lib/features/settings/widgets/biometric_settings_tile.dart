@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
@@ -49,20 +48,12 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
         );
         if (!verified) {
           messenger.showSnackBar(
-            const SnackBar(content: Text('Authentication failed or cancelled.')),
+            const SnackBar(content: Text('Biometric authentication failed. Please try again.')),
           );
           return;
         }
         final userEmail = FirebaseAuth.instance.currentUser?.email;
         await provider.setEnabled(true, email: userEmail);
-      } on PlatformException catch (e) {
-        messenger.showSnackBar(
-          SnackBar(content: Text('Error: ${e.message ?? e.code}')),
-        );
-      } catch (e) {
-        messenger.showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
       } finally {
         if (mounted) setState(() => _isProcessing = false);
       }

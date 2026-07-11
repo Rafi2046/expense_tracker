@@ -94,12 +94,13 @@ class ProfileProvider extends ChangeNotifier {
       debugPrint('ProfileProvider._loadFromDb: DB has ${allProfiles.length} profiles');
       for (final row in allProfiles) {
         final id = row['id'] as String;
-        final rowUid = row['uid'] as String?;
-        if (rowUid != null && rowUid != currentUid) continue;
+        var rowUid = row['uid'] as String?;
         if (rowUid == null && currentUid != null) {
           final db = await DatabaseHelper.instance.database;
           await db.update('profiles', {'uid': currentUid}, where: 'id = ?', whereArgs: [id]);
+          rowUid = currentUid;
         }
+        if (rowUid != currentUid) continue;
         _profiles.add(UserProfile(
           id: id,
           name: row['name'] as String,
