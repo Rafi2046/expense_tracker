@@ -56,12 +56,9 @@ class MonthSelectorSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.h16),
-          ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.40,
-            ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.40,
             child: ListView.separated(
-              shrinkWrap: true,
               itemCount: months.length,
               separatorBuilder: (_, _) => Divider(
                 color: theme.dividerTheme.color ?? const Color(0xFFF5F5F5),

@@ -258,6 +258,13 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         );
       }
 
+      final monthIdx = provider.availableMonths.indexWhere(
+        (m) => m.year == _selectedDate.year && m.month == _selectedDate.month,
+      );
+      if (monthIdx >= 0) {
+        provider.selectMonthIndex(monthIdx);
+      }
+
       Navigator.pop(context);
 
       final action = existing != null ? 'updated' : 'added';
@@ -462,7 +469,12 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         months: provider.availableMonths,
         selectedMonth: _selectedIncomeMonth,
         onSelect: (label) {
-          setState(() => _selectedIncomeMonth = label);
+          setState(() {
+            _selectedIncomeMonth = label;
+            try {
+              _selectedDate = DateFormat('MMMM yyyy').parse(label);
+            } catch (_) {}
+          });
           Navigator.pop(ctx);
         },
       ),
