@@ -57,7 +57,7 @@ class ReportsProvider extends ChangeNotifier {
   PartyStatementViewMode _partyStatementViewMode = PartyStatementViewMode.card;
 
   ReportsProvider() {
-    _selectedDateRange = getDateTimeRangeForOption(DateRangeOption.thisMonth);
+    _selectedDateRange = getDateTimeRangeForOption(DateRangeOption.allTime);
     _authSubscription = FirebaseAuth.instance.userChanges().listen((user) {
       _onAuthChanged(user);
     });
@@ -620,8 +620,8 @@ class ReportsProvider extends ChangeNotifier {
 
     _txProvider = null;
     _debtProvider = null;
-    _selectedDateRange = getDateTimeRangeForOption(DateRangeOption.thisMonth);
-    _selectedOption = DateRangeOption.thisMonth;
+    _selectedDateRange = getDateTimeRangeForOption(DateRangeOption.allTime);
+    _selectedOption = DateRangeOption.allTime;
     _searchQuery = '';
     _selectedType = 'All Transactions';
     _selectedPartyName = null;

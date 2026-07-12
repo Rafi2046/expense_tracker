@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/pages/party_statement_screen.dart';
 import 'package:expense_tracker/features/reports/widgets/parties_report_empty_state.dart';
@@ -9,6 +10,7 @@ import 'package:expense_tracker/features/reports/widgets/parties_report_summary_
 import 'package:expense_tracker/features/reports/widgets/party_list_tile.dart';
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 class PartiesReportScreen extends StatefulWidget {
@@ -129,15 +131,70 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
                               const SizedBox(height: 10),
                           itemBuilder: (context, index) {
                             final item = displayList[index];
-                            return PartyListTile(
-                              item: item,
-                              isMasked: _localMasked,
-                              isDark: isDark,
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => PartyStatementScreen(
-                                    initialPartyName: item.name,
+                            return Dismissible(
+                              key: ValueKey('party_${item.name}'),
+                              direction: DismissDirection.endToStart,
+                              confirmDismiss: (direction) async {
+                                final confirmed = await showDialog<bool>(
+                                  context: context,
+                                  builder: (dialogContext) => AlertDialog(
+                                    backgroundColor: theme.dialogTheme.backgroundColor ?? theme.cardColor,
+                                    title: Text('Delete Party', style: TextStyle(color: theme.colorScheme.onSurface)),
+                                    content: Text(
+                                      'Delete all entries for "${item.name}"?',
+                                      style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.8)),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(dialogContext, false),
+                                        child: Text('Cancel', style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(dialogContext, true),
+                                        child: Text('Delete', style: TextStyle(color: Colors.red.shade400, fontWeight: FontWeight.bold)),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                return confirmed == true;
+                              },
+                              onDismissed: (direction) {
+                                final debtProvider = context.read<DebtProvider>();
+                                final partyDebts = debtProvider.items.where((d) => d.name == item.name).toList();
+                                for (final d in partyDebts) {
+                                  debtProvider.deleteDebtItem(d.id);
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('"${item.name}" deleted'), duration: const Duration(seconds: 2)),
+                                );
+                              },
+                              background: Container(
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text('Delete', style: AppTextStyles.bodyBold.copyWith(color: Colors.red.shade400, fontSize: 14)),
+                                    const SizedBox(width: 8),
+                                    Icon(LucideIcons.trash2, color: Colors.red.shade400, size: 22),
+                                  ],
+                                ),
+                              ),
+                              child: PartyListTile(
+                                item: item,
+                                isMasked: _localMasked,
+                                isDark: isDark,
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => PartyStatementScreen(
+                                      initialPartyName: item.name,
+                                    ),
                                   ),
                                 ),
                               ),

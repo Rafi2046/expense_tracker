@@ -9,7 +9,6 @@ class PartyListTile extends StatelessWidget {
   final bool isMasked;
   final bool isDark;
   final VoidCallback onTap;
-
   const PartyListTile({
     super.key,
     required this.item,

@@ -32,9 +32,9 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
     if (widget.initialPartyName != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          context.read<ReportsProvider>().setStatementParty(
-            widget.initialPartyName,
-          );
+          final provider = context.read<ReportsProvider>();
+          provider.setDateRangeOption(DateRangeOption.allTime);
+          provider.setStatementParty(widget.initialPartyName);
         }
       });
     }
