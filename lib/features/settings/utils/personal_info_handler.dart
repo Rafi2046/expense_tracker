@@ -60,6 +60,7 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
   }
 
   Future<void> pickImage(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
       backgroundColor: Theme.of(context).cardColor,
@@ -92,14 +93,12 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
         });
       }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error selecting image: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text('Error selecting image: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 

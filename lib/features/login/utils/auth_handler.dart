@@ -32,22 +32,22 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
     if (mounted) setState(() => _biometricFailed = v);
   }
 
-  void showError(BuildContext context, dynamic e) {
-    if (!mounted) return;
+  void showError(dynamic e) {
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
     );
   }
 
-  Future<void> autoTriggerBiometric(BuildContext context) async {
+  Future<void> autoTriggerBiometric() async {
     HapticFeedback.lightImpact();
     try {
       final success = await context
           .read<BiometricAuthProvider>()
           .authenticate();
-      if (!mounted) return;
+      if (!context.mounted) return;
       if (success) {
-        _navigateToHome(context);
+        _navigateToHome();
       } else {
         HapticFeedback.heavyImpact();
         setBiometricFailed(true);
@@ -57,15 +57,15 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
     }
   }
 
-  Future<void> handleBiometricTap(BuildContext context) async {
+  Future<void> handleBiometricTap() async {
     HapticFeedback.lightImpact();
     try {
       final success = await context
           .read<BiometricAuthProvider>()
           .authenticate();
-      if (!mounted) return;
+      if (!context.mounted) return;
       if (success) {
-        _navigateToHome(context);
+        _navigateToHome();
       } else {
         HapticFeedback.heavyImpact();
         setBiometricFailed(true);
@@ -76,14 +76,13 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
   }
 
   Future<void> handleEmailLogin({
-    required BuildContext context,
     required bool biometricMode,
     required String email,
     required String password,
   }) async {
     if (biometricMode) {
       if (password.trim().isEmpty) {
-        if (mounted) {
+        if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Please enter your password')),
           );
@@ -99,9 +98,9 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
             password: password.trim(),
           ),
         );
-        if (mounted) _navigateToHome(context);
+        if (context.mounted) _navigateToHome();
       } catch (e) {
-        showError(context, e);
+        showError(e);
       } finally {
         setLoading(false);
       }
@@ -109,7 +108,7 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
     }
 
     if (email.trim().isEmpty || password.trim().isEmpty) {
-      if (mounted) {
+      if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please enter both email and password')),
         );
@@ -123,71 +122,71 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
         email.trim(),
         password.trim(),
       );
-      if (cred != null && mounted) {
-        _navigateAfterAuth(context, cred);
+      if (cred != null && context.mounted) {
+        _navigateAfterAuth(cred);
       }
     } catch (e) {
-      showError(context, e);
+      showError(e);
     } finally {
       setLoading(false);
     }
   }
 
-  Future<void> handleGoogleLogin(BuildContext context) async {
+  Future<void> handleGoogleLogin() async {
     setLoading(true);
     try {
       final cred = await _authService.signInWithGoogle();
-      if (cred != null && mounted) {
-        _navigateAfterAuth(context, cred);
+      if (cred != null && context.mounted) {
+        _navigateAfterAuth(cred);
       }
     } catch (e) {
-      showError(context, e);
+      showError(e);
     } finally {
       setLoading(false);
     }
   }
 
-  Future<void> handleAppleLogin(BuildContext context) async {
+  Future<void> handleAppleLogin() async {
     setLoading(true);
     try {
       final cred = await _authService.signInWithApple();
-      if (cred != null && mounted) {
-        _navigateAfterAuth(context, cred);
+      if (cred != null && context.mounted) {
+        _navigateAfterAuth(cred);
       }
     } catch (e) {
-      showError(context, e);
+      showError(e);
     } finally {
       setLoading(false);
     }
   }
 
-  void _navigateAfterAuth(BuildContext context, UserCredential cred) {
+  void _navigateAfterAuth(UserCredential cred) {
     final isNewUser = cred.additionalUserInfo?.isNewUser ?? false;
     final uid = FirebaseAuth.instance.currentUser?.uid;
 
     if (isNewUser || uid == null) {
-      _navigateToOnboarding(context);
+      _navigateToOnboarding();
       return;
     }
 
-    _navigateToSync(context, uid);
+    _navigateToSync(uid);
   }
 
-  void _navigateToHome(BuildContext context) {
+  void _navigateToHome() {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const BottomNavScreen()),
     );
   }
 
-  void _navigateToOnboarding(BuildContext context) {
+  void _navigateToOnboarding() {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const OnboardingScreen()),
     );
   }
 
-  void _navigateToSync(BuildContext context, String uid) {
+  void _navigateToSync(String uid) {
     final syncService = SyncService();
     Navigator.pushReplacement(
       context,

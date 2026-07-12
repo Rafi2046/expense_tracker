@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen>
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<BiometricAuthProvider>().detectBiometrics();
-        autoTriggerBiometric(context);
+        autoTriggerBiometric();
       });
     }
   }
@@ -119,8 +119,7 @@ class _LoginScreenState extends State<LoginScreen>
                           hasPasswordProvider: hasPasswordProvider,
                           isDark: isDark,
                           theme: theme,
-                          onBiometricTap: () =>
-                              handleBiometricTap(context),
+                          onBiometricTap: handleBiometricTap,
                           onSwitchAccount: () =>
                               _handleSwitchAccount(context),
                         ),
@@ -137,7 +136,6 @@ class _LoginScreenState extends State<LoginScreen>
                           onPressed: isLoading
                               ? () {}
                               : () => handleEmailLogin(
-                                    context: context,
                                     biometricMode: biometricMode,
                                     email: _emailController.text,
                                     password: _passwordController.text,
@@ -148,10 +146,8 @@ class _LoginScreenState extends State<LoginScreen>
                         LoginSocialButtons(
                           isDark: isDark,
                           isLoading: isLoading,
-                          onGoogleSignIn: () =>
-                              handleGoogleLogin(context),
-                          onAppleSignIn: () =>
-                              handleAppleLogin(context),
+                          onGoogleSignIn: handleGoogleLogin,
+                          onAppleSignIn: handleAppleLogin,
                           onSignUp: () {
                             Navigator.push(
                               context,
@@ -190,10 +186,10 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void> _handleSwitchAccount(BuildContext context) async {
+    final nav = Navigator.of(context);
     await FirebaseAuth.instance.signOut();
-    if (!mounted) return;
-    Navigator.pushReplacement(
-      context,
+    if (!context.mounted) return;
+    nav.pushReplacement(
       MaterialPageRoute(
         builder: (_) => const LoginScreen(),
       ),
