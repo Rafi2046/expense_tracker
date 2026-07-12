@@ -14,19 +14,23 @@ import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AddPartyScreen extends StatelessWidget {
-  const AddPartyScreen({super.key});
+  final DebtItem? partyToEdit;
+
+  const AddPartyScreen({super.key, this.partyToEdit});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => AddPartyProvider(),
-      child: const AddPartyForm(),
+      child: AddPartyForm(partyToEdit: partyToEdit),
     );
   }
 }
 
 class AddPartyForm extends StatefulWidget {
-  const AddPartyForm({super.key});
+  final DebtItem? partyToEdit;
+
+  const AddPartyForm({super.key, this.partyToEdit});
 
   @override
   State<AddPartyForm> createState() => _AddPartyFormState();
@@ -34,6 +38,16 @@ class AddPartyForm extends StatefulWidget {
 
 class _AddPartyFormState extends State<AddPartyForm> {
   final _formKey = GlobalKey<FormState>();
+  bool _initialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized && widget.partyToEdit != null) {
+      context.read<AddPartyProvider>().initializeForEdit(widget.partyToEdit!);
+      _initialized = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +55,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
     final debtProvider = context.read<DebtProvider>();
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final isEditing = provider.isEditing;
 
     return Scaffold(
       appBar: AppBar(
@@ -52,7 +67,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Add New Party',
+          isEditing ? 'Edit Party' : 'Add New Party',
           style: AppTextStyles.h2.copyWith(color: theme.appBarTheme.titleTextStyle?.color),
         ),
         centerTitle: true,
@@ -154,6 +169,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
               },
               primaryColor: theme.primaryColor,
               isDark: isDark,
+              isEditing: isEditing,
             ),
           ],
         ),

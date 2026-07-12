@@ -21,6 +21,43 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
   static bool _localMasked = false;
   bool _showGuide = true;
 
+  void _confirmDelete(BuildContext context, DebtItem item, DebtProvider provider) {
+    final theme = Theme.of(context);
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: theme.dialogTheme.backgroundColor ?? theme.cardColor,
+        title: Text(
+          'Delete Debt',
+          style: TextStyle(color: theme.colorScheme.onSurface),
+        ),
+        content: Text(
+          'Are you sure you want to delete this debt?',
+          style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.8)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text('Cancel', style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              provider.deleteDebtItem(item.id);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${item.name}\'s debt deleted'),
+                  duration: const Duration(seconds: 3),
+                ),
+              );
+            },
+            child: Text('Delete', style: TextStyle(color: Colors.red.shade400, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final debtProvider = context.watch<DebtProvider>();
@@ -137,20 +174,22 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
             Expanded(
               child: items.isEmpty
                   ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            AppImages.pendingPayments,
-                            height: 150,
-                            width: 150,
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            'No pending debts!',
-                            style: AppTextStyles.reportTileTitle.copyWith(color: Colors.grey.shade500),
-                          ),
-                        ],
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              AppImages.pendingPayments,
+                              height: 120,
+                              width: 120,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              'No pending debts!',
+                              style: AppTextStyles.reportTileTitle.copyWith(color: Colors.grey.shade500),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   : ListView.builder(
@@ -172,6 +211,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                             themeColor: AppColors.activeRed,
                             isReceive: false,
                           ),
+                          onDelete: () => _confirmDelete(context, item, debtProvider),
                         );
                       },
                     ),

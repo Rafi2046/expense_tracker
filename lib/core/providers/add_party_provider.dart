@@ -21,6 +21,8 @@ class AddPartyProvider extends ChangeNotifier {
   String? _pickedImagePath;
   Uint8List? _pickedImageBytes;
   bool _isNameNotEmpty = false;
+  bool _isEditing = false;
+  String? _editingItemId;
 
   int get activeTabIndex => _activeTabIndex;
   bool get isReceive => _isReceive;
@@ -28,6 +30,7 @@ class AddPartyProvider extends ChangeNotifier {
   String? get pickedImagePath => _pickedImagePath;
   Uint8List? get pickedImageBytes => _pickedImageBytes;
   bool get isNameNotEmpty => _isNameNotEmpty;
+  bool get isEditing => _isEditing;
 
   AddPartyProvider() {
     dateController.text = DateFormat('dd MMM yyyy').format(_asOfDate);
@@ -40,6 +43,23 @@ class AddPartyProvider extends ChangeNotifier {
       _isNameNotEmpty = isNotEmpty;
       notifyListeners();
     }
+  }
+
+  void initializeForEdit(DebtItem item) {
+    _isEditing = true;
+    _editingItemId = item.id;
+    nameController.text = item.name;
+    phoneController.text = item.phone ?? '';
+    balanceController.text = item.amount.toString();
+    _asOfDate = item.createdAt;
+    dateController.text = DateFormat('dd MMM yyyy').format(_asOfDate);
+    _isReceive = item.isReceive;
+    emailController.text = item.email ?? '';
+    addressController.text = item.address ?? '';
+    vatController.text = item.vat ?? '';
+    _isNameNotEmpty = true;
+    _activeTabIndex = 0;
+    notifyListeners();
   }
 
   void setPickedImage(String? path, Uint8List? bytes) {
@@ -136,28 +156,53 @@ class AddPartyProvider extends ChangeNotifier {
 
   void _commitSave(BuildContext context, DebtProvider debtProvider, String name,
       double balance, String phone) {
-    final newDebt = DebtItem(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: name,
-      detail: balance > 0 ? 'Opening Balance' : 'Register Party',
-      amount: balance,
-      isReceive: _isReceive,
-      isSettled: false,
-      createdAt: _asOfDate,
-      phone: phone.isEmpty ? null : phone,
-      email: emailController.text.trim().isEmpty ? null : emailController.text.trim(),
-      address: addressController.text.trim().isEmpty ? null : addressController.text.trim(),
-      vat: vatController.text.trim().isEmpty ? null : vatController.text.trim(),
-    );
-    debtProvider.addDebtItem(newDebt);
+    if (_isEditing && _editingItemId != null) {
+      final updatedDebt = DebtItem(
+        id: _editingItemId!,
+        name: name,
+        detail: balance > 0 ? 'Opening Balance' : 'Register Party',
+        amount: balance,
+        isReceive: _isReceive,
+        isSettled: false,
+        createdAt: _asOfDate,
+        phone: phone.isEmpty ? null : phone,
+        email: emailController.text.trim().isEmpty ? null : emailController.text.trim(),
+        address: addressController.text.trim().isEmpty ? null : addressController.text.trim(),
+        vat: vatController.text.trim().isEmpty ? null : vatController.text.trim(),
+      );
+      debtProvider.updateDebtItem(updatedDebt);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Party "$name" added successfully!'),
-        backgroundColor: AppColors.activeGreen,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Party "$name" updated successfully!'),
+          backgroundColor: AppColors.activeGreen,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } else {
+      final newDebt = DebtItem(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        name: name,
+        detail: balance > 0 ? 'Opening Balance' : 'Register Party',
+        amount: balance,
+        isReceive: _isReceive,
+        isSettled: false,
+        createdAt: _asOfDate,
+        phone: phone.isEmpty ? null : phone,
+        email: emailController.text.trim().isEmpty ? null : emailController.text.trim(),
+        address: addressController.text.trim().isEmpty ? null : addressController.text.trim(),
+        vat: vatController.text.trim().isEmpty ? null : vatController.text.trim(),
+      );
+      debtProvider.addDebtItem(newDebt);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Party "$name" added successfully!'),
+          backgroundColor: AppColors.activeGreen,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
 
     Navigator.pop(context);
   }

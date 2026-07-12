@@ -57,6 +57,7 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
     }
 
     for (final d in _debts) {
+      if (d.isSettled) continue;
       cash += d.isReceive ? d.amount : -d.amount;
     }
 
@@ -123,7 +124,8 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
       final ai = a[i], bi = b[i];
       if (ai.id != bi.id ||
           ai.amount != bi.amount ||
-          ai.isReceive != bi.isReceive) {
+          ai.isReceive != bi.isReceive ||
+          ai.isSettled != bi.isSettled) {
         return false;
       }
     }

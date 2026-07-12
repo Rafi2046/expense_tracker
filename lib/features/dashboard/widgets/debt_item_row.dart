@@ -12,6 +12,7 @@ class DebtItemRow extends StatelessWidget {
   final DebtItem item;
   final Color themeColor;
   final VoidCallback onEditTap;
+  final VoidCallback? onDelete;
   final bool isMasked;
 
   const DebtItemRow({
@@ -19,6 +20,7 @@ class DebtItemRow extends StatelessWidget {
     required this.item,
     required this.themeColor,
     required this.onEditTap,
+    this.onDelete,
     this.isMasked = false,
   });
 
@@ -160,6 +162,52 @@ class DebtItemRow extends StatelessWidget {
                 child: Container(width: 4, color: themeColor),
               ),
               ListTile(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    builder: (sheetContext) => Container(
+                      decoration: BoxDecoration(
+                        color: theme.cardColor,
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                      ),
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(sheetContext).viewInsets.bottom + MediaQuery.of(sheetContext).padding.bottom + 16,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 12),
+                            width: 40,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: theme.dividerTheme.color ?? Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                          ListTile(
+                            leading: Icon(LucideIcons.edit, color: theme.colorScheme.onSurface),
+                            title: Text('Edit', style: TextStyle(color: theme.colorScheme.onSurface)),
+                            onTap: () {
+                              Navigator.pop(sheetContext);
+                              onEditTap();
+                            },
+                          ),
+                          if (onDelete != null)
+                            ListTile(
+                              leading: Icon(LucideIcons.trash2, color: Colors.red.shade400),
+                              title: Text('Delete', style: TextStyle(color: Colors.red.shade400)),
+                              onTap: () {
+                                Navigator.pop(sheetContext);
+                                onDelete?.call();
+                              },
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
                 contentPadding: const EdgeInsets.only(
                   left: 20,
                   right: 16,
@@ -212,36 +260,14 @@ class DebtItemRow extends StatelessWidget {
                     ),
                   ),
                 ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    PrivacyMaskedText(
-                      amount: item.amount,
-                      isMasked: isMasked,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size15,
-                        fontWeight: FontWeight.bold,
-                        color: themeColor,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    GestureDetector(
-                      onTap: onEditTap,
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: isDark ? Colors.white12 : Colors.grey.shade50,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: theme.dividerTheme.color ?? Colors.grey.shade200),
-                        ),
-                        child: Icon(
-                          LucideIcons.edit,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                          size: 16,
-                        ),
-                      ),
-                    ),
-                  ],
+                trailing: PrivacyMaskedText(
+                  amount: item.amount,
+                  isMasked: isMasked,
+                  style: GoogleFonts.workSans(
+                    fontSize: AppFontSizes.size15,
+                    fontWeight: FontWeight.bold,
+                    color: themeColor,
+                  ),
                 ),
               ),
             ],

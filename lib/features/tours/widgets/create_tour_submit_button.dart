@@ -4,8 +4,9 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class CreateTourSubmitButton extends StatelessWidget {
   final VoidCallback onPressed;
+  final String? label;
 
-  const CreateTourSubmitButton({super.key, required this.onPressed});
+  const CreateTourSubmitButton({super.key, required this.onPressed, this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class CreateTourSubmitButton extends StatelessWidget {
         elevation: 0,
       ),
       child: Text(
-        'Create Tour',
+        label ?? 'Create Tour',
         style: AppTextStyles.h3.copyWith(
           color: AppColors.white,
         ),

@@ -10,8 +10,11 @@ import 'package:expense_tracker/features/dashboard/widgets/account_date_selector
 import 'package:expense_tracker/features/dashboard/widgets/account_search_bar.dart';
 import 'package:expense_tracker/features/dashboard/widgets/adjust_balance_actions.dart';
 import 'package:expense_tracker/features/dashboard/utils/transaction_processor.dart';
+import 'package:expense_tracker/features/dashboard/pages/to_receive_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/to_give_screen.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+enum AccountTab { all, toReceive, toGive }
 
 class AccountDetailsScreen extends StatefulWidget {
   final String accountType;
@@ -27,11 +30,25 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   String _searchQuery = '';
   DateTimeRange? _selectedDateRange;
   DateRangeOption _selectedOption = DateRangeOption.allTime;
+  AccountTab _selectedTab = AccountTab.all;
+
+  static const int _initialLimit = 5;
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  List<Map<String, dynamic>> _filterByTab(List<Map<String, dynamic>> items) {
+    if (_selectedTab == AccountTab.all) return items;
+    return items.where((item) {
+      final raw = item['item'];
+      if (raw is DebtItem) {
+        return _selectedTab == AccountTab.toReceive ? raw.isReceive : !raw.isReceive;
+      }
+      return false;
+    }).toList();
   }
 
   @override
@@ -53,7 +70,12 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
       selectedDateRange: _selectedDateRange,
     );
 
+    final tabbedItems = _filterByTab(processedTransactions);
+    final displayItems = tabbedItems.take(_initialLimit).toList();
+    final hasMore = tabbedItems.length > _initialLimit;
+
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -119,9 +141,66 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
               ),
               const SizedBox(height: 12),
 
-              // Transaction List (Compact)
+              // Tab Bar
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.06)
+                      : const Color(0xFFF0F1F3),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Row(
+                  children: [
+                    _buildTab('All', AccountTab.all),
+                    const SizedBox(width: 4),
+                    _buildTab('To Receive', AccountTab.toReceive),
+                    const SizedBox(width: 4),
+                    _buildTab('To Give', AccountTab.toGive),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // View All row
+              if (hasMore)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Transactions',
+                        style: AppTextStyles.label.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          if (_selectedTab == AccountTab.toReceive) {
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const ToReceiveScreen()));
+                          } else if (_selectedTab == AccountTab.toGive) {
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const ToGiveScreen()));
+                          } else {
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => _AllItemsViewScreen(items: tabbedItems, accountType: widget.accountType)));
+                          }
+                        },
+                        child: Text(
+                          'View All',
+                          style: AppTextStyles.bodyBold.copyWith(
+                            fontSize: 13,
+                            color: const Color(0xFF2EBD85),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              // Transaction List
               Expanded(
-                child: processedTransactions.isEmpty
+                child: displayItems.isEmpty
                     ? Center(
                         child: Text(
                           'No transactions found',
@@ -129,15 +208,15 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                         ),
                       )
                     : ListView.builder(
-                        itemCount: processedTransactions.length,
+                        itemCount: displayItems.length,
                         itemBuilder: (context, index) {
-                          final item = processedTransactions[index];
-                          return AccountTransactionRow(item: item);
+                          final item = displayItems[index];
+                          return AccountTransactionRow(item: item, accountType: widget.accountType);
                         },
                       ),
               ),
 
-              // Bottom Button: Adjust Balance (Compact)
+              // Bottom Button: Adjust Balance
               const SizedBox(height: 8),
               SizedBox(
                 width: double.infinity,
@@ -158,6 +237,90 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color _tabColor(AccountTab tab) {
+    switch (tab) {
+      case AccountTab.all:
+        return const Color(0xFF7C3AED);
+      case AccountTab.toReceive:
+        return const Color(0xFF2EBD85);
+      case AccountTab.toGive:
+        return const Color(0xFFDC3545);
+    }
+  }
+
+  Widget _buildTab(String label, AccountTab tab) {
+    final isSelected = _selectedTab == tab;
+    final color = _tabColor(tab);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() => _selectedTab = tab);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected ? color : Colors.transparent,
+            borderRadius: BorderRadius.circular(11),
+          ),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: AppTextStyles.bodyBold.copyWith(
+              fontSize: 13,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              color: isSelected
+                  ? Colors.white
+                  : (isDark ? Colors.white60 : const Color(0xFF6B7280)),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AllItemsViewScreen extends StatelessWidget {
+  final List<Map<String, dynamic>> items;
+  final String accountType;
+
+  const _AllItemsViewScreen({required this.items, required this.accountType});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: Icon(LucideIcons.arrowLeft, color: theme.appBarTheme.iconTheme?.color, size: 20),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'All Transactions',
+          style: AppTextStyles.h3.copyWith(color: theme.appBarTheme.titleTextStyle?.color),
+        ),
+        centerTitle: true,
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) => AccountTransactionRow(
+              item: items[index],
+              accountType: accountType,
+            ),
           ),
         ),
       ),

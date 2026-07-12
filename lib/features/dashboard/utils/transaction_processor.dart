@@ -20,7 +20,9 @@ class TransactionProcessor {
 
     if (accountType == 'Cash') {
       for (var d in debts) {
-        relevantItems.add(d);
+        if (!d.isSettled) {
+          relevantItems.add(d);
+        }
       }
     }
 
@@ -123,6 +125,7 @@ class TransactionProcessor {
     }
     if (accountType == 'Cash') {
       for (var d in debts) {
+        if (d.isSettled) continue;
         if (d.isReceive) {
           balance += d.amount;
         } else {

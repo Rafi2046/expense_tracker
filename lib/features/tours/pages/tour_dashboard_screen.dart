@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
@@ -20,6 +21,7 @@ import 'package:expense_tracker/features/tours/widgets/tour_dashboard_expense_ch
 import 'package:expense_tracker/features/tours/widgets/tour_dashboard_member_list.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_dashboard_recent_activity.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_dashboard_quick_actions.dart';
+import 'package:expense_tracker/features/tours/widgets/create_tour_sheet.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourDashboardScreen extends StatefulWidget {
@@ -92,6 +94,14 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           isInitialSetup: false,
         ),
       ),
+    );
+  }
+
+  void _openEditTourSheet(Tour tour) {
+    CreateTourSheet.show(
+      context: context,
+      tour: tour,
+      onTourCreated: (_) {},
     );
   }
 
@@ -201,6 +211,41 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               ),
             ),
             tooltip: 'Export',
+          ),
+
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'edit_tour') {
+                _openEditTourSheet(tour);
+              }
+            },
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            icon: Container(
+              padding: const EdgeInsets.all(AppSpacing.p8),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? const Color(0xFF064E3B).withValues(alpha: 0.2)
+                    : AppColors.selectionGreenBg,
+                borderRadius: BorderRadius.circular(AppSpacing.r10),
+              ),
+              child: const Icon(
+                LucideIcons.moreVertical,
+                size: 20,
+                color: AppColors.activeGreen,
+              ),
+            ),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'edit_tour',
+                child: Row(
+                  children: [
+                    Icon(LucideIcons.pencil, size: 18, color: theme.colorScheme.onSurface),
+                    const SizedBox(width: 10),
+                    Text('Edit Tour', style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface)),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),

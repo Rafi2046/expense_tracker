@@ -14,18 +14,27 @@ import 'create_tour_submit_button.dart';
 
 class CreateTourSheet extends StatefulWidget {
   final Function(Tour tour) onTourCreated;
+  final Tour? tourToEdit;
 
-  const CreateTourSheet({super.key, required this.onTourCreated});
+  const CreateTourSheet({
+    super.key,
+    required this.onTourCreated,
+    this.tourToEdit,
+  });
 
   static void show({
     required BuildContext context,
     required Function(Tour tour) onTourCreated,
+    Tour? tour,
   }) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => CreateTourSheet(onTourCreated: onTourCreated),
+      builder: (context) => CreateTourSheet(
+        onTourCreated: onTourCreated,
+        tourToEdit: tour,
+      ),
     );
   }
 
@@ -40,6 +49,17 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
   DateTime? startDate;
   DateTime? endDate;
   String? coverPhotoPath;
+
+  @override
+  void initState() {
+    super.initState();
+    final tour = widget.tourToEdit;
+    if (tour != null) {
+      nameController.text = tour.name;
+      selectedCurrency = tour.currency;
+      coverPhotoPath = tour.coverPhoto;
+    }
+  }
 
   @override
   void dispose() {
@@ -72,7 +92,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
     }
   }
 
-  void _handleCreate() {
+  void _handleSubmit() {
     final name = nameController.text.trim();
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -83,16 +103,28 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
       );
       return;
     }
-    final tour = Tour(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
-      name: name,
-      coverPhoto: coverPhotoPath,
-      currency: selectedCurrency,
-      createdAt: DateTime.now(),
-      profileId: context.read<TourProvider>().activeProfileId,
-    );
-    Navigator.pop(context);
-    widget.onTourCreated(tour);
+
+    final editTour = widget.tourToEdit;
+    if (editTour != null) {
+      final updated = editTour.copyWith(
+        name: name,
+        coverPhoto: coverPhotoPath,
+        currency: selectedCurrency,
+      );
+      Navigator.pop(context);
+      context.read<TourProvider>().updateTour(updated);
+    } else {
+      final tour = Tour(
+        id: DateTime.now().microsecondsSinceEpoch.toString(),
+        name: name,
+        coverPhoto: coverPhotoPath,
+        currency: selectedCurrency,
+        createdAt: DateTime.now(),
+        profileId: context.read<TourProvider>().activeProfileId,
+      );
+      Navigator.pop(context);
+      widget.onTourCreated(tour);
+    }
   }
 
   @override
@@ -139,7 +171,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        'Create New Tour',
+                        widget.tourToEdit != null ? 'Edit Tour' : 'Create New Tour',
                         style: AppTextStyles.h3.copyWith(
                           color: theme.colorScheme.onSurface,
                         ),
@@ -265,7 +297,10 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                       ),
                       const SizedBox(height: 20),
 
-                      CreateTourSubmitButton(onPressed: _handleCreate),
+                      CreateTourSubmitButton(
+                        onPressed: _handleSubmit,
+                        label: widget.tourToEdit != null ? 'Save Changes' : null,
+                      ),
                     ],
                   ),
                 ),

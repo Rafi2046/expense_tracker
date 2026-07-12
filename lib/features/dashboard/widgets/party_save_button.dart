@@ -7,6 +7,7 @@ class PartySaveButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Color primaryColor;
   final bool isDark;
+  final bool isEditing;
 
   const PartySaveButton({
     super.key,
@@ -14,6 +15,7 @@ class PartySaveButton extends StatelessWidget {
     required this.onPressed,
     required this.primaryColor,
     required this.isDark,
+    this.isEditing = false,
   });
 
   @override
@@ -38,7 +40,7 @@ class PartySaveButton extends StatelessWidget {
               ),
               onPressed: isEnabled ? onPressed : null,
               child: Text(
-                'Add New Party',
+                isEditing ? 'Update Party' : 'Add New Party',
                 style: AppTextStyles.partySubmitButtonText.copyWith(
                   fontSize: AppFontSizes.size15,
                   color: isEnabled
