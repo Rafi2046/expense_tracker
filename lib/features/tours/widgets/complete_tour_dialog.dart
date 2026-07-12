@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 
 Future<bool> showCompleteTourDialog(BuildContext context, String tourName, bool isCompleted) async {
+  final theme = Theme.of(context);
   final result = await showDialog<bool>(
     context: context,
     builder: (ctx) => AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
-      backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
+      backgroundColor: theme.colorScheme.surface,
       title: Text(
         isCompleted
             ? ctx.translate('mark_as_active')
             : ctx.translate('mark_as_completed'),
-        style: AppTextStyles.h2,
+        style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -24,15 +26,15 @@ Future<bool> showCompleteTourDialog(BuildContext context, String tourName, bool 
             isCompleted
                 ? 'Are you sure you want to mark this tour as active?'
                 : 'Are you sure you want to mark this tour as completed?',
-            style: AppTextStyles.profileSubtitle.copyWith(
-              color: const Color(0xFF6B7280),
+            style: AppTextStyles.dialogBody.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
           const SizedBox(height: 8),
           Text(
             tourName,
-            style: AppTextStyles.body.copyWith(
-              fontWeight: FontWeight.w600,
+            style: AppTextStyles.bodyBold.copyWith(
+              color: theme.colorScheme.onSurface,
             ),
           ),
         ],
@@ -43,7 +45,7 @@ Future<bool> showCompleteTourDialog(BuildContext context, String tourName, bool 
           child: Text(
             ctx.translate('cancel'),
             style: AppTextStyles.label.copyWith(
-              color: const Color(0xFF6B7280),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
         ),
@@ -54,6 +56,7 @@ Future<bool> showCompleteTourDialog(BuildContext context, String tourName, bool 
                 ? ctx.translate('mark_as_active')
                 : ctx.translate('mark_as_completed'),
             style: AppTextStyles.label.copyWith(
+              color: AppColors.activeGreen,
               fontWeight: FontWeight.w600,
             ),
           ),
