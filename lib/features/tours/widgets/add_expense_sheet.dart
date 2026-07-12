@@ -12,7 +12,13 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-
+import 'package:expense_tracker/features/tours/widgets/expense_category_selector.dart';
+import 'package:expense_tracker/features/tours/widgets/expense_participant_selector.dart';
+import 'package:expense_tracker/features/tours/widgets/expense_split_type_selector.dart';
+import 'package:expense_tracker/features/tours/widgets/expense_split_amount_row.dart';
+import 'package:expense_tracker/features/tours/widgets/expense_receipt_picker.dart';
+import 'package:expense_tracker/features/tours/widgets/expense_date_picker.dart';
+import 'package:expense_tracker/features/tours/widgets/expense_validation_banner.dart';
 
 class AddExpenseSheet extends StatefulWidget {
   final String tourId;
@@ -74,30 +80,6 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   DateTime _selectedDate = DateTime.now();
   XFile? _receiptImage;
 
-  static const _categories = [
-    ('Food', LucideIcons.utensilsCrossed),
-    ('Transport', LucideIcons.car),
-    ('Accommodation', LucideIcons.hotel),
-    ('Activities', LucideIcons.mountain),
-    ('Shopping', LucideIcons.shoppingBag),
-    ('Drinks', LucideIcons.beer),
-    ('Groceries', LucideIcons.shoppingCart),
-    ('Fuel', LucideIcons.fuel),
-    ('Tickets', LucideIcons.ticket),
-    ('Other', LucideIcons.moreHorizontal),
-  ];
-
-  static const _avatarColors = [
-    Color(0xFF6366F1),
-    Color(0xFFEC4899),
-    Color(0xFF10B981),
-    Color(0xFFF59E0B),
-    Color(0xFF06B6D4),
-    Color(0xFF8B5CF6),
-    Color(0xFFEF4444),
-    Color(0xFF14B8A6),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -145,8 +127,14 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   String _currencySymbol() {
     const symbols = {
-      'BDT': '৳', 'USD': r'$', 'EUR': '€', 'GBP': '£',
-      'INR': '₹', 'JPY': '¥', 'AED': 'د.إ', 'CAD': r'$',
+      'BDT': '৳',
+      'USD': r'$',
+      'EUR': '€',
+      'GBP': '£',
+      'INR': '₹',
+      'JPY': '¥',
+      'AED': 'د.إ',
+      'CAD': r'$',
     };
     return symbols[widget.currency] ?? r'$';
   }
@@ -159,7 +147,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   bool _hadNotJoinedYet(TourParticipant p) {
     final endOfDay = DateTime(
-      _selectedDate.year, _selectedDate.month, _selectedDate.day, 23, 59, 59,
+      _selectedDate.year,
+      _selectedDate.month,
+      _selectedDate.day,
+      23,
+      59,
+      59,
     );
     return p.joinedAt.isAfter(endOfDay);
   }
@@ -193,18 +186,23 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     if (_splitType != 'exact') return;
     final total = _parsedAmount;
     if (total <= 0) return;
-    final included = widget.participants.where((p) => !_excludedIds.contains(p.id)).toList();
+    final included = widget.participants
+        .where((p) => !_excludedIds.contains(p.id))
+        .toList();
     if (included.isEmpty) return;
 
     double editedSum = 0;
     for (final p in included) {
       if (_manuallyEditedMembers.contains(p.id)) {
-        editedSum += double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
+        editedSum +=
+            double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
       }
     }
 
     final remaining = total - editedSum;
-    final unedited = included.where((p) => !_manuallyEditedMembers.contains(p.id)).toList();
+    final unedited = included
+        .where((p) => !_manuallyEditedMembers.contains(p.id))
+        .toList();
 
     if (unedited.isEmpty) return;
 
@@ -216,7 +214,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     for (var i = 0; i < unedited.length; i++) {
       final cents = baseCents + (i < remainderCents ? 1 : 0);
       final value = cents / 100.0;
-      final text = value == value.roundToDouble() ? value.toStringAsFixed(0) : value.toStringAsFixed(2);
+      final text = value == value.roundToDouble()
+          ? value.toStringAsFixed(0)
+          : value.toStringAsFixed(2);
       _customValues[unedited[i].id]?.text = text;
     }
     _isDistributing = false;
@@ -224,7 +224,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   void _resetExactSplit() {
     _manuallyEditedMembers.clear();
-    final included = widget.participants.where((p) => !_excludedIds.contains(p.id)).toList();
+    final included = widget.participants
+        .where((p) => !_excludedIds.contains(p.id))
+        .toList();
     if (included.isEmpty) return;
     final total = _parsedAmount;
     if (total <= 0) return;
@@ -237,7 +239,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     for (var i = 0; i < included.length; i++) {
       final cents = baseCents + (i < remainderCents ? 1 : 0);
       final value = cents / 100.0;
-      final text = value == value.roundToDouble() ? value.toStringAsFixed(0) : value.toStringAsFixed(2);
+      final text = value == value.roundToDouble()
+          ? value.toStringAsFixed(0)
+          : value.toStringAsFixed(2);
       _customValues[included[i].id]?.text = text;
     }
     _isDistributing = false;
@@ -246,20 +250,25 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   void _redistributePercentSplit() {
     if (_splitType != 'percentage') return;
-    final included = widget.participants.where((p) => !_excludedIds.contains(p.id)).toList();
+    final included = widget.participants
+        .where((p) => !_excludedIds.contains(p.id))
+        .toList();
     if (included.isEmpty) return;
 
     double editedSum = 0;
     for (final p in included) {
       if (_manuallyEditedPercentMembers.contains(p.id)) {
-        editedSum += double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
+        editedSum +=
+            double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
       }
     }
 
     if (editedSum >= 100) return;
 
     final remaining = 100 - editedSum;
-    final unedited = included.where((p) => !_manuallyEditedPercentMembers.contains(p.id)).toList();
+    final unedited = included
+        .where((p) => !_manuallyEditedPercentMembers.contains(p.id))
+        .toList();
     if (unedited.isEmpty) return;
 
     final totalCents = (remaining * 100).round();
@@ -270,7 +279,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     for (var i = 0; i < unedited.length; i++) {
       final cents = baseCents + (i < remainderCents ? 1 : 0);
       final value = cents / 100.0;
-      final text = value == value.roundToDouble() ? value.toStringAsFixed(0) : value.toStringAsFixed(2);
+      final text = value == value.roundToDouble()
+          ? value.toStringAsFixed(0)
+          : value.toStringAsFixed(2);
       _customValues[unedited[i].id]?.text = text;
     }
     _isDistributing = false;
@@ -278,7 +289,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   void _resetPercentSplit() {
     _manuallyEditedPercentMembers.clear();
-    final included = widget.participants.where((p) => !_excludedIds.contains(p.id)).toList();
+    final included = widget.participants
+        .where((p) => !_excludedIds.contains(p.id))
+        .toList();
     if (included.isEmpty) return;
 
     final totalCents = 10000;
@@ -289,7 +302,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     for (var i = 0; i < included.length; i++) {
       final cents = baseCents + (i < remainderCents ? 1 : 0);
       final value = cents / 100.0;
-      final text = value == value.roundToDouble() ? value.toStringAsFixed(0) : value.toStringAsFixed(2);
+      final text = value == value.roundToDouble()
+          ? value.toStringAsFixed(0)
+          : value.toStringAsFixed(2);
       _customValues[included[i].id]?.text = text;
     }
     _isDistributing = false;
@@ -316,7 +331,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       case 'equal':
       case 'exclusion':
         if (excluded) return '${_sym}0';
-        final included = widget.participants.where((p) => !_excludedIds.contains(p.id)).toList();
+        final included = widget.participants
+            .where((p) => !_excludedIds.contains(p.id))
+            .toList();
         final idx = included.indexWhere((p) => p.id == participantId);
         if (idx == -1) return null;
         final totalCents = (amount * 100).round();
@@ -327,12 +344,16 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         return '$_sym${share.toStringAsFixed(share == share.roundToDouble() ? 0 : 2)}';
       case 'percentage':
         if (excluded) return null;
-        final pct = double.tryParse(_customValues[participantId]?.text.trim() ?? '') ?? 0;
+        final pct =
+            double.tryParse(_customValues[participantId]?.text.trim() ?? '') ??
+            0;
         final share = amount * pct / 100;
         return '$_sym${share.toStringAsFixed(share == share.roundToDouble() ? 0 : 2)}';
       case 'exact':
         if (excluded) return null;
-        final val = double.tryParse(_customValues[participantId]?.text.trim() ?? '');
+        final val = double.tryParse(
+          _customValues[participantId]?.text.trim() ?? '',
+        );
         if (val == null) return null;
         return '$_sym${val.toStringAsFixed(val == val.roundToDouble() ? 0 : 2)}';
       default:
@@ -350,8 +371,11 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     if (picked == null) return;
     setState(() {
       _selectedDate = DateTime(
-        picked.year, picked.month, picked.day,
-        _selectedDate.hour, _selectedDate.minute,
+        picked.year,
+        picked.month,
+        picked.day,
+        _selectedDate.hour,
+        _selectedDate.minute,
       );
       _applyDateBasedDefaults();
       _validationError = null;
@@ -359,7 +383,11 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   }
 
   Future<void> _pickReceipt(ImageSource source) async {
-    final file = await _picker.pickImage(source: source, maxWidth: 1200, imageQuality: 80);
+    final file = await _picker.pickImage(
+      source: source,
+      maxWidth: 1200,
+      imageQuality: 80,
+    );
     if (file != null) setState(() => _receiptImage = file);
   }
 
@@ -378,7 +406,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 36, height: 4,
+              width: 36,
+              height: 4,
               decoration: BoxDecoration(
                 color: theme.dividerColor.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
@@ -387,12 +416,26 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             const SizedBox(height: 20),
             Text(
               'Attach Receipt',
-              style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
+              style: AppTextStyles.h2.copyWith(
+                color: theme.colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 20),
-            _buildReceiptOption(ctx, theme, LucideIcons.camera, 'Take Photo', ImageSource.camera),
+            _buildReceiptOption(
+              ctx,
+              theme,
+              LucideIcons.camera,
+              'Take Photo',
+              ImageSource.camera,
+            ),
             const SizedBox(height: 4),
-            _buildReceiptOption(ctx, theme, LucideIcons.image, 'Choose from Gallery', ImageSource.gallery),
+            _buildReceiptOption(
+              ctx,
+              theme,
+              LucideIcons.image,
+              'Choose from Gallery',
+              ImageSource.gallery,
+            ),
             const SizedBox(height: 8),
           ],
         ),
@@ -400,18 +443,31 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     );
   }
 
-  Widget _buildReceiptOption(BuildContext ctx, ThemeData theme, IconData icon, String label, ImageSource source) {
+  Widget _buildReceiptOption(
+    BuildContext ctx,
+    ThemeData theme,
+    IconData icon,
+    String label,
+    ImageSource source,
+  ) {
     return ListTile(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       leading: Container(
-        width: 40, height: 40,
+        width: 40,
+        height: 40,
         decoration: BoxDecoration(
           color: AppColors.activeGreen.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(icon, color: AppColors.activeGreen, size: 20),
       ),
-      title: Text(label, style: AppTextStyles.bodyBold.copyWith(fontWeight: FontWeight.w500, color: theme.colorScheme.onSurface)),
+      title: Text(
+        label,
+        style: AppTextStyles.bodyBold.copyWith(
+          fontWeight: FontWeight.w500,
+          color: theme.colorScheme.onSurface,
+        ),
+      ),
       onTap: () {
         Navigator.pop(ctx);
         _pickReceipt(source);
@@ -420,9 +476,23 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   }
 
   String _formatDate(DateTime d) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     final today = DateTime.now();
-    final isToday = d.year == today.year && d.month == today.month && d.day == today.day;
+    final isToday =
+        d.year == today.year && d.month == today.month && d.day == today.day;
     if (isToday) return 'Today';
     return '${d.day} ${months[d.month - 1]} ${d.year}';
   }
@@ -436,7 +506,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       final total = widget.participants
           .where((p) => !_excludedIds.contains(p.id))
           .fold(0.0, (s, p) {
-            final v = double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
+            final v =
+                double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
             return s + v;
           });
       if ((total * 100).round() != (amount * 100).round()) {
@@ -448,7 +519,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       final total = widget.participants
           .where((p) => !_excludedIds.contains(p.id))
           .fold(0.0, (s, p) {
-            final v = double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
+            final v =
+                double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
             return s + v;
           });
       if ((total * 100).round() != 10000) return 'Percentages must total 100%';
@@ -483,7 +555,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     final amount = _parsedAmount;
     final isEdit = widget.expenseToEdit != null;
     final expense = TourExpense(
-      id: isEdit ? widget.expenseToEdit!.id : DateTime.now().microsecondsSinceEpoch.toString(),
+      id: isEdit
+          ? widget.expenseToEdit!.id
+          : DateTime.now().microsecondsSinceEpoch.toString(),
       tourId: widget.tourId,
       title: _titleController.text.trim().isEmpty && _selectedCategory != null
           ? _selectedCategory!
@@ -492,7 +566,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       paidBy: _paidById,
       splitType: _splitType,
       category: _selectedCategory,
-      note: _noteController.text.trim().isEmpty ? null : _noteController.text.trim(),
+      note: _noteController.text.trim().isEmpty
+          ? null
+          : _noteController.text.trim(),
       date: _selectedDate,
       receiptPath: await _persistReceipt(_receiptImage?.path),
     );
@@ -535,12 +611,62 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     if (mounted) Navigator.of(context).pop();
   }
 
+  // ─── Widget Callbacks ─────────────────────────────────────────────────
+
+  void _onSplitTypeChanged(String type) {
+    setState(() {
+      _splitType = type;
+      _validationError = null;
+      _applyDateBasedDefaults();
+    });
+    if (type == 'percentage') {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _resetPercentSplit());
+    } else if (type == 'exact') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_parsedAmount > 0) _resetExactSplit();
+      });
+    }
+  }
+
+  void _onExcludedChanged(String id, bool included) {
+    setState(() {
+      if (included) {
+        _excludedIds.remove(id);
+      } else {
+        _excludedIds.add(id);
+      }
+    });
+  }
+
+  void _onCustomValueChanged(String id) {
+    if (_isDistributing) return;
+    setState(() => _validationError = null);
+    if (_splitType == 'exact') {
+      _manuallyEditedMembers.add(id);
+      _redistributeExactSplit();
+      setState(() {});
+    } else if (_splitType == 'percentage') {
+      _manuallyEditedPercentMembers.add(id);
+      _redistributePercentSplit();
+      setState(() {});
+    }
+  }
+
+  Map<String, String?> _computePreviews() {
+    final previews = <String, String?>{};
+    for (final p in widget.participants) {
+      previews[p.id] = _previewAmount(p.id);
+    }
+    return previews;
+  }
+
   // ═══════════════════════════════════════════════════════════════════════
   // BUILD
   // ═══════════════════════════════════════════════════════════════════════
 
-  Color _sectionBg(ThemeData theme) =>
-      theme.brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA);
+  Color _sectionBg(ThemeData theme) => theme.brightness == Brightness.dark
+      ? Colors.white.withValues(alpha: 0.05)
+      : const Color(0xFFF8F9FA);
 
   Widget _sectionWrapper(ThemeData theme, Widget child) {
     return Container(
@@ -573,136 +699,167 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     final theme = Theme.of(context);
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     final bottomInset = MediaQuery.of(context).padding.bottom;
-    final percentageError = _splitType == 'percentage' && (_percentageTotal * 100).round() != 10000;
+    final percentageError =
+        _splitType == 'percentage' && (_percentageTotal * 100).round() != 10000;
     final exactExceedsError = _exactAmountsExceed;
 
-    final double maxHeight = (MediaQuery.of(context).size.height - bottom) * 0.85;
+    final double maxHeight =
+        (MediaQuery.of(context).size.height - bottom) * 0.85;
 
     return Padding(
       padding: EdgeInsets.only(bottom: bottom),
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: maxHeight),
         child: Container(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Scrollable content
-            Flexible(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildDragHandle(theme),
-                    const SizedBox(height: AppSpacing.s8),
-                    _buildHeroSection(theme),
-                    const SizedBox(height: AppSpacing.h24),
-                    _buildCategoryChips(theme),
-                    const SizedBox(height: AppSpacing.h24),
-                    _buildMetaRow(theme),
-                    const SizedBox(height: AppSpacing.h24),
-                    _buildReceiptSection(theme),
-                    const SizedBox(height: AppSpacing.h24),
-                    // Paid By section
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _sectionWrapper(theme,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _sectionLabel(theme, 'PAID BY'),
-                            _buildPayerContent(theme),
-                          ],
-                        ),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Scrollable content
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildDragHandle(theme),
+                      const SizedBox(height: AppSpacing.s8),
+                      _buildHeroSection(theme),
+                      const SizedBox(height: AppSpacing.h24),
+                      ExpenseCategorySelector(
+                        theme: theme,
+                        selectedCategory: _selectedCategory,
+                        customCategories: _customCategories,
+                        onCategorySelected: (v) =>
+                            setState(() => _selectedCategory = v),
+                        onAddCategory: _showAddCategoryDialog,
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.h24),
-                    // Split section
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _sectionWrapper(theme,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _sectionLabel(theme, 'SPLIT'),
-                            _buildSplitTypePills(theme),
-                            if (_lateJoiners.isNotEmpty) ...[
-                              const SizedBox(height: AppSpacing.s12),
-                              _buildLateJoinerBanner(theme),
-                            ],
-                            const SizedBox(height: AppSpacing.s12),
-                            _buildSplitDetails(theme),
-                            if (percentageError) ...[
-                              const SizedBox(height: AppSpacing.s8),
-                              Text(
-                                'Sum must be 100%',
-                                style: AppTextStyles.label.copyWith(color: AppColors.activeRed),
-                              ),
-                            ],
-                            if (exactExceedsError) ...[
-                              const SizedBox(height: AppSpacing.s8),
-                              Text(
-                                'Amounts exceed total',
-                                style: AppTextStyles.label.copyWith(color: AppColors.activeRed),
-                              ),
-                            ],
-                          ],
-                        ),
+                      const SizedBox(height: AppSpacing.h24),
+                      ExpenseDatePicker(
+                        theme: theme,
+                        selectedDate: _selectedDate,
+                        onPickDate: _pickDate,
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.h24),
-                    // Notes section
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _sectionWrapper(theme,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _sectionLabel(theme, 'NOTES'),
-                            _buildNoteContent(theme),
-                          ],
-                        ),
+                      const SizedBox(height: AppSpacing.h24),
+                      ExpenseReceiptPicker(
+                        theme: theme,
+                        receiptPath: _receiptImage?.path,
+                        receiptName: _receiptImage?.name,
+                        onPick: _showReceiptSourceSheet,
+                        onClear: () => setState(() => _receiptImage = null),
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.h16),
-                    if (_validationError != null) ...[
+                      const SizedBox(height: AppSpacing.h24),
+                      // Paid By section
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: AppColors.activeRed.withValues(alpha: 0.08),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
+                        child: _sectionWrapper(
+                          theme,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(LucideIcons.alertCircle, size: 16, color: AppColors.activeRed.withValues(alpha: 0.8)),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  _validationError!,
-                                  style: AppTextStyles.label.copyWith(color: AppColors.activeRed),
-                                ),
+                              _sectionLabel(theme, 'PAID BY'),
+                              ExpenseParticipantSelector(
+                                theme: theme,
+                                participants: widget.participants,
+                                paidById: _paidById,
+                                onPayerSelected: (id) =>
+                                    setState(() => _paidById = id),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.s12),
+                      const SizedBox(height: AppSpacing.h24),
+                      // Split section
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: _sectionWrapper(
+                          theme,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _sectionLabel(theme, 'SPLIT'),
+                              ExpenseSplitTypeSelector(
+                                theme: theme,
+                                splitType: _splitType,
+                                onSplitTypeChanged: _onSplitTypeChanged,
+                              ),
+                              if (_lateJoiners.isNotEmpty) ...[
+                                const SizedBox(height: AppSpacing.s12),
+                                _buildLateJoinerBanner(theme),
+                              ],
+                              const SizedBox(height: AppSpacing.s12),
+                              ExpenseSplitAmountRow(
+                                theme: theme,
+                                participants: widget.participants,
+                                splitType: _splitType,
+                                excludedIds: _excludedIds,
+                                customValues: _customValues,
+                                previews: _computePreviews(),
+                                lateJoinerIds: _lateJoiners
+                                    .map((p) => p.id)
+                                    .toSet(),
+                                currencySymbol: _sym,
+                                onExcludedChanged: _onExcludedChanged,
+                                onCustomValueChanged: _onCustomValueChanged,
+                                onResetSplit: _splitType == 'exact'
+                                    ? _resetExactSplit
+                                    : _resetPercentSplit,
+                              ),
+                              if (percentageError) ...[
+                                const SizedBox(height: AppSpacing.s8),
+                                Text(
+                                  'Sum must be 100%',
+                                  style: AppTextStyles.label.copyWith(
+                                    color: AppColors.activeRed,
+                                  ),
+                                ),
+                              ],
+                              if (exactExceedsError) ...[
+                                const SizedBox(height: AppSpacing.s8),
+                                Text(
+                                  'Amounts exceed total',
+                                  style: AppTextStyles.label.copyWith(
+                                    color: AppColors.activeRed,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.h24),
+                      // Notes section
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: _sectionWrapper(
+                          theme,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _sectionLabel(theme, 'NOTES'),
+                              _buildNoteContent(theme),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.h16),
+                      ExpenseValidationBanner(error: _validationError),
                     ],
-                  ],
+                  ),
                 ),
               ),
-            ),
-            // Sticky save button
-            _buildSaveButton(theme, bottomInset, percentageError || exactExceedsError),
-          ],
+              // Sticky save button
+              _buildSaveButton(
+                theme,
+                bottomInset,
+                percentageError || exactExceedsError,
+              ),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -712,7 +869,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       padding: const EdgeInsets.only(top: 12, bottom: 4),
       child: Center(
         child: Container(
-          width: 40, height: 5,
+          width: 40,
+          height: 5,
           decoration: BoxDecoration(
             color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(3),
@@ -761,11 +919,16 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               const SizedBox(width: 4),
               IntrinsicWidth(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(minWidth: 60, maxWidth: 200),
+                  constraints: const BoxConstraints(
+                    minWidth: 60,
+                    maxWidth: 200,
+                  ),
                   child: TextField(
                     controller: _amountController,
                     focusNode: _amountFocusNode,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
                     ],
@@ -786,7 +949,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       hintStyle: AppTextStyles.displayLarge.copyWith(
                         fontSize: AppFontSizes.size36,
                         fontWeight: FontWeight.w300,
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.15,
+                        ),
                       ),
                       border: InputBorder.none,
                       filled: false,
@@ -803,7 +968,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           // Title field — visible input container
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p14, vertical: AppSpacing.p12),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.p14,
+              vertical: AppSpacing.p12,
+            ),
             decoration: BoxDecoration(
               color: _sectionBg(theme),
               borderRadius: BorderRadius.circular(AppSpacing.r10),
@@ -835,152 +1003,6 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // ─── Category Chips (inline) ─────────────────────────────────────────
-
-  Widget _buildCategoryChips(ThemeData theme) {
-    final isDark = theme.brightness == Brightness.dark;
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-      decoration: BoxDecoration(
-        color: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.dividerColor.withValues(alpha: 0.1),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'CATEGORY',
-            style: AppTextStyles.caption.copyWith(
-              fontSize: AppFontSizes.size10,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.5,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-            ),
-          ),
-          const SizedBox(height: 8),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              crossAxisSpacing: 6,
-              mainAxisSpacing: 6,
-              childAspectRatio: 1.3,
-            ),
-            itemCount: _categories.length + _customCategories.length + 1,
-            itemBuilder: (context, index) {
-              if (index < _categories.length) {
-                final (label, icon) = _categories[index];
-                return _buildCategoryGridItem(theme, label, icon, _selectedCategory == label);
-              }
-              final ci = index - _categories.length;
-              if (ci < _customCategories.length) {
-                final cat = _customCategories[ci];
-                return _buildCategoryGridItem(
-                  theme, cat['name'] as String, cat['icon'] as IconData,
-                  _selectedCategory == cat['name'],
-                  onTap: () => setState(() {
-                    _selectedCategory = _selectedCategory == cat['name'] ? null : cat['name'];
-                  }),
-                );
-              }
-              return _buildAddGridItem(theme);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryGridItem(ThemeData theme, String label, IconData icon, bool selected, {VoidCallback? onTap}) {
-    final isDark = theme.brightness == Brightness.dark;
-    return GestureDetector(
-      onTap: onTap ?? () => setState(() => _selectedCategory = selected ? null : label),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          color: selected
-              ? AppColors.activeGreen.withValues(alpha: 0.12)
-              : (isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFF0F0F0)),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: selected
-                ? AppColors.activeGreen.withValues(alpha: 0.3)
-                : (isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFE5E5E5)),
-            width: 1,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 16,
-              color: selected
-                  ? AppColors.activeGreen
-                  : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-            ),
-            const SizedBox(height: 3),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.caption.copyWith(
-                fontSize: AppFontSizes.size9,
-                fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                color: selected
-                    ? AppColors.activeGreen
-                    : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAddGridItem(ThemeData theme) {
-    final isDark = theme.brightness == Brightness.dark;
-    return GestureDetector(
-      onTap: () => _showAddCategoryDialog(),
-      child: Container(
-        decoration: BoxDecoration(
-          color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFF0F0F0),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFE5E5E5),
-            width: 1,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              LucideIcons.plus,
-              size: 16,
-              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-            ),
-            const SizedBox(height: 3),
-            Text(
-              'Add',
-              style: AppTextStyles.caption.copyWith(
-                fontSize: AppFontSizes.size9,
-                fontWeight: FontWeight.w500,
-                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -1116,88 +1138,104 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           backgroundColor: Theme.of(context).colorScheme.surface,
           title: const Text(
             'New Category',
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: AppFontSizes.size18),
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: AppFontSizes.size18,
+            ),
           ),
           content: SizedBox(
             width: double.maxFinite,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                  TextField(
-                    controller: nameController,
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      hintText: 'Search icons...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(AppSpacing.r10),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.p12,
-                        vertical: AppSpacing.p12,
-                      ),
+                TextField(
+                  controller: nameController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: 'Search icons...',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(AppSpacing.r10),
                     ),
-                    onChanged: (value) {
-                      setDialogState(() => searchQuery = value.trim().toLowerCase());
-                    },
-                    onSubmitted: (value) {
-                      final name = value.trim();
-                      if (name.isNotEmpty) {
-                        Navigator.pop(ctx, {'name': name, 'icon': selectedIcon});
-                      }
-                    },
-                  ),
-          const SizedBox(height: 6),
-                  const Text(
-                    'Choose an icon',
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size12,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF6B7280),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.p12,
+                      vertical: AppSpacing.p12,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  onChanged: (value) {
+                    setDialogState(
+                      () => searchQuery = value.trim().toLowerCase(),
+                    );
+                  },
+                  onSubmitted: (value) {
+                    final name = value.trim();
+                    if (name.isNotEmpty) {
+                      Navigator.pop(ctx, {'name': name, 'icon': selectedIcon});
+                    }
+                  },
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  'Choose an icon',
+                  style: TextStyle(
+                    fontSize: AppFontSizes.size12,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF6B7280),
+                  ),
+                ),
+                const SizedBox(height: 10),
                 Expanded(
-                  child: Builder(builder: (ctx) {
-                    final filtered = searchQuery.isEmpty
-                        ? _categoryIcons
-                        : _iconSearchData.entries
-                            .where((e) => e.value.contains(searchQuery))
-                            .map((e) => e.key)
-                            .toList();
-                    return GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 6,
-                        crossAxisSpacing: 6,
-                        mainAxisSpacing: 6,
-                      ),
-                      itemCount: filtered.length,
-                      itemBuilder: (ctx, i) {
-                        final icon = filtered[i];
-                        final isSelected = icon == selectedIcon;
-                        return GestureDetector(
-                          onTap: () => setDialogState(() => selectedIcon = icon),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? AppColors.activeGreen.withValues(alpha: 0.12)
-                                  : const Color(0xFFF3F4F6),
-                              borderRadius: BorderRadius.circular(AppSpacing.r10),
-                              border: Border.all(
+                  child: Builder(
+                    builder: (ctx) {
+                      final filtered = searchQuery.isEmpty
+                          ? _categoryIcons
+                          : _iconSearchData.entries
+                                .where((e) => e.value.contains(searchQuery))
+                                .map((e) => e.key)
+                                .toList();
+                      return GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 6,
+                              crossAxisSpacing: 6,
+                              mainAxisSpacing: 6,
+                            ),
+                        itemCount: filtered.length,
+                        itemBuilder: (ctx, i) {
+                          final icon = filtered[i];
+                          final isSelected = icon == selectedIcon;
+                          return GestureDetector(
+                            onTap: () =>
+                                setDialogState(() => selectedIcon = icon),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? AppColors.activeGreen.withValues(
+                                        alpha: 0.12,
+                                      )
+                                    : const Color(0xFFF3F4F6),
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.r10,
+                                ),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppColors.activeGreen
+                                      : Colors.transparent,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: Icon(
+                                icon,
+                                size: 22,
                                 color: isSelected
                                     ? AppColors.activeGreen
-                                    : Colors.transparent,
-                                width: 1.5,
+                                    : const Color(0xFF6B7280),
                               ),
                             ),
-                            child: Icon(icon, size: 22,
-                                color: isSelected
-                                    ? AppColors.activeGreen
-                                    : const Color(0xFF6B7280)),
-                          ),
-                        );
-                      },
-                    );
-                  }),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -1205,8 +1243,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel',
-                  style: TextStyle(color: Color(0xFF6B7280))),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Color(0xFF6B7280)),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -1215,10 +1255,13 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   Navigator.pop(ctx, {'name': name, 'icon': selectedIcon});
                 }
               },
-              child: const Text('Add',
-                  style: TextStyle(
-                      color: AppColors.activeGreen,
-                      fontWeight: FontWeight.w600)),
+              child: const Text(
+                'Add',
+                style: TextStyle(
+                  color: AppColors.activeGreen,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ],
         ),
@@ -1231,273 +1274,6 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         _selectedCategory = result['name'] as String;
       });
     }
-  }
-
-  // ─── Meta Row ────────────────────────────────────────────────────────
-
-  Widget _buildMetaRow(ThemeData theme) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        children: [
-          _buildMetaChip(theme, LucideIcons.calendar, _formatDate(_selectedDate), _pickDate),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMetaChip(ThemeData theme, IconData icon, String text, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: theme.dividerColor.withValues(alpha: 0.1),
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 14, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
-            const SizedBox(width: 6),
-            Text(
-              text,
-              style: AppTextStyles.bodySmall.copyWith(
-                fontWeight: FontWeight.w500,
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Icon(LucideIcons.chevronDown, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ─── Receipt Section ──────────────────────────────────────────────────
-
-  Widget _buildReceiptSection(ThemeData theme) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: _receiptImage != null
-          ? _buildReceiptThumbnail(theme)
-          : _buildReceiptButton(theme),
-    );
-  }
-
-  Widget _buildReceiptButton(ThemeData theme) {
-    return GestureDetector(
-      onTap: _showReceiptSourceSheet,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: theme.dividerColor.withValues(alpha: 0.2),
-            width: 1.5,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(LucideIcons.receipt, size: 18,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
-            const SizedBox(width: 8),
-            Text(
-              'Add Receipt',
-              style: AppTextStyles.bodySmall.copyWith(
-                fontWeight: FontWeight.w500,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildReceiptThumbnail(ThemeData theme) {
-    return GestureDetector(
-      onTap: _showReceiptSourceSheet,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.file(
-                File(_receiptImage!.path),
-                width: 44, height: 44, fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                _receiptImage!.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.bodySmall.copyWith(color: theme.colorScheme.onSurface),
-              ),
-            ),
-            GestureDetector(
-              onTap: () => setState(() => _receiptImage = null),
-              child: Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.activeRed.withValues(alpha: 0.08),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(LucideIcons.x, size: 14, color: AppColors.activeRed.withValues(alpha: 0.7)),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ─── Paid By Section ─────────────────────────────────────────────────
-
-  Widget _buildPayerContent(ThemeData theme) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: widget.participants.map((p) {
-          final selected = p.id == _paidById;
-          final idx = widget.participants.indexOf(p);
-          return Padding(
-            padding: EdgeInsets.only(
-              right: idx < widget.participants.length - 1 ? 8 : 0,
-            ),
-            child: _buildPayerAvatar(theme, p, selected, idx),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildPayerAvatar(ThemeData theme, TourParticipant p, bool selected, int index) {
-    final color = _avatarColors[index % _avatarColors.length];
-    return GestureDetector(
-      onTap: () => setState(() => _paidById = p.id),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          color: selected ? color.withValues(alpha: 0.12) : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: selected ? color : Colors.transparent,
-            width: 1.5,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircleAvatar(
-              radius: 14,
-              backgroundColor: color,
-              child: Text(
-                p.name.isNotEmpty ? p.name[0].toUpperCase() : '?',
-                style: const TextStyle(
-                  color: Colors.white, fontSize: AppFontSizes.size11, fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            const SizedBox(width: 6),
-            Text(
-              p.name.split(' ').first,
-              style: AppTextStyles.label.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface.withValues(alpha: selected ? 1 : 0.6),
-              ),
-            ),
-            if (selected) ...[
-              const SizedBox(width: 4),
-              Icon(LucideIcons.checkCircle, size: 14, color: AppColors.activeGreen),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ─── Split Section ───────────────────────────────────────────────────
-
-  Widget _buildSplitTypePills(ThemeData theme) {
-    final types = ['equal', 'exact', 'percentage', 'exclusion'];
-    final labels = ['Equal', 'Exact', 'Percent', 'Exclude'];
-    final icons = [LucideIcons.gripHorizontal, LucideIcons.pin, LucideIcons.percent, LucideIcons.userX];
-
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: List.generate(types.length, (i) {
-          final active = _splitType == types[i];
-          return Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(left: i > 0 ? 4 : 0),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _splitType = types[i];
-                    _validationError = null;
-                    _applyDateBasedDefaults();
-                  });
-                  if (types[i] == 'percentage') {
-                    WidgetsBinding.instance.addPostFrameCallback((_) => _resetPercentSplit());
-                  } else if (types[i] == 'exact') {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (_parsedAmount > 0) _resetExactSplit();
-                    });
-                  }
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  decoration: BoxDecoration(
-                    color: active ? AppColors.activeGreen : Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: active
-                        ? [BoxShadow(color: AppColors.activeGreen.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 2))]
-                        : null,
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(icons[i], size: 16, color: active ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.3)),
-                      const SizedBox(height: 2),
-                      Text(
-                        labels[i],
-                        style: AppTextStyles.caption.copyWith(
-                          fontSize: AppFontSizes.size10,
-                          fontWeight: active ? FontWeight.w600 : FontWeight.w500,
-                          color: active ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        }),
-      ),
-    );
   }
 
   Widget _buildLateJoinerBanner(ThemeData theme) {
@@ -1517,257 +1293,14 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           Expanded(
             child: Text(
               '$names joined after ${_formatDate(_selectedDate)} — unchecked by default.',
-              style: AppTextStyles.caption.copyWith(color: AppColors.activeGreen),
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.activeGreen,
+              ),
             ),
           ),
         ],
       ),
     );
-  }
-
-  // ─── Split Details (with live preview) ───────────────────────────────
-
-  Widget _buildSplitDetails(ThemeData theme) {
-    final showCheckboxes = _splitType == 'equal' || _splitType == 'exclusion';
-    final showInputs = _splitType == 'exact' || _splitType == 'percentage';
-
-    if (showCheckboxes) {
-      return Column(
-        children: widget.participants.asMap().entries.map((entry) {
-          final p = entry.value;
-          final excluded = _excludedIds.contains(p.id);
-          final preview = _previewAmount(p.id);
-          final index = entry.key;
-          return Padding(
-            padding: EdgeInsets.only(bottom: index < widget.participants.length - 1 ? AppSpacing.s8 : 0),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p10),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(AppSpacing.r10),
-                border: Border.all(
-                  color: excluded
-                      ? theme.dividerColor.withValues(alpha: 0.08)
-                      : theme.dividerColor.withValues(alpha: 0.15),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 22, height: 22,
-                    child: Checkbox(
-                      value: !excluded,
-                      activeColor: AppColors.activeGreen,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r4)),
-                      side: WidgetStateBorderSide.resolveWith(
-                        (_) => BorderSide(
-                          color: excluded
-                              ? theme.dividerColor.withValues(alpha: 0.3)
-                              : AppColors.activeGreen,
-                        ),
-                      ),
-                      onChanged: (v) => setState(() {
-                        if (v == true) {
-                          _excludedIds.remove(p.id);
-                        } else {
-                          _excludedIds.add(p.id);
-                        }
-                      }),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.s8),
-                  CircleAvatar(
-                    radius: 14,
-                    backgroundColor: excluded
-                        ? theme.dividerColor.withValues(alpha: 0.3)
-                        : _avatarColors[index % _avatarColors.length],
-                    child: Text(
-                      p.name[0].toUpperCase(),
-                      style: TextStyle(
-                        color: excluded ? theme.colorScheme.onSurface.withValues(alpha: 0.3) : Colors.white,
-                        fontSize: AppFontSizes.size10, fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.s8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          p.name,
-                          style: AppTextStyles.bodySmall.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: excluded
-                                ? theme.colorScheme.onSurface.withValues(alpha: 0.35)
-                                : theme.colorScheme.onSurface,
-                          ),
-                        ),
-                        if (_hadNotJoinedYet(p))
-                          Text(
-                            'Joined later',
-                            style: AppTextStyles.caption.copyWith(
-                              fontSize: AppFontSizes.size10,
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  if (preview != null)
-                    Text(
-                      preview,
-                      style: AppTextStyles.bodySmall.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: excluded
-                            ? theme.colorScheme.onSurface.withValues(alpha: 0.2)
-                            : AppColors.activeGreen,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
-      );
-    }
-
-    if (showInputs) {
-      final isPercentage = _splitType == 'percentage';
-      final isExact = _splitType == 'exact';
-      final suffix = isPercentage ? '%' : _sym;
-      return Column(
-        children: [
-          ...widget.participants.asMap().entries.map((entry) {
-            final p = entry.value;
-            final preview = _previewAmount(p.id);
-            final index = entry.key;
-            return Padding(
-              padding: EdgeInsets.only(bottom: index < widget.participants.length - 1 ? AppSpacing.s8 : 0),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p10),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(AppSpacing.r10),
-                  border: Border.all(
-                    color: theme.dividerColor.withValues(alpha: 0.15),
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 14,
-                      backgroundColor: _avatarColors[index % _avatarColors.length],
-                      child: Text(
-                        p.name[0].toUpperCase(),
-                        style: const TextStyle(
-                          color: Colors.white, fontSize: AppFontSizes.size10, fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.s8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            p.name,
-                            style: AppTextStyles.bodySmall.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: theme.colorScheme.onSurface,
-                            ),
-                          ),
-                          if (preview != null && (isPercentage || isExact))
-                            Text(
-                              preview,
-                              style: AppTextStyles.caption.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.activeGreen,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 80,
-                      child: TextField(
-                        controller: _customValues[p.id],
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
-                        ],
-                        textAlign: TextAlign.right,
-                        onChanged: (_) {
-                          if (_isDistributing) return;
-                          setState(() => _validationError = null);
-                          if (isExact) {
-                            _manuallyEditedMembers.add(p.id);
-                            _redistributeExactSplit();
-                            setState(() {});
-                          } else if (isPercentage) {
-                            _manuallyEditedPercentMembers.add(p.id);
-                            _redistributePercentSplit();
-                            setState(() {});
-                          }
-                        },
-                        style: AppTextStyles.bodySmall.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: theme.colorScheme.onSurface,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: '0',
-                          suffixText: suffix,
-                          suffixStyle: AppTextStyles.label.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(AppSpacing.r8),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s8, vertical: AppSpacing.s6),
-                          isDense: true,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
-          if (isExact || isPercentage) ...[
-            const SizedBox(height: AppSpacing.s12),
-            Align(
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: isExact ? _resetExactSplit : _resetPercentSplit,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.s6),
-                  decoration: BoxDecoration(
-                    color: AppColors.activeGreen.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(AppSpacing.r8),
-                  ),
-                  child: Text(
-                    'Reset split',
-                    style: AppTextStyles.label.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.activeGreen,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ],
-      );
-    }
-
-    return const SizedBox.shrink();
   }
 
   // ─── Note Field ──────────────────────────────────────────────────────
@@ -1776,17 +1309,26 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     return TextField(
       controller: _noteController,
       maxLines: 1,
-      style: AppTextStyles.bodyBold.copyWith(fontWeight: FontWeight.w400, color: theme.colorScheme.onSurface),
+      style: AppTextStyles.bodyBold.copyWith(
+        fontWeight: FontWeight.w400,
+        color: theme.colorScheme.onSurface,
+      ),
       decoration: InputDecoration(
         hintText: 'Add a note...',
-        hintStyle: AppTextStyles.bodyBold.copyWith(fontWeight: FontWeight.w400, color: theme.colorScheme.onSurface.withValues(alpha: 0.25)),
+        hintStyle: AppTextStyles.bodyBold.copyWith(
+          fontWeight: FontWeight.w400,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
+        ),
         border: InputBorder.none,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(vertical: 2),
         prefixIcon: Padding(
           padding: const EdgeInsets.only(right: 8),
-          child: Icon(LucideIcons.stickyNote, size: 18,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.25)),
+          child: Icon(
+            LucideIcons.stickyNote,
+            size: 18,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
+          ),
         ),
         prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
       ),
@@ -1795,7 +1337,11 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   // ─── Save Button (Sticky) ────────────────────────────────────────────
 
-  Widget _buildSaveButton(ThemeData theme, double bottomInset, bool percentageError) {
+  Widget _buildSaveButton(
+    ThemeData theme,
+    double bottomInset,
+    bool percentageError,
+  ) {
     final canSave = !_isSaving && !percentageError;
     return Container(
       padding: EdgeInsets.fromLTRB(20, 12, 20, bottomInset + 12),
@@ -1816,13 +1362,19 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           onPressed: canSave ? _save : null,
           style: FilledButton.styleFrom(
             backgroundColor: AppColors.activeGreen,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
             elevation: 0,
           ),
           child: _isSaving
               ? const SizedBox(
-                  width: 22, height: 22,
-                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
                 )
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1832,7 +1384,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                     Text(
                       'Save Expense',
                       style: AppTextStyles.bodyBold.copyWith(
-                        fontSize: AppFontSizes.size15, color: Colors.white,
+                        fontSize: AppFontSizes.size15,
+                        color: Colors.white,
                       ),
                     ),
                   ],

@@ -191,7 +191,8 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(ctx, false),
-                  child: Text('Cancel',
+                  child: Text(
+                    'Cancel',
                     style: GoogleFonts.workSans(
                       color: Colors.grey,
                       fontWeight: FontWeight.w600,
@@ -206,7 +207,8 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text('Proceed',
+                  child: Text(
+                    'Proceed',
                     style: GoogleFonts.workSans(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -242,7 +244,9 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         );
         provider.updateTransaction(updatedItem);
       } else {
-        debugPrint('DIAG SAVE: _selectedDate=$_selectedDate month=${_selectedDate.month} day=${_selectedDate.day}');
+        debugPrint(
+          'DIAG SAVE: _selectedDate=$_selectedDate month=${_selectedDate.month} day=${_selectedDate.day}',
+        );
         provider.addTransaction(
           TransactionItem(
             id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -321,110 +325,131 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
       child: _isHidden
           ? const SizedBox.shrink()
           : Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.p24, AppSpacing.p20, AppSpacing.p24, 0),
-              child: TransactionSheetHeader(
-                isEditing: widget.isEditing,
-                isIncome: widget.isIncome,
-                onClose: () => Navigator.pop(context),
+              key: _formKey,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.p24,
+                      AppSpacing.p20,
+                      AppSpacing.p24,
+                      0,
+                    ),
+                    child: TransactionSheetHeader(
+                      isEditing: widget.isEditing,
+                      isIncome: widget.isIncome,
+                      onClose: () => Navigator.pop(context),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.p24,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TransactionAmountInput(
+                            controller: _amountController,
+                            themeColor: themeColor,
+                            currencySymbol: context.currencySymbol,
+                          ),
+                          const SizedBox(height: 20),
+                          CategorySelector(
+                            selectedCategory: _selectedCategory,
+                            themeColor: themeColor,
+                            isIncome: widget.isIncome,
+                            onCategorySelected: (cat) =>
+                                setState(() => _selectedCategory = cat),
+                            onTap: () async {
+                              setState(() => _isHidden = true);
+                              await SelectCategorySheet.show(
+                                context: context,
+                                isIncome: widget.isIncome,
+                                selectedCategory: _selectedCategory,
+                                onCategorySelected: (cat) =>
+                                    setState(() => _selectedCategory = cat),
+                              );
+                              if (mounted) {
+                                setState(() => _isHidden = false);
+                              }
+                            },
+                          ),
+                          const SizedBox(height: AppSpacing.h12),
+                          DateSelector(
+                            dateText: DateFormat(
+                              'EEEE, MMM d, yyyy',
+                            ).format(_selectedDate),
+                            themeColor: themeColor,
+                            onTap: () => _selectDate(context),
+                          ),
+                          const SizedBox(height: AppSpacing.h12),
+                          if (widget.isIncome) ...[
+                            IncomeMonthSelector(
+                              selectedIncomeMonth: _selectedIncomeMonth,
+                              themeColor: themeColor,
+                              onTap: () => _showMonthSheet(context),
+                            ),
+                            const SizedBox(height: AppSpacing.h12),
+                          ],
+                          PaymentModeSelector(
+                            paymentMethod: _paymentMethod,
+                            themeColor: themeColor,
+                            onTap: () => setState(() {
+                              _paymentMethod = _paymentMethod == 'Cash'
+                                  ? 'Bank'
+                                  : 'Cash';
+                            }),
+                          ),
+                          const SizedBox(height: AppSpacing.h12),
+                          PartySelectorTile(
+                            selectedPartyName: _selectedPartyName,
+                            themeColor: themeColor,
+                            onClear: () =>
+                                setState(() => _selectedPartyName = null),
+                            onTap: () => _showPartySheet(context),
+                          ),
+                          const SizedBox(height: AppSpacing.h12),
+                          TransactionNoteInput(
+                            controller: _noteController,
+                            themeColor: themeColor,
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      AppSpacing.p24,
+                      0,
+                      AppSpacing.p24,
+                      bottomInset,
+                    ),
+                    child: TransactionSaveButton(
+                      onPressed: () async {
+                        await _save(context);
+                      },
+                      themeColor: themeColor,
+                      title: widget.isEditing
+                          ? (widget.isIncome
+                                ? 'Update Income'
+                                : 'Update Expense')
+                          : (widget.isIncome ? 'Save Income' : 'Save Expense'),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TransactionAmountInput(
-                      controller: _amountController,
-                      themeColor: themeColor,
-                      currencySymbol: context.currencySymbol,
-                    ),
-                    const SizedBox(height: 20),
-                    CategorySelector(
-                      selectedCategory: _selectedCategory,
-                      themeColor: themeColor,
-                      isIncome: widget.isIncome,
-                      onCategorySelected: (cat) =>
-                          setState(() => _selectedCategory = cat),
-                      onTap: () async {
-                        setState(() => _isHidden = true);
-                        await SelectCategorySheet.show(
-                          context: context,
-                          isIncome: widget.isIncome,
-                          selectedCategory: _selectedCategory,
-                          onCategorySelected: (cat) =>
-                              setState(() => _selectedCategory = cat),
-                        );
-                        if (mounted) {
-                          setState(() => _isHidden = false);
-                        }
-                      },
-                    ),
-                    const SizedBox(height: AppSpacing.h12),
-                    DateSelector(
-                        dateText: DateFormat(
-                          'EEEE, MMM d, yyyy',
-                        ).format(_selectedDate),
-                        themeColor: themeColor,
-                        onTap: () => _selectDate(context),
-                      ),
-                      const SizedBox(height: AppSpacing.h12),
-                      if (widget.isIncome) ...[
-                        IncomeMonthSelector(
-                          selectedIncomeMonth: _selectedIncomeMonth,
-                          themeColor: themeColor,
-                          onTap: () => _showMonthSheet(context),
-                        ),
-                        const SizedBox(height: AppSpacing.h12),
-                      ],
-                      PaymentModeSelector(
-                        paymentMethod: _paymentMethod,
-                        themeColor: themeColor,
-                        onTap: () => setState(() {
-                          _paymentMethod = _paymentMethod == 'Cash' ? 'Bank' : 'Cash';
-                        }),
-                      ),
-                      const SizedBox(height: AppSpacing.h12),
-                      PartySelectorTile(
-                        selectedPartyName: _selectedPartyName,
-                        themeColor: themeColor,
-                        onClear: () => setState(() => _selectedPartyName = null),
-                        onTap: () => _showPartySheet(context),
-                      ),
-                      const SizedBox(height: AppSpacing.h12),
-                      TransactionNoteInput(
-                        controller: _noteController,
-                        themeColor: themeColor,
-                      ),
-                      const SizedBox(height: 12),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: EdgeInsets.fromLTRB(AppSpacing.p24, 0, AppSpacing.p24, bottomInset),
-                child: TransactionSaveButton(
-                onPressed: () async { await _save(context); },
-                themeColor: themeColor,
-                title: widget.isEditing
-                    ? (widget.isIncome ? 'Update Income' : 'Update Expense')
-                    : (widget.isIncome ? 'Save Income' : 'Save Expense'),
-              ),
-              ),
-            ],
-          ),
-        ),
     );
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    debugPrint('DIAG PICKER ENTERED: _selectedDate=$_selectedDate month=${_selectedDate.month}');
+    debugPrint(
+      'DIAG PICKER ENTERED: _selectedDate=$_selectedDate month=${_selectedDate.month}',
+    );
     final theme = Theme.of(context);
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -448,10 +473,14 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
     );
     debugPrint('DIAG PICKER RETURNED: picked=$picked');
     if (picked != null && picked != _selectedDate) {
-      debugPrint('DIAG PICKER SELECTED: picked=$picked month=${picked.month} day=${picked.day}');
+      debugPrint(
+        'DIAG PICKER SELECTED: picked=$picked month=${picked.month} day=${picked.day}',
+      );
       setState(() {
         _selectedDate = picked;
-        debugPrint('DIAG PICKER SETSTATE: _selectedDate=$_selectedDate month=${_selectedDate.month}');
+        debugPrint(
+          'DIAG PICKER SETSTATE: _selectedDate=$_selectedDate month=${_selectedDate.month}',
+        );
         if (widget.isIncome) {
           _selectedIncomeMonth = DateFormat('MMMM yyyy').format(picked);
         }

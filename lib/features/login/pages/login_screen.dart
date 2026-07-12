@@ -1,22 +1,20 @@
-import 'dart:io' show Platform;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/services/sync_service.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
 import 'package:expense_tracker/features/login/pages/forgot_password_screen.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
-import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
 import 'package:expense_tracker/features/login/widgets/sync_loading_overlay.dart';
+import 'package:expense_tracker/features/login/widgets/login_header.dart';
+import 'package:expense_tracker/features/login/widgets/login_email_form.dart';
+import 'package:expense_tracker/features/login/widgets/login_biometric_section.dart';
+import 'package:expense_tracker/features/login/widgets/login_social_buttons.dart';
 import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'create_account_screen.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
@@ -283,130 +281,38 @@ class _LoginScreenState extends State<LoginScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Image.asset(AppImages.splashLogo, height: 64, width: 64),
-
-                      Text(
-                        widget.biometricMode ? 'Welcome Back' : 'Welcome Back',
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.loginTitle.copyWith(
-                          color: isDark ? Colors.white : null,
-                        ),
+                      LoginHeader(
+                        biometricMode: widget.biometricMode,
+                        isDark: isDark,
                       ),
 
-                      Text(
-                        widget.biometricMode
-                            ? 'Authenticate to continue your financial journey'
-                            : 'Sign in to continue your financial journey',
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.loginSubTitle.copyWith(
-                          color: isDark ? Colors.grey.shade400 : null,
-                        ),
+                      LoginEmailForm(
+                        emailController: _emailController,
+                        passwordController: _passwordController,
+                        biometricMode: widget.biometricMode,
+                        hasPasswordProvider: _hasPasswordProvider,
+                        isDark: isDark,
+                        onForgotPassword: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const ForgotPasswordScreen(),
+                            ),
+                          );
+                        },
                       ),
 
-                      CustomTextFieldWidget(
-                        controller: _emailController,
-                        label: 'Email Address',
-                        hintText: 'you@example.com',
-                      ),
-
-                      if (!widget.biometricMode || _hasPasswordProvider)
-                        CustomTextFieldWidget(
-                          controller: _passwordController,
-                          label: 'Password',
-                          hintText: '••••••••',
-                          obscureText: true,
-                          trailingLabelWidget: widget.biometricMode
-                              ? null
-                              : GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ForgotPasswordScreen(),
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    'Forgot Password?',
-                                    style: AppTextStyles.textFieldLabelPassword.copyWith(
-                                      color: isDark ? Colors.grey.shade400 : null,
-                                    ),
-                                  ),
-                                ),
-                        ),
-
-                      if (widget.biometricMode) ...[
-                        const SizedBox(height: 8),
-                        Center(
-                          child: GestureDetector(
-                            onTap: _handleBiometricTap,
-                            child: AnimatedBuilder(
-                              animation: _biometricAnim!,
-                              builder: (context, child) {
-                                return Transform.scale(
-                                  scale: _biometricAnim!.value,
-                                  child: Container(
-                                    width: 80,
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: theme.primaryColor.withValues(
-                                        alpha: 0.1,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      biometricProvider.icon,
-                                      size: 40,
-                                      color: theme.primaryColor,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          _biometricFailed
-                              ? 'Authentication failed. Tap to retry.'
-                              : 'Tap to unlock',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: AppFontSizes.size13,
-                            color: _biometricFailed
-                                ? const Color(0xFFE53935)
-                                : theme.primaryColor.withValues(alpha: 0.7),
-                          ),
-                        ),
-                        if (_hasPasswordProvider) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            'Or enter your password',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: AppFontSizes.size12,
-                              color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
-                            ),
-                          ),
-                        ],
-                      ],
-
-                      if (widget.biometricMode && !_hasPasswordProvider)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: GestureDetector(
-                            onTap: _handleSwitchAccount,
-                            child: Text(
-                              'Switch Account',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: AppFontSizes.size14,
-                                color: theme.primaryColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
+                      if (widget.biometricMode)
+                        LoginBiometricSection(
+                          biometricAnim: _biometricAnim!,
+                          biometricProvider: biometricProvider,
+                          biometricFailed: _biometricFailed,
+                          hasPasswordProvider: _hasPasswordProvider,
+                          isDark: isDark,
+                          theme: theme,
+                          onBiometricTap: _handleBiometricTap,
+                          onSwitchAccount: _handleSwitchAccount,
                         ),
 
                       if (!widget.biometricMode || _hasPasswordProvider)
@@ -421,94 +327,22 @@ class _LoginScreenState extends State<LoginScreen>
                           onPressed: _isLoading ? () {} : _handleEmailLogin,
                         ),
 
-                      if (!widget.biometricMode) ...[
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Divider(
-                                color: isDark ? Colors.grey.shade700 : AppColors.dividerColor,
-                                thickness: 2,
+                      if (!widget.biometricMode)
+                        LoginSocialButtons(
+                          isDark: isDark,
+                          isLoading: _isLoading,
+                          onGoogleSignIn: _handleGoogleLogin,
+                          onAppleSignIn: _handleAppleLogin,
+                          onSignUp: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const CreateAccountScreen(),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.p16,
-                              ),
-                              child: Text(
-                                'or',
-                                style: TextStyle(
-                                  color: isDark ? Colors.grey.shade400 : AppColors.dividerOrColor,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Divider(
-                                color: isDark ? Colors.grey.shade700 : AppColors.dividerColor,
-                                thickness: 2,
-                              ),
-                            ),
-                          ],
+                            );
+                          },
                         ),
-
-                        CustomButton(
-                          leading: Image.asset(AppImages.googleLogo),
-                          showBorder: true,
-                          borderColor: isDark ? Colors.grey.shade600 : AppColors.borderColor,
-                          text: 'Continue with Google',
-                          textColor: isDark ? Colors.white : AppColors.googleTextColor,
-                          fontFamily: GoogleFonts.inter().fontFamily,
-                          onPressed: _isLoading ? () {} : _handleGoogleLogin,
-                          backgroundColor: isDark ? Colors.grey.shade800 : AppColors.white,
-                        ),
-
-                        if (Platform.isIOS || Platform.isMacOS)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: CustomButton(
-                              leading: Transform.scale(
-                                scale: 1.4,
-                                child: Image.asset(AppImages.appleLogo),
-                              ),
-                              showBorder: true,
-                              borderColor: isDark ? Colors.grey.shade600 : AppColors.borderColor,
-                              text: 'Continue with Apple',
-                              textColor: isDark ? Colors.white : AppColors.googleTextColor,
-                              fontFamily: GoogleFonts.inter().fontFamily,
-                              onPressed: _isLoading ? () {} : _handleAppleLogin,
-                              backgroundColor: isDark ? Colors.grey.shade800 : AppColors.white,
-                            ),
-                          ),
-
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Don't have an account? ",
-                              style: AppTextStyles.accountText.copyWith(
-                                color: isDark ? Colors.grey.shade400 : null,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CreateAccountScreen(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                'Sign Up',
-                                style: AppTextStyles.signUpText.copyWith(
-                                  color: isDark ? Colors.white : null,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
 
                       if (widget.biometricMode && _hasPasswordProvider) ...[
                         const SizedBox(height: 16),

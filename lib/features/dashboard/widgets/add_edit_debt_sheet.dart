@@ -1,11 +1,12 @@
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
-import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'debt_sheet_header.dart';
+import 'debt_form_fields.dart';
+import 'debt_save_button.dart';
 
 class AddEditDebtSheet extends StatefulWidget {
   final DebtItem? item;
@@ -104,6 +105,8 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
 
     final double maxHeight = (MediaQuery.of(context).size.height - viewInsets) * 0.85;
 
+    final saveLabel = widget.item == null ? 'Save Entry' : 'Update Entry';
+
     return Padding(
       padding: EdgeInsets.only(bottom: viewInsets),
       child: ConstrainedBox(
@@ -125,110 +128,27 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      titleText,
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size18,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        LucideIcons.x,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ],
+                DebtSheetHeader(
+                  titleText: titleText,
+                  onClose: () => Navigator.of(context).pop(),
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
-                  controller: _nameController,
-                  style: inputStyle,
-                  decoration: InputDecoration(
-                    labelText: widget.payeeLabel,
-                    labelStyle: labelStyle,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.br12),
-                      borderSide: enabledBorderSide,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.br12),
-                      borderSide: enabledBorderSide,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.br12),
-                      borderSide: focusedBorderSide,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                  ),
-                  validator: (val) => val == null || val.trim().isEmpty
+                DebtFormFields(
+                  nameController: _nameController,
+                  detailController: _detailController,
+                  amountController: _amountController,
+                  payeeLabel: widget.payeeLabel,
+                  inputStyle: inputStyle,
+                  labelStyle: labelStyle,
+                  enabledBorderSide: enabledBorderSide,
+                  focusedBorderSide: focusedBorderSide,
+                  nameValidator: (val) => val == null || val.trim().isEmpty
                       ? 'Please enter a name'
                       : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _detailController,
-                  style: inputStyle,
-                  decoration: InputDecoration(
-                    labelText: 'Details (e.g. Dinner Split, Rent, etc.)',
-                    labelStyle: labelStyle,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.br12),
-                      borderSide: enabledBorderSide,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.br12),
-                      borderSide: enabledBorderSide,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.br12),
-                      borderSide: focusedBorderSide,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                  ),
-                  validator: (val) => val == null || val.trim().isEmpty
+                  detailValidator: (val) => val == null || val.trim().isEmpty
                       ? 'Please enter details'
                       : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _amountController,
-                  style: inputStyle,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  decoration: InputDecoration(
-                    labelText: 'Amount (${context.currencySymbol})',
-                    labelStyle: labelStyle,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.br12),
-                      borderSide: enabledBorderSide,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.br12),
-                      borderSide: enabledBorderSide,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.br12),
-                      borderSide: focusedBorderSide,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                  ),
-                  validator: (val) {
+                  amountValidator: (val) {
                     if (val == null || val.trim().isEmpty) {
                       return 'Please enter an amount';
                     }
@@ -240,66 +160,50 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                   },
                 ),
                 const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: widget.themeColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppSpacing.br12),
-                      ),
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        final name = _nameController.text.trim();
-                        final details = _detailController.text.trim();
-                        final amount = double.parse(
-                          _amountController.text.trim(),
-                        );
+                DebtSaveButton(
+                  themeColor: widget.themeColor,
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      final name = _nameController.text.trim();
+                      final details = _detailController.text.trim();
+                      final amount = double.parse(
+                        _amountController.text.trim(),
+                      );
 
-                        if (widget.item == null) {
-                          final newItem = DebtItem(
-                            id: DateTime.now().millisecondsSinceEpoch.toString(),
-                            name: name,
-                            detail: details,
-                            amount: amount,
-                            isReceive: widget.isReceive,
-                            isSettled: false,
-                            createdAt: DateTime.now(),
-                          );
-                          context.read<DebtProvider>().addDebtItem(newItem);
-                        } else {
-                          final updated = widget.item!.copyWith(
-                            name: name,
-                            detail: details,
-                            amount: amount,
-                          );
-                          context.read<DebtProvider>().updateDebtItem(updated);
-                        }
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              widget.item == null
-                                  ? 'Added entry successfully'
-                                  : 'Updated entry successfully',
-                            ),
-                            duration: const Duration(seconds: 2),
-                          ),
+                      if (widget.item == null) {
+                        final newItem = DebtItem(
+                          id: DateTime.now().millisecondsSinceEpoch.toString(),
+                          name: name,
+                          detail: details,
+                          amount: amount,
+                          isReceive: widget.isReceive,
+                          isSettled: false,
+                          createdAt: DateTime.now(),
                         );
-                        Navigator.of(context).pop();
+                        context.read<DebtProvider>().addDebtItem(newItem);
+                      } else {
+                        final updated = widget.item!.copyWith(
+                          name: name,
+                          detail: details,
+                          amount: amount,
+                        );
+                        context.read<DebtProvider>().updateDebtItem(updated);
                       }
-                    },
-                    child: Text(
-                      widget.item == null ? 'Save Entry' : 'Update Entry',
-                      style: GoogleFonts.workSans(
-                        fontSize: AppFontSizes.size15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            widget.item == null
+                                ? 'Added entry successfully'
+                                : 'Updated entry successfully',
+                          ),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  label: saveLabel,
                 ),
               ],
             ),

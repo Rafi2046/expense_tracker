@@ -16,6 +16,7 @@ import 'package:expense_tracker/features/tours/widgets/tour_list_empty_state.dar
 import 'package:expense_tracker/features/tours/widgets/join_tour_sheet.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/features/tours/widgets/tour_create_button.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourListScreen extends StatefulWidget {
@@ -309,17 +310,7 @@ class _TourListScreenState extends State<TourListScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: tours.isNotEmpty
-          ? Padding(
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 4),
-              child: FloatingActionButton(
-                onPressed: _showCreateJoinSheet,
-                backgroundColor: AppColors.activeGreen,
-                foregroundColor: AppColors.white,
-                elevation: 4,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                child: Icon(LucideIcons.plus, size: 28),
-              ),
-            )
+          ? TourCreateButton(onPressed: _showCreateJoinSheet)
           : null,
       body: SafeArea(
         child: Column(

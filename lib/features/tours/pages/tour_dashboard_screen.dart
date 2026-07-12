@@ -1,9 +1,7 @@
-import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
-import 'package:expense_tracker/core/models/tour_expense_share.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/features/tours/widgets/add_expense_sheet.dart';
@@ -11,14 +9,17 @@ import 'package:expense_tracker/features/tours/pages/settle_up_screen.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/features/tours/widgets/tour_summary_row.dart';
-import 'package:expense_tracker/features/tours/widgets/tour_member_balances.dart';
-import 'package:expense_tracker/features/tours/widgets/tour_expense_tile.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_expense_details_sheet.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_export_options_sheet.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_member_required_dialog.dart';
 import 'package:expense_tracker/features/tours/pages/tour_member_management_screen.dart';
 import 'package:expense_tracker/features/tours/widgets/invite_code_card.dart';
+import 'package:expense_tracker/features/tours/widgets/tour_dashboard_summary_card.dart';
+import 'package:expense_tracker/features/tours/widgets/tour_dashboard_stats_row.dart';
+import 'package:expense_tracker/features/tours/widgets/tour_dashboard_expense_chart.dart';
+import 'package:expense_tracker/features/tours/widgets/tour_dashboard_member_list.dart';
+import 'package:expense_tracker/features/tours/widgets/tour_dashboard_recent_activity.dart';
+import 'package:expense_tracker/features/tours/widgets/tour_dashboard_quick_actions.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourDashboardScreen extends StatefulWidget {
@@ -211,7 +212,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           physics: const AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.fromLTRB(16, 16, 16, bottomInset + 100),
           children: [
-            TourSummaryRow(
+            TourDashboardSummaryCard(
               totalSpentText: totalSpentText,
               outstandingText: outstandingText,
               isSettled: isSettled,
@@ -225,7 +226,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
             ],
             if (participants.isNotEmpty) ...[
               const SizedBox(height: 12),
-              TourMemberBalances(
+              TourDashboardExpenseChart(
                 participants: participants,
                 balances: netBalances,
                 currency: tour.currency,
@@ -244,147 +245,46 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               ),
             ],
             const SizedBox(height: 12),
-            _buildExpensesHeader(theme, expenses.length),
+            TourDashboardStatsRow(expenseCount: expenses.length),
             if (expenses.isEmpty)
-              _buildEmptyState(theme)
+              const TourDashboardRecentActivity()
             else
-              _buildExpenseList(
-                theme,
-                expenses,
-                shares,
-                participants,
-                tour.currency,
-                isOwner,
+              TourDashboardMemberList(
+                expenses: expenses,
+                shares: shares,
+                participants: participants.cast<TourParticipant>(),
+                currency: tour.currency,
+                isOwner: isOwner,
+                formatAmount: (v) => _formatAmount(v, tour.currency),
+                onExpenseTap: (expense, payerName, currency, isOwner) =>
+                    _showExpenseDetailsSheet(
+                      context, expense, payerName, currency, isOwner),
               ),
           ],
         ),
       ),
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: bottomInset + 0),
-        child: FloatingActionButton.extended(
-          heroTag: 'tour_dashboard_fab',
-          onPressed: () {
-            if (tour.isCompleted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Tour is completed — cannot add expenses'),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-              return;
-            }
-            if (_ensureMinimumMembers()) {
-              AddExpenseSheet.show(
-                context,
-                tourId: widget.tourId,
-                participants: participants,
-                currency: tour.currency,
-              );
-            }
-          },
-          backgroundColor: tour.isCompleted
-              ? AppColors.activeGreen.withValues(alpha: 0.35)
-              : AppColors.activeGreen,
-          icon: Icon(LucideIcons.plus,
-              color: AppColors.white.withValues(alpha: tour.isCompleted ? 0.5 : 1),
-              size: 20),
-          label: Text(
-            'Add Expense',
-            style: AppTextStyles.label.copyWith(
-              fontWeight: FontWeight.w600,
-              color: AppColors.white.withValues(alpha: tour.isCompleted ? 0.5 : 1),
-            ),
-          ),
-          elevation: tour.isCompleted ? 0 : 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.r8),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildExpensesHeader(ThemeData theme, int count) {
-    final isDark = theme.brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 12),
-      child: Row(
-        children: [
-          Text(
-            'Expenses',
-            style: AppTextStyles.h2.copyWith(
-              color: theme.colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFE2E8F0),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              '$count',
-              style: AppTextStyles.caption.copyWith(
-                fontWeight: FontWeight.w700,
-                color: isDark
-                    ? const Color(0xFF9CA3AF)
-                    : const Color(0xFF475569),
+      floatingActionButton: TourDashboardQuickActions(
+        isCompleted: tour.isCompleted,
+        onAddExpense: () {
+          if (tour.isCompleted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Tour is completed — cannot add expenses'),
+                behavior: SnackBarBehavior.floating,
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildExpenseList(
-    ThemeData theme,
-    List<TourExpense> expenses,
-    List<TourExpenseShare> shares,
-    List participants,
-    String currency,
-    bool isOwner,
-  ) {
-    final allParticipants = participants.cast<TourParticipant>();
-    return Column(
-      children: expenses.map((expense) {
-        final payer = allParticipants.firstWhere(
-          (p) => p.id == expense.paidBy,
-          orElse: () => TourParticipant(
-            id: expense.paidBy,
-            tourId: expense.tourId,
-            name: 'Unknown',
-            joinedAt: expense.date,
-          ),
-        );
-        final expenseShares = shares
-            .where((s) => s.expenseId == expense.id)
-            .toList();
-        final includedCount = expenseShares.where((s) => !s.isExcluded).length;
-        final payerIdx = allParticipants.indexWhere(
-          (p) => p.id == expense.paidBy,
-        );
-
-        return Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.s8),
-          child: TourExpenseTile(
-            theme: theme,
-            expense: expense,
-            payerName: payer.name,
-            avatarColor: _avatarColor(payerIdx),
-            includedCount: includedCount,
-            formatAmount: (v) => _formatAmount(v, currency),
-            onTap: () => _showExpenseDetailsSheet(
+            );
+            return;
+          }
+          if (_ensureMinimumMembers()) {
+            AddExpenseSheet.show(
               context,
-              expense,
-              payer.name,
-              currency,
-              isOwner,
-            ),
-          ),
-        );
-      }).toList(),
+              tourId: widget.tourId,
+              participants: participants,
+              currency: tour.currency,
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -495,55 +395,6 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Color _avatarColor(int index) {
-    if (index < 0) return const Color(0xFF6366F1);
-    const colors = [
-      Color(0xFF6366F1),
-      Color(0xFFEC4899),
-      Color(0xFF10B981),
-      Color(0xFFF59E0B),
-      Color(0xFF06B6D4),
-      Color(0xFF8B5CF6),
-      Color(0xFFEF4444),
-      Color(0xFF14B8A6),
-    ];
-    return colors[index % colors.length];
-  }
-
-  Widget _buildEmptyState(ThemeData theme) {
-    final isDark = theme.brightness == Brightness.dark;
-    return Padding(
-      padding: EdgeInsets.only(
-        top: 4,
-        bottom: MediaQuery.of(context).padding.bottom + 100,
-      ),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(AppImages.noExpense, height: 140, width: 140),
-
-            Text(
-              'No expenses yet',
-              style: AppTextStyles.h3.copyWith(
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Tap + to add the first expense',
-              style: AppTextStyles.bodySmall.copyWith(
-                color: isDark
-                    ? const Color(0xFF9CA3AF)
-                    : const Color(0xFF6B7280),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

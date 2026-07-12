@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/features/dashboard/widgets/premium_header_section.dart';
+import 'package:expense_tracker/features/dashboard/widgets/premium_feature_list.dart';
+import 'package:expense_tracker/features/dashboard/widgets/premium_pricing_card.dart';
 
 class PremiumUpgradeSheet extends StatelessWidget {
   const PremiumUpgradeSheet({super.key});
@@ -32,246 +34,21 @@ class PremiumUpgradeSheet extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: const [
-                _PremiumHeader(),
-                SizedBox(height: 28),
-                _FeatureList(),
-                SizedBox(height: 28),
-                _PricingSection(),
-                SizedBox(height: 24),
-                _CallToActionButtons(),
+              children: [
+                PremiumHeaderSection(
+                  onClose: () => Navigator.pop(context),
+                ),
+                const SizedBox(height: 28),
+                const PremiumFeatureList(),
+                const SizedBox(height: 28),
+                const PremiumPricingCard(),
+                const SizedBox(height: 24),
+                const _CallToActionButtons(),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class _PremiumHeader extends StatelessWidget {
-  const _PremiumHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 40,
-          height: 4,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Align(
-          alignment: Alignment.topRight,
-          child: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Icon(
-              LucideIcons.x,
-              color: Colors.white.withValues(alpha: 0.6),
-              size: 24,
-            ),
-          ),
-        ),
-        Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              colors: [Color(0xFF2EBD85), Color(0xFF1A8C5E)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF2EBD85).withValues(alpha: 0.4),
-                blurRadius: 24,
-                spreadRadius: 4,
-              ),
-            ],
-          ),
-          child: const Icon(
-            LucideIcons.gem,
-            color: Colors.white,
-            size: 40,
-            weight: 400,
-          ),
-        ),
-        const SizedBox(height: 20),
-        Text(
-          'Go Premium',
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size28,
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'Unlock the full power of your finance tracker',
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size14,
-            color: Colors.white.withValues(alpha: 0.7),
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _FeatureList extends StatelessWidget {
-  const _FeatureList();
-
-  static const _features = [
-    (LucideIcons.users, 'Unlimited Profiles'),
-    (LucideIcons.barChart, 'Advanced Analytics & Reports'),
-    (LucideIcons.fileText, 'Export PDF Reports'),
-    (LucideIcons.cloudSync, 'Priority Cloud Sync'),
-    (LucideIcons.headphones, 'Priority Support'),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: _features
-          .map(
-            (f) => Padding(
-              padding: const EdgeInsets.only(bottom: 14),
-              child: _FeatureItem(icon: f.$1, text: f.$2),
-            ),
-          )
-          .toList(),
-    );
-  }
-}
-
-class _FeatureItem extends StatelessWidget {
-  final IconData icon;
-  final String text;
-
-  const _FeatureItem({required this.icon, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            color: const Color(0xFF2EBD85).withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Icon(icon, color: const Color(0xFF2EBD85), size: 18),
-        ),
-        const SizedBox(width: 14),
-        Text(
-          text,
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size15,
-            fontWeight: FontWeight.w500,
-            color: Colors.white.withValues(alpha: 0.9),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _PricingSection extends StatelessWidget {
-  const _PricingSection();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.12),
-          width: 1,
-        ),
-      ),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: _PricingOption(
-              amount: '৳150',
-              period: '/ month',
-              highlighted: false,
-            ),
-          ),
-          _Divider(),
-          Expanded(
-            child: _PricingOption(
-              amount: '৳1,500',
-              period: '/ year (save 17%)',
-              highlighted: true,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PricingOption extends StatelessWidget {
-  final String amount;
-  final String period;
-  final bool highlighted;
-
-  const _PricingOption({
-    required this.amount,
-    required this.period,
-    required this.highlighted,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final color = highlighted ? const Color(0xFF2EBD85) : Colors.white;
-    final periodColor = highlighted
-        ? const Color(0xFF2EBD85).withValues(alpha: 0.8)
-        : Colors.white.withValues(alpha: 0.6);
-
-    return Column(
-      children: [
-        Text(
-          amount,
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size24,
-            fontWeight: FontWeight.w800,
-            color: color,
-          ),
-        ),
-        Text(
-          period,
-          style: GoogleFonts.workSans(
-            fontSize: AppFontSizes.size13,
-            color: periodColor,
-            fontWeight: highlighted ? FontWeight.w600 : FontWeight.w500,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _Divider extends StatelessWidget {
-  const _Divider();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 1,
-      height: 40,
-      color: Colors.white.withValues(alpha: 0.15),
     );
   }
 }

@@ -4,7 +4,9 @@ import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_page.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/features/onboarding/widgets/onboarding_page_indicator.dart';
+import 'package:expense_tracker/features/onboarding/widgets/onboarding_navigation_buttons.dart';
+import 'package:expense_tracker/features/onboarding/widgets/onboarding_skip_button.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -149,7 +151,6 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isLastPage = _currentPage == _slides.length - 1;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
@@ -206,24 +207,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         if (!isLastPage)
-                          TextButton(
-                            onPressed: _completeOnboarding,
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                            ),
-                            child: Text(
-                              context.translate('onboarding_skip'),
-                              style: AppTextStyles.bodySmall.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurface
-                                    .withValues(alpha: 0.5),
-                              ),
-                            ),
+                          OnboardingSkipButton(
+                            onSkip: _completeOnboarding,
                           ),
                       ],
                     ),
@@ -258,69 +243,14 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(_slides.length, (index) {
-                          final isActive = index == _currentPage;
-                          return AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            width: isActive ? 28 : 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: isActive
-                                  ? AppColors.activeGreen
-                                  : (isDark
-                                      ? Colors.white24
-                                      : Colors.grey.shade300),
-                            ),
-                          );
-                        }),
+                      OnboardingPageIndicator(
+                        itemCount: _slides.length,
+                        currentPage: _currentPage,
                       ),
                       const SizedBox(height: 24),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: _onNext,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: isLastPage
-                                ? AppColors.activeGreen
-                                : AppColors.buttonColor,
-                            foregroundColor: Colors.white,
-                            elevation: isLastPage ? 6 : 2,
-                            shadowColor:
-                                AppColors.activeGreen.withValues(alpha: 0.4),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                isLastPage
-                                    ? context.translate(
-                                        'onboarding_get_started')
-                                    : context.translate('onboarding_next'),
-                                style: AppTextStyles.reportTileTitle.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Icon(
-                                isLastPage
-                                    ? LucideIcons.rocket
-                                    : LucideIcons.arrowRight,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),
+                      OnboardingNavigationButtons(
+                        isLastPage: isLastPage,
+                        onPressed: _onNext,
                       ),
                     ],
                   ),

@@ -1,9 +1,6 @@
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -18,21 +15,18 @@ import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.d
 import 'package:expense_tracker/features/dashboard/pages/to_give_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/to_receive_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
-import 'package:expense_tracker/features/dashboard/widgets/budget_summary_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_budget_status.dart';
-import 'package:expense_tracker/features/dashboard/widgets/dashboard_recent_activity.dart';
-import 'package:expense_tracker/features/dashboard/widgets/dashboard_shortcuts_card.dart';
-import 'package:expense_tracker/features/dashboard/widgets/dashboard_spending_categories.dart';
-import 'package:expense_tracker/features/dashboard/widgets/dashboard_stat_card.dart';
+import 'package:expense_tracker/features/dashboard/widgets/dashboard_stats_row.dart';
+import 'package:expense_tracker/features/dashboard/widgets/dashboard_balance_card.dart';
+import 'package:expense_tracker/features/dashboard/widgets/dashboard_quick_actions_row.dart';
+import 'package:expense_tracker/features/dashboard/widgets/dashboard_transaction_list.dart';
+import 'package:expense_tracker/features/dashboard/widgets/dashboard_summary_footer.dart';
 import 'package:expense_tracker/features/reports/pages/view_reports_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/total_balance_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/budget_management_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -104,246 +98,131 @@ class DashboardScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Row 1: Income and Expense Card
-                Skeletonizer(
-                  enabled: isLoading,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: DashboardStatCard(
-                          title:
-                              '${context.translate('income')} ($currentMonthName)',
-                          value: PrivacyMaskedText(
-                            amount: txProvider.calendarMonthIncome,
-                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeGreen),
-                          ),
-                          isPositive: txProvider.isCalendarIncomeTrendGood,
-                          isTrend: false,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const IncomeInsightsScreen(),
-                              ),
-                            );
-                          },
-                        ),
+                DashboardStatsRow(
+                  isLoading: isLoading,
+                  incomeTitle:
+                      '${context.translate('income')} ($currentMonthName)',
+                  expenseTitle:
+                      '${context.translate('expense')} ($currentMonthName)',
+                  calendarMonthIncome: txProvider.calendarMonthIncome,
+                  calendarMonthExpense: txProvider.calendarMonthExpense,
+                  isCalendarIncomeTrendGood:
+                      txProvider.isCalendarIncomeTrendGood,
+                  isCalendarExpenseTrendGood:
+                      txProvider.isCalendarExpenseTrendGood,
+                  toReceiveTitle: context.translate('to_receive'),
+                  toGiveTitle: context.translate('to_give'),
+                  totalToReceive: debtProvider.totalToReceive,
+                  totalToGive: debtProvider.totalToGive,
+                  toReceivePendingCount:
+                      debtProvider.toReceiveUnpaid.length,
+                  toGivePendingCount: debtProvider.toGiveUnpaid.length,
+                  pendingLabel: context.translate('pending'),
+                  onIncomeTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const IncomeInsightsScreen(),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: DashboardStatCard(
-                          title:
-                              '${context.translate('expense')} ($currentMonthName)',
-                          value: PrivacyMaskedText(
-                            amount: txProvider.calendarMonthExpense,
-                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeRed),
-                          ),
-                          isPositive: txProvider.isCalendarExpenseTrendGood,
-                          isTrend: false,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const ExpenseInsightsScreen(),
-                              ),
-                            );
-                          },
-                        ),
+                    );
+                  },
+                  onExpenseTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ExpenseInsightsScreen(),
                       ),
-                    ],
-                  ),
+                    );
+                  },
+                  onToReceiveTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ToReceiveScreen(),
+                      ),
+                    );
+                  },
+                  onToGiveTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ToGiveScreen(),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 8),
-
-                // Row 2: To Receive and To Give Card
-                Skeletonizer(
-                  enabled: isLoading,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: DashboardStatCard(
-                          title: context.translate('to_receive'),
-                          value: PrivacyMaskedText(
-                            amount: debtProvider.totalToReceive,
-                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeGreen),
-                          ),
-                          statusText: Text(
-                            '${debtProvider.toReceiveUnpaid.length} ${context.translate('pending')}',
-                            style: AppTextStyles.caption.copyWith(
-                              fontSize: AppFontSizes.size10,
-                            ),
-                          ),
-                          isPositive: true,
-                          isTrend: false,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ToReceiveScreen(),
-                              ),
-                            );
-                          },
-                        ),
+                DashboardBalanceCard(
+                  isLoading: isLoading,
+                  cashBankTitle:
+                      '${context.translate('cash')} & ${context.translate('bank')}',
+                  totalBalanceLabel: context.translate('total_balance'),
+                  totalBalance: totalBalance,
+                  reportsTitle: 'Transactions, Parties, In...',
+                  reportsLabel: context.translate('reports'),
+                  onCashBankTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TotalBalanceScreen(),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: DashboardStatCard(
-                          title: context.translate('to_give'),
-                          value: PrivacyMaskedText(
-                            amount: debtProvider.totalToGive,
-                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeRed),
-                          ),
-                          statusText: Text(
-                            '${debtProvider.toGiveUnpaid.length} ${context.translate('pending')}',
-                            style: AppTextStyles.caption.copyWith(
-                              fontSize: AppFontSizes.size10,
-                            ),
-                          ),
-                          isPositive: false,
-                          isTrend: false,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ToGiveScreen(),
-                              ),
-                            );
-                          },
-                        ),
+                    );
+                  },
+                  onReportsTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ViewReportsScreen(),
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 8),
-
-                // Row 3: Total Balance and Reports Card
-                Skeletonizer(
-                  enabled: isLoading,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: DashboardStatCard(
-                          title:
-                              '${context.translate('cash')} & ${context.translate('bank')}',
-                          value: Text(
-                            context.translate('total_balance'),
-                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeGreen),
-                          ),
-                          statusText: PrivacyMaskedText(
-                            amount: totalBalance,
-                            style: AppTextStyles.caption.copyWith(
-                              fontSize: AppFontSizes.size10,
-                            ),
-                          ),
-                          isPositive: true,
-                          isTrend: false,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const TotalBalanceScreen(),
-                              ),
-                            );
-                          },
-                        ),
+                DashboardQuickActionsRow(
+                  isLoading: isLoading,
+                  monthlyExpense: txProvider.monthlyExpense,
+                ),
+                DashboardTransactionList(
+                  isLoading: isLoading,
+                  transactions: txProvider.transactions,
+                  onViewAllTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RecentActivityScreen(),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: DashboardStatCard(
-                          title: 'Transactions, Parties, In...',
-                          value: Text(
-                            context.translate('reports'),
-                            style: AppTextStyles.reportTileTitle.copyWith(color: AppColors.activeGreen),
-                          ),
-                          isPositive: true,
-                          isTrend: false,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ViewReportsScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
+                  onTransactionTap: (tx) {
+                    AddTransactionSheet.show(
+                      context: context,
+                      isIncome: tx.isIncome,
+                      transaction: tx,
+                    );
+                  },
                 ),
                 const SizedBox(height: 8),
-                Skeletonizer(
-                  enabled: isLoading,
-                  child: BudgetSummaryCard(
-                    monthlyExpense: txProvider.monthlyExpense,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                const DashboardShortcutsCard(),
-                const SizedBox(height: 8),
-                if (isLoading)
-                  _recentActivitySkeleton(context)
-                else
-                  DashboardRecentActivity(
-                    items: txProvider.transactions.take(3).map((tx) {
-                      return RecentActivityItem(
-                        title: tx.note.isEmpty ? tx.category : tx.note,
-                        category: tx.category,
-                        timeText: _getRelativeTime(tx.dateTime),
-                        amount: tx.amount,
-                        isIncome: tx.isIncome,
-                        icon: _getCategoryIcon(tx.category),
-                        transaction: tx,
-                      );
-                    }).toList(),
-                    onViewAllTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RecentActivityScreen(),
-                        ),
-                      );
-                    },
-                    onItemTap: (item) {
-                      final tx = item.transaction;
-                      if (tx != null) {
-                        AddTransactionSheet.show(
-                          context: context,
-                          isIncome: tx.isIncome,
-                          transaction: tx,
-                        );
-                      }
-                    },
-                  ),
-                const SizedBox(height: 8),
-                DashboardSpendingCategories(
-                  categoryName: expenseAnalytics.monthlyCategories.isNotEmpty
-                      ? expenseAnalytics.monthlyCategories.first.name
-                      : 'No Expenses',
-                  percentage: expenseAnalytics.monthlyCategories.isNotEmpty
-                      ? ((expenseAnalytics.monthlyCategories.first.amount /
-                                    expenseAnalytics.currentMonthExpense) *
-                                100)
-                            .clamp(0, 100)
-                            .toDouble()
-                      : 0,
-                ),
-                const SizedBox(height: 8),
-                DashboardBudgetStatus(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const BudgetManagementScreen(),
-                    ),
-                  ),
-                  items: expenseAnalytics.monthlyCategories.take(3).map((cat) {
-                    final totalExpense = expenseAnalytics.currentMonthExpense;
+                DashboardSummaryFooter(
+                  topCategoryName:
+                      expenseAnalytics.monthlyCategories.isNotEmpty
+                          ? expenseAnalytics.monthlyCategories.first.name
+                          : 'No Expenses',
+                  topCategoryPercentage:
+                      expenseAnalytics.monthlyCategories.isNotEmpty
+                          ? ((expenseAnalytics.monthlyCategories.first.amount /
+                                      expenseAnalytics.currentMonthExpense) *
+                                  100)
+                                .clamp(0, 100)
+                                .toDouble()
+                          : 0,
+                  budgetItems:
+                      expenseAnalytics.monthlyCategories.take(3).map((cat) {
+                    final totalExpense =
+                        expenseAnalytics.currentMonthExpense;
                     final pct = totalExpense > 0
                         ? ((cat.amount / totalExpense) * 100)
-                              .clamp(0, 100)
-                              .toDouble()
+                            .clamp(0, 100)
+                            .toDouble()
                         : cat.percentage;
                     return BudgetStatusItem(
                       categoryName: cat.name,
@@ -351,8 +230,13 @@ class DashboardScreen extends StatelessWidget {
                       color: cat.color,
                     );
                   }).toList(),
+                  onBudgetTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const BudgetManagementScreen(),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 16),
               ],
             ),
           ),
@@ -360,130 +244,4 @@ class DashboardScreen extends StatelessWidget {
       ),
     );
   }
-
-  static String _getRelativeTime(DateTime dateTime) {
-    final now = DateTime.now();
-    final diff = now.difference(dateTime);
-    if (diff.inDays == 0) return 'Today';
-    if (diff.inDays == 1) return 'Yesterday';
-    return '${diff.inDays} days ago';
-  }
-
-  static IconData _getCategoryIcon(String category) {
-    switch (category.toLowerCase()) {
-      case 'food':
-      case 'dining':
-      case 'restaurant':
-        return LucideIcons.utensilsCrossed;
-      case 'income':
-      case 'salary':
-        return LucideIcons.creditCard;
-      case 'transport':
-      case 'fuel':
-      case 'travel':
-        return LucideIcons.car;
-      case 'shopping':
-      case 'clothing':
-      case 'electronics':
-        return LucideIcons.shoppingBag;
-      case 'entertainment':
-      case 'movie':
-        return LucideIcons.clapperboard;
-      case 'utilities':
-      case 'bills':
-      case 'rent':
-        return LucideIcons.receipt;
-      case 'health':
-      case 'medical':
-        return LucideIcons.heartPulse;
-      case 'education':
-      case 'school':
-        return LucideIcons.graduationCap;
-      case 'transfer':
-        return LucideIcons.arrowLeftRight;
-      default:
-        return LucideIcons.receipt;
-    }
-  }
-}
-
-Widget _recentActivitySkeleton(BuildContext context) {
-  final theme = Theme.of(context);
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 2.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Recent Activity',
-              style: AppTextStyles.bodyBold.copyWith(color: theme.colorScheme.onSurface),
-            ),
-            Text(
-              'View All',
-              style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-      ),
-      const SizedBox(height: 10),
-      Skeletonizer(
-        enabled: true,
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: theme.cardColor,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            children: List.generate(5, (i) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14.0,
-                  vertical: 11.0,
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.08,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Transaction Title',
-                            style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            'Category  •  Today',
-                            style: AppTextStyles.caption.copyWith(fontSize: AppFontSizes.size10, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      '+৳0,000',
-                      style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w700, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
-),
-                    ],
-                  ),
-                );
-              }),
-          ),
-        ),
-      ),
-    ],
-  );
 }

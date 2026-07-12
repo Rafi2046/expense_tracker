@@ -1,12 +1,13 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/features/dashboard/widgets/add_new_category_tile.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_list_row.dart';
+import 'package:expense_tracker/features/dashboard/widgets/category_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SelectCategorySheet extends StatefulWidget {
   final bool isIncome;
@@ -317,55 +318,10 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
               ),
               const SizedBox(height: 16),
 
-              // Search input field
-              TextField(
+              CategorySearchBar(
                 controller: _searchController,
-                style: GoogleFonts.workSans(
-                  fontSize: AppFontSizes.size15,
-                  color: theme.colorScheme.onSurface,
-                ),
-                decoration: InputDecoration(
-                  hintText: 'Search Category...',
-                  hintStyle: GoogleFonts.workSans(
-                    fontSize: AppFontSizes.size15,
-                    color: isDark ? Colors.white38 : Colors.grey.shade400,
-                  ),
-                  prefixIcon: Icon(
-                    LucideIcons.search,
-                    color: isDark ? Colors.white38 : Colors.grey.shade400,
-                    size: 20,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 16,
-                  ),
-                  filled: true,
-                  fillColor: isDark
-                      ? theme.colorScheme.onSurface.withValues(alpha: 0.04)
-                      : Colors.transparent,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: isDark
-                          ? theme.colorScheme.onSurface.withValues(alpha: 0.15)
-                          : Colors.grey.shade200,
-                      width: 1,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: isDark
-                          ? theme.colorScheme.onSurface.withValues(alpha: 0.15)
-                          : Colors.grey.shade200,
-                      width: 1,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: activeThemeColor, width: 1.5),
-                  ),
-                ),
+                activeThemeColor: activeThemeColor,
+                isDark: isDark,
                 onChanged: (val) {
                   setState(() {
                     _searchQuery = val;
@@ -374,31 +330,9 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
               ),
               const SizedBox(height: 12),
 
-              // + Add New Category
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: OutlinedButton.icon(
-                  icon: Icon(LucideIcons.plus, size: 18),
-                  label: const Text('Add New Category'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: theme.colorScheme.onSurface,
-                    side: BorderSide(
-                      color: isDark
-                          ? theme.colorScheme.onSurface.withValues(alpha: 0.2)
-                          : Colors.grey.shade200,
-                      width: 1.5,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    textStyle: GoogleFonts.workSans(
-                      fontWeight: FontWeight.w600,
-                      fontSize: AppFontSizes.size14,
-                    ),
-                  ),
-                  onPressed: () => _showAddNewCategoryDialog(context, provider),
-                ),
+              AddNewCategoryTile(
+                isDark: isDark,
+                onTap: () => _showAddNewCategoryDialog(context, provider),
               ),
               const SizedBox(height: 16),
 
