@@ -6,8 +6,8 @@ import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/error_dialog.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/month_selector_sheet.dart';
-import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/party_selector_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/party_selector_tile.dart';
+import 'package:expense_tracker/features/dashboard/widgets/select_party_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/sheet_components/category_selector.dart';
 import 'package:expense_tracker/features/dashboard/widgets/select_category_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/sheet_components/date_selector.dart';
@@ -516,30 +516,13 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   void _showPartySheet(BuildContext context) async {
     setState(() => _isHidden = true);
     final debtProvider = context.read<DebtProvider>();
-    final Map<String, DebtItem> uniqueParties = {};
-    for (var item in debtProvider.items) {
-      if (!uniqueParties.containsKey(item.name) ||
-          (uniqueParties[item.name]?.phone == null && item.phone != null)) {
-        uniqueParties[item.name] = item;
-      }
-    }
-
-    await showModalBottomSheet(
+    await showSelectPartySheet(
       context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) => PartySelectorSheet(
-        uniqueParties: uniqueParties,
-        selectedPartyName: _selectedPartyName,
-        isIncome: widget.isIncome,
-        onSelect: (name) {
-          setState(() => _selectedPartyName = name);
-          Navigator.pop(ctx);
-        },
-        onClear: () {
-          setState(() => _selectedPartyName = null);
-          Navigator.pop(ctx);
-        },
-      ),
+      debtProvider: debtProvider,
+      selectedPartyName: _selectedPartyName,
+      isIncome: widget.isIncome,
+      onSelect: (name) => setState(() => _selectedPartyName = name),
+      onClear: () => setState(() => _selectedPartyName = null),
     );
     if (mounted) {
       setState(() => _isHidden = false);

@@ -10,6 +10,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/features/tours/utils/expense_split_calculator.dart';
 import 'package:expense_tracker/features/tours/widgets/expense_category_selector.dart';
 import 'package:expense_tracker/features/tours/widgets/expense_participant_selector.dart';
 import 'package:expense_tracker/features/tours/widgets/expense_split_type_selector.dart';
@@ -146,44 +147,22 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   double get _parsedAmount =>
       double.tryParse(_amountController.text.trim()) ?? 0;
 
-  int get _includedCount =>
-      widget.participants.where((p) => !_excludedIds.contains(p.id)).length;
+  List<TourParticipant> get _lateJoiners => ExpenseSplitCalculator
+      .filterLateJoiners(
+    participants: widget.participants,
+    selectedDate: _selectedDate,
+  );
 
-  bool _hadNotJoinedYet(TourParticipant p) {
-    final endOfDay = DateTime(
-      _selectedDate.year,
-      _selectedDate.month,
-      _selectedDate.day,
-      23,
-      59,
-      59,
-    );
-    return p.joinedAt.isAfter(endOfDay);
-  }
-
-  List<TourParticipant> get _lateJoiners =>
-      widget.participants.where(_hadNotJoinedYet).toList();
-
-  double get _percentageTotal {
-    if (_splitType != 'percentage') return 100;
-    double total = 0;
-    for (final p in widget.participants) {
-      if (!_excludedIds.contains(p.id)) {
-        total += double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
-      }
+  void _applySplitResults(List<({String id, double value})> results) {
+    _isDistributing = true;
+    for (final r in results) {
+      final value = r.value;
+      final text = value == value.roundToDouble()
+          ? value.toStringAsFixed(0)
+          : value.toStringAsFixed(2);
+      _customValues[r.id]?.text = text;
     }
-    return total;
-  }
-
-  bool get _exactAmountsExceed {
-    if (_splitType != 'exact' || _parsedAmount <= 0) return false;
-    double sum = 0;
-    for (final p in widget.participants) {
-      if (!_excludedIds.contains(p.id)) {
-        sum += double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
-      }
-    }
-    return (sum * 100).round() > (_parsedAmount * 100).round();
+    _isDistributing = false;
   }
 
   void _redistributeExactSplit() {
@@ -195,35 +174,15 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         .toList();
     if (included.isEmpty) return;
 
-    double editedSum = 0;
-    for (final p in included) {
-      if (_manuallyEditedMembers.contains(p.id)) {
-        editedSum +=
-            double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
-      }
-    }
-
-    final remaining = total - editedSum;
-    final unedited = included
-        .where((p) => !_manuallyEditedMembers.contains(p.id))
-        .toList();
-
-    if (unedited.isEmpty) return;
-
-    final totalCents = (remaining * 100).round();
-    final baseCents = totalCents ~/ unedited.length;
-    final remainderCents = totalCents - (baseCents * unedited.length);
-
-    _isDistributing = true;
-    for (var i = 0; i < unedited.length; i++) {
-      final cents = baseCents + (i < remainderCents ? 1 : 0);
-      final value = cents / 100.0;
-      final text = value == value.roundToDouble()
-          ? value.toStringAsFixed(0)
-          : value.toStringAsFixed(2);
-      _customValues[unedited[i].id]?.text = text;
-    }
-    _isDistributing = false;
+    final results = ExpenseSplitCalculator.redistributeExactSplit(
+      totalAmount: total,
+      participants: included.map((p) => SplitParticipantInput(
+        id: p.id,
+        value: double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0,
+        edited: _manuallyEditedMembers.contains(p.id),
+      )).toList(),
+    );
+    _applySplitResults(results);
   }
 
   void _resetExactSplit() {
@@ -235,20 +194,11 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     final total = _parsedAmount;
     if (total <= 0) return;
 
-    final totalCents = (total * 100).round();
-    final baseCents = totalCents ~/ included.length;
-    final remainderCents = totalCents - (baseCents * included.length);
-
-    _isDistributing = true;
-    for (var i = 0; i < included.length; i++) {
-      final cents = baseCents + (i < remainderCents ? 1 : 0);
-      final value = cents / 100.0;
-      final text = value == value.roundToDouble()
-          ? value.toStringAsFixed(0)
-          : value.toStringAsFixed(2);
-      _customValues[included[i].id]?.text = text;
-    }
-    _isDistributing = false;
+    final results = ExpenseSplitCalculator.resetExactSplit(
+      totalAmount: total,
+      participantIds: included.map((p) => p.id).toList(),
+    );
+    _applySplitResults(results);
     setState(() {});
   }
 
@@ -259,36 +209,14 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         .toList();
     if (included.isEmpty) return;
 
-    double editedSum = 0;
-    for (final p in included) {
-      if (_manuallyEditedPercentMembers.contains(p.id)) {
-        editedSum +=
-            double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
-      }
-    }
-
-    if (editedSum >= 100) return;
-
-    final remaining = 100 - editedSum;
-    final unedited = included
-        .where((p) => !_manuallyEditedPercentMembers.contains(p.id))
-        .toList();
-    if (unedited.isEmpty) return;
-
-    final totalCents = (remaining * 100).round();
-    final baseCents = totalCents ~/ unedited.length;
-    final remainderCents = totalCents - (baseCents * unedited.length);
-
-    _isDistributing = true;
-    for (var i = 0; i < unedited.length; i++) {
-      final cents = baseCents + (i < remainderCents ? 1 : 0);
-      final value = cents / 100.0;
-      final text = value == value.roundToDouble()
-          ? value.toStringAsFixed(0)
-          : value.toStringAsFixed(2);
-      _customValues[unedited[i].id]?.text = text;
-    }
-    _isDistributing = false;
+    final results = ExpenseSplitCalculator.redistributePercentSplit(
+      participants: included.map((p) => SplitParticipantInput(
+        id: p.id,
+        value: double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0,
+        edited: _manuallyEditedPercentMembers.contains(p.id),
+      )).toList(),
+    );
+    _applySplitResults(results);
   }
 
   void _resetPercentSplit() {
@@ -298,71 +226,27 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         .toList();
     if (included.isEmpty) return;
 
-    final totalCents = 10000;
-    final baseCents = totalCents ~/ included.length;
-    final remainderCents = totalCents - (baseCents * included.length);
-
-    _isDistributing = true;
-    for (var i = 0; i < included.length; i++) {
-      final cents = baseCents + (i < remainderCents ? 1 : 0);
-      final value = cents / 100.0;
-      final text = value == value.roundToDouble()
-          ? value.toStringAsFixed(0)
-          : value.toStringAsFixed(2);
-      _customValues[included[i].id]?.text = text;
-    }
-    _isDistributing = false;
+    final results = ExpenseSplitCalculator.resetPercentSplit(
+      participantIds: included.map((p) => p.id).toList(),
+    );
+    _applySplitResults(results);
     setState(() {});
   }
 
   void _applyDateBasedDefaults() {
+    final toExclude = ExpenseSplitCalculator.findExcludedLateJoiners(
+      participants: widget.participants,
+      selectedDate: _selectedDate,
+    );
     _excludedIds.clear();
-    for (final p in widget.participants) {
-      if (_hadNotJoinedYet(p)) {
-        _excludedIds.add(p.id);
-      }
-    }
+    _excludedIds.addAll(toExclude);
   }
 
-  String? _previewAmount(String participantId) {
-    final amount = _parsedAmount;
-    if (amount <= 0) return null;
-    final includedCount = _includedCount;
-    if (includedCount == 0) return null;
-    final excluded = _excludedIds.contains(participantId);
-
-    switch (_splitType) {
-      case 'equal':
-      case 'exclusion':
-        if (excluded) return '${_sym}0';
-        final included = widget.participants
-            .where((p) => !_excludedIds.contains(p.id))
-            .toList();
-        final idx = included.indexWhere((p) => p.id == participantId);
-        if (idx == -1) return null;
-        final totalCents = (amount * 100).round();
-        final baseCents = totalCents ~/ includedCount;
-        final remainderCents = totalCents - (baseCents * includedCount);
-        final cents = baseCents + (idx < remainderCents ? 1 : 0);
-        final share = cents / 100.0;
-        return '$_sym${share.toStringAsFixed(share == share.roundToDouble() ? 0 : 2)}';
-      case 'percentage':
-        if (excluded) return null;
-        final pct =
-            double.tryParse(_customValues[participantId]?.text.trim() ?? '') ??
-            0;
-        final share = amount * pct / 100;
-        return '$_sym${share.toStringAsFixed(share == share.roundToDouble() ? 0 : 2)}';
-      case 'exact':
-        if (excluded) return null;
-        final val = double.tryParse(
-          _customValues[participantId]?.text.trim() ?? '',
-        );
-        if (val == null) return null;
-        return '$_sym${val.toStringAsFixed(val == val.roundToDouble() ? 0 : 2)}';
-      default:
-        return null;
-    }
+  Map<String, double> _readCustomValues() {
+    return ExpenseSplitCalculator.extractCustomValues(
+      participants: widget.participants,
+      textValues: {for (final p in widget.participants) p.id: _customValues[p.id]?.text.trim() ?? ''},
+    );
   }
 
   Future<void> _pickDate() async {
@@ -502,39 +386,15 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   }
 
   String? _validate() {
-    final amount = _parsedAmount;
-    if (amount <= 0) return 'Enter a valid amount';
-    if (_paidById.isEmpty) return 'Select who paid';
-
-    if (_splitType == 'exact') {
-      final total = widget.participants
-          .where((p) => !_excludedIds.contains(p.id))
-          .fold(0.0, (s, p) {
-            final v =
-                double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
-            return s + v;
-          });
-      if ((total * 100).round() != (amount * 100).round()) {
-        return 'Exact amounts must total $_sym${amount.toStringAsFixed(amount == amount.roundToDouble() ? 0 : 2)}';
-      }
-    }
-
-    if (_splitType == 'percentage') {
-      final total = widget.participants
-          .where((p) => !_excludedIds.contains(p.id))
-          .fold(0.0, (s, p) {
-            final v =
-                double.tryParse(_customValues[p.id]?.text.trim() ?? '') ?? 0;
-            return s + v;
-          });
-      if ((total * 100).round() != 10000) return 'Percentages must total 100%';
-    }
-
-    if (_splitType != 'exact' && _splitType != 'percentage') {
-      if (_includedCount == 0) return 'At least one person must be included';
-    }
-
-    return null;
+    return ExpenseSplitCalculator.validate(
+      amount: _parsedAmount,
+      paidById: _paidById,
+      participants: widget.participants,
+      excludedIds: _excludedIds,
+      customValues: _readCustomValues(),
+      splitType: _splitType,
+      currencySymbol: _sym,
+    );
   }
 
   Future<String?> _persistReceipt(String? path) async {
@@ -656,12 +516,15 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     }
   }
 
-  Map<String, String?> _computePreviews() {
-    final previews = <String, String?>{};
-    for (final p in widget.participants) {
-      previews[p.id] = _previewAmount(p.id);
-    }
-    return previews;
+  Map<String, String> _computePreviews() {
+    return ExpenseSplitCalculator.computePreviews(
+      participants: widget.participants,
+      totalAmount: _parsedAmount,
+      excludedIds: _excludedIds,
+      customValues: _readCustomValues(),
+      splitType: _splitType,
+      currencySymbol: _sym,
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -703,9 +566,19 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     final theme = Theme.of(context);
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     final bottomInset = MediaQuery.of(context).padding.bottom;
-    final percentageError =
-        _splitType == 'percentage' && (_percentageTotal * 100).round() != 10000;
-    final exactExceedsError = _exactAmountsExceed;
+    final customValues = _readCustomValues();
+    final percentageError = _splitType == 'percentage' &&
+        (ExpenseSplitCalculator.percentageTotal(
+              participants: widget.participants,
+              excludedIds: _excludedIds,
+              customValues: customValues,
+            ) * 100).round() != 10000;
+    final exactExceedsError = ExpenseSplitCalculator.exactAmountsExceed(
+      totalAmount: _parsedAmount,
+      participants: widget.participants,
+      excludedIds: _excludedIds,
+      customValues: customValues,
+    );
 
     final double maxHeight =
         (MediaQuery.of(context).size.height - bottom) * 0.85;

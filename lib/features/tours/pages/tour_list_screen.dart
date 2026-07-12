@@ -17,6 +17,8 @@ import 'package:expense_tracker/features/tours/widgets/join_tour_sheet.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_create_button.dart';
+import 'package:expense_tracker/features/tours/widgets/delete_tour_dialog.dart';
+import 'package:expense_tracker/features/tours/widgets/complete_tour_dialog.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourListScreen extends StatefulWidget {
@@ -29,40 +31,21 @@ class TourListScreen extends StatefulWidget {
 class _TourListScreenState extends State<TourListScreen> {
   final Map<String, int> _memberCounts = {};
 
-  void _confirmDeleteTour(BuildContext context, Tour tour) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16)),
-        backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
-        title: Text(context.translate('delete_tour'),
-            style: AppTextStyles.h2),
-        content: Text(
-          context.translate('this_action_cannot_be_undone'),
-          style: AppTextStyles.profileSubtitle.copyWith(color: const Color(0xFF6B7280)),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(context.translate('cancel'),
-                style: AppTextStyles.label.copyWith(color: const Color(0xFF6B7280))),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              context.read<TourProvider>().deleteTour(tour.id);
-            },
-            child: Text(context.translate('delete'),
-                style: AppTextStyles.label.copyWith(
-                    color: const Color(0xFFDC2626), fontWeight: FontWeight.w600)),
-          ),
-        ],
-      ),
-    );
+  Future<void> _confirmDeleteTour(BuildContext context, Tour tour) async {
+    final confirmed = await showDeleteTourDialog(context, tour.name);
+    if (confirmed && context.mounted) {
+      context.read<TourProvider>().deleteTour(tour.id);
+    }
   }
 
   Future<void> _toggleCompleteTour(Tour tour) async {
+    final confirmed = await showCompleteTourDialog(
+      context,
+      tour.name,
+      tour.isCompleted,
+    );
+    if (!confirmed) return;
+    if (!mounted) return;
     final success = await context.read<TourProvider>().toggleTourCompletion(
       tour.id,
       !tour.isCompleted,

@@ -9,11 +9,12 @@ import 'package:expense_tracker/features/dashboard/widgets/account_balance_heade
 import 'package:expense_tracker/features/dashboard/widgets/account_date_selector.dart';
 import 'package:expense_tracker/features/dashboard/widgets/account_search_bar.dart';
 import 'package:expense_tracker/features/dashboard/widgets/adjust_balance_actions.dart';
+import 'package:expense_tracker/features/dashboard/utils/transaction_processor.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 
 class AccountDetailsScreen extends StatefulWidget {
-  final String accountType; // 'Cash' or 'Bank'
+  final String accountType;
 
   const AccountDetailsScreen({super.key, required this.accountType});
 
@@ -33,129 +34,23 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     super.dispose();
   }
 
-  // Calculate dynamic running balances and filter transactions for the specific account
-  List<Map<String, dynamic>> _getProcessedTransactions(
-    List<TransactionItem> allTransactions,
-    List<DebtItem> debts,
-  ) {
-    List<dynamic> relevantItems = [];
-
-    for (var tx in allTransactions) {
-      if (tx.paymentMethod == widget.accountType) {
-        relevantItems.add(tx);
-      }
-    }
-
-    if (widget.accountType == 'Cash') {
-      for (var d in debts) {
-        relevantItems.add(d);
-      }
-    }
-
-    relevantItems.sort((a, b) {
-      DateTime aDate = a is TransactionItem ? a.dateTime : (a as DebtItem).createdAt;
-      DateTime bDate = b is TransactionItem ? b.dateTime : (b as DebtItem).createdAt;
-      return aDate.compareTo(bDate);
-    });
-
-    double currentRunningBalance = 0.0;
-    List<Map<String, dynamic>> processedList = [];
-
-    for (var item in relevantItems) {
-      double amount = 0.0;
-      bool isIncome = false;
-      String title = '';
-      String category = '';
-      DateTime dateTime;
-      String id = '';
-      dynamic originalItem = item;
-
-      if (item is TransactionItem) {
-        amount = item.amount;
-        isIncome = item.isIncome;
-        title = item.note.isNotEmpty ? item.note : item.category;
-        category = item.category;
-        dateTime = item.dateTime;
-        id = item.id;
-      } else {
-        final debt = item as DebtItem;
-        amount = debt.amount;
-        isIncome = debt.isReceive;
-        title = debt.name.isNotEmpty ? debt.name : 'Debt adjustment';
-        category = debt.isReceive ? 'To Receive' : 'To Give';
-        dateTime = debt.createdAt;
-        id = debt.id;
-      }
-
-      if (isIncome) {
-        currentRunningBalance += amount;
-      } else {
-        currentRunningBalance -= amount;
-      }
-
-      processedList.add({
-        'id': id,
-        'amount': amount,
-        'isIncome': isIncome,
-        'title': title,
-        'category': category,
-        'dateTime': dateTime,
-        'runningBalance': currentRunningBalance,
-        'item': originalItem,
-      });
-    }
-
-    processedList = processedList.reversed.toList();
-
-    if (_searchQuery.trim().isNotEmpty) {
-      final query = _searchQuery.toLowerCase().trim();
-      processedList = processedList.where((item) {
-        final title = item['title'].toString().toLowerCase();
-        final cat = item['category'].toString().toLowerCase();
-        return title.contains(query) || cat.contains(query);
-      }).toList();
-    }
-
-    if (_selectedDateRange != null) {
-      final start = DateTime(_selectedDateRange!.start.year, _selectedDateRange!.start.month, _selectedDateRange!.start.day);
-      final end = DateTime(_selectedDateRange!.end.year, _selectedDateRange!.end.month, _selectedDateRange!.end.day, 23, 59, 59);
-      processedList = processedList.where((item) {
-        final date = item['dateTime'] as DateTime;
-        return !date.isBefore(start) && !date.isAfter(end);
-      }).toList();
-    }
-
-    return processedList;
-  }
-
   @override
   Widget build(BuildContext context) {
     final txProvider = context.watch<TransactionProvider>();
     final debtProvider = context.watch<DebtProvider>();
 
-    double accountBalance = 0.0;
-    for (var tx in txProvider.transactions) {
-      if (tx.paymentMethod == widget.accountType) {
-        if (tx.isIncome) {
-          accountBalance += tx.amount;
-        } else {
-          accountBalance -= tx.amount;
-        }
-      }
-    }
-    if (widget.accountType == 'Cash') {
-      for (var d in debtProvider.items) {
-        if (d.isReceive) {
-          accountBalance += d.amount;
-        } else {
-          accountBalance -= d.amount;
-        }
-      }
-    }
+    final accountBalance = TransactionProcessor.calculateAccountBalance(
+      allTransactions: txProvider.transactions,
+      debts: debtProvider.items,
+      accountType: widget.accountType,
+    );
 
-    final processedTransactions = _getProcessedTransactions(
-      txProvider.transactions,
-      debtProvider.items,
+    final processedTransactions = TransactionProcessor.getProcessedTransactions(
+      allTransactions: txProvider.transactions,
+      debts: debtProvider.items,
+      accountType: widget.accountType,
+      searchQuery: _searchQuery,
+      selectedDateRange: _selectedDateRange,
     );
 
     final theme = Theme.of(context);

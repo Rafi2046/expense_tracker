@@ -1,12 +1,13 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
-import 'package:expense_tracker/features/dashboard/widgets/notification_card.dart';
+import 'package:expense_tracker/features/dashboard/widgets/notification_detail_dialog.dart';
 import 'package:expense_tracker/features/dashboard/widgets/notification_empty_state.dart';
+import 'package:expense_tracker/features/dashboard/widgets/notification_filter_chips.dart';
+import 'package:expense_tracker/features/dashboard/widgets/notification_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -31,76 +32,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ? NotificationType.update
         : NotificationType.credit;
     return notifications.where((n) => n.type == type).toList();
-  }
-
-  void _showNotificationDetails(
-    BuildContext context,
-    NotificationItem item,
-    NotificationProvider provider,
-  ) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    provider.markAsRead(item.id);
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        backgroundColor: theme.cardColor,
-        title: Row(
-          children: [
-            Icon(_getTypeIcon(item.type), color: _getTypeColor(item.type)),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                item.title,
-                style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
-              ),
-            ),
-          ],
-        ),
-        content: Text(
-          item.description,
-          style: AppTextStyles.body.copyWith(color: isDark ? Colors.grey.shade300 : AppColors.loginTitle, height: 1.4),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(
-              context.translate('close'),
-              style: AppTextStyles.bodyBold.copyWith(
-                color: isDark ? const Color(0xFF8E75C8) : AppColors.buttonColor,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Color _getTypeColor(NotificationType type) {
-    switch (type) {
-      case NotificationType.alert:
-        return AppColors.activeRed;
-      case NotificationType.credit:
-        return AppColors.activeGreen;
-      case NotificationType.update:
-        return AppColors.buttonColor;
-      case NotificationType.system:
-        return Colors.blueAccent;
-    }
-  }
-
-  IconData _getTypeIcon(NotificationType type) {
-    switch (type) {
-      case NotificationType.alert:
-        return LucideIcons.alertTriangle;
-      case NotificationType.credit:
-        return LucideIcons.wallet;
-      case NotificationType.update:
-        return LucideIcons.sparkles;
-      case NotificationType.system:
-        return LucideIcons.info;
-    }
   }
 
   @override
@@ -146,20 +77,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       ),
       body: Column(
         children: [
-          // Filter Chips Row
           if (allNotifications.isNotEmpty)
-            Container(
-              color: theme.cardColor,
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              child: Row(
-                children: [
-                  _buildFilterChip('All'),
-                  const SizedBox(width: 8),
-                  _buildFilterChip('Alerts'),
-                  const SizedBox(width: 8),
-                  _buildFilterChip('Updates'),
-                ],
-              ),
+            NotificationFilterChips(
+              selectedFilter: _selectedFilter,
+              onFilterChanged: (value) => setState(() => _selectedFilter = value),
             ),
 
           // Notifications List or Empty State
@@ -174,23 +95,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     itemCount: filtered.length,
                     itemBuilder: (context, index) {
                       final item = filtered[index];
-                      return Dismissible(
-                        key: Key(item.id),
-                        direction: DismissDirection.endToStart,
-                        background: Container(
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(right: 20.0),
-                          margin: const EdgeInsets.only(bottom: 12),
-                          decoration: BoxDecoration(
-                            color: isDark ? Colors.red.withValues(alpha: 0.1) : Colors.red.shade50,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: const Icon(
-                            LucideIcons.trash,
-                            color: AppColors.activeRed,
-                          ),
-                        ),
-                        onDismissed: (direction) {
+                      return NotificationListTile(
+                        item: item,
+                        onTap: () =>
+                            showNotificationDetails(context, item, provider),
+                        onDismissed: () {
                           provider.deleteNotification(item.id);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -206,48 +115,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             ),
                           );
                         },
-                        child: NotificationCard(
-                          item: item,
-                          onTap: () =>
-                              _showNotificationDetails(context, item, provider),
-                        ),
                       );
                     },
                   ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildFilterChip(String label) {
-    final isSelected = _selectedFilter == label;
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final primaryColor = isDark ? const Color(0xFF8E75C8) : AppColors.buttonColor;
-
-    return ChoiceChip(
-      label: Text(context.translate(label.toLowerCase())),
-      selected: isSelected,
-      onSelected: (val) {
-        if (val) {
-          setState(() {
-            _selectedFilter = label;
-          });
-        }
-      },
-      selectedColor: primaryColor.withValues(alpha: 0.15),
-      backgroundColor: isDark ? theme.cardColor : Colors.grey.shade100,
-      labelStyle: AppTextStyles.label.copyWith(fontSize: AppFontSizes.size13),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(
-          color: isSelected
-              ? primaryColor.withValues(alpha: 0.3)
-              : Colors.transparent,
-        ),
-      ),
-      showCheckmark: false,
     );
   }
 }
