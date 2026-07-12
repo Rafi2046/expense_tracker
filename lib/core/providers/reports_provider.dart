@@ -515,6 +515,65 @@ class ReportsProvider extends ChangeNotifier {
     return transactions.first.runningBalance;
   }
 
+  List<LedgerItem> getStatementTransactions(String accountName) {
+    if (_txProvider == null) return [];
+
+    final List<LedgerItem> ledger = [];
+
+    for (var tx in _txProvider!.transactions) {
+      if (tx.paymentMethod == accountName) {
+        ledger.add(LedgerItem(
+          id: tx.id,
+          title: tx.isIncome ? 'Money In' : 'Money Out',
+          subtitle: tx.note.isNotEmpty ? '${tx.note} (${tx.category})' : tx.category,
+          amount: tx.amount,
+          dateTime: tx.dateTime,
+          isCredit: tx.isIncome,
+        ));
+      }
+    }
+
+    if (accountName == 'Cash') {
+      for (var d in _debtProvider?.items ?? []) {
+        ledger.add(LedgerItem(
+          id: d.id,
+          title: d.isReceive ? 'Money In' : 'Money Out',
+          subtitle: '${d.name} • ${d.detail}',
+          amount: d.amount,
+          dateTime: d.createdAt,
+          isCredit: d.isReceive,
+        ));
+      }
+    }
+
+    ledger.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+
+    double runningBal = 0.0;
+    for (var item in ledger) {
+      if (item.isCredit) {
+        runningBal += item.amount;
+      } else {
+        runningBal -= item.amount;
+      }
+      item.runningBalance = runningBal;
+    }
+
+    List<LedgerItem> filtered = [];
+    if (_selectedDateRange != null) {
+      final start = DateTime(_selectedDateRange!.start.year, _selectedDateRange!.start.month, _selectedDateRange!.start.day);
+      final end = DateTime(_selectedDateRange!.end.year, _selectedDateRange!.end.month, _selectedDateRange!.end.day, 23, 59, 59);
+
+      filtered = ledger.where((item) {
+        return !item.dateTime.isBefore(start) && !item.dateTime.isAfter(end);
+      }).toList();
+    } else {
+      filtered = List.from(ledger);
+    }
+
+    filtered.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    return filtered;
+  }
+
   List<TransactionItem> get filteredIncomeExpenseTransactions {
     if (_txProvider == null) return [];
 

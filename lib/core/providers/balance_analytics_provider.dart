@@ -14,6 +14,7 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
   double allTimeCashBalance = 0.0;
   double allTimeBankBalance = 0.0;
   double allTimeTotalBalance = 0.0;
+  Map<String, double> allAccountBalances = {};
 
   BalanceAnalyticsProvider() {
     _authSubscription = FirebaseAuth.instance.userChanges().listen((user) {
@@ -28,6 +29,7 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
       allTimeCashBalance = 0.0;
       allTimeBankBalance = 0.0;
       allTimeTotalBalance = 0.0;
+      allAccountBalances = {};
       _currentProfileId = null;
       notifyListeners();
     }
@@ -45,25 +47,22 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
   }
 
   void _recompute() {
-    double cash = 0.0;
-    double bank = 0.0;
+    final Map<String, double> balances = {};
 
     for (final tx in _transactions) {
-      if (tx.paymentMethod == 'Cash') {
-        cash += tx.isIncome ? tx.amount : -tx.amount;
-      } else {
-        bank += tx.isIncome ? tx.amount : -tx.amount;
-      }
+      final account = tx.paymentMethod;
+      balances[account] = (balances[account] ?? 0.0) + (tx.isIncome ? tx.amount : -tx.amount);
     }
 
     for (final d in _debts) {
       if (d.isSettled) continue;
-      cash += d.isReceive ? d.amount : -d.amount;
+      balances['Cash'] = (balances['Cash'] ?? 0.0) + (d.isReceive ? d.amount : -d.amount);
     }
 
-    allTimeCashBalance = cash;
-    allTimeBankBalance = bank;
-    allTimeTotalBalance = cash + bank;
+    allAccountBalances = Map.from(balances);
+    allTimeCashBalance = balances['Cash'] ?? 0.0;
+    allTimeBankBalance = balances['Bank'] ?? 0.0;
+    allTimeTotalBalance = balances.values.fold(0.0, (sum, v) => sum + v);
   }
 
   double projectedBalance(String paymentMethod, {double? amount, bool? isIncome}) {
@@ -84,6 +83,10 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
     return bal;
   }
 
+  double getBalanceForAccount(String accountName) {
+    return allAccountBalances[accountName] ?? 0.0;
+  }
+
   void updateProfileId(String newProfileId) {
     if (_currentProfileId == newProfileId) return;
     _currentProfileId = newProfileId;
@@ -92,6 +95,7 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
     allTimeCashBalance = 0.0;
     allTimeBankBalance = 0.0;
     allTimeTotalBalance = 0.0;
+    allAccountBalances = {};
     notifyListeners();
   }
 
@@ -101,6 +105,7 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
     allTimeCashBalance = 0.0;
     allTimeBankBalance = 0.0;
     allTimeTotalBalance = 0.0;
+    allAccountBalances = {};
     notifyListeners();
   }
 

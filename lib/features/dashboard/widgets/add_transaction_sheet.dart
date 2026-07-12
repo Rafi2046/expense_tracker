@@ -1,9 +1,11 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
+import 'package:expense_tracker/core/providers/account_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/error_dialog.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/month_selector_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/party_selector_tile.dart';
@@ -116,6 +118,17 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         Future.microtask(() {
           if (mounted && _selectedCategory == null) {
             setState(() => _selectedCategory = defaultCat);
+          }
+        });
+      }
+    }
+    if (widget.transaction == null && _paymentMethod == 'Cash') {
+      final accountProvider = Provider.of<AccountProvider>(context, listen: false);
+      final accounts = accountProvider.accounts;
+      if (accounts.isNotEmpty && accounts.first.name != 'Cash') {
+        Future.microtask(() {
+          if (mounted) {
+            setState(() => _paymentMethod = accounts.first.name);
           }
         });
       }
@@ -396,11 +409,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                           PaymentModeSelector(
                             paymentMethod: _paymentMethod,
                             themeColor: themeColor,
-                            onTap: () => setState(() {
-                              _paymentMethod = _paymentMethod == 'Cash'
-                                  ? 'Bank'
-                                  : 'Cash';
-                            }),
+                            onTap: () => _showAccountPicker(context),
                           ),
                           const SizedBox(height: AppSpacing.h12),
                           PartySelectorTile(
@@ -527,5 +536,82 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
     if (mounted) {
       setState(() => _isHidden = false);
     }
+  }
+
+  void _showAccountPicker(BuildContext context) async {
+    final accountProvider = context.read<AccountProvider>();
+    final accounts = accountProvider.accounts;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    await showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return Container(
+          decoration: BoxDecoration(
+            color: theme.cardColor,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          padding: EdgeInsets.fromLTRB(
+            20, 20, 20, MediaQuery.of(ctx).padding.bottom + 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 32,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.white24 : Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Select Account',
+                style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
+              ),
+              const SizedBox(height: 12),
+              ...accounts.map((account) => ListTile(
+                leading: Icon(
+                  account.name == 'Cash'
+                      ? LucideIcons.creditCard
+                      : account.name == 'Bank'
+                          ? LucideIcons.landmark
+                          : LucideIcons.wallet,
+                  color: _paymentMethod == account.name
+                      ? theme.primaryColor
+                      : theme.colorScheme.onSurfaceVariant,
+                  size: 20,
+                ),
+                title: Text(
+                  account.name,
+                  style: AppTextStyles.body.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: _paymentMethod == account.name
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
+                ),
+                trailing: _paymentMethod == account.name
+                    ? Icon(LucideIcons.check, color: theme.primaryColor, size: 18)
+                    : null,
+                onTap: () {
+                  setState(() => _paymentMethod = account.name);
+                  Navigator.pop(ctx);
+                },
+              )),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

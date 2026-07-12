@@ -87,7 +87,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          widget.accountType == 'Cash' ? 'Cash' : 'Bank Account',
+          widget.accountType,
           style: AppTextStyles.h3.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
           ),

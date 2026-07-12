@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import '../model/account_model.dart';
 import '../providers/note_provider.dart';
 import '../providers/transaction_provider.dart';
 import '../providers/debt_provider.dart';
@@ -41,12 +42,12 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(
-      path,
-      version: 15,
-      onCreate: _createDB,
-      onUpgrade: _onUpgrade,
-    );
+      return await openDatabase(
+        path,
+        version: 16,
+        onCreate: _createDB,
+        onUpgrade: _onUpgrade,
+      );
   }
 
   Future _createDB(Database db, int version) async {
@@ -130,6 +131,24 @@ class DatabaseHelper {
       'type': 'Personal',
       'createdAt': DateTime.now().toIso8601String(),
     });
+
+    await db.execute('''
+      CREATE TABLE accounts (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        type TEXT NOT NULL,
+        initialBalance REAL NOT NULL DEFAULT 0.0,
+        createdAt TEXT NOT NULL,
+        profileId TEXT NOT NULL DEFAULT 'default_profile'
+      )
+    ''');
+    final defaultAccounts = [
+      {'id': 'account_cash', 'name': 'Cash', 'type': 'Cash', 'initialBalance': 0.0, 'createdAt': DateTime.now().toIso8601String(), 'profileId': 'default_profile'},
+      {'id': 'account_bank', 'name': 'Bank', 'type': 'Bank', 'initialBalance': 0.0, 'createdAt': DateTime.now().toIso8601String(), 'profileId': 'default_profile'},
+    ];
+    for (final a in defaultAccounts) {
+      await db.insert('accounts', a);
+    }
 
     await db.execute('''
       CREATE TABLE tours (
@@ -494,6 +513,29 @@ class DatabaseHelper {
         await db.execute('ALTER TABLE tours ADD COLUMN memberUids TEXT');
       }
     }
+    if (oldVersion < 16) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS accounts (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          type TEXT NOT NULL,
+          initialBalance REAL NOT NULL DEFAULT 0.0,
+          createdAt TEXT NOT NULL,
+          profileId TEXT NOT NULL DEFAULT 'default_profile'
+        )
+      ''');
+      final existing = await db.query('accounts', where: 'id = ?', whereArgs: ['account_cash']);
+      if (existing.isEmpty) {
+        await db.insert('accounts', {
+          'id': 'account_cash', 'name': 'Cash', 'type': 'Cash',
+          'initialBalance': 0.0, 'createdAt': DateTime.now().toIso8601String(), 'profileId': 'default_profile',
+        });
+        await db.insert('accounts', {
+          'id': 'account_bank', 'name': 'Bank', 'type': 'Bank',
+          'initialBalance': 0.0, 'createdAt': DateTime.now().toIso8601String(), 'profileId': 'default_profile',
+        });
+      }
+    }
   }
 
   // Helper method to read web notes
@@ -734,6 +776,43 @@ class DatabaseHelper {
     await db.update('transactions', row,
         where: 'id = ? AND profileId = ?',
         whereArgs: [item.id, profileId]);
+  }
+
+  Future<List<String>> getDistinctPaymentMethods({String profileId = 'default_profile'}) async {
+    if (kIsWeb) {
+      final data = _readWebTransactions(profileId);
+      final methods = data.where((r) => r['isDeleted'] == 0).map((r) => r['paymentMethod'] as String).toSet();
+      return methods.toList();
+    }
+
+    final db = await instance.database;
+    final maps = await db.rawQuery(
+      'SELECT DISTINCT paymentMethod FROM transactions WHERE isDeleted = 0 AND profileId = ?',
+      [profileId],
+    );
+    return maps.map((m) => m['paymentMethod'] as String).toList();
+  }
+
+  Future<void> deleteTransactionsByPaymentMethod(String paymentMethod, {String profileId = 'default_profile'}) async {
+    if (kIsWeb) {
+      final data = _readWebTransactions(profileId);
+      bool changed = false;
+      for (int i = 0; i < data.length; i++) {
+        if (data[i]['paymentMethod'] == paymentMethod && data[i]['isDeleted'] == 0) {
+          data[i] = {...data[i], 'isDeleted': 1, 'syncStatus': 'pending_delete'};
+          changed = true;
+        }
+      }
+      if (changed) await _writeWebTransactions(profileId, data);
+      return;
+    }
+
+    final db = await instance.database;
+    await db.update('transactions',
+      {'isDeleted': 1, 'syncStatus': 'pending_delete'},
+      where: 'paymentMethod = ? AND isDeleted = 0 AND profileId = ?',
+      whereArgs: [paymentMethod, profileId],
+    );
   }
 
   Future<void> softDeleteTransaction(String id, {String profileId = 'default_profile'}) async {
@@ -1317,6 +1396,55 @@ class DatabaseHelper {
     await db.delete('profiles', where: 'id = ?', whereArgs: [id]);
   }
 
+  // ─── Account CRUD ─────────────────────────────────────────────
+
+  Future<void> insertAccount(
+    AccountModel account, {
+    String profileId = 'default_profile',
+  }) async {
+    final row = {
+      ...account.toJson(),
+      'profileId': profileId,
+    };
+    final db = await instance.database;
+    await db.insert('accounts', row, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<List<AccountModel>> readAllAccounts({String profileId = 'default_profile'}) async {
+    final db = await instance.database;
+    final maps = await db.query('accounts',
+      where: 'profileId = ?',
+      whereArgs: [profileId],
+      orderBy: 'createdAt ASC',
+    );
+    return maps.map((m) => AccountModel.fromJson(m)).toList();
+  }
+
+  Future<void> updateAccount(AccountModel account, {String profileId = 'default_profile'}) async {
+    final db = await instance.database;
+    await db.update('accounts', account.toJson(),
+      where: 'id = ? AND profileId = ?',
+      whereArgs: [account.id, profileId],
+    );
+  }
+
+  Future<void> deleteAccount(String id, {String profileId = 'default_profile'}) async {
+    final db = await instance.database;
+    await db.delete('accounts',
+      where: 'id = ? AND profileId = ?',
+      whereArgs: [id, profileId],
+    );
+  }
+
+  Future<int> getAccountCount({String profileId = 'default_profile'}) async {
+    final db = await instance.database;
+    final result = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM accounts WHERE profileId = ?',
+      [profileId],
+    );
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
   /// Deletes a profile and ALL associated data (transactions, categories,
   /// debt_items, budget, notes) in a single transaction.
   Future<void> deleteProfileAndData(String profileId) async {
@@ -1335,6 +1463,7 @@ class DatabaseHelper {
       await txn.delete('debt_items', where: 'profileId = ?', whereArgs: [profileId]);
       await txn.delete('budget', where: 'profileId = ?', whereArgs: [profileId]);
       await txn.delete('notes', where: 'profileId = ?', whereArgs: [profileId]);
+      await txn.delete('accounts', where: 'profileId = ?', whereArgs: [profileId]);
       await txn.delete('profiles', where: 'id = ?', whereArgs: [profileId]);
     });
   }

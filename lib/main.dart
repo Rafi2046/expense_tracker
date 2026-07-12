@@ -19,6 +19,7 @@ import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
+import 'package:expense_tracker/core/providers/account_provider.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -149,6 +150,16 @@ void main() async {
             analyticsProvider!.updateProfileId(pm.activeProfileId);
             analyticsProvider.updateTransactions(txProvider.transactions);
             return analyticsProvider;
+          },
+        ),
+        ChangeNotifierProxyProvider<
+          ProfileManagerProvider,
+          AccountProvider
+        >(
+          create: (_) => AccountProvider(),
+          update: (_, pm, accountProvider) {
+            accountProvider!.updateProfileId(pm.activeProfileId);
+            return accountProvider;
           },
         ),
         ChangeNotifierProxyProvider3<

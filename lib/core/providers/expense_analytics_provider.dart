@@ -388,41 +388,46 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
   List<ExpenseBreakdownItem> get quarterlyBreakdowns {
     final now = DateTime.now();
     final months = _monthsInCurrentQuarter;
-    double cashAmount = 0;
-    double bankAmount = 0;
-    int cashCount = 0;
-    int bankCount = 0;
+    final Map<String, double> amountByAccount = {};
+    final Map<String, int> countByAccount = {};
 
     for (final tx in _expenseTransactions) {
       if (tx.dateTime.year == now.year && months.contains(tx.dateTime.month)) {
-        if (tx.paymentMethod == 'Cash') {
-          cashAmount += tx.amount;
-          cashCount++;
-        } else {
-          bankAmount += tx.amount;
-          bankCount++;
-        }
+        final acct = tx.paymentMethod;
+        amountByAccount[acct] = (amountByAccount[acct] ?? 0.0) + tx.amount;
+        countByAccount[acct] = (countByAccount[acct] ?? 0) + 1;
       }
     }
 
     final items = <ExpenseBreakdownItem>[];
 
-    if (cashCount > 0) {
+    if ((countByAccount['Cash'] ?? 0) > 0) {
       items.add(ExpenseBreakdownItem(
         title: 'Cash',
-        subtitle: '$cashCount transactions',
-        amount: cashAmount.toStringAsFixed(0),
+        subtitle: '${countByAccount['Cash']} transactions',
+        amount: amountByAccount['Cash']!.toStringAsFixed(0),
         icon: LucideIcons.creditCard,
       ));
     }
 
-    if (bankCount > 0) {
+    if ((countByAccount['Bank'] ?? 0) > 0) {
       items.add(ExpenseBreakdownItem(
         title: 'Bank',
-        subtitle: '$bankCount transactions',
-        amount: bankAmount.toStringAsFixed(0),
+        subtitle: '${countByAccount['Bank']} transactions',
+        amount: amountByAccount['Bank']!.toStringAsFixed(0),
         icon: LucideIcons.landmark,
       ));
+    }
+
+    for (final entry in countByAccount.entries) {
+      if (entry.key != 'Cash' && entry.key != 'Bank') {
+        items.add(ExpenseBreakdownItem(
+          title: entry.key,
+          subtitle: '${entry.value} transactions',
+          amount: amountByAccount[entry.key]!.toStringAsFixed(0),
+          icon: LucideIcons.wallet,
+        ));
+      }
     }
 
     return items;

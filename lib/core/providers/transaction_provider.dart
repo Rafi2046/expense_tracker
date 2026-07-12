@@ -1063,6 +1063,18 @@ class TransactionProvider extends ChangeNotifier {
         });
   }
 
+  Future<void> reloadFromDatabase() async {
+    _transactions.clear();
+    _pendingIds.clear();
+    await _loadFromDatabase();
+  }
+
+  Future<void> reloadCategoriesFromDatabase() async {
+    _categoryItems.clear();
+    _pendingCategoryIds.clear();
+    await _loadCategoriesFromDatabase();
+  }
+
   void updateProfileId(String id) {
     debugPrint('TransactionProvider.updateProfileId: switching to $id');
     _activeProfileId = id;

@@ -10,6 +10,8 @@ class AccountCard extends StatelessWidget {
   final Color iconBg;
   final Color iconColor;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
+  final Widget? trailing;
 
   const AccountCard({
     super.key,
@@ -20,6 +22,8 @@ class AccountCard extends StatelessWidget {
     required this.iconBg,
     required this.iconColor,
     required this.onTap,
+    this.onLongPress,
+    this.trailing,
   });
 
   @override
@@ -40,6 +44,7 @@ class AccountCard extends StatelessWidget {
       ),
       child: InkWell(
         onTap: onTap,
+        onLongPress: onLongPress,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12.0),
@@ -78,6 +83,10 @@ class AccountCard extends StatelessWidget {
 
               // Balance
               balance,
+              if (trailing != null) ...[
+                const SizedBox(width: 4),
+                trailing!,
+              ],
             ],
           ),
         ),

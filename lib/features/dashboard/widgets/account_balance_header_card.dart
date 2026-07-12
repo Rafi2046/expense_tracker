@@ -19,6 +19,8 @@ class AccountBalanceHeaderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primaryColor = theme.primaryColor;
+    final isCashOrBank = accountType == 'Cash' || accountType == 'Bank';
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16.0),
@@ -51,30 +53,31 @@ class AccountBalanceHeaderCard extends StatelessWidget {
               ),
             ],
           ),
-          OutlinedButton.icon(
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).push(
-                MaterialPageRoute(
-                  builder: (context) => accountType == 'Cash'
-                      ? const CashInHandStatementScreen()
-                      : const BankStatementScreen(),
-                ),
-              );
-            },
-            icon: Icon(LucideIcons.fileText, size: 14, color: primaryColor),
-            label: Text(
-              'View Report',
-              style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.bold, color: primaryColor),
-            ),
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: primaryColor.withValues(alpha: 0.15)),
-              backgroundColor: primaryColor.withValues(alpha: 0.1),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+          if (isCashOrBank)
+            OutlinedButton.icon(
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).push(
+                  MaterialPageRoute(
+                    builder: (context) => accountType == 'Cash'
+                        ? const CashInHandStatementScreen()
+                        : const BankStatementScreen(),
+                  ),
+                );
+              },
+              icon: Icon(LucideIcons.fileText, size: 14, color: primaryColor),
+              label: Text(
+                'View Report',
+                style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.bold, color: primaryColor),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: primaryColor.withValues(alpha: 0.15)),
+                backgroundColor: primaryColor.withValues(alpha: 0.1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              ),
             ),
-          ),
         ],
       ),
     );
