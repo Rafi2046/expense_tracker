@@ -72,7 +72,7 @@ class DebtItemRow extends StatelessWidget {
     if (parts.length > 1) {
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
-    return parts[0][0].toUpperCase();
+    return parts[0].runes.isNotEmpty ? String.fromCharCode(parts[0].runes.first).toUpperCase() : '';
   }
 
   @override

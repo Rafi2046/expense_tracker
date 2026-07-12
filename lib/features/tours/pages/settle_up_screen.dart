@@ -112,8 +112,12 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
 
   String _initials(String name) {
     final parts = name.trim().split(' ');
-    if (parts.length >= 2) return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
-    return name.isNotEmpty ? name[0].toUpperCase() : '?';
+    if (parts.length >= 2) {
+      final f = parts.first.runes.isNotEmpty ? String.fromCharCode(parts.first.runes.first) : '';
+      final l = parts.last.runes.isNotEmpty ? String.fromCharCode(parts.last.runes.first) : '';
+      return '$f$l'.toUpperCase();
+    }
+    return name.isNotEmpty ? String.fromCharCode(name.runes.first).toUpperCase() : '?';
   }
 
   @override

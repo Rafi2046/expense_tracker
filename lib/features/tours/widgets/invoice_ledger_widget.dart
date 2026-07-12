@@ -4,6 +4,17 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_format_utils.dart';
 
+String _payerNames(Map<String, double> paidBy, Map<String, String> names) {
+  final resolved = <String>[];
+  for (final id in paidBy.keys) {
+    resolved.add(names[id] ?? 'Unknown');
+  }
+  if (resolved.isEmpty) return 'Unknown';
+  if (resolved.length == 1) return resolved.first;
+  if (resolved.length == 2) return '${resolved.first} & ${resolved.last}';
+  return '${resolved.first}, ${resolved[1]} & ${resolved.last}';
+}
+
 class InvoiceLedgerWidget extends StatelessWidget {
   final List<TourExpense> expenses;
   final Map<String, String> participantNames;
@@ -61,7 +72,7 @@ class InvoiceLedgerWidget extends StatelessWidget {
               children: [
                 _ledgerCell(formatShortDate(e.date), flex: 2),
                 _ledgerCell(e.title, flex: 3),
-                _ledgerCell(participantNames[e.paidBy] ?? 'Unknown', flex: 2),
+                _ledgerCell(_payerNames(e.paidBy, participantNames), flex: 2),
                 _ledgerCell(
                   formatAmount(e.amount, currency),
                   flex: 2,

@@ -32,7 +32,7 @@ class TransactionListTile extends StatelessWidget {
 
   String _toTitleCase(String text) {
     if (text.isEmpty) return text;
-    return text[0].toUpperCase() + text.substring(1);
+    return text.runes.isNotEmpty ? String.fromCharCode(text.runes.first).toUpperCase() + text.substring(1) : text;
   }
 
   @override

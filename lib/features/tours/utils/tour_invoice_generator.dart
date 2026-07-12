@@ -370,7 +370,7 @@ class TourInvoiceGenerator {
               _formatShortDate(e.date),
               e.title,
               e.category ?? 'Uncategorized',
-              pById[e.paidBy] ?? 'Unknown',
+              _payerNames(e.paidBy, pById),
               _formatAmount(e.amount, currency),
             ],
           )
@@ -536,6 +536,17 @@ class TourInvoiceGenerator {
       'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+
+  static String _payerNames(Map<String, double> paidBy, Map<String, String> names) {
+    final resolved = <String>[];
+    for (final id in paidBy.keys) {
+      resolved.add(names[id] ?? 'Unknown');
+    }
+    if (resolved.isEmpty) return 'Unknown';
+    if (resolved.length == 1) return resolved.first;
+    if (resolved.length == 2) return '${resolved.first} & ${resolved.last}';
+    return '${resolved.first}, ${resolved[1]} & ${resolved.last}';
   }
 
   static String _formatShortDate(DateTime date) {

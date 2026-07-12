@@ -149,17 +149,32 @@ class _TourMemberManagementScreenState
   }
 
   void _removeMember(String memberId) {
-    final provider = context.read<TourProvider>();
-    final member = provider.participants.firstWhere((p) => p.id == memberId);
-    final balances = provider.netBalances(widget.tourId);
-    final balance = balances[memberId] ?? 0;
+    debugPrint('_removeMember called for: $memberId');
+    try {
+      final provider = context.read<TourProvider>();
+      final member = provider.participants.firstWhere((p) => p.id == memberId);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Removing ${member.name}...')),
+        );
+      }
+      final balances = provider.netBalances(widget.tourId);
+      final balance = balances[memberId] ?? 0;
 
-    if (balance.abs() >= 0.01) {
-      _showOutstandingBalanceDialog(member.name, balance, memberId);
-      return;
+      if (balance.abs() >= 0.01) {
+        _showOutstandingBalanceDialog(member.name, balance, memberId);
+        return;
+      }
+
+      _showConfirmRemoveDialog(member.name, memberId);
+    } catch (e) {
+      debugPrint('_removeMember error: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
     }
-
-    _showConfirmRemoveDialog(member.name, memberId);
   }
 
   void _showOutstandingBalanceDialog(
@@ -193,7 +208,15 @@ class _TourMemberManagementScreenState
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
-              context.read<TourProvider>().removeParticipant(memberId);
+              context.read<TourProvider>().removeParticipant(memberId).catchError((e) {
+                debugPrint('removeParticipant error: $e');
+                if (context.mounted) {
+                  // ignore: use_build_context_synchronously
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error: $e')),
+                  );
+                }
+              });
             },
             child: const Text(
               'Remove Anyway',
@@ -233,7 +256,15 @@ class _TourMemberManagementScreenState
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
-              context.read<TourProvider>().removeParticipant(memberId);
+              context.read<TourProvider>().removeParticipant(memberId).catchError((e) {
+                debugPrint('removeParticipant error: $e');
+                if (context.mounted) {
+                  // ignore: use_build_context_synchronously
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error: $e')),
+                  );
+                }
+              });
             },
             child: const Text(
               'Remove',

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'tour_expense_share.dart';
 
 class TourExpense {
@@ -5,7 +6,7 @@ class TourExpense {
   final String tourId;
   final String title;
   final double amount;
-  final String paidBy;
+  final Map<String, double> paidBy;
   final String splitType;
   final String? category;
   final String? note;
@@ -41,7 +42,7 @@ class TourExpense {
     String? tourId,
     String? title,
     double? amount,
-    String? paidBy,
+    Map<String, double>? paidBy,
     String? splitType,
     String? category,
     String? note,
@@ -71,11 +72,34 @@ class TourExpense {
         shares: shares ?? this.shares,
       );
 
+  static Map<String, double> _parsePaidBy(dynamic raw, double amount) {
+    if (raw == null) {
+      return <String, double>{};
+    }
+    if (raw is Map) {
+      return raw.map<String, double>((k, v) => MapEntry(k.toString(), (v as num).toDouble()));
+    }
+    if (raw is String) {
+      final trimmed = raw.trim();
+      if (trimmed.isEmpty) return <String, double>{};
+      try {
+        final decoded = jsonDecode(trimmed);
+        if (decoded is Map) {
+          return decoded.map<String, double>((k, v) => MapEntry(k.toString(), (v as num).toDouble()));
+        }
+        return <String, double>{trimmed: amount};
+      } catch (_) {
+        return <String, double>{trimmed: amount};
+      }
+    }
+    return <String, double>{};
+  }
+
   Map<String, dynamic> toMap() => {
     'tourId': tourId,
     'title': title,
     'amount': amount,
-    'paidBy': paidBy,
+    'paidBy': jsonEncode(paidBy),
     'splitType': splitType,
     'category': category,
     'note': note,
@@ -91,12 +115,13 @@ class TourExpense {
   factory TourExpense.fromMap(String id, Map<String, dynamic> map) {
     final shareMaps = (map['shares'] as List<dynamic>?)
         ?.cast<Map<String, dynamic>>();
+    final amount = (map['amount'] as num).toDouble();
     return TourExpense(
       id: id,
       tourId: map['tourId'] as String,
       title: map['title'] as String,
-      amount: (map['amount'] as num).toDouble(),
-      paidBy: map['paidBy'] as String,
+      amount: amount,
+      paidBy: _parsePaidBy(map['paidBy'], amount),
       splitType: map['splitType'] as String? ?? 'equal',
       category: map['category'] as String?,
       note: map['note'] as String?,
@@ -120,7 +145,7 @@ class TourExpense {
     'tourId': tourId,
     'title': title,
     'amount': amount,
-    'paidBy': paidBy,
+    'paidBy': jsonEncode(paidBy),
     'splitType': splitType,
     'category': category,
     'note': note,
@@ -132,24 +157,27 @@ class TourExpense {
     'lastModified': lastModified.toIso8601String(),
   };
 
-  factory TourExpense.fromJson(Map<String, dynamic> json) => TourExpense(
-    id: json['id'] as String,
-    tourId: json['tourId'] as String,
-    title: json['title'] as String,
-    amount: (json['amount'] as num).toDouble(),
-    paidBy: json['paidBy'] as String,
-    splitType: json['splitType'] as String? ?? 'equal',
-    category: json['category'] as String?,
-    note: json['note'] as String?,
-    date: DateTime.parse(json['date'] as String),
-    receiptPath: json['receiptPath'] as String?,
-    createdAt: json['createdAt'] != null
-        ? DateTime.parse(json['createdAt'] as String)
-        : null,
-    syncStatus: json['syncStatus'] as String? ?? 'synced',
-    isDeleted: (json['isDeleted'] as int? ?? 0) == 1,
-    lastModified: json['lastModified'] != null
-        ? DateTime.parse(json['lastModified'] as String)
-        : DateTime.now(),
-  );
+  factory TourExpense.fromJson(Map<String, dynamic> json) {
+    final amount = (json['amount'] as num).toDouble();
+    return TourExpense(
+      id: json['id'] as String,
+      tourId: json['tourId'] as String,
+      title: json['title'] as String,
+      amount: amount,
+      paidBy: _parsePaidBy(json['paidBy'], amount),
+      splitType: json['splitType'] as String? ?? 'equal',
+      category: json['category'] as String?,
+      note: json['note'] as String?,
+      date: DateTime.parse(json['date'] as String),
+      receiptPath: json['receiptPath'] as String?,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
+          : null,
+      syncStatus: json['syncStatus'] as String? ?? 'synced',
+      isDeleted: (json['isDeleted'] as int? ?? 0) == 1,
+      lastModified: json['lastModified'] != null
+          ? DateTime.parse(json['lastModified'] as String)
+          : DateTime.now(),
+    );
+  }
 }

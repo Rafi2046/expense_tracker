@@ -471,8 +471,19 @@ class TourProvider extends ChangeNotifier {
 
       // Reassign paidBy in expenses
       for (var i = 0; i < _expenses.length; i++) {
-        if (removeIds.contains(_expenses[i].paidBy)) {
-          _expenses[i] = _expenses[i].copyWith(paidBy: keep.id);
+        var changed = false;
+        final updatedPaidBy = <String, double>{};
+        for (final entry in _expenses[i].paidBy.entries) {
+          if (removeIds.contains(entry.key)) {
+            updatedPaidBy[keep.id] =
+                (updatedPaidBy[keep.id] ?? 0) + entry.value;
+            changed = true;
+          } else {
+            updatedPaidBy[entry.key] = entry.value;
+          }
+        }
+        if (changed) {
+          _expenses[i] = _expenses[i].copyWith(paidBy: updatedPaidBy);
         }
       }
 
@@ -561,35 +572,39 @@ class TourProvider extends ChangeNotifier {
   }
 
   Future<void> removeParticipant(String participantId) async {
-    final now = DateTime.now().toIso8601String();
     String? tourId;
     final idx = _participants.indexWhere((p) => p.id == participantId);
     if (idx != -1) {
       tourId = _participants[idx].tourId;
     }
-    final db = await _db.database;
-    await db.update(
-      'tour_participants',
-      {'isDeleted': 1, 'lastModified': now},
-      where: 'id = ?',
-      whereArgs: [participantId],
-    );
-    if (tourId != null && _selectedTourId == tourId) {
-      await refreshTourData();
-    } else {
-      _participants.removeWhere((p) => p.id == participantId);
-      notifyListeners();
-    }
-    if (tourId != null) {
-      _softDeleteDoc(tourId, 'participants', participantId, now);
-      _sharedToursCollection
-          .doc(tourId)
-          .collection('participants')
-          .doc(participantId)
-          .set({
-        'isDeleted': 1,
-        'lastModified': now,
-      }, SetOptions(merge: true));
+    // Optimistic UI: remove immediately so list updates instantly
+    _participants.removeWhere((p) => p.id == participantId);
+    notifyListeners();
+    final now = DateTime.now().toIso8601String();
+    try {
+      final db = await _db.database;
+      await db.update(
+        'tour_participants',
+        {'isDeleted': 1, 'lastModified': now},
+        where: 'id = ?',
+        whereArgs: [participantId],
+      );
+      if (tourId != null && _selectedTourId == tourId) {
+        await refreshTourData();
+      }
+      if (tourId != null) {
+        _softDeleteDoc(tourId, 'participants', participantId, now);
+        _sharedToursCollection
+            .doc(tourId)
+            .collection('participants')
+            .doc(participantId)
+            .set({
+          'isDeleted': 1,
+          'lastModified': now,
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      debugPrint('removeParticipant error: $e');
     }
   }
 
@@ -864,7 +879,7 @@ class TourProvider extends ChangeNotifier {
   ) {
     final result = <TourExpenseShare>[];
 
-    final target = included.where((p) => p.id != expense.paidBy).toList();
+    final target = included.where((p) => !expense.paidBy.containsKey(p.id)).toList();
     for (final p in target) {
       result.add(
         TourExpenseShare(
@@ -977,9 +992,12 @@ class TourProvider extends ChangeNotifier {
   /// Total amount [participantId] paid out of pocket (as `paidBy` in expenses)
   /// for the given tour. Includes all expense types (equal, exact, transfer, etc.).
   double effectivePaid(String participantId, String tourId) {
-    return _expenses
-        .where((e) => e.tourId == tourId && e.paidBy == participantId && !e.isDeleted)
-        .fold(0.0, (a, e) => a + e.amount);
+    double total = 0;
+    for (final e in _expenses) {
+      if (e.tourId != tourId || e.isDeleted) continue;
+      total += e.paidBy[participantId] ?? 0;
+    }
+    return total;
   }
 
   /// Total cost [participantId] is actually responsible for — the sum of all
@@ -1033,11 +1051,13 @@ class TourProvider extends ChangeNotifier {
     }
 
     for (final expense in _expenses.where((e) => e.tourId == tourId)) {
-      balances.update(
-        expense.paidBy,
-        (v) => v + expense.amount,
-        ifAbsent: () => expense.amount,
-      );
+      for (final entry in expense.paidBy.entries) {
+        balances.update(
+          entry.key,
+          (v) => v + entry.value,
+          ifAbsent: () => entry.value,
+        );
+      }
     }
 
     final expenseById = {for (final e in _expenses) e.id: e};

@@ -45,38 +45,53 @@ class TourDashboardMemberList extends StatelessWidget {
     return colors[index % colors.length];
   }
 
+  String _payerNames(Map<String, double> paidBy) {
+    final names = <String>[];
+    for (final id in paidBy.keys) {
+      final p = participants.firstWhere(
+        (p) => p.id == id,
+        orElse: () => TourParticipant(
+          id: id,
+          tourId: '',
+          name: 'Unknown',
+          joinedAt: DateTime.now(),
+        ),
+      );
+      names.add(p.name.split(' ').first);
+    }
+    if (names.isEmpty) return 'Unknown';
+    if (names.length == 1) return names.first;
+    if (names.length == 2) return '${names.first} & ${names.last}';
+    return '${names.first}, ${names[1]} & ${names.last}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       children: expenses.map((expense) {
-        final payer = participants.firstWhere(
-          (p) => p.id == expense.paidBy,
-          orElse: () => TourParticipant(
-            id: expense.paidBy,
-            tourId: expense.tourId,
-            name: 'Unknown',
-            joinedAt: expense.date,
-          ),
+        final firstPayerId = expense.paidBy.keys.isNotEmpty
+            ? expense.paidBy.keys.first
+            : '';
+        final firstPayerIdx = participants.indexWhere(
+          (p) => p.id == firstPayerId,
         );
         final expenseShares = shares
             .where((s) => s.expenseId == expense.id)
             .toList();
         final includedCount = expenseShares.where((s) => !s.isExcluded).length;
-        final payerIdx = participants.indexWhere(
-          (p) => p.id == expense.paidBy,
-        );
+        final payerNameStr = _payerNames(expense.paidBy);
 
         return Padding(
           padding: const EdgeInsets.only(bottom: AppSpacing.s8),
           child: TourExpenseTile(
             theme: theme,
             expense: expense,
-            payerName: payer.name,
-            avatarColor: _avatarColor(payerIdx),
+            payerName: payerNameStr,
+            avatarColor: _avatarColor(firstPayerIdx),
             includedCount: includedCount,
             formatAmount: (v) => formatAmount(v),
-            onTap: () => onExpenseTap(expense, payer.name, currency, isOwner),
+            onTap: () => onExpenseTap(expense, payerNameStr, currency, isOwner),
           ),
         );
       }).toList(),

@@ -161,7 +161,7 @@ class TourMemberBalances extends StatelessWidget {
             radius: 16,
             backgroundColor: _avatarColor(index),
             child: Text(
-              p.name.isNotEmpty ? p.name[0].toUpperCase() : '?',
+              p.name.isNotEmpty ? String.fromCharCode(p.name.runes.first).toUpperCase() : '?',
               style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: AppColors.white,

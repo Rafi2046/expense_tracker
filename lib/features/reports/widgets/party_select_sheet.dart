@@ -47,7 +47,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
     if (name.trim().isEmpty) return '?';
     final parts = name.trim().split(RegExp(r'\s+'));
     if (parts.length == 1) {
-      return parts[0][0].toUpperCase();
+      return parts[0].runes.isNotEmpty ? String.fromCharCode(parts[0].runes.first).toUpperCase() : '';
     }
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }

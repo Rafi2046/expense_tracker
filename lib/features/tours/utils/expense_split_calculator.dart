@@ -76,7 +76,10 @@ class ExpenseSplitCalculator {
     }
 
     if (editedSum >= 100) {
-      return participants.map((p) => (id: p.id, value: p.value)).toList();
+      return participants.map((p) => (
+        id: p.id,
+        value: p.edited ? p.value : 0.0,
+      )).toList();
     }
 
     final remaining = 100 - editedSum;

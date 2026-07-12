@@ -35,7 +35,7 @@ class ExpenseParticipantAvatar extends StatelessWidget {
       radius: radius,
       backgroundColor: backgroundColor ?? color,
       child: Text(
-        name.isNotEmpty ? name[0].toUpperCase() : '?',
+        name.isNotEmpty ? String.fromCharCode(name.runes.first).toUpperCase() : '?',
         style: TextStyle(
           color: textColor ?? Colors.white,
           fontSize: fontSize,

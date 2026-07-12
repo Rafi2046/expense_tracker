@@ -59,6 +59,8 @@ class TourParticipant {
         'joinedAt': joinedAt.toIso8601String(),
         'joinedExpenseId': joinedExpenseId,
         'isActive': isActive,
+        'isDeleted': isDeleted,
+        'lastModified': lastModified.toIso8601String(),
         'uid': uid,
       };
 
@@ -71,6 +73,10 @@ class TourParticipant {
         joinedAt: DateTime.parse(map['joinedAt'] as String),
         joinedExpenseId: map['joinedExpenseId'] as String?,
         isActive: map['isActive'] as bool? ?? true,
+        isDeleted: map['isDeleted'] == true || map['isDeleted'] == 1,
+        lastModified: map['lastModified'] != null
+            ? DateTime.parse(map['lastModified'] as String)
+            : null,
         uid: map['uid'] as String?,
       );
 

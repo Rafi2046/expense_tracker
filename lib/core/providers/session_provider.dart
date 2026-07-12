@@ -47,7 +47,8 @@ class SessionProvider extends ChangeNotifier {
     if (value.isEmpty) return value;
     return value.split(' ').map((word) {
       if (word.isEmpty) return word;
-      return '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}';
+      final fc = word.isNotEmpty ? String.fromCharCode(word.runes.first) : '';
+      return '${fc.toUpperCase()}${word.substring(1).toLowerCase()}';
     }).join(' ');
   }
 
@@ -82,11 +83,11 @@ class SessionProvider extends ChangeNotifier {
       if (parts.length >= 2) {
         return '${parts[0][0]}${parts.last[0]}'.toUpperCase();
       }
-      return parts[0][0].toUpperCase();
+      return parts[0].runes.isNotEmpty ? String.fromCharCode(parts[0].runes.first).toUpperCase() : '';
     }
 
     final email = user.email;
-    if (email != null && email.isNotEmpty) return email[0].toUpperCase();
+    if (email != null && email.isNotEmpty) return String.fromCharCode(email.runes.first).toUpperCase();
 
     return '?';
   }

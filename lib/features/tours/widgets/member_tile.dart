@@ -42,7 +42,7 @@ class MemberTile extends StatelessWidget {
                 : presetColors[index % presetColors.length],
             child: Text(
               member.name.isNotEmpty
-                  ? member.name[0].toUpperCase()
+                  ? String.fromCharCode(member.name.runes.first).toUpperCase()
                   : '?',
               style: const TextStyle(
                 color: AppColors.white,
@@ -61,12 +61,17 @@ class MemberTile extends StatelessWidget {
               ),
             ),
           ),
-          IconButton(
-            icon: Icon(
-              LucideIcons.minusCircle,
-              color: AppColors.activeRed.withValues(alpha: 0.8),
+          SizedBox(
+            width: 40,
+            height: 40,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () => onRemove(member.id),
+              child: Icon(
+                LucideIcons.minusCircle,
+                color: AppColors.activeRed.withValues(alpha: 0.8),
+              ),
             ),
-            onPressed: () => onRemove(member.id),
           ),
         ],
       ),

@@ -341,7 +341,7 @@ class TourExportService {
           radius: 16,
           backgroundColor: bgColor,
           child: Text(
-            name.isNotEmpty ? name[0].toUpperCase() : '?',
+            name.isNotEmpty ? String.fromCharCode(name.runes.first).toUpperCase() : '?',
             style: AppTextStyles.bodyBold.copyWith(
               fontWeight: FontWeight.w700,
               color: textColor,

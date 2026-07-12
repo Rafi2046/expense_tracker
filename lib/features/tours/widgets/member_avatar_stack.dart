@@ -93,10 +93,12 @@ class _SingleAvatar extends StatelessWidget {
   String get _initials {
     final parts = participant.name.trim().split(' ');
     if (parts.length >= 2) {
-      return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
+      final f = parts.first.runes.isNotEmpty ? String.fromCharCode(parts.first.runes.first) : '';
+      final l = parts.last.runes.isNotEmpty ? String.fromCharCode(parts.last.runes.first) : '';
+      return '$f$l'.toUpperCase();
     }
     return participant.name.isNotEmpty
-        ? participant.name[0].toUpperCase()
+        ? String.fromCharCode(participant.name.runes.first).toUpperCase()
         : '?';
   }
 

@@ -18,7 +18,7 @@ class TourDashboardQuickActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).padding.bottom;
     return Padding(
-      padding: EdgeInsets.only(bottom: bottomInset),
+      padding: EdgeInsets.only(bottom: bottomInset + 60),
       child: FloatingActionButton.extended(
         heroTag: 'tour_dashboard_fab',
         onPressed: onAddExpense,

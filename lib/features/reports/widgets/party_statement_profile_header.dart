@@ -26,7 +26,7 @@ class PartyStatementProfileHeader extends StatelessWidget {
       orElse: () => null,
     );
 
-    final initial = partyName.isNotEmpty ? partyName[0].toUpperCase() : '?';
+    final initial = partyName.isNotEmpty ? String.fromCharCode(partyName.runes.first).toUpperCase() : '?';
 
     final List<ContactChipData> contactDetails = [];
     if (partyItem != null) {

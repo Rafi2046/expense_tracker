@@ -93,7 +93,7 @@ class _PersonChip extends StatelessWidget {
           radius: 16,
           backgroundColor: color.withValues(alpha: isDark ? 0.2 : 0.1),
           child: Text(
-            name.isNotEmpty ? name[0].toUpperCase() : '?',
+            name.isNotEmpty ? String.fromCharCode(name.runes.first).toUpperCase() : '?',
             style: AppTextStyles.bodyBold.copyWith(
               fontWeight: FontWeight.w700,
               color: color,

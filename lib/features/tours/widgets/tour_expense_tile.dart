@@ -73,7 +73,7 @@ class TourExpenseTile extends StatelessWidget {
                   radius: 18,
                   backgroundColor: avatarColor,
                   child: Text(
-                    payerName.isNotEmpty ? payerName[0].toUpperCase() : '?',
+                    payerName.isNotEmpty ? String.fromCharCode(payerName.runes.first).toUpperCase() : '?',
                     style: AppTextStyles.bodyBold.copyWith(
                       color: AppColors.white,
                     ),

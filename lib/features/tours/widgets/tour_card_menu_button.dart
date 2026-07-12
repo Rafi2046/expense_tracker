@@ -16,6 +16,16 @@ class TourCardMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final markActiveLabel = context.translate('mark_as_active', listen: false);
+    final markCompletedLabel = context.translate('mark_as_completed', listen: false);
+    final deleteLabel = context.translate('delete_tour', listen: false);
+
+    final greyColor = isDark ? Colors.white70 : const Color(0xFF6B7280);
+    final greenColor = const Color(0xFF4ADE80);
+    final redColor = const Color(0xFFEF4444);
+
     return PopupMenuButton<String>(
       offset: const Offset(0, 40),
       shape: RoundedRectangleBorder(
@@ -25,7 +35,7 @@ class TourCardMenuButton extends StatelessWidget {
         if (value == 'toggleComplete') onToggleComplete?.call();
         if (value == 'delete') onDelete?.call();
       },
-      itemBuilder: (context) => [
+      itemBuilder: (_) => [
         if (onToggleComplete != null)
           PopupMenuItem(
             value: 'toggleComplete',
@@ -34,13 +44,13 @@ class TourCardMenuButton extends StatelessWidget {
                 Icon(
                   isCompleted ? LucideIcons.circle : LucideIcons.checkCircle,
                   size: 18,
-                  color: isCompleted ? const Color(0xFF6B7280) : const Color(0xFF4ADE80),
+                  color: isCompleted ? greyColor : greenColor,
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  isCompleted ? context.translate('mark_as_active') : context.translate('mark_as_completed'),
+                  isCompleted ? markActiveLabel : markCompletedLabel,
                   style: TextStyle(
-                    color: isCompleted ? const Color(0xFF6B7280) : const Color(0xFF4ADE80),
+                    color: isCompleted ? greyColor : greenColor,
                   ),
                 ),
               ],
@@ -51,10 +61,10 @@ class TourCardMenuButton extends StatelessWidget {
             value: 'delete',
             child: Row(
               children: [
-                const Icon(LucideIcons.trash, size: 18, color: Color(0xFFDC2626)),
+                Icon(LucideIcons.trash, size: 18, color: redColor),
                 const SizedBox(width: 8),
-                Text(context.translate('delete_tour'),
-                    style: const TextStyle(color: Color(0xFFDC2626))),
+                Text(deleteLabel,
+                    style: TextStyle(color: redColor)),
               ],
             ),
           ),

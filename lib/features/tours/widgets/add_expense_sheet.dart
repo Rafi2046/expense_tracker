@@ -74,7 +74,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   String? _selectedCategory;
   final _customCategories = <Map<String, dynamic>>[];
-  String _paidById = '';
+  Map<String, double> _paidByAmounts = {};
+  final _paidByControllers = <String, TextEditingController>{};
   String _splitType = 'equal';
   final Set<String> _excludedIds = {};
   final Set<String> _manuallyEditedMembers = {};
@@ -92,7 +93,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     if (edit != null) {
       _titleController.text = edit.title;
       _amountController.text = edit.amount.toStringAsFixed(0);
-      _paidById = edit.paidBy;
+      _paidByAmounts = Map<String, double>.from(edit.paidBy);
       _splitType = edit.splitType;
       _selectedCategory = edit.category;
       if (edit.note != null) _noteController.text = edit.note!;
@@ -102,11 +103,17 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       }
     } else {
       if (widget.participants.isNotEmpty) {
-        _paidById = widget.participants.first.id;
+        final first = widget.participants.first.id;
+        _paidByAmounts = {first: 0};
       }
     }
     for (final p in widget.participants) {
       _customValues[p.id] = TextEditingController();
+      _paidByControllers[p.id] = TextEditingController(
+        text: _paidByAmounts.containsKey(p.id)
+            ? _paidByAmounts[p.id]!.toStringAsFixed(0)
+            : '',
+      );
     }
     _applyDateBasedDefaults();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -386,9 +393,16 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   }
 
   String? _validate() {
+    final paidTotal = _paidByAmounts.values.fold(0.0, (a, b) => a + b);
+    final roundedPaid = (paidTotal * 100).round();
+    final roundedAmount = (_parsedAmount * 100).round();
+    if (_paidByAmounts.isEmpty) return 'Select who paid';
+    if (roundedPaid != roundedAmount) {
+      return 'Total paid ($_sym$paidTotal) must equal expense amount ($_sym$_parsedAmount)';
+    }
     return ExpenseSplitCalculator.validate(
       amount: _parsedAmount,
-      paidById: _paidById,
+      paidById: _paidByAmounts.keys.first,
       participants: widget.participants,
       excludedIds: _excludedIds,
       customValues: _readCustomValues(),
@@ -427,7 +441,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           ? _selectedCategory!
           : _titleController.text.trim(),
       amount: amount,
-      paidBy: _paidById,
+      paidBy: _paidByAmounts,
       splitType: _splitType,
       category: _selectedCategory,
       note: _noteController.text.trim().isEmpty
@@ -473,6 +487,28 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       return;
     }
     if (mounted) Navigator.of(context).pop();
+  }
+
+  void _syncPaidByToAmount() {
+    final total = _parsedAmount;
+    if (_paidByAmounts.isEmpty || total <= 0) return;
+    if (_paidByAmounts.length == 1) {
+      final id = _paidByAmounts.keys.first;
+      _paidByAmounts = {id: total};
+      _paidByControllers[id]?.text = total.toStringAsFixed(0);
+    } else {
+      final currentSum = _paidByAmounts.values.fold(0.0, (a, b) => a + b);
+      if (currentSum <= 0) return;
+      final ratio = total / currentSum;
+      final updated = <String, double>{};
+      for (final e in _paidByAmounts.entries) {
+        final newVal = (e.value * ratio * 100).round() / 100.0;
+        updated[e.key] = newVal;
+        _paidByControllers[e.key]?.text = newVal.toStringAsFixed(0);
+      }
+      _paidByAmounts = updated;
+    }
+    setState(() {});
   }
 
   // ─── Widget Callbacks ─────────────────────────────────────────────────
@@ -609,7 +645,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                         amountController: _amountController,
                         amountFocusNode: _amountFocusNode,
                         titleController: _titleController,
-                        onChanged: () => setState(() => _validationError = null),
+                        onChanged: () {
+                          setState(() => _validationError = null);
+                          _syncPaidByToAmount();
+                        },
                       ),
                       const SizedBox(height: AppSpacing.h24),
                       ExpenseCategorySelector(
@@ -635,12 +674,15 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                         onPickDate: _pickDate,
                       ),
                       const SizedBox(height: AppSpacing.h24),
-                      ExpenseReceiptPicker(
-                        theme: theme,
-                        receiptPath: _receiptImage?.path,
-                        receiptName: _receiptImage?.name,
-                        onPick: _showReceiptSourceSheet,
-                        onClear: () => setState(() => _receiptImage = null),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: ExpenseReceiptPicker(
+                          theme: theme,
+                          receiptPath: _receiptImage?.path,
+                          receiptName: _receiptImage?.name,
+                          onPick: _showReceiptSourceSheet,
+                          onClear: () => setState(() => _receiptImage = null),
+                        ),
                       ),
                       const SizedBox(height: AppSpacing.h24),
                       // Paid By section
@@ -655,9 +697,11 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                               ExpenseParticipantSelector(
                                 theme: theme,
                                 participants: widget.participants,
-                                paidById: _paidById,
-                                onPayerSelected: (id) =>
-                                    setState(() => _paidById = id),
+                                paidByAmounts: _paidByAmounts,
+                                amountControllers: _paidByControllers,
+                                totalAmount: _parsedAmount,
+                                onPaidByChanged: (updated) =>
+                                    setState(() => _paidByAmounts = updated),
                               ),
                             ],
                           ),
