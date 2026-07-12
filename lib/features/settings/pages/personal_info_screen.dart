@@ -3,12 +3,12 @@ import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/settings/widgets/personal_info_view.dart';
 import 'package:expense_tracker/features/settings/widgets/personal_info_edit.dart';
+import 'package:expense_tracker/features/settings/widgets/profile_app_bar.dart';
+import 'package:expense_tracker/features/settings/widgets/image_picker_sheet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PersonalInfoScreen extends StatefulWidget {
   const PersonalInfoScreen({super.key});
@@ -92,60 +92,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (ctx) {
-        final isDark = Theme.of(ctx).brightness == Brightness.dark;
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Choose Option', style: AppTextStyles.h2.copyWith(color: Theme.of(ctx).colorScheme.onSurface)),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.pop(ctx, ImageSource.gallery),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: isDark ? Colors.grey.shade800 : const Color(0xFFF3E8FF),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Icon(LucideIcons.image, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1), size: 28),
-                          ),
-                          const SizedBox(height: 8),
-                          Text('Gallery', style: AppTextStyles.label.copyWith(color: Theme.of(ctx).colorScheme.onSurface)),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.pop(ctx, ImageSource.camera),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: isDark ? Colors.grey.shade800 : const Color(0xFFF3E8FF),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Icon(LucideIcons.camera, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1), size: 28),
-                          ),
-                          const SizedBox(height: 8),
-                          Text('Camera', style: AppTextStyles.label.copyWith(color: Theme.of(ctx).colorScheme.onSurface)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+      builder: (_) => const ImagePickerSheet(),
     );
 
     if (source == null) return;
@@ -285,38 +232,11 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: theme.cardColor,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface, size: 20),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          _isEditing ? 'Edit Profile' : 'Profile Details',
-          style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
-        ),
-        actions: [
-          if (!_isEditing)
-            TextButton.icon(
-              onPressed: () => setState(() => _isEditing = true),
-              icon: Icon(LucideIcons.edit, size: 16, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1)),
-              label: Text(
-                'Edit',
-              style: AppTextStyles.bodyBold.copyWith(
-                color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1),
-              ),
-              ),
-            )
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1),
-            height: 1.0,
-          ),
-        ),
+      appBar: ProfileAppBar(
+        isEditing: _isEditing,
+        isDark: isDark,
+        onBack: () => Navigator.pop(context),
+        onEdit: () => setState(() => _isEditing = true),
       ),
       body: SafeArea(
         child: SingleChildScrollView(

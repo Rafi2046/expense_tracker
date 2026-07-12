@@ -1,9 +1,8 @@
 import 'dart:io';
-import 'package:expense_tracker/core/constants/app_images.dart';
+import 'package:expense_tracker/features/settings/widgets/profile_header_card.dart';
+import 'package:expense_tracker/features/settings/widgets/personal_info_details_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PersonalInfoView extends StatelessWidget {
   final User user;
@@ -31,197 +30,23 @@ class PersonalInfoView extends StatelessWidget {
     required this.onEditTap,
   });
 
-  Widget _buildInfoRow(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required String value,
-    IconData? trailingIcon,
-    VoidCallback? onTap,
-  }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: InkWell(
-        onTap: onTap,
-        child: Row(
-          children: [
-            Icon(icon, color: isDark ? Colors.white70 : Colors.grey.shade600, size: 22),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: AppTextStyles.caption.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: isDark ? Colors.grey.shade500 : Colors.grey.shade500,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    value.isEmpty ? 'Not set' : value,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.label.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: value.isEmpty
-                          ? (isDark ? Colors.grey.shade600 : Colors.grey.shade400)
-                          : Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (trailingIcon != null) ...[
-              const SizedBox(width: 6),
-              Icon(trailingIcon, color: isDark ? Colors.white60 : Colors.grey.shade400, size: 14),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final cardBg = theme.cardColor;
-    final borderColor = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1);
-    final primaryColor = isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Premium Profile Header Card
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: cardBg,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
-                blurRadius: 16,
-                offset: const Offset(0, 8),
-              ),
-            ],
-            border: Border.all(color: borderColor, width: 1),
-          ),
-          child: Column(
-            children: [
-              // Avatar Photo with premium border and glow
-              Container(
-                width: 90,
-                height: 90,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: cardBg,
-                  border: Border.all(color: primaryColor, width: 2.5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: primaryColor.withValues(alpha: 0.15),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: CircleAvatar(
-                    radius: 40,
-                    backgroundColor: isDark ? Colors.grey.shade900 : Colors.grey.shade100,
-                    backgroundImage: localImageFile != null
-                        ? FileImage(localImageFile!) as ImageProvider
-                        : (photoUrl.startsWith('http')
-                            ? NetworkImage(photoUrl) as ImageProvider
-                            : (photoUrl.isNotEmpty && File(photoUrl).existsSync()
-                                ? FileImage(File(photoUrl)) as ImageProvider
-                                : const AssetImage(AppImages.avatarImage))),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 14),
-              // Name
-              Text(
-                displayName,
-                textAlign: TextAlign.center,
-                style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
-              ),
-              if (occupation.isNotEmpty) ...[
-                const SizedBox(height: 4),
-                Text(
-                  occupation,
-                  textAlign: TextAlign.center,
-                style: AppTextStyles.bodySmall.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: primaryColor,
-                ),
-                ),
-              ],
-            ],
-          ),
+        ProfileHeaderCard(
+          displayName: displayName,
+          occupation: occupation,
+          localImageFile: localImageFile,
+          photoUrl: photoUrl,
         ),
         const SizedBox(height: 24),
-
-        // Info List Section
-        Text(
-          'PERSONAL DETAILS',
-          style: AppTextStyles.caption.copyWith(
-            fontWeight: FontWeight.bold,
-            color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
-            letterSpacing: 1.2,
-          ),
-        ),
-        const SizedBox(height: 10),
-
-        Container(
-          decoration: BoxDecoration(
-            color: cardBg,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.02),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-            border: Border.all(color: borderColor, width: 1),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-          child: Column(
-            children: [
-              _buildInfoRow(
-                context,
-                icon: LucideIcons.phoneCall,
-                label: 'Phone Number',
-                value: phone,
-              ),
-              Divider(height: 1, color: borderColor),
-              _buildInfoRow(
-                context,
-                icon: LucideIcons.calendar,
-                label: 'Date of Birth',
-                value: dob,
-              ),
-              Divider(height: 1, color: borderColor),
-              _buildInfoRow(
-                context,
-                icon: gender == 'Male' ? LucideIcons.mars : LucideIcons.venus,
-                label: 'Gender',
-                value: gender,
-              ),
-              Divider(height: 1, color: borderColor),
-              _buildInfoRow(
-                context,
-                icon: LucideIcons.mail,
-                label: 'Email Address',
-                value: user.email ?? '',
-              ),
-            ],
-          ),
+        PersonalInfoDetailsCard(
+          phone: phone,
+          dob: dob,
+          gender: gender,
+          email: user.email ?? '',
         ),
       ],
     );

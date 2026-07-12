@@ -6,11 +6,12 @@ import 'transfer_dialog.dart';
 import 'new_account_dialog.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/features/dashboard/widgets/adjust_balance_header.dart';
+import 'package:expense_tracker/features/dashboard/widgets/balance_action_list.dart';
 
 /// Central helper function to show the overall Adjust Balance Bottom Sheet.
 void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}) {
   final theme = Theme.of(context);
-  final isDark = theme.brightness == Brightness.dark;
 
   showModalBottomSheet(
     context: context,
@@ -29,51 +30,16 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Container(
-                width: 32,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: isDark ? Colors.white24 : Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
+            AdjustBalanceHeader(
+              title: 'Adjust Balance',
+              onClose: () => Navigator.pop(ctx),
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Adjust Balance',
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size16,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Add/Reduce Money
-            _buildAdjustOptionTile(
-              context: context,
-              title: 'Add/Reduce Money',
-              subtitle: 'Record income or expense to adjust a single account\'s balance',
-              icon: LucideIcons.plus,
-              iconBg: isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFDECEC),
-              iconColor: AppColors.activeRed,
-              onTap: () {
+            BalanceActionList(
+              onAddReduceMoney: () {
                 Navigator.pop(ctx);
                 showAddReduceChoiceSheet(context);
               },
-            ),
-            const SizedBox(height: 10),
-
-            // Transfer Balance
-            _buildAdjustOptionTile(
-              context: context,
-              title: 'Transfer Balance',
-              subtitle: 'Move money between Cash and Bank accounts',
-              icon: LucideIcons.arrowLeftRight,
-              iconBg: isDark ? const Color(0xFF2980B9).withValues(alpha: 0.15) : const Color(0xFFEBF3F9),
-              iconColor: const Color(0xFF2980B9),
-              onTap: () {
+              onTransferBalance: () {
                 Navigator.pop(ctx);
                 showTransferDialog(context, initialFromAccount: initialAccount);
               },
@@ -83,71 +49,6 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
         ),
       );
     },
-  );
-}
-
-Widget _buildAdjustOptionTile({
-  required BuildContext context,
-  required String title,
-  required String subtitle,
-  required IconData icon,
-  required Color iconBg,
-  required Color iconColor,
-  required VoidCallback onTap,
-}) {
-  final theme = Theme.of(context);
-  final isDark = theme.brightness == Brightness.dark;
-  return Container(
-    decoration: BoxDecoration(
-      color: isDark ? Colors.white10 : const Color(0xFFF9F9F9),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), width: 1.2),
-    ),
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: iconBg,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              alignment: Alignment.center,
-              child: Icon(icon, color: iconColor, size: 18),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.workSans(
-                      fontSize: AppFontSizes.size14,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    style: GoogleFonts.workSans(
-                      fontSize: AppFontSizes.size11,
-                      color: AppColors.textMuted,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
   );
 }
 

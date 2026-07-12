@@ -4,11 +4,13 @@ import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/party_avatar_picker.dart';
 import 'package:expense_tracker/features/dashboard/widgets/party_segmented_tabs.dart';
-import 'package:expense_tracker/features/dashboard/widgets/credit_info_form.dart';
 import 'package:expense_tracker/features/dashboard/widgets/additional_details_form.dart';
+import 'package:expense_tracker/features/dashboard/widgets/party_form_fields.dart';
+import 'package:expense_tracker/features/dashboard/widgets/party_type_selector.dart';
+import 'package:expense_tracker/features/dashboard/widgets/party_balance_input.dart';
+import 'package:expense_tracker/features/dashboard/widgets/party_save_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AddPartyScreen extends StatelessWidget {
@@ -64,15 +66,11 @@ class _AddPartyFormState extends State<AddPartyForm> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 12.0,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     children: [
-                      // Profile Picture Picker Widget
                       PartyAvatarPicker(
                         pickedImagePath: provider.pickedImagePath,
                         pickedImageBytes: provider.pickedImageBytes,
@@ -81,45 +79,11 @@ class _AddPartyFormState extends State<AddPartyForm> {
                         },
                       ),
                       const SizedBox(height: 24),
-
-                      // Party Name Field
-                      TextFormField(
-                        controller: provider.nameController,
-                        style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
-                        decoration: InputDecoration(
-                          hintText: 'Party Name',
-                          hintStyle: AppTextStyles.partyFormHint,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                          filled: true,
-                          fillColor: theme.cardColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade200),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: theme.primaryColor,
-                              width: 1.5,
-                            ),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter a party name';
-                          }
-                          return null;
-                        },
+                      PartyFormFields(
+                        nameController: provider.nameController,
+                        phoneController: provider.phoneController,
+                        isNameNotEmpty: provider.isNameNotEmpty,
                       ),
-
-                      // Progressive Disclosure Form Animation (Secondary inputs slide/fade in)
                       AnimatedSwitcher(
                         duration: const Duration(milliseconds: 300),
                         transitionBuilder:
@@ -137,53 +101,6 @@ class _AddPartyFormState extends State<AddPartyForm> {
                                 key: const ValueKey('expanded_inputs'),
                                 children: [
                                   const SizedBox(height: 12),
-                                  // Phone Number Field
-                                  TextFormField(
-                                    controller: provider.phoneController,
-                                    style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
-                                    keyboardType: TextInputType.phone,
-                                    validator: (value) {
-                                      if (value != null &&
-                                          value.trim().isNotEmpty &&
-                                          value.trim().length < 10) {
-                                        return 'Enter at least 10 digits';
-                                      }
-                                      return null;
-                                    },
-                                    decoration: InputDecoration(
-                                      hintText: 'Phone Number',
-                                      hintStyle: AppTextStyles.partyFormHint,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 12,
-                                          ),
-                                      filled: true,
-                                      fillColor: theme.cardColor,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(
-                                          color: theme.dividerTheme.color ?? Colors.grey.shade100,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(
-                                          color: theme.dividerTheme.color ?? Colors.grey.shade200,
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(
-                                          color: theme.primaryColor,
-                                          width: 1.5,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 24),
-
-                                  // Sliding Segmented Tabs
                                   PartySegmentedTabs(
                                     activeIndex: provider.activeTabIndex,
                                     onTabChanged: (index) {
@@ -191,38 +108,32 @@ class _AddPartyFormState extends State<AddPartyForm> {
                                     },
                                   ),
                                   const SizedBox(height: 20),
-
-                                  // Tab View Form Sections
                                   AnimatedSwitcher(
                                     duration: const Duration(milliseconds: 200),
                                     child: provider.activeTabIndex == 0
-                                        ? CreditInfoForm(
-                                            key: const ValueKey(
-                                              'credit_info_tab',
-                                            ),
-                                            balanceController:
-                                                provider.balanceController,
-                                            dateController:
-                                                provider.dateController,
-                                            isReceive: provider.isReceive,
-                                            currencySymbol:
-                                                context.currencySymbol,
-                                            onToggleChanged: (value) {
-                                              provider.setReceive(value);
-                                            },
-                                            onSelectDate: () =>
-                                                provider.selectDate(context),
+                                        ? Column(
+                                            key: const ValueKey('credit_info_tab'),
+                                            children: [
+                                              PartyBalanceInput(
+                                                balanceController: provider.balanceController,
+                                                dateController: provider.dateController,
+                                                currencySymbol: context.currencySymbol,
+                                                onSelectDate: () => provider.selectDate(context),
+                                              ),
+                                              const SizedBox(height: 20),
+                                              PartyTypeSelector(
+                                                isReceive: provider.isReceive,
+                                                onToggleChanged: (value) {
+                                                  provider.setReceive(value);
+                                                },
+                                              ),
+                                            ],
                                           )
                                         : AdditionalDetailsForm(
-                                            key: const ValueKey(
-                                              'additional_details_tab',
-                                            ),
-                                            emailController:
-                                                provider.emailController,
-                                            addressController:
-                                                provider.addressController,
-                                            vatController:
-                                                provider.vatController,
+                                            key: const ValueKey('additional_details_tab'),
+                                            emailController: provider.emailController,
+                                            addressController: provider.addressController,
+                                            vatController: provider.vatController,
                                           ),
                                   ),
                                 ],
@@ -234,55 +145,15 @@ class _AddPartyFormState extends State<AddPartyForm> {
                 ),
               ),
             ),
-
-            // Bottom Save Button
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 12.0,
-              ),
-              child: SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: MouseRegion(
-                  cursor: provider.isNameNotEmpty
-                      ? SystemMouseCursors.click
-                      : SystemMouseCursors.basic,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: provider.isNameNotEmpty
-                            ? theme.primaryColor
-                            : (isDark ? Colors.white10 : const Color(0xFFF1F2F4)),
-                        elevation: provider.isNameNotEmpty ? 1.5 : 0,
-                        shadowColor: theme.primaryColor.withValues(
-                          alpha: 0.25,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      onPressed: provider.isNameNotEmpty
-                          ? () {
-                              if (_formKey.currentState!.validate()) {
-                                provider.saveParty(context, debtProvider);
-                              }
-                            }
-                          : null,
-                      child: Text(
-                        'Add New Party',
-                        style: AppTextStyles.partySubmitButtonText.copyWith(
-                          fontSize: AppFontSizes.size15,
-                          color: provider.isNameNotEmpty
-                              ? Colors.white
-                              : (isDark ? Colors.white30 : const Color(0xFFC1C7D0)),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+            PartySaveButton(
+              isEnabled: provider.isNameNotEmpty,
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  provider.saveParty(context, debtProvider);
+                }
+              },
+              primaryColor: theme.primaryColor,
+              isDark: isDark,
             ),
           ],
         ),

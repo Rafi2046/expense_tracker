@@ -5,7 +5,9 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/features/tours/widgets/add_member_section.dart';
+import 'package:expense_tracker/features/tours/widgets/data_integrity_warning.dart';
+import 'package:expense_tracker/features/tours/widgets/member_tile.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourMemberManagementScreen extends StatefulWidget {
@@ -82,128 +84,17 @@ class _TourMemberManagementScreenState
       ),
       body: Column(
         children: [
-          // Add Member Section
-          Container(
-            margin: const EdgeInsets.all(AppSpacing.m16),
-            padding: const EdgeInsets.all(AppSpacing.p16),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: BorderRadius.circular(AppSpacing.br8),
-              boxShadow: [
-                BoxShadow(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.04),
-                  blurRadius: 20,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter member name',
-                    hintStyle: AppTextStyles.textFieldHint,
-                    border: InputBorder.none,
-                    filled: true,
-                    fillColor: theme.brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.05) : AppColors.containerColorGrey,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.p16,
-                      vertical: AppSpacing.p14,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.br12),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.br12),
-                      borderSide: BorderSide(
-                        color: AppColors.activeGreen.withValues(alpha: 0.5),
-                        width: 1.5,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.h16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: List.generate(_presetColors.length, (index) {
-                        return GestureDetector(
-                          onTap: () =>
-                              setState(() => _selectedColorIndex = index),
-                          child: Container(
-                            margin: const EdgeInsets.only(right: AppSpacing.m8),
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: _presetColors[index],
-                              shape: BoxShape.circle,
-                              border: _selectedColorIndex == index
-                                  ? Border.all(
-                    color: theme.colorScheme.onSurface,
-                                      width: 2.5,
-                                    )
-                                  : null,
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                    ElevatedButton(
-                      onPressed: _addMember,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.activeGreen,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSpacing.br12),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.p20,
-                          vertical: AppSpacing.p12,
-                        ),
-                        elevation: 0,
-                      ),
-                      child: const Text(
-                        'Add',
-                        style: TextStyle(
-                          color: AppColors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          AddMemberSection(
+            nameController: _nameController,
+            selectedColorIndex: _selectedColorIndex,
+            presetColors: _presetColors,
+            onColorSelected: (index) =>
+                setState(() => _selectedColorIndex = index),
+            onAddMember: _addMember,
           ),
 
-          // Data Integrity Warning
           if (participants.length < 2)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
-              child: Row(
-                children: [
-                  Icon(
-                    LucideIcons.lightbulb,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                    size: 16,
-                  ),
-                  const SizedBox(width: AppSpacing.w8),
-                  Flexible(
-                    child: Text(
-                      'Add buddies manually for offline tracking, or skip this and share the invite code later for real-time syncing!',
-                      style: TextStyle(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                        fontSize: AppFontSizes.size12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            const DataIntegrityWarning(),
 
           const SizedBox(height: AppSpacing.h16),
 
@@ -214,53 +105,11 @@ class _TourMemberManagementScreenState
               itemCount: participants.length,
               itemBuilder: (context, index) {
                 final member = participants[index];
-                return Container(
-                  margin: const EdgeInsets.only(bottom: AppSpacing.m12),
-                  padding: const EdgeInsets.all(AppSpacing.p12),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(AppSpacing.br8),
-                    // Using br12 instead of br16
-                    border: Border.all(
-                      color: AppColors.dividerColor.withValues(alpha: 0.3),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: member.avatarColor != 0
-                            ? Color(member.avatarColor)
-                            : _presetColors[index % _presetColors.length],
-                        child: Text(
-                          member.name.isNotEmpty
-                              ? member.name[0].toUpperCase()
-                              : '?',
-                          style: const TextStyle(
-                            color: AppColors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.w16),
-                      Expanded(
-                        child: Text(
-                          member.name,
-                          style: AppTextStyles.cardTitle.copyWith(
-                            color: theme.colorScheme.onSurface,
-                            fontSize: AppFontSizes.size16,
-                            letterSpacing: 0,
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          LucideIcons.minusCircle,
-                          color: AppColors.activeRed.withValues(alpha: 0.8),
-                        ),
-                        onPressed: () => _removeMember(member.id),
-                      ),
-                    ],
-                  ),
+                return MemberTile(
+                  member: member,
+                  presetColors: _presetColors,
+                  index: index,
+                  onRemove: _removeMember,
                 );
               },
             ),

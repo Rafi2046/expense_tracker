@@ -2,13 +2,12 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
 import 'package:expense_tracker/features/login/pages/login_screen.dart';
-import 'package:expense_tracker/features/login/widgets/custom_button.dart';
+import 'package:expense_tracker/features/settings/widgets/delete_account_reauth_body.dart';
+import 'package:expense_tracker/features/settings/widgets/delete_account_warning_header.dart';
+import 'package:expense_tracker/features/settings/widgets/delete_confirmation_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+
 
 class DeleteAccountDialog extends StatefulWidget {
   const DeleteAccountDialog({super.key});
@@ -144,8 +143,6 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final borderColor = isDark ? const Color(0xFF2D2D2D) : AppColors.dividerColor;
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
@@ -158,218 +155,23 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: 72,
-                height: 72,
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? Colors.red.withValues(alpha: 0.15)
-                      : const Color(0xFFFDE8E8),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  LucideIcons.trash,
-                  color: AppColors.activeRed,
-                  size: 32,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              Text(
-                'Delete Account',
-                style: AppTextStyles.h1.copyWith(fontSize: AppFontSizes.size22, fontWeight: FontWeight.w800, color: theme.colorScheme.onSurface),
-              ),
-              const SizedBox(height: 12),
-
-              if (!_reauthMode) ...[
-                Text(
-'Are you absolutely sure? This action cannot be undone.\n'
-                  'It will permanently delete your account,\n'
-                  'cloud backups, and all local data.',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.bodySmall.copyWith(
-                    fontSize: AppFontSizes.size14,
-                    color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
-                    height: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                Text(
-                  'Type DELETE to confirm',
-                  style: AppTextStyles.label.copyWith(color: AppColors.activeRed, fontWeight: FontWeight.w700, letterSpacing: 0.5),
-                ),
-                const SizedBox(height: 8),
-
-                TextField(
+              const DeleteAccountWarningHeader(),
+              if (!_reauthMode)
+                DeleteConfirmationBody(
                   controller: _deleteController,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.jetBrainsMono(
-                    fontSize: AppFontSizes.size18,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.activeRed,
-                    letterSpacing: 4,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'DELETE',
-                    hintStyle: GoogleFonts.jetBrainsMono(
-                      fontSize: AppFontSizes.size18,
-                      fontWeight: FontWeight.w800,
-                      color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-                      letterSpacing: 4,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: borderColor),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: borderColor),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: _canDelete ? AppColors.activeRed : borderColor,
-                        width: 2,
-                      ),
-                    ),
-                    fillColor: isDark
-                        ? Colors.white.withValues(alpha: 0.05)
-                        : Colors.grey.shade50,
-                    filled: true,
-                  ),
+                  canDelete: _canDelete,
+                  isDeleting: _isDeleting,
+                  onDelete: _deleteAccount,
+                  onCancel: () => Navigator.pop(context),
                 ),
-                const SizedBox(height: 24),
-
-                SizedBox(
-                  width: double.infinity,
-                  child: CustomButton(
-                    text: _isDeleting ? 'Deleting...' : 'Delete',
-                    onPressed: _canDelete && !_isDeleting
-                        ? () => _deleteAccount()
-                        : () {},
-                    backgroundColor: _canDelete
-                        ? AppColors.activeRed
-                        : (isDark ? Colors.grey.shade800 : Colors.grey.shade300),
-                    textColor: Colors.white,
-                  ),
+              if (_reauthMode)
+                DeleteAccountReauthBody(
+                  isPasswordUser: _isPasswordUser,
+                  isDeleting: _isDeleting,
+                  passwordController: _passwordController,
+                  onReauthenticate: _reauthenticateAndDelete,
+                  onCancel: () => Navigator.pop(context),
                 ),
-                const SizedBox(height: 8),
-                Center(
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Text(
-                      'Cancel',
-                      style: AppTextStyles.bodySmall.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-
-              if (_reauthMode) ...[
-Text(
-                  'Please verify your identity\nto delete your account.',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.bodySmall.copyWith(
-                    fontSize: AppFontSizes.size14,
-                    color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
-                    height: 1.5,
-                  ),
-                  ),
-                const SizedBox(height: 20),
-
-                if (_isPasswordUser) ...[
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    textAlign: TextAlign.center,
-                    autofocus: true,
-                    style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface),
-                    decoration: InputDecoration(
-                      hintText: 'Enter your password',
-                      hintStyle: AppTextStyles.body.copyWith(color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: borderColor),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: borderColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: AppColors.activeRed, width: 2),
-                      ),
-                      fillColor: isDark
-                          ? Colors.white.withValues(alpha: 0.05)
-                          : Colors.grey.shade50,
-                      filled: true,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  SizedBox(
-                    width: double.infinity,
-                    child: CustomButton(
-                      text: _isDeleting ? 'Deleting...' : 'Reauthenticate & Delete',
-                      onPressed: !_isDeleting
-                          ? () => _reauthenticateAndDelete()
-                          : () {},
-                      backgroundColor: AppColors.activeRed,
-                      textColor: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Text(
-                        'Cancel',
-                        style: AppTextStyles.bodySmall.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-
-                if (!_isPasswordUser) ...[
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: CustomButton(
-                      text: _isDeleting ? 'Deleting...' : 'Continue with Google',
-                      onPressed: !_isDeleting
-                          ? () => _reauthenticateAndDelete()
-                          : () {},
-                      backgroundColor: Colors.white,
-                      textColor: Colors.black87,
-                      showBorder: true,
-                      borderColor: borderColor,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Text(
-                        'Cancel',
-                        style: AppTextStyles.bodySmall.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ],
             ],
           ),
         ),

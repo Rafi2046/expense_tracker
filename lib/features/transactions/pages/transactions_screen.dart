@@ -1,15 +1,15 @@
+import 'package:expense_tracker/features/transactions/widgets/transaction_header.dart';
+import 'package:expense_tracker/features/transactions/widgets/transaction_filters.dart';
+import 'package:expense_tracker/features/transactions/widgets/transaction_summary_card.dart';
 import 'package:expense_tracker/features/transactions/widgets/transactions_month_selector.dart';
-import 'package:expense_tracker/features/transactions/widgets/ledger_stats_cards.dart';
 import 'package:expense_tracker/features/transactions/widgets/ledger_transaction_list.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -37,42 +37,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  Widget _buildSegment(BuildContext context, TransactionProvider provider, String label, TransactionTypeFilter filter, bool isDark) {
-    final isSelected = provider.transactionTypeFilter == filter;
-    Color selectedColor;
-    switch (filter) {
-      case TransactionTypeFilter.income:
-        selectedColor = AppColors.activeGreen;
-      case TransactionTypeFilter.expense:
-        selectedColor = AppColors.expensePink;
-      case TransactionTypeFilter.all:
-        selectedColor = const Color(0xFF6A53A1);
-    }
-
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => provider.transactionTypeFilter = filter,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            color: isSelected ? selectedColor : Colors.transparent,
-            borderRadius: BorderRadius.circular(11),
-          ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.bodyBold.copyWith(
-              fontSize: AppFontSizes.size13,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-              color: isSelected ? Colors.white : (isDark ? Colors.white60 : const Color(0xFF6B7280)),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   void _showAddOptions(BuildContext context) {
@@ -138,53 +102,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        title: isSearching
-            ? TextField(
-                controller: _searchController,
-                autofocus: true,
-                style: AppTextStyles.h3.copyWith(
-                  color: onSurface,
-                ),
-                decoration: InputDecoration(
-                  hintText: context.translate('search_hint'),
-                  hintStyle: AppTextStyles.bodyBold.copyWith(fontWeight: FontWeight.w400, color: isDark ? Colors.white38 : Colors.grey.shade400),
-                  border: InputBorder.none,
-                ),
-                onChanged: (val) => provider.updateSearchQuery(val),
-              )
-            : Text(
-                context.translate('transactions'),
-                style: AppTextStyles.h2.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: onSurface,
-                ),
-              ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              isSearching ? LucideIcons.x : LucideIcons.search,
-              color: isDark ? Colors.white70 : const Color(0xFF31394D),
-            ),
-            onPressed: () {
-              final wasSearching = provider.isSearching;
-              provider.toggleSearching(!wasSearching);
-              if (wasSearching) {
-                _searchController.clear();
-              }
-            },
-          ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
-          child: Container(
-            color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF1F1F1),
-            height: 1.0,
-          ),
-        ),
+      appBar: TransactionHeader(
+        isSearching: isSearching,
+        isDark: isDark,
+        onSurface: onSurface,
+        searchController: _searchController,
+        onSearchToggle: () {
+          final wasSearching = provider.isSearching;
+          provider.toggleSearching(!wasSearching);
+          if (wasSearching) {
+            _searchController.clear();
+          }
+        },
+        onSearchChanged: (val) => provider.updateSearchQuery(val),
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 60),
@@ -209,7 +139,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Stats Summary Cards (Income vs Expense + Net Balance)
-                TransactionsStatsCards(
+                TransactionSummaryCard(
                   isMasked: _localMasked,
                   onToggleMask: () => setState(() => _localMasked = !_localMasked),
                 ),
@@ -220,21 +150,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 const SizedBox(height: 12),
 
                 // Filter: All / Income / Expense
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFF0F1F3),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Row(
-                    children: [
-                      _buildSegment(context, provider, 'All', TransactionTypeFilter.all, isDark),
-                      const SizedBox(width: 4),
-                      _buildSegment(context, provider, 'Income', TransactionTypeFilter.income, isDark),
-                      const SizedBox(width: 4),
-                      _buildSegment(context, provider, 'Expense', TransactionTypeFilter.expense, isDark),
-                    ],
-                  ),
+                TransactionFilters(
+                  selectedFilter: provider.transactionTypeFilter,
+                  isDark: isDark,
+                  onFilterChanged: (filter) => provider.transactionTypeFilter = filter,
                 ),
 
                 LedgerTransactionList(isMasked: _localMasked, isLoading: isLoading),

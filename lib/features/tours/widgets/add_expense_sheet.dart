@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -9,7 +8,6 @@ import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/features/tours/widgets/expense_category_selector.dart';
@@ -19,6 +17,12 @@ import 'package:expense_tracker/features/tours/widgets/expense_split_amount_row.
 import 'package:expense_tracker/features/tours/widgets/expense_receipt_picker.dart';
 import 'package:expense_tracker/features/tours/widgets/expense_date_picker.dart';
 import 'package:expense_tracker/features/tours/widgets/expense_validation_banner.dart';
+import 'package:expense_tracker/features/tours/widgets/expense_sheet_drag_handle.dart';
+import 'package:expense_tracker/features/tours/widgets/expense_hero_section.dart';
+import 'package:expense_tracker/features/tours/widgets/expense_add_category_dialog.dart';
+import 'package:expense_tracker/features/tours/widgets/expense_late_joiner_banner.dart';
+import 'package:expense_tracker/features/tours/widgets/expense_note_field.dart';
+import 'package:expense_tracker/features/tours/widgets/expense_save_button.dart';
 
 class AddExpenseSheet extends StatefulWidget {
   final String tourId;
@@ -724,9 +728,16 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _buildDragHandle(theme),
+                      ExpenseSheetDragHandle(theme: theme),
                       const SizedBox(height: AppSpacing.s8),
-                      _buildHeroSection(theme),
+                      ExpenseHeroSection(
+                        theme: theme,
+                        sym: _sym,
+                        amountController: _amountController,
+                        amountFocusNode: _amountFocusNode,
+                        titleController: _titleController,
+                        onChanged: () => setState(() => _validationError = null),
+                      ),
                       const SizedBox(height: AppSpacing.h24),
                       ExpenseCategorySelector(
                         theme: theme,
@@ -734,7 +745,15 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                         customCategories: _customCategories,
                         onCategorySelected: (v) =>
                             setState(() => _selectedCategory = v),
-                        onAddCategory: _showAddCategoryDialog,
+                        onAddCategory: () async {
+                          final result = await showAddCategoryDialog(context);
+                          if (result != null && mounted) {
+                            setState(() {
+                              _customCategories.add(result);
+                              _selectedCategory = result['name'] as String;
+                            });
+                          }
+                        },
                       ),
                       const SizedBox(height: AppSpacing.h24),
                       ExpenseDatePicker(
@@ -788,7 +807,11 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                               ),
                               if (_lateJoiners.isNotEmpty) ...[
                                 const SizedBox(height: AppSpacing.s12),
-                                _buildLateJoinerBanner(theme),
+                                ExpenseLateJoinerBanner(
+                                  theme: theme,
+                                  names: _lateJoiners.map((p) => p.name.split(' ').first).join(', '),
+                                  dateText: _formatDate(_selectedDate),
+                                ),
                               ],
                               const SizedBox(height: AppSpacing.s12),
                               ExpenseSplitAmountRow(
@@ -840,7 +863,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _sectionLabel(theme, 'NOTES'),
-                              _buildNoteContent(theme),
+                              ExpenseNoteField(theme: theme, controller: _noteController),
                             ],
                           ),
                         ),
@@ -852,544 +875,15 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 ),
               ),
               // Sticky save button
-              _buildSaveButton(
-                theme,
-                bottomInset,
-                percentageError || exactExceedsError,
+              ExpenseSaveButton(
+                theme: theme,
+                bottomInset: bottomInset,
+                isSaving: _isSaving,
+                hasError: percentageError || exactExceedsError,
+                onSave: _save,
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDragHandle(ThemeData theme) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 12, bottom: 4),
-      child: Center(
-        child: Container(
-          width: 40,
-          height: 5,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(3),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ─── Hero Section (Amount + Title) ─────────────────────────────────────
-
-  Widget _buildHeroSection(ThemeData theme) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.activeGreen.withValues(alpha: 0.06),
-            AppColors.activeGreen.withValues(alpha: 0.02),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.activeGreen.withValues(alpha: 0.1),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        children: [
-          // Amount input
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(
-                _sym,
-                style: AppTextStyles.displayLarge.copyWith(
-                  fontWeight: FontWeight.w300,
-                  color: AppColors.activeGreen.withValues(alpha: 0.5),
-                ),
-              ),
-              const SizedBox(width: 4),
-              IntrinsicWidth(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    minWidth: 60,
-                    maxWidth: 200,
-                  ),
-                  child: TextField(
-                    controller: _amountController,
-                    focusNode: _amountFocusNode,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
-                    ],
-                    textAlign: TextAlign.center,
-                    onChanged: (_) => setState(() => _validationError = null),
-                    style: AppTextStyles.displayLarge.copyWith(
-                      fontSize: AppFontSizes.size36,
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSurface,
-                      height: 1.2,
-                    ),
-                    autofocus: true,
-                    cursorColor: AppColors.activeGreen,
-                    cursorWidth: 3,
-                    cursorHeight: 44,
-                    decoration: InputDecoration(
-                      hintText: '0.00',
-                      hintStyle: AppTextStyles.displayLarge.copyWith(
-                        fontSize: AppFontSizes.size36,
-                        fontWeight: FontWeight.w300,
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.15,
-                        ),
-                      ),
-                      border: InputBorder.none,
-                      filled: false,
-                      isDense: true,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    scrollPadding: EdgeInsets.zero,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          // Title field — visible input container
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.p14,
-              vertical: AppSpacing.p12,
-            ),
-            decoration: BoxDecoration(
-              color: _sectionBg(theme),
-              borderRadius: BorderRadius.circular(AppSpacing.r10),
-              border: Border.all(
-                color: theme.dividerColor.withValues(alpha: 0.1),
-                width: 1,
-              ),
-            ),
-            child: TextField(
-              controller: _titleController,
-              textAlign: TextAlign.start,
-              onChanged: (_) => setState(() => _validationError = null),
-              style: AppTextStyles.bodyBold.copyWith(
-                fontSize: AppFontSizes.size15,
-                color: theme.colorScheme.onSurface,
-                fontWeight: FontWeight.w500,
-              ),
-              decoration: InputDecoration(
-                hintText: 'e.g. Kacchi Bhai Dinner',
-                hintStyle: AppTextStyles.bodyBold.copyWith(
-                  fontSize: AppFontSizes.size15,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
-                  fontWeight: FontWeight.w400,
-                ),
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  static final _categoryIcons = <IconData>[
-    LucideIcons.tag,
-    LucideIcons.utensilsCrossed,
-    LucideIcons.coffee,
-    LucideIcons.cigarette,
-    LucideIcons.droplets,
-    LucideIcons.car,
-    LucideIcons.hotel,
-    LucideIcons.mountain,
-    LucideIcons.shoppingBag,
-    LucideIcons.beer,
-    LucideIcons.shoppingCart,
-    LucideIcons.fuel,
-    LucideIcons.ticket,
-    LucideIcons.moreHorizontal,
-    LucideIcons.plane,
-    LucideIcons.music,
-    LucideIcons.checkCircle,
-    LucideIcons.arrowDown,
-    LucideIcons.users,
-    LucideIcons.compass,
-    LucideIcons.image,
-    LucideIcons.fileText,
-    LucideIcons.arrowLeftRight,
-    LucideIcons.camera,
-    LucideIcons.image,
-    LucideIcons.info,
-    LucideIcons.trash,
-    LucideIcons.plus,
-    LucideIcons.x,
-    LucideIcons.gripHorizontal,
-    LucideIcons.pin,
-    LucideIcons.percent,
-    LucideIcons.user,
-    LucideIcons.check,
-    LucideIcons.calendar,
-    LucideIcons.receipt,
-    LucideIcons.wallet,
-    LucideIcons.chevronDown,
-    LucideIcons.alertCircle,
-    LucideIcons.minusCircle,
-    LucideIcons.arrowLeft,
-    LucideIcons.chevronRight,
-    LucideIcons.arrowLeft,
-    LucideIcons.home,
-    LucideIcons.pawPrint,
-    LucideIcons.heartPulse,
-    LucideIcons.zap,
-    LucideIcons.sparkles,
-    LucideIcons.cake,
-    LucideIcons.gift,
-    LucideIcons.wifi,
-    LucideIcons.phone,
-    LucideIcons.hardHat,
-    LucideIcons.paintbrush,
-    LucideIcons.trees,
-    LucideIcons.umbrella,
-  ];
-
-  static final _iconSearchData = <IconData, String>{
-    LucideIcons.tag: 'label tag category other misc general',
-    LucideIcons.utensilsCrossed: 'food restaurant dining meal eat dinner lunch',
-    LucideIcons.coffee: 'coffee tea breakfast cafe drink beverage morning',
-    LucideIcons.cigarette: 'cigarette smoking tobacco cigar',
-    LucideIcons.droplets: 'water drink hydration bottle liquid',
-    LucideIcons.car: 'transport car vehicle travel drive ride',
-    LucideIcons.hotel: 'hotel accommodation stay lodging room',
-    LucideIcons.mountain: 'activity outdoor adventure sport hiking trek',
-    LucideIcons.shoppingBag: 'shopping bag purchase retail store',
-    LucideIcons.beer: 'bar drink alcohol beer wine cocktail party',
-    LucideIcons.shoppingCart: 'grocery supermarket food shopping cart',
-    LucideIcons.fuel: 'fuel gas station petrol car vehicle',
-    LucideIcons.ticket: 'ticket ticket booking event movie show',
-    LucideIcons.moreHorizontal: 'more other misc extra additional',
-    LucideIcons.plane: 'flight plane travel airport trip vacation',
-    LucideIcons.music: 'music song entertainment party concert',
-    LucideIcons.checkCircle: 'check done complete confirm yes verified',
-    LucideIcons.arrowDown: 'down arrow download receive incoming',
-    LucideIcons.users: 'people group team friends family members',
-    LucideIcons.compass: 'explore adventure discover compass navigate',
-    LucideIcons.image: 'photo image picture gallery photography',
-    LucideIcons.fileText: 'document description file report text',
-    LucideIcons.arrowLeftRight: 'swap transfer exchange switch change',
-    LucideIcons.camera: 'camera photo image picture photography',
-    LucideIcons.info: 'info information help details notice',
-    LucideIcons.trash: 'delete remove trash discard',
-    LucideIcons.plus: 'add new create plus additional',
-    LucideIcons.x: 'close cancel exit remove stop',
-    LucideIcons.gripHorizontal: 'drag handle move reorder',
-    LucideIcons.pin: 'pin save bookmark important',
-    LucideIcons.percent: 'percent percentage discount offer sale',
-    LucideIcons.user: 'person user people individual',
-    LucideIcons.check: 'check done yes confirm verify',
-    LucideIcons.calendar: 'calendar date event schedule appointment',
-    LucideIcons.receipt: 'receipt bill invoice payment transaction',
-    LucideIcons.wallet: 'wallet account balance finance money bank payment',
-    LucideIcons.chevronDown: 'keyboard arrow down dropdown expand',
-    LucideIcons.alertCircle: 'error warning alert problem issue',
-    LucideIcons.minusCircle: 'remove circle delete clear cancel',
-    LucideIcons.arrowLeft: 'arrow back left previous return ios',
-    LucideIcons.chevronRight: 'chevron right next forward continue',
-    LucideIcons.home: 'home house rent lodging accommodation',
-    LucideIcons.pawPrint: 'pets animal dog cat pet veterinary',
-    LucideIcons.heartPulse: 'health medical medicine hospital doctor pharmacy',
-    LucideIcons.zap: 'flash electricity power energy utility bill',
-    LucideIcons.sparkles: 'celebration party event occasion festival',
-    LucideIcons.cake: 'cake dessert birthday sweet bakery',
-    LucideIcons.gift: 'gift present card giftcard occasion',
-    LucideIcons.wifi: 'wifi internet network connection data',
-    LucideIcons.phone: 'phone mobile call communication mobile',
-    LucideIcons.hardHat: 'construction repair maintenance tool fix',
-    LucideIcons.paintbrush: 'paint color decoration design art renovate brush',
-    LucideIcons.trees: 'forest nature tree park outdoor environment',
-    LucideIcons.umbrella: 'beach ocean sea water vacation holiday',
-  };
-
-  Future<void> _showAddCategoryDialog() async {
-    IconData selectedIcon = _categoryIcons.first;
-    final nameController = TextEditingController();
-    var searchQuery = '';
-
-    final result = await showDialog<Map<String, dynamic>?>(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setDialogState) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.r16),
-          ),
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          title: const Text(
-            'New Category',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: AppFontSizes.size18,
-            ),
-          ),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: nameController,
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    hintText: 'Search icons...',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.r10),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.p12,
-                      vertical: AppSpacing.p12,
-                    ),
-                  ),
-                  onChanged: (value) {
-                    setDialogState(
-                      () => searchQuery = value.trim().toLowerCase(),
-                    );
-                  },
-                  onSubmitted: (value) {
-                    final name = value.trim();
-                    if (name.isNotEmpty) {
-                      Navigator.pop(ctx, {'name': name, 'icon': selectedIcon});
-                    }
-                  },
-                ),
-                const SizedBox(height: 6),
-                const Text(
-                  'Choose an icon',
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size12,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF6B7280),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: Builder(
-                    builder: (ctx) {
-                      final filtered = searchQuery.isEmpty
-                          ? _categoryIcons
-                          : _iconSearchData.entries
-                                .where((e) => e.value.contains(searchQuery))
-                                .map((e) => e.key)
-                                .toList();
-                      return GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 6,
-                              crossAxisSpacing: 6,
-                              mainAxisSpacing: 6,
-                            ),
-                        itemCount: filtered.length,
-                        itemBuilder: (ctx, i) {
-                          final icon = filtered[i];
-                          final isSelected = icon == selectedIcon;
-                          return GestureDetector(
-                            onTap: () =>
-                                setDialogState(() => selectedIcon = icon),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? AppColors.activeGreen.withValues(
-                                        alpha: 0.12,
-                                      )
-                                    : const Color(0xFFF3F4F6),
-                                borderRadius: BorderRadius.circular(
-                                  AppSpacing.r10,
-                                ),
-                                border: Border.all(
-                                  color: isSelected
-                                      ? AppColors.activeGreen
-                                      : Colors.transparent,
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: Icon(
-                                icon,
-                                size: 22,
-                                color: isSelected
-                                    ? AppColors.activeGreen
-                                    : const Color(0xFF6B7280),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text(
-                'Cancel',
-                style: TextStyle(color: Color(0xFF6B7280)),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                final name = nameController.text.trim();
-                if (name.isNotEmpty) {
-                  Navigator.pop(ctx, {'name': name, 'icon': selectedIcon});
-                }
-              },
-              child: const Text(
-                'Add',
-                style: TextStyle(
-                  color: AppColors.activeGreen,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-
-    if (result != null && mounted) {
-      setState(() {
-        _customCategories.add(result);
-        _selectedCategory = result['name'] as String;
-      });
-    }
-  }
-
-  Widget _buildLateJoinerBanner(ThemeData theme) {
-    final names = _lateJoiners.map((p) => p.name.split(' ').first).join(', ');
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppColors.activeGreen.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(LucideIcons.info, size: 14, color: AppColors.activeGreen),
-          const SizedBox(width: 6),
-          Expanded(
-            child: Text(
-              '$names joined after ${_formatDate(_selectedDate)} — unchecked by default.',
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.activeGreen,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ─── Note Field ──────────────────────────────────────────────────────
-
-  Widget _buildNoteContent(ThemeData theme) {
-    return TextField(
-      controller: _noteController,
-      maxLines: 1,
-      style: AppTextStyles.bodyBold.copyWith(
-        fontWeight: FontWeight.w400,
-        color: theme.colorScheme.onSurface,
-      ),
-      decoration: InputDecoration(
-        hintText: 'Add a note...',
-        hintStyle: AppTextStyles.bodyBold.copyWith(
-          fontWeight: FontWeight.w400,
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
-        ),
-        border: InputBorder.none,
-        isDense: true,
-        contentPadding: const EdgeInsets.symmetric(vertical: 2),
-        prefixIcon: Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: Icon(
-            LucideIcons.stickyNote,
-            size: 18,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
-          ),
-        ),
-        prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
-      ),
-    );
-  }
-
-  // ─── Save Button (Sticky) ────────────────────────────────────────────
-
-  Widget _buildSaveButton(
-    ThemeData theme,
-    double bottomInset,
-    bool percentageError,
-  ) {
-    final canSave = !_isSaving && !percentageError;
-    return Container(
-      padding: EdgeInsets.fromLTRB(20, 12, 20, bottomInset + 12),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: SizedBox(
-        width: double.infinity,
-        height: 50,
-        child: FilledButton(
-          onPressed: canSave ? _save : null,
-          style: FilledButton.styleFrom(
-            backgroundColor: AppColors.activeGreen,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-            elevation: 0,
-          ),
-          child: _isSaving
-              ? const SizedBox(
-                  width: 22,
-                  height: 22,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(LucideIcons.check, size: 20, color: Colors.white),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Save Expense',
-                      style: AppTextStyles.bodyBold.copyWith(
-                        fontSize: AppFontSizes.size15,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
         ),
       ),
     );

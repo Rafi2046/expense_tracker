@@ -1,6 +1,6 @@
-import 'package:expense_tracker/features/transactions/widgets/ledger_transaction_row.dart';
+import 'package:expense_tracker/features/transactions/widgets/transaction_list_tile.dart';
+import 'package:expense_tracker/features/transactions/widgets/transaction_empty_state.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
@@ -39,7 +39,7 @@ class LedgerTransactionList extends StatelessWidget {
 
     if (isLoading) {
       return Column(
-        children: List.generate(6, (i) => LedgerTransactionRow(
+        children: List.generate(6, (i) => TransactionListTile(
           key: ValueKey('ledger_skeleton_$i'),
           title: 'Loading transaction',
           dateText: '12:00 PM',
@@ -54,24 +54,7 @@ class LedgerTransactionList extends StatelessWidget {
     }
 
     if (filteredTransactions.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 60.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                AppImages.transactions,
-                width: 250,
-                height: 250,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(height: 16),
-
-            ],
-          ),
-        ),
-      );
+      return const TransactionEmptyState();
     }
 
     // Group transactions by date
@@ -151,7 +134,7 @@ class LedgerTransactionList extends StatelessWidget {
               ),
               child: Icon(LucideIcons.trash, color: Colors.white, size: 28),
             ),
-            child: LedgerTransactionRow(
+            child: TransactionListTile(
               title: tx.note.isNotEmpty ? tx.note : tx.category,
               dateText: DateFormat('h:mm a').format(tx.dateTime),
               category: tx.category,

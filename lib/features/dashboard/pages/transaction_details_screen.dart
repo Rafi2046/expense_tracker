@@ -24,7 +24,11 @@ class TransactionDetailsScreen extends StatelessWidget {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface, size: 20),
+          icon: Icon(
+            LucideIcons.arrowLeft,
+            color: theme.colorScheme.onSurface,
+            size: 20,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -87,13 +91,8 @@ class TransactionDetailsScreen extends StatelessWidget {
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          title: Text(
-            'Delete Transaction',
-            style: AppTextStyles.h3,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          title: Text('Delete Transaction', style: AppTextStyles.h3),
           content: Text(
             'Are you sure you want to delete this transaction? This action cannot be undone.',
             style: AppTextStyles.body,
@@ -103,7 +102,10 @@ class TransactionDetailsScreen extends StatelessWidget {
               onPressed: () => Navigator.pop(ctx),
               child: Text(
                 'Cancel',
-                style: AppTextStyles.label.copyWith(fontSize: AppFontSizes.size13, color: Colors.grey),
+                style: AppTextStyles.label.copyWith(
+                  fontSize: AppFontSizes.size13,
+                  color: Colors.grey,
+                ),
               ),
             ),
             ElevatedButton(
@@ -112,8 +114,8 @@ class TransactionDetailsScreen extends StatelessWidget {
               ),
               onPressed: () {
                 context.read<TransactionProvider>().deleteTransaction(
-                      transaction.id,
-                    );
+                  transaction.id,
+                );
                 Navigator.pop(ctx);
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -125,7 +127,11 @@ class TransactionDetailsScreen extends StatelessWidget {
               },
               child: Text(
                 'Delete',
-                style: AppTextStyles.label.copyWith(fontSize: AppFontSizes.size13, color: Colors.white, fontWeight: FontWeight.bold),
+                style: AppTextStyles.label.copyWith(
+                  fontSize: AppFontSizes.size13,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],

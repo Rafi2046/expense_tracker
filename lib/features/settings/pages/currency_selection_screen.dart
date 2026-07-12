@@ -1,10 +1,12 @@
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/features/settings/widgets/currency_search_bar.dart';
+import 'package:expense_tracker/features/settings/widgets/currency_list_tile.dart';
+import 'package:expense_tracker/features/settings/widgets/currency_list_header.dart';
+import 'package:expense_tracker/features/settings/widgets/currency_empty_state.dart';
 
 class CurrencySelectionScreen extends StatefulWidget {
   const CurrencySelectionScreen({super.key});
@@ -24,34 +26,12 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
     super.dispose();
   }
 
-  Widget _buildFlagIcon(BuildContext context, String flagEmoji) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: isDark ? Theme.of(context).cardColor : const Color(0xFFF9FAFB),
-        border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF3F4F6), width: 1.5),
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        flagEmoji,
-        style: const TextStyle(
-          fontSize: AppFontSizes.size22,
-          height: 1.25,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<CurrencyProvider>();
     final selectedCurrency = provider.selectedCurrency;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final activeGreenColor = isDark ? const Color(0xFF10B981) : const Color(0xFF064E3B);
     final borderColor = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFE5E7EB);
 
     // Filter currencies based on search query
@@ -101,37 +81,13 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
           },
         ),
         title: _isSearching
-            ? Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  color: isDark ? theme.cardColor : const Color(0xFFF3F4F6),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Row(
-                  children: [
-                    Icon(LucideIcons.search, color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF), size: 18),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        controller: _searchController,
-                        autofocus: true,
-                        style: AppTextStyles.partyFormLabel.copyWith(color: theme.colorScheme.onSurface),
-                        decoration: InputDecoration(
-                          hintText: 'Search currency...',
-                          hintStyle: AppTextStyles.body.copyWith(fontFamily: GoogleFonts.workSans().fontFamily, color: isDark ? Colors.grey.shade600 : const Color(0xFF9CA3AF)),
-                          border: InputBorder.none,
-                          isDense: true,
-                        ),
-                        onChanged: (val) {
-                          setState(() {
-                            _searchQuery = val;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+            ? CurrencySearchBar(
+                controller: _searchController,
+                onChanged: (val) {
+                  setState(() {
+                    _searchQuery = val;
+                  });
+                },
               )
             : Text(
                 'Select Currency',
@@ -165,96 +121,28 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
           children: [
             // Current Currency Pinned flat card
             if (!_isSearching || filtered.contains(selectedCurrency)) ...[
-              Text(
-                'CURRENT CURRENCY',
-                style: AppTextStyles.caption.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF),
-                  letterSpacing: 1.2,
-                ),
+              CurrencyListHeader(
+                title: 'CURRENT CURRENCY',
+                letterSpacing: 1.2,
+                padding: const EdgeInsets.only(bottom: 10),
               ),
-              const SizedBox(height: 10),
-              Container(
-                decoration: BoxDecoration(
-                  color: theme.cardColor,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: borderColor, width: 1),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      child: Row(
-                        children: [
-                          _buildFlagIcon(context, selectedCurrency.flag),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  selectedCurrency.name,
-                                  style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  selectedCurrency.code,
-                                  style: AppTextStyles.label.copyWith(color: isDark ? Colors.grey.shade400 : const Color(0xFF6B7280)),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            selectedCurrency.symbol,
-                            style: AppTextStyles.h3.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: activeGreenColor,
-                            ),
-                          ),
-                          const SizedBox(width: 14),
-                          Icon(
-                            LucideIcons.checkCircle,
-                            color: activeGreenColor,
-                            size: 22,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+              CurrencyListTile(
+                currency: selectedCurrency,
+                isSelected: true,
+                isCard: true,
+                onTap: () {
+                  Navigator.pop(context);
+                },
               ),
               const SizedBox(height: 14),
             ],
 
             // Grouped Region List
             if (regions.isEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40.0),
-                child: Center(
-                  child: Text(
-                    'No currencies found',
-                    style: AppTextStyles.reportTileTitle.copyWith(color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF)),
-                  ),
-                ),
-              )
+              const CurrencyEmptyState()
             else
               for (var region in regions) ...[
-                Padding(
-                  padding: const EdgeInsets.only(top: 22.0, bottom: 8.0),
-                  child: Text(
-                    region,
-                style: AppTextStyles.caption.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF),
-                  letterSpacing: 1.5,
-                ),
-                  ),
-                ),
+                CurrencyListHeader(title: region),
                 ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -268,55 +156,13 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                     final currency = grouped[region]![index];
                     final isCurrent = currency.code == selectedCurrency.code;
 
-                    return InkWell(
+                    return CurrencyListTile(
+                      currency: currency,
+                      isSelected: isCurrent,
                       onTap: () {
                         provider.selectCurrency(currency.code);
                         Navigator.pop(context);
                       },
-                      child: SizedBox(
-                        height: 68,
-                        child: Row(
-                          children: [
-                            _buildFlagIcon(context, currency.flag),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    currency.name,
-                                    style: AppTextStyles.reportTileTitle.copyWith(
-                                      color: theme.colorScheme.onSurface,
-                                      fontWeight: isCurrent ? FontWeight.w600 : FontWeight.w400,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    currency.code,
-                                    style: AppTextStyles.label.copyWith(color: isDark ? Colors.grey.shade400 : const Color(0xFF6B7280)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text(
-                              currency.symbol,
-                            style: AppTextStyles.h3.copyWith(
-                              fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w500,
-                              color: isCurrent ? activeGreenColor : (isDark ? Colors.grey.shade400 : const Color(0xFF6B7280)),
-                            ),
-                            ),
-                            if (isCurrent) ...[
-                              const SizedBox(width: 14),
-                              Icon(
-                                LucideIcons.checkCircle,
-                                color: activeGreenColor,
-                                size: 22,
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
                     );
                   },
                 ),

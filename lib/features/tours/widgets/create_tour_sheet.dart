@@ -4,9 +4,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'tour_name_field.dart';
+import 'tour_date_range_picker.dart';
+import 'tour_currency_selector.dart';
+import 'tour_description_field.dart';
+import 'create_tour_submit_button.dart';
 
 class CreateTourSheet extends StatefulWidget {
   final Function(Tour tour) onTourCreated;
@@ -31,13 +35,64 @@ class CreateTourSheet extends StatefulWidget {
 
 class _CreateTourSheetState extends State<CreateTourSheet> {
   final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
   String selectedCurrency = 'BDT';
+  DateTime? startDate;
+  DateTime? endDate;
   String? coverPhotoPath;
 
   @override
   void dispose() {
     nameController.dispose();
+    descriptionController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickDate({required bool isStart}) async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: isStart
+          ? (startDate ?? now)
+          : (endDate ?? startDate ?? now),
+      firstDate: isStart ? now.subtract(const Duration(days: 365)) : (startDate ?? now),
+      lastDate: now.add(const Duration(days: 365)),
+    );
+    if (picked != null) {
+      setState(() {
+        if (isStart) {
+          startDate = picked;
+          if (endDate != null && endDate!.isBefore(picked)) {
+            endDate = null;
+          }
+        } else {
+          endDate = picked;
+        }
+      });
+    }
+  }
+
+  void _handleCreate() {
+    final name = nameController.text.trim();
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a tour name'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    final tour = Tour(
+      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      name: name,
+      coverPhoto: coverPhotoPath,
+      currency: selectedCurrency,
+      createdAt: DateTime.now(),
+      profileId: context.read<TourProvider>().activeProfileId,
+    );
+    Navigator.pop(context);
+    widget.onTourCreated(tour);
   }
 
   @override
@@ -91,73 +146,31 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                       ),
                       const SizedBox(height: 24),
 
-                      Container(
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.05)
-                              : Colors.grey.shade50,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                          ),
-                        ),
-                        child: TextField(
-                          controller: nameController,
-                          autofocus: true,
-                          decoration: InputDecoration(
-                            labelText: 'Tour Name',
-                            hintText: 'e.g. Bali Trip 2026',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                          ),
-                          style: AppTextStyles.reportTileTitle.copyWith(
-                            fontWeight: FontWeight.w400,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
+                      TourNameField(
+                        theme: theme,
+                        controller: nameController,
                       ),
                       const SizedBox(height: 14),
 
-                      Container(
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.05)
-                              : Colors.grey.shade50,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                          ),
-                        ),
-                        child: DropdownButtonFormField<String>(
-                          initialValue: selectedCurrency,
-                          decoration: InputDecoration(
-                            labelText: 'Currency',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                          ),
-                        dropdownColor: theme.colorScheme.surface,
-                        items: const [
-                          DropdownMenuItem(value: 'USD', child: Text('\$ USD')),
-                          DropdownMenuItem(value: 'BDT', child: Text('৳ BDT')),
-                          DropdownMenuItem(value: 'EUR', child: Text('€ EUR')),
-                          DropdownMenuItem(value: 'GBP', child: Text('£ GBP')),
-                          DropdownMenuItem(value: 'INR', child: Text('₹ INR')),
-                          DropdownMenuItem(value: 'JPY', child: Text('¥ JPY')),
-                        ],
-                        onChanged: (v) {
-                          if (v != null) setState(() => selectedCurrency = v);
-                        },
-                        style: AppTextStyles.reportTileTitle.copyWith(
-                          fontWeight: FontWeight.w400,
-                          color: theme.colorScheme.onSurface,
-                        ),
+                      TourDateRangePicker(
+                        theme: theme,
+                        startDate: startDate,
+                        endDate: endDate,
+                        onPickStartDate: () => _pickDate(isStart: true),
+                        onPickEndDate: () => _pickDate(isStart: false),
                       ),
+                      const SizedBox(height: 14),
+
+                      TourCurrencySelector(
+                        theme: theme,
+                        value: selectedCurrency,
+                        onChanged: (v) => setState(() => selectedCurrency = v),
+                      ),
+                      const SizedBox(height: 14),
+
+                      TourDescriptionField(
+                        theme: theme,
+                        controller: descriptionController,
                       ),
                       const SizedBox(height: 14),
 
@@ -252,42 +265,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                       ),
                       const SizedBox(height: 20),
 
-                      FilledButton(
-                        onPressed: () {
-                          final name = nameController.text.trim();
-                          if (name.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Please enter a tour name'),
-                                behavior: SnackBarBehavior.floating,
-                              ),
-                            );
-                            return;
-                          }
-                          final tour = Tour(
-                            id: DateTime.now().microsecondsSinceEpoch.toString(),
-                            name: name,
-                            coverPhoto: coverPhotoPath,
-                            currency: selectedCurrency,
-                            createdAt: DateTime.now(),
-                            profileId: context.read<TourProvider>().activeProfileId,
-                          );
-                          Navigator.pop(context);
-                          widget.onTourCreated(tour);
-                        },
-                        style: FilledButton.styleFrom(
-                          backgroundColor: AppColors.activeGreen,
-                          minimumSize: const Size(double.infinity, 52),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          'Create Tour',
-                          style: AppTextStyles.h3.copyWith(
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ),
+                      CreateTourSubmitButton(onPressed: _handleCreate),
                     ],
                   ),
                 ),

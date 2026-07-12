@@ -1,11 +1,12 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+
+import 'tour_card_background.dart';
+import 'tour_card_status_badge.dart';
+import 'tour_card_menu_button.dart';
+import 'tour_card_bottom_content.dart';
 
 class TourCard extends StatelessWidget {
   final Tour tour;
@@ -59,6 +60,10 @@ class TourCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasCoverPhoto = tour.coverPhoto != null && tour.coverPhoto!.isNotEmpty;
+    final totalLabel = context.translate('total_spent');
+    final memberLabel = memberCount == 1
+        ? context.translate('member')
+        : context.translate('members');
 
     return GestureDetector(
       onTap: onTap,
@@ -77,50 +82,20 @@ class TourCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           child: Stack(
             children: [
-              // Background: cover photo or gradient
-              if (hasCoverPhoto)
-                Image.file(
-                  File(tour.coverPhoto!),
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      _buildGradientFallback(),
-                )
-              else
-                _buildGradientFallback(),
-
-              // Bottom gradient overlay
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: 160,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withValues(alpha: 0.85),
-                      ],
-                    ),
-                  ),
-                ),
+              TourCardBackground(
+                coverPhoto: hasCoverPhoto ? tour.coverPhoto : null,
+                gradient: _gradient,
               ),
-
-              // Status chip — top right
               Positioned(
                 top: 14,
                 right: 14,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _StatusBadge(isCompleted: tour.isCompleted),
+                    TourCardStatusBadge(isCompleted: tour.isCompleted),
                     if (onDelete != null || onToggleComplete != null) ...[
                       const SizedBox(width: 6),
-                      _CardMenuButton(
+                      TourCardMenuButton(
                         isCompleted: tour.isCompleted,
                         onDelete: onDelete,
                         onToggleComplete: onToggleComplete,
@@ -129,218 +104,23 @@ class TourCard extends StatelessWidget {
                   ],
                 ),
               ),
-
-              // Bottom content — name, members, amount
               Positioned(
                 bottom: 0,
                 left: 0,
                 right: 0,
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.p20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        tour.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.displayMedium.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          height: 1.15,
-                          letterSpacing: -0.3,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.s12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                LucideIcons.users,
-                                color: Colors.white.withValues(alpha: 0.7),
-                                size: 16,
-                              ),
-                              const SizedBox(width: AppSpacing.s6),
-                              Text(
-                                '$memberCount ${memberCount == 1 ? context.translate('member') : context.translate('members')}',
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: Colors.white.withValues(alpha: 0.7),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                context.translate('total_spent'),
-                                style: AppTextStyles.caption.copyWith(
-                                  color: Colors.white.withValues(alpha: 0.5),
-                                  fontSize: AppFontSizes.size10,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.8,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                _formatAmount(totalSpent, tour.currency),
-                                style: AppTextStyles.displayMedium.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: -0.5,
-                                  height: 1.1,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
+                  child: TourCardBottomContent(
+                    name: tour.name,
+                    memberCount: memberCount,
+                    totalSpentFormatted: _formatAmount(totalSpent, tour.currency),
+                    totalLabel: totalLabel,
+                    memberLabel: memberLabel,
                   ),
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGradientFallback() {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: _gradient,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-    );
-  }
-}
-
-class _StatusBadge extends StatelessWidget {
-  final bool isCompleted;
-
-  const _StatusBadge({required this.isCompleted});
-
-  @override
-  Widget build(BuildContext context) {
-    final dotColor = isCompleted ? const Color(0xFF9CA3AF) : const Color(0xFF4ADE80);
-    final label = isCompleted ? context.translate('completed') : context.translate('active');
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: isCompleted ? 0.1 : 0.15),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: isCompleted ? 0.12 : 0.2),
-          width: 0.5,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 6,
-            height: 6,
-            decoration: BoxDecoration(
-              color: dotColor,
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 5),
-          Text(
-            label,
-            style: AppTextStyles.caption.copyWith(
-              color: Colors.white.withValues(alpha: isCompleted ? 0.6 : 0.9),
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.3,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CardMenuButton extends StatelessWidget {
-  final bool isCompleted;
-  final VoidCallback? onDelete;
-  final VoidCallback? onToggleComplete;
-
-  const _CardMenuButton({
-    required this.isCompleted,
-    this.onDelete,
-    this.onToggleComplete,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<String>(
-      offset: const Offset(0, 40),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      onSelected: (value) {
-        if (value == 'toggleComplete') onToggleComplete?.call();
-        if (value == 'delete') onDelete?.call();
-      },
-      itemBuilder: (context) => [
-        if (onToggleComplete != null)
-          PopupMenuItem(
-            value: 'toggleComplete',
-            child: Row(
-              children: [
-                Icon(
-                  isCompleted ? LucideIcons.circle : LucideIcons.checkCircle,
-                  size: 18,
-                  color: isCompleted ? const Color(0xFF6B7280) : const Color(0xFF4ADE80),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  isCompleted ? context.translate('mark_as_active') : context.translate('mark_as_completed'),
-                  style: TextStyle(
-                    color: isCompleted ? const Color(0xFF6B7280) : const Color(0xFF4ADE80),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        if (onDelete != null)
-          PopupMenuItem(
-            value: 'delete',
-            child: Row(
-              children: [
-                const Icon(LucideIcons.trash, size: 18, color: Color(0xFFDC2626)),
-                const SizedBox(width: 8),
-                Text(context.translate('delete_tour'),
-                    style: const TextStyle(color: Color(0xFFDC2626))),
-              ],
-            ),
-          ),
-      ],
-      child: Container(
-        padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.2),
-            width: 0.5,
-          ),
-        ),
-        child: const Icon(
-          LucideIcons.moreHorizontal,
-          size: 16,
-          color: Colors.white,
         ),
       ),
     );

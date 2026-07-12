@@ -1,14 +1,12 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
-import 'package:expense_tracker/core/providers/language_provider.dart';
-import 'package:expense_tracker/features/dashboard/widgets/category_input_row.dart';
-import 'package:expense_tracker/features/dashboard/widgets/category_list_row.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+import 'package:expense_tracker/features/settings/widgets/category_empty_state.dart';
+import 'package:expense_tracker/features/settings/widgets/category_list_tile.dart';
+import 'package:expense_tracker/features/settings/widgets/category_search_bar.dart';
+import 'package:expense_tracker/features/settings/widgets/manage_categories_header.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ManageCategoriesScreen extends StatefulWidget {
   const ManageCategoriesScreen({super.key});
@@ -159,30 +157,10 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: theme.cardColor,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          context.translate('manage_categories'),
-          style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
-        ),
-        centerTitle: true,
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: primaryTabColor,
-          unselectedLabelColor: Colors.grey,
-          indicatorColor: primaryTabColor,
-          labelStyle: AppTextStyles.bodyBold,
-          tabs: [
-            Tab(text: context.translate('expense')),
-            Tab(text: context.translate('income')),
-          ],
-        ),
+      appBar: ManageCategoriesHeader(
+        tabController: _tabController,
+        primaryTabColor: primaryTabColor,
+        onBack: () => Navigator.pop(context),
       ),
       body: TabBarView(
         controller: _tabController,
@@ -203,15 +181,13 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
         : provider.expenseCategories;
     final themeColor = isIncome ? AppColors.activeGreen : AppColors.activeRed;
     final controller = isIncome ? _incomeInputController : _expenseInputController;
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          // Inline Input Row
-          CategoryInputRow(
+          CategorySearchBar(
             controller: controller,
             themeColor: themeColor,
             onSubmitted: (_) => _addCategory(isIncome),
@@ -219,64 +195,35 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
           ),
           const SizedBox(height: 16),
 
-          // Categories List
           Expanded(
             child: categories.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          AppImages.categoriesIcon,
-                          width: 100,
-                          height: 100,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          context.translate('no_categories_yet'),
-                          style: AppTextStyles.body.copyWith(
-                            fontFamily: GoogleFonts.workSans().fontFamily,
-                            color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
+                ? CategoryEmptyState(isDark: isDark)
                 : ListView.builder(
                     itemCount: categories.length,
                     itemBuilder: (context, index) {
                       final cat = categories[index];
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        decoration: BoxDecoration(
-                          color: theme.cardColor,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF0F0F0)),
-                        ),
-                        child: CategoryListRow(
-                          categoryName: cat,
-                          themeColor: themeColor,
-                          showLeadingIcon: true,
-                          showSelection: false,
-                          onDelete: () {
-                            if (isIncome) {
-                              provider.deleteIncomeCategory(cat);
-                            } else {
-                              provider.deleteExpenseCategory(cat);
-                            }
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Category "$cat" removed.'),
-                                duration: const Duration(seconds: 1),
-                              ),
-                            );
-                          },
-                          onEdit: () => _showRenameDialog(
-                            context,
-                            provider,
-                            cat,
-                            isIncome,
-                          ),
+                      return CategoryListTile(
+                        categoryName: cat,
+                        themeColor: themeColor,
+                        isDark: isDark,
+                        onDelete: () {
+                          if (isIncome) {
+                            provider.deleteIncomeCategory(cat);
+                          } else {
+                            provider.deleteExpenseCategory(cat);
+                          }
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Category "$cat" removed.'),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                        onEdit: () => _showRenameDialog(
+                          context,
+                          provider,
+                          cat,
+                          isIncome,
                         ),
                       );
                     },

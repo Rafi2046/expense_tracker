@@ -1,13 +1,10 @@
-import 'dart:io' show Platform;
-import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
-import 'package:expense_tracker/features/login/widgets/custom_button.dart';
-import 'package:expense_tracker/features/login/widgets/custom_round_button.dart';
-import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
+import 'package:expense_tracker/features/login/widgets/signup_form.dart';
+import 'package:expense_tracker/features/login/widgets/signup_header.dart';
+import 'package:expense_tracker/features/login/widgets/signup_login_link.dart';
+import 'package:expense_tracker/features/login/widgets/signup_social_buttons.dart';
 import 'package:flutter/material.dart';
 
 
@@ -160,129 +157,25 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Image.asset(AppImages.splashLogo, height: 64, width: 64),
-
-                      Text(
-                        'Create Account',
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.loginTitle.copyWith(
-                          color: isDark ? Colors.white : null,
-                        ),
+                      SignupHeader(isDark: isDark),
+                      SignupForm(
+                        nameController: _nameController,
+                        emailController: _emailController,
+                        passwordController: _passwordController,
+                        confirmPasswordController: _confirmPasswordController,
+                        isLoading: _isLoading,
+                        onSignUp: _handleSignUp,
                       ),
-
-                      Text(
-                        'Join us to manage your finances smarter.',
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.loginSubTitle.copyWith(
-                          color: isDark ? Colors.grey.shade400 : null,
-                        ),
-                      ),
-
-                      // Controllers attached here
-                      CustomTextFieldWidget(
-                        controller: _nameController,
-                        label: 'Full Name',
-                        hintText: 'John Doe',
-                      ),
-
-                      CustomTextFieldWidget(
-                        controller: _emailController,
-                        label: 'Email Address',
-                        hintText: 'john@example.com',
-                      ),
-
-                      CustomTextFieldWidget(
-                        controller: _passwordController,
-                        label: 'Password',
-                        hintText: '••••••••',
-                        obscureText: true,
-                      ),
-
-                      CustomTextFieldWidget(
-                        controller: _confirmPasswordController,
-                        label: 'Confirm Password',
-                        hintText: '••••••••',
-                        obscureText: true,
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Action mapped to button
-                      CustomButton(
-                        text: _isLoading ? 'Creating Account...' : 'Sign Up',
-                        onPressed: _isLoading ? () {} : _handleSignUp,
-                      ),
-
                       const SizedBox(height: 8),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Divider(
-                              color: isDark ? Colors.grey.shade700 : AppColors.dividerColor,
-                              thickness: 2,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.p16,
-                            ),
-                            child: Text(
-                              'Or sign up with',
-                              style: TextStyle(color: isDark ? Colors.grey.shade400 : AppColors.dividerOrColor),
-                            ),
-                          ),
-                          Expanded(
-                            child: Divider(
-                              color: isDark ? Colors.grey.shade700 : AppColors.dividerColor,
-                              thickness: 2,
-                            ),
-                          ),
-                        ],
+                      SignupSocialButtons(
+                        isDark: isDark,
+                        isLoading: _isLoading,
+                        onGoogleSignUp: _handleGoogleSignUp,
+                        onAppleSignUp: _handleAppleSignUp,
                       ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomRoundButton(
-                            imagePath: AppImages.googleLogo,
-                            onPressed: _isLoading ? () {} : _handleGoogleSignUp,
-                          ),
-
-                          if (Platform.isIOS || Platform.isMacOS) ...[
-                            const SizedBox(width: 24),
-                            CustomRoundButton(
-                              imagePath: AppImages.appleLogo,
-                              iconSize: 26,
-                              onPressed: _isLoading ? () {} : _handleAppleSignUp,
-                            ),
-                          ],
-                        ],
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Already have an account? ",
-                            style: AppTextStyles.accountText.copyWith(
-                              color: isDark ? Colors.grey.shade400 : null,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              // Changed from Navigator.push to Navigator.pop
-                              // This prevents infinitely stacking login/signup screens
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              'Log In',
-                              style: AppTextStyles.signUpText.copyWith(
-                                color: isDark ? Colors.white : null,
-                              ),
-                            ),
-                          ),
-                        ],
+                      SignupLoginLink(
+                        isDark: isDark,
+                        onLoginTap: () => Navigator.pop(context),
                       ),
                     ],
                   ),

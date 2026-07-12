@@ -1,0 +1,175 @@
+import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/model/party_statement_entry.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
+class PartyStatementDummyCardView extends StatelessWidget {
+  final List<PartyStatementEntry> entries;
+  final ThemeData theme;
+  final bool isDark;
+
+  const PartyStatementDummyCardView({
+    super.key,
+    required this.entries,
+    required this.theme,
+    required this.isDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildBalanceBanner(),
+        const SizedBox(height: 12),
+        _buildMoneyFlowRow(),
+        const SizedBox(height: 28),
+        Text('Transactions', style: AppTextStyles.reportTransactionTitle),
+        const SizedBox(height: 14),
+        ...entries.map((e) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _buildTransactionTile(e),
+            )),
+      ],
+    );
+  }
+
+  Widget _buildBalanceBanner() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      decoration: BoxDecoration(
+        color: isDark
+            ? AppColors.activeGreen.withValues(alpha: 0.15)
+            : const Color(0xFFF4FBF9),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+            color: isDark
+                ? AppColors.activeGreen.withValues(alpha: 0.3)
+                : const Color(0xFFD3EFE8)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Total Receivables',
+              style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600)),
+          const SizedBox(height: 6),
+          Text('৳ 5,300', style: AppTextStyles.displayMedium),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMoneyFlowRow() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF2FBF7),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFD8F3E5)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Money In',
+                    style: AppTextStyles.reportStatLabel
+                        .copyWith(fontWeight: FontWeight.w600)),
+                const SizedBox(height: 4),
+                Text('৳ 0,000', style: AppTextStyles.bodyBold),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFF5F5),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: const Color(0xFFFAD1D1)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Money Out',
+                    style: AppTextStyles.reportStatLabel
+                        .copyWith(fontWeight: FontWeight.w600)),
+                const SizedBox(height: 4),
+                Text('৳ 0,000', style: AppTextStyles.bodyBold),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTransactionTile(PartyStatementEntry e) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withValues(alpha: isDark ? 0.22 : 0.04),
+              blurRadius: 12,
+              offset: const Offset(0, 4))
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: e.isInflow
+                  ? (isDark
+                      ? AppColors.activeGreen.withValues(alpha: 0.14)
+                      : const Color(0xFFE6F9F0))
+                  : (isDark
+                      ? AppColors.activeRed.withValues(alpha: 0.14)
+                      : const Color(0xFFFDE9EB)),
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: Icon(
+              e.isInflow ? LucideIcons.arrowDownLeft : LucideIcons.arrowUpRight,
+              color: e.isInflow ? AppColors.activeGreen : AppColors.activeRed,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(e.description,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.bodyBold
+                        .copyWith(color: theme.colorScheme.onSurface)),
+                const SizedBox(height: 5),
+                Text(DateFormat('dd MMM yyyy').format(e.dateTime),
+                    style: AppTextStyles.caption.copyWith(
+                        color: isDark ? Colors.white38 : Colors.grey.shade500)),
+              ],
+            ),
+          ),
+          Text(
+            '${e.isInflow ? '+' : '−'} ৳ ${e.amount.toStringAsFixed(0)}',
+            style: AppTextStyles.reportTransactionTitle.copyWith(
+                color: e.isInflow
+                    ? AppColors.activeGreen
+                    : AppColors.activeRed),
+          ),
+        ],
+      ),
+    );
+  }
+}

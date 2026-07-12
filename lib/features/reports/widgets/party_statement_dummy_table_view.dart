@@ -1,0 +1,177 @@
+import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/model/party_statement_entry.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+class PartyStatementDummyTableView extends StatelessWidget {
+  final List<PartyStatementEntry> entries;
+  final ThemeData theme;
+  final bool isDark;
+
+  const PartyStatementDummyTableView({
+    super.key,
+    required this.entries,
+    required this.theme,
+    required this.isDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildNetBalanceBanner(),
+        const SizedBox(height: 24),
+        _buildSummaryRow(),
+        const SizedBox(height: 20),
+        ...entries.map((e) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _buildTableRow(e),
+            )),
+      ],
+    );
+  }
+
+  Widget _buildNetBalanceBanner() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      decoration: BoxDecoration(
+        color: isDark
+            ? AppColors.activeGreen.withValues(alpha: 0.15)
+            : const Color(0xFFF4FBF9),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+            color: isDark
+                ? AppColors.activeGreen.withValues(alpha: 0.3)
+                : const Color(0xFFD3EFE8)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Net Balance',
+              style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600)),
+          const SizedBox(height: 6),
+          Text('৳ 5,300', style: AppTextStyles.displayMedium),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryRow() {
+    return Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Transactions', style: AppTextStyles.reportStatLabel),
+              const SizedBox(height: 4),
+              Text('5 entries', style: AppTextStyles.caption),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Column(
+            children: [
+              Text('Debit',
+                  style: AppTextStyles.reportStatLabel
+                      .copyWith(color: AppColors.activeGreen)),
+              const SizedBox(height: 4),
+              Text('৳ 0,000',
+                  style: AppTextStyles.caption
+                      .copyWith(color: AppColors.activeGreen)),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Column(
+            children: [
+              Text('Credit',
+                  style: AppTextStyles.reportStatLabel
+                      .copyWith(color: AppColors.activeRed)),
+              const SizedBox(height: 4),
+              Text('৳ 0,000',
+                  style: AppTextStyles.caption
+                      .copyWith(color: AppColors.activeRed)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTableRow(PartyStatementEntry e) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: theme.dividerColor),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(e.description,
+                    style: AppTextStyles.bodySmall
+                        .copyWith(fontWeight: FontWeight.w600)),
+                const SizedBox(height: 4),
+                Text(DateFormat('dd MMM yyyy').format(e.dateTime),
+                    style: AppTextStyles.caption
+                        .copyWith(fontSize: AppFontSizes.size10)),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: e.isInflow
+                ? Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE8F8F5),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFFD1F2E5)),
+                    ),
+                    child: Text('৳ ${e.amount.toStringAsFixed(0)}',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.reportTransactionTitle.copyWith(
+                            fontSize: AppFontSizes.size12,
+                            color: AppColors.activeGreen)),
+                  )
+                : const SizedBox.shrink(),
+          ),
+          Expanded(
+            flex: 1,
+            child: !e.isInflow
+                ? Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFDE8E8),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFFFAD1D1)),
+                    ),
+                    child: Text('৳ ${e.amount.toStringAsFixed(0)}',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.reportTransactionTitle.copyWith(
+                            fontSize: AppFontSizes.size12,
+                            color: AppColors.activeRed)),
+                  )
+                : const SizedBox.shrink(),
+          ),
+        ],
+      ),
+    );
+  }
+}

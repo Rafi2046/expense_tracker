@@ -1,15 +1,15 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
-import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
-import 'package:expense_tracker/features/reports/widgets/privacy_toggle_section.dart';
 import 'package:expense_tracker/features/reports/pages/party_statement_screen.dart';
+import 'package:expense_tracker/features/reports/widgets/parties_report_empty_state.dart';
+import 'package:expense_tracker/features/reports/widgets/parties_report_filter_chips.dart';
+import 'package:expense_tracker/features/reports/widgets/parties_report_header.dart';
+import 'package:expense_tracker/features/reports/widgets/parties_report_summary_header.dart';
+import 'package:expense_tracker/features/reports/widgets/party_list_tile.dart';
 import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PartiesReportScreen extends StatefulWidget {
   const PartiesReportScreen({super.key});
@@ -20,16 +20,32 @@ class PartiesReportScreen extends StatefulWidget {
 
 class _PartiesReportScreenState extends State<PartiesReportScreen> {
   static bool _localMasked = false;
+  PartiesFilter _selectedFilter = PartiesFilter.all;
 
   @override
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
-    final filtered = reportsProvider.partyReportSummaries;
+    final allParties = reportsProvider.partyReportSummaries;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    final displayList = switch (_selectedFilter) {
+      PartiesFilter.all => allParties,
+      PartiesFilter.debtors =>
+          allParties.where((p) => p.netBalance < 0).toList(),
+      PartiesFilter.creditors =>
+          allParties.where((p) => p.netBalance >= 0).toList(),
+    };
+
+    final totalToReceive = allParties
+        .where((p) => p.netBalance > 0)
+        .fold<double>(0, (sum, p) => sum + p.netBalance);
+    final totalToGive = allParties
+        .where((p) => p.netBalance < 0)
+        .fold<double>(0, (sum, p) => sum + p.netBalance.abs());
+
     final headers = ['Name', 'Phone', 'Net Balance', 'Transactions'];
-    final rows = filtered
+    final rows = allParties
         .map(
           (item) => {
             'Name': item.name,
@@ -80,222 +96,49 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PrivacyToggleSection(
+                  PartiesReportHeader(
                     isMasked: _localMasked,
                     onToggle: () =>
                         setState(() => _localMasked = !_localMasked),
-                  ),
-                  const SizedBox(height: 14),
-                  // Search bar
-                  TextFormField(
-                    initialValue: reportsProvider.partiesSearchQuery,
-                    onChanged: (val) {
+                    searchQuery: reportsProvider.partiesSearchQuery,
+                    onSearchChanged: (val) {
                       reportsProvider.setPartiesSearch(val);
                     },
-                    style: AppTextStyles.partyFormInput.copyWith(
-                      color: theme.colorScheme.onSurface,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Search parties...',
-                      hintStyle: AppTextStyles.partyFormHint.copyWith(
-                        fontSize: AppFontSizes.size14,
-                        color: isDark ? Colors.white30 : null,
-                      ),
-                      prefixIcon: Icon(
-                        LucideIcons.search,
-                        color: isDark ? Colors.white30 : Colors.grey.shade400,
-                        size: 20,
-                      ),
-                      filled: true,
-                      fillColor: theme.cardColor,
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 16,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color:
-                              theme.dividerTheme.color ?? Colors.grey.shade100,
-                          width: 1,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color:
-                              theme.dividerTheme.color ?? Colors.grey.shade100,
-                          width: 1,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color: theme.primaryColor,
-                          width: 1.5,
-                        ),
-                      ),
-                    ),
+                    isDark: isDark,
+                  ),
+                  const SizedBox(height: 16),
+                  PartiesReportFilterChips(
+                    selectedFilter: _selectedFilter,
+                    onFilterChanged: (filter) =>
+                        setState(() => _selectedFilter = filter),
+                  ),
+                  const SizedBox(height: 16),
+                  PartiesReportSummaryHeader(
+                    totalToReceive: totalToReceive,
+                    totalToGive: totalToGive,
+                    isMasked: _localMasked,
                   ),
                   const SizedBox(height: 20),
-
-                  // Parties list
-                  filtered.isEmpty
-                      ? Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 60.0),
-                            child: Column(
-                              children: [
-                                Icon(
-                                  LucideIcons.users,
-                                  color: isDark
-                                      ? Colors.white24
-                                      : Colors.grey.shade300,
-                                  size: 48,
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'No parties found',
-                                  style: AppTextStyles.reportTransactionSubtitle
-                                      .copyWith(
-                                        fontSize: AppFontSizes.size14,
-                                        color: theme.colorScheme.onSurface
-                                            .withValues(alpha: 0.6),
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
+                  displayList.isEmpty
+                      ? PartiesReportEmptyState(isDark: isDark)
                       : ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: filtered.length,
+                          itemCount: displayList.length,
                           separatorBuilder: (context, index) =>
                               const SizedBox(height: 10),
                           itemBuilder: (context, index) {
-                            final item = filtered[index];
-                            final isReceivable = item.netBalance >= 0;
-
-                            return InkWell(
+                            final item = displayList[index];
+                            return PartyListTile(
+                              item: item,
+                              isMasked: _localMasked,
+                              isDark: isDark,
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => PartyStatementScreen(
                                     initialPartyName: item.name,
                                   ),
-                                ),
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                              child: Container(
-                                padding: const EdgeInsets.all(14),
-                                decoration: BoxDecoration(
-                                  color: theme.cardColor,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color:
-                                        theme.dividerTheme.color ??
-                                        const Color(0xFFF1F1F1),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 44,
-                                          height: 44,
-                                          decoration: BoxDecoration(
-                                            color: isDark
-                                                ? Colors.white10
-                                                : const Color(0xFFF1F2F4),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              item.initials,
-                                              style: AppTextStyles
-                                                  .reportTileTitle
-                                                  .copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onSurface,
-                                                  ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              item.name,
-                                              style: AppTextStyles
-                                                  .reportTransactionTitle
-                                                  .copyWith(
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onSurface,
-                                                  ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              '${item.phone ?? "No phone"} • ${item.transactionCount} txs',
-                                              style: AppTextStyles
-                                                  .reportTransactionSubtitle
-                                                  .copyWith(
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onSurface
-                                                        .withValues(alpha: 0.6),
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          isReceivable
-                                              ? 'To Receive'
-                                              : 'To Give',
-                                          style: AppTextStyles.reportStatLabel
-                                              .copyWith(
-                                                color: theme
-                                                    .colorScheme
-                                                    .onSurface
-                                                    .withValues(alpha: 0.5),
-                                              ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        PrivacyMaskedText(
-                                          amount: item.netBalance.abs(),
-                                          isMasked: _localMasked,
-                                          style: AppTextStyles
-                                              .reportTransactionTitle
-                                              .copyWith(
-                                                color: item.netBalance == 0
-                                                    ? (isDark
-                                                          ? Colors.white38
-                                                          : Colors
-                                                                .grey
-                                                                .shade600)
-                                                    : (isReceivable
-                                                          ? theme.primaryColor
-                                                          : AppColors
-                                                                .activeRed),
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
                                 ),
                               ),
                             );

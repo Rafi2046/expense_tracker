@@ -1,14 +1,16 @@
 import 'dart:io';
-import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_images.dart';
-import 'package:expense_tracker/features/login/widgets/custom_button.dart';
-import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
-import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
+import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
+import 'package:expense_tracker/features/settings/widgets/profile_dialog_header.dart';
+import 'package:expense_tracker/features/settings/widgets/profile_photo_picker.dart';
+import 'package:expense_tracker/features/settings/widgets/profile_name_field.dart';
+import 'package:expense_tracker/features/settings/widgets/profile_save_button.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class EditProfileDialog extends StatefulWidget {
@@ -31,8 +33,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     if (user != null) {
       _nameController.text = user.displayName ?? '';
       _photoUrlController.text = user.photoURL ?? '';
-      
-      // If photoURL is a local file path that exists, show it in the preview
+
       if (user.photoURL != null &&
           !user.photoURL!.startsWith('http') &&
           File(user.photoURL!).existsSync()) {
@@ -80,7 +81,9 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                           Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: isDark ? Colors.grey.shade800 : const Color(0xFFF3E8FF),
+                              color: isDark
+                                  ? Colors.grey.shade800
+                                  : const Color(0xFFF3E8FF),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: const Icon(LucideIcons.image, size: 32),
@@ -97,7 +100,9 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                           Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: isDark ? Colors.grey.shade800 : const Color(0xFFF3E8FF),
+                              color: isDark
+                                  ? Colors.grey.shade800
+                                  : const Color(0xFFF3E8FF),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: const Icon(LucideIcons.camera, size: 32),
@@ -131,7 +136,9 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
         final directory = await getApplicationDocumentsDirectory();
         final user = FirebaseAuth.instance.currentUser;
         final timestamp = DateTime.now().millisecondsSinceEpoch;
-        final localFile = await File(image.path).copy('${directory.path}/profile_${user?.uid}_$timestamp.jpg');
+        final localFile = await File(image.path).copy(
+          '${directory.path}/profile_${user?.uid}_$timestamp.jpg',
+        );
 
         setState(() {
           _localImageFile = localFile;
@@ -160,9 +167,10 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
       final newName = _nameController.text.trim();
       final newPhotoUrl = _photoUrlController.text.trim();
 
-      // Save to SharedPrefs first so the settings screen picks it up
-      // even if the StreamBuilder rebuilds before the dialog closes.
-      await SharedPrefsHelper.setString('local_profile_photo_${user.uid}', newPhotoUrl);
+      await SharedPrefsHelper.setString(
+        'local_profile_photo_${user.uid}',
+        newPhotoUrl,
+      );
 
       await user.updateDisplayName(newName);
       await user.updatePhotoURL(newPhotoUrl);
@@ -197,8 +205,10 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final primaryColor = isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1);
-    final borderColor = isDark ? const Color(0xFF2D2D2D) : AppColors.dividerColor;
+    final primaryColor =
+        isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1);
+    final borderColor =
+        isDark ? const Color(0xFF2D2D2D) : AppColors.dividerColor;
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -213,99 +223,32 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Title
-              Text(
-                'Edit Profile',
-                textAlign: TextAlign.center,
-              style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
-              ),
+              const ProfileDialogHeader(),
               const SizedBox(height: 20),
-
-              // Interactive Avatar Photo Picker
-              Center(
-                child: GestureDetector(
-                  onTap: _isLoading ? null : _pickProfileImage,
-                  child: Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(3.0),
-                        decoration: BoxDecoration(
-                          color: primaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundColor: isDark ? Colors.grey.shade900 : Colors.grey.shade100,
-                          backgroundImage: _localImageFile != null
-                              ? FileImage(_localImageFile!) as ImageProvider
-                              : (_photoUrlController.text.startsWith('http')
-                                  ? NetworkImage(_photoUrlController.text) as ImageProvider
-                                  : (_photoUrlController.text.isNotEmpty && File(_photoUrlController.text).existsSync()
-                                      ? FileImage(File(_photoUrlController.text)) as ImageProvider
-                                      : const AssetImage(AppImages.avatarImage))),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: primaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          LucideIcons.camera,
-                          color: Colors.white,
-                          size: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              ProfilePhotoPicker(
+                localImageFile: _localImageFile,
+                photoUrl: _photoUrlController.text,
+                isLoading: _isLoading,
+                isDark: isDark,
+                primaryColor: primaryColor,
+                onTap: _pickProfileImage,
               ),
               const SizedBox(height: 24),
-
-              // Name Input
-              CustomTextFieldWidget(
-                label: 'Display Name',
-                hintText: 'Enter your name',
-                controller: _nameController,
-              ),
+              ProfileNameField(controller: _nameController),
               const SizedBox(height: 16),
-
-              // Photo URL Input (Still available for reference/fallback)
               CustomTextFieldWidget(
                 label: 'Profile Photo URL',
                 hintText: 'https://example.com/avatar.png',
                 controller: _photoUrlController,
               ),
               const SizedBox(height: 24),
-
-              // Actions Row
-              Row(
-                children: [
-                  // Cancel Button
-                  Expanded(
-                    child: CustomButton(
-                      text: 'Cancel',
-                      onPressed: _isLoading ? () {} : () => Navigator.pop(context),
-                      backgroundColor: isDark ? theme.cardColor : Colors.white,
-                      textColor: theme.colorScheme.onSurface,
-                      showBorder: true,
-                      borderColor: borderColor,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-
-                  // Save Button
-                  Expanded(
-                    child: CustomButton(
-                      text: _isLoading ? 'Saving...' : 'Save',
-                      onPressed: _isLoading ? () {} : _saveProfile,
-                      backgroundColor: primaryColor,
-                      textColor: Colors.white,
-                    ),
-                  ),
-                ],
+              ProfileSaveButton(
+                isLoading: _isLoading,
+                isDark: isDark,
+                primaryColor: primaryColor,
+                borderColor: borderColor,
+                onCancel: () => Navigator.pop(context),
+                onSave: _saveProfile,
               ),
             ],
           ),
