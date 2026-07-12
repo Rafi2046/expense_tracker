@@ -90,12 +90,20 @@ class TransactionDetailsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) {
+        final theme = Theme.of(ctx);
+        final onSurface = theme.colorScheme.onSurface;
         return AlertDialog(
+          backgroundColor: theme.colorScheme.surface,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          title: Text('Delete Transaction', style: AppTextStyles.h3),
+          title: Text(
+            'Delete Transaction',
+            style: AppTextStyles.h3.copyWith(color: onSurface),
+          ),
           content: Text(
             'Are you sure you want to delete this transaction? This action cannot be undone.',
-            style: AppTextStyles.body,
+            style: AppTextStyles.body.copyWith(
+              color: onSurface.withValues(alpha: 0.7),
+            ),
           ),
           actions: [
             TextButton(
@@ -104,7 +112,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                 'Cancel',
                 style: AppTextStyles.label.copyWith(
                   fontSize: AppFontSizes.size13,
-                  color: Colors.grey,
+                  color: onSurface.withValues(alpha: 0.5),
                 ),
               ),
             ),
