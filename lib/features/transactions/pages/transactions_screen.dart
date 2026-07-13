@@ -360,8 +360,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         padding: const EdgeInsets.only(bottom: 60),
         child: FloatingActionButton(
           heroTag: 'ledger_fab',
+          backgroundColor: const Color(0xFF2ECC71),
+          foregroundColor: Colors.white,
           onPressed: () => _showAddOptions(context),
-          child: Icon(LucideIcons.plus),
+          child: const Icon(LucideIcons.plus),
         ),
       ),
       body: SafeArea(

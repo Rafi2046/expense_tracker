@@ -95,11 +95,17 @@ class ProfileProvider extends ChangeNotifier {
       _lastLoadedUid = currentUid;
 
       _profiles.clear();
+      final Set<String> seenIds = {};
 
       final allProfiles = await DatabaseHelper.instance.readAllProfiles();
       debugPrint('ProfileProvider._loadFromDb: DB has ${allProfiles.length} profiles');
       for (final row in allProfiles) {
         final id = row['id'] as String;
+        if (!seenIds.add(id)) {
+          final db = await DatabaseHelper.instance.database;
+          await db.delete('profiles', where: 'id = ? AND rowid != (SELECT MIN(rowid) FROM profiles WHERE id = ?)', whereArgs: [id, id]);
+          continue;
+        }
         var rowUid = row['uid'] as String?;
         if (rowUid == null && currentUid != null) {
           final db = await DatabaseHelper.instance.database;
@@ -107,10 +113,31 @@ class ProfileProvider extends ChangeNotifier {
           rowUid = currentUid;
         }
         if (rowUid != currentUid) continue;
+
+        final name = row['name'] as String;
+        final type = row['type'] as String;
+
+        // Clean up duplicate Personal profiles (only keep 'default_profile' as the main profile)
+        final isDuplicatePersonal = id != 'default_profile' &&
+            (name == 'Personal' || name == 'Personal Account' || name == 'Personal Finance') &&
+            _profiles.any((p) => p.id == 'default_profile');
+
+        if (isDuplicatePersonal) {
+          await DatabaseHelper.instance.deleteProfileAndData(id);
+          continue;
+        }
+
+        // Clean up duplicate secondary profiles with exact same name and type
+        final isDuplicateSecondary = _profiles.any((p) => p.name == name && p.type == type);
+        if (isDuplicateSecondary) {
+          await DatabaseHelper.instance.deleteProfileAndData(id);
+          continue;
+        }
+
         _profiles.add(UserProfile(
           id: id,
-          name: row['name'] as String,
-          type: row['type'] as String,
+          name: name,
+          type: type,
           uid: currentUid ?? rowUid,
         ));
         debugPrint('ProfileProvider._loadFromDb: added from DB -> $id');

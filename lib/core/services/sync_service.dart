@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import '../models/sync_progress.dart';
@@ -202,6 +203,7 @@ class SyncService {
           'name': data['name'] ?? 'Personal',
           'type': data['type'] ?? 'Personal',
           'createdAt': data['createdAt'] ?? DateTime.now().toIso8601String(),
+          'uid': FirebaseAuth.instance.currentUser?.uid,
         };
 
       default:
