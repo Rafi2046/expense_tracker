@@ -7,7 +7,9 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'month_selector_header.dart';
 
 class TransactionsMonthSelector extends StatefulWidget {
-  const TransactionsMonthSelector({super.key});
+  final VoidCallback? onFilterTap;
+
+  const TransactionsMonthSelector({super.key, this.onFilterTap});
 
   @override
   State<TransactionsMonthSelector> createState() => _TransactionsMonthSelectorState();
@@ -199,7 +201,7 @@ class _TransactionsMonthSelectorState extends State<TransactionsMonthSelector> {
       selectedIndex: selectedIndex,
       locale: locale,
       onMonthTap: (index) => provider.selectMonthIndex(index),
-      onFilterTap: () => _showSortBottomSheet(context),
+      onFilterTap: widget.onFilterTap ?? () => _showSortBottomSheet(context),
     );
   }
 }

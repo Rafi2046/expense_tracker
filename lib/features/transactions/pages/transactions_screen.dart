@@ -1,8 +1,9 @@
 import 'package:expense_tracker/features/transactions/widgets/transaction_header.dart';
-import 'package:expense_tracker/features/transactions/widgets/transaction_filters.dart';
 import 'package:expense_tracker/features/transactions/widgets/transaction_summary_card.dart';
 import 'package:expense_tracker/features/transactions/widgets/transactions_month_selector.dart';
 import 'package:expense_tracker/features/transactions/widgets/ledger_transaction_list.dart';
+import 'package:expense_tracker/features/transactions/widgets/transaction_period_selector.dart';
+import 'package:expense_tracker/features/transactions/widgets/transaction_date_selector.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -37,6 +38,240 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _showSortFilterBottomSheet(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return Consumer<TransactionProvider>(
+          builder: (context, provider, child) {
+            final activeSort = provider.sortOption;
+            final activeType = provider.transactionTypeFilter;
+            final isDarkSheet = Theme.of(context).brightness == Brightness.dark;
+            final accentColor = const Color(0xFF6A53A1);
+
+            Widget buildSortItem(
+              String title,
+              TransactionSortOption option,
+              IconData icon,
+            ) {
+              final isSelected = activeSort == option;
+              return InkWell(
+                onTap: () {
+                  provider.updateSortOption(option);
+                },
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? accentColor.withValues(alpha: 0.05)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        icon,
+                        size: 16,
+                        color: isSelected ? accentColor : Colors.grey,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.w500,
+                            color: isSelected
+                                ? accentColor
+                                : (isDarkSheet
+                                      ? Colors.white70
+                                      : Colors.black87),
+                          ),
+                        ),
+                      ),
+                      if (isSelected)
+                        Icon(Icons.check, color: accentColor, size: 18),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            Widget buildTypeItem(
+              String title,
+              TransactionTypeFilter filter,
+              IconData icon,
+              Color color,
+            ) {
+              final isSelected = activeType == filter;
+              return InkWell(
+                onTap: () {
+                  provider.transactionTypeFilter = filter;
+                },
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? color.withValues(alpha: 0.05)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        icon,
+                        size: 16,
+                        color: isSelected ? color : Colors.grey,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.w500,
+                            color: isSelected
+                                ? color
+                                : (isDarkSheet
+                                      ? Colors.white70
+                                      : Colors.black87),
+                          ),
+                        ),
+                      ),
+                      if (isSelected) Icon(Icons.check, color: color, size: 18),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            return Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
+                ),
+              ),
+              padding: EdgeInsets.fromLTRB(20, 16, 20, 16 + bottomInset),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: isDarkSheet
+                              ? Colors.grey.shade700
+                              : Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Sort & Filter',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Icon(
+                            Icons.close,
+                            color: isDarkSheet ? Colors.white70 : Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'SORT BY',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    buildSortItem(
+                      'Latest',
+                      TransactionSortOption.latest,
+                      Icons.calendar_today,
+                    ),
+                    buildSortItem(
+                      'Amount: High to Low',
+                      TransactionSortOption.amountHighToLow,
+                      Icons.trending_down,
+                    ),
+                    buildSortItem(
+                      'Amount: Low to High',
+                      TransactionSortOption.amountLowToHigh,
+                      Icons.trending_up,
+                    ),
+                    const SizedBox(height: 12),
+                    const Divider(),
+                    const SizedBox(height: 12),
+                    const Text(
+                      'FILTER BY',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    buildTypeItem(
+                      'All Transactions',
+                      TransactionTypeFilter.all,
+                      Icons.list,
+                      accentColor,
+                    ),
+                    buildTypeItem(
+                      'Income Only',
+                      TransactionTypeFilter.income,
+                      Icons.arrow_downward,
+                      const Color(0xFF2ECC71),
+                    ),
+                    buildTypeItem(
+                      'Expense Only',
+                      TransactionTypeFilter.expense,
+                      Icons.arrow_upward,
+                      const Color(0xFFF1948A),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   void _showAddOptions(BuildContext context) {
@@ -143,26 +378,72 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Stats Summary Cards (Income vs Expense + Net Balance)
+                // 1. Stats Summary Cards (Income vs Expense + Net Balance)
                 TransactionSummaryCard(
                   isMasked: _localMasked,
                   onToggleMask: () =>
                       setState(() => _localMasked = !_localMasked),
                 ),
-                const SizedBox(height: AppSpacing.s20),
+                const SizedBox(height: 16),
 
-                // Month Selector Slider
-                const TransactionsMonthSelector(),
+                // 2. Period Selector (Daily / Monthly / Yearly)
+                TransactionPeriodSelector(
+                  selectedPeriod: provider.selectedPeriod,
+                  isDark: isDark,
+                  onPeriodChanged: (period) =>
+                      provider.setSelectedPeriod(period),
+                ),
                 const SizedBox(height: 12),
 
-                // Filter: All / Income / Expense
-                TransactionFilters(
-                  selectedFilter: provider.transactionTypeFilter,
-                  isDark: isDark,
-                  onFilterChanged: (filter) =>
-                      provider.transactionTypeFilter = filter,
-                ),
+                // 3. Date / Month Selector based on selected period
+                if (provider.selectedPeriod == TransactionPeriod.monthly)
+                  TransactionsMonthSelector(
+                    onFilterTap: () => _showSortFilterBottomSheet(context),
+                  )
+                else
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TransactionDateSelector(
+                          provider: provider,
+                          isDark: isDark,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Container(
+                        width: 44,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isDark
+                                ? (Theme.of(context).dividerTheme.color ??
+                                      const Color(0xFF2D2D2D))
+                                : const Color(0xFFF1F1F1),
+                            width: 1.0,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.01),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: IconButton(
+                          icon: Icon(LucideIcons.slidersHorizontal, size: 18),
+                          color: isDark
+                              ? Colors.white70
+                              : const Color(0xFF31394D),
+                          onPressed: () => _showSortFilterBottomSheet(context),
+                        ),
+                      ),
+                    ],
+                  ),
+               // const SizedBox(height: 16),
 
+                // 4. Transactions List
                 LedgerTransactionList(
                   isMasked: _localMasked,
                   isLoading: isLoading,

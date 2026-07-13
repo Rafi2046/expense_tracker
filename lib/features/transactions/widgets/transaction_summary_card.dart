@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:intl/intl.dart';
 
 class TransactionSummaryCard extends StatelessWidget {
   final bool isMasked;
@@ -18,13 +19,25 @@ class TransactionSummaryCard extends StatelessWidget {
     required this.onToggleMask,
   });
 
+  String _formatPeriodLabel(TransactionProvider provider) {
+    final date = provider.selectedDate;
+    final period = provider.selectedPeriod;
+    if (period == TransactionPeriod.daily) {
+      return DateFormat('dd MMM yyyy').format(date);
+    } else if (period == TransactionPeriod.yearly) {
+      return DateFormat('yyyy').format(date);
+    } else {
+      return DateFormat('MMM yyyy').format(date);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TransactionProvider>();
 
-    final totalIncome = provider.monthlyIncome;
-    final totalExpense = provider.monthlyExpense;
-    final netBalance = provider.monthlyNetBalance;
+    final totalIncome = provider.periodIncome;
+    final totalExpense = provider.periodExpense;
+    final netBalance = provider.periodNetBalance;
 
     return Container(
       width: double.infinity,
@@ -65,7 +78,7 @@ class TransactionSummaryCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: Text(
-                  provider.selectedMonth.year.toString(),
+                  _formatPeriodLabel(provider),
                   style: AppTextStyles.caption.copyWith(
                     fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.bold,

@@ -11,6 +11,8 @@ enum TransactionSortOption { latest, amountHighToLow, amountLowToHigh }
 
 enum TransactionTypeFilter { all, income, expense }
 
+enum TransactionPeriod { daily, monthly, yearly }
+
 class TransactionProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -34,6 +36,8 @@ class TransactionProvider extends ChangeNotifier {
   final List<TransactionItem> _transactions = [];
 
   // Month, Search, and Sort states
+  TransactionPeriod _selectedPeriod = TransactionPeriod.monthly;
+  DateTime _selectedDate = DateTime.now();
   late final List<DateTime> availableMonths;
   int selectedMonthIndex = 6;
   bool isSearching = false;
@@ -42,6 +46,31 @@ class TransactionProvider extends ChangeNotifier {
   TransactionTypeFilter _transactionTypeFilter = TransactionTypeFilter.all;
 
   TransactionTypeFilter get transactionTypeFilter => _transactionTypeFilter;
+
+  TransactionPeriod get selectedPeriod => _selectedPeriod;
+  DateTime get selectedDate => _selectedDate;
+
+  void setSelectedPeriod(TransactionPeriod period) {
+    _selectedPeriod = period;
+    if (period == TransactionPeriod.daily) {
+      _selectedDate = DateTime.now();
+    } else if (period == TransactionPeriod.yearly) {
+      _selectedDate = DateTime.now();
+    } else {
+      final month = availableMonths[selectedMonthIndex];
+      _selectedDate = DateTime(month.year, month.month, _selectedDate.day).clampToMonthDays();
+    }
+    notifyListeners();
+  }
+
+  void setSelectedDate(DateTime date) {
+    _selectedDate = date;
+    final idx = availableMonths.indexWhere((m) => m.year == date.year && m.month == date.month);
+    if (idx != -1) {
+      selectedMonthIndex = idx;
+    }
+    notifyListeners();
+  }
 
   set transactionTypeFilter(TransactionTypeFilter value) {
     _transactionTypeFilter = value;
@@ -341,14 +370,30 @@ class TransactionProvider extends ChangeNotifier {
     }).toList();
   }
 
+  List<TransactionItem> get periodTransactions {
+    return _transactions.where((tx) {
+      if (_selectedPeriod == TransactionPeriod.daily) {
+        return tx.dateTime.year == _selectedDate.year &&
+            tx.dateTime.month == _selectedDate.month &&
+            tx.dateTime.day == _selectedDate.day;
+      } else if (_selectedPeriod == TransactionPeriod.yearly) {
+        return tx.dateTime.year == _selectedDate.year;
+      } else {
+        // monthly
+        return tx.dateTime.year == _selectedDate.year &&
+            tx.dateTime.month == _selectedDate.month;
+      }
+    }).toList();
+  }
+
   List<TransactionItem> get filteredTransactions {
-    final monthTrans = monthlyTransactions;
+    final periodTrans = periodTransactions;
     List<TransactionItem> results;
     if (!isSearching || searchQuery.trim().isEmpty) {
-      results = List.from(monthTrans);
+      results = List.from(periodTrans);
     } else {
       final query = searchQuery.toLowerCase().trim();
-      results = monthTrans.where((tx) {
+      results = periodTrans.where((tx) {
         return tx.note.toLowerCase().contains(query) ||
             tx.category.toLowerCase().contains(query);
       }).toList();
@@ -387,6 +432,20 @@ class TransactionProvider extends ChangeNotifier {
   }
 
   double get monthlyNetBalance => monthlyIncome - monthlyExpense;
+
+  double get periodIncome {
+    return periodTransactions
+        .where((tx) => tx.isIncome)
+        .fold(0.0, (total, tx) => total + tx.amount);
+  }
+
+  double get periodExpense {
+    return periodTransactions
+        .where((tx) => !tx.isIncome)
+        .fold(0.0, (total, tx) => total + tx.amount);
+  }
+
+  double get periodNetBalance => periodIncome - periodExpense;
 
   // ─── Analytics Getters ─────────────────────────────────────────
 
@@ -590,6 +649,8 @@ class TransactionProvider extends ChangeNotifier {
   void selectMonthIndex(int index) {
     if (index >= 0 && index < availableMonths.length) {
       selectedMonthIndex = index;
+      final month = availableMonths[index];
+      _selectedDate = DateTime(month.year, month.month, _selectedDate.day).clampToMonthDays();
       notifyListeners();
     }
   }
@@ -1099,5 +1160,14 @@ class TransactionProvider extends ChangeNotifier {
     _firestoreSubscription?.cancel();
     _categorySubscription?.cancel();
     super.dispose();
+  }
+}
+
+extension DateTimeClamping on DateTime {
+  DateTime clampToMonthDays() {
+    final nextMonthStart = DateTime(year, month + 1, 1);
+    final lastDay = nextMonthStart.subtract(const Duration(days: 1)).day;
+    final clampedDay = day.clamp(1, lastDay);
+    return DateTime(year, month, clampedDay, hour, minute, second, millisecond, microsecond);
   }
 }
