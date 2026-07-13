@@ -12,7 +12,9 @@ Future<bool> showDeleteTourDialog(BuildContext context, String tourName) async {
       backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
       title: Text(
         ctx.translate('delete_tour'),
-        style: AppTextStyles.h2,
+        style: AppTextStyles.h2.copyWith(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -21,7 +23,7 @@ Future<bool> showDeleteTourDialog(BuildContext context, String tourName) async {
           Text(
             ctx.translate('this_action_cannot_be_undone'),
             style: AppTextStyles.profileSubtitle.copyWith(
-              color: const Color(0xFF6B7280),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 8),
@@ -29,6 +31,7 @@ Future<bool> showDeleteTourDialog(BuildContext context, String tourName) async {
             tourName,
             style: AppTextStyles.body.copyWith(
               fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ],
@@ -39,7 +42,7 @@ Future<bool> showDeleteTourDialog(BuildContext context, String tourName) async {
           child: Text(
             ctx.translate('cancel'),
             style: AppTextStyles.label.copyWith(
-              color: const Color(0xFF6B7280),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ),
