@@ -36,7 +36,7 @@ class _AppBottomNavState extends State<BottomNavScreen> {
 
   final List<NavItem> _navItems = const [
     NavItem(title: 'Home', iconData: LucideIcons.home),
-    NavItem(title: 'Transactions', iconData: LucideIcons.arrowLeftRight),
+    NavItem(title: 'Transactions', iconData: LucideIcons.badgeDollarSign),
     NavItem(title: 'Tours', iconData: LucideIcons.users),
     NavItem(title: 'Settings', iconData: LucideIcons.settings),
   ];
@@ -173,7 +173,7 @@ class _AppBottomNavState extends State<BottomNavScreen> {
 
                   Icon(
                     item.iconData,
-                    size: 24,
+                    size: 20,
                     color: isSelected ? activeColor : inactiveColor,
                   ),
 

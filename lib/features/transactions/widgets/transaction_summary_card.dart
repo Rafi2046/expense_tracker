@@ -30,10 +30,7 @@ class TransactionSummaryCard extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [
-            Color(0xFF32235B),
-            Color(0xFF6A53A1),
-          ],
+          colors: [Color(0xFF32235B), Color(0xFF6A53A1)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -46,26 +43,23 @@ class TransactionSummaryCard extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Expanded(
-                  child: Text(
-                    context.translate('total_balance').toUpperCase(),
-                    style: AppTextStyles.reportStatLabel.copyWith(
-                      color: Colors.white70,
-                      letterSpacing: 1.0,
-                    ),
+                child: Text(
+                  context.translate('net_balance').toUpperCase(),
+                  style: AppTextStyles.reportStatLabel.copyWith(
+                    color: Colors.white70,
+                    letterSpacing: 1.0,
                   ),
+                ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 3,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(100),
@@ -93,7 +87,7 @@ class TransactionSummaryCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
 
           // Net Balance Value
           PrivacyMaskedText(
@@ -104,11 +98,11 @@ class TransactionSummaryCard extends StatelessWidget {
               letterSpacing: -0.5,
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 8),
 
           // Divider
           Container(height: 1, color: Colors.white.withValues(alpha: 0.15)),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
 
           // Income vs Expense row
           Row(

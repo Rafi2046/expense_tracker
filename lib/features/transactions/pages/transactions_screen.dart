@@ -44,7 +44,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + MediaQuery.of(ctx).padding.bottom),
+        padding: EdgeInsets.fromLTRB(
+          20,
+          20,
+          20,
+          20 + MediaQuery.of(ctx).padding.bottom,
+        ),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -141,7 +146,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 // Stats Summary Cards (Income vs Expense + Net Balance)
                 TransactionSummaryCard(
                   isMasked: _localMasked,
-                  onToggleMask: () => setState(() => _localMasked = !_localMasked),
+                  onToggleMask: () =>
+                      setState(() => _localMasked = !_localMasked),
                 ),
                 const SizedBox(height: AppSpacing.s20),
 
@@ -153,10 +159,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 TransactionFilters(
                   selectedFilter: provider.transactionTypeFilter,
                   isDark: isDark,
-                  onFilterChanged: (filter) => provider.transactionTypeFilter = filter,
+                  onFilterChanged: (filter) =>
+                      provider.transactionTypeFilter = filter,
                 ),
 
-                LedgerTransactionList(isMasked: _localMasked, isLoading: isLoading),
+                LedgerTransactionList(
+                  isMasked: _localMasked,
+                  isLoading: isLoading,
+                ),
               ],
             ),
           ),
@@ -228,7 +238,11 @@ class _AddOptionTile extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(LucideIcons.chevronRight, color: Colors.grey.shade400, size: 20),
+              Icon(
+                LucideIcons.chevronRight,
+                color: Colors.grey.shade400,
+                size: 20,
+              ),
             ],
           ),
         ),
