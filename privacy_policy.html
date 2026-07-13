@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Expense Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text-primary: #111827;
+            --text-secondary: #4B5563;
+            --text-muted: #9CA3AF;
+            --primary-gradient: linear-gradient(135deg, #6A53A1 0%, #32235B 100%);
+            --border-color: #E5E7EB;
+            --shadow-color: rgba(0, 0, 0, 0.04);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #121214;
+                --card-bg: #1A1A1E;
+                --text-primary: #F3F4F6;
+                --text-secondary: #9CA3AF;
+                --text-muted: #6B7280;
+                --border-color: #2D2D32;
+                --shadow-color: rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+        }
+
+        .header {
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 24px;
+        }
+
+        .icon-container {
+            width: 64px;
+            height: 64px;
+            background: var(--primary-gradient);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 14px rgba(106, 83, 161, 0.3);
+        }
+
+        .icon-container svg {
+            width: 32px;
+            height: 32px;
+            fill: none;
+            stroke: #FFFFFF;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .meta {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .section {
+            margin-bottom: 28px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .footer {
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="icon-container">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="m9 11 2 2 4-4"/>
+            </svg>
+        </div>
+        <h1>Expense Tracker Privacy Policy</h1>
+        <div class="meta">Last Updated: July 2026</div>
+    </div>
+
+    <div class="section">
+        <h2>1. Data Ownership & Storage</h2>
+        <p>Your financial records, transactions, notes, and profiles are stored locally on your device's secure database. We do not transmit or process your financial information on external servers, except when you choose to use our cloud backup and sync service.</p>
+    </div>
+
+    <div class="section">
+        <h2>2. Firebase Cloud Backup & Sync</h2>
+        <p>If you choose to log in and enable cloud synchronization, your transactions, categories, budgets, and profile data are backed up to secure Firebase servers (Cloud Firestore). This data is strictly used to synchronize your entries across devices and is encrypted in transit and at rest.</p>
+    </div>
+
+    <div class="section">
+        <h2>3. Security & Encryption</h2>
+        <p>Your local database is stored in your device's isolated storage directory, accessible only by this application. In addition, when biometric security (Face ID / Touch ID) is enabled, access to the application is protected using your device's native secure enclave. We never collect or store your biometric credentials.</p>
+    </div>
+
+    <div class="section">
+        <h2>4. No Selling or Sharing</h2>
+        <p>We value your privacy. We do not sell, rent, lease, or share your financial logs, personal email, display name, or profile configurations with any third-party advertisers, companies, or analytics networks.</p>
+    </div>
+
+    <div class="section">
+        <h2>5. Your Rights & Data Deletion</h2>
+        <p>You retain absolute ownership and control over your data. At any time, you can clear all transactions, delete your custom profiles, or delete your entire account and synced backups directly from the Settings menu. Once deleted, the action cannot be undone and your data is permanently wiped from our databases.</p>
+    </div>
+
+    <div class="section">
+        <h2>6. Policy Changes & Updates</h2>
+        <p>We may update our Privacy Policy from time to time. Any changes will be posted on this screen. We encourage you to review this policy periodically for any updates to stay informed about how we protect your information.</p>
+    </div>
+
+    <div class="section">
+        <h2>7. Contact & Support</h2>
+        <p>If you have any questions or feedback regarding this Privacy Policy or your data, please contact our support team from the Settings menu or email us directly.</p>
+    </div>
+
+    <div class="footer">
+        &copy; 2026 Expense Tracker. All rights reserved.
+    </div>
+</div>
+
+</body>
+</html>

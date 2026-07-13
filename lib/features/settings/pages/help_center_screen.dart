@@ -1,8 +1,6 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class HelpCenterScreen extends StatelessWidget {
@@ -27,9 +25,38 @@ class HelpCenterScreen extends StatelessWidget {
     ),
   ];
 
+  Widget _buildFaqSection(BuildContext context, ThemeData theme, _FaqItem faq) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            faq.question,
+            style: AppTextStyles.reportTileTitle.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface,
+              fontSize: 15,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            faq.answer,
+            style: AppTextStyles.bodySmall.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+              height: 1.6,
+              fontSize: 13.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -48,110 +75,59 @@ class HelpCenterScreen extends StatelessWidget {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
-            color: theme.brightness == Brightness.dark
-                ? const Color(0xFF2D2D2D)
-                : const Color(0xFFF1F1F1),
+            color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1),
             height: 1.0,
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
-              itemCount: _faqs.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 8),
-              itemBuilder: (context, index) {
-                final faq = _faqs[index];
-                return Container(
-                  decoration: BoxDecoration(
-                    color: theme.cardColor,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                      color: theme.brightness == Brightness.dark
-                          ? const Color(0xFF2D2D2D)
-                          : const Color(0xFFF1F1F1),
-                    ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: ExpansionTile(
-                      tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-                      childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                      shape: const Border(),
-                      collapsedShape: const Border(),
-                      leading: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: theme.brightness == Brightness.dark
-                              ? const Color(0xFF2D2D2D)
-                              : const Color(0xFFF3F4F6),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          LucideIcons.helpCircle,
-                          color: theme.colorScheme.onSurfaceVariant,
-                          size: 18,
-                        ),
-                      ),
-                      title: Text(
-                        faq.question,
-                        style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface),
-                      ),
-                      children: [
-                        Text(
-                          faq.answer,
-                          style: AppTextStyles.body.copyWith(
-                            fontFamily: GoogleFonts.workSans().fontFamily,
-                            color: theme.colorScheme.onSurfaceVariant,
-                            height: 1.5,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.fromLTRB(16, 4, 16, 24 + MediaQuery.of(context).padding.bottom),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+          child: Container(
+            width: double.infinity,
             decoration: BoxDecoration(
-              color: theme.scaffoldBackgroundColor,
+              color: theme.cardColor,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFE5E7EB),
+                width: 1.0,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
-                  blurRadius: 10,
-                  offset: const Offset(0, -3),
+                  color: Colors.black.withValues(alpha: isDark ? 0.12 : 0.03),
+                  blurRadius: 16,
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
-            child: SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(LucideIcons.mail, size: 18),
-                label: Text(
-                  'Contact Support',
-                  style: AppTextStyles.reportTileTitle.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Frequently Asked Questions',
+                  style: AppTextStyles.profileTitle.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 20,
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6A53A1),
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                const SizedBox(height: 6),
+                Text(
+                  'Quick answers to help you navigate the app',
+                  style: AppTextStyles.caption.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                   ),
                 ),
-              ),
+                const SizedBox(height: 16),
+                const Divider(),
+                const SizedBox(height: 20),
+                
+                ..._faqs.map((faq) => _buildFaqSection(context, theme, faq)),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
