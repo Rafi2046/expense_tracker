@@ -443,7 +443,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       ),
                     ],
                   ),
-               // const SizedBox(height: 16),
 
                 // 4. Transactions List
                 LedgerTransactionList(

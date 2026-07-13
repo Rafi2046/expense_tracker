@@ -815,6 +815,32 @@ class DatabaseHelper {
     );
   }
 
+  Future<void> updateTransactionsPaymentMethod(
+    String oldMethod,
+    String newMethod, {
+    String profileId = 'default_profile',
+  }) async {
+    if (kIsWeb) {
+      final data = _readWebTransactions(profileId);
+      bool changed = false;
+      for (int i = 0; i < data.length; i++) {
+        if (data[i]['paymentMethod'] == oldMethod) {
+          data[i] = {...data[i], 'paymentMethod': newMethod, 'syncStatus': 'pending_update'};
+          changed = true;
+        }
+      }
+      if (changed) await _writeWebTransactions(profileId, data);
+      return;
+    }
+
+    final db = await instance.database;
+    await db.update('transactions',
+      {'paymentMethod': newMethod, 'syncStatus': 'pending_update'},
+      where: 'paymentMethod = ? AND profileId = ?',
+      whereArgs: [oldMethod, profileId],
+    );
+  }
+
   Future<void> softDeleteTransaction(String id, {String profileId = 'default_profile'}) async {
     if (kIsWeb) {
       final data = _readWebTransactions(profileId);

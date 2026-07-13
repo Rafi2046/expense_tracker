@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/model/account_model.dart';
+import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/account_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -156,18 +158,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                                 icon: _iconForAccount(account.name),
                                 iconBg: _bgForAccount(account.name, isDark),
                                 iconColor: _colorForAccount(account.name, isDark),
-                                onTap: account.name == 'Cash' || account.name == 'Bank'
-                                    ? () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => AccountDetailsScreen(
-                                              accountType: account.name,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    : () => _showAccountOptionsSheet(context, account.name),
+                                onTap: () => _showAccountOptionsSheet(context, account),
                               ),
                             ),
                         ],
@@ -202,9 +193,10 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
     );
   }
 
-  void _showAccountOptionsSheet(BuildContext context, String accountName) {
+  void _showAccountOptionsSheet(BuildContext context, AccountModel account) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final isBuiltIn = account.name == 'Cash' || account.name == 'Bank';
 
     showModalBottomSheet(
       context: context,
@@ -236,15 +228,41 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                accountName,
+                account.name,
                 style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
               ),
               const SizedBox(height: 4),
               Text(
-                'Custom Account',
+                isBuiltIn ? 'System Account' : 'Custom Account',
                 style: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),
               const SizedBox(height: 20),
+              // Edit Account
+              SizedBox(
+                width: double.infinity,
+                child: TextButton.icon(
+                  icon: Icon(LucideIcons.edit, color: theme.primaryColor, size: 18),
+                  label: Text(
+                    'Edit Account',
+                    style: AppTextStyles.body.copyWith(
+                      color: theme.colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                    backgroundColor: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    _showEditAccountDialog(context, account);
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
               // View Details
               SizedBox(
                 width: double.infinity,
@@ -270,39 +288,41 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => AccountDetailsScreen(
-                          accountType: accountName,
+                          accountType: account.name,
                         ),
                       ),
                     );
                   },
                 ),
               ),
-              const SizedBox(height: 8),
-              // Delete
-              SizedBox(
-                width: double.infinity,
-                child: TextButton.icon(
-                  icon: Icon(LucideIcons.trash2, color: Colors.red.shade400, size: 18),
-                  label: Text(
-                    'Delete Account',
-                    style: AppTextStyles.body.copyWith(
-                      color: Colors.red.shade400,
-                      fontWeight: FontWeight.w600,
+              if (!isBuiltIn) ...[
+                const SizedBox(height: 8),
+                // Delete
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton.icon(
+                    icon: Icon(LucideIcons.trash2, color: Colors.red.shade400, size: 18),
+                    label: Text(
+                      'Delete Account',
+                      style: AppTextStyles.body.copyWith(
+                        color: Colors.red.shade400,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.red.withValues(alpha: 0.08),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.red.withValues(alpha: 0.08),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      _confirmDeleteAccount(context, account.name);
+                    },
                   ),
-                  onPressed: () {
-                    Navigator.pop(ctx);
-                    _confirmDeleteAccount(context, accountName);
-                  },
                 ),
-              ),
+              ],
               const SizedBox(height: 8),
               SizedBox(
                 width: double.infinity,
@@ -318,6 +338,117 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
           ),
         );
       },
+    );
+  }
+
+  void _showEditAccountDialog(BuildContext context, AccountModel account) {
+    final theme = Theme.of(context);
+    final nameController = TextEditingController(text: account.name);
+    final balanceController = TextEditingController(text: account.initialBalance.toStringAsFixed(2));
+    String selectedType = account.type;
+
+    final isBuiltIn = account.name == 'Cash' || account.name == 'Bank';
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        backgroundColor: theme.cardColor,
+        title: Text(
+          'Edit Account',
+          style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Account Name
+              TextField(
+                controller: nameController,
+                enabled: !isBuiltIn,
+                decoration: InputDecoration(
+                  labelText: 'Account Name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Initial Balance
+              TextField(
+                controller: balanceController,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(
+                  labelText: 'Initial Balance',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Account Type dropdown
+              DropdownButtonFormField<String>(
+                initialValue: selectedType,
+                decoration: InputDecoration(
+                  labelText: 'Account Type',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                items: {selectedType, 'Cash', 'Bank', 'Custom', 'Other'}.map((type) {
+                  return DropdownMenuItem<String>(
+                    value: type,
+                    child: Text(type),
+                  );
+                }).toList(),
+                onChanged: isBuiltIn
+                    ? null
+                    : (val) {
+                        if (val != null) selectedType = val;
+                      },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Cancel', style: AppTextStyles.body.copyWith(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final newName = nameController.text.trim();
+              final newBalance = double.tryParse(balanceController.text.trim()) ?? 0.0;
+
+              if (newName.isEmpty) return;
+
+              final acctProv = context.read<AccountProvider>();
+              final activeProfileId = context.read<ProfileProvider>().currentProfile.id;
+              final navigator = Navigator.of(ctx);
+
+              await acctProv.updateAccount(
+                id: account.id,
+                name: newName,
+                type: selectedType,
+                initialBalance: newBalance,
+                profileId: activeProfileId,
+              );
+
+              if (context.mounted) {
+                context.read<TransactionProvider>().reloadFromDatabase();
+              }
+
+              navigator.pop();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.primaryColor,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: Text('Save', style: AppTextStyles.bodyBold.copyWith(color: Colors.white)),
+          ),
+        ],
+      ),
     );
   }
 

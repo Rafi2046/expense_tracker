@@ -169,17 +169,22 @@ void main() async {
             return accountProvider;
           },
         ),
-        ChangeNotifierProxyProvider3<
+        ChangeNotifierProxyProvider4<
           ProfileManagerProvider,
           TransactionProvider,
           DebtProvider,
+          AccountProvider,
           BalanceAnalyticsProvider
         >(
           create: (_) => BalanceAnalyticsProvider()
             ..updateProfileId(initialProfileId),
-          update: (_, pm, txProvider, debtProvider, balanceProvider) {
+          update: (_, pm, txProvider, debtProvider, accountProvider, balanceProvider) {
             balanceProvider!.updateProfileId(pm.activeProfileId);
-            balanceProvider.updateData(txProvider.transactions, debtProvider.items);
+            balanceProvider.updateData(
+              txProvider.transactions,
+              debtProvider.items,
+              accountProvider.accounts,
+            );
             return balanceProvider;
           },
         ),

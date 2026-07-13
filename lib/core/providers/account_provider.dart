@@ -15,7 +15,32 @@ class AccountProvider extends ChangeNotifier {
   }
 
   Future<void> _loadFromDb({String profileId = 'default_profile'}) async {
-    _accounts = await DatabaseHelper.instance.readAllAccounts(profileId: profileId);
+    var list = await DatabaseHelper.instance.readAllAccounts(profileId: profileId);
+    if (list.isEmpty) {
+      final defaultAccounts = [
+        AccountModel(
+          id: 'account_cash_$profileId',
+          name: 'Cash',
+          type: 'Cash',
+          initialBalance: 0.0,
+          createdAt: DateTime.now().toIso8601String(),
+          profileId: profileId,
+        ),
+        AccountModel(
+          id: 'account_bank_$profileId',
+          name: 'Bank',
+          type: 'Bank',
+          initialBalance: 0.0,
+          createdAt: DateTime.now().toIso8601String(),
+          profileId: profileId,
+        ),
+      ];
+      for (final a in defaultAccounts) {
+        await DatabaseHelper.instance.insertAccount(a, profileId: profileId);
+      }
+      list = await DatabaseHelper.instance.readAllAccounts(profileId: profileId);
+    }
+    _accounts = list;
     notifyListeners();
     _cleanupOrphanedTransactions(profileId: profileId);
   }
@@ -69,6 +94,30 @@ class AccountProvider extends ChangeNotifier {
     if (id == null) return;
     await DatabaseHelper.instance.deleteTransactionsByPaymentMethod(name, profileId: profileId);
     await deleteAccount(id, profileId: profileId);
+  }
+
+  Future<void> updateAccount({
+    required String id,
+    required String name,
+    required String type,
+    required double initialBalance,
+    String profileId = 'default_profile',
+  }) async {
+    final oldName = getAccountNameById(id);
+    if (oldName != null && oldName != name) {
+      await DatabaseHelper.instance.updateTransactionsPaymentMethod(oldName, name, profileId: profileId);
+    }
+
+    final account = AccountModel(
+      id: id,
+      name: name,
+      type: type,
+      initialBalance: initialBalance,
+      createdAt: DateTime.now().toIso8601String(),
+      profileId: profileId,
+    );
+    await DatabaseHelper.instance.updateAccount(account, profileId: profileId);
+    await _loadFromDb(profileId: profileId);
   }
 
   String? getAccountIdByName(String name) {

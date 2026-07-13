@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:expense_tracker/core/model/account_model.dart';
 
 class BalanceAnalyticsProvider extends ChangeNotifier {
   List<TransactionItem> _transactions = [];
@@ -15,6 +16,7 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
   double allTimeBankBalance = 0.0;
   double allTimeTotalBalance = 0.0;
   Map<String, double> allAccountBalances = {};
+  List<AccountModel> _accounts = [];
 
   BalanceAnalyticsProvider() {
     _authSubscription = FirebaseAuth.instance.userChanges().listen((user) {
@@ -35,13 +37,20 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
     }
   }
 
-  void updateData(List<TransactionItem> transactions, List<DebtItem> debts) {
-    if (_isListEqual(transactions, _transactions) && _isDebtListEqual(debts, _debts)) {
+  void updateData(
+    List<TransactionItem> transactions,
+    List<DebtItem> debts,
+    List<AccountModel> accounts,
+  ) {
+    if (_isListEqual(transactions, _transactions) &&
+        _isDebtListEqual(debts, _debts) &&
+        _isAccountListEqual(accounts, _accounts)) {
       return;
     }
 
     _transactions = transactions;
     _debts = debts;
+    _accounts = accounts;
     _recompute();
     notifyListeners();
   }
@@ -49,11 +58,18 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
   void _recompute() {
     final Map<String, double> balances = {};
 
+    // 1. Initialize balances with each account's initialBalance
+    for (final acc in _accounts) {
+      balances[acc.name] = acc.initialBalance;
+    }
+
+    // 2. Add/subtract transaction amounts
     for (final tx in _transactions) {
       final account = tx.paymentMethod;
       balances[account] = (balances[account] ?? 0.0) + (tx.isIncome ? tx.amount : -tx.amount);
     }
 
+    // 3. Add/subtract debts (only affects Cash)
     for (final d in _debts) {
       if (d.isSettled) continue;
       balances['Cash'] = (balances['Cash'] ?? 0.0) + (d.isReceive ? d.amount : -d.amount);
@@ -67,6 +83,11 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
 
   double projectedBalance(String paymentMethod, {double? amount, bool? isIncome}) {
     double bal = 0.0;
+    final accIdx = _accounts.indexWhere((a) => a.name == paymentMethod);
+    if (accIdx != -1) {
+      bal = _accounts[accIdx].initialBalance;
+    }
+
     for (final tx in _transactions) {
       if (tx.paymentMethod == paymentMethod) {
         bal += tx.isIncome ? tx.amount : -tx.amount;
@@ -92,6 +113,7 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
     _currentProfileId = newProfileId;
     _transactions = [];
     _debts = [];
+    _accounts = [];
     allTimeCashBalance = 0.0;
     allTimeBankBalance = 0.0;
     allTimeTotalBalance = 0.0;
@@ -131,6 +153,20 @@ class BalanceAnalyticsProvider extends ChangeNotifier {
           ai.amount != bi.amount ||
           ai.isReceive != bi.isReceive ||
           ai.isSettled != bi.isSettled) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool _isAccountListEqual(List<AccountModel> a, List<AccountModel> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      final ai = a[i], bi = b[i];
+      if (ai.id != bi.id ||
+          ai.name != bi.name ||
+          ai.initialBalance != bi.initialBalance ||
+          ai.profileId != bi.profileId) {
         return false;
       }
     }
