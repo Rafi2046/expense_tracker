@@ -12,6 +12,7 @@ class ProfileProvider extends ChangeNotifier {
   late UserProfile _currentProfile;
   bool _isPremium = false;
   bool _isReady = false;
+  String? _lastLoadedUid;
 
   // Profile Creation Flow State
   String _creationProfileType = 'business'; // 'business' or 'personal'
@@ -64,7 +65,8 @@ class ProfileProvider extends ChangeNotifier {
       : _initialProfileId = initialProfileId {
     _initSync();
     _loadFromDb();
-    FirebaseAuth.instance.userChanges().listen((user) {
+    FirebaseAuth.instance.userChanges().listen((user) async {
+      await _loadFromDb();
       if (user != null) {
         final name = (user.displayName != null && user.displayName!.trim().isNotEmpty)
             ? user.displayName!.trim()
@@ -86,9 +88,13 @@ class ProfileProvider extends ChangeNotifier {
       var currentUser = FirebaseAuth.instance.currentUser;
       currentUser ??= await FirebaseAuth.instance.authStateChanges().first;
 
-      _profiles.clear();
-
       final currentUid = currentUser?.uid;
+      if (_isReady && currentUid == _lastLoadedUid) {
+        return;
+      }
+      _lastLoadedUid = currentUid;
+
+      _profiles.clear();
 
       final allProfiles = await DatabaseHelper.instance.readAllProfiles();
       debugPrint('ProfileProvider._loadFromDb: DB has ${allProfiles.length} profiles');
@@ -135,8 +141,13 @@ class ProfileProvider extends ChangeNotifier {
           'createdAt': DateTime.now().toIso8601String(),
         });
       } else {
-        final match = _profiles.where((p) => p.id == _initialProfileId);
-        _currentProfile = match.isNotEmpty ? match.first : _profiles.first;
+        final currentMatch = _profiles.where((p) => p.id == _currentProfile.id);
+        if (currentMatch.isNotEmpty) {
+          _currentProfile = currentMatch.first;
+        } else {
+          final initialMatch = _profiles.where((p) => p.id == _initialProfileId);
+          _currentProfile = initialMatch.isNotEmpty ? initialMatch.first : _profiles.first;
+        }
       }
 
       await _saveProfilesToPrefs();

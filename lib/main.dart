@@ -54,10 +54,17 @@ void main() async {
             initialProfileId: initialProfileId,
           ),
         ),
-        ChangeNotifierProvider(
+        ChangeNotifierProxyProvider<ProfileProvider, ProfileManagerProvider>(
           create: (_) => ProfileManagerProvider(
             initialProfileId: initialProfileId,
           ),
+          update: (_, profileProvider, pm) {
+            if (profileProvider.isReady &&
+                profileProvider.currentProfile.id != pm!.activeProfileId) {
+              Future.microtask(() => pm.switchProfile(profileProvider.currentProfile.id));
+            }
+            return pm!;
+          },
         ),
         ChangeNotifierProxyProvider<ProfileManagerProvider, TransactionProvider>(
           create: (_) => TransactionProvider(

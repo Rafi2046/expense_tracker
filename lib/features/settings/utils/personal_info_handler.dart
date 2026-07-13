@@ -139,7 +139,7 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
   }
 
   Future<void> saveChanges() async {
-    final name = "$firstNameController ${lastNameController.text}".trim();
+    final name = "${firstNameController.text} ${lastNameController.text}".trim();
 
     if (firstNameController.text.trim().isEmpty) {
       if (mounted) {
