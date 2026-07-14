@@ -131,7 +131,9 @@ class TourProvider extends ChangeNotifier {
   Future<void> createTour(Tour tour) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
 
-    final code = uid != null ? await _inviteCodeService.generateUniqueCode() : null;
+    final code = uid != null
+        ? await _inviteCodeService.generateUniqueCode()
+        : null;
 
     final enriched = tour.copyWith(
       inviteCode: code,
@@ -198,11 +200,14 @@ class TourProvider extends ChangeNotifier {
   Future<bool> toggleTourCompletion(String tourId, bool completed) async {
     final tour = _tours.firstWhere(
       (t) => t.id == tourId,
-      orElse: () => Tour(id: '', name: '', currency: '', createdAt: DateTime.now()),
+      orElse: () =>
+          Tour(id: '', name: '', currency: '', createdAt: DateTime.now()),
     );
     if (tour.id.isEmpty) return false;
     final currentUid = FirebaseAuth.instance.currentUser?.uid;
-    if (tour.ownerUid != null && currentUid != null && tour.ownerUid != currentUid) {
+    if (tour.ownerUid != null &&
+        currentUid != null &&
+        tour.ownerUid != currentUid) {
       return false;
     }
     final db = await _db.database;
@@ -215,7 +220,10 @@ class TourProvider extends ChangeNotifier {
     );
     final idx = _tours.indexWhere((t) => t.id == tourId);
     if (idx != -1) {
-      _tours[idx] = _tours[idx].copyWith(isCompleted: completed, lastModified: DateTime.now());
+      _tours[idx] = _tours[idx].copyWith(
+        isCompleted: completed,
+        lastModified: DateTime.now(),
+      );
     }
     if (_selectedTourId == tourId) {
       _selectedTourId = tourId;
@@ -325,14 +333,18 @@ class TourProvider extends ChangeNotifier {
               .toList();
         }
       } catch (_) {
-        debugPrint('No participants/expenses found in shared_tours for ${tour.id}');
+        debugPrint(
+          'No participants/expenses found in shared_tours for ${tour.id}',
+        );
       }
 
       // Check if current user already has a participant entry (same uid)
       final existing = participants.where((p) => p.uid == uid).toList();
       if (existing.isNotEmpty) {
         // Already a participant — just use existing data, no duplicate needed
-        debugPrint('User already has participant entry, skipping duplicate creation');
+        debugPrint(
+          'User already has participant entry, skipping duplicate creation',
+        );
       } else {
         // Check if a dummy (uid=null) can be claimed
         final dummy = participants.where((p) => p.uid == null).toList();
@@ -345,9 +357,9 @@ class TourProvider extends ChangeNotifier {
               .collection('participants')
               .doc(claimed.id)
               .update({
-            'uid': uid,
-            'name': currentUser?.displayName ?? claimed.name,
-          });
+                'uid': uid,
+                'name': currentUser?.displayName ?? claimed.name,
+              });
           // Fix local list to reflect the update
           final idx = participants.indexWhere((p) => p.id == claimed.id);
           if (idx != -1) {
@@ -528,7 +540,9 @@ class TourProvider extends ChangeNotifier {
         _participants.removeAt(idx);
       }
 
-      debugPrint('Reconciled ${removeIds.length} duplicate(s) into ${keep.id} (uid: ${entry.key})');
+      debugPrint(
+        'Reconciled ${removeIds.length} duplicate(s) into ${keep.id} (uid: ${entry.key})',
+      );
     }
   }
 
@@ -617,9 +631,9 @@ class TourProvider extends ChangeNotifier {
             .collection('participants')
             .doc(participantId)
             .set({
-          'isDeleted': 1,
-          'lastModified': now,
-        }, SetOptions(merge: true));
+              'isDeleted': 1,
+              'lastModified': now,
+            }, SetOptions(merge: true));
       }
     } catch (e) {
       debugPrint('removeParticipant error: $e');
@@ -638,7 +652,8 @@ class TourProvider extends ChangeNotifier {
     }
     final tour = _tours.firstWhere(
       (t) => t.id == expense.tourId,
-      orElse: () => Tour(id: '', name: '', currency: '', createdAt: DateTime.now()),
+      orElse: () =>
+          Tour(id: '', name: '', currency: '', createdAt: DateTime.now()),
     );
     if (tour.isCompleted) {
       debugPrint('ERROR: cannot add expense to a completed tour');
@@ -670,7 +685,8 @@ class TourProvider extends ChangeNotifier {
   ) async {
     final tour = _tours.firstWhere(
       (t) => t.id == expense.tourId,
-      orElse: () => Tour(id: '', name: '', currency: '', createdAt: DateTime.now()),
+      orElse: () =>
+          Tour(id: '', name: '', currency: '', createdAt: DateTime.now()),
     );
     if (tour.isCompleted) {
       debugPrint('ERROR: cannot update expense in a completed tour');
@@ -709,10 +725,13 @@ class TourProvider extends ChangeNotifier {
 
     final tour = _tours.firstWhere(
       (t) => t.id == tourId,
-      orElse: () => Tour(id: '', name: '', currency: '', createdAt: DateTime.now()),
+      orElse: () =>
+          Tour(id: '', name: '', currency: '', createdAt: DateTime.now()),
     );
     final currentUid = FirebaseAuth.instance.currentUser?.uid;
-    if (tour.ownerUid != null && currentUid != null && tour.ownerUid != currentUid) {
+    if (tour.ownerUid != null &&
+        currentUid != null &&
+        tour.ownerUid != currentUid) {
       return false;
     }
 
@@ -740,7 +759,10 @@ class TourProvider extends ChangeNotifier {
       _shares.removeWhere((s) => s.expenseId == expenseId);
       notifyListeners();
     }
-    final deleted = original.copyWith(isDeleted: true, lastModified: DateTime.now());
+    final deleted = original.copyWith(
+      isDeleted: true,
+      lastModified: DateTime.now(),
+    );
     await _sharedToursCollection
         .doc(tourId)
         .collection('expenses')
@@ -897,7 +919,9 @@ class TourProvider extends ChangeNotifier {
   ) {
     final result = <TourExpenseShare>[];
 
-    final target = included.where((p) => !expense.paidBy.containsKey(p.id)).toList();
+    final target = included
+        .where((p) => !expense.paidBy.containsKey(p.id))
+        .toList();
     for (final p in target) {
       result.add(
         TourExpenseShare(
@@ -1027,11 +1051,13 @@ class TourProvider extends ChangeNotifier {
         .map((e) => e.id)
         .toSet();
     return _shares
-        .where((s) =>
-            expenseIds.contains(s.expenseId) &&
-            s.participantId == participantId &&
-            !s.isDeleted &&
-            !s.isExcluded)
+        .where(
+          (s) =>
+              expenseIds.contains(s.expenseId) &&
+              s.participantId == participantId &&
+              !s.isDeleted &&
+              !s.isExcluded,
+        )
         .fold(0.0, (a, s) => a + s.shareAmount);
   }
 
@@ -1046,16 +1072,20 @@ class TourProvider extends ChangeNotifier {
     final paid = effectivePaid(participantId, tourId);
     final share = finalShare(participantId, tourId);
     final received = _settlements
-        .where((s) =>
-            s.tourId == tourId &&
-            s.toParticipant == participantId &&
-            !s.isDeleted)
+        .where(
+          (s) =>
+              s.tourId == tourId &&
+              s.toParticipant == participantId &&
+              !s.isDeleted,
+        )
         .fold(0.0, (a, s) => a + s.amount);
     final sent = _settlements
-        .where((s) =>
-            s.tourId == tourId &&
-            s.fromParticipant == participantId &&
-            !s.isDeleted)
+        .where(
+          (s) =>
+              s.tourId == tourId &&
+              s.fromParticipant == participantId &&
+              !s.isDeleted,
+        )
         .fold(0.0, (a, s) => a + s.amount);
     return ((paid - share - received + sent) * 100).round() / 100.0;
   }
@@ -1149,7 +1179,8 @@ class TourProvider extends ChangeNotifier {
 
         String targetProfileId = _activeProfileId;
         if (localTourMaps.isNotEmpty) {
-          targetProfileId = localTourMaps.first['profileId'] as String? ?? _activeProfileId;
+          targetProfileId =
+              localTourMaps.first['profileId'] as String? ?? _activeProfileId;
         }
 
         final updatedTour = tour.copyWith(profileId: targetProfileId);
@@ -1160,7 +1191,7 @@ class TourProvider extends ChangeNotifier {
             .collection('participants')
             .get();
         final participants = participantSnapshot.docs
-            .map((doc) => TourParticipant.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+            .map((doc) => TourParticipant.fromMap(doc.id, doc.data()))
             .toList();
 
         final expenseSnapshot = await _sharedToursCollection
@@ -1168,7 +1199,7 @@ class TourProvider extends ChangeNotifier {
             .collection('expenses')
             .get();
         final expenses = expenseSnapshot.docs
-            .map((doc) => TourExpense.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+            .map((doc) => TourExpense.fromMap(doc.id, doc.data()))
             .toList();
 
         final shares = expenses
@@ -1227,7 +1258,9 @@ class TourProvider extends ChangeNotifier {
         .set(participant.toMap());
   }
 
-  Future<void> _syncParticipantToSharedCollection(TourParticipant participant) async {
+  Future<void> _syncParticipantToSharedCollection(
+    TourParticipant participant,
+  ) async {
     await _sharedToursCollection
         .doc(participant.tourId)
         .collection('participants')
@@ -1264,7 +1297,7 @@ class TourProvider extends ChangeNotifier {
         final data = snapshot.data();
         if (data == null) return;
         final tour = Tour.fromMap(snapshot.id, data as Map<String, dynamic>);
-        
+
         final db = await _db.database;
         final localTourMaps = await db.query(
           'tours',
@@ -1273,7 +1306,8 @@ class TourProvider extends ChangeNotifier {
         );
         String targetProfileId = _activeProfileId;
         if (localTourMaps.isNotEmpty) {
-          targetProfileId = localTourMaps.first['profileId'] as String? ?? _activeProfileId;
+          targetProfileId =
+              localTourMaps.first['profileId'] as String? ?? _activeProfileId;
         }
         final updatedTour = tour.copyWith(profileId: targetProfileId);
 
@@ -1285,8 +1319,10 @@ class TourProvider extends ChangeNotifier {
           _tours[idx] = updatedTour;
           notifyListeners();
           final currentUid = FirebaseAuth.instance.currentUser?.uid;
-          if (tour.isCompleted && !old.isCompleted &&
-              tour.ownerUid != null && currentUid != null &&
+          if (tour.isCompleted &&
+              !old.isCompleted &&
+              tour.ownerUid != null &&
+              currentUid != null &&
               tour.ownerUid != currentUid) {
             final notif = TourProvider.onNotification;
             notif?.call('Tour marked as completed by the creator');
@@ -1320,7 +1356,15 @@ class TourProvider extends ChangeNotifier {
         final localService = TourLocalService(await _db.database);
         final currentUid = FirebaseAuth.instance.currentUser?.uid;
         final tourOwnerUid = _tours
-            .firstWhere((t) => t.id == tourId, orElse: () => Tour(id: '', name: '', currency: '', createdAt: DateTime.now()))
+            .firstWhere(
+              (t) => t.id == tourId,
+              orElse: () => Tour(
+                id: '',
+                name: '',
+                currency: '',
+                createdAt: DateTime.now(),
+              ),
+            )
             .ownerUid;
         for (final change in snapshot.docChanges) {
           if (change.type == DocumentChangeType.removed) continue;
