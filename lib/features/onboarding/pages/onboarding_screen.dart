@@ -10,6 +10,9 @@ import 'package:expense_tracker/features/onboarding/widgets/onboarding_navigatio
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_skip_button.dart';
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_theme_picker.dart';
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_language_picker.dart';
+import 'package:expense_tracker/features/onboarding/widgets/onboarding_biometric_picker.dart';
+import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -24,7 +27,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   final PageController _pageController = PageController();
   int _currentPage = 0;
   late List<_OnboardingSlide> _slides;
-  static const int _totalSlides = 6;
+  bool _hasBiometrics = false;
+  int get _totalSlides => _hasBiometrics ? 7 : 6;
 
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
@@ -34,6 +38,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   void initState() {
     super.initState();
     _slides = _buildSlides();
+    _checkBiometrics();
 
     _fadeController = AnimationController(
       vsync: this,
@@ -50,6 +55,15 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       vsync: this,
       duration: const Duration(seconds: 8),
     )..repeat(reverse: true);
+  }
+
+  Future<void> _checkBiometrics() async {
+    final hasBio = await context.read<BiometricAuthProvider>().canCheckBiometrics;
+    if (mounted) {
+      setState(() {
+        _hasBiometrics = hasBio;
+      });
+    }
   }
 
   @override
@@ -295,8 +309,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                             const Spacer(flex: 2),
                             Image.asset(
                               AppImages.onboardingLogo,
-                              width: 160,
-                              height: 160,
+                              width: 140,
+                              height: 140,
                             ),
                             const SizedBox(height: 32),
                             Text(
@@ -335,8 +349,13 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         );
                       } else if (index == 4) {
                         return OnboardingThemePicker(isDark: isDark);
-                      } else {
+                      } else if (index == 5) {
                         return OnboardingLanguagePicker(isDark: isDark);
+                      } else {
+                        return OnboardingBiometricPicker(
+                          isDark: isDark,
+                          onStepComplete: _completeOnboarding,
+                        );
                       }
                     },
                   ),
