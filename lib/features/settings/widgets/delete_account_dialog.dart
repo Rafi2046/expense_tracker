@@ -28,7 +28,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
   void initState() {
     super.initState();
     _deleteController.addListener(() {
-      setState(() => _canDelete = _deleteController.text.trim() == 'DELETE');
+      setState(() => _canDelete = _deleteController.text.trim().toUpperCase() == 'DELETE');
     });
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -129,9 +129,9 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Failed to delete account: $e',
-            style: const TextStyle(color: Colors.white),
+          content: const Text(
+            'Something went wrong. Please try again.',
+            style: TextStyle(color: Colors.white),
           ),
           backgroundColor: AppColors.activeRed,
         ),
@@ -162,7 +162,6 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                   canDelete: _canDelete,
                   isDeleting: _isDeleting,
                   onDelete: _deleteAccount,
-                  onCancel: () => Navigator.pop(context),
                 ),
               if (_reauthMode)
                 DeleteAccountReauthBody(
@@ -170,7 +169,6 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                   isDeleting: _isDeleting,
                   passwordController: _passwordController,
                   onReauthenticate: _reauthenticateAndDelete,
-                  onCancel: () => Navigator.pop(context),
                 ),
             ],
           ),

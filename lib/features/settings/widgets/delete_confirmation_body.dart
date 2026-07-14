@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
-import 'package:expense_tracker/features/settings/widgets/delete_account_cancel_link.dart';
 
 class DeleteConfirmationBody extends StatefulWidget {
   final TextEditingController controller;
   final bool canDelete;
   final bool isDeleting;
   final VoidCallback onDelete;
-  final VoidCallback onCancel;
 
   const DeleteConfirmationBody({
     super.key,
@@ -19,7 +18,6 @@ class DeleteConfirmationBody extends StatefulWidget {
     required this.canDelete,
     required this.isDeleting,
     required this.onDelete,
-    required this.onCancel,
   });
 
   @override
@@ -48,7 +46,7 @@ class _DeleteConfirmationBodyState extends State<DeleteConfirmationBody> {
         ),
         const SizedBox(height: 20),
         Text(
-          'Type DELETE to confirm',
+          'Type "DELETE" to confirm',
           style: AppTextStyles.label.copyWith(
             color: AppColors.activeRed,
             fontWeight: FontWeight.w700,
@@ -59,6 +57,8 @@ class _DeleteConfirmationBodyState extends State<DeleteConfirmationBody> {
         TextField(
           controller: widget.controller,
           textAlign: TextAlign.center,
+          textCapitalization: TextCapitalization.characters,
+          inputFormatters: [_UpperCaseInputFormatter()],
           style: GoogleFonts.jetBrainsMono(
             fontSize: AppFontSizes.size18,
             fontWeight: FontWeight.w800,
@@ -108,9 +108,20 @@ class _DeleteConfirmationBodyState extends State<DeleteConfirmationBody> {
             textColor: Colors.white,
           ),
         ),
-        const SizedBox(height: 8),
-        DeleteAccountCancelLink(onTap: widget.onCancel),
       ],
+    );
+  }
+}
+
+class _UpperCaseInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
     );
   }
 }

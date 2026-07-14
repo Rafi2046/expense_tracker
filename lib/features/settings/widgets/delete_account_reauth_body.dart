@@ -3,14 +3,12 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
-import 'package:expense_tracker/features/settings/widgets/delete_account_cancel_link.dart';
 
 class DeleteAccountReauthBody extends StatelessWidget {
   final bool isPasswordUser;
   final bool isDeleting;
   final TextEditingController passwordController;
   final VoidCallback onReauthenticate;
-  final VoidCallback onCancel;
 
   const DeleteAccountReauthBody({
     super.key,
@@ -18,7 +16,6 @@ class DeleteAccountReauthBody extends StatelessWidget {
     required this.isDeleting,
     required this.passwordController,
     required this.onReauthenticate,
-    required this.onCancel,
   });
 
   @override
@@ -94,8 +91,6 @@ class DeleteAccountReauthBody extends StatelessWidget {
             ),
           ),
         ],
-        const SizedBox(height: 8),
-        DeleteAccountCancelLink(onTap: onCancel),
       ],
     );
   }
