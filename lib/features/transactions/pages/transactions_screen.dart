@@ -358,7 +358,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         onSearchChanged: (val) => provider.updateSearchQuery(val),
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 60),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom + 88,
+        ),
         child: FloatingActionButton(
           heroTag: 'ledger_fab',
           backgroundColor: const Color(0xFF2ECC71),

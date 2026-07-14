@@ -84,7 +84,9 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
         centerTitle: true,
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 72),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom + 88,
+        ),
         child: FloatingActionButton(
           onPressed: () => AddEditDebtSheet.show(
             context: context,

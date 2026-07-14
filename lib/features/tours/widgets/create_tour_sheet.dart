@@ -235,16 +235,22 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                       style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w600, color: sTheme.colorScheme.onSurface),
                                     ),
                                     const SizedBox(height: 20),
-                                    ListTile(
-                                      leading: Icon(LucideIcons.camera),
-                                      title: Text('Take Photo', style: AppTextStyles.reportTileTitle.copyWith(fontWeight: FontWeight.w400)),
-                                      onTap: () => Navigator.pop(sCtx, ImageSource.camera),
-                                    ),
-                                    ListTile(
-                                      leading: Icon(LucideIcons.image),
-                                      title: Text('Choose from Gallery', style: AppTextStyles.reportTileTitle.copyWith(fontWeight: FontWeight.w400)),
-                                      onTap: () => Navigator.pop(sCtx, ImageSource.gallery),
-                                    ),
+                                     ListTile(
+                                       leading: Icon(LucideIcons.camera, color: sTheme.colorScheme.onSurface),
+                                       title: Text('Take Photo', style: AppTextStyles.reportTileTitle.copyWith(
+                                         fontWeight: FontWeight.w400,
+                                         color: sTheme.colorScheme.onSurface,
+                                       )),
+                                       onTap: () => Navigator.pop(sCtx, ImageSource.camera),
+                                     ),
+                                     ListTile(
+                                       leading: Icon(LucideIcons.image, color: sTheme.colorScheme.onSurface),
+                                       title: Text('Choose from Gallery', style: AppTextStyles.reportTileTitle.copyWith(
+                                         fontWeight: FontWeight.w400,
+                                         color: sTheme.colorScheme.onSurface,
+                                       )),
+                                       onTap: () => Navigator.pop(sCtx, ImageSource.gallery),
+                                     ),
                                   ],
                                 ),
                               );

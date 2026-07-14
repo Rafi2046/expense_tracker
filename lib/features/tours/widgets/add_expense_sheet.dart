@@ -700,6 +700,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                                 paidByAmounts: _paidByAmounts,
                                 amountControllers: _paidByControllers,
                                 totalAmount: _parsedAmount,
+                                currencySymbol: _sym,
                                 onPaidByChanged: (updated) =>
                                     setState(() => _paidByAmounts = updated),
                               ),

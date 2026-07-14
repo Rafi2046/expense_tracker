@@ -11,7 +11,7 @@ class TourCreateButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).padding.bottom;
     return Padding(
-      padding: EdgeInsets.only(bottom: bottomInset + 60),
+      padding: EdgeInsets.only(bottom: bottomInset + 88),
       child: FloatingActionButton(
         onPressed: onPressed,
         backgroundColor: AppColors.activeGreen,

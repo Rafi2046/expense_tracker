@@ -14,6 +14,7 @@ class ExpenseParticipantSelector extends StatefulWidget {
   final Map<String, double> paidByAmounts;
   final Map<String, TextEditingController> amountControllers;
   final double totalAmount;
+  final String currencySymbol;
   final void Function(Map<String, double>) onPaidByChanged;
 
   const ExpenseParticipantSelector({
@@ -23,6 +24,7 @@ class ExpenseParticipantSelector extends StatefulWidget {
     required this.paidByAmounts,
     required this.amountControllers,
     required this.totalAmount,
+    required this.currencySymbol,
     required this.onPaidByChanged,
   });
 
@@ -176,7 +178,7 @@ class _ExpenseParticipantSelectorState
                   if (selected) ...[
                     const Spacer(),
                     SizedBox(
-                      width: 90,
+                      width: 110,
                       child: TextField(
                         controller: widget.amountControllers[p.id],
                         keyboardType: const TextInputType.numberWithOptions(
@@ -191,17 +193,41 @@ class _ExpenseParticipantSelectorState
                           color: widget.theme.colorScheme.onSurface,
                         ),
                         decoration: InputDecoration(
-                          hintText: '0',
+                          hintText: '0.00',
+                          hintStyle: AppTextStyles.bodySmall.copyWith(
+                            color: widget.theme.colorScheme.onSurface.withValues(alpha: 0.35),
+                          ),
+                          prefixText: '${widget.currencySymbol} ',
+                          prefixStyle: AppTextStyles.bodySmall.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: widget.theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(AppSpacing.r8),
-                            borderSide: BorderSide.none,
+                            borderSide: BorderSide(
+                              color: widget.theme.dividerColor.withValues(alpha: 0.2),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(AppSpacing.r8),
+                            borderSide: BorderSide(
+                              color: widget.theme.dividerColor.withValues(alpha: 0.2),
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(AppSpacing.r8),
+                            borderSide: const BorderSide(
+                              color: AppColors.activeGreen,
+                              width: 1.5,
+                            ),
                           ),
                           filled: true,
-                          fillColor: widget.theme.colorScheme.surfaceContainerHighest
-                              .withValues(alpha: 0.3),
+                          fillColor: widget.theme.brightness == Brightness.dark
+                              ? Colors.grey.shade900.withValues(alpha: 0.4)
+                              : Colors.grey.shade50,
                           contentPadding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.s8,
-                            vertical: AppSpacing.s6,
+                            horizontal: AppSpacing.p10,
+                            vertical: AppSpacing.s8,
                           ),
                           isDense: true,
                         ),

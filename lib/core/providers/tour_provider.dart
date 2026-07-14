@@ -85,6 +85,7 @@ class TourProvider extends ChangeNotifier {
 
   Future<void> _loadTours() async {
     try {
+      // 1. Load local tours first for instant rendering
       final db = await _db.database;
       final maps = await db.query(
         'tours',
@@ -93,6 +94,23 @@ class TourProvider extends ChangeNotifier {
         orderBy: 'createdAt DESC',
       );
       _tours = maps.map((m) => Tour.fromJson(m)).toList();
+      for (final tour in _tours) {
+        _initRealTimeListenerForTour(tour.id);
+      }
+      _isLoading = false;
+      notifyListeners();
+
+      // 2. Fetch/sync latest tours from Firestore in the background
+      await _syncToursFromFirestore();
+
+      // 3. Reload local tours from SQLite to reflect any background additions
+      final updatedMaps = await db.query(
+        'tours',
+        where: 'isDeleted = 0 AND profileId = ?',
+        whereArgs: [_activeProfileId],
+        orderBy: 'createdAt DESC',
+      );
+      _tours = updatedMaps.map((m) => Tour.fromJson(m)).toList();
       for (final tour in _tours) {
         _initRealTimeListenerForTour(tour.id);
       }
@@ -1105,6 +1123,71 @@ class TourProvider extends ChangeNotifier {
   CollectionReference get _sharedToursCollection =>
       FirebaseFirestore.instance.collection(AppConstants.toursCollection);
 
+  Future<void> _syncToursFromFirestore() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    try {
+      final querySnapshot = await _sharedToursCollection
+          .where('memberUids', arrayContains: uid)
+          .get();
+
+      final db = await _db.database;
+      final localService = TourLocalService(db);
+
+      for (final doc in querySnapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>?;
+        if (data == null) continue;
+        final tour = Tour.fromMap(doc.id, data);
+
+        // Check if this tour already exists in local SQLite to preserve profileId
+        final localTourMaps = await db.query(
+          'tours',
+          where: 'id = ?',
+          whereArgs: [tour.id],
+        );
+
+        String targetProfileId = _activeProfileId;
+        if (localTourMaps.isNotEmpty) {
+          targetProfileId = localTourMaps.first['profileId'] as String? ?? _activeProfileId;
+        }
+
+        final updatedTour = tour.copyWith(profileId: targetProfileId);
+
+        // Fetch participants and expenses
+        final participantSnapshot = await _sharedToursCollection
+            .doc(tour.id)
+            .collection('participants')
+            .get();
+        final participants = participantSnapshot.docs
+            .map((doc) => TourParticipant.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+            .toList();
+
+        final expenseSnapshot = await _sharedToursCollection
+            .doc(tour.id)
+            .collection('expenses')
+            .get();
+        final expenses = expenseSnapshot.docs
+            .map((doc) => TourExpense.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+            .toList();
+
+        final shares = expenses
+            .where((e) => e.shares != null)
+            .expand((e) => e.shares!)
+            .toList();
+
+        await localService.saveJoinedTourLocally(
+          updatedTour,
+          participants,
+          expenses: expenses,
+          shares: shares,
+        );
+      }
+    } catch (e) {
+      debugPrint('Error syncing tours from Firestore: $e');
+    }
+  }
+
   Future<void> _syncTourToSharedCollection(Tour tour) async {
     await _sharedToursCollection.doc(tour.id).set(tour.toMap());
   }
@@ -1181,12 +1264,25 @@ class TourProvider extends ChangeNotifier {
         final data = snapshot.data();
         if (data == null) return;
         final tour = Tour.fromMap(snapshot.id, data as Map<String, dynamic>);
-        final localService = TourLocalService(await _db.database);
-        await localService.upsertTour(tour);
+        
+        final db = await _db.database;
+        final localTourMaps = await db.query(
+          'tours',
+          where: 'id = ?',
+          whereArgs: [tour.id],
+        );
+        String targetProfileId = _activeProfileId;
+        if (localTourMaps.isNotEmpty) {
+          targetProfileId = localTourMaps.first['profileId'] as String? ?? _activeProfileId;
+        }
+        final updatedTour = tour.copyWith(profileId: targetProfileId);
+
+        final localService = TourLocalService(db);
+        await localService.upsertTour(updatedTour);
         final idx = _tours.indexWhere((t) => t.id == tourId);
         if (idx != -1) {
           final old = _tours[idx];
-          _tours[idx] = tour;
+          _tours[idx] = updatedTour;
           notifyListeners();
           final currentUid = FirebaseAuth.instance.currentUser?.uid;
           if (tour.isCompleted && !old.isCompleted &&
