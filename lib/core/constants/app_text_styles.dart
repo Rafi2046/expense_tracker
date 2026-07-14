@@ -95,11 +95,12 @@ class AppTextStyles {
 
   // Splash
   static TextStyle splashTextTitle = TextStyle(
-    fontSize: AppFontSizes.size16,
-    fontFamily: GoogleFonts.workSans().fontFamily,
-    color: AppColors.splash,
-    fontWeight: FontWeight.w600,
+    fontSize: AppFontSizes.size18,
+    fontFamily: GoogleFonts.inter().fontFamily,
+    color: AppColors.splashColor,
+    fontWeight: FontWeight.w400,
   );
+
 
   static TextStyle splashTextSubTitle = TextStyle(
     fontSize: AppFontSizes.size16,

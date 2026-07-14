@@ -14,8 +14,8 @@ class TransactionEmptyState extends StatelessWidget {
           children: [
             Image.asset(
               AppImages.transactions,
-              width: 250,
-              height: 250,
+              width: 200,
+              height: 200,
               fit: BoxFit.contain,
             ),
             const SizedBox(height: 16),
