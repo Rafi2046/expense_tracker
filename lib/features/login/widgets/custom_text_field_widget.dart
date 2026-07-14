@@ -34,13 +34,19 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(widget.label, style: AppTextStyles.textFieldLabel),
+            Text(
+              widget.label,
+              style: AppTextStyles.textFieldLabel.copyWith(
+                color: isDark ? Colors.grey.shade300 : null,
+              ),
+            ),
 
             if (widget.trailingLabelWidget != null) widget.trailingLabelWidget!,
           ],
@@ -49,10 +55,14 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
         TextFormField(
           controller: widget.controller,
           obscureText: _obscureText,
-          style: AppTextStyles.textFieldHint,
+          style: AppTextStyles.textFieldHint.copyWith(
+            color: isDark ? Colors.white : null,
+          ),
           decoration: InputDecoration(
             hintText: widget.hintText,
-            hintStyle: TextStyle(color: AppColors.loginLabelColor),
+            hintStyle: TextStyle(
+              color: isDark ? Colors.grey.shade400 : AppColors.loginLabelColor,
+            ),
 
             suffixIcon: widget.obscureText
                 ? IconButton(
@@ -63,16 +73,23 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                     },
                     icon: Icon(
                       _obscureText ? LucideIcons.eye : LucideIcons.eyeOff,
+                      color: isDark ? Colors.grey.shade400 : null,
                     ),
                   )
                 : null,
 
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.zero,
-              borderSide: BorderSide(color: AppColors.borderColor, width: 1.5),
+              borderSide: BorderSide(
+                color: isDark ? Colors.grey.shade600 : AppColors.borderColor,
+                width: 1.5,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColors.borderColor, width: 1.5),
+              borderSide: BorderSide(
+                color: isDark ? Colors.grey.shade500 : AppColors.borderColor,
+                width: 1.5,
+              ),
             ),
           ),
         ),

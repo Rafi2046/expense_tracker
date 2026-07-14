@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -97,40 +98,49 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               vertical: 20.0,
             ),
             child: Column(
-              spacing: AppSpacing.s16,
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Image.asset(
                   AppImages.forgetPassLogo,
-                  height: 320,
+                  height: 250,
                   width: double.infinity,
                   fit: BoxFit.contain,
                 ),
-                Text(
-                  'Forgot password?',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.loginTitle.copyWith(
-                    color: isDark ? Colors.white : null,
-                  ),
+
+                Column(
+                  spacing: AppSpacing.s4,
+                  children: [
+                    Text(
+                      'Forgot password?',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.loginTitle.copyWith(
+                        fontSize: AppFontSizes.size28,
+                        color: isDark ? Colors.white : null,
+                      ),
+                    ),
+                    Text(
+                      'No worries, it happens! Just enter your email address associated with your account.',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.loginSubTitle.copyWith(
+                        color: isDark ? Colors.grey.shade400 : null,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  'No worries, it happens! Just enter your email address associated with your account.',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.loginSubTitle.copyWith(
-                    color: isDark ? Colors.grey.shade400 : null,
-                  ),
-                ),
+                const SizedBox(height: AppSpacing.s16),
 
                 CustomTextFieldWidget(
                   label: 'Email Address',
                   hintText: 'Enter your email',
                   controller: _emailController,
                 ),
+                const SizedBox(height: AppSpacing.s16),
                 CustomButton(
                   text: _isLoading ? 'Sending...' : 'Send Link',
                   onPressed: _isLoading ? () {} : _sendResetEmail,
                 ),
+                const SizedBox(height: AppSpacing.s16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
