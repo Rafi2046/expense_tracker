@@ -6,9 +6,11 @@ import 'package:expense_tracker/features/dashboard/pages/dashboard_screen.dart';
 import 'package:expense_tracker/features/settings/pages/settings_screen.dart';
 import 'package:expense_tracker/features/tours/pages/tour_list_screen.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:provider/provider.dart';
 
 class BottomNavScreen extends StatefulWidget {
   const BottomNavScreen({super.key});
@@ -144,6 +146,9 @@ class _AppBottomNavState extends State<BottomNavScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(24),
           onTap: () {
+            if (index == 1) {
+              context.read<TransactionProvider>().setSelectedPeriod(TransactionPeriod.monthly);
+            }
             setState(() {
               _currentIndex = index;
             });

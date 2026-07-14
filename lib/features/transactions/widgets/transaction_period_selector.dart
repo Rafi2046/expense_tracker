@@ -22,8 +22,7 @@ class TransactionPeriodSelector extends StatelessWidget {
     return Expanded(
       child: GestureDetector(
         onTap: () => onPeriodChanged(period),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+        child: Container(
           padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
             color: isSelected ? accentColor : Colors.transparent,
