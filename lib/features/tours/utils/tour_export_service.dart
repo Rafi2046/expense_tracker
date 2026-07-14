@@ -377,7 +377,7 @@ class TourExportService {
         const SizedBox(width: AppSpacing.s6),
         Flexible(
           child: Text(
-            'Generated via Expense Tracker  \u2022  Shared Expenses Simplified',
+            'Generated via BudgetMint  \u2022  Shared Expenses Simplified',
             style: AppTextStyles.caption.copyWith(
               fontSize: AppFontSizes.size9,
               color: Colors.grey.shade400,

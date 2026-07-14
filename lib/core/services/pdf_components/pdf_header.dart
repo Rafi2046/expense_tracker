@@ -4,7 +4,7 @@ import 'pdf_theme.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PdfHeaderBuilder {
-  static pw.Widget build(String title, String dateRange, pw.TextStyle baseStyle) {
+  static pw.Widget build(String title, String dateRange, pw.TextStyle baseStyle, pw.ImageProvider? logoImage) {
     return pw.Container(
       padding: const pw.EdgeInsets.only(bottom: 14),
       decoration: const pw.BoxDecoration(
@@ -16,30 +16,37 @@ class PdfHeaderBuilder {
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           // Brand mark
-          pw.Container(
-            width: 40,
-            height: 40,
-            decoration: pw.BoxDecoration(
-              color: PdfTheme.brandPrimary,
-              borderRadius: pw.BorderRadius.circular(8),
-            ),
-            alignment: pw.Alignment.center,
-            child: pw.Text(
-              'ET',
-              style: baseStyle.copyWith(
-                color: PdfTheme.white,
-                fontSize: AppFontSizes.size16,
-                fontWeight: pw.FontWeight.bold,
+          if (logoImage != null)
+            pw.Container(
+              width: 40,
+              height: 40,
+              child: pw.Image(logoImage),
+            )
+          else
+            pw.Container(
+              width: 40,
+              height: 40,
+              decoration: pw.BoxDecoration(
+                color: PdfTheme.brandPrimary,
+                borderRadius: pw.BorderRadius.circular(8),
+              ),
+              alignment: pw.Alignment.center,
+              child: pw.Text(
+                'BM',
+                style: baseStyle.copyWith(
+                  color: PdfTheme.white,
+                  fontSize: AppFontSizes.size16,
+                  fontWeight: pw.FontWeight.bold,
+                ),
               ),
             ),
-          ),
           pw.SizedBox(width: 12),
           pw.Expanded(
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
                 pw.Text(
-                  'Expense Tracker',
+                  'BudgetMint',
                   style: baseStyle.copyWith(
                     fontSize: AppFontSizes.size10,
                     color: PdfTheme.mutedText,

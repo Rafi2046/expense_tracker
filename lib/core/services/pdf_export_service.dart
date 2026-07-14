@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -41,13 +42,21 @@ class PdfExportService {
       bold: _fontBold!,
     );
 
+    pw.ImageProvider? logoImage;
+    try {
+      final logoData = await rootBundle.load('assets/app_logo/splash_logo_final.png');
+      logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
+    } catch (_) {
+      // Fallback if asset loading fails
+    }
+
     final pdf = pw.Document(theme: theme);
 
     pdf.addPage(
       pw.MultiPage(
         pageFormat: pageFormat,
         margin: const pw.EdgeInsets.symmetric(horizontal: 36, vertical: 28),
-        header: (context) => PdfHeaderBuilder.build(title, dateRange, baseStyle),
+        header: (context) => PdfHeaderBuilder.build(title, dateRange, baseStyle, logoImage),
         footer: (context) => PdfFooterBuilder.build(context, baseStyle),
         build: (context) => [
           if (summaryData != null) ...[

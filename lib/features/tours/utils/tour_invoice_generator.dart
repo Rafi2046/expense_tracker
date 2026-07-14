@@ -86,7 +86,7 @@ class TourInvoiceGenerator {
 
     return pw.Document(
       title: '${tour.name} Invoice',
-      author: 'Expense Tracker',
+      author: 'BudgetMint',
       subject: 'Tour Expense Invoice',
     )..addPage(
       pw.MultiPage(
@@ -134,7 +134,7 @@ class TourInvoiceGenerator {
             style: pw.TextStyle(fontSize: AppFontSizes.size10, color: PdfColors.grey600),
           ),
           pw.Text(
-            'Expense Tracker',
+            'BudgetMint',
             style: pw.TextStyle(fontSize: AppFontSizes.size10, color: PdfColors.grey600),
           ),
         ],
@@ -154,7 +154,7 @@ class TourInvoiceGenerator {
         mainAxisAlignment: pw.MainAxisAlignment.center,
         children: [
           pw.Text(
-            'Generated via Expense Tracker - Shared Expenses Simplified',
+            'Generated via BudgetMint - Shared Expenses Simplified',
             style: pw.TextStyle(fontSize: AppFontSizes.size8, color: PdfColors.grey500),
           ),
         ],

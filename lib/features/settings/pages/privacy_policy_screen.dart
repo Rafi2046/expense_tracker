@@ -86,7 +86,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Expense Tracker Privacy Policy',
+                  'BudgetMint Privacy Policy',
                   style: AppTextStyles.profileTitle.copyWith(
                     color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w800,

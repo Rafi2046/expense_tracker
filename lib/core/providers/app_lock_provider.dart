@@ -71,7 +71,7 @@ class AppLockProvider extends ChangeNotifier {
     try {
       final localAuth = LocalAuthentication();
       final didAuthenticate = await localAuth.authenticate(
-        localizedReason: 'Authenticate to unlock your expense tracker',
+        localizedReason: 'Authenticate to unlock your BudgetMint',
       );
 
       if (didAuthenticate) {

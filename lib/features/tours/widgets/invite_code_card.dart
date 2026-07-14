@@ -31,7 +31,7 @@ class InviteCodeCard extends StatelessWidget {
   void _onShare() {
     SharePlus.instance.share(
       ShareParams(
-        text: 'Join my tour "$tourName" on Expense Tracker!\n\n'
+        text: 'Join my tour "$tourName" on BudgetMint!\n\n'
             'Use invite code: $inviteCode',
       ),
     );

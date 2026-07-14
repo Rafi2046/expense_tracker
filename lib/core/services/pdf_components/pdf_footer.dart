@@ -38,7 +38,7 @@ class PdfFooterBuilder {
             ),
             pw.SizedBox(width: 4),
             pw.Text(
-              'Expense Tracker',
+              'BudgetMint',
               style: baseStyle.copyWith(
                 fontSize: AppFontSizes.size7,
                 color: PdfTheme.brandPrimary,

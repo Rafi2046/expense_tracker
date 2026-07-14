@@ -37,7 +37,7 @@ class BiometricAuthProvider extends ChangeNotifier {
     } catch (_) {}
   }
 
-  Future<bool> authenticate({String localizedReason = 'Use biometrics to unlock your expense tracker'}) async {
+  Future<bool> authenticate({String localizedReason = 'Use biometrics to unlock your BudgetMint'}) async {
     try {
       final localAuth = LocalAuthentication();
       return await localAuth.authenticate(

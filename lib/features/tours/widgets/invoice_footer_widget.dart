@@ -15,7 +15,7 @@ class InvoiceFooterWidget extends StatelessWidget {
           Icon(LucideIcons.wallet, size: 13, color: Colors.grey.shade400),
           const SizedBox(width: 6),
           Text(
-            'Generated via Expense Tracker',
+            'Generated via BudgetMint',
             style: AppTextStyles.caption.copyWith(
               fontSize: AppFontSizes.size9,
               color: Colors.grey.shade400,
