@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/login/pages/login_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/delete_account_reauth_body.dart';
 import 'package:expense_tracker/features/settings/widgets/delete_account_warning_header.dart';
@@ -46,6 +47,10 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
   Future<void> _finishDeletion() async {
     await DatabaseHelper.instance.clearUserData();
     await DatabaseHelper.instance.checkDatabaseEmptyStatus();
+
+    // Clear user-specific shared preferences keys
+    await SharedPrefsHelper.remove(SharedPrefsHelper.activeProfileKey);
+    await SharedPrefsHelper.remove(SharedPrefsHelper.onboardingCompleteKey);
 
     final authService = AuthService();
     try {

@@ -17,7 +17,7 @@ class LoginHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image.asset(AppImages.splashLogo, height: 68, width: 68),
+        Image.asset(AppImages.splashLogo, height: 70, width: 70),
         Text(
           'Welcome Back',
           textAlign: TextAlign.center,
