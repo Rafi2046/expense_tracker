@@ -83,13 +83,37 @@ class ProfileProvider extends ChangeNotifier {
     _currentProfile = _profiles.first;
   }
 
-  Future<void> _loadFromDb() async {
+  Future<void> _loadFromDb({bool force = false}) async {
     try {
       var currentUser = FirebaseAuth.instance.currentUser;
       currentUser ??= await FirebaseAuth.instance.authStateChanges().first;
 
       final currentUid = currentUser?.uid;
-      if (_isReady && currentUid == _lastLoadedUid) {
+
+      // Sync profiles from Firestore first if logged in
+      if (currentUid != null) {
+        try {
+          final snapshot = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(currentUid)
+              .collection('profiles')
+              .get();
+          for (final doc in snapshot.docs) {
+            final data = doc.data();
+            await DatabaseHelper.instance.insertProfile({
+              'id': doc.id,
+              'name': data['name'] ?? 'Personal',
+              'type': data['type'] ?? 'Personal',
+              'createdAt': data['createdAt'] ?? DateTime.now().toIso8601String(),
+              'uid': currentUid,
+            });
+          }
+        } catch (e) {
+          debugPrint('ProfileProvider: Error syncing profiles from Firestore: $e');
+        }
+      }
+
+      if (!force && _isReady && currentUid == _lastLoadedUid) {
         return;
       }
       _lastLoadedUid = currentUid;
@@ -212,7 +236,7 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future<void> reload() async {
-    await _loadFromDb();
+    await _loadFromDb(force: true);
   }
 
   // Getters

@@ -83,8 +83,9 @@ class DashboardScreen extends StatelessWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          txProvider.updateProfileId(currentProfile.id);
-          debtProvider.updateProfileId(currentProfile.id);
+          await profileProvider.reload();
+          txProvider.updateProfileId(profileProvider.currentProfile.id);
+          debtProvider.updateProfileId(profileProvider.currentProfile.id);
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),

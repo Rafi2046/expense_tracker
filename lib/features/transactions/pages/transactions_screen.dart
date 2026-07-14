@@ -8,6 +8,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -371,6 +372,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         child: RefreshIndicator(
           color: const Color(0xFF6A53A1),
           onRefresh: () async {
+            await context.read<ProfileProvider>().reload();
             provider.updateProfileId(provider.activeProfileId);
             await Future.delayed(const Duration(milliseconds: 800));
           },
