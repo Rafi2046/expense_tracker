@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
 
@@ -23,6 +24,7 @@ class LoginEmailForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: AppSpacing.s4,
       children: [
         CustomTextFieldWidget(
           controller: emailController,

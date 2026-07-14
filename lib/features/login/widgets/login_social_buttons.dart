@@ -54,6 +54,7 @@ class LoginSocialButtons extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: AppSpacing.s16),
         CustomButton(
           leading: Image.asset(AppImages.googleLogo),
           showBorder: true,

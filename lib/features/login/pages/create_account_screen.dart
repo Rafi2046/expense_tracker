@@ -166,16 +166,20 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         isLoading: _isLoading,
                         onSignUp: _handleSignUp,
                       ),
-                      const SizedBox(height: 8),
-                      SignupSocialButtons(
-                        isDark: isDark,
-                        isLoading: _isLoading,
-                        onGoogleSignUp: _handleGoogleSignUp,
-                        onAppleSignUp: _handleAppleSignUp,
-                      ),
-                      SignupLoginLink(
-                        isDark: isDark,
-                        onLoginTap: () => Navigator.pop(context),
+                      Column(
+                        spacing: AppSpacing.s8,
+                        children: [
+                          SignupSocialButtons(
+                            isDark: isDark,
+                            isLoading: _isLoading,
+                            onGoogleSignUp: _handleGoogleSignUp,
+                            onAppleSignUp: _handleAppleSignUp,
+                          ),
+                          SignupLoginLink(
+                            isDark: isDark,
+                            onLoginTap: () => Navigator.pop(context),
+                          ),
+                        ],
                       ),
                     ],
                   ),

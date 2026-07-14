@@ -34,7 +34,7 @@ class CustomButton extends StatelessWidget {
       height: AppSpacing.h50,
       child: InkWell(
         onTap: onPressed,
-        borderRadius: BorderRadius.circular(AppSpacing.br12),
+        borderRadius: BorderRadius.circular(AppSpacing.br8),
         child: Container(
           decoration: BoxDecoration(
             color: backgroundColor,
@@ -43,7 +43,7 @@ class CustomButton extends StatelessWidget {
                   ? borderColor ?? AppColors.loginLabelPasswordColor
                   : Colors.transparent,
             ),
-            borderRadius: BorderRadius.circular(AppSpacing.br12),
+            borderRadius: BorderRadius.circular(AppSpacing.br8),
           ),
 
           child: (leading == null && trailing == null)

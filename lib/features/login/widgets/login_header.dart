@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
@@ -16,11 +17,12 @@ class LoginHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image.asset(AppImages.splashLogo, height: 64, width: 64),
+        Image.asset(AppImages.splashLogo, height: 68, width: 68),
         Text(
           'Welcome Back',
           textAlign: TextAlign.center,
           style: AppTextStyles.loginTitle.copyWith(
+            fontSize: AppFontSizes.size28,
             color: isDark ? Colors.white : null,
           ),
         ),

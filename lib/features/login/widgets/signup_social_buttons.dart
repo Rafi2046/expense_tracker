@@ -48,6 +48,7 @@ class SignupSocialButtons extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: AppSpacing.s8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
