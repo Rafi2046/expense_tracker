@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
@@ -7,6 +8,8 @@ import 'package:expense_tracker/features/onboarding/widgets/onboarding_page.dart
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_page_indicator.dart';
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_navigation_buttons.dart';
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_skip_button.dart';
+import 'package:expense_tracker/features/onboarding/widgets/onboarding_theme_picker.dart';
+import 'package:expense_tracker/features/onboarding/widgets/onboarding_language_picker.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -21,9 +24,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   final PageController _pageController = PageController();
   int _currentPage = 0;
   late List<_OnboardingSlide> _slides;
+  static const int _totalSlides = 6;
 
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
+  late AnimationController _bgFloatController;
 
   @override
   void initState() {
@@ -39,37 +44,44 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       curve: Curves.easeOut,
     );
     _fadeController.forward();
+
+    // Slow floating animation for background orbs
+    _bgFloatController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 8),
+    )..repeat(reverse: true);
   }
 
   @override
   void dispose() {
     _pageController.dispose();
     _fadeController.dispose();
+    _bgFloatController.dispose();
     super.dispose();
   }
 
   List<_OnboardingSlide> _buildSlides() {
     return [
       _OnboardingSlide(
-        icon: LucideIcons.wallet,
+        icon: LucideIcons.sparkles,
         iconColor: AppColors.activeGreen,
         titleKey: 'onboarding_welcome_title',
         subtitleKey: 'onboarding_welcome_subtitle',
         features: [],
       ),
       _OnboardingSlide(
-        icon: LucideIcons.arrowUpDown,
+        icon: LucideIcons.arrowDownUp,
         iconColor: const Color(0xFF4CAF50),
         titleKey: 'onboarding_track_title',
         subtitleKey: 'onboarding_track_subtitle',
         features: [
           OnboardingFeatureItem(
-            icon: LucideIcons.arrowDown,
+            icon: LucideIcons.trendingUp,
             labelKey: 'onboarding_track_feature_income',
             color: const Color(0xFF4CAF50),
           ),
           OnboardingFeatureItem(
-            icon: LucideIcons.arrowUp,
+            icon: LucideIcons.trendingDown,
             labelKey: 'onboarding_track_feature_expense',
             color: AppColors.expensePink,
           ),
@@ -81,25 +93,30 @@ class _OnboardingScreenState extends State<OnboardingScreen>
         ],
       ),
       _OnboardingSlide(
-        icon: LucideIcons.users,
+        icon: LucideIcons.usersRound,
         iconColor: const Color(0xFF42A5F5),
-        titleKey: 'onboarding_payment_title',
-        subtitleKey: 'onboarding_payment_subtitle',
+        titleKey: 'onboarding_tour_title',
+        subtitleKey: 'onboarding_tour_subtitle',
         features: [
           OnboardingFeatureItem(
-            icon: LucideIcons.arrowDownLeft,
-            labelKey: 'onboarding_payment_feature_in',
-            color: const Color(0xFF4CAF50),
+            icon: LucideIcons.split,
+            labelKey: 'onboarding_tour_feature_split',
+            color: const Color(0xFF42A5F5),
           ),
           OnboardingFeatureItem(
-            icon: LucideIcons.arrowUpRight,
-            labelKey: 'onboarding_payment_feature_out',
-            color: AppColors.activeRed,
+            icon: LucideIcons.handshake,
+            labelKey: 'onboarding_tour_feature_settle',
+            color: const Color(0xFF2EBD85),
+          ),
+          OnboardingFeatureItem(
+            icon: LucideIcons.layoutGrid,
+            labelKey: 'onboarding_tour_feature_multi',
+            color: const Color(0xFFFFA726),
           ),
         ],
       ),
       _OnboardingSlide(
-        icon: LucideIcons.barChart,
+        icon: LucideIcons.chartNoAxesCombined,
         iconColor: const Color(0xFFAB47BC),
         titleKey: 'onboarding_budget_title',
         subtitleKey: 'onboarding_budget_subtitle',
@@ -110,7 +127,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             color: const Color(0xFFFFA726),
           ),
           OnboardingFeatureItem(
-            icon: LucideIcons.barChart,
+            icon: LucideIcons.pieChart,
             labelKey: 'onboarding_budget_feature_reports',
             color: const Color(0xFFAB47BC),
           ),
@@ -120,7 +137,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 
   void _onNext() {
-    if (_currentPage < _slides.length - 1) {
+    if (_currentPage < _totalSlides - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
@@ -149,10 +166,19 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     );
   }
 
+  // Get the accent color for current page to tint background orbs
+  Color get _currentAccentColor {
+    if (_currentPage < _slides.length) {
+      return _slides[_currentPage].iconColor;
+    }
+    return AppColors.activeGreen;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isLastPage = _currentPage == _slides.length - 1;
+    final isLastPage = _currentPage == _totalSlides - 1;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -160,40 +186,80 @@ class _OnboardingScreenState extends State<OnboardingScreen>
         opacity: _fadeAnimation,
         child: Stack(
           children: [
-            Positioned(
-              top: -80,
-              right: -60,
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      AppColors.activeGreen.withValues(alpha: 0.08),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
-              ),
+            // ─── Animated Background Orbs ───
+            AnimatedBuilder(
+              animation: _bgFloatController,
+              builder: (context, child) {
+                final floatValue = _bgFloatController.value;
+                return Stack(
+                  children: [
+                    // Top-right orb (large, follows page accent color)
+                    Positioned(
+                      top: -100 + (floatValue * 20),
+                      right: -80 - (floatValue * 15),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        width: 280,
+                        height: 280,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: RadialGradient(
+                            colors: [
+                              _currentAccentColor.withValues(
+                                  alpha: isDark ? 0.12 : 0.08),
+                              _currentAccentColor.withValues(
+                                  alpha: isDark ? 0.04 : 0.02),
+                              Colors.transparent,
+                            ],
+                            stops: const [0.0, 0.5, 1.0],
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Bottom-left orb
+                    Positioned(
+                      bottom: -60 - (floatValue * 15),
+                      left: -60 + (floatValue * 10),
+                      child: Container(
+                        width: 220,
+                        height: 220,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: RadialGradient(
+                            colors: [
+                              const Color(0xFFAB47BC).withValues(
+                                  alpha: isDark ? 0.1 : 0.06),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Center-left accent orb (new — adds depth)
+                    Positioned(
+                      top: MediaQuery.of(context).size.height * 0.35,
+                      left: -120 + (floatValue * 25),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        width: 180,
+                        height: 180,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: RadialGradient(
+                            colors: [
+                              _currentAccentColor.withValues(
+                                  alpha: isDark ? 0.06 : 0.04),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
-            Positioned(
-              bottom: -40,
-              left: -40,
-              child: Container(
-                width: 160,
-                height: 160,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      AppColors.buttonColor.withValues(alpha: 0.06),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // ─── Main Content ───
             Column(
               children: [
                 SafeArea(
@@ -217,19 +283,61 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 Expanded(
                   child: PageView.builder(
                     controller: _pageController,
-                    itemCount: _slides.length,
+                    itemCount: _totalSlides,
                     onPageChanged: (index) {
                       setState(() => _currentPage = index);
                     },
                     itemBuilder: (context, index) {
-                      final slide = _slides[index];
-                      return OnboardingPage(
-                        icon: slide.icon,
-                        iconColor: slide.iconColor,
-                        title: context.translate(slide.titleKey),
-                        subtitle: context.translate(slide.subtitleKey),
-                        features: slide.features,
-                      );
+                      if (index == 0) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Spacer(flex: 2),
+                            Image.asset(
+                              AppImages.splashLogo,
+                              width: 160,
+                              height: 160,
+                            ),
+                            const SizedBox(height: 32),
+                            Text(
+                              'Welcome to BudgetMint',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: isDark ? Colors.white : const Color(0xFF1F2937),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 32),
+                              child: Text(
+                                'Your all-in-one companion to track daily expenses, manage budgets, and split tour bills effortlessly.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey.shade400,
+                                  height: 1.5,
+                                ),
+                              ),
+                            ),
+                            const Spacer(flex: 3),
+                          ],
+                        );
+                      } else if (index < 4) {
+                        final slide = _slides[index];
+                        return OnboardingPage(
+                          icon: slide.icon,
+                          iconColor: slide.iconColor,
+                          title: context.translate(slide.titleKey),
+                          subtitle: context.translate(slide.subtitleKey),
+                          features: slide.features,
+                        );
+                      } else if (index == 4) {
+                        return OnboardingThemePicker(isDark: isDark);
+                      } else {
+                        return OnboardingLanguagePicker(isDark: isDark);
+                      }
                     },
                   ),
                 ),
@@ -244,7 +352,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       OnboardingPageIndicator(
-                        itemCount: _slides.length,
+                        itemCount: _totalSlides,
                         currentPage: _currentPage,
                       ),
                       const SizedBox(height: 24),
@@ -262,6 +370,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       ),
     );
   }
+
 }
 
 class _OnboardingSlide {
