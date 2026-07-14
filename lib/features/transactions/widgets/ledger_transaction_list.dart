@@ -36,6 +36,7 @@ class LedgerTransactionList extends StatelessWidget {
     final provider = context.watch<TransactionProvider>();
     final locale = context.watch<LanguageProvider>().currentLanguageCode;
     final filteredTransactions = provider.filteredTransactions;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (isLoading) {
       return Column(
@@ -76,7 +77,7 @@ class LedgerTransactionList extends StatelessWidget {
           child: Text(
             dateHeader.toUpperCase(),
             style: AppTextStyles.reportStatLabel.copyWith(
-              color: Colors.grey.shade800,
+              color: isDark ? Colors.grey.shade400 : Colors.grey.shade800,
               fontWeight: FontWeight.w800,
               letterSpacing: 1.0,
             ),
