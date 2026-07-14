@@ -294,7 +294,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           children: [
                             const Spacer(flex: 2),
                             Image.asset(
-                              AppImages.splashLogo,
+                              AppImages.onboardingLogo,
                               width: 160,
                               height: 160,
                             ),
@@ -316,7 +316,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.grey.shade400,
+                                  color: isDark ? Colors.white70 : const Color(0xFF6B7280),
                                   height: 1.5,
                                 ),
                               ),

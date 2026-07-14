@@ -368,88 +368,96 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       ),
       body: SafeArea(
         bottom: false,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.only(
-            left: AppSpacing.p16,
-            right: AppSpacing.p16,
-            top: AppSpacing.p20,
-            bottom: 120,
-          ),
-          child: Skeletonizer(
-            enabled: isLoading,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 1. Stats Summary Cards (Income vs Expense + Net Balance)
-                TransactionSummaryCard(
-                  isMasked: _localMasked,
-                  onToggleMask: () =>
-                      setState(() => _localMasked = !_localMasked),
-                ),
-                const SizedBox(height: 16),
-
-                // 2. Period Selector (Daily / Monthly / Yearly)
-                TransactionPeriodSelector(
-                  selectedPeriod: provider.selectedPeriod,
-                  isDark: isDark,
-                  onPeriodChanged: (period) =>
-                      provider.setSelectedPeriod(period),
-                ),
-                const SizedBox(height: 12),
-
-                // 3. Date / Month Selector based on selected period
-                if (provider.selectedPeriod == TransactionPeriod.monthly)
-                  TransactionsMonthSelector(
-                    onFilterTap: () => _showSortFilterBottomSheet(context),
-                  )
-                else
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TransactionDateSelector(
-                          provider: provider,
-                          isDark: isDark,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Container(
-                        width: 44,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: isDark
-                                ? (Theme.of(context).dividerTheme.color ??
-                                      const Color(0xFF2D2D2D))
-                                : const Color(0xFFF1F1F1),
-                            width: 1.0,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.01),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: IconButton(
-                          icon: Icon(LucideIcons.slidersHorizontal, size: 18),
-                          color: isDark
-                              ? Colors.white70
-                              : const Color(0xFF31394D),
-                          onPressed: () => _showSortFilterBottomSheet(context),
-                        ),
-                      ),
-                    ],
+        child: RefreshIndicator(
+          color: const Color(0xFF6A53A1),
+          onRefresh: () async {
+            provider.updateProfileId(provider.activeProfileId);
+            await Future.delayed(const Duration(milliseconds: 800));
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.only(
+              left: AppSpacing.p16,
+              right: AppSpacing.p16,
+              top: AppSpacing.p20,
+              bottom: 120,
+            ),
+            child: Skeletonizer(
+              enabled: isLoading,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 1. Stats Summary Cards (Income vs Expense + Net Balance)
+                  TransactionSummaryCard(
+                    isMasked: _localMasked,
+                    onToggleMask: () =>
+                        setState(() => _localMasked = !_localMasked),
                   ),
+                  const SizedBox(height: 16),
 
-                // 4. Transactions List
-                LedgerTransactionList(
-                  isMasked: _localMasked,
-                  isLoading: isLoading,
-                ),
-              ],
+                  // 2. Period Selector (Daily / Monthly / Yearly)
+                  TransactionPeriodSelector(
+                    selectedPeriod: provider.selectedPeriod,
+                    isDark: isDark,
+                    onPeriodChanged: (period) =>
+                        provider.setSelectedPeriod(period),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // 3. Date / Month Selector based on selected period
+                  if (provider.selectedPeriod == TransactionPeriod.monthly)
+                    TransactionsMonthSelector(
+                      onFilterTap: () => _showSortFilterBottomSheet(context),
+                    )
+                  else
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TransactionDateSelector(
+                            provider: provider,
+                            isDark: isDark,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Container(
+                          width: 44,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: isDark
+                                  ? (Theme.of(context).dividerTheme.color ??
+                                        const Color(0xFF2D2D2D))
+                                  : const Color(0xFFF1F1F1),
+                              width: 1.0,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.01),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: IconButton(
+                            icon: Icon(LucideIcons.slidersHorizontal, size: 18),
+                            color: isDark
+                                ? Colors.white70
+                                : const Color(0xFF31394D),
+                            onPressed: () => _showSortFilterBottomSheet(context),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                  // 4. Transactions List
+                  LedgerTransactionList(
+                    isMasked: _localMasked,
+                    isLoading: isLoading,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
