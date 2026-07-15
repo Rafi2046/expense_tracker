@@ -149,27 +149,7 @@ class BudgetManagementHeader extends StatelessWidget {
               ),
             ),
           ],
-          if (!hasBudget) ...[
-            const SizedBox(height: AppSpacing.s12),
-            SizedBox(
-              width: double.infinity,
-              child: TextButton.icon(
-                onPressed: onEditBudget,
-                icon: const Icon(
-                  LucideIcons.plusCircle,
-                  color: Colors.white,
-                  size: 18,
-                ),
-                label: Text(
-                  'Set Monthly Budget',
-                  style: AppTextStyles.cardStatusText.copyWith(
-                    color: Colors.white,
-                    fontSize: AppFontSizes.size13,
-                  ),
-                ),
-              ),
-            ),
-          ],
+
         ],
       ),
     );
