@@ -359,7 +359,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       ),
       floatingActionButton: Padding(
         padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).padding.bottom + 64,
+          bottom: MediaQuery.of(context).padding.bottom + 20,
         ),
         child: FloatingActionButton(
           heroTag: 'ledger_fab',
