@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:printing/printing.dart';
 import 'package:expense_tracker/core/services/export_service.dart';
@@ -27,9 +28,8 @@ class ReportBottomActions extends StatelessWidget {
   });
 
   Future<void> _onDownload(BuildContext context) async {
-    final theme = Theme.of(context);
     final messenger = ScaffoldMessenger.of(context);
-    messenger.showSnackBar(_loadingSnackBar(theme));
+    messenger.showSnackBar(_loadingSnackBar(context));
 
     try {
       final service = ExportService();
@@ -44,14 +44,13 @@ class ReportBottomActions extends StatelessWidget {
       await OpenFilex.open(file.path);
     } catch (e) {
       messenger.hideCurrentSnackBar();
-      messenger.showSnackBar(_errorSnackBar('Failed to download PDF: $e'));
+      messenger.showSnackBar(_errorSnackBar(context.translate('failed_to_download_pdf').replaceAll('{error}', e.toString())));
     }
   }
 
   Future<void> _onExcel(BuildContext context) async {
-    final theme = Theme.of(context);
     final messenger = ScaffoldMessenger.of(context);
-    messenger.showSnackBar(_loadingSnackBar(theme));
+    messenger.showSnackBar(_loadingSnackBar(context));
 
     try {
       final service = ExportService();
@@ -65,7 +64,7 @@ class ReportBottomActions extends StatelessWidget {
       await OpenFilex.open(file.path);
     } catch (e) {
       messenger.hideCurrentSnackBar();
-      messenger.showSnackBar(_errorSnackBar('Failed to export Excel: $e'));
+      messenger.showSnackBar(_errorSnackBar(context.translate('failed_to_export_excel').replaceAll('{error}', e.toString())));
     }
   }
 
@@ -85,17 +84,16 @@ class ReportBottomActions extends StatelessWidget {
       );
     } catch (e) {
       messenger.showSnackBar(
-        _errorSnackBar('Failed to print: $e'),
+        _errorSnackBar(context.translate('failed_to_print').replaceAll('{error}', e.toString())),
       );
     }
   }
 
   Future<void> _onShare(BuildContext context) async {
-    final theme = Theme.of(context);
     final messenger = ScaffoldMessenger.of(context);
     final format = await ShareReportSheet.show(context);
     if (format == null || !context.mounted) return;
-    messenger.showSnackBar(_loadingSnackBar(theme));
+    messenger.showSnackBar(_loadingSnackBar(context));
 
     try {
       final service = ExportService();
@@ -122,11 +120,12 @@ class ReportBottomActions extends StatelessWidget {
       }
     } catch (e) {
       messenger.hideCurrentSnackBar();
-      messenger.showSnackBar(_errorSnackBar('Failed to share: $e'));
+      messenger.showSnackBar(_errorSnackBar(context.translate('failed_to_share').replaceAll('{error}', e.toString())));
     }
   }
 
-  SnackBar _loadingSnackBar(ThemeData theme) {
+  SnackBar _loadingSnackBar(BuildContext context) {
+    final theme = Theme.of(context);
     return SnackBar(
       content: Row(
         children: [
@@ -139,10 +138,10 @@ class ReportBottomActions extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          const Flexible(
+          Flexible(
             child: Text(
-              'Generating report...',
-              style: TextStyle(color: Colors.white, fontSize: AppFontSizes.size14),
+              context.translate('generating_report'),
+              style: const TextStyle(color: Colors.white, fontSize: AppFontSizes.size14),
             ),
           ),
         ],
@@ -182,7 +181,7 @@ class ReportBottomActions extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
         child: Container(
-          height: 58,
+          height: 64,
           decoration: BoxDecoration(
             color: theme.cardColor,
             borderRadius: BorderRadius.circular(30),
@@ -206,25 +205,25 @@ class ReportBottomActions extends StatelessWidget {
                 _buildActionItem(
                   context: context,
                   icon: LucideIcons.downloadCloud,
-                  label: 'Download',
+                  label: context.translate('download'),
                   onTap: () => _onDownload(context),
                 ),
                 _buildActionItem(
                   context: context,
                   icon: LucideIcons.printer,
-                  label: 'Print PDF',
+                  label: context.translate('print_pdf'),
                   onTap: () => _onPrint(context),
                 ),
                 _buildActionItem(
                   context: context,
                   icon: LucideIcons.fileText,
-                  label: 'Excel',
+                  label: context.translate('excel'),
                   onTap: () => _onExcel(context),
                 ),
                 _buildActionItem(
                   context: context,
                   icon: LucideIcons.externalLink,
-                  label: 'Share',
+                  label: context.translate('share'),
                   onTap: () => _onShare(context),
                 ),
               ],
@@ -252,13 +251,17 @@ class ReportBottomActions extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: theme.primaryColor, size: 16),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: AppFontSizes.size10,
-                fontFamily: GoogleFonts.workSans().fontFamily,
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface,
+            const SizedBox(height: 2),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: AppFontSizes.size10,
+                  fontFamily: GoogleFonts.workSans().fontFamily,
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface,
+                ),
               ),
             ),
           ],

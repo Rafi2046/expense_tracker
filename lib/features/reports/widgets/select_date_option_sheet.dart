@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -40,6 +41,24 @@ class SelectDateOptionSheet extends StatelessWidget {
     );
   }
 
+  String _translateTitle(BuildContext context, String title) {
+    final key = title.toLowerCase().replaceAll(' ', '_');
+    return context.translate(key);
+  }
+
+  String _translateSubtitle(BuildContext context, String subtitle) {
+    if (subtitle == 'See Transactions of all time') {
+      return context.translate('see_transactions_of_all_time');
+    }
+    if (subtitle == 'Select date from calendar') {
+      return context.translate('select_date_from_calendar');
+    }
+    if (subtitle == 'Select range') {
+      return context.translate('select_range');
+    }
+    return subtitle;
+  }
+
   @override
   Widget build(BuildContext context) {
     final reportsProvider = context.watch<ReportsProvider>();
@@ -65,7 +84,7 @@ class SelectDateOptionSheet extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
           child: Text(
-            'Select Date',
+            context.translate('select_date'),
             style: AppTextStyles.h3.copyWith(
               color: theme.colorScheme.onSurface,
             ),
@@ -124,7 +143,7 @@ class SelectDateOptionSheet extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    _translateTitle(context, title),
                     style: AppTextStyles.reportTileTitle.copyWith(
                       fontSize: AppFontSizes.size14,
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
@@ -133,7 +152,7 @@ class SelectDateOptionSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    subtitle,
+                    _translateSubtitle(context, subtitle),
                     style: AppTextStyles.reportTransactionSubtitle.copyWith(
                       color: isDark ? Colors.white30 : Colors.grey.shade400,
                       fontSize: AppFontSizes.size11,

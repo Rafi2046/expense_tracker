@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -15,6 +16,16 @@ class ReportTile extends StatelessWidget {
     Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(builder: (_) => item.destination),
     );
+  }
+
+  String _translateTitle(BuildContext context, String title) {
+    final key = title.toLowerCase().replaceAll(' ', '_').replaceAll('&', 'and');
+    return context.translate(key);
+  }
+
+  String _translateSubtitle(BuildContext context, String subtitle) {
+    final key = subtitle.toLowerCase().replaceAll(' ', '_').replaceAll('&', 'and');
+    return context.translate(key);
   }
 
   @override
@@ -47,14 +58,14 @@ class ReportTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item.title,
+                    _translateTitle(context, item.title),
                     style: AppTextStyles.bodyBold.copyWith(
                       color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    item.subtitle,
+                    _translateSubtitle(context, item.subtitle),
                     style: AppTextStyles.caption.copyWith(
                       color: isDark ? Colors.white60 : Colors.grey.shade500,
                     ),

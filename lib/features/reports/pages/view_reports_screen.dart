@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:expense_tracker/features/reports/pages/all_transactions_report_screen.dart';
 import 'package:expense_tracker/features/reports/pages/bank_statement_screen.dart';
@@ -26,7 +27,7 @@ class ViewReportsScreen extends StatelessWidget {
         scrolledUnderElevation: 0,
         leading: BackButton(color: theme.appBarTheme.iconTheme?.color),
         title: Text(
-          'Reports',
+          context.translate('reports'),
           style: AppTextStyles.h2.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
             letterSpacing: -0.3,
@@ -62,14 +63,14 @@ class ViewReportsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Financial Reports',
+                          context.translate('financial_reports'),
                           style: AppTextStyles.reportTransactionTitle.copyWith(
                             color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Track, analyze & export your data',
+                          context.translate('financial_reports_subtitle'),
                           style: AppTextStyles.caption.copyWith(
                             color: Colors.white70,
                           ),
@@ -90,7 +91,7 @@ class ViewReportsScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 22),
-            _buildSectionLabel(context, 'POPULAR REPORTS'),
+            _buildSectionLabel(context, context.translate('popular_reports')),
             const SizedBox(height: 10),
 
             _buildReportCard(context, items: [
@@ -121,7 +122,7 @@ class ViewReportsScreen extends StatelessWidget {
             ]),
 
             const SizedBox(height: 22),
-            _buildSectionLabel(context, 'BROWSE ALL'),
+            _buildSectionLabel(context, context.translate('browse_all')),
             const SizedBox(height: 10),
 
             _buildReportCard(context, items: [

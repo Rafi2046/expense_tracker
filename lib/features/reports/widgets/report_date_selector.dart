@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/select_date_option_sheet.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,24 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ReportDateSelector extends StatelessWidget {
   const ReportDateSelector({super.key});
+
+  String _translateTitle(BuildContext context, String title) {
+    final key = title.toLowerCase().replaceAll(' ', '_');
+    return context.translate(key);
+  }
+
+  String _translateSubtitle(BuildContext context, String subtitle) {
+    if (subtitle == 'See Transactions of all time') {
+      return context.translate('see_transactions_of_all_time');
+    }
+    if (subtitle == 'Select date from calendar') {
+      return context.translate('select_date_from_calendar');
+    }
+    if (subtitle == 'Select range') {
+      return context.translate('select_range');
+    }
+    return subtitle;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +57,11 @@ class ReportDateSelector extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    _translateTitle(context, title),
                     style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: AppFontSizes.size14, color: theme.colorScheme.onSurface),
                   ),
                   Text(
-                    subtitle,
+                    _translateSubtitle(context, subtitle),
                     style: AppTextStyles.reportTransactionSubtitle.copyWith(
                       fontSize: AppFontSizes.size11,
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
@@ -66,7 +85,7 @@ class ReportDateSelector extends StatelessWidget {
               }
             },
             child: Text(
-              'CHANGE',
+              context.translate('change'),
               style: AppTextStyles.reportSectionHeader.copyWith(
                 color: theme.primaryColor,
                 fontSize: AppFontSizes.size11,

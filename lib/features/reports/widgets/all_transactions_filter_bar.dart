@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -46,7 +47,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
           },
           style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
-            hintText: 'Search Transactions...',
+            hintText: context.translate('search_transactions'),
             hintStyle: AppTextStyles.partyFormHint.copyWith(fontSize: AppFontSizes.size14, color: isDark ? Colors.white30 : null),
             prefixIcon: Icon(LucideIcons.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
             filled: true,
@@ -94,7 +95,15 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        reportsProvider.selectedType,
+                        (() {
+                          final type = reportsProvider.selectedType;
+                          if (type == 'All Transactions') return context.translate('all_transactions');
+                          if (type == 'Payment In') return context.translate('payment_in');
+                          if (type == 'Payment Out') return context.translate('payment_out');
+                          if (type == 'Expense') return context.translate('expense');
+                          if (type == 'Income') return context.translate('income');
+                          return type;
+                        })(),
                         style: AppTextStyles.reportTileTitle.copyWith(fontSize: AppFontSizes.size11, color: theme.colorScheme.onSurface),
                       ),
                       Icon(LucideIcons.chevronDown, color: theme.colorScheme.onSurface),
@@ -130,7 +139,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        reportsProvider.selectedPartyName ?? 'Select Party',
+                        reportsProvider.selectedPartyName ?? context.translate('select_party'),
                         style: AppTextStyles.reportTileTitle.copyWith(fontSize: AppFontSizes.size11, color: theme.colorScheme.onSurface),
                       ),
                       Icon(LucideIcons.chevronDown, color: theme.colorScheme.onSurface),

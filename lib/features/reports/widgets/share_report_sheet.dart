@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -47,7 +48,7 @@ class ShareReportSheet extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
             child: Text(
-              'Share Report',
+              context.translate('share_report_title'),
               style: AppTextStyles.h3.copyWith(
                 color: theme.colorScheme.onSurface,
               ),
@@ -73,7 +74,7 @@ class ShareReportSheet extends StatelessWidget {
               ),
             ),
             title: Text(
-              'Share Image',
+              context.translate('share_image'),
               style: AppTextStyles.bodyBold.copyWith(
                 fontWeight: FontWeight.w500,
                 color: theme.colorScheme.onSurface,
@@ -98,7 +99,7 @@ class ShareReportSheet extends StatelessWidget {
               ),
             ),
             title: Text(
-              'Share PDF',
+              context.translate('share_pdf'),
               style: AppTextStyles.bodyBold.copyWith(
                 fontWeight: FontWeight.w500,
                 color: theme.colorScheme.onSurface,

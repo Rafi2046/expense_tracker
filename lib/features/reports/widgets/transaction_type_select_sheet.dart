@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
@@ -64,7 +65,7 @@ class TransactionTypeSelectSheet extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
             child: Text(
-              'Select Transaction Type',
+              context.translate('select_transaction_type'),
               style: AppTextStyles.h3.copyWith(
                 color: theme.colorScheme.onSurface,
               ),
@@ -89,7 +90,14 @@ class TransactionTypeSelectSheet extends StatelessWidget {
                 onTap: () => Navigator.pop(context, type),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
                 title: Text(
-                  type,
+                  (() {
+                    if (type == 'All Transactions') return context.translate('all_transactions');
+                    if (type == 'Payment In') return context.translate('payment_in');
+                    if (type == 'Payment Out') return context.translate('payment_out');
+                    if (type == 'Expense') return context.translate('expense');
+                    if (type == 'Income') return context.translate('income');
+                    return type;
+                  })(),
                   style: AppTextStyles.bodyBold.copyWith(
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     color: theme.colorScheme.onSurface,

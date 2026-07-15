@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/all_transactions_filter_bar.dart';
@@ -60,7 +61,7 @@ class _AllTransactionsReportScreenState extends State<AllTransactionsReportScree
         scrolledUnderElevation: 0,
         leading: BackButton(color: theme.appBarTheme.iconTheme?.color),
         title: Text(
-          'All Transactions Report',
+          context.translate('all_transactions_report'),
           style: AppTextStyles.reportAppBarTitle.copyWith(color: theme.appBarTheme.titleTextStyle?.color),
         ),
         centerTitle: true,
@@ -100,7 +101,7 @@ class _AllTransactionsReportScreenState extends State<AllTransactionsReportScree
                   AllTransactionsSummaryGrid(isMasked: _localMasked),
                   const SizedBox(height: 24),
                   Text(
-                    'Transaction Lists',
+                    context.translate('transaction_lists'),
                     style: AppTextStyles.reportSectionHeader.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   const SizedBox(height: 12),
@@ -116,7 +117,7 @@ class _AllTransactionsReportScreenState extends State<AllTransactionsReportScree
             alignment: Alignment.bottomCenter,
             child: ReportBottomActions(
               reportName: 'All Transactions',
-              title: 'All Transactions Report',
+              title: context.translate('all_transactions_report'),
               dateSubtitle: dateSubtitle,
               headers: headers,
               rows: rows,
