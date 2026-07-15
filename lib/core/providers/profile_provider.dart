@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
@@ -9,10 +10,14 @@ import 'package:flutter/material.dart';
 class ProfileProvider extends ChangeNotifier {
   final String _initialProfileId;
   final List<UserProfile> _profiles = [];
+  final Set<String> _knownProfileIds = {};
   late UserProfile _currentProfile;
   bool _isPremium = false;
   bool _isReady = false;
   String? _lastLoadedUid;
+
+  StreamSubscription<User?>? _authSubscription;
+  StreamSubscription<QuerySnapshot>? _profileSubscription;
 
   // Profile Creation Flow State
   String _creationProfileType = 'business'; // 'business' or 'personal'
@@ -65,15 +70,7 @@ class ProfileProvider extends ChangeNotifier {
       : _initialProfileId = initialProfileId {
     _initSync();
     _loadFromDb();
-    FirebaseAuth.instance.userChanges().listen((user) async {
-      await _loadFromDb();
-      if (user != null) {
-        final name = (user.displayName != null && user.displayName!.trim().isNotEmpty)
-            ? user.displayName!.trim()
-            : (user.email != null && user.email!.contains('@') ? user.email!.split('@').first : 'Personal Account');
-        syncDefaultProfileName(name);
-      }
-    });
+    _authSubscription = FirebaseAuth.instance.userChanges().listen(_onAuthChanged);
   }
 
   void _initSync() {
@@ -83,35 +80,119 @@ class ProfileProvider extends ChangeNotifier {
     _currentProfile = _profiles.first;
   }
 
+  void _onAuthChanged(User? newUser) {
+    final uidChanged = newUser?.uid != _lastLoadedUid;
+
+    _profileSubscription?.cancel();
+    _profileSubscription = null;
+    _knownProfileIds.clear();
+
+    if (newUser == null) {
+      _initSync();
+      _isReady = false;
+      notifyListeners();
+      return;
+    }
+
+    if (uidChanged) {
+      _profiles.clear();
+      _loadFromDb(force: true);
+    }
+
+    _attachProfileListener(newUser.uid);
+  }
+
+  void _attachProfileListener(String uid) {
+    _profileSubscription = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('profiles')
+        .snapshots()
+        .listen(
+          (snapshot) {
+            bool changed = false;
+            for (final change in snapshot.docChanges) {
+              final docId = change.doc.id;
+              final data = change.doc.data();
+              if (data == null) continue;
+              switch (change.type) {
+                case DocumentChangeType.added:
+                  if (!_knownProfileIds.contains(docId) && !_profiles.any((p) => p.id == docId)) {
+                    _knownProfileIds.add(docId);
+                    DatabaseHelper.instance.insertProfile({
+                      'id': docId,
+                      'name': data['name'] ?? 'Personal',
+                      'type': data['type'] ?? 'Personal',
+                      'createdAt': data['createdAt'] ?? DateTime.now().toIso8601String(),
+                      'uid': uid,
+                    });
+                    _profiles.add(UserProfile(
+                      id: docId,
+                      name: data['name'] ?? 'Personal',
+                      type: data['type'] ?? 'Personal',
+                      uid: uid,
+                    ));
+                    changed = true;
+                  }
+                  break;
+                case DocumentChangeType.modified:
+                  _knownProfileIds.add(docId);
+                  DatabaseHelper.instance.updateProfile(docId, {
+                    'name': data['name'] ?? 'Personal',
+                    'type': data['type'] ?? 'Personal',
+                  });
+                  final idx = _profiles.indexWhere((p) => p.id == docId);
+                  if (idx != -1) {
+                    _profiles[idx] = UserProfile(
+                      id: docId,
+                      name: data['name'] ?? 'Personal',
+                      type: data['type'] ?? 'Personal',
+                      uid: uid,
+                    );
+                  } else {
+                    _profiles.add(UserProfile(
+                      id: docId,
+                      name: data['name'] ?? 'Personal',
+                      type: data['type'] ?? 'Personal',
+                      uid: uid,
+                    ));
+                  }
+                  changed = true;
+                  break;
+                case DocumentChangeType.removed:
+                  _knownProfileIds.remove(docId);
+                  DatabaseHelper.instance.deleteProfileAndData(docId);
+                  _profiles.removeWhere((p) => p.id == docId);
+                  if (_currentProfile.id == docId) {
+                    final defaultProfile = _profiles.firstWhere(
+                      (p) => p.id == 'default_profile',
+                      orElse: () => _profiles.isNotEmpty ? _profiles.first : UserProfile(
+                        id: 'default_profile', name: 'Personal', type: 'Personal', uid: uid,
+                      ),
+                    );
+                    _currentProfile = defaultProfile;
+                  }
+                  changed = true;
+                  break;
+              }
+            }
+            if (changed) {
+              _profiles.sort((a, b) => a.id == 'default_profile' ? -1 : b.id == 'default_profile' ? 1 : 0);
+              _saveProfilesToPrefs();
+              _isReady = true;
+              notifyListeners();
+            }
+          },
+          onError: (error) {
+            debugPrint('ProfileProvider: Firestore snapshot listener error: $error');
+          },
+        );
+  }
+
   Future<void> _loadFromDb({bool force = false}) async {
     try {
-      var currentUser = FirebaseAuth.instance.currentUser;
-      currentUser ??= await FirebaseAuth.instance.authStateChanges().first;
-
+      final currentUser = FirebaseAuth.instance.currentUser;
       final currentUid = currentUser?.uid;
-
-      // Sync profiles from Firestore first if logged in
-      if (currentUid != null) {
-        try {
-          final snapshot = await FirebaseFirestore.instance
-              .collection('users')
-              .doc(currentUid)
-              .collection('profiles')
-              .get();
-          for (final doc in snapshot.docs) {
-            final data = doc.data();
-            await DatabaseHelper.instance.insertProfile({
-              'id': doc.id,
-              'name': data['name'] ?? 'Personal',
-              'type': data['type'] ?? 'Personal',
-              'createdAt': data['createdAt'] ?? DateTime.now().toIso8601String(),
-              'uid': currentUid,
-            });
-          }
-        } catch (e) {
-          debugPrint('ProfileProvider: Error syncing profiles from Firestore: $e');
-        }
-      }
 
       if (!force && _isReady && currentUid == _lastLoadedUid) {
         return;
@@ -119,6 +200,7 @@ class ProfileProvider extends ChangeNotifier {
       _lastLoadedUid = currentUid;
 
       _profiles.clear();
+      _knownProfileIds.clear();
       final Set<String> seenIds = {};
 
       final allProfiles = await DatabaseHelper.instance.readAllProfiles();
@@ -164,6 +246,7 @@ class ProfileProvider extends ChangeNotifier {
           type: type,
           uid: currentUid ?? rowUid,
         ));
+        _knownProfileIds.add(id);
         debugPrint('ProfileProvider._loadFromDb: added from DB -> $id');
       }
 
@@ -184,7 +267,7 @@ class ProfileProvider extends ChangeNotifier {
           'name': name,
           'type': 'Personal',
           'createdAt': DateTime.now().toIso8601String(),
-          'uid': ?currentUid,
+          'uid': currentUid,
         });
         await _profileDoc('default_profile')?.set({
           'name': name,
@@ -360,7 +443,7 @@ class ProfileProvider extends ChangeNotifier {
         'name': newProfile.name,
         'type': newProfile.type,
         'createdAt': DateTime.now().toIso8601String(),
-        'uid': ?currentUid,
+        'uid': currentUid,
       });
 
       final verify = await DatabaseHelper.instance.readAllProfiles();
@@ -401,6 +484,7 @@ class ProfileProvider extends ChangeNotifier {
     await _profileDoc(profileId)?.delete();
 
     _profiles.removeWhere((p) => p.id == profileId);
+    _knownProfileIds.remove(profileId);
 
     if (_currentProfile.id == profileId) {
       final defaultProfile = _profiles.firstWhere(
@@ -414,5 +498,12 @@ class ProfileProvider extends ChangeNotifier {
 
     resetCreationState();
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _profileSubscription?.cancel();
+    _authSubscription?.cancel();
+    super.dispose();
   }
 }
