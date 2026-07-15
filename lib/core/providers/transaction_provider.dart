@@ -260,12 +260,99 @@ class TransactionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<CategoryItem> _getDefaultCategories() {
+    return [
+      // Expense Categories
+      CategoryItem(
+        id: 'cat_food_$_activeProfileId',
+        name: 'Food',
+        isIncome: false,
+        profileId: _activeProfileId,
+      ),
+      CategoryItem(
+        id: 'cat_transport_$_activeProfileId',
+        name: 'Transport',
+        isIncome: false,
+        profileId: _activeProfileId,
+      ),
+      CategoryItem(
+        id: 'cat_medicine_$_activeProfileId',
+        name: 'Medicine',
+        isIncome: false,
+        profileId: _activeProfileId,
+      ),
+      CategoryItem(
+        id: 'cat_rent_$_activeProfileId',
+        name: 'Rent',
+        isIncome: false,
+        profileId: _activeProfileId,
+      ),
+      CategoryItem(
+        id: 'cat_entertainment_$_activeProfileId',
+        name: 'Entertainment',
+        isIncome: false,
+        profileId: _activeProfileId,
+      ),
+      CategoryItem(
+        id: 'cat_shopping_$_activeProfileId',
+        name: 'Shopping',
+        isIncome: false,
+        profileId: _activeProfileId,
+      ),
+      CategoryItem(
+        id: 'cat_utilities_$_activeProfileId',
+        name: 'Utilities',
+        isIncome: false,
+        profileId: _activeProfileId,
+      ),
+      // Income Categories
+      CategoryItem(
+        id: 'cat_salary_$_activeProfileId',
+        name: 'Salary',
+        isIncome: true,
+        profileId: _activeProfileId,
+      ),
+      CategoryItem(
+        id: 'cat_freelance_$_activeProfileId',
+        name: 'Freelance',
+        isIncome: true,
+        profileId: _activeProfileId,
+      ),
+      CategoryItem(
+        id: 'cat_investment_$_activeProfileId',
+        name: 'Investment',
+        isIncome: true,
+        profileId: _activeProfileId,
+      ),
+    ];
+  }
+
   Future<void> _loadCategoriesFromDatabase() async {
     try {
       final items = await _db.readAllCategories(profileId: _activeProfileId);
-      _categoryItems.addAll(items);
-      for (final item in items) {
-        _knownCategoryIds.add(item.id);
+      if (items.isEmpty) {
+        final defaultCats = _getDefaultCategories();
+        for (final cat in defaultCats) {
+          await _db.insertCategory(cat, syncStatus: 'pending_create', profileId: _activeProfileId);
+          _categoryItems.add(cat);
+          _knownCategoryIds.add(cat.id);
+          
+          final uid = _firebaseUser?.uid;
+          if (uid != null) {
+            _firestore
+                .collection('users')
+                .doc(uid)
+                .collection('categories')
+                .doc(cat.id)
+                .set(cat.toMap())
+                .catchError((_) {});
+          }
+        }
+      } else {
+        _categoryItems.addAll(items);
+        for (final item in items) {
+          _knownCategoryIds.add(item.id);
+        }
       }
       final pendingIds = await _db.readAllPendingCategoryIds(profileId: _activeProfileId);
       _pendingCategoryIds.addAll(pendingIds);
