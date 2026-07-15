@@ -1,7 +1,6 @@
-import 'package:expense_tracker/core/localization/app_translations.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AppLanguage {
   final String code;
@@ -45,23 +44,24 @@ class LanguageProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> changeLanguage(String code) async {
+  Future<void> changeLanguage(String code, BuildContext context) async {
     if (_currentLanguageCode != code) {
       _currentLanguageCode = code;
       await SharedPrefsHelper.setString('app_language_code', code);
+      if (context.mounted) {
+        await context.setLocale(Locale(code));
+      }
       notifyListeners();
     }
   }
 
   String translate(String key) {
-    return AppTranslations.localizedValues[_currentLanguageCode]?[key] ??
-        AppTranslations.localizedValues['en']?[key] ??
-        key;
+    return tr(key);
   }
 }
 
 extension TranslationExtension on BuildContext {
   String translate(String key, {bool listen = true}) {
-    return Provider.of<LanguageProvider>(this, listen: listen).translate(key);
+    return tr(key);
   }
 }

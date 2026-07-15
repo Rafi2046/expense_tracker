@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/services/sync_service.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,7 +26,7 @@ class SyncLoadingOverlay extends StatefulWidget {
 }
 
 class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
-  String _statusText = 'Restoring your data…';
+  String _statusText = '';
   bool _hasError = false;
   String? _errorMessage;
 
@@ -69,7 +70,7 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
     setState(() {
       _hasError = false;
       _errorMessage = null;
-      _statusText = 'Restoring your data…';
+      _statusText = '';
     });
     _startSync();
   }
@@ -108,8 +109,8 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
                     color: const Color(0xFFE53935),
                   ),
                 const SizedBox(height: 24),
-                Text(
-                  _hasError ? 'Sync Failed' : 'Restoring Your Data',
+                 Text(
+                  _hasError ? context.translate('sync_failed') : context.translate('sync_restoring_data'),
                   style: AppTextStyles.h1.copyWith(
                     fontWeight: FontWeight.w700,
                     color: theme.colorScheme.onSurface,
@@ -118,8 +119,8 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
                 const SizedBox(height: 12),
                 Text(
                   _hasError
-                      ? _errorMessage ?? 'An unexpected error occurred.'
-                      : _statusText,
+                      ? _errorMessage ?? context.translate('unexpected_sync_error')
+                      : (_statusText.isEmpty ? context.translate('restoring_data_status') : _statusText),
                   textAlign: TextAlign.center,
                   style: AppTextStyles.body.copyWith(
                     fontFamily: GoogleFonts.workSans().fontFamily,
@@ -133,14 +134,14 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
                       Expanded(
                         child: OutlinedButton(
                           onPressed: _skip,
-                          child: const Text('Skip'),
+                          child: Text(context.translate('skip')),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: FilledButton(
                           onPressed: _retry,
-                          child: const Text('Retry'),
+                          child: Text(context.translate('retry')),
                         ),
                       ),
                     ],

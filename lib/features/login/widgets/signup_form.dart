@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
 
@@ -26,29 +27,29 @@ class SignupForm extends StatelessWidget {
       children: [
         CustomTextFieldWidget(
           controller: nameController,
-          label: 'Full Name',
-          hintText: 'John Doe',
+          label: context.translate('full_name'),
+          hintText: context.translate('full_name_hint'),
         ),
         CustomTextFieldWidget(
           controller: emailController,
-          label: 'Email Address',
-          hintText: 'john@example.com',
+          label: context.translate('email_address'),
+          hintText: context.translate('email_hint'),
         ),
         CustomTextFieldWidget(
           controller: passwordController,
-          label: 'Password',
+          label: context.translate('password'),
           hintText: '••••••••',
           obscureText: true,
         ),
         CustomTextFieldWidget(
           controller: confirmPasswordController,
-          label: 'Confirm Password',
+          label: context.translate('confirm_password'),
           hintText: '••••••••',
           obscureText: true,
         ),
         const SizedBox(height: 16),
         CustomButton(
-          text: isLoading ? 'Creating Account...' : 'Sign Up',
+          text: isLoading ? context.translate('creating_account') : context.translate('sign_up'),
           onPressed: isLoading ? () {} : onSignUp,
         ),
       ],

@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/login/pages/password_change_success_screen.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
@@ -26,8 +27,8 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
   void _verifyOtp() {
     if (_otpCode.length < 4) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a 4-digit code.'),
+        SnackBar(
+          content: Text(context.translate('otp_digit_warning')),
           backgroundColor: Colors.red,
         ),
       );
@@ -75,17 +76,17 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
                   ),
 
                   Text(
-                    'Reset Verification',
+                    context.translate('reset_verification_title'),
                     textAlign: TextAlign.center,
                     style: AppTextStyles.loginTitle,
                   ),
-
+ 
                   Text(
-                    "We've sent a password reset link to your email. Click it to choose a new password, then enter any 4 digits here to proceed.",
+                    context.translate('otp_instruction'),
                     textAlign: TextAlign.center,
                     style: AppTextStyles.loginSubTitle,
                   ),
-
+ 
                   OtpTextField(
                     numberOfFields: 4,
                     borderColor: accentPurpleColor,
@@ -105,30 +106,30 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
                       _verifyOtp();
                     },
                   ),
-
+ 
                   CustomButton(
-                    text: 'Verify',
+                    text: context.translate('verify'),
                     onPressed: _verifyOtp,
                   ),
-
+ 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Didn't receive code? ",
+                        context.translate('did_not_receive_code'),
                         style: AppTextStyles.accountText,
                       ),
                       GestureDetector(
                         onTap: () {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Verification link resent. Please check your inbox.'),
-                              backgroundColor: Color(0xFF6A53A1),
+                            SnackBar(
+                              content: Text(context.translate('verification_link_resent')),
+                              backgroundColor: const Color(0xFF6A53A1),
                             ),
                           );
                         },
                         child: Text(
-                          'Resend',
+                          context.translate('resend'),
                           style: AppTextStyles.signUpText.copyWith(
                             color: accentDarkGreenColor,
                           ),

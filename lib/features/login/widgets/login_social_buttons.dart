@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 
 class LoginSocialButtons extends StatelessWidget {
@@ -40,7 +41,7 @@ class LoginSocialButtons extends StatelessWidget {
                 horizontal: AppSpacing.p16,
               ),
               child: Text(
-                'or',
+                context.translate('or'),
                 style: TextStyle(
                   color: isDark ? Colors.grey.shade400 : AppColors.dividerOrColor,
                 ),
@@ -59,7 +60,7 @@ class LoginSocialButtons extends StatelessWidget {
           leading: Image.asset(AppImages.googleLogo),
           showBorder: true,
           borderColor: isDark ? Colors.grey.shade600 : AppColors.borderColor,
-          text: 'Continue with Google',
+          text: context.translate('continue_with_google'),
           textColor: isDark ? Colors.white : AppColors.googleTextColor,
           fontFamily: GoogleFonts.inter().fontFamily,
           onPressed: isLoading ? () {} : onGoogleSignIn,
@@ -75,7 +76,7 @@ class LoginSocialButtons extends StatelessWidget {
               ),
               showBorder: true,
               borderColor: isDark ? Colors.grey.shade600 : AppColors.borderColor,
-              text: 'Continue with Apple',
+              text: context.translate('continue_with_apple'),
               textColor: isDark ? Colors.white : AppColors.googleTextColor,
               fontFamily: GoogleFonts.inter().fontFamily,
               onPressed: isLoading ? () {} : onAppleSignIn!,
@@ -87,7 +88,7 @@ class LoginSocialButtons extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Don't have an account? ",
+              context.translate('dont_have_account'),
               style: AppTextStyles.accountText.copyWith(
                 color: isDark ? Colors.grey.shade400 : null,
               ),
@@ -95,7 +96,7 @@ class LoginSocialButtons extends StatelessWidget {
             GestureDetector(
               onTap: onSignUp,
               child: Text(
-                'Sign Up',
+                context.translate('sign_up'),
                 style: AppTextStyles.signUpText.copyWith(
                   color: isDark ? Colors.white : null,
                 ),

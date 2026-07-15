@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
 
 class LoginEmailForm extends StatelessWidget {
@@ -28,13 +29,13 @@ class LoginEmailForm extends StatelessWidget {
       children: [
         CustomTextFieldWidget(
           controller: emailController,
-          label: 'Email Address',
-          hintText: 'you@example.com',
+          label: context.translate('email_address'),
+          hintText: context.translate('email_hint'),
         ),
         if (!biometricMode || hasPasswordProvider)
           CustomTextFieldWidget(
             controller: passwordController,
-            label: 'Password',
+            label: context.translate('password'),
             hintText: '••••••••',
             obscureText: true,
             trailingLabelWidget: biometricMode
@@ -42,7 +43,7 @@ class LoginEmailForm extends StatelessWidget {
                 : GestureDetector(
                     onTap: onForgotPassword,
                     child: Text(
-                      'Forgot Password?',
+                      context.translate('forgot_password_link'),
                       style: AppTextStyles.textFieldLabelPassword.copyWith(
                         color: isDark ? Colors.grey.shade400 : null,
                       ),

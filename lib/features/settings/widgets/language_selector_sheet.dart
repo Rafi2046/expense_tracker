@@ -143,7 +143,7 @@ class LanguageSelectorSheet extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        provider.changeLanguage(lang.code);
+        provider.changeLanguage(lang.code, context);
         Navigator.pop(context);
       },
       child: AnimatedContainer(

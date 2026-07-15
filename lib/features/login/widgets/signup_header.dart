@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class SignupHeader extends StatelessWidget {
   final bool isDark;
@@ -14,7 +15,7 @@ class SignupHeader extends StatelessWidget {
       children: [
         Image.asset(AppImages.splashLogo, height: 70, width: 70),
         Text(
-          'Create Account',
+          context.translate('create_account_title'),
           textAlign: TextAlign.center,
           style: AppTextStyles.loginTitle.copyWith(
             fontSize: AppFontSizes.size28,
@@ -22,7 +23,7 @@ class SignupHeader extends StatelessWidget {
           ),
         ),
         Text(
-          'Join us to manage your finances smarter.',
+          context.translate('signup_subtitle'),
           textAlign: TextAlign.center,
           style: AppTextStyles.loginSubTitle.copyWith(
             color: isDark ? Colors.grey.shade400 : null,

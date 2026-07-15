@@ -11,6 +11,7 @@ import 'package:expense_tracker/features/login/widgets/login_biometric_section.d
 import 'package:expense_tracker/features/login/widgets/login_social_buttons.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/login/pages/forgot_password_screen.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/login/pages/create_account_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -128,11 +129,11 @@ class _LoginScreenState extends State<LoginScreen>
                         CustomButton(
                           text: isLoading
                               ? (biometricMode
-                                    ? 'Verifying...'
-                                    : 'Signing In...')
+                                    ? context.translate('verifying')
+                                    : context.translate('signing_in'))
                               : (biometricMode
-                                    ? 'Sign In with Password'
-                                    : 'Sign In'),
+                                    ? context.translate('sign_in_with_password')
+                                    : context.translate('sign_in')),
                           onPressed: isLoading
                               ? () {}
                               : () => handleEmailLogin(
@@ -164,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen>
                         GestureDetector(
                           onTap: () => _handleSwitchAccount(context),
                           child: Text(
-                            'Switch Account',
+                            context.translate('switch_account'),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: AppFontSizes.size14,

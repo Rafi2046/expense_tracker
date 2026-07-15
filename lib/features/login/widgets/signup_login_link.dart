@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class SignupLoginLink extends StatelessWidget {
   final bool isDark;
@@ -17,7 +18,7 @@ class SignupLoginLink extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Already have an account? ",
+          context.translate('already_have_account'),
           style: AppTextStyles.accountText.copyWith(
             color: isDark ? Colors.grey.shade400 : null,
           ),
@@ -25,7 +26,7 @@ class SignupLoginLink extends StatelessWidget {
         GestureDetector(
           onTap: onLoginTap,
           child: Text(
-            'Log In',
+            context.translate('log_in_capital'),
             style: AppTextStyles.signUpText.copyWith(
               color: isDark ? Colors.white : null,
             ),

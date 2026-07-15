@@ -13,6 +13,7 @@ import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/login/widgets/sync_loading_overlay.dart';
 import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/login/pages/login_screen.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
@@ -100,8 +101,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       _startCooldown();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Verification link sent successfully!'),
+          SnackBar(
+            content: Text(context.translate('verification_link_sent')),
             backgroundColor: AppColors.activeGreen,
           ),
         );
@@ -142,8 +143,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
         } else {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Email not verified yet. Please check your inbox.'),
+              SnackBar(
+                content: Text(context.translate('email_not_verified')),
                 backgroundColor: AppColors.dividerOrColor,
               ),
             );
@@ -258,7 +259,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
                   // Header Title
                   Text(
-                    'Verify Your Email',
+                    context.translate('verify_email_title'),
                     style: AppTextStyles.h1.copyWith(
                       color: theme.colorScheme.onSurface,
                       fontWeight: FontWeight.w700,
@@ -266,10 +267,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: AppSpacing.h12),
-
+ 
                   // Subtitle Information
                   Text(
-                    'We have sent a verification link to your email address.',
+                    context.translate('verify_email_sent_subtitle'),
                     style: AppTextStyles.body.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                       fontFamily: GoogleFonts.workSans().fontFamily,
@@ -277,7 +278,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: AppSpacing.h16),
-
+ 
                   // Email Card
                   Container(
                     width: double.infinity,
@@ -302,30 +303,29 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.h24),
-
+ 
                   // Guidelines text
                   Text(
-                    'Please click the link in the email to activate your account. If you don\'t see it, check your spam folder.',
+                    context.translate('verify_email_guideline'),
                     style: AppTextStyles.bodySmall.copyWith(
                       color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: AppSpacing.h40),
-
+ 
                   // Check Status Button
                   CustomButton(
-                    text: _isReloading ? 'Checking...' : 'I have verified',
+                    text: _isReloading ? context.translate('checking_status') : context.translate('i_have_verified'),
                     onPressed: _isReloading ? () {} : _checkVerificationStatus,
                     backgroundColor: theme.primaryColor,
                   ),
                   const SizedBox(height: AppSpacing.h12),
-
-                  // Resend Verification Email Button
+ 
                   CustomButton(
                     text: _resendCooldown > 0
-                        ? 'Resend in ${_resendCooldown}s'
-                        : 'Resend Verification Email',
+                        ? '${context.translate('resend_in')}$_resendCooldown${context.translate('resend_seconds')}'
+                        : context.translate('resend_verification_email'),
                     onPressed: (_resendCooldown > 0 || _isResending) ? () {} : _resendVerificationEmail,
                     backgroundColor: Colors.transparent,
                     textColor: theme.primaryColor,
@@ -333,7 +333,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     borderColor: theme.primaryColor,
                   ),
                   const SizedBox(height: AppSpacing.h24),
-
+ 
                   // Cancel / Sign Out
                   TextButton.icon(
                     onPressed: _handleSignOut,
@@ -343,7 +343,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       color: AppColors.activeRed,
                     ),
                     label: Text(
-                      'Cancel and Sign Out',
+                      context.translate('cancel_and_sign_out'),
                       style: AppTextStyles.bodyBold.copyWith(
                         color: AppColors.activeRed,
                         fontSize: 14,

@@ -26,6 +26,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'features/splash/pages/splash_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,6 +35,7 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   await SharedPrefsHelper.init();
   await initializeDateFormatting(); // Enable local date names (Bangla, Hindi, Urdu)
 
@@ -47,7 +49,11 @@ void main() async {
   debugPrint('main: initial active profile = $initialProfileId');
 
   runApp(
-    MultiProvider(
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('bn'), Locale('hi'), Locale('ur')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      child: MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (_) => ProfileProvider(
@@ -191,7 +197,8 @@ void main() async {
       ],
       child: const MyApp(),
     ),
-  );
+  ),
+);
 
   verifyFirestoreSchema();
 }
@@ -235,6 +242,9 @@ class MyApp extends StatelessWidget {
       themeMode: themeProvider.themeMode,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       home: SplashScreen(),
       builder: (context, child) => AppLockManager(child: child!),
     );

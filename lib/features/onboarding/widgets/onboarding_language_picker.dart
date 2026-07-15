@@ -165,7 +165,7 @@ class _OnboardingLanguagePickerState extends State<OnboardingLanguagePicker>
                   children: langProvider.supportedLanguages.map((lang) {
                     final isSelected = langProvider.currentLanguageCode == lang.code;
                     return GestureDetector(
-                      onTap: () => langProvider.changeLanguage(lang.code),
+                      onTap: () => langProvider.changeLanguage(lang.code, context),
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 250),
                         curve: Curves.easeOut,

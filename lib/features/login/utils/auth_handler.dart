@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/services/sync_service.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/login/widgets/sync_loading_overlay.dart';
 import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
 import 'package:expense_tracker/features/login/pages/verify_email_screen.dart';
@@ -85,7 +86,7 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
       if (password.trim().isEmpty) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please enter your password')),
+            SnackBar(content: Text(context.translate('please_enter_password'))),
           );
         }
         return;
@@ -117,7 +118,7 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
     if (email.trim().isEmpty || password.trim().isEmpty) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter both email and password')),
+          SnackBar(content: Text(context.translate('please_enter_email_password'))),
         );
       }
       return;

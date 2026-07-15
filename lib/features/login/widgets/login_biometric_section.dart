@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class LoginBiometricSection extends StatelessWidget {
   final Animation<double> biometricAnim;
@@ -58,8 +59,8 @@ class LoginBiometricSection extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           biometricFailed
-              ? 'Authentication failed. Tap to retry.'
-              : 'Tap to unlock',
+              ? context.translate('biometric_failed')
+              : context.translate('tap_to_unlock'),
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: AppFontSizes.size13,
@@ -71,7 +72,7 @@ class LoginBiometricSection extends StatelessWidget {
         if (hasPasswordProvider) ...[
           const SizedBox(height: 4),
           Text(
-            'Or enter your password',
+            context.translate('or_enter_password'),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: AppFontSizes.size12,
@@ -85,7 +86,7 @@ class LoginBiometricSection extends StatelessWidget {
             child: GestureDetector(
               onTap: onSwitchAccount,
               child: Text(
-                'Switch Account',
+                context.translate('switch_account'),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: AppFontSizes.size14,

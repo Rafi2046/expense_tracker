@@ -7,6 +7,7 @@ import 'package:expense_tracker/features/login/pages/login_screen.dart';
 import 'package:expense_tracker/features/login/pages/password_change_success_screen.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -31,8 +32,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final email = _emailController.text.trim();
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your email address.'),
+        SnackBar(
+          content: Text(context.translate('please_enter_email')),
           backgroundColor: Colors.red,
         ),
       );
@@ -41,8 +42,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a valid email address.'),
+        SnackBar(
+          content: Text(context.translate('please_enter_valid_email')),
           backgroundColor: Colors.red,
         ),
       );
@@ -55,11 +56,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       await _authService.sendPasswordResetEmail(email);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'Password reset email sent! Please check your inbox.',
+              context.translate('password_reset_email_sent'),
             ),
-            backgroundColor: Color(0xFF6A53A1),
+            backgroundColor: const Color(0xFF6A53A1),
           ),
         );
         Navigator.push(
@@ -112,7 +113,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   spacing: AppSpacing.s4,
                   children: [
                     Text(
-                      'Forgot password?',
+                      context.translate('forgot_password_title'),
                       textAlign: TextAlign.center,
                       style: AppTextStyles.loginTitle.copyWith(
                         fontSize: AppFontSizes.size28,
@@ -120,7 +121,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                     ),
                     Text(
-                      'No worries, it happens! Just enter your email address associated with your account.',
+                      context.translate('forgot_password_subtitle'),
                       textAlign: TextAlign.center,
                       style: AppTextStyles.loginSubTitle.copyWith(
                         color: isDark ? Colors.grey.shade400 : null,
@@ -131,13 +132,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 const SizedBox(height: AppSpacing.s16),
 
                 CustomTextFieldWidget(
-                  label: 'Email Address',
-                  hintText: 'Enter your email',
+                  label: context.translate('email_address'),
+                  hintText: context.translate('enter_your_email'),
                   controller: _emailController,
                 ),
                 const SizedBox(height: AppSpacing.s16),
                 CustomButton(
-                  text: _isLoading ? 'Sending...' : 'Send Link',
+                  text: _isLoading ? context.translate('sending') : context.translate('send_link'),
                   onPressed: _isLoading ? () {} : _sendResetEmail,
                 ),
                 const SizedBox(height: AppSpacing.s16),
@@ -145,7 +146,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Remember password? ",
+                      context.translate('remember_password'),
                       style: AppTextStyles.accountText.copyWith(
                         color: isDark ? Colors.grey.shade400 : null,
                       ),
@@ -160,7 +161,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         );
                       },
                       child: Text(
-                        'Log in',
+                        context.translate('log_in'),
                         style: AppTextStyles.signUpText.copyWith(
                           color: isDark ? Colors.white : null,
                         ),
