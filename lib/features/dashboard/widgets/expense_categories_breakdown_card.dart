@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
@@ -88,7 +89,7 @@ class _ExpenseCategoriesBreakdownCardState
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
                 child: Text(
-                  _isExpanded ? 'View Less' : 'View All Category',
+                  _isExpanded ? context.translate('view_less') : context.translate('view_all_categories'),
                   style: GoogleFonts.workSans(
                     fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.w600,

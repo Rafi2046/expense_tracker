@@ -310,5 +310,16 @@
   "income_trend_highlighted_bars_desc": "Highlighted bars indicate the current active month.",
   "income_trend_lighter_bars_desc": "Lighter bars show historical monthly income statistics.",
   "income_month": "Income Month",
-  "no_transactions_found": "No transactions found"
+  "no_transactions_found": "No transactions found",
+  "expense_breakdown": "Expense Breakdown",
+  "categories_breakdown": "Categories Breakdown",
+  "expense_today": "Expense (Today)",
+  "expense_this_week": "Expense (This Week)",
+  "percentage_this_week": "{percentage}% This Week",
+  "expense_month_template": "Expense ({month})",
+  "percentage_this_month": "{percentage}% This Month",
+  "expense_this_quarter": "Expense (This Quarter)",
+  "percentage_this_quarter": "{percentage}% This Quarter",
+  "this_month_paren": "(This Month)",
+  "this_quarter_paren": "(This Quarter)"
 }

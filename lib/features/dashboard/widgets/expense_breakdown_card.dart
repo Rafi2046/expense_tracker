@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -72,7 +73,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                 fontFamily: GoogleFonts.workSans().fontFamily,
               ),
               children: [
-                const TextSpan(text: 'Expense Breakdown '),
+                TextSpan(text: '${context.translate('expense_breakdown')} '),
                 TextSpan(
                   text: suffixText,
                   style: TextStyle(
@@ -120,7 +121,12 @@ class ExpenseBreakdownCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item.title,
+                          (() {
+                            final lowerTitle = item.title.toLowerCase();
+                            return (lowerTitle == 'cash' || lowerTitle == 'bank') 
+                                ? context.translate(lowerTitle) 
+                                : item.title;
+                          })(),
                           style: TextStyle(
                             fontSize: AppFontSizes.size15,
                             fontWeight: FontWeight.bold,
@@ -130,7 +136,17 @@ class ExpenseBreakdownCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          item.subtitle,
+                          (() {
+                            final subtitle = item.subtitle;
+                            if (subtitle.contains('transactions')) {
+                              final countStr = subtitle.split(' ').first;
+                              final count = int.tryParse(countStr) ?? 0;
+                              return count == 1
+                                  ? context.translate('transaction_count_singular')
+                                  : context.translate('transaction_count_plural').replaceAll('{count}', '$count');
+                            }
+                            return subtitle;
+                          })(),
                           style: TextStyle(
                             fontSize: AppFontSizes.size12,
                             color: AppColors.textMuted,

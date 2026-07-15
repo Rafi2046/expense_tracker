@@ -3,6 +3,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_breakdown_item.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class CategoryBreakdownChart extends StatelessWidget {
   final List<CategoryBreakdownItem> categories;
@@ -60,7 +61,7 @@ class CategoryBreakdownChart extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Total',
+                              context.translate('total'),
                               style: GoogleFonts.workSans(
                                 fontSize: AppFontSizes.size11,
                                 color: Colors.grey.shade500,

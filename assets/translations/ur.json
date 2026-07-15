@@ -302,5 +302,16 @@
   "income_trend_highlighted_bars_desc": "نمایاں کردہ بارز موجودہ فعال مہینے کی نشاندہی کرتی ہیں۔",
   "income_trend_lighter_bars_desc": "ہلکے رنگ کی بارز تاریخی ماہانہ آمدنی کے اعداد و شمار دکھاتی ہیں۔",
   "income_month": "آمدنی کا مہینہ",
-  "no_transactions_found": "کوئی لین دین نہیں ملا"
+  "no_transactions_found": "کوئی لین دین نہیں ملا",
+  "expense_breakdown": "اخراجات کی تفصیل",
+  "categories_breakdown": "زمرے کی تفصیل",
+  "expense_today": "اخراجات (آج)",
+  "expense_this_week": "اخراجات (اس ہفتے)",
+  "percentage_this_week": "{percentage}% اس ہفتے",
+  "expense_month_template": "اخراجات ({month})",
+  "percentage_this_month": "{percentage}% اس مہینے",
+  "expense_this_quarter": "اخراجات (اس سہ ماہی)",
+  "percentage_this_quarter": "{percentage}% اس سہ ماہی",
+  "this_month_paren": "(اس مہینے)",
+  "this_quarter_paren": "(اس سہ ماہی)"
 }

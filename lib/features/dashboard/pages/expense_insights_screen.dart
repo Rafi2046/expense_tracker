@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/expense_breakdown_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/expense_categories_breakdown_card.dart';
@@ -8,9 +9,9 @@ import 'package:expense_tracker/features/dashboard/widgets/expense_time_frame_se
 import 'package:expense_tracker/features/dashboard/widgets/expense_trend_chart_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ExpenseInsightsScreen extends StatefulWidget {
   const ExpenseInsightsScreen({super.key});
@@ -36,7 +37,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Expense Insights',
+          context.translate('expense_insights'),
           style: AppTextStyles.insightsHeaderTitle.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
           ),
@@ -88,7 +89,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
               if (_selectedTimeFrame == 'Daily')
                 ExpenseTrendChartCard(
                   timeFrame: 'Daily',
-                  title: 'Expense (Today)',
+                  title: context.translate('expense_today'),
                   amount: PrivacyMaskedText(
                     amount: provider.todayExpense,
                     isMasked: _localMasked,
@@ -99,47 +100,47 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
               else if (_selectedTimeFrame == 'Weekly')
                 ExpenseTrendChartCard(
                   timeFrame: 'Weekly',
-                  title: 'Expense (This Week)',
+                  title: context.translate('expense_this_week'),
                   amount: PrivacyMaskedText(
                     amount: provider.currentWeekExpense,
                     isMasked: _localMasked,
                     style: AppTextStyles.displayLarge.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   trendPercentage:
-                      '${provider.weeklyPercentageChange.toStringAsFixed(2)}% This Week',
+                      context.translate('percentage_this_week').replaceAll('{percentage}', provider.weeklyPercentageChange.toStringAsFixed(2)),
                   chartData: provider.weeklyChartData,
                 )
               else if (_selectedTimeFrame == 'Monthly')
                 ExpenseTrendChartCard(
                   timeFrame: 'Monthly',
-                  title: 'Expense (${DateFormat('MMMM').format(DateTime.now())})',
+                  title: context.translate('expense_month_template').replaceAll('{month}', DateFormat('MMMM', context.locale.toString()).format(DateTime.now())),
                   amount: PrivacyMaskedText(
                     amount: provider.currentMonthExpense,
                     isMasked: _localMasked,
                     style: AppTextStyles.displayLarge.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   trendPercentage:
-                      '${provider.monthlyPercentageChange.toStringAsFixed(2)}% This Month',
+                      context.translate('percentage_this_month').replaceAll('{percentage}', provider.monthlyPercentageChange.toStringAsFixed(2)),
                   chartData: provider.monthlyChartData,
                 )
               else if (_selectedTimeFrame == 'Quarterly')
                 ExpenseTrendChartCard(
                   timeFrame: 'Quarterly',
-                  title: 'Expense (This Quarter)',
+                  title: context.translate('expense_this_quarter'),
                   amount: PrivacyMaskedText(
                     amount: provider.currentQuarterExpense,
                     isMasked: _localMasked,
                     style: AppTextStyles.displayLarge.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   trendPercentage:
-                      '${provider.quarterlyPercentageChange.toStringAsFixed(2)}% This Quarter',
+                      context.translate('percentage_this_quarter').replaceAll('{percentage}', provider.quarterlyPercentageChange.toStringAsFixed(2)),
                   chartData: provider.quarterlyChartData,
                 ),
 
               if (_selectedTimeFrame == 'Monthly') ...[
                 const SizedBox(height: 20),
                 ExpenseCategoriesBreakdownCard(
-                  suffixText: '(This Month)',
+                  suffixText: context.translate('this_month_paren'),
                   totalAmount: PrivacyMaskedText(
                     amount: provider.currentMonthExpense,
                     isMasked: _localMasked,
@@ -151,7 +152,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
               ] else if (_selectedTimeFrame == 'Quarterly') ...[
                 const SizedBox(height: 20),
                 ExpenseCategoriesBreakdownCard(
-                  suffixText: '(This Quarter)',
+                  suffixText: context.translate('this_quarter_paren'),
                   totalAmount: PrivacyMaskedText(
                     amount: provider.currentQuarterExpense,
                     isMasked: _localMasked,
@@ -165,7 +166,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
               if (_selectedTimeFrame == 'Quarterly') ...[
                 const SizedBox(height: 20),
                 ExpenseBreakdownCard(
-                  suffixText: '(This Quarter)',
+                  suffixText: context.translate('this_quarter_paren'),
                   items: provider.quarterlyBreakdowns,
                   isMasked: _localMasked,
                 ),

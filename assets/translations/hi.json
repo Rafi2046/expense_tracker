@@ -292,5 +292,16 @@
   "income_trend_highlighted_bars_desc": "हाईलाइट की गई बारें वर्तमान सक्रिय महीने को दर्शाती हैं।",
   "income_trend_lighter_bars_desc": "हल्की बारें ऐतिहासिक मासिक आय के आंकड़े दिखाती हैं।",
   "income_month": "आय का महीना",
-  "no_transactions_found": "कोई लेनदेन नहीं मिला"
+  "no_transactions_found": "कोई लेनदेन नहीं मिला",
+  "expense_breakdown": "व्यय विश्लेषण",
+  "categories_breakdown": "श्रेणियों का विश्लेषण",
+  "expense_today": "व्यय (आज)",
+  "expense_this_week": "व्यय (इस सप्ताह)",
+  "percentage_this_week": "{percentage}% इस सप्ताह",
+  "expense_month_template": "व्यय ({month})",
+  "percentage_this_month": "{percentage}% इस महीने",
+  "expense_this_quarter": "व्यय (इस तिमाही)",
+  "percentage_this_quarter": "{percentage}% इस तिमाही",
+  "this_month_paren": "(इस महीने)",
+  "this_quarter_paren": "(इस तिमाही)"
 }

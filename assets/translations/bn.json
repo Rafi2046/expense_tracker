@@ -292,5 +292,16 @@
   "income_trend_highlighted_bars_desc": "হাইলাইট করা বারগুলো বর্তমান সক্রিয় মাস নির্দেশ করে।",
   "income_trend_lighter_bars_desc": "হালকা রঙের বারগুলো ঐতিহাসিক মাসিক আয়ের পরিসংখ্যান দেখায়।",
   "income_month": "আয়ের মাস",
-  "no_transactions_found": "কোনো লেনদেন পাওয়া যায়নি"
+  "no_transactions_found": "কোনো লেনদেন পাওয়া যায়নি",
+  "expense_breakdown": "ব্যয় বিশ্লেষণ",
+  "categories_breakdown": "ক্যাটাগরি বিশ্লেষণ",
+  "expense_today": "ব্যয় (আজ)",
+  "expense_this_week": "ব্যয় (এই সপ্তাহ)",
+  "percentage_this_week": "{percentage}% এই সপ্তাহে",
+  "expense_month_template": "ব্যয় ({month})",
+  "percentage_this_month": "{percentage}% এই মাসে",
+  "expense_this_quarter": "ব্যয় (এই কোয়ার্টার)",
+  "percentage_this_quarter": "{percentage}% এই কোয়ার্টারে",
+  "this_month_paren": "(এই মাস)",
+  "this_quarter_paren": "(এই কোয়ার্টার)"
 }

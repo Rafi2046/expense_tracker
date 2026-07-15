@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -30,7 +31,7 @@ class CategoryBreakdownHeader extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Text(
-              'Categories Breakdown',
+              context.translate('categories_breakdown'),
               style: GoogleFonts.workSans(
                 fontSize: AppFontSizes.size16,
                 fontWeight: FontWeight.w700,
