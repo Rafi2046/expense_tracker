@@ -39,7 +39,6 @@ class LedgerTransactionRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final amountColor = isIncome ? AppColors.activeGreen : AppColors.expensePink;
     final amountPrefix = isIncome ? '+ ' : '- ';
-    final catColor = CategoryUtils.getColor(category);
     final catIcon = CategoryUtils.getIcon(category);
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -67,21 +66,12 @@ class LedgerTransactionRow extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
           child: Row(
             children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: catColor.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: Icon(
-                  catIcon,
-                  color: catColor,
-                  size: 20,
-                ),
+              Icon(
+                catIcon,
+                color: isDark ? Colors.white70 : Colors.grey.shade600,
+                size: 22,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 14),
 
               Expanded(
                 child: Column(

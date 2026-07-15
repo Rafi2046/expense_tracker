@@ -12,7 +12,6 @@ class CategoryDetailCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final catColor = CategoryUtils.getColor(category);
     final catIcon = CategoryUtils.getIcon(category);
 
     return Container(
@@ -29,17 +28,12 @@ class CategoryDetailCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: catColor.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            alignment: Alignment.center,
-            child: Icon(catIcon, color: catColor, size: 18),
+          Icon(
+            catIcon,
+            color: isDark ? Colors.white70 : Colors.grey.shade600,
+            size: 20,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
           Text(
             category,
             style: GoogleFonts.workSans(

@@ -46,17 +46,12 @@ class TransactionSelectorTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // ── Icon Badge ──
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: themeColor.withValues(alpha: isDark ? 0.15 : 0.08),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(leadingIcon, color: themeColor, size: 19),
+            Icon(
+              leadingIcon,
+              color: isDark ? Colors.white70 : Colors.grey.shade600,
+              size: 22,
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 16),
 
             // ── Label + Value (floating label style) ──
             Expanded(
