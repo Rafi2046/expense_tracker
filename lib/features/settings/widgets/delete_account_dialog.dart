@@ -7,6 +7,7 @@ import 'package:expense_tracker/features/settings/widgets/delete_account_reauth_
 import 'package:expense_tracker/features/settings/widgets/delete_account_warning_header.dart';
 import 'package:expense_tracker/features/settings/widgets/delete_confirmation_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 
 
@@ -118,7 +119,14 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
         );
         await user.reauthenticateWithCredential(credential);
       } else if (isGoogleUser) {
-        await user.reauthenticateWithProvider(GoogleAuthProvider());
+        final googleSignIn = GoogleSignIn.instance;
+        await googleSignIn.signOut();
+        final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
+        final googleAuth = googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+        );
+        await user.reauthenticateWithCredential(credential);
       } else {
         throw Exception('No supported sign-in method found');
       }
