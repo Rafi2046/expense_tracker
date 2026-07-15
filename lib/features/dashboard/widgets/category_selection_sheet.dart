@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -40,8 +41,8 @@ class CategorySelectionSheetContent extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          Text(
-            'Select Business Category',
+            Text(
+              context.translate('select_business_category'),
             style: TextStyle(
               fontSize: AppFontSizes.size20,
               fontWeight: FontWeight.w800,
@@ -56,7 +57,7 @@ class CategorySelectionSheetContent extends StatelessWidget {
               color: theme.textTheme.bodyLarge?.color,
             ),
             decoration: InputDecoration(
-              hintText: 'Search Category',
+              hintText: context.translate('search_category'),
               hintStyle: TextStyle(color: theme.textTheme.bodySmall?.color),
               prefixIcon: Icon(
                 LucideIcons.search,

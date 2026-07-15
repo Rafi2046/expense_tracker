@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -41,7 +42,7 @@ class CreditInfoForm extends StatelessWidget {
                   decimal: true,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Opening Balance',
+                  hintText: context.translate('opening_balance'),
                   hintStyle: AppTextStyles.partyFormHint.copyWith(color: isDark ? Colors.white30 : null),
                   prefixText: '$currencySymbol ',
                   prefixStyle: AppTextStyles.partyFormInput.copyWith(
@@ -85,7 +86,7 @@ class CreditInfoForm extends StatelessWidget {
                 ),
                 onTap: onSelectDate,
                 decoration: InputDecoration(
-                  labelText: 'As of Date',
+                  labelText: context.translate('as_of_date'),
                   labelStyle: AppTextStyles.partyFormLabel.copyWith(
                     fontSize: AppFontSizes.size12,
                     fontWeight: FontWeight.w600,
@@ -130,14 +131,14 @@ class CreditInfoForm extends StatelessWidget {
           children: [
             _buildAnimatedPill(
               context: context,
-              label: 'To Receive',
+              label: context.translate('to_receive'),
               isActive: isReceive,
               onTap: () => onToggleChanged(true),
             ),
             const SizedBox(width: 12),
             _buildAnimatedPill(
               context: context,
-              label: 'To Give',
+              label: context.translate('to_give'),
               isActive: !isReceive,
               onTap: () => onToggleChanged(false),
             ),

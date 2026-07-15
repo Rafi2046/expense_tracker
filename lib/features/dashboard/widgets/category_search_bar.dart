@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class CategorySearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -26,7 +27,7 @@ class CategorySearchBar extends StatelessWidget {
         color: theme.colorScheme.onSurface,
       ),
       decoration: InputDecoration(
-        hintText: 'Search Category...',
+        hintText: context.translate('search_category'),
         hintStyle: TextStyle(
           fontSize: AppFontSizes.size15,
           color: isDark ? Colors.white38 : Colors.grey.shade400,

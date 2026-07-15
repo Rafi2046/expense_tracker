@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_format_utils.dart';
@@ -46,7 +47,7 @@ class InvoiceSettlementCardWidget extends StatelessWidget {
             children: [
               _PersonChip(name: fromName, isDark: isDark, color: AppColors.activeRed),
               const Spacer(),
-              Text('pays', style: AppTextStyles.label.copyWith(color: const Color(0xFF9CA3AF))),
+              Text(context.translate('pays_label'), style: AppTextStyles.label.copyWith(color: const Color(0xFF9CA3AF))),
               const Spacer(),
               _PersonChip(name: toName, isDark: isDark, color: AppColors.activeGreen),
             ],

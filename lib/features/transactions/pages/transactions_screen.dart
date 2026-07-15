@@ -8,6 +8,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:flutter/material.dart';
@@ -304,8 +305,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             const SizedBox(height: 24),
             _AddOptionTile(
               icon: LucideIcons.wallet,
-              label: 'Add Income',
-              subtitle: 'Record money received',
+              label: context.translate('add_income'),
+              subtitle: context.translate('record_money_received'),
               color: AppColors.activeGreen,
               bgColor: AppColors.activeGreen.withValues(alpha: 0.08),
               onTap: () {
@@ -316,8 +317,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             const SizedBox(height: 12),
             _AddOptionTile(
               icon: LucideIcons.creditCard,
-              label: 'Add Expense',
-              subtitle: 'Record money spent',
+              label: context.translate('add_expense'),
+              subtitle: context.translate('record_money_spent'),
               color: AppColors.expensePink,
               bgColor: AppColors.expensePink.withValues(alpha: 0.08),
               onTap: () {

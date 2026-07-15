@@ -6,6 +6,7 @@ import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet
 import 'package:expense_tracker/features/dashboard/widgets/transaction_detail_cards.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TransactionDetailsScreen extends StatelessWidget {
   final TransactionItem transaction;
@@ -32,7 +33,7 @@ class TransactionDetailsScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          isIncome ? 'Income Details' : 'Expense Details',
+          isIncome ? context.translate('income_details') : context.translate('expense_details'),
           style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
         ),
         centerTitle: true,
@@ -96,11 +97,11 @@ class TransactionDetailsScreen extends StatelessWidget {
           backgroundColor: theme.colorScheme.surface,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           title: Text(
-            'Delete Transaction',
+            context.translate('delete_transaction'),
             style: AppTextStyles.h3.copyWith(color: onSurface),
           ),
           content: Text(
-            'Are you sure you want to delete this transaction? This action cannot be undone.',
+            context.translate('delete_transaction_confirmation'),
             style: AppTextStyles.body.copyWith(
               color: onSurface.withValues(alpha: 0.7),
             ),
@@ -109,7 +110,7 @@ class TransactionDetailsScreen extends StatelessWidget {
             TextButton(
               onPressed: () => Navigator.pop(ctx),
               child: Text(
-                'Cancel',
+                context.translate('cancel'),
                 style: AppTextStyles.label.copyWith(
                   fontSize: AppFontSizes.size13,
                   color: onSurface.withValues(alpha: 0.5),
@@ -127,14 +128,14 @@ class TransactionDetailsScreen extends StatelessWidget {
                 Navigator.pop(ctx);
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Transaction deleted successfully'),
+                  SnackBar(
+                    content: Text(context.translate('transaction_deleted_success')),
                     backgroundColor: Colors.redAccent,
                   ),
                 );
               },
               child: Text(
-                'Delete',
+                context.translate('delete'),
                 style: AppTextStyles.label.copyWith(
                   fontSize: AppFontSizes.size13,
                   color: Colors.white,

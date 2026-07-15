@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/app_lock_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/lock_screen_overlay.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -91,7 +92,7 @@ class _AppLockManagerState extends State<AppLockManager> with WidgetsBindingObse
                       Icon(LucideIcons.lock, color: Colors.white, size: 48),
                       const SizedBox(height: 16),
                       Text(
-                        'App Locked',
+                        context.translate('app_locked'),
                         style: AppTextStyles.h2.copyWith(
                           color: Colors.white,
                         ),

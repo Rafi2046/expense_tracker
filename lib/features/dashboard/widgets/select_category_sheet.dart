@@ -7,6 +7,7 @@ import 'package:expense_tracker/features/dashboard/widgets/category_search_bar.d
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class SelectCategorySheet extends StatefulWidget {
   final bool isIncome;
@@ -67,8 +68,8 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
         ),
         title: Text(
           widget.isIncome
-              ? 'Add New Income Category'
-              : 'Add New Expense Category',
+              ? context.translate('add_new_income_category')
+              : context.translate('add_new_expense_category'),
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: AppFontSizes.size16,
@@ -78,7 +79,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
           controller: textController,
           autofocus: true,
           decoration: InputDecoration(
-            hintText: 'Category Name',
+            hintText: context.translate('category_name'),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 12,
@@ -102,7 +103,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
-              'Cancel',
+              context.translate('cancel'),
               style: TextStyle(
                 color: Colors.grey.shade600,
                 fontWeight: FontWeight.w600,
@@ -132,7 +133,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
               }
             },
             child: Text(
-              'Add',
+              context.translate('add'),
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -164,7 +165,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
           borderRadius: BorderRadius.circular(16),
         ),
         title: Text(
-          'Rename Category',
+          context.translate('rename_category'),
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: AppFontSizes.size16,
@@ -174,7 +175,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
           controller: controller,
           autofocus: true,
           decoration: InputDecoration(
-            hintText: 'Category Name',
+            hintText: context.translate('category_name'),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 12,
@@ -193,7 +194,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
-              'Cancel',
+              context.translate('cancel'),
               style: TextStyle(
                 color: Colors.grey.shade600,
                 fontWeight: FontWeight.w600,
@@ -217,7 +218,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                 );
                 ScaffoldMessenger.of(ctx).showSnackBar(
                   SnackBar(
-                    content: Text('Category renamed to "$newName".'),
+                    content: Text(context.translate('category_renamed', namedArgs: {'name': newName})),
                     duration: const Duration(seconds: 1),
                   ),
                 );
@@ -225,7 +226,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
               Navigator.pop(ctx);
             },
             child: Text(
-              'Rename',
+              context.translate('rename'),
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -307,8 +308,8 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
 
               Text(
                 widget.isIncome
-                    ? 'Select Category for Income'
-                    : 'Select Category for Expense',
+                    ? context.translate('select_category_for_income')
+                    : context.translate('select_category_for_expense'),
                 style: TextStyle(
                   fontSize: AppFontSizes.size18,
                   fontWeight: FontWeight.bold,
@@ -345,7 +346,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Text(
-                            'No categories found.',
+                            context.translate('no_categories_found'),
                             style: TextStyle(
                               color: isDark ? Colors.white38 : Colors.grey.shade400,
                               fontSize: AppFontSizes.size14,
@@ -384,7 +385,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                               }
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('Category "$cat" removed.'),
+                                  content: Text(context.translate('category_removed', namedArgs: {'name': cat})),
                                   duration: const Duration(seconds: 1),
                                 ),
                               );

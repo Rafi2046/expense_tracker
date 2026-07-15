@@ -7,6 +7,7 @@ import 'package:expense_tracker/features/dashboard/widgets/debt_total_card.dart'
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class ToReceiveScreen extends StatefulWidget {
   const ToReceiveScreen({super.key});
@@ -26,17 +27,17 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
       builder: (dialogContext) => AlertDialog(
         backgroundColor: theme.dialogTheme.backgroundColor ?? theme.cardColor,
         title: Text(
-          'Delete Debt',
+          context.translate('delete_debt'),
           style: TextStyle(color: theme.colorScheme.onSurface),
         ),
         content: Text(
-          'Are you sure you want to delete this debt?',
+          context.translate('delete_debt_confirmation'),
           style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.8)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: Text('Cancel', style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
+            child: Text(context.translate('cancel'), style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
           ),
           TextButton(
             onPressed: () {
@@ -44,12 +45,12 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
               provider.deleteDebtItem(item.id);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('${item.name}\'s debt deleted'),
+                  content: Text(context.translate('debt_deleted', namedArgs: {'name': item.name})),
                   duration: const Duration(seconds: 3),
                 ),
               );
             },
-            child: Text('Delete', style: TextStyle(color: Colors.red.shade400, fontWeight: FontWeight.bold)),
+            child: Text(context.translate('delete'), style: TextStyle(color: Colors.red.shade400, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -75,7 +76,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'To Receive',
+          context.translate('to_receive'),
           style: AppTextStyles.appbarTitle.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
             fontFamily: TextStyle().fontFamily,
@@ -91,7 +92,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
         child: FloatingActionButton(
           onPressed: () => AddEditDebtSheet.show(
             context: context,
-            payeeLabel: 'Client/Friend Name',
+                            payeeLabel: context.translate('payee_label'),
             themeColor: theme.primaryColor,
             isReceive: true,
           ),
@@ -106,11 +107,10 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: DebtTotalCard(
-                title: 'TOTAL OWED TO YOU',
+                title: context.translate('total_owed_to_you'),
                 amount: debtProvider.totalToReceive,
                 gradientColors: const [Color(0xFF0C4E3C), Color(0xFF197F63)],
-                guideText:
-                    'Swipe left on any item to quickly settle, or tap ✎ to edit details.',
+                guideText: context.translate('guide_swipe_settle'),
                 showGuide: _showGuide,
                 onDismissGuide: () {
                   setState(() {
@@ -134,7 +134,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                     Row(
                       children: [
                         Text(
-                          'Pending Collections',
+                          context.translate('pending_collections'),
                           style: AppTextStyles.sectionHeaderTitle.copyWith(color: theme.colorScheme.onSurface),
                         ),
                         const SizedBox(width: 8),
@@ -168,7 +168,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                             _showGuide = true;
                           });
                         },
-                        tooltip: 'Show Guide',
+                        tooltip: context.translate('show_guide'),
                       ),
                   ],
                 ),
@@ -188,7 +188,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              'No pending payments!',
+                              context.translate('no_pending_payments'),
                               style: AppTextStyles.reportTileTitle.copyWith(color: Colors.grey.shade500),
                             ),
                           ],
@@ -210,7 +210,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                           onEditTap: () => AddEditDebtSheet.show(
                             context: context,
                             item: item,
-                            payeeLabel: 'Client/Friend Name',
+            payeeLabel: context.translate('payee_label'),
                             themeColor: theme.primaryColor,
                             isReceive: true,
                           ),

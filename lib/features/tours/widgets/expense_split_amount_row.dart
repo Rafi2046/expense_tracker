@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -41,17 +42,17 @@ class ExpenseSplitAmountRow extends StatelessWidget {
     final showInputs = splitType == 'exact' || splitType == 'percentage';
 
     if (showCheckboxes) {
-      return _buildCheckboxRows();
+      return _buildCheckboxRows(context);
     }
 
     if (showInputs) {
-      return _buildInputRows();
+      return _buildInputRows(context);
     }
 
     return const SizedBox.shrink();
   }
 
-  Widget _buildCheckboxRows() {
+  Widget _buildCheckboxRows(BuildContext context) {
     return Column(
       children: participants.asMap().entries.map((entry) {
         final p = entry.value;
@@ -120,7 +121,7 @@ class ExpenseSplitAmountRow extends StatelessWidget {
                       ),
                       if (lateJoinerIds.contains(p.id))
                         Text(
-                          'Joined later',
+                          context.translate('joined_later'),
                           style: AppTextStyles.caption.copyWith(
                             fontSize: AppFontSizes.size10,
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
@@ -147,7 +148,7 @@ class ExpenseSplitAmountRow extends StatelessWidget {
     );
   }
 
-  Widget _buildInputRows() {
+  Widget _buildInputRows(BuildContext context) {
     final isPercentage = splitType == 'percentage';
     final isExact = splitType == 'exact';
     final suffix = isPercentage ? '%' : currencySymbol;
@@ -250,7 +251,7 @@ class ExpenseSplitAmountRow extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
                 child: Text(
-                  'Reset split',
+                  context.translate('reset_split'),
                   style: AppTextStyles.label.copyWith(
                     fontWeight: FontWeight.w600,
                     color: AppColors.activeGreen,

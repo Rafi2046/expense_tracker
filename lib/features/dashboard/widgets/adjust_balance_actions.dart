@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'transfer_dialog.dart';
 import 'new_account_dialog.dart';
@@ -30,7 +31,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AdjustBalanceHeader(
-              title: 'Adjust Balance',
+              title: context.translate('adjust_balance'),
               onClose: () => Navigator.pop(ctx),
             ),
             BalanceActionList(
@@ -84,7 +85,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
             ),
             const SizedBox(height: 16),
             Text(
-              'Choose Transaction Type',
+              context.translate('choose_transaction_type'),
               style: TextStyle(
                 fontSize: AppFontSizes.size16,
                 fontWeight: FontWeight.bold,
@@ -104,7 +105,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                         color: isDark ? theme.primaryColor : const Color(0xFF006C49),
                       ),
                       label: Text(
-                        'Add Income',
+                        context.translate('add_income'),
                         style: TextStyle(
                           fontSize: AppFontSizes.size13,
                           fontWeight: FontWeight.bold,
@@ -141,7 +142,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                         color: isDark ? AppColors.activeRed : const Color(0xFFD9383A),
                       ),
                       label: Text(
-                        'Add Expense',
+                        context.translate('add_expense'),
                         style: TextStyle(
                           fontSize: AppFontSizes.size13,
                           fontWeight: FontWeight.bold,

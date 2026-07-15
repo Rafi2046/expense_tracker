@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class BudgetCategoryItem {
   final String name;
@@ -49,7 +50,7 @@ class BudgetCategoryProgressList extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.s12),
               Text(
-                'No expenses this month',
+                context.translate('no_expenses_this_month'),
                 style: AppTextStyles.cardStatusText,
               ),
             ],
@@ -68,7 +69,7 @@ class BudgetCategoryProgressList extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('CATEGORY BREAKDOWN', style: AppTextStyles.cardTitle),
+              Text(context.translate('category_breakdown_title'), style: AppTextStyles.cardTitle),
               Text(
                 '$currency ${_formatAmount(totalExpense)}',
                 style: AppTextStyles.cardStatusText.copyWith(
@@ -214,7 +215,7 @@ class _CategoryProgressRow extends StatelessWidget {
                               ),
                               const SizedBox(height: AppSpacing.s2),
                               Text(
-                                '${barPct.toStringAsFixed(1)}% ${hasBudget ? "of budget" : "of spending"}',
+                                '${barPct.toStringAsFixed(1)}% ${hasBudget ? context.translate('of_budget') : context.translate('of_spending')}',
                                 style: AppTextStyles.cardStatusText.copyWith(
                                   fontSize: AppFontSizes.size11,
                                   color: item.color,

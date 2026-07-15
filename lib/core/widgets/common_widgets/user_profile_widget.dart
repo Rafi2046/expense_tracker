@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/edit_profile_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -64,8 +65,8 @@ class ProfileSwitchSheet extends StatefulWidget {
 
 class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
   String _profileLabel(UserProfile p) {
-    if (p.id == 'default_profile') return 'Main Profile';
-    if (p.type == 'Personal') return 'Secondary';
+    if (p.id == 'default_profile') return context.translate('main_profile');
+    if (p.type == 'Personal') return context.translate('secondary');
     return p.type;
   }
   @override
@@ -93,7 +94,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Switch Profile',
+              context.translate('switch_profile'),
               style: AppTextStyles.h1.copyWith(
                 fontWeight: FontWeight.w800,
                 color: theme.textTheme.titleLarge?.color,
@@ -101,7 +102,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Choose a profile to manage',
+              context.translate('choose_profile_to_manage'),
               style: AppTextStyles.bodySmall.copyWith(color: theme.textTheme.bodySmall?.color),
             ),
             const SizedBox(height: 20),
@@ -212,7 +213,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                 },
                 icon: Icon(LucideIcons.plus, color: Color(0xFF00BFA5)),
                 label: Text(
-                  'Create New Profile',
+                  context.translate('create_new_profile'),
                   style: AppTextStyles.reportTileTitle.copyWith(
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF00BFA5),

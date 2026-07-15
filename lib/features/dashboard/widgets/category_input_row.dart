@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CategoryInputRow extends StatelessWidget {
@@ -39,7 +40,7 @@ class CategoryInputRow extends StatelessWidget {
                 fontSize: AppFontSizes.size15,
               ),
               decoration: InputDecoration(
-                hintText: 'Enter category name, then tap +',
+                hintText: context.translate('enter_category_name_then_tap'),
                 hintStyle: TextStyle(
                   color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                   fontSize: AppFontSizes.size14,

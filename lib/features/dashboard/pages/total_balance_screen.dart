@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/model/account_model.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/account_provider.dart';
@@ -77,7 +78,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Accounts',
+          context.translate('accounts'),
           style: AppTextStyles.h2.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
           ),
@@ -106,7 +107,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'All Accounts',
+                    context.translate('all_accounts'),
                     style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   TextButton.icon(
@@ -117,7 +118,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                       color: theme.primaryColor,
                     ),
                     label: Text(
-                      'New Account',
+                      context.translate('new_account'),
                       style: AppTextStyles.label.copyWith(color: theme.primaryColor),
                     ),
                     style: TextButton.styleFrom(
@@ -135,7 +136,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                 child: accountProvider.accounts.isEmpty
                     ? Center(
                         child: Text(
-                          'No accounts yet. Tap "New Account" to create one.',
+                          context.translate('no_accounts_yet'),
                           style: AppTextStyles.bodySmall.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -181,7 +182,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                     ),
                   ),
                   child: Text(
-                    'Adjust Balance',
+                    context.translate('adjust_balance'),
                     style: AppTextStyles.bodyBold.copyWith(color: Colors.white),
                   ),
                 ),
@@ -233,7 +234,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
               ),
               const SizedBox(height: 4),
               Text(
-                isBuiltIn ? 'System Account' : 'Custom Account',
+                isBuiltIn ? context.translate('system_account') : context.translate('custom_account'),
                 style: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),
               const SizedBox(height: 20),
@@ -243,7 +244,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                 child: TextButton.icon(
                   icon: Icon(LucideIcons.edit, color: theme.primaryColor, size: 18),
                   label: Text(
-                    'Edit Account',
+                    context.translate('edit_account'),
                     style: AppTextStyles.body.copyWith(
                       color: theme.colorScheme.onSurface,
                       fontWeight: FontWeight.w600,
@@ -269,7 +270,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                 child: TextButton.icon(
                   icon: Icon(LucideIcons.eye, color: theme.primaryColor, size: 18),
                   label: Text(
-                    'View Details',
+                    context.translate('view_details'),
                     style: AppTextStyles.body.copyWith(
                       color: theme.colorScheme.onSurface,
                       fontWeight: FontWeight.w600,
@@ -303,7 +304,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                   child: TextButton.icon(
                     icon: Icon(LucideIcons.trash2, color: Colors.red.shade400, size: 18),
                     label: Text(
-                      'Delete Account',
+                      context.translate('delete_account'),
                       style: AppTextStyles.body.copyWith(
                         color: Colors.red.shade400,
                         fontWeight: FontWeight.w600,
@@ -329,7 +330,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                 child: TextButton(
                   onPressed: () => Navigator.pop(ctx),
                   child: Text(
-                    'Cancel',
+                    context.translate('cancel'),
                     style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurfaceVariant),
                   ),
                 ),
@@ -355,7 +356,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         backgroundColor: theme.cardColor,
         title: Text(
-          'Edit Account',
+          context.translate('edit_account'),
           style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
         ),
         content: SingleChildScrollView(
@@ -367,7 +368,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                 controller: nameController,
                 enabled: !isBuiltIn,
                 decoration: InputDecoration(
-                  labelText: 'Account Name',
+                  labelText: context.translate('account_name'),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -379,7 +380,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                 controller: balanceController,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 decoration: InputDecoration(
-                  labelText: 'Initial Balance',
+                  labelText: context.translate('initial_balance'),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -390,7 +391,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
               DropdownButtonFormField<String>(
                 initialValue: selectedType,
                 decoration: InputDecoration(
-                  labelText: 'Account Type',
+                  labelText: context.translate('account_type'),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -413,7 +414,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel', style: AppTextStyles.body.copyWith(color: Colors.grey)),
+            child: Text(context.translate('cancel'), style: AppTextStyles.body.copyWith(color: Colors.grey)),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -445,7 +446,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
-            child: Text('Save', style: AppTextStyles.bodyBold.copyWith(color: Colors.white)),
+            child: Text(context.translate('save'), style: AppTextStyles.bodyBold.copyWith(color: Colors.white)),
           ),
         ],
       ),
@@ -465,18 +466,17 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
           children: [
             Icon(LucideIcons.alertTriangle, color: Colors.red.shade400, size: 22),
             const SizedBox(width: 8),
-            Text('Delete Account', style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface)),
+            Text(context.translate('delete_account'), style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface)),
           ],
         ),
         content: Text(
-          'Delete "$accountName" and all its transactions?\n\n'
-          'This will also remove all income/expense entries linked to this account.',
+          context.translate('delete_account_confirmation', namedArgs: {'account_name': accountName}),
           style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurfaceVariant, height: 1.45),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: Text('Cancel', style: AppTextStyles.body.copyWith(color: Colors.grey)),
+            child: Text(context.translate('cancel'), style: AppTextStyles.body.copyWith(color: Colors.grey)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
@@ -485,7 +485,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
-            child: Text('Delete', style: AppTextStyles.bodyBold.copyWith(color: Colors.white)),
+            child: Text(context.translate('delete'), style: AppTextStyles.bodyBold.copyWith(color: Colors.white)),
           ),
         ],
       ),
@@ -498,7 +498,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
       }
       messenger.showSnackBar(
         SnackBar(
-          content: Text('"$accountName" account deleted'),
+          content: Text(context.translate('account_deleted_message', namedArgs: {'account_name': accountName})),
           backgroundColor: Colors.red.shade400,
           behavior: SnackBarBehavior.floating,
         ),

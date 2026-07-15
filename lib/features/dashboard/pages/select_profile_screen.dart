@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/premium_upgrade_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_info_banner.dart';
@@ -37,20 +38,20 @@ class SelectProfileScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Select Your Profile',
+                context.translate('select_your_profile'),
                 style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w800, color: theme.textTheme.titleLarge?.color),
               ),
               const SizedBox(height: 4),
               Text(
-                'What will you use the app mostly for?',
+                context.translate('what_will_you_use'),
                 style: AppTextStyles.bodySmall.copyWith(color: theme.textTheme.bodySmall?.color),
               ),
               const SizedBox(height: 20),
 
               ProfileTypeCard(
                 icon: LucideIcons.store,
-                title: 'Business Management',
-                subtitle: 'Manage your business accounting and inventory easily.',
+                title: context.translate('business_management'),
+                subtitle: context.translate('business_management_subtitle'),
                 isSelected: false,
                 onTap: () => ComingSoonSheet.show(context),
               ),
@@ -59,8 +60,8 @@ class SelectProfileScreen extends StatelessWidget {
 
               ProfileTypeCard(
                 icon: LucideIcons.user,
-                title: 'Personal Finance',
-                subtitle: 'Track your expenses and maintain your credits with friends.',
+                title: context.translate('personal_finance'),
+                subtitle: context.translate('personal_finance_subtitle'),
                 isSelected: !isBusiness,
                 onTap: () => provider.setCreationProfileType('personal'),
               ),
@@ -72,7 +73,7 @@ class SelectProfileScreen extends StatelessWidget {
               const SizedBox(height: 14),
 
               CustomButton(
-                text: 'Continue',
+                text: context.translate('continue'),
                 backgroundColor: const Color(0xFF2EBD85),
                 onPressed: () async {
                   if (provider.profiles.length >= 3 && !provider.isPremium) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class AddNewCategoryTile extends StatelessWidget {
   final bool isDark;
@@ -20,7 +21,7 @@ class AddNewCategoryTile extends StatelessWidget {
       height: 48,
       child: OutlinedButton.icon(
         icon: Icon(LucideIcons.plus, size: 18),
-        label: const Text('Add New Category'),
+        label: Text(context.translate('add_new_category')),
         style: OutlinedButton.styleFrom(
           foregroundColor: theme.colorScheme.onSurface,
           side: BorderSide(

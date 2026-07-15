@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class AccountSearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -40,8 +41,8 @@ class AccountSearchBar extends StatelessWidget {
                   child: TextField(
                     controller: controller,
                     style: TextStyle(fontSize: AppFontSizes.size13, color: theme.colorScheme.onSurface),
-                    decoration: const InputDecoration(
-                      hintText: 'Search Transactions...',
+                    decoration: InputDecoration(
+                      hintText: context.translate('search_transactions'),
                       hintStyle: TextStyle(color: Colors.grey, fontSize: AppFontSizes.size13),
                       border: InputBorder.none,
                       isDense: true,
@@ -79,11 +80,11 @@ class AccountSearchBar extends StatelessWidget {
                 controller.clear();
                 onResetFilters();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Filters reset')),
+                  SnackBar(content: Text(context.translate('filters_reset'))),
                 );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Use search or change date to filter')),
+                  SnackBar(content: Text(context.translate('use_search_or_change_date'))),
                 );
               }
             },

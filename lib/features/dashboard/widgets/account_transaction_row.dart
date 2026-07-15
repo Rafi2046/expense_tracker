@@ -9,6 +9,7 @@ import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/pages/transaction_details_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class AccountTransactionRow extends StatelessWidget {
   final Map<String, dynamic> item;
@@ -87,13 +88,13 @@ class AccountTransactionRow extends StatelessWidget {
                     ),
                     ListTile(
                       leading: Icon(LucideIcons.edit, color: theme.colorScheme.onSurface),
-                      title: Text('Edit', style: TextStyle(color: theme.colorScheme.onSurface)),
+                      title: Text(context.translate('edit'), style: TextStyle(color: theme.colorScheme.onSurface)),
                       onTap: () {
                         Navigator.pop(sheetContext);
                         AddEditDebtSheet.show(
                           context: context,
                           item: rawItem,
-                          payeeLabel: 'Client/Friend Name',
+                          payeeLabel: context.translate('payee_label'),
                           themeColor: debtThemeColor,
                           isReceive: rawItem.isReceive,
                         );
@@ -101,7 +102,7 @@ class AccountTransactionRow extends StatelessWidget {
                     ),
                     ListTile(
                       leading: Icon(LucideIcons.checkCircle, color: debtThemeColor),
-                      title: Text('Settle', style: TextStyle(color: debtThemeColor)),
+                      title: Text(context.translate('settle'), style: TextStyle(color: debtThemeColor)),
                       onTap: () {
                         Navigator.pop(sheetContext);
                         final txProvider = context.read<TransactionProvider>();
@@ -120,7 +121,7 @@ class AccountTransactionRow extends StatelessWidget {
                         debtProvider.settleDebtItem(rawItem.id);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('${rawItem.name}\'s debt settled'),
+                            content: Text(context.translate('debt_settled', namedArgs: {'name': rawItem.name})),
                             duration: const Duration(seconds: 2),
                           ),
                         );
@@ -128,22 +129,22 @@ class AccountTransactionRow extends StatelessWidget {
                     ),
                     ListTile(
                       leading: Icon(LucideIcons.trash2, color: Colors.red.shade400),
-                      title: Text('Delete', style: TextStyle(color: Colors.red.shade400)),
+                      title: Text(context.translate('delete'), style: TextStyle(color: Colors.red.shade400)),
                       onTap: () {
                         Navigator.pop(sheetContext);
                         showDialog(
                           context: context,
                           builder: (dialogContext) => AlertDialog(
                             backgroundColor: theme.dialogTheme.backgroundColor ?? theme.cardColor,
-                            title: Text('Delete Debt', style: TextStyle(color: theme.colorScheme.onSurface)),
+                            title: Text(context.translate('delete_debt'), style: TextStyle(color: theme.colorScheme.onSurface)),
                             content: Text(
-                              'Are you sure you want to delete this debt?',
+                              context.translate('delete_debt_confirmation'),
                               style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.8)),
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(dialogContext),
-                                child: Text('Cancel', style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
+                                child: Text(context.translate('cancel'), style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
                               ),
                               TextButton(
                                 onPressed: () {
@@ -151,12 +152,12 @@ class AccountTransactionRow extends StatelessWidget {
                                   context.read<DebtProvider>().deleteDebtItem(rawItem.id);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text('${rawItem.name}\'s debt deleted'),
+                                      content: Text(context.translate('debt_deleted', namedArgs: {'name': rawItem.name})),
                                       duration: const Duration(seconds: 2),
                                     ),
                                   );
                                 },
-                                child: Text('Delete', style: TextStyle(color: Colors.red.shade400, fontWeight: FontWeight.bold)),
+                                child: Text(context.translate('delete'), style: TextStyle(color: Colors.red.shade400, fontWeight: FontWeight.bold)),
                               ),
                             ],
                           ),

@@ -8,6 +8,7 @@ import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TransferDialog extends StatefulWidget {
   final String? initialFromAccount;
@@ -50,15 +51,15 @@ class _TransferDialogState extends State<TransferDialog> {
     if (fromAccounts.isEmpty || toAccounts.isEmpty) {
       return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('Transfer', style: AppTextStyles.h3),
+        title: Text(context.translate('transfer_btn'), style: AppTextStyles.h3),
         content: Text(
-          'Need at least 2 accounts to transfer.',
+          context.translate('need_two_accounts'),
           style: AppTextStyles.body,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('OK', style: AppTextStyles.body.copyWith(color: theme.primaryColor)),
+            child: Text(context.translate('ok'), style: AppTextStyles.body.copyWith(color: theme.primaryColor)),
           ),
         ],
       );
@@ -89,7 +90,7 @@ class _TransferDialogState extends State<TransferDialog> {
           ),
           const SizedBox(width: 10),
           Text(
-            'Transfer Balance',
+            context.translate('transfer_balance'),
             style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
           ),
         ],
@@ -108,7 +109,7 @@ class _TransferDialogState extends State<TransferDialog> {
                     key: ValueKey('from_$_fromAccount'),
                     initialValue: _fromAccount,
                     decoration: InputDecoration(
-                      labelText: 'From',
+                      labelText: context.translate('from_label'),
                       labelStyle: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurfaceVariant),
                       filled: true,
                       fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA),
@@ -146,7 +147,7 @@ class _TransferDialogState extends State<TransferDialog> {
                     key: ValueKey('to_$_toAccount'),
                     initialValue: _toAccount,
                     decoration: InputDecoration(
-                      labelText: 'To',
+                      labelText: context.translate('to_label'),
                       labelStyle: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurfaceVariant),
                       filled: true,
                       fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA),
@@ -183,7 +184,7 @@ class _TransferDialogState extends State<TransferDialog> {
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface),
               decoration: InputDecoration(
-                labelText: 'Transfer Amount',
+                labelText: context.translate('transfer_amount'),
                 labelStyle: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 prefixText: '${context.currencySymbol} ',
                 filled: true,
@@ -195,8 +196,8 @@ class _TransferDialogState extends State<TransferDialog> {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               ),
               validator: (val) {
-                if (val == null || val.isEmpty) return 'Enter amount';
-                if (double.tryParse(val) == null || double.parse(val) <= 0) return 'Enter a valid amount';
+                if (val == null || val.isEmpty) return context.translate('enter_amount');
+                if (double.tryParse(val) == null || double.parse(val) <= 0) return context.translate('enter_valid_amount');
                 return null;
               },
             ),
@@ -206,7 +207,7 @@ class _TransferDialogState extends State<TransferDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text('Cancel', style: AppTextStyles.body.copyWith(color: Colors.grey)),
+          child: Text(context.translate('cancel'), style: AppTextStyles.body.copyWith(color: Colors.grey)),
         ),
         ElevatedButton(
           onPressed: _handleTransfer,
@@ -216,7 +217,7 @@ class _TransferDialogState extends State<TransferDialog> {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           ),
-          child: Text('Transfer', style: AppTextStyles.bodyBold.copyWith(color: Colors.white, fontSize: AppFontSizes.size13)),
+          child: Text(context.translate('transfer_btn'), style: AppTextStyles.bodyBold.copyWith(color: Colors.white, fontSize: AppFontSizes.size13)),
         ),
       ],
     );
@@ -241,24 +242,25 @@ class _TransferDialogState extends State<TransferDialog> {
         context: context,
         builder: (ctx) => AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Text('Balance Will Go Negative',
+          title: Text(context.translate('balance_will_go_negative'),
             style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
           ),
           content: Text(
-            'This will bring your $_fromAccount balance to '
-            '${context.formatAmount(projected, listen: false)}.\n\n'
-            'Are you sure you want to proceed?',
+            context.translate('balance_negative_warning', namedArgs: {
+              'account': _fromAccount,
+              'balance': context.formatAmount(projected, listen: false),
+            }),
             style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurfaceVariant, height: 1.45),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: Text('Cancel', style: AppTextStyles.body.copyWith(color: Colors.grey)),
+              child: Text(context.translate('cancel'), style: AppTextStyles.body.copyWith(color: Colors.grey)),
             ),
             ElevatedButton(
               onPressed: () => Navigator.pop(ctx, true),
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.activeRed),
-              child: Text('Proceed', style: AppTextStyles.bodyBold.copyWith(color: Colors.white)),
+              child: Text(context.translate('proceed'), style: AppTextStyles.bodyBold.copyWith(color: Colors.white)),
             ),
           ],
         ),
@@ -272,7 +274,11 @@ class _TransferDialogState extends State<TransferDialog> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Successfully transferred ${context.formatAmount(amount, listen: false)} from $_fromAccount to $_toAccount',
+          context.translate('transfer_success', namedArgs: {
+            'amount': context.formatAmount(amount, listen: false),
+            'from': _fromAccount,
+            'to': _toAccount,
+          }),
         ),
         backgroundColor: Theme.of(context).primaryColor,
       ),

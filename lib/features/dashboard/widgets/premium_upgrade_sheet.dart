@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/features/dashboard/widgets/premium_header_section.dart';
 import 'package:expense_tracker/features/dashboard/widgets/premium_feature_list.dart';
 import 'package:expense_tracker/features/dashboard/widgets/premium_pricing_card.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class PremiumUpgradeSheet extends StatelessWidget {
   const PremiumUpgradeSheet({super.key});
@@ -81,7 +82,7 @@ class _CallToActionButtons extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Premium coming soon!')),
+                  SnackBar(content: Text(context.translate('premium_coming_soon'))),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -92,7 +93,7 @@ class _CallToActionButtons extends StatelessWidget {
                 ),
               ),
               child: Text(
-                'Upgrade to Premium',
+                context.translate('upgrade_to_premium'),
                 style: TextStyle(
                   fontSize: AppFontSizes.size18,
                   fontWeight: FontWeight.w700,
@@ -106,7 +107,7 @@ class _CallToActionButtons extends StatelessWidget {
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: Text(
-            'Maybe Later',
+            context.translate('maybe_later'),
             style: TextStyle(
               fontSize: AppFontSizes.size14,
               fontWeight: FontWeight.w600,

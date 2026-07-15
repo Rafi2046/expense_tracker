@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/models/transaction_models.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TransactionProcessor {
   static List<Map<String, dynamic>> getProcessedTransactions({
@@ -59,7 +60,7 @@ class TransactionProcessor {
         final debt = item as DebtItem;
         amount = debt.amount;
         isIncome = debt.isReceive;
-        title = debt.name.isNotEmpty ? debt.name : 'Debt adjustment';
+        title = debt.name.isNotEmpty ? debt.name : tr('debt_adjustment');
         category = debt.isReceive ? 'To Receive' : 'To Give';
         dateTime = debt.createdAt;
         id = debt.id;

@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/providers/account_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class NewAccountDialog extends StatefulWidget {
   const NewAccountDialog({super.key});
@@ -50,7 +51,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
           ),
           const SizedBox(width: 10),
           Text(
-            'Create Account',
+            context.translate('create_account'),
             style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
           ),
         ],
@@ -64,8 +65,8 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
               controller: _nameController,
               style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface),
               decoration: InputDecoration(
-                labelText: 'Account Name',
-                hintText: 'e.g. Bkash, Nagad, DBBL',
+                labelText: context.translate('account_name'),
+                hintText: context.translate('account_name_hint'),
                 hintStyle: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 labelStyle: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 prefixIcon: Icon(LucideIcons.landmark, size: 18, color: theme.colorScheme.onSurfaceVariant),
@@ -82,7 +83,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               ),
               validator: (val) => (val == null || val.trim().isEmpty)
-                  ? 'Enter account name'
+                  ? context.translate('enter_account_name')
                   : null,
             ),
             const SizedBox(height: 12),
@@ -91,8 +92,8 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface),
               decoration: InputDecoration(
-                labelText: 'Initial Balance',
-                hintText: '0.00',
+                labelText: context.translate('initial_balance'),
+                hintText: context.translate('zero_balance_hint'),
                 labelStyle: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 prefixText: '${context.currencySymbol} ',
                 prefixIcon: Icon(LucideIcons.dollarSign, size: 18, color: theme.colorScheme.onSurfaceVariant),
@@ -109,8 +110,8 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               ),
               validator: (val) {
-                if (val == null || val.isEmpty) return 'Enter initial balance';
-                if (double.tryParse(val) == null) return 'Enter a valid number';
+                if (val == null || val.isEmpty) return context.translate('enter_initial_balance');
+                if (double.tryParse(val) == null) return context.translate('enter_valid_number');
                 return null;
               },
             ),
@@ -121,7 +122,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: Text(
-            'Cancel',
+            context.translate('cancel'),
             style: AppTextStyles.body.copyWith(color: Colors.grey),
           ),
         ),
@@ -142,7 +143,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 ),
                 child: Text(
-                  'Create',
+                  context.translate('create'),
                   style: AppTextStyles.bodyBold.copyWith(color: Colors.white, fontSize: AppFontSizes.size13),
                 ),
               ),
@@ -170,7 +171,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('"$name" account created successfully!'),
+            content: Text(context.translate('account_created_success', namedArgs: {'name': name})),
             backgroundColor: Theme.of(context).primaryColor,
             behavior: SnackBarBehavior.floating,
           ),
@@ -181,7 +182,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
         setState(() => _isSubmitting = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to create account: $e'),
+            content: Text(context.translate('failed_to_create_account', namedArgs: {'error': e.toString()})),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
           ),

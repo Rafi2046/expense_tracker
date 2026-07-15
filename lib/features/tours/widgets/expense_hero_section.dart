@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -134,7 +135,7 @@ class ExpenseHeroSection extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
               decoration: InputDecoration(
-                hintText: 'e.g. Kacchi Bhai Dinner',
+                hintText: context.translate('expense_title_hint'),
                 hintStyle: AppTextStyles.bodyBold.copyWith(
                   fontSize: AppFontSizes.size15,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.25),

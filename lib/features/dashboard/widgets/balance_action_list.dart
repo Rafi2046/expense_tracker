@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/balance_action_tile.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -20,8 +21,8 @@ class BalanceActionList extends StatelessWidget {
     return Column(
       children: [
         BalanceActionTile(
-          title: 'Add/Reduce Money',
-          subtitle: "Record income or expense to adjust a single account's balance",
+          title: context.translate('add_reduce_money'),
+          subtitle: context.translate('add_reduce_money_subtitle'),
           icon: LucideIcons.plus,
           iconBg: isDark ? AppColors.activeRed.withValues(alpha: 0.15) : const Color(0xFFFDECEC),
           iconColor: AppColors.activeRed,
@@ -29,8 +30,8 @@ class BalanceActionList extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         BalanceActionTile(
-          title: 'Transfer Balance',
-          subtitle: 'Move money between Cash and Bank accounts',
+          title: context.translate('transfer_balance'),
+          subtitle: context.translate('transfer_balance_subtitle'),
           icon: LucideIcons.arrowLeftRight,
           iconBg: isDark ? const Color(0xFF2980B9).withValues(alpha: 0.15) : const Color(0xFFEBF3F9),
           iconColor: const Color(0xFF2980B9),

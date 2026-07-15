@@ -22,7 +22,7 @@ class RecentActivityScreen extends StatelessWidget {
         backgroundColor: t.appBarTheme.backgroundColor,
         elevation: 0, scrolledUnderElevation: 0,
         leading: BackButton(color: t.appBarTheme.iconTheme?.color),
-        title: Text('Recent Activity', style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700, color: t.colorScheme.onSurface)),
+        title: Text(context.translate('recent_activity'), style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700, color: t.colorScheme.onSurface)),
         centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),

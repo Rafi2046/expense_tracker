@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class NoteInputField extends StatelessWidget {
@@ -26,7 +27,7 @@ class NoteInputField extends StatelessWidget {
         color: theme.colorScheme.onSurface,
       ),
       decoration: InputDecoration(
-        hintText: 'Add a note/detail (optional)...',
+        hintText: context.translate('add_note_detail_hint'),
         hintStyle: TextStyle(
           fontSize: AppFontSizes.size15,
           color: isDark ? Colors.white30 : Colors.grey.shade400,

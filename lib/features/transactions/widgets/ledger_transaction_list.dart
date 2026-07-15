@@ -42,7 +42,7 @@ class LedgerTransactionList extends StatelessWidget {
       return Column(
         children: List.generate(6, (i) => TransactionListTile(
           key: ValueKey('ledger_skeleton_$i'),
-          title: 'Loading transaction',
+          title: context.translate('loading_transaction'),
           dateText: '12:00 PM',
           category: 'Category',
           amount: 0.0,
@@ -95,20 +95,20 @@ class LedgerTransactionList extends StatelessWidget {
               return await showDialog<bool>(
                 context: context,
                 builder: (ctx) => AlertDialog(
-                  title: const Text('Delete Transaction'),
+                  title: Text(context.translate('delete_transaction')),
                   content: Text(
                     'Delete "${tx.note.isNotEmpty ? tx.note : tx.category}"?',
                   ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(ctx, false),
-                    child: Text('Cancel',
+                    child: Text(context.translate('cancel'),
                       style: AppTextStyles.bodyBold.copyWith(color: AppColors.textMuted),
                     ),
                   ),
                   TextButton(
                     onPressed: () => Navigator.pop(ctx, true),
-                    child: Text('Delete',
+                    child: Text(context.translate('delete'),
                       style: AppTextStyles.bodyBold.copyWith(color: AppColors.activeRed),
                     ),
                   ),
@@ -120,7 +120,7 @@ class LedgerTransactionList extends StatelessWidget {
               context.read<TransactionProvider>().deleteTransaction(tx.id);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Transaction deleted'),
+                  content: Text(context.translate('transaction_deleted_success')),
                   duration: const Duration(seconds: 2),
                 ),
               );

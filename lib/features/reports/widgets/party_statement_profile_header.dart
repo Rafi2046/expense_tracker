@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -34,28 +35,28 @@ class PartyStatementProfileHeader extends StatelessWidget {
         contactDetails.add(ContactChipData(
           icon: LucideIcons.phoneCall,
           label: partyItem.phone!,
-          title: 'Phone',
+          title: context.translate('phone'),
         ));
       }
       if (partyItem.email != null && partyItem.email!.trim().isNotEmpty) {
         contactDetails.add(ContactChipData(
           icon: LucideIcons.mail,
           label: partyItem.email!,
-          title: 'Email',
+          title: context.translate('email'),
         ));
       }
       if (partyItem.address != null && partyItem.address!.trim().isNotEmpty) {
         contactDetails.add(ContactChipData(
           icon: LucideIcons.mapPin,
           label: partyItem.address!,
-          title: 'Address',
+          title: context.translate('party_address'),
         ));
       }
       if (partyItem.vat != null && partyItem.vat!.trim().isNotEmpty) {
         contactDetails.add(ContactChipData(
           icon: LucideIcons.fileText,
           label: partyItem.vat!,
-          title: 'VAT / Tax ID',
+          title: context.translate('vat_number'),
         ));
       }
     }

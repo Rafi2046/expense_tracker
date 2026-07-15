@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
 import 'package:expense_tracker/features/dashboard/utils/profile_sheet_handler.dart';
 
@@ -76,7 +77,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Edit Profile',
+                        context.translate('edit_profile'),
                         style: TextStyle(
                           fontSize: AppFontSizes.size20,
                           fontWeight: FontWeight.w800,
@@ -92,7 +93,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                         color: theme.textTheme.bodyLarge?.color,
                       ),
                       decoration: InputDecoration(
-                        labelText: 'Profile Name',
+                        labelText: context.translate('profile_name'),
                         labelStyle: TextStyle(
                           fontSize: AppFontSizes.size13,
                           color: theme.textTheme.bodySmall?.color,
@@ -130,7 +131,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                           ),
                         ),
                         child: Text(
-                          'Save',
+                          context.translate('save'),
                           style: TextStyle(
                             fontSize: AppFontSizes.size16,
                             fontWeight: FontWeight.w700,
@@ -152,7 +153,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'DANGER ZONE',
+                            context.translate('danger_zone'),
                             style: TextStyle(
                               fontSize: AppFontSizes.size12,
                               fontWeight: FontWeight.w800,
@@ -164,8 +165,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Once you delete a profile, there is no going back. '
-                        'Please be certain.',
+                        context.translate('delete_profile_warning'),
                         style: TextStyle(
                           fontSize: AppFontSizes.size12,
                           color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
@@ -180,7 +180,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                           onPressed: confirmDelete,
                           icon: Icon(LucideIcons.trash, color: Color(0xFFDC3545)),
                           label: Text(
-                            'Delete Profile',
+                            context.translate('delete_profile'),
                             style: TextStyle(
                               fontSize: AppFontSizes.size15,
                               fontWeight: FontWeight.w600,

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/app_lock_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -72,7 +73,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
     } else {
       setState(() {
         _hasError = true;
-        _errorMessage = 'Authentication failed. Try again.';
+        _errorMessage = context.translate('auth_failed_try_again');
       });
     }
   }
@@ -113,7 +114,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
             ),
             const SizedBox(height: 32),
             Text(
-              'App Locked',
+              context.translate('app_locked'),
               style: AppTextStyles.profileTitle.copyWith(
                 fontWeight: FontWeight.w700,
                 color: theme.colorScheme.onSurface,
@@ -122,7 +123,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
             ),
             const SizedBox(height: 8),
             Text(
-              'Authenticate to access your data',
+              context.translate('authenticate_to_access'),
               style: AppTextStyles.body.copyWith(
                 fontFamily: 'WorkSans',
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
@@ -150,7 +151,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  'Tap to Unlock',
+                  context.translate('tap_to_unlock'),
                   style: AppTextStyles.reportTileTitle.copyWith(
                     color: theme.colorScheme.onPrimary,
                     fontWeight: FontWeight.w600,

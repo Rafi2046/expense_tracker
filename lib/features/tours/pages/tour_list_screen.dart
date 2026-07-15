@@ -60,8 +60,8 @@ class _TourListScreenState extends State<TourListScreen> {
     );
     if (!success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Only the tour creator can mark completion status'),
+        SnackBar(
+          content: Text(context.translate('only_creator_mark_completion')),
           behavior: SnackBarBehavior.floating,
         ),
       );

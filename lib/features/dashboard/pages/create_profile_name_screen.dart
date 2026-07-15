@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class CreateProfileNameScreen extends StatefulWidget {
   final bool isBusiness;
@@ -88,12 +89,12 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Create an Account',
+                context.translate('create_account'),
                 style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w800, color: theme.textTheme.titleLarge?.color),
               ),
               const SizedBox(height: 6),
               Text(
-                'Please enter the following details to get started',
+                context.translate('enter_details_to_start'),
                 style: AppTextStyles.bodySmall.copyWith(color: theme.textTheme.bodySmall?.color),
               ),
               const SizedBox(height: 24),
@@ -103,7 +104,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
               const SizedBox(height: 24),
 
               CustomButton(
-                text: _isCreating ? 'Creating…' : 'Continue',
+                text: _isCreating ? context.translate('creating') : context.translate('continue'),
                 backgroundColor: const Color(0xFF2EBD85),
                 onPressed: _isCreating
                     ? () {}
@@ -111,7 +112,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
                   final name = _nameController.text.trim();
                   if (name.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Please enter your name')),
+                      SnackBar(content: Text(context.translate('please_enter_name'))),
                     );
                     return;
                   }

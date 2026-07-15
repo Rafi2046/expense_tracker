@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class DebtItemRow extends StatelessWidget {
   final DebtItem item;
@@ -106,7 +107,7 @@ class DebtItemRow extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-              'Settle',
+              context.translate('settle'),
               style: TextStyle(
                 color: themeColor,
                 fontWeight: FontWeight.bold,
@@ -124,10 +125,10 @@ class DebtItemRow extends StatelessWidget {
         Future.microtask(() => debtProvider.settleDebtItem(id));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('$name\'s debt settled'),
+            content: Text(context.translate('debt_settled', namedArgs: {'name': name})),
             duration: const Duration(seconds: 3),
             action: SnackBarAction(
-              label: 'Undo',
+              label: context.translate('undo'),
               textColor: Colors.yellow,
               onPressed: () {
                 debtProvider.toggleSettledStatus(id);
@@ -187,7 +188,7 @@ class DebtItemRow extends StatelessWidget {
                           ),
                           ListTile(
                             leading: Icon(LucideIcons.edit, color: theme.colorScheme.onSurface),
-                            title: Text('Edit', style: TextStyle(color: theme.colorScheme.onSurface)),
+                            title: Text(context.translate('edit'), style: TextStyle(color: theme.colorScheme.onSurface)),
                             onTap: () {
                               Navigator.pop(sheetContext);
                               onEditTap();
@@ -196,7 +197,7 @@ class DebtItemRow extends StatelessWidget {
                           if (onDelete != null)
                             ListTile(
                               leading: Icon(LucideIcons.trash2, color: Colors.red.shade400),
-                              title: Text('Delete', style: TextStyle(color: Colors.red.shade400)),
+                              title: Text(context.translate('delete'), style: TextStyle(color: Colors.red.shade400)),
                               onTap: () {
                                 Navigator.pop(sheetContext);
                                 onDelete?.call();

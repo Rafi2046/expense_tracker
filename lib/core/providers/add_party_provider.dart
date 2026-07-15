@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AddPartyProvider extends ChangeNotifier {
   // Text Controllers
@@ -113,8 +113,8 @@ class AddPartyProvider extends ChangeNotifier {
     // Phone: at least 10 digits if not empty
     if (phone.isNotEmpty && phone.length < 10) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Phone number must be at least 10 digits'),
+        SnackBar(
+          content: Text(tr('enter_at_least_10_digits')),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -127,18 +127,18 @@ class AddPartyProvider extends ChangeNotifier {
       showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Zero Balance'),
-          content: const Text(
-            'Are you sure you want to add a party with zero balance?',
+          title: Text(tr('zero_balance')),
+          content: Text(
+            tr('confirm_zero_balance'),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel'),
+              child: Text(tr('cancel')),
             ),
             TextButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Yes, Add Party'),
+              child: Text(tr('yes_add_party')),
             ),
           ],
         ),
@@ -174,7 +174,7 @@ class AddPartyProvider extends ChangeNotifier {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Party "$name" updated successfully!'),
+          content: Text(tr('party_updated_success', namedArgs: {'name': name})),
           backgroundColor: AppColors.activeGreen,
           behavior: SnackBarBehavior.floating,
         ),
@@ -197,7 +197,7 @@ class AddPartyProvider extends ChangeNotifier {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Party "$name" added successfully!'),
+          content: Text(tr('party_added_success', namedArgs: {'name': name})),
           backgroundColor: AppColors.activeGreen,
           behavior: SnackBarBehavior.floating,
         ),
