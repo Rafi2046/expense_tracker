@@ -150,7 +150,11 @@ class TourProvider extends ChangeNotifier {
         .child(tourId)
         .child('cover_photo.jpg');
 
-    final uploadTask = storageRef.putFile(file);
+    final bytes = await file.readAsBytes();
+    final uploadTask = storageRef.putData(
+      bytes,
+      SettableMetadata(contentType: 'image/jpeg'),
+    );
     final snapshot = await uploadTask;
     return await snapshot.ref.getDownloadURL();
   }
