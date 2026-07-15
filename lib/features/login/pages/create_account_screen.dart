@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
+import 'package:expense_tracker/features/login/pages/verify_email_screen.dart';
 import 'package:expense_tracker/features/login/widgets/signup_form.dart';
 import 'package:expense_tracker/features/login/widgets/signup_header.dart';
 import 'package:expense_tracker/features/login/widgets/signup_login_link.dart';
@@ -70,10 +71,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         await userCredential.user!.updateDisplayName(name);
 
         if (mounted) {
-          // Navigate to Dashboard and clear history
+          // Navigate to Verify Email Screen and clear history
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+            MaterialPageRoute(builder: (context) => const VerifyEmailScreen(isFromSignup: true)),
                 (route) => false,
           );
         }

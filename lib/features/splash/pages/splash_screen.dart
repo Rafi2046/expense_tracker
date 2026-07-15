@@ -7,6 +7,7 @@ import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
 import 'package:expense_tracker/features/login/pages/login_screen.dart';
 import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
+import 'package:expense_tracker/features/login/pages/verify_email_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -28,6 +29,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
+      if (!user.emailVerified) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const VerifyEmailScreen(),
+          ),
+        );
+        return;
+      }
       final biometricEnabled = context.read<BiometricAuthProvider>().isEnabled;
 
       if (biometricEnabled) {

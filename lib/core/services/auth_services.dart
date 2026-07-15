@@ -246,5 +246,21 @@ class AuthService {
     } catch (_) {}
   }
 
+  Future<void> sendEmailVerification() async {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception('No user logged in');
+    try {
+      await user.sendEmailVerification();
+    } on SocketException {
+      throw Exception(
+        'No internet connection. Please check your network and try again.',
+      );
+    } on FirebaseAuthException catch (e) {
+      throw Exception(_friendlyMessage(e));
+    } catch (e) {
+      throw Exception(_friendlyMessage(e));
+    }
+  }
+
   Stream<User?> get userStateChanges => _auth.authStateChanges();
 }

@@ -8,6 +8,7 @@ import 'package:expense_tracker/core/services/sync_service.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
 import 'package:expense_tracker/features/login/widgets/sync_loading_overlay.dart';
 import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
+import 'package:expense_tracker/features/login/pages/verify_email_screen.dart';
 
 mixin AuthHandler<T extends StatefulWidget> on State<T> {
   final AuthService _authService = AuthService();
@@ -98,7 +99,13 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
             password: password.trim(),
           ),
         );
-        if (context.mounted) _navigateToHome();
+        if (context.mounted) {
+          if (!user.emailVerified) {
+            _navigateToVerifyEmail();
+          } else {
+            _navigateToHome();
+          }
+        }
       } catch (e) {
         showError(e);
       } finally {
@@ -161,8 +168,14 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
   }
 
   void _navigateAfterAuth(UserCredential cred) {
+    final user = cred.user;
+    if (user != null && !user.emailVerified) {
+      _navigateToVerifyEmail();
+      return;
+    }
+
     final isNewUser = cred.additionalUserInfo?.isNewUser ?? false;
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final uid = user?.uid;
 
     if (isNewUser || uid == null) {
       _navigateToOnboarding();
@@ -196,6 +209,13 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
           uid: uid,
         ),
       ),
+    );
+  }
+
+  void _navigateToVerifyEmail() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const VerifyEmailScreen()),
     );
   }
 }
