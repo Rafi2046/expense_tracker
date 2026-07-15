@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/select_date_input_dialog.dart';
 import 'package:expense_tracker/features/reports/widgets/date_range_header.dart';
 import 'package:expense_tracker/features/reports/widgets/date_range_display.dart';
@@ -69,7 +70,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
   }
 
   String get _rangeText {
-    if (_startDate == null) return 'Select dates';
+    if (_startDate == null) return '';
     final startFormat = DateFormat('MMM d').format(_startDate!);
     if (_endDate == null) return startFormat;
     final endFormat = DateFormat('MMM d').format(_endDate!);
@@ -95,7 +96,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
         children: [
           DateRangeHeader(onClose: () => Navigator.pop(context)),
           DateRangeDisplay(
-            rangeText: _rangeText,
+            rangeText: _rangeText.isNotEmpty ? _rangeText : context.translate('select_dates'),
             onEditTap: () async {
               final result = await SelectDateInputDialog.show(
                 context,

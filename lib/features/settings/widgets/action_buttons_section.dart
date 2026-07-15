@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 
@@ -23,7 +24,7 @@ class ActionButtonsSection extends StatelessWidget {
       children: [
         Expanded(
           child: CustomButton(
-            text: 'Cancel',
+            text: context.translate('cancel'),
             onPressed: isLoading ? () {} : onCancel,
             backgroundColor: isDark ? theme.cardColor : Colors.white,
             textColor: theme.colorScheme.onSurface,
@@ -34,7 +35,7 @@ class ActionButtonsSection extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: CustomButton(
-            text: isLoading ? 'Saving...' : 'Save',
+            text: isLoading ? context.translate('saving') : context.translate('save'),
             onPressed: isLoading ? () {} : onSave,
             backgroundColor: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1),
             textColor: Colors.white,

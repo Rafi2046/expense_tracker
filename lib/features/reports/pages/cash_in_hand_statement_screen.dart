@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/cash_statement_balance_card.dart';
 import 'package:expense_tracker/features/reports/widgets/cash_statement_list.dart';
@@ -28,12 +29,18 @@ class _CashInHandStatementScreenState extends State<CashInHandStatementScreen> {
     final currencySymbol = context.currencySymbol;
     final dateFormat = DateFormat('dd MMM yyyy');
 
-    final headers = ['Date', 'Description', 'Amount', 'Type', 'Balance'];
+    final headers = [
+      context.translate('date'),
+      context.translate('description_field'),
+      context.translate('amount_label'),
+      context.translate('type'),
+      context.translate('balance'),
+    ];
     final rows = reportsProvider.cashStatementTransactions.map((item) => {
       'Date': dateFormat.format(item.dateTime),
       'Description': item.subtitle,
       'Amount': '$currencySymbol ${item.amount.toStringAsFixed(0)}',
-      'Type': item.isCredit ? 'Credit' : 'Debit',
+      'Type': item.isCredit ? context.translate('credit') : context.translate('debit'),
       'Balance': '$currencySymbol ${item.runningBalance.toStringAsFixed(0)}',
     }).toList();
     final dateSubtitle = reportsProvider.getDateRangeSubtitle(reportsProvider.selectedOption, reportsProvider.selectedDateRange);
@@ -46,7 +53,7 @@ class _CashInHandStatementScreenState extends State<CashInHandStatementScreen> {
         scrolledUnderElevation: 0,
         leading: BackButton(color: theme.appBarTheme.iconTheme?.color),
         title: Text(
-          'Cash In Hand Statement',
+          context.translate('cash_in_hand_statement'),
           style: AppTextStyles.reportAppBarTitle.copyWith(color: theme.appBarTheme.titleTextStyle?.color),
         ),
         centerTitle: true,
@@ -91,8 +98,8 @@ class _CashInHandStatementScreenState extends State<CashInHandStatementScreen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: ReportBottomActions(
-                reportName: 'Cash In Hand',
-                title: 'Cash Statement',
+                reportName: context.translate('cash_in_hand'),
+                title: context.translate('cash_statement'),
                 dateSubtitle: dateSubtitle,
                 headers: headers,
                 rows: rows,

@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TourStatsRow extends StatelessWidget {
   final int totalTours;
@@ -28,7 +29,7 @@ class TourStatsRow extends StatelessWidget {
               isDark: isDark,
               theme: theme,
               icon: LucideIcons.map,
-              label: '$totalTours ${totalTours == 1 ? 'tour' : 'tours'}',
+              label: '$totalTours ${totalTours == 1 ? context.translate('tour_singular') : context.translate('tours_plural')}',
             ),
           ),
           const SizedBox(width: 12), // Slightly more spacing
@@ -37,7 +38,7 @@ class TourStatsRow extends StatelessWidget {
               isDark: isDark,
               theme: theme,
               icon: LucideIcons.users,
-              label: '$totalBuddies ${totalBuddies == 1 ? 'buddy' : 'buddies'}',
+              label: '$totalBuddies ${totalBuddies == 1 ? context.translate('buddy_singular') : context.translate('buddies_plural')}',
             ),
           ),
         ],

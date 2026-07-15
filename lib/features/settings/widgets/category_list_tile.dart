@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -50,7 +49,7 @@ class CategoryListTile extends StatelessWidget {
                     child: Text(
                       categoryName,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.workSans(
+                      style: TextStyle(
                         fontSize: AppFontSizes.size15,
                         fontWeight: FontWeight.w400,
                         color: theme.colorScheme.onSurface,

@@ -1,6 +1,6 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -34,9 +34,7 @@ class _DeleteConfirmationBodyState extends State<DeleteConfirmationBody> {
     return Column(
       children: [
         Text(
-          'Are you absolutely sure? This action cannot be undone.\n'
-          'It will permanently delete your account,\n'
-          'cloud backups, and all local data.',
+          context.translate('delete_confirm_body'),
           textAlign: TextAlign.center,
           style: AppTextStyles.bodySmall.copyWith(
             fontSize: AppFontSizes.size14,
@@ -46,7 +44,7 @@ class _DeleteConfirmationBodyState extends State<DeleteConfirmationBody> {
         ),
         const SizedBox(height: 20),
         Text(
-          'Type "DELETE" to confirm',
+          context.translate('type_delete_confirm'),
           style: AppTextStyles.label.copyWith(
             color: AppColors.activeRed,
             fontWeight: FontWeight.w700,
@@ -59,15 +57,15 @@ class _DeleteConfirmationBodyState extends State<DeleteConfirmationBody> {
           textAlign: TextAlign.center,
           textCapitalization: TextCapitalization.characters,
           inputFormatters: [_UpperCaseInputFormatter()],
-          style: GoogleFonts.jetBrainsMono(
+          style: TextStyle(
             fontSize: AppFontSizes.size18,
             fontWeight: FontWeight.w800,
             color: AppColors.activeRed,
             letterSpacing: 4,
           ),
           decoration: InputDecoration(
-            hintText: 'DELETE',
-            hintStyle: GoogleFonts.jetBrainsMono(
+            hintText: context.translate('delete'),
+            hintStyle: TextStyle(
               fontSize: AppFontSizes.size18,
               fontWeight: FontWeight.w800,
               color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
@@ -98,7 +96,7 @@ class _DeleteConfirmationBodyState extends State<DeleteConfirmationBody> {
         SizedBox(
           width: double.infinity,
           child: CustomButton(
-            text: widget.isDeleting ? 'Deleting...' : 'Delete',
+            text: widget.isDeleting ? context.translate('deleting') : context.translate('delete'),
             onPressed: widget.canDelete && !widget.isDeleting
                 ? widget.onDelete
                 : () {},

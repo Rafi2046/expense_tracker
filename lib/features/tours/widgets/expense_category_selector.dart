@@ -3,6 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class ExpenseCategorySelector extends StatelessWidget {
   final ThemeData theme;
@@ -50,7 +51,7 @@ class ExpenseCategorySelector extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'CATEGORY',
+            context.translate('category_section_label'),
             style: AppTextStyles.caption.copyWith(
               fontSize: AppFontSizes.size10,
               fontWeight: FontWeight.w700,
@@ -87,7 +88,7 @@ class ExpenseCategorySelector extends StatelessWidget {
                   },
                 );
               }
-              return _buildAddGridItem();
+              return _buildAddGridItem(context);
             },
           ),
         ],
@@ -143,7 +144,7 @@ class ExpenseCategorySelector extends StatelessWidget {
     );
   }
 
-  Widget _buildAddGridItem() {
+  Widget _buildAddGridItem(BuildContext context) {
     final isDark = theme.brightness == Brightness.dark;
     return GestureDetector(
       onTap: onAddCategory,
@@ -166,7 +167,7 @@ class ExpenseCategorySelector extends StatelessWidget {
             ),
             const SizedBox(height: 3),
             Text(
-              'Add',
+              context.translate('add'),
               style: AppTextStyles.caption.copyWith(
                 fontSize: AppFontSizes.size9,
                 fontWeight: FontWeight.w500,

@@ -6,25 +6,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 class HelpCenterScreen extends StatelessWidget {
   const HelpCenterScreen({super.key});
 
-  static const _faqs = [
-    _FaqItem(
-      question: 'How to reset biometric login?',
-      answer: 'Open Settings → Account → Biometric Settings. Toggle the switch off, then on again to re-enroll your biometrics.',
-    ),
-    _FaqItem(
-      question: 'How to export party statements?',
-      answer: 'Go to Reports → Party Statement. Select the party and date range, then tap the Export button to save as PDF.',
-    ),
-    _FaqItem(
-      question: 'Are my transactions backed up?',
-      answer: 'Transactions are stored locally on your device. Enable cloud backup in Settings → Preferences to keep your data safe.',
-    ),
-    _FaqItem(
-      question: 'How to edit a budget?',
-      answer: 'Navigate to Dashboard → Budget Card → Tap the budget you want to modify. Adjust the amount or category and save.',
-    ),
-  ];
-
   Widget _buildFaqSection(BuildContext context, ThemeData theme, _FaqItem faq) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24.0),
@@ -57,6 +38,25 @@ class HelpCenterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+
+    final faqs = [
+      _FaqItem(
+        question: context.translate('faq_biometric_q'),
+        answer: context.translate('faq_biometric_a'),
+      ),
+      _FaqItem(
+        question: context.translate('faq_export_statements_q'),
+        answer: context.translate('faq_export_statements_a'),
+      ),
+      _FaqItem(
+        question: context.translate('faq_backup_q'),
+        answer: context.translate('faq_backup_a'),
+      ),
+      _FaqItem(
+        question: context.translate('faq_edit_budget_q'),
+        answer: context.translate('faq_edit_budget_a'),
+      ),
+    ];
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -105,7 +105,7 @@ class HelpCenterScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Frequently Asked Questions',
+                  context.translate('faq'),
                   style: AppTextStyles.profileTitle.copyWith(
                     color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w800,
@@ -114,7 +114,7 @@ class HelpCenterScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Quick answers to help you navigate the app',
+                  context.translate('faq_subtitle'),
                   style: AppTextStyles.caption.copyWith(
                     color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                   ),
@@ -123,7 +123,7 @@ class HelpCenterScreen extends StatelessWidget {
                 const Divider(),
                 const SizedBox(height: 20),
                 
-                ..._faqs.map((faq) => _buildFaqSection(context, theme, faq)),
+                ...faqs.map((faq) => _buildFaqSection(context, theme, faq)),
               ],
             ),
           ),

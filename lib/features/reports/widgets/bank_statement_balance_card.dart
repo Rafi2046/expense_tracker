@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
@@ -37,7 +38,7 @@ class BankStatementBalanceCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Closing Balance',
+            context.translate('closing_balance'),
             style: AppTextStyles.reportStatLabel.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),

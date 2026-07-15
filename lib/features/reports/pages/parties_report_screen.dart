@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/pages/party_statement_screen.dart';
 import 'package:expense_tracker/features/reports/widgets/parties_report_empty_state.dart';
@@ -46,7 +47,12 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
         .where((p) => p.netBalance < 0)
         .fold<double>(0, (sum, p) => sum + p.netBalance.abs());
 
-    final headers = ['Name', 'Phone', 'Net Balance', 'Transactions'];
+    final headers = [
+      context.translate('name'),
+      context.translate('phone'),
+      context.translate('net_balance'),
+      context.translate('transactions'),
+    ];
     final rows = allParties
         .map(
           (item) => {
@@ -71,7 +77,7 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
         scrolledUnderElevation: 0,
         leading: BackButton(color: theme.appBarTheme.iconTheme?.color),
         title: Text(
-          'Parties Report',
+          context.translate('parties_report'),
           style: AppTextStyles.reportAppBarTitle.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
           ),
@@ -139,19 +145,19 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
                                   context: context,
                                   builder: (dialogContext) => AlertDialog(
                                     backgroundColor: theme.dialogTheme.backgroundColor ?? theme.cardColor,
-                                    title: Text('Delete Party', style: TextStyle(color: theme.colorScheme.onSurface)),
+                                    title: Text(context.translate('delete_party'), style: TextStyle(color: theme.colorScheme.onSurface)),
                                     content: Text(
-                                      'Delete all entries for "${item.name}"?',
+                                      context.translate('delete_entries_for', namedArgs: {'name': item.name}),
                                       style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.8)),
                                     ),
                                     actions: [
                                       TextButton(
                                         onPressed: () => Navigator.pop(dialogContext, false),
-                                        child: Text('Cancel', style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
+                                        child: Text(context.translate('cancel'), style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6))),
                                       ),
                                       TextButton(
                                         onPressed: () => Navigator.pop(dialogContext, true),
-                                        child: Text('Delete', style: TextStyle(color: Colors.red.shade400, fontWeight: FontWeight.bold)),
+                                        child: Text(context.translate('delete'), style: TextStyle(color: Colors.red.shade400, fontWeight: FontWeight.bold)),
                                       ),
                                     ],
                                   ),
@@ -165,7 +171,7 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
                                   debtProvider.deleteDebtItem(d.id);
                                 }
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('"${item.name}" deleted'), duration: const Duration(seconds: 2)),
+                                  SnackBar(content: Text(context.translate('name_deleted', namedArgs: {'name': item.name})), duration: const Duration(seconds: 2)),
                                 );
                               },
                               background: Container(
@@ -179,7 +185,7 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Text('Delete', style: AppTextStyles.bodyBold.copyWith(color: Colors.red.shade400, fontSize: 14)),
+                                    Text(context.translate('delete'), style: AppTextStyles.bodyBold.copyWith(color: Colors.red.shade400, fontSize: 14)),
                                     const SizedBox(width: 8),
                                     Icon(LucideIcons.trash2, color: Colors.red.shade400, size: 22),
                                   ],
@@ -208,8 +214,8 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
           Align(
             alignment: Alignment.bottomCenter,
             child: ReportBottomActions(
-              reportName: 'Parties Report',
-              title: 'Parties Report',
+              reportName: context.translate('parties_report'),
+              title: context.translate('parties_report'),
               dateSubtitle: dateSubtitle,
               headers: headers,
               rows: rows,

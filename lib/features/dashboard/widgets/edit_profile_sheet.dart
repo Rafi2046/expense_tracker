@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
@@ -78,7 +77,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Edit Profile',
-                        style: GoogleFonts.workSans(
+                        style: TextStyle(
                           fontSize: AppFontSizes.size20,
                           fontWeight: FontWeight.w800,
                           color: theme.textTheme.titleLarge?.color,
@@ -88,13 +87,13 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                     const SizedBox(height: 20),
                     TextField(
                       controller: _nameController,
-                      style: GoogleFonts.workSans(
+                      style: TextStyle(
                         fontSize: AppFontSizes.size15,
                         color: theme.textTheme.bodyLarge?.color,
                       ),
                       decoration: InputDecoration(
                         labelText: 'Profile Name',
-                        labelStyle: GoogleFonts.workSans(
+                        labelStyle: TextStyle(
                           fontSize: AppFontSizes.size13,
                           color: theme.textTheme.bodySmall?.color,
                         ),
@@ -132,7 +131,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                         ),
                         child: Text(
                           'Save',
-                          style: GoogleFonts.workSans(
+                          style: TextStyle(
                             fontSize: AppFontSizes.size16,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
@@ -154,7 +153,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                           const SizedBox(width: 8),
                           Text(
                             'DANGER ZONE',
-                            style: GoogleFonts.workSans(
+                            style: TextStyle(
                               fontSize: AppFontSizes.size12,
                               fontWeight: FontWeight.w800,
                               color: const Color(0xFFDC3545),
@@ -167,7 +166,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                       Text(
                         'Once you delete a profile, there is no going back. '
                         'Please be certain.',
-                        style: GoogleFonts.workSans(
+                        style: TextStyle(
                           fontSize: AppFontSizes.size12,
                           color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                           height: 1.4,
@@ -182,7 +181,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                           icon: Icon(LucideIcons.trash, color: Color(0xFFDC3545)),
                           label: Text(
                             'Delete Profile',
-                            style: GoogleFonts.workSans(
+                            style: TextStyle(
                               fontSize: AppFontSizes.size15,
                               fontWeight: FontWeight.w600,
                               color: const Color(0xFFDC3545),

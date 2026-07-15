@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/reports/models/select_date_input_dialog_result.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -30,6 +31,7 @@ class SelectDateInputDialog extends StatefulWidget {
 }
 
 class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
+  BuildContext? _dialogContext;
   late TextEditingController _startDateController;
   late TextEditingController _endDateController;
   DateTime? _startDate;
@@ -84,7 +86,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
     final parsed = _parseDate(val);
     setState(() {
       _startDate = parsed;
-      _startError = val.isNotEmpty && parsed == null ? 'Invalid date' : null;
+      _startError = val.isNotEmpty && parsed == null ? (_dialogContext?.translate('invalid_date') ?? 'Invalid date') : null;
     });
   }
 
@@ -92,12 +94,13 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
     final parsed = _parseDate(val);
     setState(() {
       _endDate = parsed;
-      _endError = val.isNotEmpty && parsed == null ? 'Invalid date' : null;
+      _endError = val.isNotEmpty && parsed == null ? (_dialogContext?.translate('invalid_date') ?? 'Invalid date') : null;
     });
   }
 
   String get _rangeText {
-    if (_startDate == null && _endDate == null) return 'Select date';
+    final ctx = _dialogContext;
+    if (_startDate == null && _endDate == null) return ctx?.translate('select_date') ?? 'Select date';
     final startFormat = _startDate != null ? DateFormat('MMM d').format(_startDate!) : '?';
     final endFormat = _endDate != null ? DateFormat('MMM d').format(_endDate!) : '?';
     return '$startFormat – $endFormat';
@@ -105,6 +108,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
 
   @override
   Widget build(BuildContext context) {
+    _dialogContext = context;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final isOkEnabled = _startDate != null && _endDate != null && !_startDate!.isAfter(_endDate!);
@@ -122,7 +126,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Select Date',
+                context.translate('select_date'),
                 style: AppTextStyles.reportStatLabel.copyWith(
                   color: isDark ? Colors.white30 : Colors.grey.shade500,
                   fontSize: AppFontSizes.size12,
@@ -170,7 +174,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Start date',
+                          context.translate('start_date'),
                           style: AppTextStyles.reportStatLabel.copyWith(
                             color: _startError != null ? AppColors.activeRed : theme.primaryColor,
                           ),
@@ -180,7 +184,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                           onChanged: _onStartDateChanged,
                           keyboardType: TextInputType.datetime,
                           decoration: InputDecoration(
-                            hintText: 'm/d/yyyy',
+                            hintText: context.translate('m_d_yyyy'),
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: theme.primaryColor, width: 2),
                             ),
@@ -200,7 +204,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'End date',
+                          context.translate('end_date'),
                           style: AppTextStyles.reportStatLabel.copyWith(
                             color: _endError != null ? AppColors.activeRed : (isDark ? Colors.white60 : Colors.grey.shade600),
                           ),
@@ -210,7 +214,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                           onChanged: _onEndDateChanged,
                           keyboardType: TextInputType.datetime,
                           decoration: InputDecoration(
-                            hintText: 'm/d/yyyy',
+                            hintText: context.translate('m_d_yyyy'),
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: theme.primaryColor, width: 2),
                             ),
@@ -233,7 +237,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                   TextButton(
                     onPressed: () => Navigator.pop(context),
                     child: Text(
-                      'Cancel',
+                      context.translate('cancel'),
                       style: AppTextStyles.dialogCloseButton.copyWith(
                         color: theme.primaryColor,
                         fontSize: AppFontSizes.size15,
@@ -254,7 +258,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                           }
                         : null,
                     child: Text(
-                      'Ok',
+                      context.translate('ok'),
                       style: AppTextStyles.dialogCloseButton.copyWith(
                         color: isOkEnabled ? theme.primaryColor : (isDark ? Colors.white24 : Colors.grey.shade400),
                         fontSize: AppFontSizes.size15,

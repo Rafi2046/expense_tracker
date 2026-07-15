@@ -42,7 +42,14 @@ class _AllTransactionsReportScreenState extends State<AllTransactionsReportScree
     final currencySymbol = context.currencySymbol;
     final dateFormat = DateFormat('dd MMM yyyy');
 
-    final headers = ['Date', 'Title', 'Category', 'Amount', 'Type', 'Payment Method'];
+    final headers = [
+      context.translate('date'),
+      context.translate('title'),
+      context.translate('category'),
+      context.translate('amount_label'),
+      context.translate('type'),
+      context.translate('payment_method'),
+    ];
     final rows = provider.filteredTransactions.map((tx) => {
       'Date': dateFormat.format(tx.dateTime),
       'Title': tx.title,
@@ -116,7 +123,7 @@ class _AllTransactionsReportScreenState extends State<AllTransactionsReportScree
           Align(
             alignment: Alignment.bottomCenter,
             child: ReportBottomActions(
-              reportName: 'All Transactions',
+              reportName: context.translate('all_transactions'),
               title: context.translate('all_transactions_report'),
               dateSubtitle: dateSubtitle,
               headers: headers,

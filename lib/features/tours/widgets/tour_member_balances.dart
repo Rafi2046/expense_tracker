@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TourMemberBalances extends StatelessWidget {
   final List<TourParticipant> participants;
@@ -50,7 +51,7 @@ class TourMemberBalances extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: Text(
-            'Balances',
+            context.translate('balances_label'),
             style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
           ),
         ),
@@ -81,6 +82,7 @@ class TourMemberBalances extends StatelessWidget {
                 return Column(
                   children: [
                     _buildMemberBalanceRow(
+                      context: context,
                       theme: theme,
                       p: participant,
                       index: idx,
@@ -128,7 +130,7 @@ class TourMemberBalances extends StatelessWidget {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          'Settle Up Balances',
+                          context.translate('settle_up_balances'),
                           style: AppTextStyles.cardTrendGreen,
                         ),
                       ],
@@ -144,6 +146,7 @@ class TourMemberBalances extends StatelessWidget {
   }
 
   Widget _buildMemberBalanceRow({
+    required BuildContext context,
     required ThemeData theme,
     required TourParticipant p,
     required int index,
@@ -189,7 +192,7 @@ class TourMemberBalances extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'Settled',
+                context.translate('settled_label'),
                 style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w600,
                   color: const Color(0xFF9CA3AF),
@@ -207,7 +210,7 @@ class TourMemberBalances extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'Gets back ${formatAmount(balance)}',
+                context.translate('gets_back_amount', namedArgs: {'amount': formatAmount(balance)}),
                 style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w700,
                   color: AppColors.activeGreen,
@@ -225,7 +228,7 @@ class TourMemberBalances extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'Owes ${formatAmount(balance.abs())}',
+                context.translate('owes_amount', namedArgs: {'amount': formatAmount(balance.abs())}),
                 style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w700,
                   color: AppColors.activeRed,

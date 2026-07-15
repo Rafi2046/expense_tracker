@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/features/tours/widgets/expense_category_icon_data.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 Future<Map<String, dynamic>?> showAddCategoryDialog(BuildContext context) async {
   IconData selectedIcon = categoryIcons.first;
@@ -17,9 +18,9 @@ Future<Map<String, dynamic>?> showAddCategoryDialog(BuildContext context) async 
           borderRadius: BorderRadius.circular(AppSpacing.r16),
         ),
         backgroundColor: Theme.of(context).colorScheme.surface,
-        title: const Text(
-          'New Category',
-          style: TextStyle(
+        title: Text(
+          context.translate('new_category_title'),
+          style: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: AppFontSizes.size18,
           ),
@@ -33,7 +34,7 @@ Future<Map<String, dynamic>?> showAddCategoryDialog(BuildContext context) async 
                 controller: nameController,
                 autofocus: true,
                 decoration: InputDecoration(
-                  hintText: 'Search icons...',
+                  hintText: context.translate('search_icons'),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSpacing.r10),
                   ),
@@ -55,8 +56,8 @@ Future<Map<String, dynamic>?> showAddCategoryDialog(BuildContext context) async 
                 },
               ),
               const SizedBox(height: 6),
-              const Text(
-                'Choose an icon',
+              Text(
+                context.translate('choose_icon'),
                 style: TextStyle(
                   fontSize: AppFontSizes.size12,
                   fontWeight: FontWeight.w600,
@@ -124,8 +125,8 @@ Future<Map<String, dynamic>?> showAddCategoryDialog(BuildContext context) async 
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text(
-              'Cancel',
+            child: Text(
+              context.translate('cancel_button'),
               style: TextStyle(color: Color(0xFF6B7280)),
             ),
           ),
@@ -136,8 +137,8 @@ Future<Map<String, dynamic>?> showAddCategoryDialog(BuildContext context) async 
                 Navigator.pop(ctx, {'name': name, 'icon': selectedIcon});
               }
             },
-            child: const Text(
-              'Add',
+            child: Text(
+              context.translate('add'),
               style: TextStyle(
                 color: AppColors.activeGreen,
                 fontWeight: FontWeight.w600,

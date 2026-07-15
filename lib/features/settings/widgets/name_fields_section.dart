@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_text_field.dart';
@@ -18,8 +19,8 @@ class NameFieldsSection extends StatelessWidget {
       children: [
         Expanded(
           child: SettingsTextField(
-            label: 'First Name',
-            hintText: 'First Name',
+            label: context.translate('first_name'),
+            hintText: context.translate('first_name'),
             controller: firstNameController,
             prefixIcon: LucideIcons.user,
           ),
@@ -27,8 +28,8 @@ class NameFieldsSection extends StatelessWidget {
         const SizedBox(width: 16),
         Expanded(
           child: SettingsTextField(
-            label: 'Last Name',
-            hintText: 'Last Name',
+            label: context.translate('last_name'),
+            hintText: context.translate('last_name'),
             controller: lastNameController,
             prefixIcon: LucideIcons.user,
           ),

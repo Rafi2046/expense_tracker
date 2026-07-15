@@ -1,7 +1,6 @@
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -63,7 +62,7 @@ class DebtTotalCard extends StatelessWidget {
                     children: [
                       Text(
                         title.toUpperCase(),
-                        style: GoogleFonts.jetBrainsMono(
+                        style: TextStyle(
                           fontSize: AppFontSizes.size11,
                           fontWeight: FontWeight.bold,
                           color: Colors.white70,
@@ -74,7 +73,7 @@ class DebtTotalCard extends StatelessWidget {
                       PrivacyMaskedText(
                         amount: amount,
                         isMasked: isMasked,
-                        style: GoogleFonts.workSans(
+                        style: TextStyle(
                           fontSize: AppFontSizes.size32,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -135,7 +134,7 @@ class DebtTotalCard extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 guideText,
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: AppFontSizes.size12,
                                   color: Colors.white.withValues(alpha: 0.9),
                                   height: 1.4,

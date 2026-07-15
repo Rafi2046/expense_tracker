@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_selector_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -18,7 +19,7 @@ class DateSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return TransactionSelectorTile(
       leadingIcon: LucideIcons.calendar,
-      labelText: 'Date',
+      labelText: context.translate('date'),
       valueText: dateText,
       isValueSelected: true,
       themeColor: themeColor,

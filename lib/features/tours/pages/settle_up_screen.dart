@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/models/tour_settlement.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/utils/debt_simplifier.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
@@ -179,7 +180,7 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
         icon: Icon(LucideIcons.arrowLeft, color: theme.colorScheme.onSurface),
         onPressed: () => Navigator.pop(context),
       ),
-      title: Text('Settle Up', style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface)),
+      title: Text(context.translate('settle_up'), style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface)),
     );
   }
 
@@ -226,10 +227,10 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
               child: Icon(LucideIcons.checkCircle, size: 44, color: AppColors.activeGreen),
             ),
             const SizedBox(height: AppSpacing.h20),
-            Text('All Settled Up!', style: AppTextStyles.cardValueGreen),
+            Text(context.translate('all_settled_up'), style: AppTextStyles.cardValueGreen),
             const SizedBox(height: AppSpacing.s8),
             Text(
-              'Everyone is even. No outstanding debts.',
+              context.translate('everyone_even'),
               textAlign: TextAlign.center,
               style: AppTextStyles.cardStatusText,
             ),

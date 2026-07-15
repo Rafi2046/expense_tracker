@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -34,7 +33,7 @@ class TransactionInfoRow extends StatelessWidget {
               children: [
                 Text(
                   isIncome ? 'Income Number' : 'Expense Number',
-                  style: GoogleFonts.workSans(
+                  style: TextStyle(
                     fontSize: AppFontSizes.size11,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     fontWeight: FontWeight.w500,
@@ -45,7 +44,7 @@ class TransactionInfoRow extends StatelessWidget {
                   transaction.id.length > 5
                       ? transaction.id.substring(transaction.id.length - 4)
                       : transaction.id,
-                  style: GoogleFonts.workSans(
+                  style: TextStyle(
                     fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
@@ -73,7 +72,7 @@ class TransactionInfoRow extends StatelessWidget {
               children: [
                 Text(
                   'Date',
-                  style: GoogleFonts.workSans(
+                  style: TextStyle(
                     fontSize: AppFontSizes.size11,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     fontWeight: FontWeight.w500,
@@ -82,7 +81,7 @@ class TransactionInfoRow extends StatelessWidget {
                 const SizedBox(height: 3),
                 Text(
                   DateFormat('dd Jun yyyy').format(transaction.dateTime),
-                  style: GoogleFonts.workSans(
+                  style: TextStyle(
                     fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,

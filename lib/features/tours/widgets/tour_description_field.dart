@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TourDescriptionField extends StatelessWidget {
   final ThemeData theme;
@@ -28,8 +29,8 @@ class TourDescriptionField extends StatelessWidget {
         controller: controller,
         maxLines: 3,
         decoration: InputDecoration(
-          labelText: 'Description (optional)',
-          hintText: 'Add trip description...',
+          labelText: context.translate('description_optional'),
+          hintText: context.translate('description_hint'),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,

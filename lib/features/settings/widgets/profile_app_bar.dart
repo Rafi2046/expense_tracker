@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -28,7 +29,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
         onPressed: onBack,
       ),
       title: Text(
-        isEditing ? 'Edit Profile' : 'Profile Details',
+        isEditing ? context.translate('edit_profile') : context.translate('profile_details'),
         style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
       ),
       actions: [
@@ -37,7 +38,7 @@ class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: onEdit,
             icon: Icon(LucideIcons.edit, size: 16, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1)),
             label: Text(
-              'Edit',
+              context.translate('edit'),
               style: AppTextStyles.bodyBold.copyWith(
                 color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1),
               ),

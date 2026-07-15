@@ -1,6 +1,6 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -38,8 +38,8 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
 
     if (currentPassword.isEmpty || newPassword.isEmpty || confirmPassword.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill in all password fields.'),
+        SnackBar(
+          content: Text(context.translate('fill_password_fields')),
           backgroundColor: Colors.red,
         ),
       );
@@ -48,8 +48,8 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
 
     if (newPassword.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('New password must be at least 6 characters long.'),
+        SnackBar(
+          content: Text(context.translate('password_min_length')),
           backgroundColor: Colors.red,
         ),
       );
@@ -58,8 +58,8 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
 
     if (newPassword != confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('New passwords do not match.'),
+        SnackBar(
+          content: Text(context.translate('passwords_do_not_match')),
           backgroundColor: Colors.red,
         ),
       );
@@ -76,9 +76,9 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Password updated successfully!'),
-            backgroundColor: Color(0xFF6A53A1),
+          SnackBar(
+            content: Text(context.translate('password_updated')),
+            backgroundColor: const Color(0xFF6A53A1),
           ),
         );
         _currentPasswordController.clear();
@@ -135,7 +135,6 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: AppTextStyles.body.copyWith(
-                fontFamily: GoogleFonts.workSans().fontFamily,
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
               border: InputBorder.none,
@@ -161,8 +160,8 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _buildTextField(
-          label: 'Current Password',
-          hintText: 'Enter current password',
+          label: context.translate('current_password'),
+          hintText: context.translate('enter_current_password'),
           obscureText: _obscureCurrentPassword,
           controller: _currentPasswordController,
           onToggleObscure: () {
@@ -173,8 +172,8 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
         ),
         const SizedBox(height: 16),
         _buildTextField(
-          label: 'New Password',
-          hintText: 'Min. 6 characters',
+          label: context.translate('new_password'),
+          hintText: context.translate('min_6_characters'),
           obscureText: _obscureNewPassword,
           controller: _newPasswordController,
           onToggleObscure: () {
@@ -185,8 +184,8 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
         ),
         const SizedBox(height: 16),
         _buildTextField(
-          label: 'Confirm New Password',
-          hintText: 'Re-enter new password',
+          label: context.translate('confirm_new_password'),
+          hintText: context.translate('reenter_new_password'),
           obscureText: _obscureConfirmPassword,
           controller: _confirmPasswordController,
           onToggleObscure: () {
@@ -217,7 +216,7 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
                   ),
                 )
               : Text(
-                  'Update Password',
+                  context.translate('update_password'),
                   style: AppTextStyles.reportTileTitle.copyWith(fontWeight: FontWeight.bold),
                 ),
         ),

@@ -1,7 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class BudgetStatusItem {
@@ -63,7 +62,7 @@ class DashboardBudgetStatus extends StatelessWidget {
                   color: isDark
                       ? Colors.white60
                       : AppColors.loginSubTitle.withValues(alpha: 0.8),
-                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                  fontFamily: TextStyle().fontFamily,
                   letterSpacing: 1.2,
                 ),
               ),
@@ -95,7 +94,7 @@ class DashboardBudgetStatus extends StatelessWidget {
                               fontSize: AppFontSizes.size12,
                               fontWeight: FontWeight.w600,
                               color: labelColor,
-                              fontFamily: GoogleFonts.workSans().fontFamily,
+                              fontFamily: TextStyle().fontFamily,
                             ),
                           ),
                           Text(
@@ -104,7 +103,7 @@ class DashboardBudgetStatus extends StatelessWidget {
                               fontSize: AppFontSizes.size12,
                               fontWeight: FontWeight.bold,
                               color: labelColor,
-                              fontFamily: GoogleFonts.workSans().fontFamily,
+                              fontFamily: TextStyle().fontFamily,
                             ),
                           ),
                         ],

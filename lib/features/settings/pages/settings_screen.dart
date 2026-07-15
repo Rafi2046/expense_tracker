@@ -86,8 +86,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   stream: FirebaseAuth.instance.userChanges(),
                   builder: (context, snapshot) {
                     final user = snapshot.data;
-                    final displayName = user?.displayName ?? 'Guest User';
-                    final email = user?.email ?? 'No email';
+                    final displayName = user?.displayName ?? context.translate('guest_user');
+                    final email = user?.email ?? context.translate('no_email');
 
                     // Retrieve local photo path if it was saved, otherwise fall back to user.photoURL
                     final localPhoto = user != null

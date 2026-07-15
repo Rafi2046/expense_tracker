@@ -2,7 +2,6 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
@@ -64,7 +63,7 @@ class DashboardSpendingCategories extends StatelessWidget {
                 fontSize: AppFontSizes.size11,
                 fontWeight: FontWeight.bold,
                 color: isDark ? Colors.white60 : AppColors.loginSubTitle.withValues(alpha: 0.8),
-                fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                fontFamily: TextStyle().fontFamily,
                 letterSpacing: 1.2,
               ),
             ),
@@ -104,7 +103,7 @@ class DashboardSpendingCategories extends StatelessWidget {
                           fontSize: AppFontSizes.size20,
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.onSurface,
-                          fontFamily: GoogleFonts.workSans().fontFamily,
+                          fontFamily: TextStyle().fontFamily,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -114,7 +113,7 @@ class DashboardSpendingCategories extends StatelessWidget {
                           fontSize: AppFontSizes.size11,
                           color: AppColors.textMuted,
                           fontWeight: FontWeight.w500,
-                          fontFamily: GoogleFonts.workSans().fontFamily,
+                          fontFamily: TextStyle().fontFamily,
                         ),
                       ),
                     ],

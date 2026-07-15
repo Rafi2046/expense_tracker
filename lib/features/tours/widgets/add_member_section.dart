@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class AddMemberSection extends StatelessWidget {
   final TextEditingController nameController;
@@ -43,7 +44,7 @@ class AddMemberSection extends StatelessWidget {
           TextField(
             controller: nameController,
             decoration: InputDecoration(
-              hintText: 'Enter member name',
+              hintText: context.translate('enter_member_name'),
               hintStyle: AppTextStyles.textFieldHint,
               border: InputBorder.none,
               filled: true,
@@ -106,8 +107,8 @@ class AddMemberSection extends StatelessWidget {
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
-                  'Add',
+                child: Text(
+                  context.translate('add'),
                   style: TextStyle(
                     color: AppColors.white,
                     fontWeight: FontWeight.bold,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TourNameField extends StatelessWidget {
   final ThemeData theme;
@@ -28,8 +29,8 @@ class TourNameField extends StatelessWidget {
         controller: controller,
         autofocus: true,
         decoration: InputDecoration(
-          labelText: 'Tour Name',
-          hintText: 'e.g. Bali Trip 2026',
+          labelText: context.translate('tour_name_field'),
+          hintText: context.translate('tour_name_hint'),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,

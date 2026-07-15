@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
 import 'package:expense_tracker/features/login/pages/verify_email_screen.dart';
@@ -46,17 +47,17 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
     // Validation
     if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      _showErrorSnackBar('Please fill in all fields');
+      _showErrorSnackBar(context.translate('please_fill_fields'));
       return;
     }
 
     if (password != confirmPassword) {
-      _showErrorSnackBar('Passwords do not match');
+      _showErrorSnackBar(context.translate('passwords_do_not_match'));
       return;
     }
 
     if (password.length < 6) {
-      _showErrorSnackBar('Password must be at least 6 characters long');
+      _showErrorSnackBar(context.translate('password_min_length'));
       return;
     }
 

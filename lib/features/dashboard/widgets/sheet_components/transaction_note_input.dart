@@ -1,5 +1,5 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -21,13 +21,13 @@ class TransactionNoteInput extends StatelessWidget {
     return TextFormField(
       controller: controller,
       maxLines: 2,
-      style: GoogleFonts.workSans(
+      style: TextStyle(
         fontSize: AppFontSizes.size15,
         color: theme.colorScheme.onSurface,
       ),
       decoration: InputDecoration(
-        hintText: 'Add a note or description...',
-        hintStyle: GoogleFonts.workSans(
+        hintText: context.translate('note_hint'),
+        hintStyle: TextStyle(
           fontSize: AppFontSizes.size14,
           color: isDark ? Colors.white24 : Colors.grey.shade400,
         ),

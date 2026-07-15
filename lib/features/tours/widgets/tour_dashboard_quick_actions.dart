@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourDashboardQuickActions extends StatelessWidget {
@@ -29,7 +30,7 @@ class TourDashboardQuickActions extends StatelessWidget {
             color: AppColors.white.withValues(alpha: isCompleted ? 0.5 : 1),
             size: 20),
         label: Text(
-          'Add Expense',
+          context.translate('add_expense_fab'),
           style: AppTextStyles.label.copyWith(
             fontWeight: FontWeight.w600,
             color: AppColors.white.withValues(alpha: isCompleted ? 0.5 : 1),

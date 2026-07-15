@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/add_party_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/party_avatar_picker.dart';
 import 'package:expense_tracker/features/dashboard/widgets/party_segmented_tabs.dart';
 import 'package:expense_tracker/features/dashboard/widgets/additional_details_form.dart';
@@ -67,7 +68,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          isEditing ? 'Edit Party' : 'Add New Party',
+          isEditing ? context.translate('edit_party') : context.translate('add_new_party'),
           style: AppTextStyles.h2.copyWith(color: theme.appBarTheme.titleTextStyle?.color),
         ),
         centerTitle: true,

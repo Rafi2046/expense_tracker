@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class DateRangeActions extends StatelessWidget {
   final VoidCallback onCancel;
@@ -31,7 +32,7 @@ class DateRangeActions extends StatelessWidget {
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             child: Text(
-              'Cancel',
+              context.translate('cancel'),
               style: AppTextStyles.bodyBold.copyWith(
                 color: AppColors.activeGreen,
               ),
@@ -50,7 +51,7 @@ class DateRangeActions extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
             ),
             child: Text(
-              'Ok',
+              context.translate('ok'),
               style: AppTextStyles.bodyBold.copyWith(
                 color: canApply
                     ? Colors.white

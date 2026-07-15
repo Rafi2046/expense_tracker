@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -27,12 +28,12 @@ class InlineGoogleNotice extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Google Sign-in Active',
+                context.translate('google_signin_active'),
               style: AppTextStyles.bodyBold.copyWith(color: theme.colorScheme.onSurface),
               ),
               const SizedBox(height: 6),
               Text(
-                'Your account password is managed securely by Google. You cannot change your Google account credentials inside this app.',
+                context.translate('google_password_notice'),
                 textAlign: TextAlign.center,
               style: AppTextStyles.label.copyWith(
                 fontWeight: FontWeight.w400,

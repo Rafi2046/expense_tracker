@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class GlobalBalancePreview extends StatelessWidget {
   const GlobalBalancePreview({super.key});
@@ -39,7 +40,7 @@ class GlobalBalancePreview extends StatelessWidget {
                     size: 16, color: AppColors.activeGreen),
                 const SizedBox(width: 8),
                 Text(
-                  'Across All Tours',
+                  context.translate('across_all_tours'),
                   style: AppTextStyles.bodySmall.copyWith(
                     fontWeight: FontWeight.w600,
                     color: labelColor,
@@ -52,7 +53,7 @@ class GlobalBalancePreview extends StatelessWidget {
               children: [
                 Expanded(
                   child: _BalanceTile(
-                    label: 'You Owe',
+                    label: context.translate('you_owe_amount'),
                     amount: '\$340.00',
                     isNegative: true,
                     labelColor: labelColor,
@@ -62,7 +63,7 @@ class GlobalBalancePreview extends StatelessWidget {
                     color: borderColor),
                 Expanded(
                   child: _BalanceTile(
-                    label: 'You are Owed',
+                    label: context.translate('you_are_owed_amount'),
                     amount: '\$890.50',
                     isNegative: false,
                     labelColor: labelColor,

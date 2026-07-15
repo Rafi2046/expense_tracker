@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class InviteCodeCard extends StatelessWidget {
   final String inviteCode;
@@ -24,15 +25,14 @@ class InviteCodeCard extends StatelessWidget {
   void _onCopy(BuildContext context) {
     Clipboard.setData(ClipboardData(text: inviteCode));
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Code copied: $inviteCode')),
+      SnackBar(content: Text(context.translate('code_copied', namedArgs: {'code': inviteCode}))),
     );
   }
 
-  void _onShare() {
+  void _onShare(BuildContext context) {
     SharePlus.instance.share(
       ShareParams(
-        text: 'Join my tour "$tourName" on BudgetMint!\n\n'
-            'Use invite code: $inviteCode',
+        text: context.translate('share_invite_text', namedArgs: {'tourName': tourName, 'code': inviteCode}),
       ),
     );
   }
@@ -63,7 +63,7 @@ class InviteCodeCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Invite Code',
+                  context.translate('invite_code_label'),
                   style: AppTextStyles.caption.copyWith(
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
@@ -86,13 +86,13 @@ class InviteCodeCard extends StatelessWidget {
           _IconButton(
             icon: LucideIcons.copy,
             onTap: () => _onCopy(context),
-            tooltip: 'Copy',
+            tooltip: context.translate('tooltip_copy'),
           ),
           const SizedBox(width: 8),
           _IconButton(
             icon: LucideIcons.share,
-            onTap: _onShare,
-            tooltip: 'Share',
+            onTap: () => _onShare(context),
+            tooltip: context.translate('tooltip_share'),
           ),
         ],
       ),

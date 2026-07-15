@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -43,7 +44,7 @@ class _SetBudgetDialogState extends State<SetBudgetDialog> {
         borderRadius: BorderRadius.circular(AppSpacing.br12),
       ),
       title: Text(
-        widget.currentAmount > 0 ? 'Edit Monthly Budget' : 'Set Monthly Budget',
+        widget.currentAmount > 0 ? context.translate('edit_monthly_budget') : context.translate('set_monthly_budget'),
         style: AppTextStyles.dialogTitle.copyWith(color: onSurface),
       ),
       content: Form(
@@ -54,8 +55,8 @@ class _SetBudgetDialogState extends State<SetBudgetDialog> {
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           style: TextStyle(color: onSurface),
           decoration: InputDecoration(
-            labelText: 'Budget Amount (${context.currencySymbol})',
-            hintText: 'Enter amount',
+            labelText: context.translate('budget_amount', namedArgs: {'currency': context.currencySymbol}),
+            hintText: context.translate('enter_amount_hint'),
             labelStyle: AppTextStyles.textFieldLabel.copyWith(color: isDark ? Colors.grey.shade400 : null),
             hintStyle: AppTextStyles.textFieldHint.copyWith(color: isDark ? Colors.grey.shade500 : null),
             prefixText: '${context.currencySymbol} ',
@@ -75,11 +76,11 @@ class _SetBudgetDialogState extends State<SetBudgetDialog> {
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return 'Please enter an amount';
+              return context.translate('please_enter_amount');
             }
             final parsed = double.tryParse(value.trim());
             if (parsed == null || parsed <= 0) {
-              return 'Please enter a valid amount';
+              return context.translate('please_enter_valid_amount');
             }
             return null;
           },
@@ -88,7 +89,7 @@ class _SetBudgetDialogState extends State<SetBudgetDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text('Cancel', style: AppTextStyles.dialogCloseButton.copyWith(color: isDark ? Colors.grey.shade400 : AppColors.textMuted)),
+          child: Text(context.translate('cancel'), style: AppTextStyles.dialogCloseButton.copyWith(color: isDark ? Colors.grey.shade400 : AppColors.textMuted)),
         ),
         TextButton(
           onPressed: () {
@@ -97,7 +98,7 @@ class _SetBudgetDialogState extends State<SetBudgetDialog> {
               Navigator.of(context).pop(amount);
             }
           },
-          child: Text('Save', style: AppTextStyles.dialogCloseButton),
+          child: Text(context.translate('save'), style: AppTextStyles.dialogCloseButton),
         ),
       ],
     );

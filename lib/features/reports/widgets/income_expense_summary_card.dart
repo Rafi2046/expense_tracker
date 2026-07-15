@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
@@ -32,7 +33,7 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            netProfit >= 0 ? 'Net Profit' : 'Net Loss',
+            netProfit >= 0 ? context.translate('net_profit') : context.translate('net_loss'),
             style: AppTextStyles.reportStatLabel.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
@@ -53,7 +54,7 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Total Income',
+                      context.translate('total_income'),
                       style: AppTextStyles.reportStatLabel.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                       ),
@@ -76,7 +77,7 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Total Expense',
+                      context.translate('total_expense'),
                       style: AppTextStyles.reportStatLabel.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                       ),

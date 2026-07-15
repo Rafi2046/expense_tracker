@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.dart';
@@ -190,7 +191,7 @@ class PartyStatementTransactionTile extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        'Opening',
+                        context.translate('opening'),
                         style: AppTextStyles.caption.copyWith(
                           fontSize: AppFontSizes.size10,
                           fontWeight: FontWeight.w600,

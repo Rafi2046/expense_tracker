@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
 
@@ -9,8 +10,8 @@ class ProfileEmailField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomTextFieldWidget(
-      label: 'Email',
-      hintText: 'Enter your email',
+      label: context.translate('email'),
+      hintText: context.translate('enter_your_email'),
       controller: controller,
     );
   }

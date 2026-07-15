@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/tours/pages/join_request_waiting_screen.dart';
@@ -95,14 +96,14 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
               ),
               const SizedBox(height: 20),
               Text(
-                'Join a Tour',
+                context.translate('join_invite_code'),
                 style: AppTextStyles.h2.copyWith(
                   color: theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 6),
               Text(
-                'Enter the code shared by your tour host',
+                context.translate('join_tour_subtitle'),
                 style: AppTextStyles.bodySmall.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
@@ -126,7 +127,7 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
                 ),
                 decoration: InputDecoration(
                   counterText: '',
-                  hintText: 'ENTER 6-DIGIT CODE',
+                  hintText: context.translate('enter_code_hint'),
                   hintStyle: GoogleFonts.jetBrainsMono(
                     fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.w500,
@@ -190,7 +191,7 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
                           ),
                         )
                       : Text(
-                          'Join Tour',
+                          context.translate('join_tour_btn'),
                           style: AppTextStyles.reportTileTitle.copyWith(
                             fontWeight: FontWeight.w700,
                             color: Colors.white,

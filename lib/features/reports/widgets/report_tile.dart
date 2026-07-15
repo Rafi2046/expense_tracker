@@ -18,16 +18,6 @@ class ReportTile extends StatelessWidget {
     );
   }
 
-  String _translateTitle(BuildContext context, String title) {
-    final key = title.toLowerCase().replaceAll(' ', '_').replaceAll('&', 'and');
-    return context.translate(key);
-  }
-
-  String _translateSubtitle(BuildContext context, String subtitle) {
-    final key = subtitle.toLowerCase().replaceAll(' ', '_').replaceAll('&', 'and');
-    return context.translate(key);
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -40,7 +30,6 @@ class ReportTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
-            // Icon container
             Container(
               width: 38,
               height: 38,
@@ -51,21 +40,19 @@ class ReportTile extends StatelessWidget {
               child: Icon(item.icon, color: theme.primaryColor, size: 18),
             ),
             const SizedBox(width: 14),
-
-            // Title + subtitle
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _translateTitle(context, item.title),
+                    context.translate(item.titleKey),
                     style: AppTextStyles.bodyBold.copyWith(
                       color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    _translateSubtitle(context, item.subtitle),
+                    context.translate(item.subtitleKey),
                     style: AppTextStyles.caption.copyWith(
                       color: isDark ? Colors.white60 : Colors.grey.shade500,
                     ),
@@ -73,8 +60,6 @@ class ReportTile extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Chevron
             Container(
               width: 26,
               height: 26,

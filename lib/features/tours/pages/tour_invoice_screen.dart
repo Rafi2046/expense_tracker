@@ -9,6 +9,7 @@ import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/utils/debt_simplifier.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_format_utils.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_header_widget.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_total_badge_widget.dart';
@@ -53,7 +54,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
 
     final categoryTotals = <String, double>{};
     for (final e in expenses) {
-      final cat = e.category ?? 'Uncategorized';
+      final cat = e.category ?? context.translate('uncategorized');
       categoryTotals[cat] = (categoryTotals[cat] ?? 0) + e.amount;
     }
 
@@ -68,7 +69,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
         shape: Border(
           bottom: BorderSide(color: theme.colorScheme.onSurface.withValues(alpha: 0.08)),
         ),
-        title: Text('Invoice', style: GoogleFonts.workSans(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface)),
+        title: Text(context.translate('invoice_title'), style: GoogleFonts.workSans(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface)),
         actions: [
           IconButton(
             icon: _isSharing
@@ -115,11 +116,11 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
                   ),
                   if (!isAllSettled) ...[
                     const SizedBox(height: 32),
-                    InvoiceSectionTitleWidget(title: 'PAYMENTS REQUIRED'),
+                    InvoiceSectionTitleWidget(title: context.translate('payments_required_section')),
                     const SizedBox(height: 16),
                     ...settlements.map((s) => InvoiceSettlementCardWidget(
-                      fromName: pById[s.fromParticipantId] ?? 'Unknown',
-                      toName: pById[s.toParticipantId] ?? 'Unknown',
+                      fromName: pById[s.fromParticipantId] ?? context.translate('unknown_member'),
+                      toName: pById[s.toParticipantId] ?? context.translate('unknown_member'),
                       amount: s.amount,
                       currency: tour.currency,
                       isDark: isDark,
@@ -131,7 +132,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
                     InvoiceAllSettledWidget(isDark: isDark),
                     const SizedBox(height: 32),
                   ],
-                  InvoiceSectionTitleWidget(title: 'WHERE THE MONEY WENT'),
+                  InvoiceSectionTitleWidget(title: context.translate('where_the_money_went')),
                   const SizedBox(height: 16),
                   InvoiceCategoryBreakdownWidget(
                     categoryTotals: categoryTotals,
@@ -139,7 +140,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
                     isDark: isDark,
                   ),
                   const SizedBox(height: 32),
-                  InvoiceSectionTitleWidget(title: 'DETAILED LEDGER'),
+                  InvoiceSectionTitleWidget(title: context.translate('detailed_ledger_section')),
                   const SizedBox(height: 16),
                   InvoiceLedgerWidget(
                     expenses: expenses,
@@ -149,7 +150,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
                   ),
                   if (expenses.any((e) => e.receiptPath != null && e.receiptPath!.isNotEmpty)) ...[
                     const SizedBox(height: 32),
-                    InvoiceSectionTitleWidget(title: 'RECEIPTS'),
+                    InvoiceSectionTitleWidget(title: context.translate('receipts_section')),
                     const SizedBox(height: 16),
                     InvoiceReceiptsGridWidget(expenses: expenses, isDark: isDark),
                   ],
@@ -183,7 +184,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
       final file = File('${dir.path}/tour_invoice_${tour.id.substring(0, 8)}.png');
       await file.writeAsBytes(imageBytes);
       await SharePlus.instance.share(
-        ShareParams(files: [XFile(file.path)], text: '${tour.name} — Detailed Invoice'),
+        ShareParams(files: [XFile(file.path)], text: context.translate('share_invoice_text', namedArgs: {'name': tour.name})),
       );
     } catch (_) {}
     if (mounted) setState(() => _isSharing = false);

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/settings/widgets/image_picker_sheet.dart';
@@ -95,7 +96,7 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
     } catch (e) {
       messenger.showSnackBar(
         SnackBar(
-          content: Text('Error selecting image: $e'),
+          content: Text(context.translate('error_selecting_image', namedArgs: {'error': e.toString()})),
           backgroundColor: Colors.red,
         ),
       );
@@ -144,8 +145,8 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
     if (firstNameController.text.trim().isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('First Name cannot be empty.'),
+          SnackBar(
+            content: Text(context.translate('first_name_required')),
             backgroundColor: Colors.red,
           ),
         );
@@ -173,9 +174,9 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile updated successfully!'),
-            backgroundColor: Color(0xFF6A53A1),
+          SnackBar(
+            content: Text(context.translate('profile_updated')),
+            backgroundColor: const Color(0xFF6A53A1),
           ),
         );
         setState(() => isEditing = false);
@@ -184,7 +185,7 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to save changes: $e'),
+            content: Text(context.translate('failed_save_changes', namedArgs: {'error': e.toString()})),
             backgroundColor: Colors.red,
           ),
         );

@@ -2,7 +2,6 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/shortcut_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -112,7 +111,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                 children: [
                   Text(
                     context.translate('edit_quick_actions'),
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size18,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.onSurface,
@@ -121,7 +120,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                   const SizedBox(height: 2),
                   Text(
                     context.translate('drag_to_reorder_toggle_to_show'),
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size12,
                       color: Colors.grey.shade500,
                     ),
@@ -189,7 +188,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                             Expanded(
                               child: Text(
                                 context.translate(item.id),
-                                style: GoogleFonts.workSans(
+                                style: TextStyle(
                                   fontSize: AppFontSizes.size14,
                                   fontWeight: FontWeight.w500,
                                   color: Theme.of(context).colorScheme.onSurface,
@@ -205,7 +204,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                                 ),
                                 child: Text(
                                   context.translate('always_on'),
-                                  style: GoogleFonts.workSans(
+                                  style: TextStyle(
                                     fontSize: AppFontSizes.size10,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.grey.shade500,
@@ -248,7 +247,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                       ),
                       child: Text(
                         context.translate('cancel'),
-                        style: GoogleFonts.workSans(fontWeight: FontWeight.w600),
+                        style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),
@@ -264,7 +263,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                       ),
                       child: Text(
                         context.translate('save'),
-                        style: GoogleFonts.workSans(fontWeight: FontWeight.w600, color: Colors.white),
+                        style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
                       ),
                     ),
                   ),

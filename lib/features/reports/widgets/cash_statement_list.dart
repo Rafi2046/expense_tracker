@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -49,8 +50,8 @@ class CashStatementList extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      'Bal: ',
+              Text(
+                context.translate('bal_label'),
                       style: AppTextStyles.reportStatLabel.copyWith(
                         color: theme.primaryColor,
                         fontSize: AppFontSizes.size11,
@@ -100,7 +101,7 @@ class CashStatementList extends StatelessWidget {
               Icon(LucideIcons.wallet, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
               const SizedBox(height: 12),
               Text(
-                'No cash transactions found',
+                context.translate('no_cash_transactions_found'),
                 style: AppTextStyles.reportTransactionSubtitle.copyWith(
                   fontSize: AppFontSizes.size14,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
@@ -122,7 +123,7 @@ class CashStatementList extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Transaction Lists',
+              context.translate('transaction_lists'),
               style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
             ),
             if (showViewAll)
@@ -138,7 +139,7 @@ class CashStatementList extends StatelessWidget {
                   minimumSize: Size.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-                child: Text('View All', style: AppTextStyles.viewAllText),
+                child: Text(context.translate('view_all'), style: AppTextStyles.viewAllText),
               ),
           ],
         ),

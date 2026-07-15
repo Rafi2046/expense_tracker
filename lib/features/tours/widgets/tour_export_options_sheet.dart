@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/utils/tour_export_service.dart';
 import 'package:expense_tracker/features/tours/utils/tour_invoice_generator.dart';
 import 'package:expense_tracker/features/tours/pages/tour_invoice_screen.dart';
@@ -62,7 +63,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Export Report',
+                  context.translate('export_report_title'),
                   style: AppTextStyles.h1.copyWith(
                     fontWeight: FontWeight.w700,
                     color: theme.colorScheme.onSurface,
@@ -70,7 +71,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Choose how to share your tour details',
+                  context.translate('export_report_subtitle'),
                   style: AppTextStyles.bodySmall.copyWith(
                     color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
                   ),
@@ -78,8 +79,8 @@ class TourExportOptionsSheet extends StatelessWidget {
                 const SizedBox(height: 20),
                 _ExportOptionTile(
                   icon: LucideIcons.image,
-                  title: 'Share Balances Image',
-                  subtitle: 'A snapshot showing who owes whom',
+                  title: context.translate('share_balances_image'),
+                  subtitle: context.translate('share_balances_image_desc'),
                   gradientColors: const [Color(0xFF059669), Color(0xFF0F766E)],
                   onTap: () {
                     Navigator.pop(context);
@@ -89,8 +90,8 @@ class TourExportOptionsSheet extends StatelessWidget {
                 const SizedBox(height: 12),
                 _ExportOptionTile(
                   icon: LucideIcons.fileText,
-                  title: 'View Detailed Invoice',
-                  subtitle: 'Full report with category breakdown & ledger table',
+                  title: context.translate('view_detailed_invoice_title'),
+                  subtitle: context.translate('view_detailed_invoice_desc'),
                   gradientColors: const [Color(0xFF2563EB), Color(0xFF1D4ED8)],
                   onTap: () {
                     Navigator.push(
@@ -104,8 +105,8 @@ class TourExportOptionsSheet extends StatelessWidget {
                 const SizedBox(height: 12),
                 _ExportOptionTile(
                   icon: LucideIcons.file,
-                  title: 'Download Detailed Invoice (PDF)',
-                  subtitle: 'Export as PDF file to share or print',
+                  title: context.translate('download_pdf_invoice_title'),
+                  subtitle: context.translate('download_pdf_invoice_desc'),
                   gradientColors: const [Color(0xFFDC2626), Color(0xFFB91C1C)],
                   onTap: () {
                     Navigator.pop(context);

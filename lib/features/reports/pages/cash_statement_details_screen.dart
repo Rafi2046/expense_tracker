@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/cash_statement_list.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -27,7 +28,7 @@ class CashStatementDetailsScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'All Transactions',
+          context.translate('all_transactions'),
           style: AppTextStyles.reportAppBarTitle.copyWith(color: theme.appBarTheme.titleTextStyle?.color),
         ),
         centerTitle: true,

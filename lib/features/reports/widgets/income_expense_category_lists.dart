@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/model/category_summary.dart';
@@ -25,7 +26,7 @@ class IncomeExpenseCategoryLists extends StatelessWidget {
       children: [
         if (incomeSummaries.isNotEmpty) ...[
           Text(
-            'Incomes by Category',
+            context.translate('incomes_by_category'),
             style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
           ),
           const SizedBox(height: 12),
@@ -49,7 +50,7 @@ class IncomeExpenseCategoryLists extends StatelessWidget {
                     style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   subtitle: Text(
-                    '${s.transactionCount} transactions',
+                    context.translate('transaction_count_plural', namedArgs: {'count': s.transactionCount.toString()}),
                     style: AppTextStyles.reportTransactionSubtitle.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
@@ -70,7 +71,7 @@ class IncomeExpenseCategoryLists extends StatelessWidget {
 
         if (expenseSummaries.isNotEmpty) ...[
           Text(
-            'Expenses by Category',
+            context.translate('expenses_by_category'),
             style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
           ),
           const SizedBox(height: 12),
@@ -94,7 +95,7 @@ class IncomeExpenseCategoryLists extends StatelessWidget {
                     style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   subtitle: Text(
-                    '${s.transactionCount} transactions',
+                    context.translate('transaction_count_plural', namedArgs: {'count': s.transactionCount.toString()}),
                     style: AppTextStyles.reportTransactionSubtitle.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),

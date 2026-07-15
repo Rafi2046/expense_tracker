@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -54,7 +55,7 @@ class PartyStatementBalanceCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    netBalance >= 0 ? 'To Receive' : 'To Give',
+                    context.translate(netBalance >= 0 ? 'to_receive' : 'to_give'),
                     style: AppTextStyles.reportStatLabel.copyWith(
                       color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                     ),
@@ -75,7 +76,7 @@ class PartyStatementBalanceCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  netBalance >= 0 ? 'RECEIVABLE' : 'PAYABLE',
+                  context.translate(netBalance >= 0 ? 'receivable' : 'payable'),
                   style: AppTextStyles.reportStatLabel.copyWith(
                     color: netBalance >= 0 ? AppColors.activeGreen : AppColors.activeRed,
                   ),

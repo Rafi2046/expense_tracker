@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -70,7 +71,7 @@ class SettleUpPaymentMethodSelector extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Text('SETTLEMENT AMOUNT',
+                  Text(context.translate('settlement_amount_label'),
                     style: AppTextStyles.cardTitle.copyWith(fontSize: AppFontSizes.size10, fontWeight: FontWeight.w700, color: Colors.white70, letterSpacing: 1.5),
                   ),
                   const SizedBox(height: 6),
@@ -96,7 +97,7 @@ class SettleUpPaymentMethodSelector extends StatelessWidget {
                           style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
                         ),
                         const SizedBox(height: 2),
-                        Text('pays',
+                        Text(context.translate('pays_label'),
                           style: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
                         ),
                       ],
@@ -122,7 +123,7 @@ class SettleUpPaymentMethodSelector extends StatelessWidget {
                           style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
                         ),
                         const SizedBox(height: 2),
-                        Text('receives',
+                        Text(context.translate('receives_label'),
                           style: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
                         ),
                       ],
@@ -144,7 +145,7 @@ class SettleUpPaymentMethodSelector extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     elevation: 0,
                   ),
-                  child: Text('Mark as Settled',
+                  child: Text(context.translate('mark_as_settled'),
                     style: AppTextStyles.bodyBold.copyWith(fontSize: AppFontSizes.size15, color: Colors.white),
                   ),
                 ),

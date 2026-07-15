@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_net_balance_card.dart';
@@ -43,7 +44,7 @@ class PartyStatementTableView extends StatelessWidget {
           isReceivable: isReceivable,
           isMasked: isMasked,
           isDark: isDark,
-          label: 'Net Balance',
+          label: context.translate('net_balance'),
         ),
         const SizedBox(height: 24),
 
@@ -95,7 +96,7 @@ class PartyStatementTableView extends StatelessWidget {
                   AddEditDebtSheet.show(
                     context: context,
                     item: debt,
-                    payeeLabel: entry.isInflow ? 'Client/Friend Name' : 'Payee Name',
+                    payeeLabel: entry.isInflow ? context.translate('client_friend_name') : context.translate('payee_name'),
                     themeColor: entry.isInflow ? theme.primaryColor : AppColors.activeRed,
                     isReceive: entry.isInflow,
                   );

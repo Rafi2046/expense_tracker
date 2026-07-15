@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
@@ -55,7 +54,7 @@ class BalanceActionTile extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: GoogleFonts.workSans(
+                      style: TextStyle(
                         fontSize: AppFontSizes.size14,
                         fontWeight: FontWeight.bold,
                         color: theme.colorScheme.onSurface,
@@ -64,7 +63,7 @@ class BalanceActionTile extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style: GoogleFonts.workSans(
+                      style: TextStyle(
                         fontSize: AppFontSizes.size11,
                         color: AppColors.textMuted,
                       ),

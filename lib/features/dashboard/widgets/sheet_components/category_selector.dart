@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/select_category_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_selector_tile.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,8 @@ class CategorySelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return TransactionSelectorTile(
       leadingIcon: LucideIcons.grid,
-      labelText: 'Category',
-      valueText: selectedCategory ?? 'Select Category',
+      labelText: context.translate('category'),
+      valueText: selectedCategory ?? context.translate('select_category'),
       isValueSelected: selectedCategory != null,
       themeColor: themeColor,
       trailingIcon: LucideIcons.arrowRight,

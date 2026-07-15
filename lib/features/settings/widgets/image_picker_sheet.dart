@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,7 +16,7 @@ class ImagePickerSheet extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Choose Option', style: AppTextStyles.h2.copyWith(color: Theme.of(context).colorScheme.onSurface)),
+            Text(context.translate('choose_option'), style: AppTextStyles.h2.copyWith(color: Theme.of(context).colorScheme.onSurface)),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -33,7 +34,7 @@ class ImagePickerSheet extends StatelessWidget {
                         child: Icon(LucideIcons.image, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1), size: 28),
                       ),
                       const SizedBox(height: 8),
-                      Text('Gallery', style: AppTextStyles.label.copyWith(color: Theme.of(context).colorScheme.onSurface)),
+                      Text(context.translate('gallery'), style: AppTextStyles.label.copyWith(color: Theme.of(context).colorScheme.onSurface)),
                     ],
                   ),
                 ),
@@ -50,7 +51,7 @@ class ImagePickerSheet extends StatelessWidget {
                         child: Icon(LucideIcons.camera, color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1), size: 28),
                       ),
                       const SizedBox(height: 8),
-                      Text('Camera', style: AppTextStyles.label.copyWith(color: Theme.of(context).colorScheme.onSurface)),
+                      Text(context.translate('camera'), style: AppTextStyles.label.copyWith(color: Theme.of(context).colorScheme.onSurface)),
                     ],
                   ),
                 ),

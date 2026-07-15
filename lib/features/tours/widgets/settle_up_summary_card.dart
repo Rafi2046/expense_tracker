@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class SettleUpSummaryCard extends StatelessWidget {
   final String formattedAmount;
@@ -30,7 +31,7 @@ class SettleUpSummaryCard extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Total Outstanding',
+            context.translate('total_outstanding_label'),
             style: AppTextStyles.cardTitle.copyWith(
               color: Colors.white70,
               letterSpacing: 1.2,
@@ -54,7 +55,7 @@ class SettleUpSummaryCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'Outstanding balances to settle',
+              context.translate('outstanding_balances_settle'),
               style: AppTextStyles.caption.copyWith(
                 fontSize: AppFontSizes.size10,
                 fontWeight: FontWeight.w500,

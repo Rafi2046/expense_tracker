@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
 
@@ -9,8 +10,8 @@ class ProfileBioField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomTextFieldWidget(
-      label: 'Bio',
-      hintText: 'Tell us about yourself',
+      label: context.translate('bio'),
+      hintText: context.translate('tell_us_about_yourself'),
       controller: controller,
     );
   }

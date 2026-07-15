@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -7,12 +6,14 @@ class TransactionSaveButton extends StatefulWidget {
   final VoidCallback onPressed;
   final Color themeColor;
   final String title;
+  final bool isEditing;
 
   const TransactionSaveButton({
     super.key,
     required this.onPressed,
     required this.themeColor,
     required this.title,
+    this.isEditing = false,
   });
 
   @override
@@ -81,7 +82,7 @@ class _TransactionSaveButtonState extends State<TransactionSaveButton>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                widget.title.contains('Update')
+                widget.isEditing
                     ? LucideIcons.checkCircle
                     : LucideIcons.save,
                 color: Colors.white,
@@ -90,7 +91,7 @@ class _TransactionSaveButtonState extends State<TransactionSaveButton>
               const SizedBox(width: 10),
               Text(
                 widget.title,
-                style: GoogleFonts.workSans(
+                style: TextStyle(
                   fontSize: AppFontSizes.size16,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,

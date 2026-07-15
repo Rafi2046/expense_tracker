@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
@@ -35,7 +34,7 @@ class AdjustBalanceHeader extends StatelessWidget {
           children: [
             Text(
               title,
-              style: GoogleFonts.workSans(
+              style: TextStyle(
                 fontSize: AppFontSizes.size16,
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,

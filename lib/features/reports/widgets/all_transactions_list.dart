@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_images.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -44,12 +45,12 @@ class AllTransactionsList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Dummy Title Here',
+                        context.translate('title'),
                         style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Category  •  01 Jan 2024',
+                        '${context.translate('category')}  •  01 Jan 2024',
                         style: AppTextStyles.reportTransactionSubtitle.copyWith(
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
@@ -85,7 +86,7 @@ class AllTransactionsList extends StatelessWidget {
 
               const SizedBox(height: 12),
               Text(
-                'No transactions matched filters',
+                context.translate('no_transactions_matched_filters'),
                 style: AppTextStyles.reportTileTitle.copyWith(
                   color: isDark ? Colors.white60 : Colors.grey.shade500,
                   fontWeight: FontWeight.w500,

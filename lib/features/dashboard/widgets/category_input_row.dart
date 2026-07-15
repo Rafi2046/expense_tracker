@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -35,13 +34,13 @@ class CategoryInputRow extends StatelessWidget {
             child: TextField(
               controller: controller,
               textInputAction: TextInputAction.done,
-              style: GoogleFonts.workSans(
+              style: TextStyle(
                 color: theme.colorScheme.onSurface,
                 fontSize: AppFontSizes.size15,
               ),
               decoration: InputDecoration(
                 hintText: 'Enter category name, then tap +',
-                hintStyle: GoogleFonts.workSans(
+                hintStyle: TextStyle(
                   color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
                   fontSize: AppFontSizes.size14,
                 ),

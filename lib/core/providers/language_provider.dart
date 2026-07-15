@@ -61,7 +61,24 @@ class LanguageProvider extends ChangeNotifier {
 }
 
 extension TranslationExtension on BuildContext {
-  String translate(String key, {bool listen = true}) {
-    return tr(key);
+  String translate(String key, {bool listen = true, List<String>? args, Map<String, String>? namedArgs}) {
+    if (args != null) return this.tr(key, args: args);
+    if (namedArgs != null) return this.tr(key, namedArgs: namedArgs);
+    return this.tr(key);
+  }
+}
+
+/// Helper to get localized month name using the app locale
+extension LocaleDateFormat on BuildContext {
+  String formatMonth(DateTime date) {
+    return DateFormat('MMMM', locale.toString()).format(date);
+  }
+
+  String formatDate(DateTime date, {String pattern = 'dd MMM yyyy'}) {
+    return DateFormat(pattern, locale.toString()).format(date);
+  }
+
+  String formatDateTime(DateTime date, {String pattern = 'dd MMM yyyy • h:mm a'}) {
+    return DateFormat(pattern, locale.toString()).format(date);
   }
 }

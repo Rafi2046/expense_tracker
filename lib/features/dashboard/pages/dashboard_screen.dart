@@ -25,7 +25,6 @@ import 'package:expense_tracker/features/reports/pages/view_reports_screen.dart'
 import 'package:expense_tracker/features/dashboard/pages/total_balance_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/budget_management_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -40,7 +39,7 @@ class DashboardScreen extends StatelessWidget {
     final balanceProvider = context.watch<BalanceAnalyticsProvider>();
     final expenseAnalytics = context.watch<ExpenseAnalyticsProvider>();
     final double totalBalance = balanceProvider.allTimeTotalBalance;
-    final String currentMonthName = DateFormat('MMMM').format(DateTime.now());
+    final String currentMonthName = context.formatMonth(DateTime.now());
     final isLoading = txProvider.isLoading;
 
     return Scaffold(
@@ -159,7 +158,7 @@ class DashboardScreen extends StatelessWidget {
                       '${context.translate('cash')} & ${context.translate('bank')}',
                   totalBalanceLabel: context.translate('total_balance'),
                   totalBalance: totalBalance,
-                  reportsTitle: 'Transactions, Parties, In...',
+                  reportsTitle: context.translate('transactions_parties_in'),
                   reportsLabel: context.translate('reports'),
                   onCashBankTap: () {
                     Navigator.push(

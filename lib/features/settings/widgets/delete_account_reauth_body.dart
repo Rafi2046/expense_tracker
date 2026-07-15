@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -27,7 +28,7 @@ class DeleteAccountReauthBody extends StatelessWidget {
     return Column(
       children: [
         Text(
-          'Please verify your identity\nto delete your account.',
+          context.translate('verify_identity_delete'),
           textAlign: TextAlign.center,
           style: AppTextStyles.bodySmall.copyWith(
             fontSize: AppFontSizes.size14,
@@ -44,7 +45,7 @@ class DeleteAccountReauthBody extends StatelessWidget {
             autofocus: true,
             style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface),
             decoration: InputDecoration(
-              hintText: 'Enter your password',
+              hintText: context.translate('enter_password'),
               hintStyle: AppTextStyles.body.copyWith(
                 color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
               ),
@@ -70,7 +71,7 @@ class DeleteAccountReauthBody extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: CustomButton(
-              text: isDeleting ? 'Deleting...' : 'Reauthenticate & Delete',
+              text: isDeleting ? context.translate('deleting') : context.translate('reauthenticate_delete'),
               onPressed: !isDeleting ? onReauthenticate : () {},
               backgroundColor: AppColors.activeRed,
               textColor: Colors.white,
@@ -82,7 +83,7 @@ class DeleteAccountReauthBody extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: CustomButton(
-              text: isDeleting ? 'Deleting...' : 'Continue with Google',
+              text: isDeleting ? context.translate('deleting') : context.translate('continue_with_google'),
               onPressed: !isDeleting ? onReauthenticate : () {},
               backgroundColor: Colors.white,
               textColor: Colors.black87,

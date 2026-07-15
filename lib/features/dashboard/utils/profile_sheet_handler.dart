@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
@@ -17,7 +16,7 @@ mixin ProfileSheetHandler<T extends StatefulWidget> on State<T> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Text(
             'Delete Profile?',
-            style: GoogleFonts.workSans(
+            style: TextStyle(
               fontSize: AppFontSizes.size18,
               fontWeight: FontWeight.w800,
               color: theme.textTheme.titleLarge?.color,
@@ -25,7 +24,7 @@ mixin ProfileSheetHandler<T extends StatefulWidget> on State<T> {
           ),
           content: Text(
             'Are you sure? All data in this profile will be permanently lost.',
-            style: GoogleFonts.workSans(
+            style: TextStyle(
               fontSize: AppFontSizes.size14,
               color: theme.textTheme.bodySmall?.color,
               height: 1.4,
@@ -36,7 +35,7 @@ mixin ProfileSheetHandler<T extends StatefulWidget> on State<T> {
               onPressed: () => Navigator.pop(ctx, false),
               child: Text(
                 'Cancel',
-                style: GoogleFonts.workSans(
+                style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: theme.textTheme.bodySmall?.color,
                 ),
@@ -46,7 +45,7 @@ mixin ProfileSheetHandler<T extends StatefulWidget> on State<T> {
               onPressed: () => Navigator.pop(ctx, true),
               child: Text(
                 'Delete',
-                style: GoogleFonts.workSans(
+                style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: const Color(0xFFDC3545),
                 ),

@@ -1,9 +1,9 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/features/login/pages/login_screen.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -46,17 +46,16 @@ class LogoutDialog extends StatelessWidget {
 
             // Title
             Text(
-              'Logout',
+              context.translate('logout'),
               style: AppTextStyles.profileTitle.copyWith(color: theme.colorScheme.onSurface),
             ),
             const SizedBox(height: 12),
 
             // Subtitle Description
             Text(
-              'Are you sure you want to logout?\nYou will need to login again to access your account.',
+              context.translate('logout_confirm'),
               textAlign: TextAlign.center,
               style: AppTextStyles.body.copyWith(
-                fontFamily: GoogleFonts.workSans().fontFamily,
                 color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                 height: 1.4,
               ),
@@ -69,7 +68,7 @@ class LogoutDialog extends StatelessWidget {
                 // Cancel Button
                 Expanded(
                   child: CustomButton(
-                    text: 'Cancel',
+                    text: context.translate('cancel'),
                     onPressed: () => Navigator.pop(context),
                     backgroundColor: isDark ? theme.cardColor : Colors.white,
                     textColor: theme.colorScheme.onSurface,
@@ -82,7 +81,7 @@ class LogoutDialog extends StatelessWidget {
                 // Logout Button
                 Expanded(
                   child: CustomButton(
-                    text: 'Logout',
+                    text: context.translate('logout'),
                     onPressed: () async {
                       try {
                         await AuthService().signOut();

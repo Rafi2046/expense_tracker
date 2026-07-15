@@ -1,5 +1,5 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -21,9 +21,9 @@ class TransactionSheetHeader extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final title = isEditing
-        ? (isIncome ? 'Edit Income' : 'Edit Expense')
-        : (isIncome ? 'Add Income' : 'Add Expense');
-    final subtitle = isIncome ? 'Record your earnings' : 'Track your spending';
+        ? (isIncome ? context.translate('edit_income') : context.translate('edit_expense'))
+        : (isIncome ? context.translate('add_income') : context.translate('add_expense'));
+    final subtitle = isIncome ? context.translate('record_your_earnings') : context.translate('track_your_spending');
 
     return Column(
       children: [
@@ -51,7 +51,7 @@ class TransactionSheetHeader extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size20,
                       fontWeight: FontWeight.w800,
                       color: theme.colorScheme.onSurface,
@@ -61,7 +61,7 @@ class TransactionSheetHeader extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size12,
                       fontWeight: FontWeight.w400,
                       color: isDark ? Colors.white38 : Colors.grey.shade500,

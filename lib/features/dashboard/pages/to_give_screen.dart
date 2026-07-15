@@ -6,7 +6,6 @@ import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.d
 import 'package:expense_tracker/features/dashboard/widgets/debt_item_row.dart';
 import 'package:expense_tracker/features/dashboard/widgets/debt_total_card.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -77,7 +76,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
           'To Give',
           style: AppTextStyles.appbarTitle.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
-            fontFamily: GoogleFonts.workSans().fontFamily,
+            fontFamily: TextStyle().fontFamily,
             fontWeight: FontWeight.w600,
           ),
         ),

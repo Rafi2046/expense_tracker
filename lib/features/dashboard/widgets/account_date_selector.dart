@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/select_date_option_sheet.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -62,7 +61,7 @@ class AccountDateSelector extends StatelessWidget {
               children: [
                 Text(
                   reportsProvider.getDateRangeOptionTitle(selectedOption),
-                  style: GoogleFonts.workSans(
+                  style: TextStyle(
                     fontSize: AppFontSizes.size12,
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface,
@@ -70,7 +69,7 @@ class AccountDateSelector extends StatelessWidget {
                 ),
                 Text(
                   reportsProvider.getDateRangeSubtitle(selectedOption, selectedDateRange),
-                  style: GoogleFonts.workSans(
+                  style: TextStyle(
                     fontSize: AppFontSizes.size10,
                     color: isDark ? Colors.white60 : Colors.grey.shade500,
                   ),
@@ -87,7 +86,7 @@ class AccountDateSelector extends StatelessWidget {
             ),
             child: Text(
               'CHANGE',
-              style: GoogleFonts.workSans(
+              style: TextStyle(
                 fontSize: AppFontSizes.size11,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xFF2EBD85),

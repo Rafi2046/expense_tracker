@@ -275,13 +275,8 @@ class ProfileProvider extends ChangeNotifier {
           'createdAt': DateTime.now().toIso8601String(),
         });
       } else {
-        final currentMatch = _profiles.where((p) => p.id == _currentProfile.id);
-        if (currentMatch.isNotEmpty) {
-          _currentProfile = currentMatch.first;
-        } else {
-          final initialMatch = _profiles.where((p) => p.id == _initialProfileId);
-          _currentProfile = initialMatch.isNotEmpty ? initialMatch.first : _profiles.first;
-        }
+        final initialMatch = _profiles.where((p) => p.id == _initialProfileId);
+        _currentProfile = initialMatch.isNotEmpty ? initialMatch.first : _profiles.first;
       }
 
       await _saveProfilesToPrefs();

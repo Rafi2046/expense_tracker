@@ -94,7 +94,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
     final List<SpendingDistributionItem> spendingItems = isLoading
         ? List.generate(4, (i) => SpendingDistributionItem(
-            category: ['Food', 'Transport', 'Shopping', 'Entertainment'][i],
+            category: [context.translate('food'), context.translate('transport'), context.translate('shopping'), context.translate('entertainment')][i],
             percentage: 0.0,
             amount: 0.0,
             color: _colorPalette[i],
@@ -126,7 +126,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       }
       if (othersTotal > 0) {
         items.add(SpendingDistributionItem(
-          category: 'Others',
+          category: context.translate('other_category'),
           percentage: txProvider.monthlyExpense > 0 ? (othersTotal / txProvider.monthlyExpense) * 100 : 0.0,
           amount: othersTotal,
           color: _colorPalette.last,
@@ -137,11 +137,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
     final List<TopSpendingCategoryItem> topItems = isLoading
         ? List.generate(4, (i) => TopSpendingCategoryItem(
-            title: ['Food', 'Transport', 'Shopping', 'Entertainment'][i],
+            title: [context.translate('food'), context.translate('transport'), context.translate('shopping'), context.translate('entertainment')][i],
             subtitle: '',
             amount: 0.0,
             percentage: 0.0,
-            icon: _categoryIcon(['Food', 'Transport', 'Shopping', 'Entertainment'][i]),
+            icon: _categoryIcon([context.translate('food'), context.translate('transport'), context.translate('shopping'), context.translate('entertainment')][i]),
           ))
         : txProvider.topSpendingCategories(5).map((t) {
             final (name, amount, pct) = t;

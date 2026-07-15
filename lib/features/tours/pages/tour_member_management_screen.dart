@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/features/tours/widgets/add_member_section.dart';
 import 'package:expense_tracker/features/tours/widgets/data_integrity_warning.dart';
@@ -58,7 +59,7 @@ class _TourMemberManagementScreenState
           ),
         ),
         centerTitle: true,
-        title: Text('Manage Members', style: AppTextStyles.appbarTitle.copyWith(color: theme.colorScheme.onSurface)),
+        title: Text(context.translate('manage_members'), style: AppTextStyles.appbarTitle.copyWith(color: theme.colorScheme.onSurface)),
         leading: widget.isInitialSetup
             ? const SizedBox.shrink()
             : IconButton(
@@ -74,7 +75,7 @@ class _TourMemberManagementScreenState
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(
-                'Done',
+                context.translate('done'),
                 style: AppTextStyles.h3.copyWith(
                   color: AppColors.activeGreen,
                 ),
@@ -129,7 +130,7 @@ class _TourMemberManagementScreenState
     );
     if (exists) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$name is already added')),
+        SnackBar(content: Text(context.translate('name_already_added', namedArgs: {'name': name}))),
       );
       return;
     }
@@ -155,7 +156,7 @@ class _TourMemberManagementScreenState
       final member = provider.participants.firstWhere((p) => p.id == memberId);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Removing ${member.name}...')),
+          SnackBar(content: Text(context.translate('removing_member_msg', namedArgs: {'name': member.name}))),
         );
       }
       final balances = provider.netBalances(widget.tourId);
@@ -171,7 +172,7 @@ class _TourMemberManagementScreenState
       debugPrint('_removeMember error: $e');
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(content: Text(context.translate('error_prefix', namedArgs: {'error': e.toString()}))),
         );
       }
     }
@@ -192,16 +193,16 @@ class _TourMemberManagementScreenState
           borderRadius: BorderRadius.circular(AppSpacing.br8),
         ),
         backgroundColor: theme.colorScheme.surface,
-        title: Text('Outstanding Balance', style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface)),
+        title: Text(context.translate('outstanding_balance_title'), style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface)),
         content: Text(
-          '$name $owesOrOwed $amount in this tour. Removing them now will make this amount disappear from everyone\'s calculation — it won\'t be settled.\n\nSettle up first, or remove anyway?',
+          context.translate('remove_outstanding_warning', namedArgs: {'name': name, 'owesOrOwed': owesOrOwed, 'amount': amount}),
           style: AppTextStyles.dialogBody.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
-              'Cancel',
+              context.translate('cancel_button'),
               style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
             ),
           ),
@@ -213,14 +214,14 @@ class _TourMemberManagementScreenState
                 if (context.mounted) {
                   // ignore: use_build_context_synchronously
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error: $e')),
+                    SnackBar(content: Text(context.translate('error_prefix', namedArgs: {'error': e.toString()}))),
                   );
                 }
               });
             },
-            child: const Text(
-              'Remove Anyway',
-              style: TextStyle(
+            child: Text(
+              context.translate('remove_anyway_button'),
+              style: const TextStyle(
                 color: AppColors.activeRed,
                 fontWeight: FontWeight.bold,
               ),
@@ -240,16 +241,16 @@ class _TourMemberManagementScreenState
           borderRadius: BorderRadius.circular(AppSpacing.br8),
         ),
         backgroundColor: theme.colorScheme.surface,
-        title: Text('Remove Member', style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface)),
+        title: Text(context.translate('remove_member_title'), style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface)),
         content: Text(
-          'Remove $name from this tour?',
+          context.translate('remove_member_confirm_msg', namedArgs: {'name': name}),
           style: AppTextStyles.dialogBody.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
-              'Cancel',
+              context.translate('cancel_button'),
               style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
             ),
           ),
@@ -261,14 +262,14 @@ class _TourMemberManagementScreenState
                 if (context.mounted) {
                   // ignore: use_build_context_synchronously
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error: $e')),
+                    SnackBar(content: Text(context.translate('error_prefix', namedArgs: {'error': e.toString()}))),
                   );
                 }
               });
             },
-            child: const Text(
-              'Remove',
-              style: TextStyle(
+            child: Text(
+              context.translate('remove_button'),
+              style: const TextStyle(
                 color: AppColors.activeRed,
                 fontWeight: FontWeight.bold,
               ),

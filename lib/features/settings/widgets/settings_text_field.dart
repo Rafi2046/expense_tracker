@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
@@ -37,7 +36,7 @@ class SettingsTextField extends StatelessWidget {
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
-          style: GoogleFonts.workSans(fontSize: AppFontSizes.size15, color: theme.colorScheme.onSurface),
+          style: TextStyle(fontSize: AppFontSizes.size15, color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
             filled: true,
             fillColor: isDark ? theme.cardColor : const Color(0xFFF5F6F8),
@@ -47,7 +46,7 @@ class SettingsTextField extends StatelessWidget {
               size: 18,
             ),
             hintText: hintText,
-            hintStyle: GoogleFonts.workSans(fontSize: AppFontSizes.size14, color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
+            hintStyle: TextStyle(fontSize: AppFontSizes.size14, color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

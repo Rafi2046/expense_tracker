@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/model/party_statement_entry.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -22,19 +23,19 @@ class PartyStatementDummyTableView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildNetBalanceBanner(),
+        _buildNetBalanceBanner(context),
         const SizedBox(height: 24),
-        _buildSummaryRow(),
+        _buildSummaryRow(context),
         const SizedBox(height: 20),
         ...entries.map((e) => Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: _buildTableRow(e),
+              child: _buildTableRow(context, e),
             )),
       ],
     );
   }
 
-  Widget _buildNetBalanceBanner() {
+  Widget _buildNetBalanceBanner(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
@@ -51,7 +52,7 @@ class PartyStatementDummyTableView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Net Balance',
+          Text(context.translate('net_balance'),
               style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600)),
           const SizedBox(height: 6),
           Text('৳ 5,300', style: AppTextStyles.displayMedium),
@@ -60,7 +61,7 @@ class PartyStatementDummyTableView extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryRow() {
+  Widget _buildSummaryRow(BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -68,7 +69,7 @@ class PartyStatementDummyTableView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Transactions', style: AppTextStyles.reportStatLabel),
+              Text(context.translate('transactions'), style: AppTextStyles.reportStatLabel),
               const SizedBox(height: 4),
               Text('5 entries', style: AppTextStyles.caption),
             ],
@@ -78,7 +79,7 @@ class PartyStatementDummyTableView extends StatelessWidget {
           flex: 1,
           child: Column(
             children: [
-              Text('Debit',
+              Text(context.translate('debit'),
                   style: AppTextStyles.reportStatLabel
                       .copyWith(color: AppColors.activeGreen)),
               const SizedBox(height: 4),
@@ -92,7 +93,7 @@ class PartyStatementDummyTableView extends StatelessWidget {
           flex: 1,
           child: Column(
             children: [
-              Text('Credit',
+              Text(context.translate('credit'),
                   style: AppTextStyles.reportStatLabel
                       .copyWith(color: AppColors.activeRed)),
               const SizedBox(height: 4),
@@ -106,7 +107,8 @@ class PartyStatementDummyTableView extends StatelessWidget {
     );
   }
 
-  Widget _buildTableRow(PartyStatementEntry e) {
+  Widget _buildTableRow(BuildContext context, PartyStatementEntry e) {
+    final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),

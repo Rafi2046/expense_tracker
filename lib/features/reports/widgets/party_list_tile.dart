@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/model/party_report_summary.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 
@@ -70,7 +71,7 @@ class PartyListTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${item.phone ?? "No phone"} • ${item.transactionCount} txs',
+                      '${item.phone ?? context.translate('no_phone')} • ${item.transactionCount} txs',
                       style: AppTextStyles.reportTransactionSubtitle.copyWith(
                         color: theme.colorScheme.onSurface
                             .withValues(alpha: 0.6),
@@ -84,7 +85,7 @@ class PartyListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  isReceivable ? 'To Receive' : 'To Give',
+                  context.translate(isReceivable ? 'to_receive' : 'to_give'),
                   style: AppTextStyles.reportStatLabel.copyWith(
                     color: theme.colorScheme.onSurface
                         .withValues(alpha: 0.5),

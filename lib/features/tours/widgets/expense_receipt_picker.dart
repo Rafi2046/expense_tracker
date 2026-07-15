@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class ExpenseReceiptPicker extends StatelessWidget {
   final ThemeData theme;
@@ -25,10 +26,10 @@ class ExpenseReceiptPicker extends StatelessWidget {
     if (receiptPath != null) {
       return _buildThumbnail();
     }
-    return _buildButton();
+    return _buildButton(context);
   }
 
-  Widget _buildButton() {
+  Widget _buildButton(BuildContext context) {
     return GestureDetector(
       onTap: onPick,
       child: Container(
@@ -48,7 +49,7 @@ class ExpenseReceiptPicker extends StatelessWidget {
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
             const SizedBox(width: 8),
             Text(
-              'Add Receipt',
+              context.translate('add_receipt'),
               style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.w500,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.35),

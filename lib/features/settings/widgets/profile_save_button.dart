@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 
@@ -27,7 +28,7 @@ class ProfileSaveButton extends StatelessWidget {
       children: [
         Expanded(
           child: CustomButton(
-            text: 'Cancel',
+            text: context.translate('cancel'),
             onPressed: isLoading ? () {} : onCancel,
             backgroundColor: isDark ? theme.cardColor : Colors.white,
             textColor: theme.colorScheme.onSurface,
@@ -38,7 +39,7 @@ class ProfileSaveButton extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: CustomButton(
-            text: isLoading ? 'Saving...' : 'Save',
+            text: isLoading ? context.translate('saving') : context.translate('save'),
             onPressed: isLoading ? () {} : onSave,
             backgroundColor: primaryColor,
             textColor: Colors.white,

@@ -1,7 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -43,7 +42,7 @@ class CategorySelectionSheetContent extends StatelessWidget {
 
           Text(
             'Select Business Category',
-            style: GoogleFonts.workSans(
+            style: TextStyle(
               fontSize: AppFontSizes.size20,
               fontWeight: FontWeight.w800,
               color: theme.textTheme.titleLarge?.color,
@@ -52,7 +51,7 @@ class CategorySelectionSheetContent extends StatelessWidget {
           const SizedBox(height: 16),
 
           TextField(
-            style: GoogleFonts.workSans(
+            style: TextStyle(
               fontSize: AppFontSizes.size15,
               color: theme.textTheme.bodyLarge?.color,
             ),
@@ -103,7 +102,7 @@ class CategorySelectionSheetContent extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   title: Text(
                     cat,
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size15,
                       color: theme.textTheme.bodyLarge?.color,
                     ),

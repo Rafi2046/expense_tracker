@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/features/settings/utils/personal_info_handler.dart';
 import 'package:expense_tracker/features/settings/widgets/personal_info_view.dart';
@@ -29,7 +30,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final displayName = user.displayName ?? 'Guest User';
+    final displayName = user.displayName ?? context.translate('guest_user');
     final occupation = occupationController.text.trim();
 
     return Scaffold(

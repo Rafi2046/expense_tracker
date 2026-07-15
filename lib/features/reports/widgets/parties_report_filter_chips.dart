@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 
 enum PartiesFilter { all, debtors, creditors }
@@ -16,11 +17,11 @@ class PartiesReportFilterChips extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _buildChip(context, PartiesFilter.all, 'All'),
+        _buildChip(context, PartiesFilter.all, context.translate('all')),
         const SizedBox(width: 8),
-        _buildChip(context, PartiesFilter.debtors, 'Debtors'),
+        _buildChip(context, PartiesFilter.debtors, context.translate('debtors')),
         const SizedBox(width: 8),
-        _buildChip(context, PartiesFilter.creditors, 'Creditors'),
+        _buildChip(context, PartiesFilter.creditors, context.translate('creditors')),
       ],
     );
   }

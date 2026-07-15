@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class PartyStatementList extends StatelessWidget {
               Image.asset(AppImages.partyReportIcon, width: 150, height: 200),
               const SizedBox(height: 16),
               Text(
-                'Select Party to View Report',
+                context.translate('select_party_to_view_report'),
                 style: AppTextStyles.reportAppBar.copyWith(
                   color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                 ),
@@ -47,8 +48,8 @@ class PartyStatementList extends StatelessWidget {
       return Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 40.0),
-          child: Text(
-            'No transactions in this period',
+          child:           Text(
+            context.translate('no_transactions_in_this_period'),
             style: AppTextStyles.reportTransactionSubtitle.copyWith(
               fontSize: AppFontSizes.size14,
               color: theme.colorScheme.onSurfaceVariant,
@@ -62,7 +63,7 @@ class PartyStatementList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Transaction Lists',
+          context.translate('transaction_lists'),
           style: AppTextStyles.reportTransactionTitle.copyWith(
             color: theme.colorScheme.onSurface,
             letterSpacing: -0.2,

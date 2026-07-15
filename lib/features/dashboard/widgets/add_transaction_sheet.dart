@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/account_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/error_dialog.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/month_selector_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_components/party_selector_tile.dart';
@@ -20,7 +21,7 @@ import 'package:expense_tracker/features/dashboard/widgets/sheet_components/tran
 import 'package:expense_tracker/features/dashboard/widgets/sheet_components/transaction_save_button.dart';
 import 'package:expense_tracker/features/dashboard/widgets/sheet_components/transaction_sheet_header.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -78,6 +79,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   String _paymentMethod = 'Cash';
   String? _selectedPartyName;
   bool _isHidden = false;
+  bool _initialized = false;
 
   @override
   void initState() {
@@ -92,34 +94,36 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
       _selectedIncomeMonth = tx.incomeMonth;
       _paymentMethod = tx.paymentMethod;
       _selectedPartyName = tx.partyName;
-    } else {
-      if (widget.isIncome) {
-        _selectedIncomeMonth = DateFormat('MMMM yyyy').format(_selectedDate);
-      }
     }
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_selectedCategory == null && widget.transaction == null) {
-      final provider = Provider.of<TransactionProvider>(context);
-      final cats = widget.isIncome
-          ? provider.incomeCategories
-          : provider.expenseCategories;
+    if (!_initialized) {
+      _initialized = true;
+      if (widget.transaction == null && widget.isIncome) {
+        _selectedIncomeMonth = context.formatDate(_selectedDate, pattern: 'MMMM yyyy');
+      }
+      if (_selectedCategory == null && widget.transaction == null) {
+        final provider = Provider.of<TransactionProvider>(context);
+        final cats = widget.isIncome
+            ? provider.incomeCategories
+            : provider.expenseCategories;
 
-      if (cats.isNotEmpty) {
-        final targetSearch = widget.isIncome ? 'salary' : 'misc';
-        final defaultCat = cats.firstWhere(
-          (c) => c.toLowerCase().contains(targetSearch),
-          orElse: () => cats.first,
-        );
+        if (cats.isNotEmpty) {
+          final targetSearch = widget.isIncome ? 'salary' : 'misc';
+          final defaultCat = cats.firstWhere(
+            (c) => c.toLowerCase().contains(targetSearch),
+            orElse: () => cats.first,
+          );
 
-        Future.microtask(() {
-          if (mounted && _selectedCategory == null) {
-            setState(() => _selectedCategory = defaultCat);
-          }
-        });
+          Future.microtask(() {
+            if (mounted && _selectedCategory == null) {
+              setState(() => _selectedCategory = defaultCat);
+            }
+          });
+        }
       }
     }
     if (widget.transaction == null && _paymentMethod == 'Cash') {
@@ -150,7 +154,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         showDialog(
           context: context,
           builder: (_) => const ErrorDialog(
-            message: 'Please enter a valid amount greater than 0.',
+            messageKey: 'please_enter_valid_amount',
           ),
         );
         return;
@@ -160,7 +164,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         showDialog(
           context: context,
           builder: (_) => const ErrorDialog(
-            message: 'Please select a category before saving.',
+            messageKey: 'please_select_category',
           ),
         );
         return;
@@ -184,18 +188,21 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 borderRadius: BorderRadius.circular(16),
               ),
               title: Text(
-                'Balance Will Go Negative',
-                style: GoogleFonts.workSans(
+                context.translate('balance_will_go_negative'),
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: AppFontSizes.size16,
                   color: theme.colorScheme.onSurface,
                 ),
               ),
               content: Text(
-                'This will bring your $_paymentMethod balance to '
-                '${context.formatAmount(projected, listen: false)}.\n\n'
-                'Are you sure you want to proceed?',
-                style: GoogleFonts.workSans(
+                context.translate('balance_warning_body', namedArgs: {
+                  'account': _paymentMethod == 'Cash' || _paymentMethod == 'Bank'
+                      ? context.translate(_paymentMethod.toLowerCase())
+                      : _paymentMethod,
+                  'amount': context.formatAmount(projected, listen: false),
+                }),
+                style: TextStyle(
                   fontSize: AppFontSizes.size14,
                   color: theme.colorScheme.onSurfaceVariant,
                   height: 1.45,
@@ -205,8 +212,8 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 TextButton(
                   onPressed: () => Navigator.pop(ctx, false),
                   child: Text(
-                    'Cancel',
-                    style: GoogleFonts.workSans(
+                    context.translate('cancel'),
+                    style: TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.w600,
                     ),
@@ -221,8 +228,8 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                     ),
                   ),
                   child: Text(
-                    'Proceed',
-                    style: GoogleFonts.workSans(
+                    context.translate('proceed'),
+                    style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -240,7 +247,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
       final noteText = _noteController.text.trim();
 
       final finalNote = noteText.isEmpty && widget.isIncome
-          ? 'Income for $_selectedIncomeMonth'
+          ? context.translate('income_for_month', namedArgs: {'month': _selectedIncomeMonth!})
           : noteText;
 
       if (existing != null) {
@@ -284,7 +291,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
 
       Navigator.pop(context);
 
-      final action = existing != null ? 'updated' : 'added';
+      final action = existing != null ? context.translate('updated') : context.translate('added');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
@@ -292,8 +299,12 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
               Icon(LucideIcons.checkCircle, color: Colors.white),
               const SizedBox(width: AppSpacing.w8),
               Text(
-                '${widget.isIncome ? "Income" : "Expense"} $action: ${context.formatAmount(amount, listen: false)}',
-                style: GoogleFonts.workSans(fontWeight: FontWeight.w600),
+                context.translate('transaction_saved_snackbar', namedArgs: {
+                  'type': context.translate(widget.isIncome ? 'income' : 'expense'),
+                  'action': action,
+                  'amount': context.formatAmount(amount, listen: false),
+                }),
+                style: TextStyle(fontWeight: FontWeight.w600),
               ),
             ],
           ),
@@ -308,7 +319,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
       showDialog(
         context: context,
         builder: (_) => const ErrorDialog(
-          message: 'Something went wrong. Please check your inputs.',
+          messageKey: 'something_went_wrong',
         ),
       );
       debugPrint('Save error: $e');
@@ -391,9 +402,10 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                           ),
                           const SizedBox(height: AppSpacing.h12),
                           DateSelector(
-                            dateText: DateFormat(
-                              'EEEE, MMM d, yyyy',
-                            ).format(_selectedDate),
+                            dateText: context.formatDate(
+                              _selectedDate,
+                              pattern: 'EEEE, MMM d, yyyy',
+                            ),
                             themeColor: themeColor,
                             onTap: () => _selectDate(context),
                           ),
@@ -442,11 +454,12 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                         await _save(context);
                       },
                       themeColor: themeColor,
+                      isEditing: widget.isEditing,
                       title: widget.isEditing
                           ? (widget.isIncome
-                                ? 'Update Income'
-                                : 'Update Expense')
-                          : (widget.isIncome ? 'Save Income' : 'Save Expense'),
+                                ? context.translate('update_income')
+                                : context.translate('update_expense'))
+                          : (widget.isIncome ? context.translate('save_income') : context.translate('save_expense')),
                     ),
                   ),
                 ],
@@ -491,7 +504,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
           'DIAG PICKER SETSTATE: _selectedDate=$_selectedDate month=${_selectedDate.month}',
         );
         if (widget.isIncome) {
-          _selectedIncomeMonth = DateFormat('MMMM yyyy').format(picked);
+          _selectedIncomeMonth = context.formatDate(picked, pattern: 'MMMM yyyy');
         }
       });
     }
@@ -510,7 +523,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
           setState(() {
             _selectedIncomeMonth = label;
             try {
-              _selectedDate = DateFormat('MMMM yyyy').parse(label);
+              _selectedDate = DateFormat('MMMM yyyy', context.locale.toString()).parse(label);
             } catch (_) {}
           });
           Navigator.pop(ctx);
@@ -575,7 +588,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Select Account',
+                context.translate('select_account'),
                 style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
               ),
               const SizedBox(height: 12),
@@ -592,7 +605,9 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   size: 20,
                 ),
                 title: Text(
-                  account.name,
+                  account.name == 'Cash' || account.name == 'Bank'
+                      ? context.translate(account.name.toLowerCase())
+                      : account.name,
                   style: AppTextStyles.body.copyWith(
                     color: theme.colorScheme.onSurface,
                     fontWeight: _paymentMethod == account.name

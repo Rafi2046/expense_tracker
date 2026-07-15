@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PremiumFeatureTile extends StatelessWidget {
@@ -24,7 +23,7 @@ class PremiumFeatureTile extends StatelessWidget {
         const SizedBox(width: 14),
         Text(
           text,
-          style: GoogleFonts.workSans(
+          style: TextStyle(
             fontSize: AppFontSizes.size15,
             fontWeight: FontWeight.w500,
             color: Colors.white.withValues(alpha: 0.9),

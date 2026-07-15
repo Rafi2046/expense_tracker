@@ -1,5 +1,5 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -35,9 +35,8 @@ class CurrencySearchBar extends StatelessWidget {
               autofocus: true,
               style: AppTextStyles.partyFormLabel.copyWith(color: theme.colorScheme.onSurface),
               decoration: InputDecoration(
-                hintText: 'Search currency...',
+                hintText: context.translate('search_currency'),
                 hintStyle: AppTextStyles.body.copyWith(
-                  fontFamily: GoogleFonts.workSans().fontFamily,
                   color: isDark ? Colors.grey.shade600 : const Color(0xFF9CA3AF),
                 ),
                 border: InputBorder.none,

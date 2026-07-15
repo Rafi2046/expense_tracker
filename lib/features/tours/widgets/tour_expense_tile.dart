@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TourExpenseTile extends StatelessWidget {
   final ThemeData theme;
@@ -24,18 +25,18 @@ class TourExpenseTile extends StatelessWidget {
     required this.onTap,
   });
 
-  String _splitLabel() {
+  String _splitLabel(BuildContext context) {
     switch (expense.splitType) {
       case 'equal':
-        return 'Split equally among $includedCount';
+        return context.translate('split_equally_count', namedArgs: {'count': includedCount.toString()});
       case 'exact':
-        return 'Split by exact amounts';
+        return context.translate('split_exact_amounts');
       case 'percentage':
-        return 'Split by percentages';
+        return context.translate('split_percentages');
       case 'exclusion':
-        return 'Split among $includedCount (exclusions)';
+        return context.translate('split_exclusion_count', namedArgs: {'count': includedCount.toString()});
       default:
-        return 'Split equally among $includedCount';
+        return context.translate('split_equally_count', namedArgs: {'count': includedCount.toString()});
     }
   }
 
@@ -94,7 +95,7 @@ class TourExpenseTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        '${payerName.split(' ').first} \u00B7 ${_splitLabel()} \u00B7 $formattedDate',
+                        '${payerName.split(' ').first} \u00B7 ${_splitLabel(context)} \u00B7 $formattedDate',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.label.copyWith(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TourSummaryRow extends StatelessWidget {
   final String totalSpentText;
@@ -25,7 +26,7 @@ class TourSummaryRow extends StatelessWidget {
         Expanded(
           child: _buildSummaryCard(
             theme: theme,
-            label: 'Total spent',
+            label: context.translate('total_spent_card'),
             value: totalSpentText,
             icon: LucideIcons.creditCard,
             iconColor: isDark ? const Color(0xFF818CF8) : const Color(0xFF4F46E5),
@@ -37,7 +38,7 @@ class TourSummaryRow extends StatelessWidget {
         Expanded(
           child: _buildSummaryCard(
             theme: theme,
-            label: isSettled ? 'All settled' : 'Outstanding',
+            label: isSettled ? context.translate('all_settled_card') : context.translate('outstanding_card'),
             value: isSettled ? '✓' : outstandingText,
             icon: isSettled ? LucideIcons.checkCircle : LucideIcons.arrowLeftRight,
             iconColor: isSettled ? const Color(0xFF10B981) : const Color(0xFFEF4444),

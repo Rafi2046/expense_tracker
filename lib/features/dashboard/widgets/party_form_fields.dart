@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 
 class PartyFormFields extends StatelessWidget {
@@ -23,7 +24,7 @@ class PartyFormFields extends StatelessWidget {
           controller: nameController,
           style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
-            hintText: 'Party Name',
+            hintText: context.translate('party_name'),
             hintStyle: AppTextStyles.partyFormHint,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             filled: true,
@@ -43,7 +44,7 @@ class PartyFormFields extends StatelessWidget {
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return 'Please enter a party name';
+              return context.translate('please_enter_party_name');
             }
             return null;
           },
@@ -62,7 +63,7 @@ class PartyFormFields extends StatelessWidget {
                     style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
-                      hintText: 'Phone Number',
+                      hintText: context.translate('phone_number'),
                       hintStyle: AppTextStyles.partyFormHint,
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       filled: true,
@@ -82,7 +83,7 @@ class PartyFormFields extends StatelessWidget {
                     ),
                     validator: (value) {
                       if (value != null && value.trim().isNotEmpty && value.trim().length < 10) {
-                        return 'Enter at least 10 digits';
+                        return context.translate('enter_at_least_10_digits');
                       }
                       return null;
                     },

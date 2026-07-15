@@ -85,7 +85,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Select your preferred interface language',
+                        context.translate('language_select_subtitle'),
                         style: AppTextStyles.label.copyWith(
                           color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                           fontWeight: FontWeight.w400,

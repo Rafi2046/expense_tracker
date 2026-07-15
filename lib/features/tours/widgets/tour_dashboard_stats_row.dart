@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TourDashboardStatsRow extends StatelessWidget {
   final int expenseCount;
@@ -15,7 +16,7 @@ class TourDashboardStatsRow extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            'Expenses',
+            context.translate('expenses_count'),
             style: AppTextStyles.h2.copyWith(
               color: theme.colorScheme.onSurface,
             ),

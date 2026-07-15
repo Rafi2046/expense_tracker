@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
@@ -22,25 +23,25 @@ class AllTransactionsSummaryGrid extends StatelessWidget {
       mainAxisSpacing: 12,
       children: [
         ReportStatCard(
-          title: 'Total Payments In',
+          title: context.translate('total_payments_in'),
           amount: totals['totalPaymentsIn'] ?? 0.0,
           isPositive: true,
           isMasked: isMasked,
         ),
         ReportStatCard(
-          title: 'Total Payments Out',
+          title: context.translate('total_payments_out'),
           amount: totals['totalPaymentsOut'] ?? 0.0,
           isPositive: false,
           isMasked: isMasked,
         ),
         ReportStatCard(
-          title: 'Total Income',
+          title: context.translate('total_income'),
           amount: totals['totalIncome'] ?? 0.0,
           isPositive: true,
           isMasked: isMasked,
         ),
         ReportStatCard(
-          title: 'Total Expense',
+          title: context.translate('total_expense'),
           amount: totals['totalExpense'] ?? 0.0,
           isPositive: false,
           isMasked: isMasked,

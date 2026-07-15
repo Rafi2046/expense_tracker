@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_card_view.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_dummy_card_view.dart';
@@ -51,8 +52,8 @@ class PartyStatementContent extends StatelessWidget {
     final dummyEntries = List.generate(5, (i) {
       return PartyStatementEntry(
         id: 'skel_$i',
-        partyName: 'Party Name',
-        description: 'Transaction description skeleton $i',
+        partyName: context.translate('party_name'),
+        description: context.translate('transaction_description_skeleton', namedArgs: {'i': i.toString()}),
         amount: [500.0, 1200.0, 300.0, 2500.0, 800.0][i],
         isInflow: i.isEven,
         dateTime: DateTime.now().subtract(Duration(days: i)),

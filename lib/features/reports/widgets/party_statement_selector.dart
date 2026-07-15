@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_select_sheet.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class PartyStatementSelector extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                partyName ?? 'Select Party',
+                partyName ?? context.translate('select_party'),
                 style: AppTextStyles.reportTileTitle.copyWith(
                   fontSize: AppFontSizes.size14,
                   color: isSelected ? Colors.white : theme.colorScheme.onSurface,

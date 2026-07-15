@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class NewTourCta extends StatelessWidget {
   final VoidCallback onTap;
@@ -60,7 +61,7 @@ class NewTourCta extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Text(
-                'Create New Tour',
+                context.translate('create_new_tour'),
                 style: AppTextStyles.reportTileTitle.copyWith(
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.3,

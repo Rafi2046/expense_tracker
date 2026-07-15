@@ -1,6 +1,5 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_breakdown_item.dart';
@@ -90,7 +89,7 @@ class _ExpenseCategoriesBreakdownCardState
                 ),
                 child: Text(
                   _isExpanded ? context.translate('view_less') : context.translate('view_all_categories'),
-                  style: GoogleFonts.workSans(
+                  style: TextStyle(
                     fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.w600,
                     color: AppColors.activeGreen,

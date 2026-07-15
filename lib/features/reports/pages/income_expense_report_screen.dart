@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/model/category_summary.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/income_expense_summary_card.dart';
 import 'package:expense_tracker/features/reports/widgets/income_expense_category_lists.dart';
@@ -29,18 +30,23 @@ class _IncomeExpenseReportScreenState extends State<IncomeExpenseReportScreen> {
 
     final expenseSummaries = (data['expenseSummaries'] as List<CategorySummary>);
     final incomeSummaries = (data['incomeSummaries'] as List<CategorySummary>);
-    final headers = ['Category', 'Amount', 'Type', 'Count'];
+    final headers = [
+      context.translate('category'),
+      context.translate('amount_label'),
+      context.translate('type'),
+      context.translate('count'),
+    ];
     final rows = [
       ...expenseSummaries.map((s) => {
         'Category': s.categoryName,
         'Amount': '$currencySymbol ${s.totalAmount.toStringAsFixed(0)}',
-        'Type': 'Expense',
+        'Type': context.translate('expense'),
         'Count': s.transactionCount.toString(),
       }),
       ...incomeSummaries.map((s) => {
         'Category': s.categoryName,
         'Amount': '$currencySymbol ${s.totalAmount.toStringAsFixed(0)}',
-        'Type': 'Income',
+        'Type': context.translate('income'),
         'Count': s.transactionCount.toString(),
       }),
     ];
@@ -54,7 +60,7 @@ class _IncomeExpenseReportScreenState extends State<IncomeExpenseReportScreen> {
         scrolledUnderElevation: 0,
         leading: BackButton(color: theme.appBarTheme.iconTheme?.color),
         title: Text(
-          'Income Expense Report',
+          context.translate('income_expense_report'),
           style: AppTextStyles.reportAppBarTitle.copyWith(color: theme.appBarTheme.titleTextStyle?.color),
         ),
         centerTitle: true,
@@ -96,8 +102,8 @@ class _IncomeExpenseReportScreenState extends State<IncomeExpenseReportScreen> {
           Align(
             alignment: Alignment.bottomCenter,
             child: ReportBottomActions(
-              reportName: 'Income Expense',
-              title: 'Income Expense Report',
+              reportName: context.translate('income_and_expense'),
+              title: context.translate('income_expense_report'),
               dateSubtitle: dateSubtitle,
               headers: headers,
               rows: rows,

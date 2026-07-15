@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 
 class SplitParticipantInput {
@@ -246,15 +247,17 @@ class ExpenseSplitCalculator {
     required String splitType,
     required String currencySymbol,
   }) {
-    if (amount <= 0) return 'Enter a valid amount';
-    if (paidById.isEmpty) return 'Select who paid';
+    if (amount <= 0) return tr('enter_valid_amount');
+    if (paidById.isEmpty) return tr('select_who_paid_error');
 
     if (splitType == 'exact') {
       final total = participants
           .where((p) => !excludedIds.contains(p.id))
           .fold(0.0, (s, p) => s + (customValues[p.id] ?? 0));
       if ((total * 100).round() != (amount * 100).round()) {
-        return 'Exact amounts must total $currencySymbol${amount.toStringAsFixed(amount == amount.roundToDouble() ? 0 : 2)}';
+        final sym = currencySymbol;
+        final amt = amount.toStringAsFixed(amount == amount.roundToDouble() ? 0 : 2);
+        return tr('exact_amounts_must_total', namedArgs: {'sym': sym, 'amount': amt});
       }
     }
 
@@ -262,12 +265,12 @@ class ExpenseSplitCalculator {
       final total = participants
           .where((p) => !excludedIds.contains(p.id))
           .fold(0.0, (s, p) => s + (customValues[p.id] ?? 0));
-      if ((total * 100).round() != 10000) return 'Percentages must total 100%';
+      if ((total * 100).round() != 10000) return tr('percentages_must_total_100');
     }
 
     if (splitType != 'exact' && splitType != 'percentage') {
       if (includedCount(participants: participants, excludedIds: excludedIds) == 0) {
-        return 'At least one person must be included';
+        return tr('at_least_one_person_included');
       }
     }
 

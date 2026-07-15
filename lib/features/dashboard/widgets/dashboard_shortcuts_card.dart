@@ -7,7 +7,6 @@ import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet
 import 'package:expense_tracker/features/dashboard/widgets/edit_shortcuts_sheet.dart';
 import 'package:expense_tracker/features/dashboard/pages/add_party_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -81,6 +80,7 @@ class DashboardShortcutsCard extends StatelessWidget {
     final shortcutProvider = context.watch<ShortcutProvider>();
     final activeShortcuts = shortcutProvider.activeShortcuts;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    context.watch<LanguageProvider>();
 
     // Add Party is always-on and gets its own row treatment, so split it out
     final addParty = activeShortcuts.where((s) => s.id == 'add_party').toList();
@@ -119,7 +119,7 @@ class DashboardShortcutsCard extends StatelessWidget {
             children: [
               Text(
                 context.translate('quick_actions'),
-                style: GoogleFonts.workSans(
+                style: TextStyle(
                   fontSize: AppFontSizes.size15,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.2,
@@ -131,7 +131,7 @@ class DashboardShortcutsCard extends StatelessWidget {
                 behavior: HitTestBehavior.opaque,
                 child: Text(
                   context.translate('edit_menu'),
-                  style: GoogleFonts.workSans(
+                  style: TextStyle(
                     fontSize: AppFontSizes.size12,
                     fontWeight: FontWeight.w600,
                     color: labelColor,
@@ -192,7 +192,7 @@ class DashboardShortcutsCard extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            style: GoogleFonts.workSans(
+            style: TextStyle(
               fontSize: AppFontSizes.size10,
               fontWeight: FontWeight.w600,
               color: labelColor,
@@ -229,7 +229,7 @@ class DashboardShortcutsCard extends StatelessWidget {
               children: [
                 Text(
                   context.translate(item.id),
-                  style: GoogleFonts.workSans(
+                  style: TextStyle(
                     fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(context).colorScheme.onSurface,
@@ -237,7 +237,7 @@ class DashboardShortcutsCard extends StatelessWidget {
                 ),
                 Text(
                   context.translate('always_on'),
-                  style: GoogleFonts.workSans(fontSize: AppFontSizes.size10, color: subLabelColor),
+                  style: TextStyle(fontSize: AppFontSizes.size10, color: subLabelColor),
                 ),
               ],
             ),
@@ -261,21 +261,21 @@ class DashboardShortcutsCard extends StatelessWidget {
     } else if (item.id == 'payment_out') {
       AddEditDebtSheet.show(
         context: context,
-        payeeLabel: 'Payee Name',
+        payeeLabel: context.translate('payee_name'),
         themeColor: AppColors.activeRed,
         isReceive: false,
       );
     } else if (item.id == 'payment_in') {
       AddEditDebtSheet.show(
         context: context,
-        payeeLabel: 'Client/Friend Name',
+        payeeLabel: context.translate('client_friend_name'),
         themeColor: AppColors.buttonColor,
         isReceive: true,
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${item.label} shortcut clicked'),
+          content: Text(context.translate('shortcut_clicked', namedArgs: {'label': context.translate(item.id)})),
           duration: const Duration(seconds: 1),
         ),
       );

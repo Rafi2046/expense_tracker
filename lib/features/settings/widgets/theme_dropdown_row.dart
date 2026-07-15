@@ -110,7 +110,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
             isSelected: currentMode == ThemeMode.light,
             onTap: () {
               themeProvider.setThemeMode(ThemeMode.light);
-              widget.onSnackBar('$themeLightLabel Selected');
+              widget.onSnackBar('${context.translate('theme_light')} ${context.translate('selected')}');
             },
           ),
           _buildThemeOption(
@@ -120,7 +120,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
             isSelected: currentMode == ThemeMode.dark,
             onTap: () {
               themeProvider.setThemeMode(ThemeMode.dark);
-              widget.onSnackBar('$themeDarkLabel Selected');
+              widget.onSnackBar('${context.translate('theme_dark')} ${context.translate('selected')}');
             },
           ),
           _buildThemeOption(
@@ -130,7 +130,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
             isSelected: currentMode == ThemeMode.system,
             onTap: () {
               themeProvider.setThemeMode(ThemeMode.system);
-              widget.onSnackBar('$themeSystemLabel Selected');
+              widget.onSnackBar('${context.translate('theme_system')} ${context.translate('selected')}');
             },
           ),
         ],

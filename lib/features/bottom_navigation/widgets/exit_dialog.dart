@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,14 +42,14 @@ class ExitDialog extends StatelessWidget {
 
             // Title
             Text(
-              'Exit App',
+              context.translate('exit_app'),
               style: AppTextStyles.profileTitle.copyWith(color: Colors.black87),
             ),
             const SizedBox(height: 12),
 
             // Subtitle Description
             Text(
-              'Are you sure you want to exit the application?',
+              context.translate('exit_confirm'),
               textAlign: TextAlign.center,
               style: AppTextStyles.body.copyWith(
                 fontFamily: GoogleFonts.workSans().fontFamily,
@@ -64,7 +65,7 @@ class ExitDialog extends StatelessWidget {
                 // Cancel Button
                 Expanded(
                   child: CustomButton(
-                    text: 'Cancel',
+                    text: context.translate('cancel'),
                     onPressed: () => Navigator.pop(context),
                     backgroundColor: Colors.white,
                     textColor: const Color(0xFF31394D),
@@ -77,7 +78,7 @@ class ExitDialog extends StatelessWidget {
                 // Exit Button
                 Expanded(
                   child: CustomButton(
-                    text: 'Exit',
+                    text: context.translate('exit'),
                     onPressed: () {
                       Navigator.pop(context); // Close dialog
                       SystemNavigator.pop();  // Exit app

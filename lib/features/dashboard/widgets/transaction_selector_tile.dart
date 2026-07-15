@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class TransactionSelectorTile extends StatelessWidget {
@@ -60,7 +59,7 @@ class TransactionSelectorTile extends StatelessWidget {
                 children: [
                   Text(
                     labelText,
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size10,
                       color: isDark
                           ? Colors.white38
@@ -72,7 +71,7 @@ class TransactionSelectorTile extends StatelessWidget {
                   const SizedBox(height: 3),
                   Text(
                     valueText,
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size15,
                       fontWeight: isValueSelected
                           ? FontWeight.w600

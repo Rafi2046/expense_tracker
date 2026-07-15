@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -44,11 +45,11 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
       setState(() => _isProcessing = true);
       try {
         final verified = await provider.authenticate(
-          localizedReason: 'Scan your fingerprint or Face ID to register and enable biometric login.',
+          localizedReason: context.translate('biometric_reason'),
         );
         if (!verified) {
           messenger.showSnackBar(
-            const SnackBar(content: Text('Biometric authentication failed. Please try again.')),
+            SnackBar(content: Text(context.translate('biometric_failed'))),
           );
           return;
         }
@@ -87,7 +88,7 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Biometric Login',
+                  context.translate('biometric_login'),
                   style: AppTextStyles.label.copyWith(
                     fontWeight: FontWeight.w600,
                     color: isAvailable
@@ -98,10 +99,10 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
                 const SizedBox(height: 2),
                 Text(
                   _isProcessing
-                      ? 'Authenticating...'
+                      ? context.translate('authenticating')
                       : (isAvailable
-                          ? 'Use Face ID / Fingerprint on app restart'
-                          : 'Not available on this device'),
+                          ? context.translate('use_face_id')
+                          : context.translate('not_available')),
                   style: AppTextStyles.caption.copyWith(
                     fontSize: AppFontSizes.size9,
                     color: _isProcessing

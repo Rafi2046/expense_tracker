@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
@@ -42,7 +41,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
             children: [
               Text(
                 'Total Amount',
-                style: GoogleFonts.workSans(
+                style: TextStyle(
                   fontSize: AppFontSizes.size14,
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
@@ -50,7 +49,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
               ),
               Text(
                 context.formatAmount(transaction.amount),
-                style: GoogleFonts.workSans(
+                style: TextStyle(
                   fontSize: AppFontSizes.size16,
                   fontWeight: FontWeight.bold,
                   color: isIncome ? const Color(0xFF006C49) : const Color(0xFFDC3545),
@@ -71,7 +70,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
             children: [
               Text(
                 'Payment Mode',
-                style: GoogleFonts.workSans(
+                style: TextStyle(
                   fontSize: AppFontSizes.size14,
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
@@ -81,7 +80,7 @@ class AmountPaymentDetailCard extends StatelessWidget {
                 children: [
                   Text(
                     transaction.paymentMethod,
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,

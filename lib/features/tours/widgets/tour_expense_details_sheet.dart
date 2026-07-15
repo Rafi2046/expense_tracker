@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourExpenseDetailsSheet extends StatelessWidget {
@@ -35,19 +36,19 @@ class TourExpenseDetailsSheet extends StatelessWidget {
     String splitLabel;
     switch (expense.splitType) {
       case 'equal':
-        splitLabel = 'Split equally';
+        splitLabel = context.translate('split_equally');
         break;
       case 'exact':
-        splitLabel = 'Split by exact amounts';
+        splitLabel = context.translate('split_exact');
         break;
       case 'percentage':
-        splitLabel = 'Split by percentages';
+        splitLabel = context.translate('split_percent');
         break;
       case 'exclusion':
-        splitLabel = 'Split with exclusions';
+        splitLabel = context.translate('split_exclusion_label');
         break;
       default:
-        splitLabel = 'Split equally';
+        splitLabel = context.translate('split_equally');
     }
 
     return Container(
@@ -133,14 +134,14 @@ class TourExpenseDetailsSheet extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
-                _buildDetailRow(theme, 'Paid by', payerName),
+                _buildDetailRow(theme, context.translate('paid_by_detail'), payerName),
                 const SizedBox(height: 12),
-                _buildDetailRow(theme, 'Date & Time', formattedDate),
+                _buildDetailRow(theme, context.translate('date_time_detail'), formattedDate),
                 const SizedBox(height: 12),
-                _buildDetailRow(theme, 'Split Method', splitLabel),
+                _buildDetailRow(theme, context.translate('split_method_detail'), splitLabel),
                 if (expense.note != null && expense.note!.isNotEmpty) ...[
                   const SizedBox(height: 12),
-                  _buildDetailRow(theme, 'Note', expense.note!),
+                  _buildDetailRow(theme, context.translate('note_detail'), expense.note!),
                 ],
               ],
             ),
@@ -170,7 +171,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                         Icon(LucideIcons.imageOff, color: Colors.grey.shade400),
                         const SizedBox(width: 12),
                         Text(
-                          'Receipt image path not found',
+                          context.translate('receipt_image_not_found'),
                           style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF9CA3AF)),
                         ),
                       ],
@@ -193,7 +194,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                       onPressed: onEdit,
                       icon: Icon(LucideIcons.edit, color: Colors.white, size: 18),
                       label: Text(
-                        'Edit Expense',
+                        context.translate('edit_expense_button'),
                         style: AppTextStyles.bodyBold.copyWith(color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
@@ -212,7 +213,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                     onPressed: onDelete,
                   icon: Icon(LucideIcons.trash, color: Colors.white, size: 18),
                   label: Text(
-                    'Delete Expense',
+                    context.translate('delete_expense_button'),
                     style: AppTextStyles.bodyBold.copyWith(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(

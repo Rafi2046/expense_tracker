@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 
@@ -30,7 +29,7 @@ class DebtSaveButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           label,
-          style: GoogleFonts.workSans(
+          style: TextStyle(
             fontSize: AppFontSizes.size15,
             fontWeight: FontWeight.bold,
             color: Colors.white,

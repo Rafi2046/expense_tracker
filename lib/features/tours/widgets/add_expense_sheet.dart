@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -310,7 +311,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Attach Receipt',
+              context.translate('attach_receipt'),
               style: AppTextStyles.h2.copyWith(
                 color: theme.colorScheme.onSurface,
               ),
@@ -320,7 +321,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               ctx,
               theme,
               LucideIcons.camera,
-              'Take Photo',
+              context.translate('take_photo'),
               ImageSource.camera,
             ),
             const SizedBox(height: 4),
@@ -328,7 +329,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               ctx,
               theme,
               LucideIcons.image,
-              'Choose from Gallery',
+              context.translate('choose_from_gallery'),
               ImageSource.gallery,
             ),
             const SizedBox(height: 8),
@@ -388,7 +389,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     final today = DateTime.now();
     final isToday =
         d.year == today.year && d.month == today.month && d.day == today.day;
-    if (isToday) return 'Today';
+    if (isToday) return context.translate('today');
     return '${d.day} ${months[d.month - 1]} ${d.year}';
   }
 
@@ -396,9 +397,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     final paidTotal = _paidByAmounts.values.fold(0.0, (a, b) => a + b);
     final roundedPaid = (paidTotal * 100).round();
     final roundedAmount = (_parsedAmount * 100).round();
-    if (_paidByAmounts.isEmpty) return 'Select who paid';
+    if (_paidByAmounts.isEmpty) return context.translate('select_who_paid_error');
     if (roundedPaid != roundedAmount) {
-      return 'Total paid ($_sym$paidTotal) must equal expense amount ($_sym$_parsedAmount)';
+      return context.translate('total_paid_must_equal_expense', namedArgs: {'sym': _sym, 'paid': paidTotal.toStringAsFixed(0), 'amount': _parsedAmount.toStringAsFixed(0)});
     }
     return ExpenseSplitCalculator.validate(
       amount: _parsedAmount,
@@ -478,8 +479,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     if (!success) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Cannot modify expense — tour is completed'),
+          SnackBar(
+            content: Text(context.translate('cannot_modify_completed')),
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -693,7 +694,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _sectionLabel(theme, 'PAID BY'),
+                              _sectionLabel(theme, context.translate('paid_by_section')),
                               ExpenseParticipantSelector(
                                 theme: theme,
                                 participants: widget.participants,
@@ -717,7 +718,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _sectionLabel(theme, 'SPLIT'),
+                              _sectionLabel(theme, context.translate('split_section')),
                               ExpenseSplitTypeSelector(
                                 theme: theme,
                                 splitType: _splitType,
@@ -752,7 +753,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                               if (percentageError) ...[
                                 const SizedBox(height: AppSpacing.s8),
                                 Text(
-                                  'Sum must be 100%',
+                                  context.translate('sum_must_be_100'),
                                   style: AppTextStyles.label.copyWith(
                                     color: AppColors.activeRed,
                                   ),
@@ -761,7 +762,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                               if (exactExceedsError) ...[
                                 const SizedBox(height: AppSpacing.s8),
                                 Text(
-                                  'Amounts exceed total',
+                                  context.translate('amounts_exceed_total'),
                                   style: AppTextStyles.label.copyWith(
                                     color: AppColors.activeRed,
                                   ),
@@ -780,7 +781,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _sectionLabel(theme, 'NOTES'),
+                              _sectionLabel(theme, context.translate('notes_section')),
                               ExpenseNoteField(theme: theme, controller: _noteController),
                             ],
                           ),

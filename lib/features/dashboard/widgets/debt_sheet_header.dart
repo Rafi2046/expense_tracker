@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
@@ -21,7 +20,7 @@ class DebtSheetHeader extends StatelessWidget {
       children: [
         Text(
           titleText,
-          style: GoogleFonts.workSans(
+          style: TextStyle(
             fontSize: AppFontSizes.size18,
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.onSurface,

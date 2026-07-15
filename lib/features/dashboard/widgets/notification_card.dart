@@ -1,7 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -113,7 +112,7 @@ class NotificationCard extends StatelessWidget {
                               item.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.workSans(
+                              style: TextStyle(
                                 fontWeight: item.isRead
                                     ? FontWeight.w600
                                     : FontWeight.bold,
@@ -125,7 +124,7 @@ class NotificationCard extends StatelessWidget {
                           const SizedBox(width: 8),
                           Text(
                             _getTimeAgo(item.dateTime),
-                            style: GoogleFonts.workSans(
+                            style: TextStyle(
                               fontSize: AppFontSizes.size11,
                               color: isDark ? Colors.grey.shade500 : AppColors.textMuted,
                               fontWeight: FontWeight.w500,
@@ -138,7 +137,7 @@ class NotificationCard extends StatelessWidget {
                         item.description,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.workSans(
+                        style: TextStyle(
                           fontSize: AppFontSizes.size13,
                           color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
                           height: 1.4,

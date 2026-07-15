@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TourDashboardRecentActivity extends StatelessWidget {
   const TourDashboardRecentActivity({super.key});
@@ -21,14 +22,14 @@ class TourDashboardRecentActivity extends StatelessWidget {
             Image.asset(AppImages.noExpense, height: 140, width: 140),
 
             Text(
-              'No expenses yet',
+              context.translate('no_expenses_yet'),
               style: AppTextStyles.h3.copyWith(
                 color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 4),
             Text(
-              'Tap + to add the first expense',
+              context.translate('tap_to_add_first_expense'),
               style: AppTextStyles.bodySmall.copyWith(
                 color: isDark
                     ? const Color(0xFF9CA3AF)

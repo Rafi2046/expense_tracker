@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class MonthlyComparisonCard extends StatelessWidget {
@@ -62,7 +63,7 @@ class MonthlyComparisonCard extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Text(
-                'Monthly Comparison',
+                context.translate('monthly_comparison'),
                 style: AppTextStyles.h2.copyWith(color: onSurface),
               ),
             ],
@@ -73,7 +74,7 @@ class MonthlyComparisonCard extends StatelessWidget {
             children: [
               Expanded(
                 child: _MonthCard(
-                  label: 'This Month',
+                  label: context.translate('this_month'),
                   amount: currentAmount,
                   progress: currentPct,
                   color: const Color(0xFF2EBD85),
@@ -85,7 +86,7 @@ class MonthlyComparisonCard extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: _MonthCard(
-                  label: 'Last Month',
+                  label: context.translate('last_month'),
                   amount: previousAmount,
                   progress: previousPct,
                   color: isDark ? Colors.grey.shade600 : const Color(0xFFB3C5B9),
@@ -109,7 +110,7 @@ class MonthlyComparisonCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Net Change',
+                  context.translate('net_change'),
                 style: AppTextStyles.bodySmall.copyWith(
                   fontWeight: FontWeight.w600,
                   color: changeColor,

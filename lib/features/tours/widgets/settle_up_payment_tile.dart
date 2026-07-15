@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class SettleUpPaymentTile extends StatelessWidget {
   final ThemeData theme;
@@ -116,7 +117,7 @@ class SettleUpPaymentTile extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 14),
                     elevation: 0,
                   ),
-                  child: Text('Settle', style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w700, color: AppColors.white)),
+                  child: Text(context.translate('settle_button'), style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w700, color: AppColors.white)),
                 ),
               ),
             ],

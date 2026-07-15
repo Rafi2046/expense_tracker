@@ -86,7 +86,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'BudgetMint Privacy Policy',
+                  context.translate('privacy_policy_title'),
                   style: AppTextStyles.profileTitle.copyWith(
                     color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w800,
@@ -95,7 +95,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Last Updated: July 2026',
+                  context.translate('last_updated'),
                   style: AppTextStyles.caption.copyWith(
                     color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                   ),
@@ -107,44 +107,44 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 _buildSection(
                   context,
                   theme,
-                  '1. Data Ownership & Storage',
-                  'Your financial records, transactions, notes, and profiles are stored locally on your device\'s secure database. We do not transmit or process your financial information on external servers, except when you choose to use our cloud backup and sync service.',
+                  context.translate('data_ownership'),
+                  context.translate('data_ownership_body'),
                 ),
                 _buildSection(
                   context,
                   theme,
-                  '2. Firebase Cloud Backup & Sync',
-                  'If you choose to log in and enable cloud synchronization, your transactions, categories, budgets, and profile data are backed up to secure Firebase servers (Cloud Firestore). This data is strictly used to synchronize your entries across devices and is encrypted in transit and at rest.',
+                  context.translate('firebase_backup'),
+                  context.translate('firebase_backup_body'),
                 ),
                 _buildSection(
                   context,
                   theme,
-                  '3. Security & Encryption',
-                  'Your local database is stored in your device\'s isolated storage directory, accessible only by this application. In addition, when biometric security (Face ID / Touch ID) is enabled, access to the application is protected using your device\'s native secure enclave. We never collect or store your biometric credentials.',
+                  context.translate('security_encryption'),
+                  context.translate('security_encryption_body'),
                 ),
                 _buildSection(
                   context,
                   theme,
-                  '4. No Selling or Sharing',
-                  'We value your privacy. We do not sell, rent, lease, or share your financial logs, personal email, display name, or profile configurations with any third-party advertisers, companies, or analytics networks.',
+                  context.translate('no_selling_sharing'),
+                  context.translate('no_selling_sharing_body'),
                 ),
                 _buildSection(
                   context,
                   theme,
-                  '5. Your Rights & Data Deletion',
-                  'You retain absolute ownership and control over your data. At any time, you can clear all transactions, delete your custom profiles, or delete your entire account and synced backups directly from the Settings menu. Once deleted, the action cannot be undone and your data is permanently wiped from our databases.',
+                  context.translate('rights_deletion'),
+                  context.translate('rights_deletion_body'),
                 ),
                 _buildSection(
                   context,
                   theme,
-                  '6. Policy Changes & Updates',
-                  'We may update our Privacy Policy from time to time. Any changes will be posted on this screen. We encourage you to review this policy periodically for any updates to stay informed about how we protect your information.',
+                  context.translate('policy_changes'),
+                  context.translate('policy_changes_body'),
                 ),
                 _buildSection(
                   context,
                   theme,
-                  '7. Contact & Support',
-                  'If you have any questions or feedback regarding this Privacy Policy or your data, please contact our support team from the Settings menu or email us directly.',
+                  context.translate('contact_support'),
+                  context.translate('contact_support_body'),
                 ),
               ],
             ),

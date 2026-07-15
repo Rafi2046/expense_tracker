@@ -10,6 +10,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/pages/tour_dashboard_screen.dart';
 
 class JoinRequestWaitingScreen extends StatefulWidget {
@@ -81,7 +82,7 @@ class _JoinRequestWaitingScreenState extends State<JoinRequestWaitingScreen> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Join approved for ${widget.tour.name}!'),
+          content: Text(context.translate('join_approved_snackbar', namedArgs: {'name': widget.tour.name})),
           backgroundColor: AppColors.activeGreen,
         ),
       );
@@ -185,8 +186,8 @@ class _JoinRequestWaitingScreenState extends State<JoinRequestWaitingScreen> {
                 // Request Status Title
                 Text(
                   _requestStatus == 'pending'
-                      ? 'Waiting for Host Approval'
-                      : (_requestStatus == 'approved' ? 'Join Request Approved' : 'Join Request Declined'),
+                      ? context.translate('waiting_for_host_approval_title')
+                      : (_requestStatus == 'approved' ? context.translate('join_request_approved_title') : context.translate('declined_title')),
                   style: AppTextStyles.h1.copyWith(
                     color: isDark ? Colors.white : theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w700,
@@ -198,8 +199,8 @@ class _JoinRequestWaitingScreenState extends State<JoinRequestWaitingScreen> {
                 // Request Details text
                 Text(
                   _requestStatus == 'pending'
-                      ? 'Your request to join the tour is pending approval from the host.'
-                      : (_requestStatus == 'approved' ? 'The host has approved your request! Redirecting...' : 'The host has declined your request to join this tour.'),
+                      ? context.translate('pending_approval_desc')
+                      : (_requestStatus == 'approved' ? context.translate('approved_desc') : context.translate('declined_desc')),
                   style: AppTextStyles.body.copyWith(
                     color: isDark ? Colors.white70 : theme.colorScheme.onSurfaceVariant,
                     fontFamily: GoogleFonts.workSans().fontFamily,
@@ -225,7 +226,7 @@ class _JoinRequestWaitingScreenState extends State<JoinRequestWaitingScreen> {
                   child: Column(
                     children: [
                       Text(
-                        'Tour Name',
+                        context.translate('tour_name_label_in_dialog'),
                         style: AppTextStyles.label.copyWith(
                           fontSize: 11,
                           color: isDark ? Colors.white54 : AppColors.textMuted,
@@ -255,7 +256,7 @@ class _JoinRequestWaitingScreenState extends State<JoinRequestWaitingScreen> {
                       onPressed: _cancelRequest,
                       icon: const Icon(LucideIcons.x, size: 16),
                       label: Text(
-                        'Cancel Request',
+                        context.translate('cancel_request'),
                         style: AppTextStyles.bodyBold.copyWith(
                           fontSize: 14,
                           color: AppColors.activeRed,
@@ -284,7 +285,7 @@ class _JoinRequestWaitingScreenState extends State<JoinRequestWaitingScreen> {
                         ),
                       ),
                       child: Text(
-                        'Close',
+                        context.translate('close'),
                         style: AppTextStyles.reportTileTitle.copyWith(
                           fontWeight: FontWeight.w700,
                           color: Colors.white,

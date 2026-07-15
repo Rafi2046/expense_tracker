@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/privacy_toggle_section.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -39,7 +40,7 @@ class PartiesReportHeader extends StatelessWidget {
             color: theme.colorScheme.onSurface,
           ),
           decoration: InputDecoration(
-            hintText: 'Search parties...',
+            hintText: context.translate('search_parties'),
             hintStyle: AppTextStyles.partyFormHint.copyWith(
               fontSize: AppFontSizes.size14,
               color: isDark ? Colors.white30 : null,

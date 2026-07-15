@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TourDateRangePicker extends StatelessWidget {
   final ThemeData theme;
@@ -46,7 +47,7 @@ class TourDateRangePicker extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Duration',
+            context.translate('duration_label'),
             style: AppTextStyles.reportTileTitle.copyWith(
               fontWeight: FontWeight.w400,
               color: textColor.withValues(alpha: 0.6),
@@ -57,7 +58,7 @@ class TourDateRangePicker extends StatelessWidget {
             children: [
               Expanded(
                 child: _DateButton(
-                  label: 'Start',
+                  label: context.translate('start_label'),
                   dateText: _formatDate(startDate),
                   icon: LucideIcons.calendarDays,
                   onTap: onPickStartDate,
@@ -74,7 +75,7 @@ class TourDateRangePicker extends StatelessWidget {
               ),
               Expanded(
                 child: _DateButton(
-                  label: 'End',
+                  label: context.translate('end_label'),
                   dateText: _formatDate(endDate),
                   icon: LucideIcons.calendarCheck,
                   onTap: onPickEndDate,

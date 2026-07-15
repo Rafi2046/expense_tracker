@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TourCurrencySelector extends StatelessWidget {
   final ThemeData theme;
@@ -29,7 +30,7 @@ class TourCurrencySelector extends StatelessWidget {
       child: DropdownButtonFormField<String>(
         initialValue: value,
         decoration: InputDecoration(
-          labelText: 'Currency',
+          labelText: context.translate('currency'),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,

@@ -1,6 +1,6 @@
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -69,8 +69,8 @@ class PartySelectorTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Party',
-                    style: GoogleFonts.workSans(
+                    context.translate('party'),
+                    style: TextStyle(
                       fontSize: AppFontSizes.size10,
                       color: isDark ? Colors.white38 : Colors.grey.shade500,
                       fontWeight: FontWeight.w600,
@@ -79,8 +79,8 @@ class PartySelectorTile extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.s4),
                   Text(
-                    selectedPartyName ?? 'Link to Party (Optional)',
-                    style: GoogleFonts.workSans(
+                    selectedPartyName ?? context.translate('link_to_party_optional'),
+                    style: TextStyle(
                       fontSize: AppFontSizes.size15,
                       fontWeight: hasValue ? FontWeight.w600 : FontWeight.w400,
                       color: hasValue

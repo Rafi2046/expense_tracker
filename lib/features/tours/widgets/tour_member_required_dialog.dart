@@ -3,6 +3,7 @@ import 'package:expense_tracker/features/tours/pages/tour_member_management_scre
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class TourMemberRequiredDialog extends StatelessWidget {
   final String tourId;
@@ -20,14 +21,14 @@ class TourMemberRequiredDialog extends StatelessWidget {
       ),
       backgroundColor: theme.cardColor,
       title: Text(
-        'Members Required',
+        context.translate('members_required_title'),
         style: AppTextStyles.dialogTitle.copyWith(
           fontWeight: FontWeight.w600,
           color: theme.colorScheme.onSurface,
         ),
       ),
       content: Text(
-        'You need at least 2 members in the tour to add expenses or settle up.',
+        context.translate('need_at_least_2_members'),
         style: AppTextStyles.body.copyWith(
           color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
         ),
@@ -35,8 +36,8 @@ class TourMemberRequiredDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(
-            'Cancel',
+            child: Text(
+              context.translate('cancel_button'),
             style: TextStyle(
               color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
             ),
@@ -52,8 +53,8 @@ class TourMemberRequiredDialog extends StatelessWidget {
               ),
             );
           },
-          child: const Text(
-            'Add Members',
+          child: Text(
+            context.translate('add_members_btn'),
             style: TextStyle(
               color: AppColors.activeGreen,
               fontWeight: FontWeight.w600,

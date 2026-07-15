@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/features/tours/widgets/join_tour_sheet.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourListEmptyState extends StatelessWidget {
@@ -43,14 +44,14 @@ class TourListEmptyState extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'Your journey starts here',
+                context.translate('your_journey_starts'),
                 style: AppTextStyles.sectionHeaderTitle.copyWith(
                   color: theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: AppSpacing.s8),
               Text(
-                'Create a new tour or join an existing one\nto seamlessly split expenses with your buddies.',
+                context.translate('journey_description'),
                 textAlign: TextAlign.center,
                 style: AppTextStyles.dialogBody.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
@@ -60,7 +61,7 @@ class TourListEmptyState extends StatelessWidget {
               FilledButton.icon(
                 onPressed: onCreateTour,
                 icon: Icon(LucideIcons.plus, size: 20),
-                label: const Text('Create your first tour'),
+                label: Text(context.translate('create_first_tour')),
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.activeGreen,
                   padding: const EdgeInsets.symmetric(
@@ -77,7 +78,7 @@ class TourListEmptyState extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: onJoinTour ?? () => _showJoinSheet(context),
                 icon: Icon(LucideIcons.qrCode, size: 18),
-                label: const Text('Join with Invite Code'),
+                label: Text(context.translate('join_invite_code')),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.activeGreen,
                   side: BorderSide(

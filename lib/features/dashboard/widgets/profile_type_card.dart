@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -69,7 +68,7 @@ class ProfileTypeCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size15,
                       fontWeight: FontWeight.w600,
                       color: theme.textTheme.titleMedium?.color,
@@ -78,7 +77,7 @@ class ProfileTypeCard extends StatelessWidget {
                   const SizedBox(height: 3),
                   Text(
                     subtitle,
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size12,
                       color: theme.textTheme.bodySmall?.color,
                     ),

@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_statement_selector.dart';
@@ -51,7 +52,12 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
     final theme = Theme.of(context);
     final dateFormat = DateFormat('dd MMM yyyy');
 
-    final headers = ['Date', 'Detail', 'Amount', 'Type'];
+    final headers = [
+      context.translate('date'),
+      context.translate('detail'),
+      context.translate('amount_label'),
+      context.translate('type'),
+    ];
     final rows = reportsProvider.partyStatementTransactions
         .map(
           (item) => {
@@ -59,7 +65,7 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
             'Detail': '${item.partyName} • ${item.description}',
             'Amount':
                 '${context.currencySymbol} ${item.amount.toStringAsFixed(0)}',
-            'Type': item.isInflow ? 'Receive' : 'Give',
+            'Type': item.isInflow ? context.translate('receive') : context.translate('give'),
           },
         )
         .toList();
@@ -83,7 +89,7 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
           ),
         ),
         title: Text(
-          'Party Statement',
+          context.translate('party_statement'),
           style: AppTextStyles.reportAppBarTitle.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
           ),
@@ -137,8 +143,8 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: ReportBottomActions(
-                reportName: 'Party Statement',
-                title: 'Party Statement - $partyName',
+                reportName: context.translate('party_statement'),
+                title: '${context.translate('party_statement')} - $partyName',
                 dateSubtitle: dateSubtitle,
                 headers: headers,
                 rows: rows,

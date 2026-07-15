@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 
 class PartySegmentedTabs extends StatelessWidget {
@@ -61,7 +62,7 @@ class PartySegmentedTabs extends StatelessWidget {
                         color: Colors.transparent,
                         alignment: Alignment.center,
                         child: Text(
-                          'Credit Info',
+                          context.translate('credit_info'),
                           style: activeIndex == 0
                               ? AppTextStyles.partyTabActive
                               : AppTextStyles.partyTabInactive.copyWith(
@@ -78,7 +79,7 @@ class PartySegmentedTabs extends StatelessWidget {
                         color: Colors.transparent,
                         alignment: Alignment.center,
                         child: Text(
-                          'Additional Details',
+                          context.translate('additional_details'),
                           style: activeIndex == 1
                               ? AppTextStyles.partyTabActive
                               : AppTextStyles.partyTabInactive.copyWith(

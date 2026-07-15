@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/login/widgets/custom_round_button.dart';
 
 class SignupSocialButtons extends StatelessWidget {
@@ -34,7 +35,7 @@ class SignupSocialButtons extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
               child: Text(
-                'Or sign up with',
+                context.translate('or_sign_up_with'),
                 style: TextStyle(
                   color: isDark ? Colors.grey.shade400 : AppColors.dividerOrColor,
                 ),

@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -110,7 +111,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
               children: [
                 Expanded(
                   child: Text(
-                    'Select Party to View Report',
+                    context.translate('select_party_to_view_report'),
                     style: AppTextStyles.h3.copyWith(
                       color: theme.colorScheme.onSurface,
                     ),
@@ -125,7 +126,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   child: Text(
-                    'CLEAR',
+                    context.translate('clear').toUpperCase(),
                     style: GoogleFonts.workSans(
                       color: AppColors.activeRed,
                       fontWeight: FontWeight.w600,
@@ -150,7 +151,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
               },
               style: GoogleFonts.workSans(fontSize: AppFontSizes.size14, color: theme.colorScheme.onSurface),
               decoration: InputDecoration(
-                hintText: 'Search parties...',
+                hintText: context.translate('search_parties'),
                 hintStyle: GoogleFonts.workSans(fontSize: AppFontSizes.size14, color: isDark ? Colors.white30 : Colors.grey.shade400),
                 prefixIcon: Icon(LucideIcons.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
                 filled: true,
@@ -182,7 +183,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                         Icon(LucideIcons.users, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
                         const SizedBox(height: 12),
                         Text(
-                          'No parties found',
+                          context.translate('no_parties_found'),
                           style: AppTextStyles.reportTileTitle.copyWith(
                             color: isDark ? Colors.white60 : Colors.grey.shade500,
                             fontWeight: FontWeight.w500,
@@ -234,7 +235,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                           ),
                         ),
                         subtitle: Text(
-                          party.phone ?? 'No phone number',
+                          party.phone ?? context.translate('no_phone_number'),
                           style: AppTextStyles.reportTransactionSubtitle.copyWith(
                             color: isDark ? Colors.white60 : Colors.grey.shade500,
                           ),

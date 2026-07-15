@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_expense_share.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_expense_tile.dart';
 
 class TourDashboardMemberList extends StatelessWidget {
@@ -45,7 +46,7 @@ class TourDashboardMemberList extends StatelessWidget {
     return colors[index % colors.length];
   }
 
-  String _payerNames(Map<String, double> paidBy) {
+  String _payerNames(Map<String, double> paidBy, BuildContext context) {
     final names = <String>[];
     for (final id in paidBy.keys) {
       final p = participants.firstWhere(
@@ -53,16 +54,16 @@ class TourDashboardMemberList extends StatelessWidget {
         orElse: () => TourParticipant(
           id: id,
           tourId: '',
-          name: 'Unknown',
+          name: context.translate('unknown_member'),
           joinedAt: DateTime.now(),
         ),
       );
       names.add(p.name.split(' ').first);
     }
-    if (names.isEmpty) return 'Unknown';
+    if (names.isEmpty) return context.translate('unknown_member');
     if (names.length == 1) return names.first;
-    if (names.length == 2) return '${names.first} & ${names.last}';
-    return '${names.first}, ${names[1]} & ${names.last}';
+    if (names.length == 2) return '${names.first} ${context.translate('and_separator')} ${names.last}';
+    return '${names.first}, ${names[1]} ${context.translate('and_separator')} ${names.last}';
   }
 
   @override
@@ -80,7 +81,7 @@ class TourDashboardMemberList extends StatelessWidget {
             .where((s) => s.expenseId == expense.id)
             .toList();
         final includedCount = expenseShares.where((s) => !s.isExcluded).length;
-        final payerNameStr = _payerNames(expense.paidBy);
+        final payerNameStr = _payerNames(expense.paidBy, context);
 
         return Padding(
           padding: const EdgeInsets.only(bottom: AppSpacing.s8),

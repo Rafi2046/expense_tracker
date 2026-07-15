@@ -13,6 +13,7 @@ import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -252,14 +253,14 @@ class TourExportService {
           ),
           const SizedBox(height: AppSpacing.s12),
           Text(
-            'All settled up',
+            tr('all_settled_up'),
             style: AppTextStyles.h2.copyWith(
               color: const Color(0xFF065F46),
             ),
           ),
           const SizedBox(height: AppSpacing.s4),
           Text(
-            'No payments needed \u2014 everyone is even',
+            tr('no_payments_needed'),
             style: AppTextStyles.bodySmall.copyWith(
               fontWeight: FontWeight.w500,
               color: const Color(0xFF6B7280),
@@ -277,8 +278,8 @@ class TourExportService {
   ) {
     return settlements.asMap().entries.map((entry) {
       final s = entry.value;
-      final from = pById[s.fromParticipantId] ?? 'Unknown';
-      final to = pById[s.toParticipantId] ?? 'Unknown';
+      final from = pById[s.fromParticipantId] ?? tr('unknown_member');
+      final to = pById[s.toParticipantId] ?? tr('unknown_member');
 
       return Container(
         margin: const EdgeInsets.only(bottom: AppSpacing.s12),
@@ -377,7 +378,7 @@ class TourExportService {
         const SizedBox(width: AppSpacing.s6),
         Flexible(
           child: Text(
-            'Generated via BudgetMint  \u2022  Shared Expenses Simplified',
+            tr('generated_via_budgetmint_footer'),
             style: AppTextStyles.caption.copyWith(
               fontSize: AppFontSizes.size9,
               color: Colors.grey.shade400,

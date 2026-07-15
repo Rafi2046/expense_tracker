@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PremiumPricingCard extends StatelessWidget {
@@ -63,7 +62,7 @@ class _PricingOption extends StatelessWidget {
       children: [
         Text(
           amount,
-          style: GoogleFonts.workSans(
+          style: TextStyle(
             fontSize: AppFontSizes.size24,
             fontWeight: FontWeight.w800,
             color: color,
@@ -71,7 +70,7 @@ class _PricingOption extends StatelessWidget {
         ),
         Text(
           period,
-          style: GoogleFonts.workSans(
+          style: TextStyle(
             fontSize: AppFontSizes.size13,
             color: periodColor,
             fontWeight: highlighted ? FontWeight.w600 : FontWeight.w500,

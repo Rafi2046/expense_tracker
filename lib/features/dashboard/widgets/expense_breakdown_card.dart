@@ -2,7 +2,6 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class ExpenseBreakdownItem {
@@ -70,7 +69,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                 fontSize: AppFontSizes.size16,
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
-                fontFamily: GoogleFonts.workSans().fontFamily,
+                fontFamily: TextStyle().fontFamily,
               ),
               children: [
                 TextSpan(text: '${context.translate('expense_breakdown')} '),
@@ -131,7 +130,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                             fontSize: AppFontSizes.size15,
                             fontWeight: FontWeight.bold,
                             color: theme.colorScheme.onSurface,
-                            fontFamily: GoogleFonts.workSans().fontFamily,
+                            fontFamily: TextStyle().fontFamily,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -150,7 +149,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: AppFontSizes.size12,
                             color: AppColors.textMuted,
-                            fontFamily: GoogleFonts.workSans().fontFamily,
+                            fontFamily: TextStyle().fontFamily,
                           ),
                         ),
                       ],
@@ -165,7 +164,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                       fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.w600,
                       color: theme.colorScheme.onSurface,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
+                      fontFamily: TextStyle().fontFamily,
                     ),
                   ),
                 ],

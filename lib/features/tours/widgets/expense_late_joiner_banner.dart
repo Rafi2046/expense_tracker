@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class ExpenseLateJoinerBanner extends StatelessWidget {
   final ThemeData theme;
@@ -31,7 +32,7 @@ class ExpenseLateJoinerBanner extends StatelessWidget {
           const SizedBox(width: 6),
           Expanded(
             child: Text(
-              '$names joined after $dateText — unchecked by default.',
+              context.translate('late_joiner_banner', namedArgs: {'names': names, 'date': dateText}),
               style: AppTextStyles.caption.copyWith(
                 color: AppColors.activeGreen,
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class CreateTourSubmitButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -19,7 +20,7 @@ class CreateTourSubmitButton extends StatelessWidget {
         elevation: 0,
       ),
       child: Text(
-        label ?? 'Create Tour',
+        label ?? context.translate('create_tour_button'),
         style: AppTextStyles.h3.copyWith(
           color: AppColors.white,
         ),

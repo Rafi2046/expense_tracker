@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/utils/category_utils.dart';
 
@@ -36,7 +35,7 @@ class CategoryDetailCard extends StatelessWidget {
           const SizedBox(width: 14),
           Text(
             category,
-            style: GoogleFonts.workSans(
+            style: TextStyle(
               fontSize: AppFontSizes.size15,
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,

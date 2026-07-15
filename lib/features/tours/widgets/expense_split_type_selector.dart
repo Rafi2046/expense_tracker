@@ -3,6 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class ExpenseSplitTypeSelector extends StatelessWidget {
   final ThemeData theme;
@@ -10,7 +11,7 @@ class ExpenseSplitTypeSelector extends StatelessWidget {
   final ValueChanged<String> onSplitTypeChanged;
 
   static const _types = ['equal', 'exact', 'percentage', 'exclusion'];
-  static const _labels = ['Equal', 'Exact', 'Percent', 'Exclude'];
+  static const _labels = ['equal_split_label', 'exact_split_label', 'percent_split_label', 'exclude_split_label'];
   static const _icons = [
     LucideIcons.gripHorizontal,
     LucideIcons.pin,
@@ -56,7 +57,7 @@ class ExpenseSplitTypeSelector extends StatelessWidget {
                       Icon(_icons[i], size: 16, color: active ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.3)),
                       const SizedBox(height: 2),
                       Text(
-                        _labels[i],
+                        context.translate(_labels[i]),
                         style: AppTextStyles.caption.copyWith(
                           fontSize: AppFontSizes.size10,
                           fontWeight: active ? FontWeight.w600 : FontWeight.w500,

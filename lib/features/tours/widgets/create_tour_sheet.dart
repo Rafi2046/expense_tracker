@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'tour_name_field.dart';
@@ -96,8 +97,8 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
     final name = nameController.text.trim();
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a tour name'),
+        SnackBar(
+          content: Text(context.translate('please_enter_tour_name')),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -171,7 +172,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        widget.tourToEdit != null ? 'Edit Tour' : 'Create New Tour',
+                        widget.tourToEdit != null ? context.translate('edit_tour_title') : context.translate('create_tour_title'),
                         style: AppTextStyles.h3.copyWith(
                           color: theme.colorScheme.onSurface,
                         ),
@@ -231,13 +232,13 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                       ),
                                     ),
                                     const SizedBox(height: 20),
-                                    Text('Cover Photo',
+                                    Text(context.translate('cover_photo_label'),
                                       style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w600, color: sTheme.colorScheme.onSurface),
                                     ),
                                     const SizedBox(height: 20),
                                      ListTile(
                                        leading: Icon(LucideIcons.camera, color: sTheme.colorScheme.onSurface),
-                                       title: Text('Take Photo', style: AppTextStyles.reportTileTitle.copyWith(
+                                       title: Text(context.translate('take_photo'), style: AppTextStyles.reportTileTitle.copyWith(
                                          fontWeight: FontWeight.w400,
                                          color: sTheme.colorScheme.onSurface,
                                        )),
@@ -245,7 +246,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                      ),
                                      ListTile(
                                        leading: Icon(LucideIcons.image, color: sTheme.colorScheme.onSurface),
-                                       title: Text('Choose from Gallery', style: AppTextStyles.reportTileTitle.copyWith(
+                                       title: Text(context.translate('choose_from_gallery'), style: AppTextStyles.reportTileTitle.copyWith(
                                          fontWeight: FontWeight.w400,
                                          color: sTheme.colorScheme.onSurface,
                                        )),
@@ -291,7 +292,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                       Icon(LucideIcons.imagePlus,
                                         color: theme.colorScheme.onSurface.withValues(alpha: 0.35), size: 22),
                                       const SizedBox(width: 8),
-                                      Text('Add cover photo',
+                                      Text(context.translate('add_cover_photo'),
                                         style: AppTextStyles.bodyBold.copyWith(
                                           fontWeight: FontWeight.w400,
                                           color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
@@ -307,7 +308,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
 
                       CreateTourSubmitButton(
                         onPressed: _handleSubmit,
-                        label: widget.tourToEdit != null ? 'Save Changes' : null,
+                        label: widget.tourToEdit != null ? context.translate('save_changes') : null,
                       ),
                     ],
                   ),

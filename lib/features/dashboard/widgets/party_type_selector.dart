@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class PartyTypeSelector extends StatelessWidget {
@@ -18,14 +18,14 @@ class PartyTypeSelector extends StatelessWidget {
       children: [
         _buildAnimatedPill(
           context: context,
-          label: 'To Receive',
+          label: context.translate('to_receive'),
           isActive: isReceive,
           onTap: () => onToggleChanged(true),
         ),
         const SizedBox(width: 12),
         _buildAnimatedPill(
           context: context,
-          label: 'To Give',
+          label: context.translate('to_give'),
           isActive: !isReceive,
           onTap: () => onToggleChanged(false),
         ),
@@ -65,7 +65,7 @@ class PartyTypeSelector extends StatelessWidget {
           ),
           child: Text(
             label,
-            style: GoogleFonts.workSans(
+            style: TextStyle(
               fontSize: AppFontSizes.size12,
               fontWeight: FontWeight.w600,
               color: isActive ? Colors.white : (isDark ? Colors.white60 : const Color(0xFF31394D)),

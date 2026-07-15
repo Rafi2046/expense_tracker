@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class MemoDetailCard extends StatelessWidget {
@@ -29,7 +28,7 @@ class MemoDetailCard extends StatelessWidget {
         children: [
           Text(
             'Memo / Detail',
-            style: GoogleFonts.workSans(
+            style: TextStyle(
               fontSize: AppFontSizes.size11,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               fontWeight: FontWeight.w500,
@@ -38,7 +37,7 @@ class MemoDetailCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             note,
-            style: GoogleFonts.workSans(
+            style: TextStyle(
               fontSize: AppFontSizes.size14,
               color: theme.colorScheme.onSurface,
               height: 1.3,

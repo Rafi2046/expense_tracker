@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 
 class AdditionalDetailsForm extends StatelessWidget {
@@ -26,7 +27,7 @@ class AdditionalDetailsForm extends StatelessWidget {
           style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            hintText: 'Party Email',
+            hintText: context.translate('party_email'),
             hintStyle: AppTextStyles.partyFormHint.copyWith(color: isDark ? Colors.white30 : null),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -58,7 +59,7 @@ class AdditionalDetailsForm extends StatelessWidget {
           controller: addressController,
           style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
-            hintText: 'Party Address',
+            hintText: context.translate('party_address'),
             hintStyle: AppTextStyles.partyFormHint.copyWith(color: isDark ? Colors.white30 : null),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -90,7 +91,7 @@ class AdditionalDetailsForm extends StatelessWidget {
           controller: vatController,
           style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
-            hintText: 'VAT Number',
+            hintText: context.translate('vat_number'),
             hintStyle: AppTextStyles.partyFormHint.copyWith(color: isDark ? Colors.white30 : null),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,

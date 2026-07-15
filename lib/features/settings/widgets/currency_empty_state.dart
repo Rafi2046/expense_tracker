@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
@@ -12,7 +13,7 @@ class CurrencyEmptyState extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 40.0),
       child: Center(
         child: Text(
-          'No currencies found',
+          context.translate('no_currencies_found'),
           style: AppTextStyles.reportTileTitle.copyWith(
             color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF),
           ),

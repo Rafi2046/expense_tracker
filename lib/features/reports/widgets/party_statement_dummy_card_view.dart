@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/model/party_statement_entry.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -22,21 +23,21 @@ class PartyStatementDummyCardView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildBalanceBanner(),
+        _buildBalanceBanner(context),
         const SizedBox(height: 12),
-        _buildMoneyFlowRow(),
+        _buildMoneyFlowRow(context),
         const SizedBox(height: 28),
-        Text('Transactions', style: AppTextStyles.reportTransactionTitle),
+        Text(context.translate('transactions'), style: AppTextStyles.reportTransactionTitle),
         const SizedBox(height: 14),
         ...entries.map((e) => Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: _buildTransactionTile(e),
+              child: _buildTransactionTile(context, e),
             )),
       ],
     );
   }
 
-  Widget _buildBalanceBanner() {
+  Widget _buildBalanceBanner(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
@@ -53,7 +54,7 @@ class PartyStatementDummyCardView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Total Receivables',
+          Text(context.translate('total_receivables'),
               style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600)),
           const SizedBox(height: 6),
           Text('৳ 5,300', style: AppTextStyles.displayMedium),
@@ -62,7 +63,7 @@ class PartyStatementDummyCardView extends StatelessWidget {
     );
   }
 
-  Widget _buildMoneyFlowRow() {
+  Widget _buildMoneyFlowRow(BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -76,7 +77,7 @@ class PartyStatementDummyCardView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Money In',
+                Text(context.translate('money_in'),
                     style: AppTextStyles.reportStatLabel
                         .copyWith(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
@@ -97,7 +98,7 @@ class PartyStatementDummyCardView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Money Out',
+                Text(context.translate('money_out'),
                     style: AppTextStyles.reportStatLabel
                         .copyWith(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
@@ -110,7 +111,8 @@ class PartyStatementDummyCardView extends StatelessWidget {
     );
   }
 
-  Widget _buildTransactionTile(PartyStatementEntry e) {
+  Widget _buildTransactionTile(BuildContext context, PartyStatementEntry e) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(

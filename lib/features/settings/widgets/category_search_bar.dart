@@ -1,5 +1,5 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -39,13 +39,13 @@ class CategorySearchBar extends StatelessWidget {
             child: TextField(
               controller: controller,
               textInputAction: TextInputAction.done,
-              style: GoogleFonts.workSans(
+              style: TextStyle(
                 color: theme.colorScheme.onSurface,
                 fontSize: AppFontSizes.size15,
               ),
               decoration: InputDecoration(
-                hintText: 'Enter category name, then tap +',
-                hintStyle: GoogleFonts.workSans(
+                hintText: context.translate('enter_category_name_hint'),
+                hintStyle: TextStyle(
                   color: isDark
                       ? Colors.grey.shade600
                       : Colors.grey.shade400,

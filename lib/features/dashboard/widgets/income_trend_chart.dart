@@ -2,7 +2,6 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_trend_info_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'dart:math' show max;
@@ -51,7 +50,7 @@ class IncomeTrendChart extends StatelessWidget {
                   fontSize: AppFontSizes.size18,
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
+                  fontFamily: TextStyle().fontFamily,
                 ),
               ),
               IconButton(
@@ -84,7 +83,7 @@ class IncomeTrendChart extends StatelessWidget {
                   fontSize: AppFontSizes.size11,
                   color: AppColors.textMuted,
                   fontWeight: FontWeight.w600,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
+                  fontFamily: TextStyle().fontFamily,
                 ),
               ),
               primaryYAxis: NumericAxis(
@@ -102,7 +101,7 @@ class IncomeTrendChart extends StatelessWidget {
                   fontSize: AppFontSizes.size11,
                   color: AppColors.textMuted,
                   fontWeight: FontWeight.w600,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
+                  fontFamily: TextStyle().fontFamily,
                 ),
                 axisLabelFormatter: (AxisLabelRenderDetails details) {
                   String label = details.text;
@@ -117,7 +116,7 @@ class IncomeTrendChart extends StatelessWidget {
                       fontSize: AppFontSizes.size11,
                       color: AppColors.textMuted,
                       fontWeight: FontWeight.w600,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
+                      fontFamily: TextStyle().fontFamily,
                     ),
                   );
                 },

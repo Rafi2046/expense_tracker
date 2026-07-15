@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/settings/widgets/info_row_tile.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class PersonalInfoDetailsCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          'PERSONAL DETAILS',
+          context.translate('personal_details'),
           style: AppTextStyles.caption.copyWith(
             fontWeight: FontWeight.bold,
             color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
@@ -53,25 +54,25 @@ class PersonalInfoDetailsCard extends StatelessWidget {
             children: [
               InfoRowTile(
                 icon: LucideIcons.phoneCall,
-                label: 'Phone Number',
+                label: context.translate('phone_number'),
                 value: phone,
               ),
               Divider(height: 1, color: borderColor),
               InfoRowTile(
                 icon: LucideIcons.calendar,
-                label: 'Date of Birth',
+                label: context.translate('date_of_birth'),
                 value: dob,
               ),
               Divider(height: 1, color: borderColor),
               InfoRowTile(
                 icon: gender == 'Male' ? LucideIcons.mars : LucideIcons.venus,
-                label: 'Gender',
+                label: context.translate('gender'),
                 value: gender,
               ),
               Divider(height: 1, color: borderColor),
               InfoRowTile(
                 icon: LucideIcons.mail,
-                label: 'Email Address',
+                label: context.translate('email_address'),
                 value: email,
               ),
             ],

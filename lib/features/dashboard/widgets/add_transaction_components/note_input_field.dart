@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -22,13 +21,13 @@ class NoteInputField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       maxLines: 2,
-      style: GoogleFonts.workSans(
+      style: TextStyle(
         fontSize: AppFontSizes.size15,
         color: theme.colorScheme.onSurface,
       ),
       decoration: InputDecoration(
         hintText: 'Add a note/detail (optional)...',
-        hintStyle: GoogleFonts.workSans(
+        hintStyle: TextStyle(
           fontSize: AppFontSizes.size15,
           color: isDark ? Colors.white30 : Colors.grey.shade400,
         ),

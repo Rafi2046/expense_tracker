@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -60,7 +59,7 @@ class PremiumHeaderSection extends StatelessWidget {
         const SizedBox(height: 20),
         Text(
           'Go Premium',
-          style: GoogleFonts.workSans(
+          style: TextStyle(
             fontSize: AppFontSizes.size28,
             fontWeight: FontWeight.w800,
             color: Colors.white,
@@ -69,7 +68,7 @@ class PremiumHeaderSection extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           'Unlock the full power of your finance tracker',
-          style: GoogleFonts.workSans(
+          style: TextStyle(
             fontSize: AppFontSizes.size14,
             color: Colors.white.withValues(alpha: 0.7),
             fontWeight: FontWeight.w400,

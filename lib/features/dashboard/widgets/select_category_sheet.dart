@@ -5,7 +5,6 @@ import 'package:expense_tracker/features/dashboard/widgets/add_new_category_tile
 import 'package:expense_tracker/features/dashboard/widgets/category_list_row.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_search_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
@@ -70,7 +69,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
           widget.isIncome
               ? 'Add New Income Category'
               : 'Add New Expense Category',
-          style: GoogleFonts.workSans(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: AppFontSizes.size16,
           ),
@@ -104,7 +103,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
             onPressed: () => Navigator.pop(ctx),
             child: Text(
               'Cancel',
-              style: GoogleFonts.workSans(
+              style: TextStyle(
                 color: Colors.grey.shade600,
                 fontWeight: FontWeight.w600,
               ),
@@ -134,7 +133,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
             },
             child: Text(
               'Add',
-              style: GoogleFonts.workSans(
+              style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
@@ -166,7 +165,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
         ),
         title: Text(
           'Rename Category',
-          style: GoogleFonts.workSans(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: AppFontSizes.size16,
           ),
@@ -195,7 +194,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
             onPressed: () => Navigator.pop(ctx),
             child: Text(
               'Cancel',
-              style: GoogleFonts.workSans(
+              style: TextStyle(
                 color: Colors.grey.shade600,
                 fontWeight: FontWeight.w600,
               ),
@@ -227,7 +226,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
             },
             child: Text(
               'Rename',
-              style: GoogleFonts.workSans(
+              style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
@@ -310,7 +309,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                 widget.isIncome
                     ? 'Select Category for Income'
                     : 'Select Category for Expense',
-                style: GoogleFonts.workSans(
+                style: TextStyle(
                   fontSize: AppFontSizes.size18,
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
@@ -347,7 +346,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                           padding: const EdgeInsets.all(20.0),
                           child: Text(
                             'No categories found.',
-                            style: GoogleFonts.workSans(
+                            style: TextStyle(
                               color: isDark ? Colors.white38 : Colors.grey.shade400,
                               fontSize: AppFontSizes.size14,
                             ),

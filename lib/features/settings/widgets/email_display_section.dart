@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
@@ -19,7 +20,7 @@ class EmailDisplaySection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Email Address',
+          context.translate('email_address'),
           style: AppTextStyles.partyFormLabel.copyWith(color: isDark ? Colors.grey.shade400 : null),
         ),
         const SizedBox(height: 6),

@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -31,7 +32,7 @@ class PartyBalanceInput extends StatelessWidget {
             style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
-              hintText: 'Opening Balance',
+              hintText: context.translate('opening_balance'),
               hintStyle: AppTextStyles.partyFormHint.copyWith(color: isDark ? Colors.white30 : null),
               prefixText: '$currencySymbol ',
               prefixStyle: AppTextStyles.partyFormInput.copyWith(
@@ -67,7 +68,7 @@ class PartyBalanceInput extends StatelessWidget {
             ),
             onTap: onSelectDate,
             decoration: InputDecoration(
-              labelText: 'As of Date',
+              labelText: context.translate('as_of_date'),
               labelStyle: AppTextStyles.partyFormLabel.copyWith(
                 fontSize: AppFontSizes.size12,
                 fontWeight: FontWeight.w600,

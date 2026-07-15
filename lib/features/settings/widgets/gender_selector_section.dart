@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -22,7 +23,7 @@ class GenderSelectorSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Gender',
+          context.translate('gender'),
           style: AppTextStyles.bodySmall.copyWith(
             fontWeight: FontWeight.w600,
             color: isDark ? Colors.grey.shade400 : Colors.black54,
@@ -31,6 +32,7 @@ class GenderSelectorSection extends StatelessWidget {
         const SizedBox(height: 8),
         Row(
           children: ['Male', 'Female'].map((gender) {
+            final genderLabel = context.translate(gender.toLowerCase());
             final isSelected = selectedGender == gender;
             final genderIcon = gender == 'Male' ? LucideIcons.mars : LucideIcons.venus;
             final activeColor = gender == 'Male' ? const Color(0xFF1E88E5) : const Color(0xFFD81B60);
@@ -65,7 +67,7 @@ class GenderSelectorSection extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        gender,
+                        genderLabel,
                         style: AppTextStyles.bodyBold.copyWith(
                           color: isSelected ? Colors.white : theme.colorScheme.onSurface,
                         ),

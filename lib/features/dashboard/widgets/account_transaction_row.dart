@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
@@ -182,7 +181,7 @@ class AccountTransactionRow extends StatelessWidget {
                 children: [
                   Text(
                     isIncome ? 'Income #1' : 'Expense #1',
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size10,
                       fontWeight: FontWeight.w600,
                       color: isIncome
@@ -195,7 +194,7 @@ class AccountTransactionRow extends StatelessWidget {
                     children: [
                       Text(
                         amountPrefix,
-                        style: GoogleFonts.workSans(
+                        style: TextStyle(
                           fontSize: AppFontSizes.size14,
                           fontWeight: FontWeight.bold,
                           color: amountColor,
@@ -203,7 +202,7 @@ class AccountTransactionRow extends StatelessWidget {
                       ),
                       PrivacyMaskedText(
                         amount: amount,
-                        style: GoogleFonts.workSans(
+                        style: TextStyle(
                           fontSize: AppFontSizes.size14,
                           fontWeight: FontWeight.bold,
                           color: amountColor,
@@ -223,7 +222,7 @@ class AccountTransactionRow extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: GoogleFonts.workSans(
+                      style: TextStyle(
                         fontSize: AppFontSizes.size14,
                         fontWeight: FontWeight.bold,
                         color: theme.colorScheme.onSurface,
@@ -244,7 +243,7 @@ class AccountTransactionRow extends StatelessWidget {
                       children: [
                         Text(
                           'Bal: ',
-                          style: GoogleFonts.workSans(
+                          style: TextStyle(
                             fontSize: AppFontSizes.size10,
                             fontWeight: FontWeight.w600,
                             color: isDark ? theme.primaryColor : const Color(0xFF006C49),
@@ -252,7 +251,7 @@ class AccountTransactionRow extends StatelessWidget {
                         ),
                         PrivacyMaskedText(
                           amount: runningBal,
-                          style: GoogleFonts.workSans(
+                          style: TextStyle(
                             fontSize: AppFontSizes.size10,
                             fontWeight: FontWeight.w600,
                             color: isDark ? theme.primaryColor : const Color(0xFF006C49),
@@ -271,7 +270,7 @@ class AccountTransactionRow extends StatelessWidget {
                 children: [
                   Text(
                     DateFormat('dd MMM yyyy • h:mm a').format(dateTime),
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size11,
                       color: AppColors.textMuted,
                     ),
@@ -284,7 +283,7 @@ class AccountTransactionRow extends StatelessWidget {
                             const SizedBox(width: 4),
                             Text(
                               displayCategory,
-                              style: GoogleFonts.workSans(
+                              style: TextStyle(
                                 fontSize: AppFontSizes.size10,
                                 color: const Color(0xFF7C3AED),
                                 fontWeight: FontWeight.w600,
@@ -294,7 +293,7 @@ class AccountTransactionRow extends StatelessWidget {
                         )
                       : Text(
                           displayCategory,
-                          style: GoogleFonts.workSans(
+                          style: TextStyle(
                             fontSize: AppFontSizes.size10,
                             color: AppColors.textMuted,
                             fontWeight: FontWeight.w500,

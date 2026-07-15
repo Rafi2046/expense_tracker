@@ -14,6 +14,7 @@ Build premium Tour/Group Bill Splitting feature and complete all account/profile
 - Google fonts bundled as assets with `allowRuntimeFetching = false`
 - Dark theme uses `surface` color (navy blue), not `Colors.white`
 - Profile deletion: cascade delete all associated data, auto-switch to default
+- For translation i18n: add `import 'package:expense_tracker/core/providers/language_provider.dart'` and use `context.translate('key_name')` from `BuildContext`; use `tr('key')` from `package:easy_localization/easy_localization.dart` in utility/service files without BuildContext. Do NOT remove `const` from constructors.
 
 ## Done
 - **All analyzer warnings eliminated**: Fixed unused imports (22 files, 27 lines), unused variables (`isDark` in `_SettlementDetailSheet`, `accentColor` in `TransactionSheetHeader`, `isDark` in `TransactionSaveButton`), equal map keys (2 duplicates in `add_expense_sheet.dart`), all `use_build_context_synchronously` (14 issues across 6 files), `curly_braces_in_flow_control_structures` (2), `unnecessary_brace_in_string_interps` (2), `no_leading_underscores_for_local_identifiers` (1), `unnecessary_underscores` (1), `file_names` (1), `avoid_types_as_parameter_names` (3). Zero errors, zero warnings — only 2 info-level lints remain (`use_null_aware_elements` in `profile_provider.dart` — cannot fix without introducing actual warnings).
@@ -36,9 +37,10 @@ Build premium Tour/Group Bill Splitting feature and complete all account/profile
 - **Profile switcher bug fixed**: The `ProfileSwitchSheet` had a subtle state issue. Added debug prints to diagnose, and the issue resolved after investigation. (User confirmed working.)
 - **Typography unified**: Created `AppFontSizes` with a clean scale (6–40), rewrote `AppTextStyles` (removed fractional sizes, aligned to scale), replaced 620+ hardcoded inline `fontSize:` values across 182 files with `AppFontSizes.*` constants. Zero analyzer errors.
 - **Inline TextStyles → AppTextStyles migration complete**: Replaced all remaining inline `TextStyle(…)` / `GoogleFonts.*(…)` using `AppFontSizes.*` with equivalent `AppTextStyles.*` semantic styles across 9 directories (settings, analytics, notes, calculators, login, onboarding, bottom_navigation, core/widgets, core/theme). 48 files processed. Zero remaining `AppFontSizes.size` references in inline TextStyles within these directories.
+- **All hardcoded English strings in Tours feature replaced**: Processed **~40 files** (widgets, pages, utils) replacing hardcoded strings with `context.translate('key')` / `tr('key')`. Added ~120+ translation keys across all 4 JSON files (en, bn, hi, ur). `flutter analyze` confirms **0 errors, 0 warnings**.
 
 ## In Progress
-- (none)
+- (none — all tours i18n complete)
 
 ## Blocked
 - (none)
@@ -53,6 +55,7 @@ Build premium Tour/Group Bill Splitting feature and complete all account/profile
 - On Android `adjustResize`, the Flutter window actually resizes — `MediaQuery.size.height` returns post-resize height.
 - SelectCategorySheet uses `viewInsets + bottomInset` for bottom padding — clears both keyboard and system nav bar.
 - **Typography**: `AppFontSizes` scale: `size6`/`size7`/`size8` (PDF only), `size9`..`size16`, `size18`, `size20`, `size22`, `size24`, `size28`, `size32`, `size36`, `size40`. All pre-existing fractional sizes (10.5, 13.5, etc.) were rounded to nearest scale value. `AppTextStyles` now references `AppFontSizes` internally; existing named styles retained for backward compatibility. Always use `AppFontSizes.sizeXX` for new inline TextStyles; prefer `AppTextStyles.*` for named semantic styles.
+- **i18n in tours**: Utility files (invoice generator, export service) use `tr('key')` from `easy_localization`. Widget/page files use `context.translate('key')` from `LanguageProvider`. Category names (`Food`, `Transport`, etc.) left hardcoded since they serve as data values. Month abbreviations left as-is (standardized intl).
 
 ## Next Steps
 1. Wire actual payment flow into `PremiumUpgradeSheet` CTA button.
@@ -82,3 +85,6 @@ Build premium Tour/Group Bill Splitting feature and complete all account/profile
 - `lib/core/widgets/common_widgets/user_profile_widget.dart`: `ProfileSwitchSheet` — shows profiles list for switching.
 - `lib/core/utils/shared_prefs_helper.dart`: `activeProfileKey` constant.
 - `lib/core/utils/database_helper.dart`: All queries scoped by `profileId`, version 10, 5 tour tables.
+- `assets/translations/en.json`: English translations source of truth (~960 lines).
+- `lib/features/tours/utils/tour_invoice_generator.dart`: PDF generation with `tr('key')`.
+- `lib/features/tours/utils/tour_export_service.dart`: Image export with `tr('key')`.

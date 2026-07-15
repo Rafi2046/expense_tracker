@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,7 @@ class InfoRowTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    value.isEmpty ? 'Not set' : value,
+                    value.isEmpty ? context.translate('not_set') : value,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.label.copyWith(

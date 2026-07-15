@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:flutter/material.dart';
 
 class ProfileAvatarSection extends StatelessWidget {
   final String partyName;
@@ -69,7 +70,7 @@ class ProfileAvatarSection extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Party Account',
+            context.translate('party_account'),
             style: AppTextStyles.label.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
               letterSpacing: 0.8,

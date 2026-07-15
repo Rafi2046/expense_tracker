@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -30,7 +29,7 @@ class ProfileInfoBanner extends StatelessWidget {
           Expanded(
             child: Text(
               'You can also create & manage multiple profiles from the homepage later.',
-              style: GoogleFonts.workSans(
+              style: TextStyle(
                 fontSize: AppFontSizes.size12,
                 color: theme.textTheme.bodySmall?.color,
               ),

@@ -1,6 +1,5 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_breakdown_item.dart';
 
@@ -57,7 +56,7 @@ class CategoryBreakdownList extends StatelessWidget {
                               ? context.translate(lowerName)
                               : item.name;
                         })(),
-                        style: GoogleFonts.workSans(
+                        style: TextStyle(
                           fontSize: AppFontSizes.size11,
                           fontWeight: FontWeight.w600,
                           color: onSurface,
@@ -86,7 +85,7 @@ class CategoryBreakdownList extends StatelessWidget {
                   item.percentage < 1
                       ? '${item.percentage.toStringAsFixed(1)}%'
                       : '${item.percentage.toStringAsFixed(0)}%',
-                  style: GoogleFonts.workSans(
+                  style: TextStyle(
                     fontSize: AppFontSizes.size11,
                     fontWeight: FontWeight.w700,
                     color: onSurface.withValues(alpha: 0.7),

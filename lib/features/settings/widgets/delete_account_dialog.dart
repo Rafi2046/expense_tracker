@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
@@ -104,8 +105,8 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
         if (password.isEmpty) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Please enter your password'),
+              SnackBar(
+                content: Text(context.translate('please_enter_password')),
                 backgroundColor: AppColors.activeRed,
               ),
             );
@@ -142,10 +143,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text(
-            'Something went wrong. Please try again.',
-            style: TextStyle(color: Colors.white),
-          ),
+          content: Text(context.translate('something_wrong')),
           backgroundColor: AppColors.activeRed,
         ),
       );

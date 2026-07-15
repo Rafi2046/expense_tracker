@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
@@ -33,7 +32,7 @@ class AddNewCategoryTile extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          textStyle: GoogleFonts.workSans(
+          textStyle: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: AppFontSizes.size14,
           ),

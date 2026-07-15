@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -90,7 +91,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                 },
               )
             : Text(
-                'Select Currency',
+                context.translate('select_currency'),
                 style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
               ),
         centerTitle: true,
@@ -122,7 +123,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
             // Current Currency Pinned flat card
             if (!_isSearching || filtered.contains(selectedCurrency)) ...[
               CurrencyListHeader(
-                title: 'CURRENT CURRENCY',
+                title: context.translate('current_currency'),
                 letterSpacing: 1.2,
                 padding: const EdgeInsets.only(bottom: 10),
               ),

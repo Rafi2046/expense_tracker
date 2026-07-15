@@ -6,6 +6,7 @@ import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/widgets/add_expense_sheet.dart';
 import 'package:expense_tracker/features/tours/pages/settle_up_screen.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
@@ -134,10 +135,10 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 theme.colorScheme.onSurface,
           ),
         ),
-        body: const Center(
+        body: Center(
           child: Text(
-            'Tour not found',
-            style: TextStyle(color: Color(0xFF6B7280)),
+            context.translate('tour_not_found'),
+            style: const TextStyle(color: Color(0xFF6B7280)),
           ),
         ),
       );
@@ -192,7 +193,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 color: AppColors.activeGreen,
               ),
             ),
-            tooltip: 'Manage Members',
+            tooltip: context.translate('manage_members_tooltip'),
           ),
 
           IconButton(
@@ -211,7 +212,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 color: AppColors.activeGreen,
               ),
             ),
-            tooltip: 'Export',
+            tooltip: context.translate('export_tooltip'),
           ),
 
           PopupMenuButton<String>(
@@ -242,7 +243,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                   children: [
                     Icon(LucideIcons.pencil, size: 18, color: theme.colorScheme.onSurface),
                     const SizedBox(width: 10),
-                    Text('Edit Tour', style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface)),
+                    Text(context.translate('edit_tour'), style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface)),
                   ],
                 ),
               ),
@@ -317,7 +318,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Join Request',
+                                          context.translate('join_request_label'),
                                           style: AppTextStyles.label.copyWith(
                                             color: AppColors.activeGreen,
                                             fontWeight: FontWeight.w600,
@@ -360,7 +361,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                                         ),
                                         padding: const EdgeInsets.symmetric(vertical: 10),
                                       ),
-                                      child: const Text('Decline'),
+                                      child: Text(context.translate('decline_button')),
                                     ),
                                   ),
                                   const SizedBox(width: AppSpacing.s12),
@@ -382,7 +383,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                                         ),
                                         padding: const EdgeInsets.symmetric(vertical: 10),
                                       ),
-                                      child: const Text('Accept'),
+                                      child: Text(context.translate('accept_button')),
                                     ),
                                   ),
                                 ],
@@ -452,8 +453,8 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         onAddExpense: () {
           if (tour.isCompleted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Tour is completed — cannot add expenses'),
+              SnackBar(
+                content: Text(context.translate('tour_completed_no_expense')),
                 behavior: SnackBarBehavior.floating,
               ),
             );
@@ -523,13 +524,13 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         backgroundColor: theme.cardColor,
         title: Text(
-          'Delete Expense',
+          context.translate('delete_expense_title'),
           style: AppTextStyles.dialogTitle.copyWith(
             color: theme.colorScheme.onSurface,
           ),
         ),
         content: Text(
-          'Are you sure you want to delete this expense? This action cannot be undone.',
+          context.translate('delete_expense_confirm_msg'),
           style: AppTextStyles.body.copyWith(
             color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF4B5563),
           ),
@@ -538,7 +539,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
-              'Cancel',
+              context.translate('cancel_button'),
               style: TextStyle(
                 color: isDark
                     ? const Color(0xFF9CA3AF)
@@ -555,24 +556,24 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 final scaffoldMessenger = ScaffoldMessenger.of(context);
                 if (success) {
                   scaffoldMessenger.showSnackBar(
-                    const SnackBar(
-                      content: Text('Expense deleted successfully'),
+                    SnackBar(
+                      content: Text(context.translate('expense_deleted')),
                       backgroundColor: AppColors.activeGreen,
                     ),
                   );
                 } else {
                   scaffoldMessenger.showSnackBar(
-                    const SnackBar(
-                      content: Text('Only the tour creator can delete expenses'),
+                    SnackBar(
+                      content: Text(context.translate('only_creator_delete_expense')),
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
                 }
               }
             },
-            child: const Text(
-              'Delete',
-              style: TextStyle(
+            child: Text(
+              context.translate('delete_button'),
+              style: const TextStyle(
                 color: AppColors.activeRed,
                 fontWeight: FontWeight.w700,
               ),

@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/budget_provider.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/budget_category_progress_list.dart';
 import 'package:expense_tracker/features/dashboard/widgets/budget_management_header.dart';
@@ -36,7 +37,7 @@ class BudgetManagementScreen extends StatelessWidget {
         scrolledUnderElevation: 0,
         leading: const BackButton(),
         title: Text(
-          'Budget Management',
+          context.translate('budget_management'),
           style: AppTextStyles.reportAppBarTitle.copyWith(
             color: theme.colorScheme.onSurface,
           ),
@@ -89,7 +90,7 @@ class BudgetManagementScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.s12),
                       Text(
-                        'Add some expenses to see your budget breakdown',
+                        context.translate('add_expenses_to_see_budget'),
                         style: AppTextStyles.cardStatusText,
                         textAlign: TextAlign.center,
                       ),

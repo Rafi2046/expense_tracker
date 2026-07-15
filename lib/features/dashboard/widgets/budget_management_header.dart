@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -66,7 +67,7 @@ class BudgetManagementHeader extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.w12),
               Text(
-                'Budget Overview',
+                context.translate('budget_overview'),
                 style: AppTextStyles.cardTitle.copyWith(
                   color: Colors.white,
                   fontSize: AppFontSizes.size13,
@@ -91,7 +92,7 @@ class BudgetManagementHeader extends StatelessWidget {
                       Icon(LucideIcons.edit, color: Colors.white, size: 14),
                       const SizedBox(width: AppSpacing.w4),
                       Text(
-                        'Edit',
+                        context.translate('edit'),
                         style: AppTextStyles.cardStatusText.copyWith(
                           color: Colors.white,
                           fontSize: AppFontSizes.size12,
@@ -107,23 +108,23 @@ class BudgetManagementHeader extends StatelessWidget {
           Row(
             children: [
               _HeaderStat(
-                label: 'Total Budget',
+                label: context.translate('total_budget'),
                 value: hasBudget
                     ? '$currency ${_formatAmount(budgetAmount)}'
-                    : 'Not set',
+                    : context.translate('not_set'),
                 color: Colors.white70,
               ),
               const Spacer(),
               if (hasBudget)
                 _HeaderStat(
-                  label: 'Spent',
+                  label: context.translate('spent'),
                   value: '$currency ${_formatAmount(monthlyExpense)}',
                   color: isOver ? AppColors.activeRed : Colors.white,
                 ),
               const Spacer(),
               if (hasBudget)
                 _HeaderStat(
-                  label: 'Remaining',
+                  label: context.translate('remaining'),
                   value: '$currency ${_formatAmount(remaining)}',
                   color: isOver ? AppColors.activeRed : const Color(0xFF2EBD85),
                 ),
@@ -142,7 +143,7 @@ class BudgetManagementHeader extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.s6),
             Text(
-              '${percentage.toStringAsFixed(1)}% used',
+              context.translate('percent_used', namedArgs: {'percentage': percentage.toStringAsFixed(1)}),
               style: AppTextStyles.cardStatusText.copyWith(
                 color: Colors.white70,
                 fontSize: AppFontSizes.size11,
@@ -186,7 +187,7 @@ class _HeaderStat extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label.toUpperCase(),
+          label,
           style: AppTextStyles.cardTitle.copyWith(
             color: Colors.white60,
             fontSize: AppFontSizes.size9,

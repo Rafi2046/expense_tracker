@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
@@ -31,7 +32,7 @@ class DeleteAccountWarningHeader extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'Delete Account',
+          context.translate('delete_account'),
           style: AppTextStyles.h1.copyWith(
             fontSize: AppFontSizes.size22,
             fontWeight: FontWeight.w800,

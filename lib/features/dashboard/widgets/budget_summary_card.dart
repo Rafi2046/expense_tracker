@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/budget_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/budget_progress_section.dart';
 import 'package:expense_tracker/features/dashboard/widgets/over_budget_warning.dart';
@@ -47,7 +48,7 @@ class BudgetSummaryCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Monthly Budget',
+                    context.translate('monthly_budget'),
                     style: AppTextStyles.cardTitle,
                   ),
                   budgetProvider.hasBudget
@@ -55,7 +56,7 @@ class BudgetSummaryCard extends StatelessWidget {
                           amount: budgetProvider.amount,
                           style: AppTextStyles.cardStatusText,
                         )
-                      : Text('Tap to set', style: AppTextStyles.cardStatusText),
+                      : Text(context.translate('tap_to_set'), style: AppTextStyles.cardStatusText),
                 ],
               ),
               if (budgetProvider.hasBudget) ...[
@@ -70,7 +71,7 @@ class BudgetSummaryCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _SummaryLabel(
-                        label: 'Spent',
+                        label: context.translate('spent'),
                         value: PrivacyMaskedText(
                           amount: monthlyExpense,
                           style: AppTextStyles.cardValueGreen.copyWith(
@@ -83,7 +84,7 @@ class BudgetSummaryCard extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: _SummaryLabel(
-                        label: 'Remaining',
+                        label: context.translate('remaining'),
                         value: PrivacyMaskedText(
                           amount: remaining,
                           style: AppTextStyles.cardValueGreen.copyWith(

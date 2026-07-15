@@ -10,6 +10,7 @@ import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/utils/debt_simplifier.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TourInvoiceGenerator {
   TourInvoiceGenerator._();
@@ -85,9 +86,9 @@ class TourInvoiceGenerator {
     final isAllSettled = totalOutstanding == 0;
 
     return pw.Document(
-      title: '${tour.name} Invoice',
-      author: 'BudgetMint',
-      subject: 'Tour Expense Invoice',
+      title: tr('invoice_title_with_name', namedArgs: {'name': tour.name}),
+      author: tr('pdf_author'),
+      subject: tr('pdf_subject'),
     )..addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
@@ -134,7 +135,7 @@ class TourInvoiceGenerator {
             style: pw.TextStyle(fontSize: AppFontSizes.size10, color: PdfColors.grey600),
           ),
           pw.Text(
-            'BudgetMint',
+            tr('budgetmint'),
             style: pw.TextStyle(fontSize: AppFontSizes.size10, color: PdfColors.grey600),
           ),
         ],
@@ -154,7 +155,7 @@ class TourInvoiceGenerator {
         mainAxisAlignment: pw.MainAxisAlignment.center,
         children: [
           pw.Text(
-            'Generated via BudgetMint - Shared Expenses Simplified',
+            tr('generated_via_budgetmint_footer'),
             style: pw.TextStyle(fontSize: AppFontSizes.size8, color: PdfColors.grey500),
           ),
         ],
@@ -204,7 +205,7 @@ class TourInvoiceGenerator {
                 ),
                 pw.SizedBox(height: 4),
                 pw.Text(
-                  'Currency: ${tour.currency}',
+                  tr('currency_prefix', namedArgs: {'currency': tour.currency}),
                   style: pw.TextStyle(fontSize: AppFontSizes.size10, color: PdfColors.grey600),
                 ),
               ],
@@ -223,7 +224,7 @@ class TourInvoiceGenerator {
             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
             children: [
               pw.Text(
-                'TOTAL SPENT',
+                tr('total_spent_label'),
                 style: pw.TextStyle(
                   fontSize: AppFontSizes.size10,
                   fontWeight: pw.FontWeight.bold,
@@ -251,7 +252,7 @@ class TourInvoiceGenerator {
   static Map<String, double> _groupByCategory(List<TourExpense> expenses) {
     final map = <String, double>{};
     for (final e in expenses) {
-      final cat = e.category ?? 'Uncategorized';
+      final cat = e.category ?? tr('uncategorized');
       map[cat] = (map[cat] ?? 0) + e.amount;
     }
     return map;
@@ -274,7 +275,7 @@ class TourInvoiceGenerator {
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle('WHERE THE MONEY WENT'),
+          _buildSectionTitle(tr('where_the_money_went')),
           pw.SizedBox(height: 16),
           pw.TableHelper.fromTextArray(
             headerStyle: pw.TextStyle(
@@ -293,7 +294,7 @@ class TourInvoiceGenerator {
                 bottom: pw.BorderSide(color: PdfColors.grey200, width: 0.5),
               ),
             ),
-            headers: ['Category', 'Amount'],
+            headers: [tr('category_colon'), tr('amount_colon')],
             data: entries
                 .map((e) => [e.key, _formatAmount(e.value, currency)])
                 .toList(),
@@ -363,13 +364,13 @@ class TourInvoiceGenerator {
         3: pw.Alignment.centerLeft,
         4: pw.Alignment.centerRight,
       },
-      headers: ['Date', 'Expense', 'Category', 'Paid By', 'Amount'],
+      headers: [tr('ledger_date_header'), tr('ledger_expense_header'), tr('category_colon'), tr('ledger_paid_by_header'), tr('ledger_amount_header')],
       data: sorted
           .map(
             (e) => [
               _formatShortDate(e.date),
               e.title,
-              e.category ?? 'Uncategorized',
+              e.category ?? tr('uncategorized'),
               _payerNames(e.paidBy, pById),
               _formatAmount(e.amount, currency),
             ],
@@ -424,7 +425,7 @@ class TourInvoiceGenerator {
           ),
           pw.SizedBox(height: 8),
           pw.Text(
-            'All settled up',
+            tr('all_settled_up'),
             style: pw.TextStyle(
               fontSize: AppFontSizes.size16,
               fontWeight: pw.FontWeight.bold,
@@ -433,7 +434,7 @@ class TourInvoiceGenerator {
           ),
           pw.SizedBox(height: 4),
           pw.Text(
-            'No payments needed - everyone is even',
+            tr('no_payments_needed'),
             style: pw.TextStyle(fontSize: AppFontSizes.size11, color: PdfColors.grey600),
           ),
         ],
@@ -447,8 +448,8 @@ class TourInvoiceGenerator {
     String currency,
   ) {
     return settlements.map((s) {
-      final from = pById[s.fromParticipantId] ?? 'Unknown';
-      final to = pById[s.toParticipantId] ?? 'Unknown';
+      final from = pById[s.fromParticipantId] ?? tr('unknown_member');
+      final to = pById[s.toParticipantId] ?? tr('unknown_member');
 
       return pw.Container(
         margin: const pw.EdgeInsets.only(bottom: 8),
@@ -470,7 +471,7 @@ class TourInvoiceGenerator {
             ),
             pw.SizedBox(width: 6),
             pw.Text(
-              'gets',
+              tr('gets_from'),
               style: const pw.TextStyle(fontSize: AppFontSizes.size11, color: PdfColors.grey600),
             ),
             pw.SizedBox(width: 6),
@@ -483,7 +484,7 @@ class TourInvoiceGenerator {
               ),
             ),
             pw.Text(
-              ' from ',
+              tr('from_label_lower'),
               style: const pw.TextStyle(fontSize: AppFontSizes.size11, color: PdfColors.grey600),
             ),
             pw.Text(
@@ -541,12 +542,12 @@ class TourInvoiceGenerator {
   static String _payerNames(Map<String, double> paidBy, Map<String, String> names) {
     final resolved = <String>[];
     for (final id in paidBy.keys) {
-      resolved.add(names[id] ?? 'Unknown');
+      resolved.add(names[id] ?? tr('unknown_member'));
     }
-    if (resolved.isEmpty) return 'Unknown';
+    if (resolved.isEmpty) return tr('unknown_member');
     if (resolved.length == 1) return resolved.first;
-    if (resolved.length == 2) return '${resolved.first} & ${resolved.last}';
-    return '${resolved.first}, ${resolved[1]} & ${resolved.last}';
+    if (resolved.length == 2) return '${resolved.first} ${tr('and_separator')} ${resolved.last}';
+    return '${resolved.first}, ${resolved[1]} ${tr('and_separator')} ${resolved.last}';
   }
 
   static String _formatShortDate(DateTime date) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class ExpenseNoteField extends StatelessWidget {
   final ThemeData theme;
@@ -22,7 +23,7 @@ class ExpenseNoteField extends StatelessWidget {
         color: theme.colorScheme.onSurface,
       ),
       decoration: InputDecoration(
-        hintText: 'Add a note...',
+        hintText: context.translate('note_hint'),
         hintStyle: AppTextStyles.bodyBold.copyWith(
           fontWeight: FontWeight.w400,
           color: theme.colorScheme.onSurface.withValues(alpha: 0.25),

@@ -1,5 +1,5 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -24,7 +24,7 @@ class DateOfBirthSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Date of Birth',
+          context.translate('date_of_birth'),
           style: AppTextStyles.bodySmall.copyWith(
             fontWeight: FontWeight.w600,
             color: isDark ? Colors.grey.shade400 : Colors.black54,
@@ -44,8 +44,8 @@ class DateOfBirthSection extends StatelessWidget {
               color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
               size: 18,
             ),
-            hintText: 'DD/MM/YYYY',
-            hintStyle: AppTextStyles.body.copyWith(fontFamily: GoogleFonts.workSans().fontFamily, color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
+            hintText: context.translate('dd_mm_yyyy'),
+            hintStyle: AppTextStyles.body.copyWith(color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

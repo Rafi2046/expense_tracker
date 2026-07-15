@@ -8,7 +8,6 @@ import 'package:expense_tracker/features/dashboard/widgets/transaction_container
 import 'package:expense_tracker/features/dashboard/widgets/transaction_list_container.dart';
 import 'package:expense_tracker/features/dashboard/widgets/weekly_trend_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -23,7 +22,7 @@ class IncomeWeeklySection extends StatelessWidget {
     fontSize: AppFontSizes.size15,
     fontWeight: FontWeight.bold,
     color: const Color(0xFF2EBD85),
-    fontFamily: GoogleFonts.workSans().fontFamily,
+    fontFamily: TextStyle().fontFamily,
   );
 
   @override

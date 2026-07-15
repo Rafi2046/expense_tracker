@@ -4,7 +4,6 @@ import 'package:expense_tracker/core/models/transaction_models.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -66,7 +65,7 @@ class IncomeCategoryBreakdown extends StatelessWidget {
                           fontSize: AppFontSizes.size14,
                           fontWeight: FontWeight.w600,
                           color: theme.colorScheme.onSurface,
-                          fontFamily: GoogleFonts.workSans().fontFamily,
+                          fontFamily: TextStyle().fontFamily,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -80,7 +79,7 @@ class IncomeCategoryBreakdown extends StatelessWidget {
                         style: TextStyle(
                           fontSize: AppFontSizes.size12,
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                          fontFamily: GoogleFonts.workSans().fontFamily,
+                          fontFamily: TextStyle().fontFamily,
                         ),
                       ),
                     ],
@@ -93,7 +92,7 @@ class IncomeCategoryBreakdown extends StatelessWidget {
                     fontSize: AppFontSizes.size14,
                     fontWeight: FontWeight.bold,
                     color: AppColors.activeGreen,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
+                    fontFamily: TextStyle().fontFamily,
                   ),
                 ),
               ],

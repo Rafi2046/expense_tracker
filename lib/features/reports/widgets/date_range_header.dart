@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DateRangeHeader extends StatelessWidget {
@@ -34,7 +35,7 @@ class DateRangeHeader extends StatelessWidget {
                 onPressed: onClose,
               ),
               Text(
-                'Select Date',
+                context.translate('select_date'),
                 style: AppTextStyles.reportTileTitle.copyWith(
                   color: theme.colorScheme.onSurface,
                 ),

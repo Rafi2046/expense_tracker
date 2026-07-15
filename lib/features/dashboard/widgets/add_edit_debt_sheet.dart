@@ -1,7 +1,7 @@
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'debt_sheet_header.dart';
@@ -82,14 +82,14 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final titleText = widget.item == null
-        ? (widget.isReceive ? 'Add Owed Entry' : 'Add Owed Entry (To Give)')
-        : (widget.isReceive ? 'Edit Owed Entry' : 'Edit Owed Entry (To Give)');
+        ? (widget.isReceive ? context.translate('add_owed_entry') : context.translate('add_owed_entry_to_give'))
+        : (widget.isReceive ? context.translate('edit_owed_entry') : context.translate('edit_owed_entry_to_give'));
 
-    final inputStyle = GoogleFonts.inter(
+    final inputStyle = TextStyle(
       fontSize: AppFontSizes.size14,
       color: theme.colorScheme.onSurface,
     );
-    final labelStyle = GoogleFonts.inter(
+    final labelStyle = TextStyle(
       fontSize: AppFontSizes.size14,
       color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
     );
@@ -105,7 +105,7 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
 
     final double maxHeight = (MediaQuery.of(context).size.height - viewInsets) * 0.85;
 
-    final saveLabel = widget.item == null ? 'Save Entry' : 'Update Entry';
+    final saveLabel = widget.item == null ? context.translate('save_entry') : context.translate('update_entry');
 
     return Padding(
       padding: EdgeInsets.only(bottom: viewInsets),
@@ -143,18 +143,18 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                   enabledBorderSide: enabledBorderSide,
                   focusedBorderSide: focusedBorderSide,
                   nameValidator: (val) => val == null || val.trim().isEmpty
-                      ? 'Please enter a name'
+                      ? context.translate('please_enter_name')
                       : null,
                   detailValidator: (val) => val == null || val.trim().isEmpty
-                      ? 'Please enter details'
+                      ? context.translate('please_enter_details')
                       : null,
                   amountValidator: (val) {
                     if (val == null || val.trim().isEmpty) {
-                      return 'Please enter an amount';
+                      return context.translate('please_enter_amount');
                     }
                     final parsed = double.tryParse(val);
                     if (parsed == null || parsed <= 0) {
-                      return 'Please enter a valid positive number';
+                      return context.translate('please_enter_valid_positive_number');
                     }
                     return null;
                   },
@@ -194,8 +194,8 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                         SnackBar(
                           content: Text(
                             widget.item == null
-                                ? 'Added entry successfully'
-                                : 'Updated entry successfully',
+                                ? context.translate('added_entry_success')
+                                : context.translate('updated_entry_success'),
                           ),
                           duration: const Duration(seconds: 2),
                         ),

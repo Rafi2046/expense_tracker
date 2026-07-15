@@ -1,8 +1,8 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -64,8 +64,8 @@ class PartySelectorSheet extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Link to Party (Optional)',
-                style: GoogleFonts.workSans(
+                context.translate('link_to_party_optional'),
+                style: TextStyle(
                   fontSize: AppFontSizes.size18,
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
@@ -75,8 +75,8 @@ class PartySelectorSheet extends StatelessWidget {
                 TextButton(
                   onPressed: onClear,
                   child: Text(
-                    'Clear',
-                    style: GoogleFonts.workSans(
+                    context.translate('clear'),
+                    style: TextStyle(
                       color: AppColors.activeRed,
                       fontWeight: FontWeight.w600,
                     ),
@@ -111,7 +111,7 @@ class PartySelectorSheet extends StatelessWidget {
                         : (isDark ? Colors.white12 : Colors.grey.shade100),
                     child: Text(
                       initials,
-                      style: GoogleFonts.workSans(
+                      style: TextStyle(
                         fontSize: AppFontSizes.size13,
                         fontWeight: FontWeight.w600,
                         color: isSelected
@@ -122,7 +122,7 @@ class PartySelectorSheet extends StatelessWidget {
                   ),
                   title: Text(
                     name,
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size15,
                       fontWeight: isSelected
                           ? FontWeight.w600
@@ -133,7 +133,7 @@ class PartySelectorSheet extends StatelessWidget {
                   subtitle: party.phone != null
                       ? Text(
                           party.phone!,
-                          style: GoogleFonts.workSans(
+                          style: TextStyle(
                             fontSize: AppFontSizes.size12,
                             color: isDark ? Colors.white38 : Colors.grey,
                           ),

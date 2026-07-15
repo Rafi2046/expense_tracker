@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -65,7 +66,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Choose Option',
+                  context.translate('choose_option'),
                   style: AppTextStyles.h1.copyWith(
                     color: Theme.of(ctx).colorScheme.onSurface,
                   ),
@@ -89,7 +90,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                             child: const Icon(LucideIcons.image, size: 32),
                           ),
                           const SizedBox(height: 8),
-                          Text('Gallery', style: AppTextStyles.label),
+                          Text(context.translate('gallery'), style: AppTextStyles.label),
                         ],
                       ),
                     ),
@@ -108,7 +109,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                             child: const Icon(LucideIcons.camera, size: 32),
                           ),
                           const SizedBox(height: 8),
-                          Text('Camera', style: AppTextStyles.label),
+                          Text(context.translate('camera'), style: AppTextStyles.label),
                         ],
                       ),
                     ),
@@ -149,7 +150,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error selecting image: $e'),
+            content: Text(context.translate('error_selecting_image', namedArgs: {'error': e.toString()})),
             backgroundColor: Colors.red,
           ),
         );
@@ -178,9 +179,9 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile updated successfully!'),
-            backgroundColor: Color(0xFF6A53A1),
+          SnackBar(
+            content: Text(context.translate('profile_updated')),
+            backgroundColor: const Color(0xFF6A53A1),
           ),
         );
         Navigator.pop(context);
@@ -189,7 +190,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to update profile: $e'),
+            content: Text(context.translate('failed_update_profile', namedArgs: {'error': e.toString()})),
             backgroundColor: Colors.red,
           ),
         );
@@ -223,7 +224,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const ProfileDialogHeader(),
+              ProfileDialogHeader(title: context.translate('edit_profile')),
               const SizedBox(height: 20),
               ProfilePhotoPicker(
                 localImageFile: _localImageFile,
@@ -237,8 +238,8 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               ProfileNameField(controller: _nameController),
               const SizedBox(height: 16),
               CustomTextFieldWidget(
-                label: 'Profile Photo URL',
-                hintText: 'https://example.com/avatar.png',
+                label: context.translate('profile_photo_url'),
+                hintText: context.translate('photo_url_hint'),
                 controller: _photoUrlController,
               ),
               const SizedBox(height: 24),

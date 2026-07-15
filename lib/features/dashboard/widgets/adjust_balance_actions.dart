@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'transfer_dialog.dart';
@@ -86,7 +85,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
             const SizedBox(height: 16),
             Text(
               'Choose Transaction Type',
-              style: GoogleFonts.workSans(
+              style: TextStyle(
                 fontSize: AppFontSizes.size16,
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
@@ -106,7 +105,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                       ),
                       label: Text(
                         'Add Income',
-                        style: GoogleFonts.workSans(
+                        style: TextStyle(
                           fontSize: AppFontSizes.size13,
                           fontWeight: FontWeight.bold,
                           color: isDark ? theme.primaryColor : const Color(0xFF006C49),
@@ -143,7 +142,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                       ),
                       label: Text(
                         'Add Expense',
-                        style: GoogleFonts.workSans(
+                        style: TextStyle(
                           fontSize: AppFontSizes.size13,
                           fontWeight: FontWeight.bold,
                           color: isDark ? AppColors.activeRed : const Color(0xFFD9383A),

@@ -1,7 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 
 class IncomeTransactionRow extends StatelessWidget {
@@ -65,7 +64,7 @@ class IncomeTransactionRow extends StatelessWidget {
                       fontSize: AppFontSizes.size15,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
+                      fontFamily: TextStyle().fontFamily,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -74,7 +73,7 @@ class IncomeTransactionRow extends StatelessWidget {
                     style: TextStyle(
                       fontSize: AppFontSizes.size12,
                       color: isDark ? Colors.white60 : Colors.grey.shade600,
-                      fontFamily: GoogleFonts.workSans().fontFamily,
+                      fontFamily: TextStyle().fontFamily,
                     ),
                   ),
                 ],
@@ -91,7 +90,7 @@ class IncomeTransactionRow extends StatelessWidget {
                     fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.w600,
                     color: isDark ? Colors.white38 : Colors.grey.shade500,
-                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                    fontFamily: TextStyle().fontFamily,
                     letterSpacing: 0.5,
                   ),
                 ),

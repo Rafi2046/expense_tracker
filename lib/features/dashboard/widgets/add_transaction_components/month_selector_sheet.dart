@@ -1,8 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -48,8 +47,8 @@ class MonthSelectorSheet extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.h16),
           Text(
-            'Select Income Month',
-            style: GoogleFonts.workSans(
+            context.translate('select_income_month'),
+            style: TextStyle(
               fontSize: AppFontSizes.size18,
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
@@ -66,14 +65,14 @@ class MonthSelectorSheet extends StatelessWidget {
               ),
               itemBuilder: (context, index) {
                 final monthDate = months[index];
-                final label = DateFormat('MMMM yyyy').format(monthDate);
+                final label = context.formatDate(monthDate, pattern: 'MMMM yyyy');
                 final isSelected = selectedMonth == label;
 
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(
                     label,
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size15,
                       fontWeight: isSelected
                           ? FontWeight.w600

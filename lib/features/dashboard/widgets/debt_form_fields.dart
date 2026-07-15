@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class DebtFormFields extends StatelessWidget {
   final TextEditingController nameController;
@@ -64,7 +65,7 @@ class DebtFormFields extends StatelessWidget {
           controller: detailController,
           style: inputStyle,
           decoration: InputDecoration(
-            labelText: 'Details (e.g. Dinner Split, Rent, etc.)',
+            labelText: context.translate('details_hint'),
             labelStyle: labelStyle,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSpacing.br12),
@@ -93,7 +94,7 @@ class DebtFormFields extends StatelessWidget {
             decimal: true,
           ),
           decoration: InputDecoration(
-            labelText: 'Amount (${context.currencySymbol})',
+            labelText: context.translate('amount_with_currency', namedArgs: {'currency': context.currencySymbol}),
             labelStyle: labelStyle,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppSpacing.br12),

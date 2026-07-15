@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/settings/widgets/category_empty_state.dart';
@@ -52,7 +53,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
       FocusScope.of(context).unfocus();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Category "$name" added successfully!'),
+          content: Text(context.translate('category_added', namedArgs: {'name': name})),
           duration: const Duration(seconds: 1),
           backgroundColor: isIncome ? AppColors.activeGreen : AppColors.activeRed,
         ),
@@ -60,7 +61,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Category "$name" already exists.'),
+          content: Text(context.translate('category_exists', namedArgs: {'name': name})),
           duration: const Duration(seconds: 2),
           backgroundColor: Colors.orange.shade800,
         ),
@@ -84,14 +85,14 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
           borderRadius: BorderRadius.circular(16),
         ),
         title: Text(
-          'Rename Category',
+          context.translate('rename_category'),
           style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold),
         ),
         content: TextField(
           controller: controller,
           autofocus: true,
           decoration: InputDecoration(
-            hintText: 'Category Name',
+            hintText: context.translate('category_name'),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 12,
@@ -110,7 +111,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
-              'Cancel',
+              context.translate('cancel'),
               style: AppTextStyles.bodyBold.copyWith(color: Colors.grey.shade600),
             ),
           ),
@@ -131,7 +132,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
                 );
                 ScaffoldMessenger.of(ctx).showSnackBar(
                   SnackBar(
-                    content: Text('Category renamed to "$newName".'),
+                    content: Text(context.translate('category_renamed', namedArgs: {'name': newName})),
                     duration: const Duration(seconds: 1),
                   ),
                 );
@@ -139,7 +140,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
               Navigator.pop(ctx);
             },
             child: Text(
-              'Rename',
+              context.translate('rename'),
               style: AppTextStyles.bodyBold.copyWith(color: Colors.white),
             ),
           ),
@@ -214,7 +215,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
                           }
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Category "$cat" removed.'),
+                              content: Text(context.translate('category_removed', namedArgs: {'name': cat})),
                               duration: const Duration(seconds: 1),
                             ),
                           );

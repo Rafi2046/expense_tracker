@@ -1,6 +1,5 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -55,7 +54,7 @@ class FinancialHealthBanner extends StatelessWidget {
                     fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    fontFamily: GoogleFonts.workSans().fontFamily,
+                    fontFamily: TextStyle().fontFamily,
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -67,7 +66,7 @@ class FinancialHealthBanner extends StatelessWidget {
                   style: TextStyle(
                     fontSize: AppFontSizes.size12,
                     color: Colors.white.withValues(alpha: 0.85),
-                    fontFamily: GoogleFonts.workSans().fontFamily,
+                    fontFamily: TextStyle().fontFamily,
                     height: 1.3,
                   ),
                 ),

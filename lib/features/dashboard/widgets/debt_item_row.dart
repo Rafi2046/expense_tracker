@@ -3,7 +3,6 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -108,7 +107,7 @@ class DebtItemRow extends StatelessWidget {
           children: [
             Text(
               'Settle',
-              style: GoogleFonts.workSans(
+              style: TextStyle(
                 color: themeColor,
                 fontWeight: FontWeight.bold,
                 fontSize: AppFontSizes.size14,
@@ -235,7 +234,7 @@ class DebtItemRow extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Text(
                     _getInitials(item.name),
-                    style: GoogleFonts.workSans(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size14,
                       fontWeight: FontWeight.bold,
                       color: _getAvatarFg(context, item.name),
@@ -244,7 +243,7 @@ class DebtItemRow extends StatelessWidget {
                 ),
                 title: Text(
                   item.name,
-                  style: GoogleFonts.workSans(
+                  style: TextStyle(
                     fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
@@ -254,7 +253,7 @@ class DebtItemRow extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 2.0),
                   child: Text(
                     item.detail,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: AppFontSizes.size13,
                       color: AppColors.textMuted,
                     ),
@@ -263,7 +262,7 @@ class DebtItemRow extends StatelessWidget {
                 trailing: PrivacyMaskedText(
                   amount: item.amount,
                   isMasked: isMasked,
-                  style: GoogleFonts.workSans(
+                  style: TextStyle(
                     fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.bold,
                     color: themeColor,

@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 
 class BudgetProgressSection extends StatelessWidget {
@@ -40,7 +41,7 @@ class BudgetProgressSection extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.s6),
         Text(
-          '${percentage.toStringAsFixed(1)}% of budget used',
+          context.translate('percent_used', namedArgs: {'percentage': percentage.toStringAsFixed(1)}),
           style: AppTextStyles.cardStatusText.copyWith(color: color),
         ),
       ],

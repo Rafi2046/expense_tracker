@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -51,8 +52,8 @@ class SortBySheet extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
-            child: Text(
-              'Sort By:',
+            child:             Text(
+              context.translate('sort_by'),
             style: AppTextStyles.h3.copyWith(
               color: theme.colorScheme.onSurface,
             ),
@@ -61,25 +62,25 @@ class SortBySheet extends StatelessWidget {
           Divider(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), height: 1),
           _buildOption(
             context: context,
-            title: 'Latest',
+            title: context.translate('latest_sort'),
             option: ReportSortOption.latest,
             icon: LucideIcons.arrowUpDown,
           ),
           _buildOption(
             context: context,
-            title: 'Oldest',
+            title: context.translate('oldest'),
             option: ReportSortOption.oldest,
             icon: LucideIcons.arrowUpDown,
           ),
           _buildOption(
             context: context,
-            title: 'Amount: High to Low',
+            title: context.translate('sort_amount_high_low'),
             option: ReportSortOption.amountHighToLow,
             icon: LucideIcons.arrowUpDown,
           ),
           _buildOption(
             context: context,
-            title: 'Amount: Low to High',
+            title: context.translate('sort_amount_low_high'),
             option: ReportSortOption.amountLowToHigh,
             icon: LucideIcons.arrowUpDown,
           ),
