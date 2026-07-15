@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
@@ -32,7 +33,14 @@ class _TourListScreenState extends State<TourListScreen> {
   final Map<String, int> _memberCounts = {};
 
   Future<void> _confirmDeleteTour(BuildContext context, Tour tour) async {
-    final confirmed = await showDeleteTourDialog(context, tour.name);
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    final isOwner = tour.ownerUid == null || currentUid == null || tour.ownerUid == currentUid;
+
+    final confirmed = await showDeleteTourDialog(
+      context,
+      tour.name,
+      isOwner: isOwner,
+    );
     if (confirmed && context.mounted) {
       context.read<TourProvider>().deleteTour(tour.id);
     }
@@ -81,13 +89,23 @@ class _TourListScreenState extends State<TourListScreen> {
           ),
         );
       };
+      context.read<TourProvider>().addListener(_onProviderChanged);
     });
+  }
+
+  void _onProviderChanged() {
+    if (mounted) {
+      _loadCounts();
+    }
   }
 
   @override
   void dispose() {
     TourProvider.onNotification = null;
     _pageController.dispose();
+    try {
+      context.read<TourProvider>().removeListener(_onProviderChanged);
+    } catch (_) {}
     super.dispose();
   }
 
@@ -356,8 +374,11 @@ class _TourListScreenState extends State<TourListScreen> {
                       onPageChanged: (index) {
                         setState(() => _currentPageIndex = index);
                       },
-                      itemBuilder: (context, index) {
+                       itemBuilder: (context, index) {
                         final tour = tours[index];
+                        final currentUid = FirebaseAuth.instance.currentUser?.uid;
+                        final isOwner = tour.ownerUid == null || currentUid == null || tour.ownerUid == currentUid;
+
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: TourCard(
@@ -365,8 +386,9 @@ class _TourListScreenState extends State<TourListScreen> {
                             memberCount: _memberCounts[tour.id] ?? 0,
                             totalSpent: _totalSpent[tour.id] ?? 0,
                             index: index,
+                            isOwner: isOwner,
                             onDelete: () => _confirmDeleteTour(context, tour),
-                            onToggleComplete: () => _toggleCompleteTour(tour),
+                            onToggleComplete: isOwner ? () => _toggleCompleteTour(tour) : null,
                             onTap: () {
                               Navigator.push(
                                 context,

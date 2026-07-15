@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/features/tours/pages/join_request_waiting_screen.dart';
 
 class JoinTourSheet extends StatefulWidget {
   const JoinTourSheet({super.key});
@@ -31,12 +33,22 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
     setState(() => _isLoading = true);
 
     try {
-      final tourName =
-          await context.read<TourProvider>().joinTourByCode(code.toUpperCase());
+      final tour =
+          await context.read<TourProvider>().requestToJoinTourByCode(code.toUpperCase());
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) throw Exception('No user logged in.');
+      
       if (!mounted) return;
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Successfully joined $tourName!')),
+      
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => JoinRequestWaitingScreen(
+            tour: tour,
+            uid: currentUser.uid,
+          ),
+        ),
       );
     } catch (e) {
       if (!mounted) return;

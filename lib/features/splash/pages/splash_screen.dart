@@ -27,9 +27,17 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
 
-    final user = FirebaseAuth.instance.currentUser;
+    var user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      if (!user.emailVerified) {
+      try {
+        await user.reload();
+        user = FirebaseAuth.instance.currentUser;
+      } catch (e) {
+        debugPrint('Splash screen user reload failed: $e');
+      }
+      if (!mounted) return;
+
+      if (user != null && !user.emailVerified) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

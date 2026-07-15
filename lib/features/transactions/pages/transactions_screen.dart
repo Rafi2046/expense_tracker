@@ -449,7 +449,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             color: isDark
                                 ? Colors.white70
                                 : const Color(0xFF31394D),
-                            onPressed: () => _showSortFilterBottomSheet(context),
+                            onPressed: () =>
+                                _showSortFilterBottomSheet(context),
                           ),
                         ),
                       ],

@@ -13,6 +13,7 @@ class TourCard extends StatelessWidget {
   final int memberCount;
   final double totalSpent;
   final VoidCallback onTap;
+  final bool isOwner;
   final VoidCallback? onDelete;
   final VoidCallback? onToggleComplete;
   final int index;
@@ -34,6 +35,7 @@ class TourCard extends StatelessWidget {
     required this.memberCount,
     required this.totalSpent,
     required this.onTap,
+    this.isOwner = true,
     this.onDelete,
     this.onToggleComplete,
     this.index = 0,
@@ -97,6 +99,7 @@ class TourCard extends StatelessWidget {
                       const SizedBox(width: 6),
                       TourCardMenuButton(
                         isCompleted: tour.isCompleted,
+                        isOwner: isOwner,
                         onDelete: onDelete,
                         onToggleComplete: onToggleComplete,
                       ),

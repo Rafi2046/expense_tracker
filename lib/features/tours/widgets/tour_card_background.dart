@@ -16,14 +16,23 @@ class TourCardBackground extends StatelessWidget {
     return Stack(
       children: [
         if (coverPhoto != null && coverPhoto!.isNotEmpty)
-          Image.file(
-            File(coverPhoto!),
-            width: double.infinity,
-            height: double.infinity,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) =>
-                _buildGradientFallback(),
-          )
+          coverPhoto!.startsWith('http')
+              ? Image.network(
+                  coverPhoto!,
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      _buildGradientFallback(),
+                )
+              : Image.file(
+                  File(coverPhoto!),
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      _buildGradientFallback(),
+                )
         else
           _buildGradientFallback(),
         Positioned(

@@ -278,7 +278,9 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                               color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                             ),
                             image: coverPhotoPath != null
-                                ? DecorationImage(image: FileImage(File(coverPhotoPath!)), fit: BoxFit.cover)
+                                ? (coverPhotoPath!.startsWith('http')
+                                    ? DecorationImage(image: NetworkImage(coverPhotoPath!), fit: BoxFit.cover)
+                                    : DecorationImage(image: FileImage(File(coverPhotoPath!)), fit: BoxFit.cover))
                                 : null,
                           ),
                           child: coverPhotoPath == null

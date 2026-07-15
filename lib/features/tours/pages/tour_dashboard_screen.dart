@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
@@ -257,6 +258,144 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
           physics: const AlwaysScrollableScrollPhysics(),
           padding: EdgeInsets.fromLTRB(16, 16, 16, bottomInset + 100),
           children: [
+            if (isOwner) ...[
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('shared_tours')
+                    .doc(tour.id)
+                    .collection('join_requests')
+                    .where('status', isEqualTo: 'pending')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+
+                  final docs = snapshot.data!.docs;
+
+                  return Column(
+                    children: [
+                      ...docs.map((doc) {
+                        final data = doc.data() as Map<String, dynamic>;
+                        final requesterUid = doc.id;
+                        final name = data['name'] as String? ?? 'Friend';
+                        final email = data['email'] as String? ?? '';
+
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.all(AppSpacing.p16),
+                          decoration: BoxDecoration(
+                            color: isDark 
+                                ? theme.cardColor 
+                                : AppColors.selectionGreenBg.withValues(alpha: 0.4),
+                            borderRadius: BorderRadius.circular(AppSpacing.br12),
+                            border: Border.all(
+                              color: AppColors.activeGreen.withValues(alpha: 0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(AppSpacing.p8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.activeGreen.withValues(alpha: 0.15),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      LucideIcons.userCheck,
+                                      size: 20,
+                                      color: AppColors.activeGreen,
+                                    ),
+                                  ),
+                                  const SizedBox(width: AppSpacing.s12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Join Request',
+                                          style: AppTextStyles.label.copyWith(
+                                            color: AppColors.activeGreen,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Text(
+                                          name,
+                                          style: AppTextStyles.h3.copyWith(
+                                            color: theme.colorScheme.onSurface,
+                                          ),
+                                        ),
+                                        if (email.isNotEmpty)
+                                          Text(
+                                            email,
+                                            style: AppTextStyles.caption.copyWith(
+                                              color: theme.colorScheme.onSurfaceVariant,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: AppSpacing.h12),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: () async {
+                                        await context.read<TourProvider>().rejectJoinRequest(
+                                          tour.id,
+                                          requesterUid,
+                                        );
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: AppColors.activeRed,
+                                        side: const BorderSide(color: AppColors.activeRed),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                      ),
+                                      child: const Text('Decline'),
+                                    ),
+                                  ),
+                                  const SizedBox(width: AppSpacing.s12),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        await context.read<TourProvider>().approveJoinRequest(
+                                          tour,
+                                          requesterUid,
+                                          name,
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.activeGreen,
+                                        foregroundColor: Colors.white,
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                      ),
+                                      child: const Text('Accept'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ],
+                  );
+                },
+              ),
+            ],
             TourDashboardSummaryCard(
               totalSpentText: totalSpentText,
               outstandingText: outstandingText,

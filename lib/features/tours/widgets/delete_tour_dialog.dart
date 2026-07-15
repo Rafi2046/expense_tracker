@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 
-Future<bool> showDeleteTourDialog(BuildContext context, String tourName) async {
+Future<bool> showDeleteTourDialog(BuildContext context, String tourName, {bool isOwner = true}) async {
   final result = await showDialog<bool>(
     context: context,
     builder: (ctx) => AlertDialog(
@@ -11,7 +11,7 @@ Future<bool> showDeleteTourDialog(BuildContext context, String tourName) async {
       ),
       backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
       title: Text(
-        ctx.translate('delete_tour'),
+        ctx.translate(isOwner ? 'delete_tour' : 'leave_tour'),
         style: AppTextStyles.h2.copyWith(
           color: Theme.of(context).colorScheme.onSurface,
         ),
@@ -21,7 +21,7 @@ Future<bool> showDeleteTourDialog(BuildContext context, String tourName) async {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            ctx.translate('this_action_cannot_be_undone'),
+            ctx.translate(isOwner ? 'this_action_cannot_be_undone' : 'confirm_leave_tour_msg'),
             style: AppTextStyles.profileSubtitle.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -49,7 +49,7 @@ Future<bool> showDeleteTourDialog(BuildContext context, String tourName) async {
         TextButton(
           onPressed: () => Navigator.pop(ctx, true),
           child: Text(
-            ctx.translate('delete'),
+            ctx.translate(isOwner ? 'delete' : 'leave_tour'),
             style: AppTextStyles.label.copyWith(
               color: const Color(0xFFDC2626),
               fontWeight: FontWeight.w600,

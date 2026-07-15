@@ -4,12 +4,14 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourCardMenuButton extends StatelessWidget {
   final bool isCompleted;
+  final bool isOwner;
   final VoidCallback? onDelete;
   final VoidCallback? onToggleComplete;
 
   const TourCardMenuButton({
     super.key,
     required this.isCompleted,
+    this.isOwner = true,
     this.onDelete,
     this.onToggleComplete,
   });
@@ -20,7 +22,7 @@ class TourCardMenuButton extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final markActiveLabel = context.translate('mark_as_active', listen: false);
     final markCompletedLabel = context.translate('mark_as_completed', listen: false);
-    final deleteLabel = context.translate('delete_tour', listen: false);
+    final deleteLabel = context.translate(isOwner ? 'delete_tour' : 'leave_tour', listen: false);
 
     final greyColor = isDark ? Colors.white70 : const Color(0xFF6B7280);
     final greenColor = const Color(0xFF4ADE80);
