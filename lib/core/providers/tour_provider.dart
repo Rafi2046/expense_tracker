@@ -146,16 +146,10 @@ class TourProvider extends ChangeNotifier {
         .ref()
         .child('users')
         .child(uid)
-        .child('tours')
-        .child(tourId)
-        .child('cover_photo.jpg');
+        .child('tour_${tourId}_cover.jpg');
 
-    final bytes = await file.readAsBytes();
-    final uploadTask = storageRef.putData(
-      bytes,
-      SettableMetadata(contentType: 'image/jpeg'),
-    );
-    final snapshot = await uploadTask;
+    final UploadTask uploadTask = storageRef.putFile(file);
+    final TaskSnapshot snapshot = await uploadTask;
     return await snapshot.ref.getDownloadURL();
   }
 
@@ -168,8 +162,6 @@ class TourProvider extends ChangeNotifier {
         finalCoverPhoto = await _uploadTourCoverPhoto(tour.id, finalCoverPhoto);
       } catch (e) {
         debugPrint('Error uploading tour cover photo: $e');
-        final notif = TourProvider.onNotification;
-        notif?.call('Failed to upload cover photo: $e');
       }
     }
 
@@ -227,8 +219,6 @@ class TourProvider extends ChangeNotifier {
         finalCoverPhoto = await _uploadTourCoverPhoto(tour.id, finalCoverPhoto);
       } catch (e) {
         debugPrint('Error uploading tour cover photo: $e');
-        final notif = TourProvider.onNotification;
-        notif?.call('Failed to upload cover photo: $e');
       }
     }
 
