@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/pages/income_transaction_list_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/transaction_details_screen.dart';
@@ -39,7 +40,7 @@ class IncomeMonthlySection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Recent Income',
+              context.translate('recent_income'),
               style: AppTextStyles.sectionHeaderTitle.copyWith(
                 color: theme.colorScheme.onSurface,
               ),
@@ -49,7 +50,7 @@ class IncomeMonthlySection extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (_) => IncomeTransactionListScreen(
-                    title: 'All Monthly Income',
+                    title: context.translate('all_monthly_income'),
                     transactions: monthlyTransactions,
                     isMasked: isMasked,
                   ),
@@ -60,15 +61,15 @@ class IncomeMonthlySection extends StatelessWidget {
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: Text('View All', style: AppTextStyles.viewAllText),
+              child: Text(context.translate('view_all'), style: AppTextStyles.viewAllText),
             ),
           ],
         ),
         const SizedBox(height: 12),
         monthlyTransactions.isEmpty
-            ? const Padding(
-                padding: EdgeInsets.symmetric(vertical: 24.0),
-                child: Center(child: Text('No income transactions this month')),
+            ?  Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24.0),
+                child: Center(child: Text(context.translate('no_income_this_month'))),
               )
             : ListView.separated(
                 padding: EdgeInsets.zero,

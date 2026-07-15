@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/models/transaction_models.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/pages/transaction_details_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_transaction_row.dart';
@@ -47,7 +48,7 @@ class IncomeTransactionListScreen extends StatelessWidget {
       body: transactions.isEmpty
           ? Center(
               child: Text(
-                'No transactions found',
+                context.translate('no_transactions_found'),
                 style: AppTextStyles.reportTileTitle.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
               ),
             )

@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -26,12 +27,12 @@ class IncomeTrendInfoDialog extends StatelessWidget {
                   size: 24,
                 ),
                 const SizedBox(width: 8),
-                Text('Income Trend Chart', style: AppTextStyles.dialogTitle),
+                Text(context.translate('income_trend_chart_title'), style: AppTextStyles.dialogTitle),
               ],
             ),
             const SizedBox(height: 12),
             Text(
-              'This chart displays your monthly income trend from January to December. It helps you visualize fluctuations, seasonal peaks, and trace your progress throughout the year.',
+              context.translate('income_trend_chart_desc'),
               style: AppTextStyles.dialogBody,
             ),
             const SizedBox(height: 12),
@@ -51,7 +52,7 @@ class IncomeTrendInfoDialog extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    'Highlighted bars (in deep green) indicate the current active month (JUN).',
+                    context.translate('income_trend_highlighted_bars_desc'),
                     style: AppTextStyles.dialogBulletText,
                   ),
                 ),
@@ -74,7 +75,7 @@ class IncomeTrendInfoDialog extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    'Lighter bars show historical monthly income statistics.',
+                    context.translate('income_trend_lighter_bars_desc'),
                     style: AppTextStyles.dialogBulletText,
                   ),
                 ),
@@ -95,7 +96,7 @@ class IncomeTrendInfoDialog extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text('Close', style: AppTextStyles.dialogCloseButton),
+                child: Text(context.translate('close'), style: AppTextStyles.dialogCloseButton),
               ),
             ),
           ],

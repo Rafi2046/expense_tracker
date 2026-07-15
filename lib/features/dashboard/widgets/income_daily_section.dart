@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/pages/income_transaction_list_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/transaction_details_screen.dart';
@@ -36,13 +37,13 @@ class IncomeDailySection extends StatelessWidget {
         DailyDistributionChart(data: analytics.dailyChartData),
         const SizedBox(height: 24),
         TransactionListContainer(
-          title: "Today's Income",
+          title: context.translate('todays_income'),
           trailing: TextButton(
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => IncomeTransactionListScreen(
-                  title: "Today's Income",
+                  title: context.translate('todays_income'),
                   transactions: todayTransactions,
                   isMasked: isMasked,
                 ),
@@ -53,13 +54,13 @@ class IncomeDailySection extends StatelessWidget {
               minimumSize: Size.zero,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            child: Text('View All', style: AppTextStyles.viewAllText),
+            child: Text(context.translate('view_all'), style: AppTextStyles.viewAllText),
           ),
           children: todayTransactions.isEmpty
               ? [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24.0),
-                    child: Center(child: Text('No income transactions today')),
+                   Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 24.0),
+                    child: Center(child: Text(context.translate('no_income_today'))),
                   )
                 ]
               : todayTransactions.map((tx) {

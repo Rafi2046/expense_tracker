@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_selector_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -18,8 +19,8 @@ class IncomeMonthSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return TransactionSelectorTile(
       leadingIcon: LucideIcons.calendar,
-      labelText: 'Income Month',
-      valueText: selectedIncomeMonth ?? 'Select Month',
+      labelText: context.translate('income_month'),
+      valueText: selectedIncomeMonth ?? context.translate('select_month'),
       isValueSelected: selectedIncomeMonth != null,
       themeColor: themeColor,
       trailingIcon: LucideIcons.arrowRight,

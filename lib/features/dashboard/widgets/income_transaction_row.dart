@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -85,7 +86,7 @@ class IncomeTransactionRow extends StatelessWidget {
                 amount,
                 const SizedBox(height: 4),
                 Text(
-                  status.toUpperCase(),
+                  context.translate(status).toUpperCase(),
                   style: TextStyle(
                     fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.w600,

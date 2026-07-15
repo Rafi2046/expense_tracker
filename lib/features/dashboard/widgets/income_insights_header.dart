@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -22,7 +23,7 @@ class IncomeInsightsHeader extends StatelessWidget implements PreferredSizeWidge
         onPressed: onBack,
       ),
       title: Text(
-        'Income Insights',
+        context.translate('income_insights'),
         style: AppTextStyles.insightsHeaderTitle.copyWith(
           color: theme.appBarTheme.titleTextStyle?.color,
         ),

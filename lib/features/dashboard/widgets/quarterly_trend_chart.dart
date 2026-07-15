@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -21,6 +22,9 @@ class QuarterlyTrendChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primaryColor = theme.primaryColor;
+    final quarter = ((DateTime.now().month - 1) ~/ 3) + 1;
+    final quarterTitle = 'Q$quarter';
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20.0),
@@ -36,7 +40,7 @@ class QuarterlyTrendChart extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Income Trend (Q3)',
+                '${context.translate('income_trend')} ($quarterTitle)',
                 style: TextStyle(
                   fontSize: AppFontSizes.size18,
                   fontWeight: FontWeight.bold,

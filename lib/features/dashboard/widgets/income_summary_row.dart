@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_summary_card.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class IncomeSummaryRow extends StatelessWidget {
         return _buildQuarterly(context);
       case 'Monthly':
       default:
-        return _buildMonthly();
+        return _buildMonthly(context);
     }
   }
 
@@ -40,7 +41,7 @@ class IncomeSummaryRow extends StatelessWidget {
     final isPositive = change >= 0;
     final sign = isPositive ? '+' : '';
     return IncomeSummaryCard(
-      label: 'Total Daily Income',
+      label: context.translate('total_daily_income'),
       amount: PrivacyMaskedText(
         amount: analytics.todayIncome,
         style: AppTextStyles.summaryCardValue,
@@ -52,7 +53,7 @@ class IncomeSummaryRow extends StatelessWidget {
       bottomContent: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('Vs Yesterday', style: AppTextStyles.bodySmall),
+          Text(context.translate('vs_yesterday'), style: AppTextStyles.bodySmall),
           Row(
             children: [
               Icon(
@@ -87,7 +88,7 @@ class IncomeSummaryRow extends StatelessWidget {
     final isPositive = change >= 0;
     final sign = isPositive ? '+' : '';
     return IncomeSummaryCard(
-      label: 'Total Weekly Income',
+      label: context.translate('total_weekly_income'),
       amount: PrivacyMaskedText(
         amount: analytics.currentWeekIncome,
         style: AppTextStyles.summaryCardValue,
@@ -102,7 +103,7 @@ class IncomeSummaryRow extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Avg. Daily',
+                context.translate('avg_daily'),
                 style: AppTextStyles.bodySmall.copyWith(
                   color: Theme.of(context).brightness == Brightness.light
                       ? AppColors.loginSubTitle
@@ -124,7 +125,7 @@ class IncomeSummaryRow extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Vs Last Week',
+                context.translate('vs_last_week'),
                 style: AppTextStyles.bodySmall.copyWith(
                   color: Theme.of(context).brightness == Brightness.light
                       ? AppColors.loginSubTitle
@@ -173,7 +174,7 @@ class IncomeSummaryRow extends StatelessWidget {
     final dayOfMonth = DateTime.now().day;
     final progress = (monthOfQuarter - 1) / 3.0 + (dayOfMonth / 90.0);
     return IncomeSummaryCard(
-      label: 'Total Quarterly Income',
+      label: context.translate('total_quarterly_income'),
       amount: PrivacyMaskedText(
         amount: quarterlyIncome,
         style: AppTextStyles.summaryCardValue,
@@ -181,7 +182,7 @@ class IncomeSummaryRow extends StatelessWidget {
       ),
       isMasked: isMasked,
       onToggleMask: onToggleMask,
-      percentageText: '$sign${change.toStringAsFixed(1)}% vs $prevQStr',
+      percentageText: '$sign${change.toStringAsFixed(1)}% ${context.translate('vs')} $prevQStr',
       showDivider: true,
       bottomContent: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,7 +191,7 @@ class IncomeSummaryRow extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Projected Year End',
+                context.translate('projected_year_end'),
                 style: AppTextStyles.bodySmall.copyWith(
                   color: Theme.of(context).brightness == Brightness.light
                       ? AppColors.loginSubTitle
@@ -227,12 +228,12 @@ class IncomeSummaryRow extends StatelessWidget {
     );
   }
 
-  Widget _buildMonthly() {
+  Widget _buildMonthly(BuildContext context) {
     final change = analytics.monthlyPercentageChange;
     final isPositive = change >= 0;
     final sign = isPositive ? '+' : '';
     return IncomeSummaryCard(
-      label: 'Total Monthly Income',
+      label: context.translate('total_monthly_income'),
       amount: PrivacyMaskedText(
         amount: analytics.currentMonthIncome,
         style: AppTextStyles.summaryCardValue,
@@ -241,7 +242,7 @@ class IncomeSummaryRow extends StatelessWidget {
       isMasked: isMasked,
       onToggleMask: onToggleMask,
       percentageText: '$sign${change.toStringAsFixed(1)}%',
-      compareText: 'vs. last month',
+      compareText: context.translate('vs_last_month'),
     );
   }
 }

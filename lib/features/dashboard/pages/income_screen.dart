@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 
 class IncomeScreen extends StatelessWidget {
@@ -5,6 +6,6 @@ class IncomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text('Income Screen')));
+    return Scaffold(body: Center(child: Text(context.translate('income'))));
   }
 }

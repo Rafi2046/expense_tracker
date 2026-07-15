@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/pages/income_transaction_list_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/transaction_details_screen.dart';
@@ -40,13 +41,13 @@ class IncomeQuarterlySection extends StatelessWidget {
         QuarterlyTrendChart(data: analytics.quarterlyChartData),
         const SizedBox(height: 24),
         TransactionListContainer(
-          title: 'Major Quarterly Earnings ($quarterTitle)',
+          title: context.translate('major_quarterly_earnings').replaceAll('{quarter}', quarterTitle),
           trailing: TextButton(
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => IncomeTransactionListScreen(
-                  title: 'Quarterly Earnings',
+                  title: context.translate('quarterly_earnings'),
                   transactions: quarterlyTransactions,
                   isMasked: isMasked,
                 ),
@@ -58,15 +59,15 @@ class IncomeQuarterlySection extends StatelessWidget {
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             child: Text(
-              'View All',
+              context.translate('view_all'),
               style: AppTextStyles.viewAllText,
             ),
           ),
           children: quarterlyTransactions.isEmpty
               ? [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24.0),
-                    child: Center(child: Text('No income transactions this quarter')),
+                   Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 24.0),
+                    child: Center(child: Text(context.translate('no_income_this_quarter'))),
                   )
                 ]
               : quarterlyTransactions.take(5).map((tx) {
@@ -90,7 +91,7 @@ class IncomeQuarterlySection extends StatelessWidget {
                       isMasked: isMasked,
                       style: _amountStyle,
                     ),
-                    subAmountLabel: tx.note.isNotEmpty ? tx.category : 'Income',
+                    subAmountLabel: tx.note.isNotEmpty ? tx.category : context.translate('income'),
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(

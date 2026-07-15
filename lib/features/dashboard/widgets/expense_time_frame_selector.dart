@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -42,7 +43,7 @@ class ExpenseTimeFrameSelector extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Text(
-                  tf,
+                  context.translate(tf.toLowerCase()),
                   style: TextStyle(
                     fontSize: AppFontSizes.size14,
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,

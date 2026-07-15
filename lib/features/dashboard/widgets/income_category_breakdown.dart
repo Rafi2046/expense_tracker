@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/models/transaction_models.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,9 +24,9 @@ class IncomeCategoryBreakdown extends StatelessWidget {
     final breakdown = _computeBreakdown();
 
     if (breakdown.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 24.0),
-        child: Center(child: Text('No income data')),
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 24.0),
+        child: Center(child: Text(context.translate('no_income_data'))),
       );
     }
 
@@ -33,7 +34,7 @@ class IncomeCategoryBreakdown extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Income by Category',
+          context.translate('income_by_category'),
           style: AppTextStyles.sectionHeaderTitle.copyWith(
             color: theme.colorScheme.onSurface,
           ),
@@ -70,7 +71,12 @@ class IncomeCategoryBreakdown extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '${entry.value} transaction${entry.value == 1 ? '' : 's'}',
+                        (() {
+                          final count = transactions.where((tx) => (tx.category.isEmpty ? 'Other' : tx.category) == entry.key).length;
+                          return count == 1
+                              ? context.translate('transaction_count_singular')
+                              : context.translate('transaction_count_plural').replaceAll('{count}', '$count');
+                        })(),
                         style: TextStyle(
                           fontSize: AppFontSizes.size12,
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.6),

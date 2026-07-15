@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
@@ -49,7 +50,7 @@ class FinancialHealthBanner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Financial Health',
+                  context.translate('financial_health'),
                   style: TextStyle(
                     fontSize: AppFontSizes.size15,
                     fontWeight: FontWeight.bold,
@@ -59,7 +60,10 @@ class FinancialHealthBanner extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Your income has $direction by $sign${percentageChange.toStringAsFixed(1)}% this $period.',
+                  context.translate('income_health_change_message')
+                      .replaceAll('{direction}', context.translate(direction))
+                      .replaceAll('{change}', '$sign${percentageChange.toStringAsFixed(1)}')
+                      .replaceAll('{period}', context.translate(period)),
                   style: TextStyle(
                     fontSize: AppFontSizes.size12,
                     color: Colors.white.withValues(alpha: 0.85),
