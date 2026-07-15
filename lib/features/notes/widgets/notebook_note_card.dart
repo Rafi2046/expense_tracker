@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
@@ -84,7 +85,7 @@ class NotebookNoteCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-              'Swipe to delete',
+              context.translate('swipe_to_delete'),
               style: AppTextStyles.bodyBold.copyWith(
                 color: isDark ? Colors.red.shade400 : const Color(0xFFB91C1C),
               ),

@@ -10,6 +10,7 @@ import 'package:expense_tracker/features/notes/widgets/notebook_search_bar.dart'
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class NotebookScreen extends StatefulWidget {
   const NotebookScreen({super.key});
@@ -35,25 +36,25 @@ class _NotebookScreenState extends State<NotebookScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: theme.cardColor,
         title: Text(
-          'Delete Note?',
+          context.translate('delete_note_title'),
           style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface),
         ),
         content: Text(
-          'Are you sure you want to delete this note permanently?',
+          context.translate('delete_note_message'),
           style: AppTextStyles.body.copyWith(fontFamily: GoogleFonts.workSans().fontFamily, color: theme.colorScheme.onSurface),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text(
-              'Cancel',
+              context.translate('cancel'),
               style: AppTextStyles.body.copyWith(fontFamily: GoogleFonts.workSans().fontFamily, color: Colors.grey.shade600),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: Text(
-              'Delete',
+              context.translate('delete'),
               style: AppTextStyles.body.copyWith(fontFamily: GoogleFonts.workSans().fontFamily, color: Colors.red),
             ),
           ),
@@ -138,10 +139,10 @@ class _NotebookScreenState extends State<NotebookScreen> {
                           noteProvider.deleteNote(note.id);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: const Text('Note deleted'),
+                              content: Text(context.translate('note_deleted')),
                               duration: const Duration(seconds: 3),
                               action: SnackBarAction(
-                                label: 'Undo',
+                                label: context.translate('undo'),
                                 textColor: Colors.yellow,
                                 onPressed: () {
                                   noteProvider.insertNote(index, note);

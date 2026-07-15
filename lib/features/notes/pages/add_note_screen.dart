@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AddNoteScreen extends StatefulWidget {
@@ -57,7 +58,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
       );
       provider.addNote(newNote);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Note added successfully'), duration: Duration(seconds: 1)),
+        SnackBar(content: Text(context.translate('note_added_success')), duration: const Duration(seconds: 1)),
       );
     } else {
       // Edit Note
@@ -69,7 +70,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
       );
       provider.updateNote(updatedNote);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Note updated successfully'), duration: Duration(seconds: 1)),
+        SnackBar(content: Text(context.translate('note_updated_success')), duration: const Duration(seconds: 1)),
       );
     }
 
@@ -93,7 +94,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          widget.note == null ? 'Add Note' : 'Edit Note',
+          widget.note == null ? context.translate('add_note') : context.translate('edit_note'),
           style: AppTextStyles.appbarTitle.copyWith(
             fontFamily: GoogleFonts.workSans().fontFamily,
             fontWeight: FontWeight.w600,
@@ -118,7 +119,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
               children: [
                 // Category Selector label
                 Text(
-                  'CATEGORY',
+                  context.translate('category_label'),
                   style: AppTextStyles.caption.copyWith(
                     fontWeight: FontWeight.bold,
                     color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
@@ -189,14 +190,14 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                   controller: _titleController,
                   style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
                   decoration: InputDecoration(
-                    hintText: 'Note Title',
+                     hintText: context.translate('note_title_hint'),
                     hintStyle: AppTextStyles.h1.copyWith(color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.zero,
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a title';
+                      return context.translate('note_title_required');
                     }
                     return null;
                   },
@@ -220,7 +221,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                       color: theme.colorScheme.onSurface,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'Start writing your note here...',
+                      hintText: context.translate('note_content_hint'),
                       hintStyle: AppTextStyles.body.copyWith(
                         fontSize: AppFontSizes.size15,
                         color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
@@ -230,7 +231,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter note content';
+                        return context.translate('note_content_required');
                       }
                       return null;
                     },

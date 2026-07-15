@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/constants/app_font_sizes.dart';
@@ -35,7 +36,7 @@ class NotebookSearchBar extends StatelessWidget {
           fontFamily: GoogleFonts.workSans().fontFamily,
         ),
         decoration: InputDecoration(
-          hintText: 'Search notes...',
+          hintText: context.translate('search_notes_hint'),
           hintStyle: AppTextStyles.body.copyWith(
             color: isDark ? Colors.grey.shade400 : Colors.grey.shade400,
             fontSize: AppFontSizes.size15,

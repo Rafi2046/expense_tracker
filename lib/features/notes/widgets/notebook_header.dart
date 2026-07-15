@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/constants/app_text_styles.dart';
@@ -23,7 +24,7 @@ class NotebookHeader extends StatelessWidget implements PreferredSizeWidget {
         onPressed: onBack,
       ),
       title: Text(
-        'Notebook',
+        context.translate('notebook'),
         style: AppTextStyles.appbarTitle.copyWith(
           fontFamily: GoogleFonts.workSans().fontFamily,
           fontWeight: FontWeight.w600,
