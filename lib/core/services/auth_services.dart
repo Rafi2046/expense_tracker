@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -234,6 +235,13 @@ class AuthService {
   }
 
   Future<void> signOut() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        await SharedPrefsHelper.remove('has_synced_for_user_${user.uid}');
+      }
+    } catch (_) {}
+
     try {
       await DatabaseHelper.instance.clearUserData();
     } catch (_) {}

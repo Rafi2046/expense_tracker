@@ -83,12 +83,13 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
       ),
       child: ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        child: Container(
+        child: Material(
           color: theme.colorScheme.surface,
-          constraints: BoxConstraints(maxHeight: widget.maxHeight),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
+          child: Container(
+            constraints: BoxConstraints(maxHeight: widget.maxHeight),
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
               child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,6 +234,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
           ),
         ),
       ),
-    );
+    ),
+  );
   }
 }

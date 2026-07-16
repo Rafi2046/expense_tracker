@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/services/sync_service.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -57,6 +58,9 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
     if (!mounted) return;
     final pm = context.read<ProfileManagerProvider>();
     await pm.switchProfile(pm.activeProfileId);
+
+    // Save sync success status for the user
+    await SharedPrefsHelper.setBool('has_synced_for_user_${widget.uid}', true);
 
     if (mounted) {
       Navigator.pushReplacement(

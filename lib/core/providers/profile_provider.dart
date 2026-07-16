@@ -18,6 +18,8 @@ class ProfileProvider extends ChangeNotifier {
 
   StreamSubscription<User?>? _authSubscription;
   StreamSubscription<QuerySnapshot>? _profileSubscription;
+  Future<void>? _loadingFuture;
+  Future<void> _onAuthChangedChain = Future.value();
 
   // Profile Creation Flow State
   String _creationProfileType = 'business'; // 'business' or 'personal'
@@ -69,7 +71,7 @@ class ProfileProvider extends ChangeNotifier {
   ProfileProvider({required String initialProfileId})
       : _initialProfileId = initialProfileId {
     _initSync();
-    _loadFromDb();
+    _loadingFuture = _loadFromDb();
     _authSubscription = FirebaseAuth.instance.userChanges().listen(_onAuthChanged);
   }
 
@@ -81,6 +83,16 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   void _onAuthChanged(User? newUser) {
+    _onAuthChangedChain = _onAuthChangedChain.then((_) async {
+      await _handleAuthChanged(newUser);
+    });
+  }
+
+  Future<void> _handleAuthChanged(User? newUser) async {
+    if (_loadingFuture != null) {
+      await _loadingFuture;
+    }
+
     final uidChanged = newUser?.uid != _lastLoadedUid;
 
     _profileSubscription?.cancel();
@@ -96,7 +108,8 @@ class ProfileProvider extends ChangeNotifier {
 
     if (uidChanged) {
       _profiles.clear();
-      _loadFromDb(force: true);
+      _loadingFuture = _loadFromDb(force: true);
+      await _loadingFuture;
     }
 
     _attachProfileListener(newUser.uid);
@@ -199,11 +212,23 @@ class ProfileProvider extends ChangeNotifier {
       }
       _lastLoadedUid = currentUid;
 
+      // Remember current selection so force-reloads don't reset it
+      final preservedProfileId = force ? _currentProfile.id : _initialProfileId;
+
       _profiles.clear();
       _knownProfileIds.clear();
       final Set<String> seenIds = {};
 
-      final allProfiles = await DatabaseHelper.instance.readAllProfiles();
+      final dbProfiles = await DatabaseHelper.instance.readAllProfiles();
+      final allProfiles = List<Map<String, dynamic>>.from(dbProfiles);
+      allProfiles.sort((a, b) {
+        if (a['id'] == 'default_profile') return -1;
+        if (b['id'] == 'default_profile') return 1;
+        final ca = a['createdAt'] as String? ?? '';
+        final cb = b['createdAt'] as String? ?? '';
+        return ca.compareTo(cb);
+      });
+
       debugPrint('ProfileProvider._loadFromDb: DB has ${allProfiles.length} profiles');
       for (final row in allProfiles) {
         final id = row['id'] as String;
@@ -229,13 +254,6 @@ class ProfileProvider extends ChangeNotifier {
             _profiles.any((p) => p.id == 'default_profile');
 
         if (isDuplicatePersonal) {
-          await DatabaseHelper.instance.deleteProfileAndData(id);
-          continue;
-        }
-
-        // Clean up duplicate secondary profiles with exact same name and type
-        final isDuplicateSecondary = _profiles.any((p) => p.name == name && p.type == type);
-        if (isDuplicateSecondary) {
           await DatabaseHelper.instance.deleteProfileAndData(id);
           continue;
         }
@@ -275,8 +293,8 @@ class ProfileProvider extends ChangeNotifier {
           'createdAt': DateTime.now().toIso8601String(),
         });
       } else {
-        final initialMatch = _profiles.where((p) => p.id == _initialProfileId);
-        _currentProfile = initialMatch.isNotEmpty ? initialMatch.first : _profiles.first;
+        final match = _profiles.where((p) => p.id == preservedProfileId);
+        _currentProfile = match.isNotEmpty ? match.first : _profiles.first;
       }
 
       await _saveProfilesToPrefs();
@@ -314,7 +332,20 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future<void> reload() async {
-    await _loadFromDb(force: true);
+    // Cancel the Firestore listener before reloading to prevent it from
+    // firing mid-reload with stale _knownProfileIds and corrupting state.
+    _profileSubscription?.cancel();
+    _profileSubscription = null;
+
+    _loadingFuture = _loadFromDb(force: true);
+    await _loadingFuture;
+
+    // Re-attach the Firestore listener now that _knownProfileIds is populated
+    // from the freshly loaded database state.
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      _attachProfileListener(uid);
+    }
   }
 
   // Getters

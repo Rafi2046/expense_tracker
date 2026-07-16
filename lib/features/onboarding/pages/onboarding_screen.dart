@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/services/sync_service.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_page.dart';
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_page_indicator.dart';
@@ -11,6 +13,7 @@ import 'package:expense_tracker/features/onboarding/widgets/onboarding_skip_butt
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_theme_picker.dart';
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_language_picker.dart';
 import 'package:expense_tracker/features/onboarding/widgets/onboarding_biometric_picker.dart';
+import 'package:expense_tracker/features/login/widgets/sync_loading_overlay.dart';
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -167,6 +170,24 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       true,
     );
     if (!mounted) return;
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final hasSynced = SharedPrefsHelper.getBool('has_synced_for_user_${user.uid}') ?? false;
+      if (!hasSynced) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SyncLoadingOverlay(
+              syncService: SyncService(),
+              uid: user.uid,
+            ),
+          ),
+        );
+        return;
+      }
+    }
+
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(

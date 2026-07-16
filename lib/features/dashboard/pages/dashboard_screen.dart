@@ -114,8 +114,7 @@ class DashboardScreen extends StatelessWidget {
                   toGiveTitle: context.translate('to_give'),
                   totalToReceive: debtProvider.totalToReceive,
                   totalToGive: debtProvider.totalToGive,
-                  toReceivePendingCount:
-                      debtProvider.toReceiveUnpaid.length,
+                  toReceivePendingCount: debtProvider.toReceiveUnpaid.length,
                   toGivePendingCount: debtProvider.toGiveUnpaid.length,
                   pendingLabel: context.translate('pending'),
                   onIncomeTap: () {
@@ -203,26 +202,25 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 DashboardSummaryFooter(
-                  topCategoryName:
-                      expenseAnalytics.monthlyCategories.isNotEmpty
-                          ? expenseAnalytics.monthlyCategories.first.name
-                          : 'No Expenses',
+                  topCategoryName: expenseAnalytics.monthlyCategories.isNotEmpty
+                      ? expenseAnalytics.monthlyCategories.first.name
+                      : 'No Expenses',
                   topCategoryPercentage:
                       expenseAnalytics.monthlyCategories.isNotEmpty
-                          ? ((expenseAnalytics.monthlyCategories.first.amount /
-                                      expenseAnalytics.currentMonthExpense) *
-                                  100)
-                                .clamp(0, 100)
-                                .toDouble()
-                          : 0,
-                  budgetItems:
-                      expenseAnalytics.monthlyCategories.take(3).map((cat) {
-                    final totalExpense =
-                        expenseAnalytics.currentMonthExpense;
-                    final pct = totalExpense > 0
-                        ? ((cat.amount / totalExpense) * 100)
+                      ? ((expenseAnalytics.monthlyCategories.first.amount /
+                                    expenseAnalytics.currentMonthExpense) *
+                                100)
                             .clamp(0, 100)
                             .toDouble()
+                      : 0,
+                  budgetItems: expenseAnalytics.monthlyCategories.take(3).map((
+                    cat,
+                  ) {
+                    final totalExpense = expenseAnalytics.currentMonthExpense;
+                    final pct = totalExpense > 0
+                        ? ((cat.amount / totalExpense) * 100)
+                              .clamp(0, 100)
+                              .toDouble()
                         : cat.percentage;
                     return BudgetStatusItem(
                       categoryName: cat.name,
