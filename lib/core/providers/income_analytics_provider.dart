@@ -13,8 +13,9 @@ class IncomeAnalyticsProvider extends ChangeNotifier {
   String? _currentProfileId;
   StreamSubscription<User?>? _authSubscription;
 
-  IncomeAnalyticsProvider() {
-    _authSubscription = FirebaseAuth.instance.userChanges().listen((user) {
+  IncomeAnalyticsProvider({FirebaseAuth? auth}) {
+    final firebaseAuth = auth ?? FirebaseAuth.instance;
+    _authSubscription = firebaseAuth.userChanges().listen((user) {
       _onAuthChanged(user);
     });
   }

@@ -1,13 +1,24 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/income_analytics_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
+
+class FakeFirebaseAuth extends Fake implements FirebaseAuth {
+  final StreamController<User?> _controller = StreamController<User?>.broadcast();
+
+  @override
+  Stream<User?> userChanges() => _controller.stream;
+}
 
 void main() {
   group('IncomeAnalyticsProvider Tests', () {
     late IncomeAnalyticsProvider provider;
+    late FakeFirebaseAuth fakeAuth;
 
     setUp(() {
-      provider = IncomeAnalyticsProvider();
+      fakeAuth = FakeFirebaseAuth();
+      provider = IncomeAnalyticsProvider(auth: fakeAuth);
     });
 
     test('initial state has zero totals', () {
