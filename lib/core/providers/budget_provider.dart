@@ -154,6 +154,7 @@ class BudgetProvider extends ChangeNotifier {
   }
 
   void updateProfileId(String id) {
+    if (id == _activeProfileId) return;
     debugPrint('BudgetProvider.updateProfileId: switching to $id');
     _activeProfileId = id;
     _firestoreSubscription?.cancel();

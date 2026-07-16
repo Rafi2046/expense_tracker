@@ -73,6 +73,7 @@ class _AppLockManagerState extends State<AppLockManager> with WidgetsBindingObse
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('AppLockManager: build called');
     return Material(
       type: MaterialType.transparency,
       child: Stack(

@@ -1224,6 +1224,7 @@ class TransactionProvider extends ChangeNotifier {
   }
 
   void updateProfileId(String id) {
+    if (id == _activeProfileId) return;
     debugPrint('TransactionProvider.updateProfileId: switching to $id');
     _activeProfileId = id;
     _firestoreSubscription?.cancel();

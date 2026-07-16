@@ -35,11 +35,39 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
-  await SharedPrefsHelper.init();
-  await initializeDateFormatting(); // Enable local date names (Bangla, Hindi, Urdu)
+  debugPrint('main: WidgetsFlutterBinding initialized');
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  try {
+    debugPrint('main: initializing EasyLocalization...');
+    await EasyLocalization.ensureInitialized();
+    debugPrint('main: EasyLocalization initialization complete');
+  } catch (e) {
+    debugPrint('main: EasyLocalization initialization error: $e');
+  }
+
+  try {
+    debugPrint('main: initializing SharedPrefsHelper...');
+    await SharedPrefsHelper.init();
+    debugPrint('main: SharedPrefsHelper initialization complete');
+  } catch (e) {
+    debugPrint('main: SharedPrefsHelper initialization error: $e');
+  }
+
+  try {
+    debugPrint('main: initializing DateFormatting...');
+    await initializeDateFormatting(); // Enable local date names (Bangla, Hindi, Urdu)
+    debugPrint('main: DateFormatting initialization complete');
+  } catch (e) {
+    debugPrint('main: DateFormatting initialization error: $e');
+  }
+
+  try {
+    debugPrint('main: initializing Firebase...');
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    debugPrint('main: Firebase initialization complete');
+  } catch (e) {
+    debugPrint('main: Firebase initialization error: $e');
+  }
 
   // Read saved profile ID ONCE, before any provider is created.
   // Every data provider receives it directly as a constructor argument,
@@ -236,6 +264,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('MyApp: build called');
     final themeProvider = context.watch<ThemeProvider>();
     return MaterialApp(
       debugShowCheckedModeBanner: false,

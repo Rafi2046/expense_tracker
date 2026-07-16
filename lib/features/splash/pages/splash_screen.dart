@@ -26,21 +26,26 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _navigateAfterDelay() async {
+    debugPrint('Splash: starting navigation check');
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
 
     var user = FirebaseAuth.instance.currentUser;
+    debugPrint('Splash: currentUser is $user');
     if (user != null) {
       try {
-        await user.reload();
+        debugPrint('Splash: reloading user...');
+        await user.reload().timeout(const Duration(seconds: 3));
         user = FirebaseAuth.instance.currentUser;
+        debugPrint('Splash: reload successful. user is now $user');
       } catch (e) {
-        debugPrint('Splash screen user reload failed: $e');
+        debugPrint('Splash screen user reload failed or timed out: $e');
       }
     }
     if (!mounted) return;
 
     if (user == null) {
+      debugPrint('Splash: no user found, navigating to LoginScreen');
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -49,8 +54,10 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     final currentUser = user;
+    debugPrint('Splash: user is authenticated. Email verified: ${currentUser.emailVerified}');
 
     if (!currentUser.emailVerified) {
+      debugPrint('Splash: email not verified, navigating to VerifyEmailScreen');
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -60,9 +67,12 @@ class _SplashScreenState extends State<SplashScreen> {
       return;
     }
 
+    debugPrint('Splash: checking biometrics...');
     final biometricEnabled = context.read<BiometricAuthProvider>().isEnabled;
+    debugPrint('Splash: biometricEnabled: $biometricEnabled');
 
     if (biometricEnabled) {
+      debugPrint('Splash: biometric enabled, navigating to LoginScreen in biometric mode');
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -70,14 +80,17 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       );
     } else {
-      // Check if the user has completed onboarding
+      debugPrint('Splash: checking onboarding...');
       final onboardingDone = SharedPrefsHelper.getBool(
         SharedPrefsHelper.onboardingCompleteKey,
       );
+      debugPrint('Splash: onboardingDone: $onboardingDone');
 
       if (onboardingDone == true) {
         final hasSynced = SharedPrefsHelper.getBool('has_synced_for_user_${currentUser.uid}') ?? false;
+        debugPrint('Splash: sync status: hasSynced = $hasSynced');
         if (!hasSynced) {
+          debugPrint('Splash: user not synced, navigating to SyncLoadingOverlay');
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -88,12 +101,14 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           );
         } else {
+          debugPrint('Splash: user synced, navigating to BottomNavScreen');
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const BottomNavScreen()),
           );
         }
       } else {
+        debugPrint('Splash: onboarding not done, navigating to OnboardingScreen');
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const OnboardingScreen()),
@@ -104,6 +119,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('SplashScreen: build called');
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Column(

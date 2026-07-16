@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>1018341294472-fimc4j5cm1cpvdfil0c7gujv88mm2e1e.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1018341294472-fimc4j5cm1cpvdfil0c7gujv88mm2e1e</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1018341294472-4ha6qjtmlc6skj0bnhkg2v7jm0v1r8eg.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyA7yLyUnVOlloss0PKYjC8iTE8Gzh1KPj4</string>
 	<key>GCM_SENDER_ID</key>
@@ -9,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.expenseTracker</string>
+	<string>com.onesttech.budgetmint</string>
 	<key>PROJECT_ID</key>
 	<string>expense-tracker-8a3c5</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1018341294472:ios:037f725723c075da883a3d</string>
+	<string>1:1018341294472:ios:05fcfd69a210f973883a3d</string>
 </dict>
 </plist>

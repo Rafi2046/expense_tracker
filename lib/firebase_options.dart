@@ -60,20 +60,20 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyA7yLyUnVOlloss0PKYjC8iTE8Gzh1KPj4',
-    appId: '1:1018341294472:ios:037f725723c075da883a3d',
+    appId: '1:1018341294472:ios:05fcfd69a210f973883a3d',
     messagingSenderId: '1018341294472',
     projectId: 'expense-tracker-8a3c5',
     storageBucket: 'expense-tracker-8a3c5.firebasestorage.app',
-    iosBundleId: 'com.example.expenseTracker',
+    iosBundleId: 'com.onesttech.budgetmint',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyA7yLyUnVOlloss0PKYjC8iTE8Gzh1KPj4',
-    appId: '1:1018341294472:ios:037f725723c075da883a3d',
+    appId: '1:1018341294472:ios:05fcfd69a210f973883a3d',
     messagingSenderId: '1018341294472',
     projectId: 'expense-tracker-8a3c5',
     storageBucket: 'expense-tracker-8a3c5.firebasestorage.app',
-    iosBundleId: 'com.example.expenseTracker',
+    iosBundleId: 'com.onesttech.budgetmint',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
