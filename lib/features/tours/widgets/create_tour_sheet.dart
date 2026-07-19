@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
@@ -23,16 +24,16 @@ class CreateTourSheet extends StatefulWidget {
     this.tourToEdit,
   });
 
-  static void show({
+  static Future<void> show({
     required BuildContext context,
     required Function(Tour tour) onTourCreated,
     Tour? tour,
-  }) {
-    showModalBottomSheet(
+  }) async {
+    await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => CreateTourSheet(
+      builder: (_) => CreateTourSheet(
         onTourCreated: onTourCreated,
         tourToEdit: tour,
       ),
@@ -128,13 +129,85 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
     }
   }
 
+  Future<void> _pickCoverImage() async {
+    final source = await showDialog<ImageSource>(
+      context: context,
+      builder: (sCtx) {
+        final sTheme = Theme.of(sCtx);
+        return AlertDialog(
+          backgroundColor: sTheme.colorScheme.surface,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          contentPadding: EdgeInsets.zero,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 20),
+              Text(context.translate('cover_photo_label'),
+                style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w600, color: sTheme.colorScheme.onSurface),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                leading: Icon(LucideIcons.camera, color: sTheme.colorScheme.onSurface),
+                title: Text(context.translate('take_photo'), style: AppTextStyles.reportTileTitle.copyWith(
+                  fontWeight: FontWeight.w400,
+                  color: sTheme.colorScheme.onSurface,
+                )),
+                onTap: () => Navigator.pop(sCtx, ImageSource.camera),
+              ),
+              ListTile(
+                leading: Icon(LucideIcons.image, color: sTheme.colorScheme.onSurface),
+                title: Text(context.translate('choose_from_gallery'), style: AppTextStyles.reportTileTitle.copyWith(
+                  fontWeight: FontWeight.w400,
+                  color: sTheme.colorScheme.onSurface,
+                )),
+                onTap: () => Navigator.pop(sCtx, ImageSource.gallery),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (source != null) {
+      final picked = await ImagePicker().pickImage(
+        source: source,
+        maxWidth: 1200,
+        imageQuality: 85,
+      );
+      if (picked != null && mounted) {
+        final permanentPath = await _saveImagePermanently(picked.path);
+        if (mounted) {
+          setState(() => coverPhotoPath = permanentPath);
+        }
+      }
+    }
+  }
+
+  Future<String> _saveImagePermanently(String tempPath) async {
+    try {
+      final appDir = await getApplicationDocumentsDirectory();
+      final fileName = 'tour_cover_${DateTime.now().microsecondsSinceEpoch}.jpg';
+      final savedImage = await File(tempPath).copy('${appDir.path}/$fileName');
+      return savedImage.path;
+    } catch (e) {
+      return tempPath;
+    }
+  }
+
+  bool get _hasValidCoverPhoto {
+    if (coverPhotoPath == null || coverPhotoPath!.isEmpty) return false;
+    if (coverPhotoPath!.startsWith('http')) return true;
+    return File(coverPhotoPath!).existsSync();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final viewInsets = MediaQuery.of(context).viewInsets.bottom;
     final bottomInset = MediaQuery.of(context).padding.bottom;
-    final double maxHeight = (MediaQuery.of(context).size.height - viewInsets) * 0.65;
+    final double maxHeight = (MediaQuery.of(context).size.height - viewInsets) * 0.80;
 
     return Padding(
       padding: EdgeInsets.only(bottom: viewInsets),
@@ -208,83 +281,30 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                       const SizedBox(height: 14),
 
                       InkWell(
-                        onTap: () async {
-                          final source = await showModalBottomSheet<ImageSource>(
-                            context: context,
-                            backgroundColor: Colors.transparent,
-                            builder: (sCtx) {
-                              final sTheme = Theme.of(sCtx);
-                              final sDark = sTheme.brightness == Brightness.dark;
-                              return Container(
-                                decoration: BoxDecoration(
-                                  color: sTheme.colorScheme.surface,
-                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                                ),
-                                padding: EdgeInsets.fromLTRB(24, 12, 24, 20 + MediaQuery.of(sCtx).padding.bottom),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      width: 36, height: 4,
-                                      decoration: BoxDecoration(
-                                        color: sDark ? Colors.grey.shade700 : Colors.grey.shade300,
-                                        borderRadius: BorderRadius.circular(2),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Text(context.translate('cover_photo_label'),
-                                      style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w600, color: sTheme.colorScheme.onSurface),
-                                    ),
-                                    const SizedBox(height: 20),
-                                     ListTile(
-                                       leading: Icon(LucideIcons.camera, color: sTheme.colorScheme.onSurface),
-                                       title: Text(context.translate('take_photo'), style: AppTextStyles.reportTileTitle.copyWith(
-                                         fontWeight: FontWeight.w400,
-                                         color: sTheme.colorScheme.onSurface,
-                                       )),
-                                       onTap: () => Navigator.pop(sCtx, ImageSource.camera),
-                                     ),
-                                     ListTile(
-                                       leading: Icon(LucideIcons.image, color: sTheme.colorScheme.onSurface),
-                                       title: Text(context.translate('choose_from_gallery'), style: AppTextStyles.reportTileTitle.copyWith(
-                                         fontWeight: FontWeight.w400,
-                                         color: sTheme.colorScheme.onSurface,
-                                       )),
-                                       onTap: () => Navigator.pop(sCtx, ImageSource.gallery),
-                                     ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                          if (source != null) {
-                            final picked = await ImagePicker().pickImage(
-                              source: source,
-                              maxWidth: 1200,
-                              imageQuality: 85,
-                            );
-                            if (picked != null) {
-                              setState(() => coverPhotoPath = picked.path);
-                            }
-                          }
-                        },
+                        onTap: _pickCoverImage,
                         child: Container(
-                          height: 150,
+                          height: 180,
+                          clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
-                            color: coverPhotoPath != null
+                            color: _hasValidCoverPhoto
                                 ? null
                                 : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.shade50),
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                            ),
-                            image: coverPhotoPath != null
+                            border: _hasValidCoverPhoto
+                                ? null
+                                : Border.all(
+                                    color: isDark
+                                        ? Colors.white.withValues(alpha: 0.15)
+                                        : Colors.grey.shade300,
+                                    width: 1,
+                                  ),
+                            image: _hasValidCoverPhoto
                                 ? (coverPhotoPath!.startsWith('http')
                                     ? DecorationImage(image: NetworkImage(coverPhotoPath!), fit: BoxFit.cover)
                                     : DecorationImage(image: FileImage(File(coverPhotoPath!)), fit: BoxFit.cover))
                                 : null,
                           ),
-                          child: coverPhotoPath == null
+                          child: !_hasValidCoverPhoto
                               ? Center(
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -301,7 +321,34 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                     ],
                                   ),
                                 )
-                              : null,
+                              : Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      colors: [
+                                        Colors.black.withValues(alpha: 0.6),
+                                        Colors.transparent,
+                                      ],
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(LucideIcons.imagePlus,
+                                          color: Colors.white, size: 22),
+                                        const SizedBox(width: 8),
+                                        Text(context.translate('change_cover_photo'),
+                                          style: AppTextStyles.bodyBold.copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                         ),
                       ),
                       const SizedBox(height: 20),

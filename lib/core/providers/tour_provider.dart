@@ -131,9 +131,6 @@ class TourProvider extends ChangeNotifier {
   }
 
   Future<String> _uploadTourCoverPhoto(String tourId, String localPath) async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) throw Exception('No user logged in to upload cover photo');
-
     String cleanedPath = localPath;
     if (cleanedPath.startsWith('file://')) {
       cleanedPath = cleanedPath.replaceFirst('file://', '');
@@ -144,9 +141,8 @@ class TourProvider extends ChangeNotifier {
     }
     final storageRef = FirebaseStorage.instance
         .ref()
-        .child('users')
-        .child(uid)
-        .child('tour_${tourId}_cover.jpg');
+        .child('tour_covers')
+        .child('$tourId.jpg');
 
     final UploadTask uploadTask = storageRef.putFile(file);
     final TaskSnapshot snapshot = await uploadTask;

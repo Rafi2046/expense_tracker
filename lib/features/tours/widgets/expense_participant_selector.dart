@@ -187,6 +187,9 @@ class _ExpenseParticipantSelectorState
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
                         ],
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (_) =>
+                            FocusScope.of(context).unfocus(),
                         textAlign: TextAlign.right,
                         style: AppTextStyles.bodySmall.copyWith(
                           fontWeight: FontWeight.w600,

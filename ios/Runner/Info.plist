@@ -42,7 +42,11 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>This app uses Face ID / Touch ID to securely lock your financial data when the app goes into the background.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library to let you select and upload a profile picture.</string>
+	<string>We need access to your photo library to let you select photos for tours, receipts, and profile pictures.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera to take cover photos for tours and receipts.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We need permission to save photos to your photo library.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

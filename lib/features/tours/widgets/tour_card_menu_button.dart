@@ -5,6 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 class TourCardMenuButton extends StatelessWidget {
   final bool isCompleted;
   final bool isOwner;
+  final VoidCallback? onEdit;
   final VoidCallback? onDelete;
   final VoidCallback? onToggleComplete;
 
@@ -12,6 +13,7 @@ class TourCardMenuButton extends StatelessWidget {
     super.key,
     required this.isCompleted,
     this.isOwner = true,
+    this.onEdit,
     this.onDelete,
     this.onToggleComplete,
   });
@@ -20,6 +22,7 @@ class TourCardMenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final editLabel = context.translate('edit_tour', listen: false);
     final markActiveLabel = context.translate('mark_as_active', listen: false);
     final markCompletedLabel = context.translate('mark_as_completed', listen: false);
     final deleteLabel = context.translate(isOwner ? 'delete_tour' : 'leave_tour', listen: false);
@@ -34,10 +37,22 @@ class TourCardMenuButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       onSelected: (value) {
+        if (value == 'edit') onEdit?.call();
         if (value == 'toggleComplete') onToggleComplete?.call();
         if (value == 'delete') onDelete?.call();
       },
       itemBuilder: (_) => [
+        if (onEdit != null)
+          PopupMenuItem(
+            value: 'edit',
+            child: Row(
+              children: [
+                Icon(LucideIcons.pencil, size: 18, color: greyColor),
+                const SizedBox(width: 8),
+                Text(editLabel, style: TextStyle(color: greyColor)),
+              ],
+            ),
+          ),
         if (onToggleComplete != null)
           PopupMenuItem(
             value: 'toggleComplete',

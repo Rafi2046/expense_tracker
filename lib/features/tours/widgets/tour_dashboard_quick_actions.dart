@@ -19,27 +19,27 @@ class TourDashboardQuickActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).padding.bottom;
     return Padding(
-      padding: EdgeInsets.only(bottom: bottomInset + 60),
+      padding: EdgeInsets.only(bottom: bottomInset + 100),
       child: FloatingActionButton.extended(
-        heroTag: 'tour_dashboard_fab',
-        onPressed: onAddExpense,
-        backgroundColor: isCompleted
-            ? AppColors.activeGreen.withValues(alpha: 0.35)
-            : AppColors.activeGreen,
-        icon: Icon(LucideIcons.plus,
-            color: AppColors.white.withValues(alpha: isCompleted ? 0.5 : 1),
-            size: 20),
-        label: Text(
-          context.translate('add_expense_fab'),
-          style: AppTextStyles.label.copyWith(
-            fontWeight: FontWeight.w600,
-            color: AppColors.white.withValues(alpha: isCompleted ? 0.5 : 1),
-          ),
+      heroTag: 'tour_dashboard_fab',
+      onPressed: onAddExpense,
+      backgroundColor: isCompleted
+          ? AppColors.activeGreen.withValues(alpha: 0.35)
+          : AppColors.activeGreen,
+      icon: Icon(LucideIcons.plus,
+          color: AppColors.white.withValues(alpha: isCompleted ? 0.5 : 1),
+          size: 20),
+      label: Text(
+        context.translate('add_expense_fab'),
+        style: AppTextStyles.label.copyWith(
+          fontWeight: FontWeight.w600,
+          color: AppColors.white.withValues(alpha: isCompleted ? 0.5 : 1),
         ),
-        elevation: isCompleted ? 0 : 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.r8),
-        ),
+      ),
+      elevation: isCompleted ? 0 : 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.r8),
+      ),
       ),
     );
   }

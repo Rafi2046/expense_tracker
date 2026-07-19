@@ -172,6 +172,14 @@ class _TourListScreenState extends State<TourListScreen> {
     );
   }
 
+  void _openEditTourSheet(Tour tour) {
+    CreateTourSheet.show(
+      context: context,
+      tour: tour,
+      onTourCreated: (_) {},
+    );
+  }
+
   void _showCreateJoinSheet() {
     showModalBottomSheet(
       context: context,
@@ -387,6 +395,7 @@ class _TourListScreenState extends State<TourListScreen> {
                             totalSpent: _totalSpent[tour.id] ?? 0,
                             index: index,
                             isOwner: isOwner,
+                            onEdit: isOwner ? () => _openEditTourSheet(tour) : null,
                             onDelete: () => _confirmDeleteTour(context, tour),
                             onToggleComplete: isOwner ? () => _toggleCompleteTour(tour) : null,
                             onTap: () {
