@@ -64,11 +64,11 @@ class LoginSocialButtons extends StatelessWidget {
           textColor: isDark ? Colors.white : AppColors.googleTextColor,
           fontFamily: GoogleFonts.inter().fontFamily,
           onPressed: isLoading ? () {} : onGoogleSignIn,
-          backgroundColor: isDark ? Colors.grey.shade800 : AppColors.white,
+          backgroundColor: isDark ? Colors.grey.shade700 : AppColors.white,
         ),
         if (Platform.isIOS || Platform.isMacOS)
           Padding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.only(top: 12),
             child: CustomButton(
               leading: Transform.scale(
                 scale: 1.4,
@@ -80,7 +80,7 @@ class LoginSocialButtons extends StatelessWidget {
               textColor: isDark ? Colors.white : AppColors.googleTextColor,
               fontFamily: GoogleFonts.inter().fontFamily,
               onPressed: isLoading ? () {} : onAppleSignIn!,
-              backgroundColor: isDark ? Colors.grey.shade800 : AppColors.white,
+          backgroundColor: isDark ? Colors.grey.shade700 : AppColors.white,
             ),
           ),
         const SizedBox(height: 8),

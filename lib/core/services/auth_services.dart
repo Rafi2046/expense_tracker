@@ -139,7 +139,23 @@ class AuthService {
         accessToken: appleIdCredential.authorizationCode,
       );
 
-      return await _auth.signInWithCredential(credential);
+      final userCredential = await _auth.signInWithCredential(credential);
+
+      final user = userCredential.user;
+      if (user != null) {
+        if (user.displayName == null || user.displayName!.trim().isEmpty) {
+          final givenName = appleIdCredential.givenName;
+          final familyName = appleIdCredential.familyName;
+          final fullName = [givenName, familyName].where((n) => n != null).join(' ');
+          if (fullName.isNotEmpty) {
+            await user.updateDisplayName(fullName);
+          } else if (user.email != null && user.email!.isNotEmpty) {
+            await user.updateDisplayName(user.email!.split('@').first);
+          }
+        }
+      }
+
+      return userCredential;
     } on SignInWithAppleAuthorizationException catch (e) {
       if (e.code == AuthorizationErrorCode.canceled) {
         return null;

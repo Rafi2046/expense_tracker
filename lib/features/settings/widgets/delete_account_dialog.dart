@@ -9,6 +9,7 @@ import 'package:expense_tracker/features/settings/widgets/delete_account_warning
 import 'package:expense_tracker/features/settings/widgets/delete_confirmation_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:flutter/material.dart';
 
 
@@ -26,6 +27,8 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
   bool _isDeleting = false;
   bool _reauthMode = false;
   bool _isPasswordUser = false;
+  bool _isAppleUser = false;
+  bool _isGoogleUser = false;
 
   @override
   void initState() {
@@ -36,6 +39,8 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       _isPasswordUser = user.providerData.any((p) => p.providerId == 'password');
+      _isAppleUser = user.providerData.any((p) => p.providerId == 'apple.com');
+      _isGoogleUser = user.providerData.any((p) => p.providerId == 'google.com');
     }
   }
 
@@ -100,7 +105,29 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
 
       final isGoogleUser = user.providerData.any((p) => p.providerId == 'google.com');
 
-      if (_isPasswordUser) {
+      if (isGoogleUser) {
+        final googleSignIn = GoogleSignIn.instance;
+        await googleSignIn.initialize();
+        final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
+        final googleAuth = googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+        );
+        await user.reauthenticateWithCredential(credential);
+      } else if (_isAppleUser) {
+        final appleIdCredential = await SignInWithApple.getAppleIDCredential(
+          scopes: [
+            AppleIDAuthorizationScopes.email,
+            AppleIDAuthorizationScopes.fullName,
+          ],
+        );
+        final oAuthProvider = OAuthProvider('apple.com');
+        final credential = oAuthProvider.credential(
+          idToken: appleIdCredential.identityToken,
+          accessToken: appleIdCredential.authorizationCode,
+        );
+        await user.reauthenticateWithCredential(credential);
+      } else if (_isPasswordUser) {
         final password = _passwordController.text.trim();
         if (password.isEmpty) {
           if (mounted) {
@@ -117,15 +144,6 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
         final credential = EmailAuthProvider.credential(
           email: user.email!,
           password: password,
-        );
-        await user.reauthenticateWithCredential(credential);
-      } else if (isGoogleUser) {
-        final googleSignIn = GoogleSignIn.instance;
-        await googleSignIn.initialize();
-        final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
-        final googleAuth = googleUser.authentication;
-        final credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
         );
         await user.reauthenticateWithCredential(credential);
       } else {
@@ -177,6 +195,8 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
               if (_reauthMode)
                 DeleteAccountReauthBody(
                   isPasswordUser: _isPasswordUser,
+                  isAppleUser: _isAppleUser,
+                  isGoogleUser: _isGoogleUser,
                   isDeleting: _isDeleting,
                   passwordController: _passwordController,
                   onReauthenticate: _reauthenticateAndDelete,

@@ -15,6 +15,7 @@ class CustomRoundButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return InkWell(
       onTap: onPressed,
       borderRadius: BorderRadius.circular(50),
@@ -22,8 +23,11 @@ class CustomRoundButton extends StatelessWidget {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.white,
-          border: Border.all(color: AppColors.borderColor, width: 1),
+          color: isDark ? Colors.grey.shade700 : Colors.white,
+          border: Border.all(
+            color: isDark ? Colors.grey.shade600 : AppColors.borderColor,
+            width: 1,
+          ),
         ),
         child: Image.asset(
           imagePath,

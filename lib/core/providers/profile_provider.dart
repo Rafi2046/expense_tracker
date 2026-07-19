@@ -258,6 +258,11 @@ class ProfileProvider extends ChangeNotifier {
           continue;
         }
 
+        if (_profiles.any((p) => p.id == id)) {
+          debugPrint('ProfileProvider._loadFromDb: skipping duplicate -> $id');
+          continue;
+        }
+
         _profiles.add(UserProfile(
           id: id,
           name: name,

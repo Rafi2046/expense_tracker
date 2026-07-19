@@ -7,6 +7,8 @@ import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 
 class DeleteAccountReauthBody extends StatelessWidget {
   final bool isPasswordUser;
+  final bool isAppleUser;
+  final bool isGoogleUser;
   final bool isDeleting;
   final TextEditingController passwordController;
   final VoidCallback onReauthenticate;
@@ -14,6 +16,8 @@ class DeleteAccountReauthBody extends StatelessWidget {
   const DeleteAccountReauthBody({
     super.key,
     required this.isPasswordUser,
+    required this.isAppleUser,
+    required this.isGoogleUser,
     required this.isDeleting,
     required this.passwordController,
     required this.onReauthenticate,
@@ -37,7 +41,22 @@ class DeleteAccountReauthBody extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        if (isPasswordUser) ...[
+        if (isGoogleUser || isAppleUser) ...[
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: CustomButton(
+              text: isDeleting
+                  ? context.translate('deleting')
+                  : context.translate(isAppleUser ? 'continue_with_apple' : 'continue_with_google'),
+              onPressed: !isDeleting ? onReauthenticate : () {},
+              backgroundColor: isDark ? Colors.grey.shade700 : Colors.white,
+              textColor: isDark ? Colors.white : Colors.black87,
+              showBorder: true,
+              borderColor: isDark ? Colors.grey.shade600 : borderColor,
+            ),
+          ),
+        ] else if (isPasswordUser) ...[
           TextField(
             controller: passwordController,
             obscureText: true,
@@ -75,20 +94,6 @@ class DeleteAccountReauthBody extends StatelessWidget {
               onPressed: !isDeleting ? onReauthenticate : () {},
               backgroundColor: AppColors.activeRed,
               textColor: Colors.white,
-            ),
-          ),
-        ],
-        if (!isPasswordUser) ...[
-          const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: CustomButton(
-              text: isDeleting ? context.translate('deleting') : context.translate('continue_with_google'),
-              onPressed: !isDeleting ? onReauthenticate : () {},
-              backgroundColor: Colors.white,
-              textColor: Colors.black87,
-              showBorder: true,
-              borderColor: borderColor,
             ),
           ),
         ],
