@@ -395,7 +395,7 @@ class _TourListScreenState extends State<TourListScreen> {
                             totalSpent: _totalSpent[tour.id] ?? 0,
                             index: index,
                             isOwner: isOwner,
-                            onEdit: isOwner ? () => _openEditTourSheet(tour) : null,
+                            onEdit: () => _openEditTourSheet(tour),
                             onDelete: () => _confirmDeleteTour(context, tour),
                             onToggleComplete: isOwner ? () => _toggleCompleteTour(tour) : null,
                             onTap: () {

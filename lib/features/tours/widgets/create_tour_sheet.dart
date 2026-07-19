@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour.dart';
@@ -106,6 +107,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
       return;
     }
 
+    final tourProvider = context.read<TourProvider>();
     final editTour = widget.tourToEdit;
     if (editTour != null) {
       final updated = editTour.copyWith(
@@ -114,7 +116,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
         currency: selectedCurrency,
       );
       Navigator.pop(context);
-      context.read<TourProvider>().updateTour(updated);
+      tourProvider.updateTour(updated);
     } else {
       final tour = Tour(
         id: DateTime.now().microsecondsSinceEpoch.toString(),
@@ -122,7 +124,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
         coverPhoto: coverPhotoPath,
         currency: selectedCurrency,
         createdAt: DateTime.now(),
-        profileId: context.read<TourProvider>().activeProfileId,
+        profileId: tourProvider.activeProfileId,
       );
       Navigator.pop(context);
       widget.onTourCreated(tour);
@@ -208,6 +210,9 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
     final viewInsets = MediaQuery.of(context).viewInsets.bottom;
     final bottomInset = MediaQuery.of(context).padding.bottom;
     final double maxHeight = (MediaQuery.of(context).size.height - viewInsets) * 0.80;
+    
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    final isOwner = widget.tourToEdit == null || widget.tourToEdit!.ownerUid == null || widget.tourToEdit!.ownerUid == currentUid;
 
     return Padding(
       padding: EdgeInsets.only(bottom: viewInsets),
@@ -252,38 +257,76 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                       ),
                       const SizedBox(height: 24),
 
-                      TourNameField(
-                        theme: theme,
-                        controller: nameController,
-                      ),
-                      const SizedBox(height: 14),
+                      if (!isOwner) ...[
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.amber.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(LucideIcons.info, size: 16, color: Colors.amber),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'Only the creator can edit tour details. You can only change the cover photo.',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: isDark ? Colors.amber.shade200 : Colors.amber.shade900,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                      Opacity(
+                        opacity: isOwner ? 1.0 : 0.5,
+                        child: IgnorePointer(
+                          ignoring: !isOwner,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              TourNameField(
+                                theme: theme,
+                                controller: nameController,
+                              ),
+                              const SizedBox(height: 14),
 
-                      TourDateRangePicker(
-                        theme: theme,
-                        startDate: startDate,
-                        endDate: endDate,
-                        onPickStartDate: () => _pickDate(isStart: true),
-                        onPickEndDate: () => _pickDate(isStart: false),
-                      ),
-                      const SizedBox(height: 14),
+                              TourDateRangePicker(
+                                theme: theme,
+                                startDate: startDate,
+                                endDate: endDate,
+                                onPickStartDate: () => _pickDate(isStart: true),
+                                onPickEndDate: () => _pickDate(isStart: false),
+                              ),
+                              const SizedBox(height: 14),
 
-                      TourCurrencySelector(
-                        theme: theme,
-                        value: selectedCurrency,
-                        onChanged: (v) => setState(() => selectedCurrency = v),
-                      ),
-                      const SizedBox(height: 14),
+                              TourCurrencySelector(
+                                theme: theme,
+                                value: selectedCurrency,
+                                onChanged: (v) => setState(() => selectedCurrency = v),
+                              ),
+                              const SizedBox(height: 14),
 
-                      TourDescriptionField(
-                        theme: theme,
-                        controller: descriptionController,
+                              TourDescriptionField(
+                                theme: theme,
+                                controller: descriptionController,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 14),
 
                       InkWell(
                         onTap: _pickCoverImage,
                         child: Container(
-                          height: 180,
+                          height: 210,
                           clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
                             color: _hasValidCoverPhoto

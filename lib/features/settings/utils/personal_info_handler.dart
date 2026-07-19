@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/settings/widgets/image_picker_sheet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -159,10 +160,31 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
     try {
       await AuthService().updatePersonalInfo(displayName: name);
 
-      if (photoUrl != user.photoURL) {
-        await user.updatePhotoURL(photoUrl);
+      String finalPhotoUrl = photoUrl;
+      if (localImageFile != null && localImageFile!.existsSync()) {
+        try {
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('profile_photos')
+              .child('${user.uid}.jpg');
+          final uploadTask = storageRef.putFile(localImageFile!);
+          final snapshot = await uploadTask;
+          finalPhotoUrl = await snapshot.ref.getDownloadURL();
+        } catch (e) {
+          debugPrint('Error uploading profile photo: $e');
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to upload image: $e'), backgroundColor: Colors.red),
+            );
+          }
+        }
+      }
+
+      if (finalPhotoUrl != user.photoURL) {
+        await user.updatePhotoURL(finalPhotoUrl);
         await user.reload();
-        await SharedPrefsHelper.setString('local_profile_photo_${user.uid}', photoUrl);
+        await SharedPrefsHelper.setString('local_profile_photo_${user.uid}', finalPhotoUrl);
+        photoUrl = finalPhotoUrl;
       }
 
       await SharedPrefsHelper.setString('local_phone_number_${user.uid}', phoneController.text.trim());

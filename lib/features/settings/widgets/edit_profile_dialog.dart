@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
@@ -166,7 +167,26 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
 
     try {
       final newName = _nameController.text.trim();
-      final newPhotoUrl = _photoUrlController.text.trim();
+      String newPhotoUrl = _photoUrlController.text.trim();
+
+      if (_localImageFile != null && _localImageFile!.existsSync()) {
+        try {
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('profile_photos')
+              .child('${user.uid}.jpg');
+          final uploadTask = storageRef.putFile(_localImageFile!);
+          final snapshot = await uploadTask;
+          newPhotoUrl = await snapshot.ref.getDownloadURL();
+        } catch (e) {
+          debugPrint('Error uploading profile photo: $e');
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to upload image: $e'), backgroundColor: Colors.red),
+            );
+          }
+        }
+      }
 
       await SharedPrefsHelper.setString(
         'local_profile_photo_${user.uid}',

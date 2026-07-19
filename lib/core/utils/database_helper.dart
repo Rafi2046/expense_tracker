@@ -44,7 +44,7 @@ class DatabaseHelper {
 
       return await openDatabase(
         path,
-        version: 16,
+        version: 17,
         onCreate: _createDB,
         onUpgrade: _onUpgrade,
       );
@@ -179,7 +179,8 @@ class DatabaseHelper {
         syncStatus TEXT NOT NULL DEFAULT 'synced',
         isDeleted INTEGER NOT NULL DEFAULT 0,
         lastModified TEXT NOT NULL,
-        uid TEXT
+        uid TEXT,
+        photoUrl TEXT
       )
     ''');
     await db.execute('''
@@ -534,6 +535,13 @@ class DatabaseHelper {
           'id': 'account_bank', 'name': 'Bank', 'type': 'Bank',
           'initialBalance': 0.0, 'createdAt': DateTime.now().toIso8601String(), 'profileId': 'default_profile',
         });
+      }
+    }
+    if (oldVersion < 17) {
+      final columns = await db.rawQuery('PRAGMA table_info(tour_participants)');
+      final hasPhotoUrl = columns.any((col) => col['name'] == 'photoUrl');
+      if (!hasPhotoUrl) {
+        await db.execute('ALTER TABLE tour_participants ADD COLUMN photoUrl TEXT');
       }
     }
   }

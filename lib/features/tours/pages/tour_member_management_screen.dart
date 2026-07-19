@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -6,6 +7,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/tours/widgets/add_member_section.dart';
 import 'package:expense_tracker/features/tours/widgets/data_integrity_warning.dart';
 import 'package:expense_tracker/features/tours/widgets/member_tile.dart';
@@ -136,6 +138,12 @@ class _TourMemberManagementScreenState
     }
 
     final int memberColor = _presetColors[_selectedColorIndex].toARGB32();
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final isMe = currentUser != null &&
+        (name.toLowerCase() == (currentUser.displayName ?? '').toLowerCase() || name.toLowerCase() == 'you');
+    final photoUrl = isMe
+        ? (currentUser.photoURL ?? SharedPrefsHelper.getString('local_profile_photo_${currentUser.uid}'))
+        : null;
 
     final member = TourParticipant(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -143,6 +151,8 @@ class _TourMemberManagementScreenState
       name: name,
       avatarColor: memberColor,
       joinedAt: DateTime.now(),
+      uid: isMe ? currentUser.uid : null,
+      photoUrl: photoUrl,
     );
 
     provider.addParticipant(member);

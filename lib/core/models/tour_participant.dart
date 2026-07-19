@@ -10,6 +10,7 @@ class TourParticipant {
   final bool isDeleted;
   final DateTime lastModified;
   final String? uid;
+  final String? photoUrl;
 
   TourParticipant({
     required this.id,
@@ -23,6 +24,7 @@ class TourParticipant {
     this.isDeleted = false,
     DateTime? lastModified,
     this.uid,
+    this.photoUrl,
   }) : lastModified = lastModified ?? DateTime.now();
 
   TourParticipant copyWith({
@@ -37,6 +39,7 @@ class TourParticipant {
     bool? isDeleted,
     DateTime? lastModified,
     String? uid,
+    String? photoUrl,
   }) =>
       TourParticipant(
         id: id ?? this.id,
@@ -50,6 +53,7 @@ class TourParticipant {
         isDeleted: isDeleted ?? this.isDeleted,
         lastModified: lastModified ?? this.lastModified,
         uid: uid ?? this.uid,
+        photoUrl: photoUrl ?? this.photoUrl,
       );
 
   Map<String, dynamic> toMap() => {
@@ -62,6 +66,7 @@ class TourParticipant {
         'isDeleted': isDeleted,
         'lastModified': lastModified.toIso8601String(),
         'uid': uid,
+        'photoUrl': photoUrl,
       };
 
   factory TourParticipant.fromMap(String id, Map<String, dynamic> map) =>
@@ -78,6 +83,7 @@ class TourParticipant {
             ? DateTime.parse(map['lastModified'] as String)
             : null,
         uid: map['uid'] as String?,
+        photoUrl: map['photoUrl'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -92,6 +98,7 @@ class TourParticipant {
         'isDeleted': isDeleted ? 1 : 0,
         'lastModified': lastModified.toIso8601String(),
         'uid': uid,
+        'photoUrl': photoUrl,
       };
 
   factory TourParticipant.fromJson(Map<String, dynamic> json) =>
@@ -109,5 +116,6 @@ class TourParticipant {
             ? DateTime.parse(json['lastModified'] as String)
             : DateTime.now(),
         uid: json['uid'] as String?,
+        photoUrl: json['photoUrl'] as String?,
       );
 }

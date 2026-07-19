@@ -11,6 +11,7 @@ import '../models/tour_expense.dart';
 import '../models/tour_expense_share.dart';
 import '../models/tour_settlement.dart';
 import '../utils/database_helper.dart';
+import '../utils/shared_prefs_helper.dart';
 import '../constants/app_constants.dart';
 import '../services/invite_code_service.dart';
 import '../services/tour_local_service.dart';
@@ -152,23 +153,14 @@ class TourProvider extends ChangeNotifier {
   Future<void> createTour(Tour tour) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
 
-    String? finalCoverPhoto = tour.coverPhoto;
-    if (finalCoverPhoto != null && finalCoverPhoto.isNotEmpty && !finalCoverPhoto.startsWith('http')) {
-      try {
-        finalCoverPhoto = await _uploadTourCoverPhoto(tour.id, finalCoverPhoto);
-      } catch (e) {
-        debugPrint('Error uploading tour cover photo: $e');
-      }
-    }
-
     final code = uid != null
         ? await _inviteCodeService.generateUniqueCode()
         : null;
 
+    // 1. Save locally first with local cover photo path
     final enriched = tour.copyWith(
       inviteCode: code,
       ownerUid: uid,
-      coverPhoto: finalCoverPhoto,
       memberUids: uid != null ? [uid] : [],
     );
 
@@ -184,12 +176,15 @@ class TourProvider extends ChangeNotifier {
 
     // Auto-create creator as participant
     if (uid != null) {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      final photoUrl = currentUser?.photoURL ?? (currentUser != null ? SharedPrefsHelper.getString('local_profile_photo_${currentUser.uid}') : null);
       final creator = TourParticipant(
         id: '${tour.id}_creator',
         tourId: tour.id,
-        name: FirebaseAuth.instance.currentUser?.displayName ?? 'You',
+        name: currentUser?.displayName ?? 'You',
         joinedAt: DateTime.now(),
         uid: uid,
+        photoUrl: photoUrl,
       );
       await db.insert(
         'tour_participants',
@@ -203,24 +198,43 @@ class TourProvider extends ChangeNotifier {
     }
 
     notifyListeners();
-    _syncTourToSharedCollection(enriched);
-    _syncTourToFirestore(enriched);
+
+    // 2. Upload cover photo in background — if successful, update with HTTP URL
+    String? finalCoverPhoto = tour.coverPhoto;
+    if (finalCoverPhoto != null && finalCoverPhoto.isNotEmpty && !finalCoverPhoto.startsWith('http')) {
+      try {
+        final httpUrl = await _uploadTourCoverPhoto(tour.id, finalCoverPhoto);
+        final withUrl = enriched.copyWith(coverPhoto: httpUrl);
+        await db.update(
+          'tours',
+          withUrl.toJson(),
+          where: 'id = ?',
+          whereArgs: [tour.id],
+        );
+        final idx = _tours.indexWhere((t) => t.id == tour.id);
+        if (idx != -1) {
+          _tours[idx] = withUrl;
+        }
+        notifyListeners();
+        _syncTourToSharedCollection(withUrl);
+        _syncTourToFirestore(withUrl);
+      } catch (e) {
+        debugPrint('Error uploading tour cover photo: $e');
+        _syncTourToSharedCollection(enriched);
+        _syncTourToFirestore(enriched);
+      }
+    } else {
+      _syncTourToSharedCollection(enriched);
+      _syncTourToFirestore(enriched);
+    }
     _initRealTimeListenerForTour(tour.id);
   }
 
   Future<void> updateTour(Tour tour) async {
-    String? finalCoverPhoto = tour.coverPhoto;
-    if (finalCoverPhoto != null && finalCoverPhoto.isNotEmpty && !finalCoverPhoto.startsWith('http')) {
-      try {
-        finalCoverPhoto = await _uploadTourCoverPhoto(tour.id, finalCoverPhoto);
-      } catch (e) {
-        debugPrint('Error uploading tour cover photo: $e');
-      }
-    }
-
     final db = await _db.database;
+
+    // 1. Save locally first with whatever path we have (local or http)
     final updated = tour.copyWith(
-      coverPhoto: finalCoverPhoto,
       lastModified: DateTime.now(),
     );
     await db.update(
@@ -237,6 +251,38 @@ class TourProvider extends ChangeNotifier {
       _selectedTourId = tour.id;
     }
     notifyListeners();
+
+    // 2. Attempt upload in background — if successful, update with HTTP URL
+    String? finalCoverPhoto = tour.coverPhoto;
+    if (finalCoverPhoto != null && finalCoverPhoto.isNotEmpty && !finalCoverPhoto.startsWith('http')) {
+      try {
+        final httpUrl = await _uploadTourCoverPhoto(tour.id, finalCoverPhoto);
+        final withUrl = updated.copyWith(coverPhoto: httpUrl);
+        await db.update(
+          'tours',
+          withUrl.toJson(),
+          where: 'id = ?',
+          whereArgs: [tour.id],
+        );
+        if (idx != -1) {
+          _tours[idx] = withUrl;
+        }
+        notifyListeners();
+        _syncTourToFirestore(withUrl);
+        if (withUrl.inviteCode != null || withUrl.ownerUid != null) {
+          try {
+            await _syncTourToSharedCollection(withUrl);
+          } catch (e) {
+            debugPrint('Error syncing updated tour to shared collection: $e');
+          }
+        }
+        return;
+      } catch (e) {
+        debugPrint('Error uploading tour cover photo: $e');
+      }
+    }
+
+    // 3. Sync without upload
     _syncTourToFirestore(updated);
     if (updated.inviteCode != null || updated.ownerUid != null) {
       try {
@@ -407,6 +453,7 @@ class TourProvider extends ChangeNotifier {
         'uid': currentUser.uid,
         'name': currentUser.displayName ?? 'Friend',
         'email': currentUser.email ?? '',
+        'photoUrl': currentUser.photoURL ?? SharedPrefsHelper.getString('local_profile_photo_${currentUser.uid}') ?? '',
         'status': 'pending',
         'createdAt': DateTime.now().toIso8601String(),
       });
@@ -469,22 +516,26 @@ class TourProvider extends ChangeNotifier {
           // The owner's app will update Firestore. We prepare the local list state here.
           final claimed = dummy.first;
           final currentUser = FirebaseAuth.instance.currentUser;
+          final joinerPhotoUrl = currentUser?.photoURL ?? (currentUser != null ? SharedPrefsHelper.getString('local_profile_photo_${currentUser.uid}') : null);
           final idx = participants.indexWhere((p) => p.id == claimed.id);
           if (idx != -1) {
             participants[idx] = claimed.copyWith(
               uid: uid,
               name: currentUser?.displayName ?? claimed.name,
+              photoUrl: joinerPhotoUrl,
             );
           }
         } else {
           // Create new participant locally to resolve sync delay, no Firestore write
           final currentUser = FirebaseAuth.instance.currentUser;
+          final joinerPhotoUrl = currentUser?.photoURL ?? (currentUser != null ? SharedPrefsHelper.getString('local_profile_photo_${currentUser.uid}') : null);
           final joiner = TourParticipant(
             id: '${tour.id}_member_$uid',
             tourId: tour.id,
             name: currentUser?.displayName ?? 'New Member',
             joinedAt: DateTime.now(),
             uid: uid,
+            photoUrl: joinerPhotoUrl,
           );
           participants.add(joiner);
         }
@@ -518,7 +569,13 @@ class TourProvider extends ChangeNotifier {
 
   Future<void> approveJoinRequest(Tour tour, String requesterUid, String requesterName) async {
     try {
-      // 1. Update request status to approved
+      // 1. Update request status to approved and fetch photoUrl
+      final reqDoc = await _sharedToursCollection
+          .doc(tour.id)
+          .collection('join_requests')
+          .doc(requesterUid)
+          .get();
+      final requesterPhotoUrl = (reqDoc.data()?['photoUrl'] as String?) ?? '';
       await _sharedToursCollection
           .doc(tour.id)
           .collection('join_requests')
@@ -560,6 +617,7 @@ class TourProvider extends ChangeNotifier {
             name: requesterName,
             joinedAt: DateTime.now(),
             uid: requesterUid,
+            photoUrl: requesterPhotoUrl,
           );
           await _sharedToursCollection
               .doc(tour.id)
@@ -1347,7 +1405,7 @@ class TourProvider extends ChangeNotifier {
         final tour = Tour.fromMap(doc.id, data);
         firestoreTourIds.add(tour.id);
 
-        // Check if this tour already exists in local SQLite to preserve profileId
+        // Check if this tour already exists in local SQLite to preserve profileId & local coverPhoto
         final localTourMaps = await db.query(
           'tours',
           where: 'id = ?',
@@ -1355,12 +1413,24 @@ class TourProvider extends ChangeNotifier {
         );
 
         String targetProfileId = _activeProfileId;
+        String? existingCover;
         if (localTourMaps.isNotEmpty) {
           targetProfileId =
               localTourMaps.first['profileId'] as String? ?? _activeProfileId;
+          existingCover = localTourMaps.first['coverPhoto'] as String?;
         }
 
-        final updatedTour = tour.copyWith(profileId: targetProfileId);
+        String? finalCover = tour.coverPhoto;
+        if ((finalCover == null || finalCover.isEmpty) &&
+            existingCover != null &&
+            existingCover.isNotEmpty) {
+          finalCover = existingCover;
+        }
+
+        final updatedTour = tour.copyWith(
+          profileId: targetProfileId,
+          coverPhoto: finalCover,
+        );
 
         // Fetch participants and expenses
         final participantSnapshot = await _sharedToursCollection
@@ -1413,13 +1483,21 @@ class TourProvider extends ChangeNotifier {
   }
 
   Future<void> _syncTourToSharedCollection(Tour tour) async {
-    await _sharedToursCollection.doc(tour.id).set(tour.toMap());
+    final map = tour.toMap();
+    if (tour.coverPhoto != null && !tour.coverPhoto!.startsWith('http')) {
+      map['coverPhoto'] = null; // Don't sync local paths
+    }
+    await _sharedToursCollection.doc(tour.id).set(map);
   }
 
   Future<void> _syncTourToFirestore(Tour tour) async {
     final col = _toursCollection;
     if (col == null) return;
-    await col.doc(tour.id).set(tour.toMap());
+    final map = tour.toMap();
+    if (tour.coverPhoto != null && !tour.coverPhoto!.startsWith('http')) {
+      map['coverPhoto'] = null; // Don't sync local paths
+    }
+    await col.doc(tour.id).set(map);
   }
 
   Future<void> _syncExpenseToFirestore(
@@ -1505,11 +1583,24 @@ class TourProvider extends ChangeNotifier {
           whereArgs: [tour.id],
         );
         String targetProfileId = _activeProfileId;
+        String? existingCover;
         if (localTourMaps.isNotEmpty) {
           targetProfileId =
               localTourMaps.first['profileId'] as String? ?? _activeProfileId;
+          existingCover = localTourMaps.first['coverPhoto'] as String?;
         }
-        final updatedTour = tour.copyWith(profileId: targetProfileId);
+
+        String? finalCover = tour.coverPhoto;
+        if ((finalCover == null || finalCover.isEmpty) &&
+            existingCover != null &&
+            existingCover.isNotEmpty) {
+          finalCover = existingCover;
+        }
+
+        final updatedTour = tour.copyWith(
+          profileId: targetProfileId,
+          coverPhoto: finalCover,
+        );
 
         final localService = TourLocalService(db);
         await localService.upsertTour(updatedTour);

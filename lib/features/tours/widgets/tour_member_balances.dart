@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 
@@ -37,6 +40,22 @@ class TourMemberBalances extends StatelessWidget {
       Color(0xFF14B8A6),
     ];
     return colors[index % colors.length];
+  }
+
+  ImageProvider? _getParticipantImage(TourParticipant p) {
+    String? url = p.photoUrl;
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if ((url == null || url.isEmpty) && p.uid != null && currentUser != null && p.uid == currentUser.uid) {
+      url = currentUser.photoURL ?? SharedPrefsHelper.getString('local_profile_photo_${currentUser.uid}');
+    }
+    if (url != null && url.isNotEmpty) {
+      if (url.startsWith('http')) {
+        return NetworkImage(url);
+      } else if (File(url).existsSync()) {
+        return FileImage(File(url));
+      }
+    }
+    return null;
   }
 
   @override
@@ -163,13 +182,16 @@ class TourMemberBalances extends StatelessWidget {
           CircleAvatar(
             radius: 16,
             backgroundColor: _avatarColor(index),
-            child: Text(
-              p.name.isNotEmpty ? String.fromCharCode(p.name.runes.first).toUpperCase() : '?',
-              style: AppTextStyles.bodySmall.copyWith(
-                fontWeight: FontWeight.w600,
-                color: AppColors.white,
-              ),
-            ),
+            backgroundImage: _getParticipantImage(p),
+            child: _getParticipantImage(p) == null
+                ? Text(
+                    p.name.isNotEmpty ? String.fromCharCode(p.name.runes.first).toUpperCase() : '?',
+                    style: AppTextStyles.bodySmall.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.white,
+                    ),
+                  )
+                : null,
           ),
           const SizedBox(width: 12),
           Expanded(

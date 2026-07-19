@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 
 class MemberAvatarStack extends StatelessWidget {
   final List<TourParticipant> participants;
@@ -102,8 +105,26 @@ class _SingleAvatar extends StatelessWidget {
         : '?';
   }
 
+  ImageProvider? get _avatarImage {
+    String? url = participant.photoUrl;
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if ((url == null || url.isEmpty) && participant.uid != null && currentUser != null && participant.uid == currentUser.uid) {
+      url = currentUser.photoURL ?? SharedPrefsHelper.getString('local_profile_photo_${currentUser.uid}');
+    }
+    if (url != null && url.isNotEmpty) {
+      if (url.startsWith('http')) {
+        return NetworkImage(url);
+      } else if (File(url).existsSync()) {
+        return FileImage(File(url));
+      }
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final avatarImg = _avatarImage;
+
     return SizedBox(
       width: AppSpacing.h40,
       height: AppSpacing.h40,
@@ -116,16 +137,21 @@ class _SingleAvatar extends StatelessWidget {
               color: color,
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.white, width: AppSpacing.w2),
+              image: avatarImg != null
+                  ? DecorationImage(image: avatarImg, fit: BoxFit.cover)
+                  : null,
             ),
-            child: Center(
-              child: Text(
-                _initials,
-                style: AppTextStyles.label.copyWith(
-                  color: AppColors.white,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+            child: avatarImg == null
+                ? Center(
+                    child: Text(
+                      _initials,
+                      style: AppTextStyles.label.copyWith(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  )
+                : null,
           ),
           Positioned(
             right: AppSpacing.w1,

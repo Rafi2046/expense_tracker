@@ -237,17 +237,16 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               ),
             ),
             itemBuilder: (context) => [
-              if (isOwner)
-                PopupMenuItem(
-                  value: 'edit_tour',
-                  child: Row(
-                    children: [
-                      Icon(LucideIcons.pencil, size: 18, color: theme.colorScheme.onSurface),
-                      const SizedBox(width: 10),
-                      Text(context.translate('edit_tour'), style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface)),
-                    ],
-                  ),
+              PopupMenuItem(
+                value: 'edit_tour',
+                child: Row(
+                  children: [
+                    Icon(LucideIcons.pencil, size: 18, color: theme.colorScheme.onSurface),
+                    const SizedBox(width: 10),
+                    Text(context.translate('edit_tour'), style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface)),
+                  ],
                 ),
+              ),
             ],
           ),
         ],
