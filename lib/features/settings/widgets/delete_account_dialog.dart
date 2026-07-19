@@ -121,7 +121,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
         await user.reauthenticateWithCredential(credential);
       } else if (isGoogleUser) {
         final googleSignIn = GoogleSignIn.instance;
-        await googleSignIn.signOut();
+        await googleSignIn.initialize();
         final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
         final googleAuth = googleUser.authentication;
         final credential = GoogleAuthProvider.credential(
