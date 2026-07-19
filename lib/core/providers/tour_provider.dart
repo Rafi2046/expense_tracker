@@ -1421,7 +1421,9 @@ class TourProvider extends ChangeNotifier {
         }
 
         String? finalCover = tour.coverPhoto;
-        if ((finalCover == null || finalCover.isEmpty) &&
+        if (existingCover != null && existingCover.isNotEmpty && !existingCover.startsWith('http')) {
+          finalCover = existingCover; // Prefer local custom photo
+        } else if ((finalCover == null || finalCover.isEmpty) &&
             existingCover != null &&
             existingCover.isNotEmpty) {
           finalCover = existingCover;
@@ -1591,7 +1593,9 @@ class TourProvider extends ChangeNotifier {
         }
 
         String? finalCover = tour.coverPhoto;
-        if ((finalCover == null || finalCover.isEmpty) &&
+        if (existingCover != null && existingCover.isNotEmpty && !existingCover.startsWith('http')) {
+          finalCover = existingCover; // Prefer local custom photo
+        } else if ((finalCover == null || finalCover.isEmpty) &&
             existingCover != null &&
             existingCover.isNotEmpty) {
           finalCover = existingCover;
