@@ -66,7 +66,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
                 // Title
                 Expanded(
                   child: Text(
-                    context.translate('Change Theme'),
+                    context.translate('change_theme'),
                     style: AppTextStyles.label.copyWith(
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
