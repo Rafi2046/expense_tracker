@@ -123,7 +123,10 @@ class _ForgotPasswordOtpScreenState extends State<ForgotPasswordOtpScreen> {
                         onTap: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text(context.translate('verification_link_resent')),
+                              content: Text(
+                                context.translate('verification_link_resent'),
+                                style: const TextStyle(color: Colors.white),
+                              ),
                               backgroundColor: const Color(0xFF6A53A1),
                             ),
                           );

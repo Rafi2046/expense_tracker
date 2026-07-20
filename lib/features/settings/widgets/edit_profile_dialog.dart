@@ -180,11 +180,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
           newPhotoUrl = await snapshot.ref.getDownloadURL();
         } catch (e) {
           debugPrint('Error uploading profile photo: $e');
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to upload image: $e'), backgroundColor: Colors.red),
-            );
-          }
+          newPhotoUrl = _localImageFile!.path;
         }
       }
 
@@ -200,7 +196,10 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(context.translate('profile_updated')),
+            content: Text(
+              context.translate('profile_updated'),
+              style: const TextStyle(color: Colors.white),
+            ),
             backgroundColor: const Color(0xFF6A53A1),
           ),
         );

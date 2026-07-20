@@ -77,7 +77,10 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(context.translate('password_updated')),
+            content: Text(
+              context.translate('password_updated'),
+              style: const TextStyle(color: Colors.white),
+            ),
             backgroundColor: const Color(0xFF6A53A1),
           ),
         );

@@ -59,6 +59,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           SnackBar(
             content: Text(
               context.translate('password_reset_email_sent'),
+              style: const TextStyle(color: Colors.white),
             ),
             backgroundColor: const Color(0xFF6A53A1),
           ),

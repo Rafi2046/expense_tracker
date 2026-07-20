@@ -172,11 +172,7 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
           finalPhotoUrl = await snapshot.ref.getDownloadURL();
         } catch (e) {
           debugPrint('Error uploading profile photo: $e');
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to upload image: $e'), backgroundColor: Colors.red),
-            );
-          }
+          finalPhotoUrl = localImageFile!.path;
         }
       }
 
@@ -197,7 +193,10 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(context.translate('profile_updated')),
+            content: Text(
+              context.translate('profile_updated'),
+              style: const TextStyle(color: Colors.white),
+            ),
             backgroundColor: const Color(0xFF6A53A1),
           ),
         );
