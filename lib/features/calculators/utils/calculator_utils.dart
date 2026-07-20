@@ -109,8 +109,8 @@ class CalculatorUtils {
 
     if (isInclusive) {
       final double total = amount;
-      final double base = amount / (1 + (rate / 100));
-      final double tax = amount - base;
+      final double base = double.parse((amount / (1 + (rate / 100))).toStringAsFixed(2));
+      final double tax = double.parse((amount - base).toStringAsFixed(2));
       return {
         'tax': tax,
         'base': base,
@@ -118,8 +118,8 @@ class CalculatorUtils {
       };
     } else {
       final double base = amount;
-      final double tax = amount * (rate / 100);
-      final double total = amount + tax;
+      final double tax = double.parse((amount * (rate / 100)).toStringAsFixed(2));
+      final double total = double.parse((amount + tax).toStringAsFixed(2));
       return {
         'tax': tax,
         'base': base,

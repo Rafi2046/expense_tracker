@@ -42,6 +42,25 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
     super.dispose();
   }
 
+  void _recalculateSilently() {
+    final String amountText = _amountController.text.trim();
+    final String rateText = _rateController.text.trim();
+
+    final double amount = double.tryParse(amountText) ?? 0;
+    final double rate = double.tryParse(rateText) ?? 0;
+
+    if (amount <= 0 || rate < 0) return;
+
+    final results = CalculatorUtils.calculateTax(amount: amount, rate: rate, isInclusive: _isInclusive);
+
+    setState(() {
+      _taxAmount = results['tax'] ?? 0;
+      _baseAmount = results['base'] ?? 0;
+      _totalAmount = results['total'] ?? 0;
+      _taxRate = rate;
+    });
+  }
+
   void _performCalculation() {
     final String amountText = _amountController.text.trim();
     final String rateText = _rateController.text.trim();
@@ -49,7 +68,8 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
     if (amountText.isEmpty || rateText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(context.translate('please_fill_fields', listen: false)),
+          content: Text(context.translate('please_fill_fields', listen: false),
+            style: const TextStyle(color: Colors.white)),
           backgroundColor: Colors.red,
         ),
       );
@@ -62,7 +82,8 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
     if (amount <= 0 || rate < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(context.translate('please_enter_valid', listen: false)),
+          content: Text(context.translate('please_enter_valid', listen: false),
+            style: const TextStyle(color: Colors.white)),
           backgroundColor: Colors.red,
         ),
       );
@@ -120,13 +141,13 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
                   setState(() {
                     _isInclusive = false;
                   });
-                  _performCalculation();
+                  _recalculateSilently();
                 },
                 onTap2: () {
                   setState(() {
                     _isInclusive = true;
                   });
-                  _performCalculation();
+                  _recalculateSilently();
                 },
               ),
               const SizedBox(height: 20),
