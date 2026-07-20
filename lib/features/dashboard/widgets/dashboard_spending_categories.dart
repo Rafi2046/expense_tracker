@@ -35,7 +35,7 @@ class DashboardSpendingCategories extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         border: Border.all(

@@ -30,7 +30,7 @@ class DashboardBudgetStatus extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 16),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           border: Border.all(
