@@ -42,7 +42,7 @@ class CalculatorTextField extends StatelessWidget {
             style: AppTextStyles.calculatorInputText.copyWith(color: theme.colorScheme.onSurface),
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: AppTextStyles.textFieldHint.copyWith(color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
+              hintStyle: AppTextStyles.textFieldHint.copyWith(color: isDark ? Colors.grey.shade400 : Colors.grey.shade400),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               prefixIcon: prefix,

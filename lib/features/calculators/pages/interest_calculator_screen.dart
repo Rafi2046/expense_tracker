@@ -48,6 +48,33 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
     super.dispose();
   }
 
+  void _recalculateSilently() {
+    final String principalText = _principalController.text.trim();
+    final String rateText = _rateController.text.trim();
+    final String periodText = _periodController.text.trim();
+
+    final double principal = double.tryParse(principalText) ?? 0;
+    final double rate = double.tryParse(rateText) ?? 0;
+    final double periodValue = double.tryParse(periodText) ?? 0;
+
+    if (principal <= 0 || rate < 0 || periodValue <= 0) return;
+
+    final results = CalculatorUtils.calculateInterest(
+      principal: principal,
+      rate: rate,
+      periodValue: periodValue,
+      periodUnit: _periodUnit,
+      isCompound: _isCompound,
+      frequency: _frequency,
+    );
+
+    setState(() {
+      _interest = results['interest'] ?? 0;
+      _maturityAmount = results['maturity'] ?? 0;
+      _principalAmount = results['principal'] ?? 0;
+    });
+  }
+
   void _performCalculation() {
     final String principalText = _principalController.text.trim();
     final String rateText = _rateController.text.trim();
@@ -56,7 +83,8 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
     if (principalText.isEmpty || rateText.isEmpty || periodText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(context.translate('please_fill_fields', listen: false)),
+          content: Text(context.translate('please_fill_fields', listen: false),
+            style: const TextStyle(color: Colors.white)),
           backgroundColor: Colors.red,
         ),
       );
@@ -70,7 +98,8 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
     if (principal <= 0 || rate < 0 || periodValue <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(context.translate('please_enter_valid', listen: false)),
+          content: Text(context.translate('please_enter_valid', listen: false),
+            style: const TextStyle(color: Colors.white)),
           backgroundColor: Colors.red,
         ),
       );
@@ -136,13 +165,13 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
                   setState(() {
                     _isCompound = true;
                   });
-                  _performCalculation();
+                  _recalculateSilently();
                 },
                 onTap2: () {
                   setState(() {
                     _isCompound = false;
                   });
-                  _performCalculation();
+                  _recalculateSilently();
                 },
               ),
               const SizedBox(height: 20),
@@ -218,6 +247,7 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
                     setState(() {
                       _periodUnit = newVal;
                     });
+                    _recalculateSilently();
                   }
                 },
               ),

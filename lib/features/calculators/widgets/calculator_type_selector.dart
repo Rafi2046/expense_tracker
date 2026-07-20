@@ -21,8 +21,8 @@ class CalculatorTypeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final trackBg = isDark ? theme.cardColor : Colors.grey.shade200;
-    final pillBg = isDark ? const Color(0xFF2D2D2D) : Colors.white;
+    final trackBg = isDark ? const Color(0xFF334155) : Colors.grey.shade200;
+    final pillBg = isDark ? theme.cardColor : Colors.white;
 
     return Container(
       width: double.infinity,
@@ -56,7 +56,7 @@ class CalculatorTypeSelector extends StatelessWidget {
                     title1,
                     style: AppTextStyles.calculatorLabel.copyWith(
                       fontWeight: isSelected1 ? FontWeight.bold : FontWeight.w500,
-                      color: isSelected1 ? theme.colorScheme.onSurface : (isDark ? Colors.grey.shade500 : Colors.grey.shade600),
+                      color: isSelected1 ? theme.colorScheme.onSurface : (isDark ? Colors.grey.shade400 : Colors.grey.shade600),
                     ),
                   ),
                 ),
@@ -86,7 +86,7 @@ class CalculatorTypeSelector extends StatelessWidget {
                     title2,
                     style: AppTextStyles.calculatorLabel.copyWith(
                       fontWeight: !isSelected1 ? FontWeight.bold : FontWeight.w500,
-                      color: !isSelected1 ? theme.colorScheme.onSurface : (isDark ? Colors.grey.shade500 : Colors.grey.shade600),
+                      color: !isSelected1 ? theme.colorScheme.onSurface : (isDark ? Colors.grey.shade400 : Colors.grey.shade600),
                     ),
                   ),
                 ),
