@@ -157,6 +157,8 @@ class LedgerTransactionList extends StatelessWidget {
       }
     });
 
+    listItems.add(const SizedBox(height: 100));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: listItems,
