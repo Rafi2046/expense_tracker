@@ -76,11 +76,18 @@ void main() async {
       SharedPrefsHelper.getString(SharedPrefsHelper.activeProfileKey) ?? 'default_profile';
   debugPrint('main: initial active profile = $initialProfileId');
 
+  final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+  const supportedLangCodes = ['en', 'bn', 'hi', 'ur'];
+  final defaultCode = supportedLangCodes.contains(deviceLocale) ? deviceLocale : 'en';
+  final savedLanguageCode = SharedPrefsHelper.getString('app_language_code') ?? defaultCode;
+  debugPrint('main: saved/default language code = $savedLanguageCode');
+
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('bn'), Locale('hi'), Locale('ur')],
       path: 'assets/translations',
       fallbackLocale: const Locale('en'),
+      startLocale: Locale(savedLanguageCode),
       child: MultiProvider(
       providers: [
         ChangeNotifierProvider(

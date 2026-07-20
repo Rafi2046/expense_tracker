@@ -41,11 +41,20 @@ class LanguageProvider extends ChangeNotifier {
     final savedCode = SharedPrefsHelper.getString('app_language_code');
     if (savedCode != null) {
       _currentLanguageCode = savedCode;
+    } else {
+      final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+      final supportedCodes = supportedLanguages.map((l) => l.code).toList();
+      if (supportedCodes.contains(deviceLocale)) {
+        _currentLanguageCode = deviceLocale;
+      } else {
+        _currentLanguageCode = 'en';
+      }
     }
   }
 
   Future<void> changeLanguage(String code, BuildContext context) async {
-    if (_currentLanguageCode != code) {
+    final easyLocale = EasyLocalization.of(context)?.locale.languageCode;
+    if (_currentLanguageCode != code || easyLocale != code) {
       _currentLanguageCode = code;
       await SharedPrefsHelper.setString('app_language_code', code);
       if (context.mounted) {

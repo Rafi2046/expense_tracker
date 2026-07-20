@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
@@ -175,9 +175,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final onboardingDone = SharedPrefsHelper.getBool(
-          SharedPrefsHelper.onboardingCompleteKey,
-        ) ?? false;
+    final onboardingDone =
+        SharedPrefsHelper.getBool(SharedPrefsHelper.onboardingCompleteKey) ??
+        false;
 
     if (widget.isFromSignup || !onboardingDone) {
       Navigator.pushAndRemoveUntil(
@@ -189,10 +189,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => SyncLoadingOverlay(
-            syncService: SyncService(),
-            uid: user.uid,
-          ),
+          builder: (context) =>
+              SyncLoadingOverlay(syncService: SyncService(), uid: user.uid),
         ),
         (route) => false,
       );
@@ -225,7 +223,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24, vertical: AppSpacing.p16),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.p24,
+                vertical: AppSpacing.p16,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -235,24 +236,17 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     width: 140,
                     height: 140,
                     decoration: BoxDecoration(
-                      color: isDark ? theme.cardColor : AppColors.containerColorGrey,
+                      color: isDark
+                          ? theme.cardColor
+                          : AppColors.containerColorGrey,
                       shape: BoxShape.circle,
                     ),
                     child: Center(
-                      child: Icon(
-                        LucideIcons.mailOpen,
-                        size: 64,
-                        color: theme.primaryColor,
-                      )
-                          .animate(onPlay: (controller) => controller.repeat(reverse: true))
-                          .scaleXY(
-                            begin: 0.95,
-                            end: 1.05,
-                            duration: 1000.ms,
-                            curve: Curves.easeInOut,
-                          )
-                          .then()
-                          .shimmer(duration: 1500.ms, color: Colors.white30),
+                      child: Image.asset(
+                        AppImages.passwordVerify,
+                        width: 250,
+                        height: 250,
+                      ),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.h32),
@@ -267,7 +261,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: AppSpacing.h12),
- 
+
                   // Subtitle Information
                   Text(
                     context.translate('verify_email_sent_subtitle'),
@@ -278,7 +272,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: AppSpacing.h16),
- 
+
                   // Email Card
                   Container(
                     width: double.infinity,
@@ -287,10 +281,14 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       vertical: AppSpacing.p12,
                     ),
                     decoration: BoxDecoration(
-                      color: isDark ? theme.cardColor : AppColors.containerColorGrey,
+                      color: isDark
+                          ? theme.cardColor
+                          : AppColors.containerColorGrey,
                       borderRadius: BorderRadius.circular(AppSpacing.br10),
                       border: Border.all(
-                        color: isDark ? Colors.white10 : AppColors.dividerColor.withValues(alpha: 0.5),
+                        color: isDark
+                            ? Colors.white10
+                            : AppColors.dividerColor.withValues(alpha: 0.5),
                       ),
                     ),
                     child: Text(
@@ -303,37 +301,43 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.h24),
- 
+
                   // Guidelines text
                   Text(
                     context.translate('verify_email_guideline'),
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                      color: theme.colorScheme.onSurfaceVariant.withValues(
+                        alpha: 0.8,
+                      ),
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: AppSpacing.h40),
- 
+
                   // Check Status Button
                   CustomButton(
-                    text: _isReloading ? context.translate('checking_status') : context.translate('i_have_verified'),
+                    text: _isReloading
+                        ? context.translate('checking_status')
+                        : context.translate('i_have_verified'),
                     onPressed: _isReloading ? () {} : _checkVerificationStatus,
                     backgroundColor: theme.primaryColor,
                   ),
                   const SizedBox(height: AppSpacing.h12),
- 
+
                   CustomButton(
                     text: _resendCooldown > 0
                         ? '${context.translate('resend_in')}$_resendCooldown${context.translate('resend_seconds')}'
                         : context.translate('resend_verification_email'),
-                    onPressed: (_resendCooldown > 0 || _isResending) ? () {} : _resendVerificationEmail,
+                    onPressed: (_resendCooldown > 0 || _isResending)
+                        ? () {}
+                        : _resendVerificationEmail,
                     backgroundColor: Colors.transparent,
                     textColor: theme.primaryColor,
                     showBorder: true,
                     borderColor: theme.primaryColor,
                   ),
                   const SizedBox(height: AppSpacing.h24),
- 
+
                   // Cancel / Sign Out
                   TextButton.icon(
                     onPressed: _handleSignOut,

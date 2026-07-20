@@ -8,6 +8,7 @@ class AppImages {
   static const String otpLogo = 'assets/app_logo/forgot_password_logo.png';
   static const String tick = 'assets/app_logo/right_sign.png';
   static const String onboardingLogo = 'assets/app_logo/onborading_logo.png';
+  static const String passwordVerify = 'assets/app_icons/password_verify.png';
 
 
 
