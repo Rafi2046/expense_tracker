@@ -8,6 +8,7 @@ class CalculatorPeriodSelector extends StatelessWidget {
   final String unit;
   final ValueChanged<String?> onChanged;
   final Color themeColor;
+  final Widget? labelWidget;
 
   const CalculatorPeriodSelector({
     super.key,
@@ -15,6 +16,7 @@ class CalculatorPeriodSelector extends StatelessWidget {
     required this.unit,
     required this.onChanged,
     required this.themeColor,
+    this.labelWidget,
   });
 
   @override
@@ -26,10 +28,11 @@ class CalculatorPeriodSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          context.translate('time_period'),
-          style: AppTextStyles.calculatorLabel.copyWith(color: isDark ? Colors.grey.shade400 : null),
-        ),
+        labelWidget ??
+            Text(
+              context.translate('time_period'),
+              style: AppTextStyles.calculatorLabel.copyWith(color: isDark ? Colors.grey.shade400 : null),
+            ),
         const SizedBox(height: 6),
         Row(
           children: [

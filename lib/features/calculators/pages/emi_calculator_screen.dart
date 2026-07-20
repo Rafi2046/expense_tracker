@@ -3,10 +3,12 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/calculators/utils/calculator_utils.dart';
+import 'package:expense_tracker/features/calculators/utils/glossary_entries.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_breakdown_card.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_result_card.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_result_item.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_text_field.dart';
+import 'package:expense_tracker/features/calculators/widgets/glossary_label.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -147,6 +149,10 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
 
               CalculatorTextField(
                 label: '${context.translate('loan_amount')} ($symbol)',
+                labelWidget: GlossaryLabel(
+                  text: context.translate('loan_amount'),
+                  entry: GlossaryEntries.principal,
+                ),
                 hintText: context.translate('loan_amount'),
                 controller: _amountController,
                 prefix: Padding(
@@ -158,6 +164,10 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
 
               CalculatorTextField(
                 label: context.translate('loan_interest_rate'),
+                labelWidget: GlossaryLabel(
+                  text: context.translate('loan_interest_rate'),
+                  entry: GlossaryEntries.interestRate,
+                ),
                 hintText: context.translate('interest'),
                 controller: _rateController,
                 suffix: Padding(
@@ -169,6 +179,10 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
 
               CalculatorTextField(
                 label: context.translate('loan_tenure'),
+                labelWidget: GlossaryLabel(
+                  text: context.translate('loan_tenure'),
+                  entry: GlossaryEntries.timePeriod,
+                ),
                 hintText: context.translate('years_label'),
                 controller: _tenureController,
                 suffix: Padding(

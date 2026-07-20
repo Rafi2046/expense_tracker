@@ -7,6 +7,7 @@ class CalculatorTextField extends StatelessWidget {
   final TextEditingController controller;
   final Widget? prefix;
   final Widget? suffix;
+  final Widget? labelWidget;
 
   const CalculatorTextField({
     super.key,
@@ -15,6 +16,7 @@ class CalculatorTextField extends StatelessWidget {
     required this.controller,
     this.prefix,
     this.suffix,
+    this.labelWidget,
   });
 
   @override
@@ -25,10 +27,11 @@ class CalculatorTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: AppTextStyles.calculatorLabel.copyWith(color: isDark ? Colors.grey.shade400 : null),
-        ),
+        labelWidget ??
+            Text(
+              label,
+              style: AppTextStyles.calculatorLabel.copyWith(color: isDark ? Colors.grey.shade400 : null),
+            ),
         const SizedBox(height: 6),
         Container(
           decoration: BoxDecoration(

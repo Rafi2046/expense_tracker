@@ -2,12 +2,14 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/calculators/utils/calculator_utils.dart';
+import 'package:expense_tracker/features/calculators/utils/glossary_entries.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_breakdown_card.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_period_selector.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_result_card.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_result_item.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_text_field.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_type_selector.dart';
+import 'package:expense_tracker/features/calculators/widgets/glossary_label.dart';
 import 'package:expense_tracker/features/calculators/widgets/interest_frequency_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -204,6 +206,10 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
               if (_isCompound) ...[
                 InterestFrequencySelector(
                   value: _frequency,
+                  labelWidget: GlossaryLabel(
+                    text: context.translate('compounding_frequency'),
+                    entry: GlossaryEntries.compoundingFrequency,
+                  ),
                   onChanged: (newValue) {
                     if (newValue != null) {
                       setState(() {
@@ -218,6 +224,10 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
 
               CalculatorTextField(
                 label: '${context.translate('principal_amount')} ($symbol)',
+                labelWidget: GlossaryLabel(
+                  text: context.translate('principal_amount'),
+                  entry: GlossaryEntries.principal,
+                ),
                 hintText: context.translate('principal_amount'),
                 controller: _principalController,
                 prefix: Padding(
@@ -229,6 +239,10 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
 
               CalculatorTextField(
                 label: context.translate('annual_interest_rate'),
+                labelWidget: GlossaryLabel(
+                  text: context.translate('annual_interest_rate'),
+                  entry: GlossaryEntries.interestRate,
+                ),
                 hintText: context.translate('interest'),
                 controller: _rateController,
                 suffix: Padding(
@@ -242,6 +256,10 @@ class _InterestCalculatorScreenState extends State<InterestCalculatorScreen> {
                 controller: _periodController,
                 unit: _periodUnit,
                 themeColor: primaryCalcColor,
+                labelWidget: GlossaryLabel(
+                  text: context.translate('time_period'),
+                  entry: GlossaryEntries.timePeriod,
+                ),
                 onChanged: (newVal) {
                   if (newVal != null) {
                     setState(() {

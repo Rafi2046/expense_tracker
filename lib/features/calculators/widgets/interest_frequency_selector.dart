@@ -6,11 +6,13 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 class InterestFrequencySelector extends StatelessWidget {
   final String value;
   final ValueChanged<String?> onChanged;
+  final Widget? labelWidget;
 
   const InterestFrequencySelector({
     super.key,
     required this.value,
     required this.onChanged,
+    this.labelWidget,
   });
 
   @override
@@ -31,10 +33,11 @@ class InterestFrequencySelector extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            context.translate('compounding_frequency'),
-            style: AppTextStyles.calculatorLabel.copyWith(color: isDark ? Colors.grey.shade400 : null),
-          ),
+          labelWidget ??
+              Text(
+                context.translate('compounding_frequency'),
+                style: AppTextStyles.calculatorLabel.copyWith(color: isDark ? Colors.grey.shade400 : null),
+              ),
           DropdownButton<String>(
             value: value,
             underline: Container(),
