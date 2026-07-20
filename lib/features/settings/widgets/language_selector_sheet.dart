@@ -142,9 +142,11 @@ class LanguageSelectorSheet extends StatelessWidget {
         : (isDark ? const Color(0xFF2D2D2D) : const Color(0xFFE5E7EB));
 
     return GestureDetector(
-      onTap: () {
-        provider.changeLanguage(lang.code, context);
-        Navigator.pop(context);
+      onTap: () async {
+        await provider.changeLanguage(lang.code, context);
+        if (context.mounted) {
+          Navigator.pop(context);
+        }
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
