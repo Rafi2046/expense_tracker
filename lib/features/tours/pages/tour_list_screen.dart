@@ -71,6 +71,7 @@ class _TourListScreenState extends State<TourListScreen> {
   final Map<String, double> _totalSpent = {};
   int _currentPageIndex = 0;
   String? _lastProfileId;
+  int _lastTourHash = 0;
   late final PageController _pageController;
 
   @override
@@ -89,23 +90,13 @@ class _TourListScreenState extends State<TourListScreen> {
           ),
         );
       };
-      context.read<TourProvider>().addListener(_onProviderChanged);
     });
-  }
-
-  void _onProviderChanged() {
-    if (mounted) {
-      _loadCounts();
-    }
   }
 
   @override
   void dispose() {
     TourProvider.onNotification = null;
     _pageController.dispose();
-    try {
-      context.read<TourProvider>().removeListener(_onProviderChanged);
-    } catch (_) {}
     super.dispose();
   }
 
@@ -301,8 +292,10 @@ class _TourListScreenState extends State<TourListScreen> {
     final session = context.watch<SessionProvider>();
 
     final activeProfileId = provider.activeProfileId;
-    if (_lastProfileId != activeProfileId) {
+    final currentHash = Object.hashAll(provider.tours.map((t) => t.id));
+    if (_lastProfileId != activeProfileId || _lastTourHash != currentHash) {
       _lastProfileId = activeProfileId;
+      _lastTourHash = currentHash;
       WidgetsBinding.instance.addPostFrameCallback((_) => _loadCounts());
     }
 
