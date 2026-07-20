@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_format_utils.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class InvoiceSettlementCardWidget extends StatelessWidget {
   final String fromName;
@@ -12,6 +12,7 @@ class InvoiceSettlementCardWidget extends StatelessWidget {
   final double amount;
   final String currency;
   final bool isDark;
+  final VoidCallback? onTap;
 
   const InvoiceSettlementCardWidget({
     super.key,
@@ -20,55 +21,49 @@ class InvoiceSettlementCardWidget extends StatelessWidget {
     required this.amount,
     required this.currency,
     required this.isDark,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1E1E2E) : Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFE5E7EB),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            children: [
-              _PersonChip(name: fromName, isDark: isDark, color: AppColors.activeRed),
-              const Spacer(),
-              Text(context.translate('pays_label'), style: AppTextStyles.label.copyWith(color: const Color(0xFF9CA3AF))),
-              const Spacer(),
-              _PersonChip(name: toName, isDark: isDark, color: AppColors.activeGreen),
-            ],
+          Flexible(child: _PersonChip(name: fromName, isDark: isDark, color: AppColors.activeRed)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Icon(LucideIcons.arrowRight, size: 14,
+                color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF)),
           ),
-          const SizedBox(height: 8),
+          Flexible(child: _PersonChip(name: toName, isDark: isDark, color: AppColors.activeGreen)),
+          const Spacer(),
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
             decoration: BoxDecoration(
               color: AppColors.activeGreen.withValues(alpha: isDark ? 0.15 : 0.08),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
               formatAmount(amount, currency),
               style: GoogleFonts.jetBrainsMono(
-                fontSize: AppFontSizes.size18,
+                fontSize: AppFontSizes.size13,
                 fontWeight: FontWeight.w800,
                 color: AppColors.activeGreen,
               ),
             ),
           ),
         ],
+      ),
       ),
     );
   }
@@ -91,23 +86,25 @@ class _PersonChip extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CircleAvatar(
-          radius: 16,
+          radius: 12,
           backgroundColor: color.withValues(alpha: isDark ? 0.2 : 0.1),
           child: Text(
             name.isNotEmpty ? String.fromCharCode(name.runes.first).toUpperCase() : '?',
-            style: AppTextStyles.bodyBold.copyWith(
+            style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w700,
               color: color,
+              fontSize: AppFontSizes.size10,
             ),
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 5),
         Flexible(
           child: Text(
             name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.bodyBold.copyWith(
+            style: AppTextStyles.caption.copyWith(
+              fontWeight: FontWeight.w600,
               color: isDark ? Colors.white : const Color(0xFF374151),
             ),
           ),

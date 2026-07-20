@@ -18,6 +18,9 @@ import 'package:expense_tracker/features/tours/widgets/invoice_settlement_card_w
 import 'package:expense_tracker/features/tours/widgets/invoice_all_settled_widget.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_category_breakdown_widget.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_ledger_widget.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_receipts_grid_widget.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_footer_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -87,7 +90,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
       body: Screenshot(
         controller: _screenshotController,
         child: Container(
-          margin: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+          margin: EdgeInsets.fromLTRB(16, 12, 16, MediaQuery.of(context).padding.bottom + 8),
           decoration: BoxDecoration(
             color: isDark ? const Color(0xFF1E1E2E) : Colors.white,
             borderRadius: BorderRadius.circular(8),
@@ -99,7 +102,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: SingleChildScrollView(
-              padding: EdgeInsets.fromLTRB(28, 28, 28, MediaQuery.of(context).padding.bottom + 28),
+              padding: const EdgeInsets.fromLTRB(28, 28, 28, 28),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -118,13 +121,18 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
                     const SizedBox(height: 32),
                     InvoiceSectionTitleWidget(title: context.translate('payments_required_section')),
                     const SizedBox(height: 16),
-                    ...settlements.map((s) => InvoiceSettlementCardWidget(
-                      fromName: pById[s.fromParticipantId] ?? context.translate('unknown_member'),
-                      toName: pById[s.toParticipantId] ?? context.translate('unknown_member'),
-                      amount: s.amount,
-                      currency: tour.currency,
-                      isDark: isDark,
-                    )),
+                    ...settlements.map((s) {
+                      final fromName = pById[s.fromParticipantId] ?? context.translate('unknown_member');
+                      final toName = pById[s.toParticipantId] ?? context.translate('unknown_member');
+                      return InvoiceSettlementCardWidget(
+                        fromName: fromName,
+                        toName: toName,
+                        amount: s.amount,
+                        currency: tour.currency,
+                        isDark: isDark,
+                        onTap: () => _showSettlementDetail(context, fromName, toName, s.amount, tour.currency),
+                      );
+                    }),
                     const SizedBox(height: 32),
                   ],
                   if (isAllSettled) ...[
@@ -154,7 +162,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
                     const SizedBox(height: 16),
                     InvoiceReceiptsGridWidget(expenses: expenses, isDark: isDark),
                   ],
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 8),
                   InvoiceFooterWidget(),
                 ],
               ),
@@ -188,5 +196,60 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
       );
     } catch (_) {}
     if (mounted) setState(() => _isSharing = false);
+  }
+
+  void _showSettlementDetail(BuildContext context, String fromName, String toName, double amount, String currency) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        padding: EdgeInsets.fromLTRB(24, 16, 24, 32 + MediaQuery.of(ctx).padding.bottom),
+        decoration: BoxDecoration(
+          color: Theme.of(ctx).colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
+            const SizedBox(height: 24),
+            Text(context.translate('settlement_detail'), style: AppTextStyles.h2.copyWith(color: Theme.of(ctx).colorScheme.onSurface)),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    CircleAvatar(radius: 24, backgroundColor: AppColors.activeRed.withValues(alpha: 0.1),
+                      child: Text(fromName[0].toUpperCase(), style: AppTextStyles.bodyBold.copyWith(color: AppColors.activeRed))),
+                    const SizedBox(height: 6),
+                    Text(fromName, style: AppTextStyles.label.copyWith(color: Theme.of(ctx).colorScheme.onSurface)),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      Icon(LucideIcons.arrowRight, size: 24, color: AppColors.activeGreen),
+                      const SizedBox(height: 6),
+                      Text(formatAmount(amount, currency),
+                        style: GoogleFonts.jetBrainsMono(fontSize: AppFontSizes.size20, fontWeight: FontWeight.w800, color: AppColors.activeGreen)),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    CircleAvatar(radius: 24, backgroundColor: AppColors.activeGreen.withValues(alpha: 0.1),
+                      child: Text(toName[0].toUpperCase(), style: AppTextStyles.bodyBold.copyWith(color: AppColors.activeGreen))),
+                    const SizedBox(height: 6),
+                    Text(toName, style: AppTextStyles.label.copyWith(color: Theme.of(ctx).colorScheme.onSurface)),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_format_utils.dart';
 
 String _payerNames(Map<String, double> paidBy, Map<String, String> names) {
@@ -50,10 +52,9 @@ class InvoiceLedgerWidget extends StatelessWidget {
             color: AppColors.activeGreen,
             child: Row(
               children: [
-                _ledgerCell('Date', flex: 2, isHeader: true),
-                _ledgerCell('Expense', flex: 3, isHeader: true),
-                _ledgerCell('Paid By', flex: 2, isHeader: true),
-                _ledgerCell('Amount', flex: 2, align: TextAlign.right, isHeader: true),
+                _ledgerCell(context.translate('expense'), flex: 4, isHeader: true),
+                _ledgerCell(context.translate('paid_by_label'), flex: 2, isHeader: true),
+                _ledgerCell(context.translate('amount_label'), flex: 2, align: TextAlign.right, isHeader: true),
               ],
             ),
           ),
@@ -70,8 +71,27 @@ class InvoiceLedgerWidget extends StatelessWidget {
             ),
             child: Row(
               children: [
-                _ledgerCell(formatShortDate(e.date), flex: 2),
-                _ledgerCell(e.title, flex: 3),
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(e.title, maxLines: 1, overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.caption.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? Colors.white : const Color(0xFF111827),
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(formatShortDate(e.date),
+                        style: AppTextStyles.caption.copyWith(
+                          fontSize: AppFontSizes.size9,
+                          color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF9CA3AF),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 _ledgerCell(_payerNames(e.paidBy, participantNames), flex: 2),
                 _ledgerCell(
                   formatAmount(e.amount, currency),
@@ -103,7 +123,9 @@ class InvoiceLedgerWidget extends StatelessWidget {
           fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
           color: isHeader
               ? Colors.white
-              : (bold ? const Color(0xFF111827) : const Color(0xFF6B7280)),
+              : (bold
+                  ? (isDark ? Colors.white : const Color(0xFF111827))
+                  : (isDark ? const Color(0xFFD1D5DB) : const Color(0xFF6B7280))),
         ),
       ),
     );

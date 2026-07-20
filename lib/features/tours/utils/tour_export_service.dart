@@ -350,8 +350,7 @@ class TourExportService {
           ),
         ),
         const SizedBox(width: AppSpacing.s8),
-        ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 120),
+        Flexible(
           child: Text(
             name,
             maxLines: 1,
