@@ -192,8 +192,21 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                   decoration: InputDecoration(
                      hintText: context.translate('note_title_hint'),
                     hintStyle: AppTextStyles.h1.copyWith(color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
+                    filled: true,
+                    fillColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.grey.shade50,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -207,7 +220,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                 // Divider
                 Divider(color: isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade100, height: 1),
                 const SizedBox(height: 16),
-                
+
                 // Content text area
                 Expanded(
                   child: TextFormField(
@@ -215,6 +228,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     maxLines: null,
                     expands: true,
                     keyboardType: TextInputType.multiline,
+                    textAlignVertical: TextAlignVertical.top,
                     style: AppTextStyles.body.copyWith(
                       fontSize: AppFontSizes.size15,
                       height: 1.5,
@@ -226,8 +240,21 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                         fontSize: AppFontSizes.size15,
                         color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                       ),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
+                      filled: true,
+                      fillColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.grey.shade50,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.all(16),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
