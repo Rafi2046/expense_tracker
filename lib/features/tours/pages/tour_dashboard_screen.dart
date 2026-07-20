@@ -236,6 +236,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               ),
             ),
             itemBuilder: (context) => [
+              if (isOwner)
               PopupMenuItem(
                 value: 'edit_tour',
                 child: Row(

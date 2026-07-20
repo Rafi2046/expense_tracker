@@ -378,7 +378,7 @@ class _TourListScreenState extends State<TourListScreen> {
                        itemBuilder: (context, index) {
                         final tour = tours[index];
                         final currentUid = FirebaseAuth.instance.currentUser?.uid;
-                        final isOwner = tour.ownerUid == null || currentUid == null || tour.ownerUid == currentUid;
+                        final isOwner = (tour.ownerUid == null && tour.inviteCode == null) || (currentUid != null && tour.ownerUid != null && tour.ownerUid == currentUid);
 
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 6),

@@ -110,10 +110,13 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
     final tourProvider = context.read<TourProvider>();
     final editTour = widget.tourToEdit;
     if (editTour != null) {
+      final currentUid = FirebaseAuth.instance.currentUser?.uid;
+      final isOwner = (editTour.ownerUid == null && editTour.inviteCode == null) ||
+          (currentUid != null && editTour.ownerUid != null && editTour.ownerUid == currentUid);
       final updated = editTour.copyWith(
-        name: name,
+        name: isOwner ? name : editTour.name,
         coverPhoto: coverPhotoPath,
-        currency: selectedCurrency,
+        currency: isOwner ? selectedCurrency : editTour.currency,
       );
       Navigator.pop(context);
       tourProvider.updateTour(updated);
@@ -212,7 +215,9 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
     final double maxHeight = (MediaQuery.of(context).size.height - viewInsets) * 0.80;
     
     final currentUid = FirebaseAuth.instance.currentUser?.uid;
-    final isOwner = widget.tourToEdit == null || widget.tourToEdit!.ownerUid == null || widget.tourToEdit!.ownerUid == currentUid;
+    final isOwner = widget.tourToEdit == null ||
+        (widget.tourToEdit!.ownerUid == null && widget.tourToEdit!.inviteCode == null) ||
+        (currentUid != null && widget.tourToEdit!.ownerUid != null && widget.tourToEdit!.ownerUid == currentUid);
 
     return Padding(
       padding: EdgeInsets.only(bottom: viewInsets),
@@ -284,44 +289,36 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                         ),
                         const SizedBox(height: 16),
                       ],
-                      Opacity(
-                        opacity: isOwner ? 1.0 : 0.5,
-                        child: IgnorePointer(
-                          ignoring: !isOwner,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              TourNameField(
-                                theme: theme,
-                                controller: nameController,
-                              ),
-                              const SizedBox(height: 14),
 
-                              TourDateRangePicker(
-                                theme: theme,
-                                startDate: startDate,
-                                endDate: endDate,
-                                onPickStartDate: () => _pickDate(isStart: true),
-                                onPickEndDate: () => _pickDate(isStart: false),
-                              ),
-                              const SizedBox(height: 14),
-
-                              TourCurrencySelector(
-                                theme: theme,
-                                value: selectedCurrency,
-                                onChanged: (v) => setState(() => selectedCurrency = v),
-                              ),
-                              const SizedBox(height: 14),
-
-                              TourDescriptionField(
-                                theme: theme,
-                                controller: descriptionController,
-                              ),
-                            ],
-                          ),
+                      if (isOwner) ...[
+                        TourNameField(
+                          theme: theme,
+                          controller: nameController,
                         ),
-                      ),
-                      const SizedBox(height: 14),
+                        const SizedBox(height: 14),
+
+                        TourDateRangePicker(
+                          theme: theme,
+                          startDate: startDate,
+                          endDate: endDate,
+                          onPickStartDate: () => _pickDate(isStart: true),
+                          onPickEndDate: () => _pickDate(isStart: false),
+                        ),
+                        const SizedBox(height: 14),
+
+                        TourCurrencySelector(
+                          theme: theme,
+                          value: selectedCurrency,
+                          onChanged: (v) => setState(() => selectedCurrency = v),
+                        ),
+                        const SizedBox(height: 14),
+
+                        TourDescriptionField(
+                          theme: theme,
+                          controller: descriptionController,
+                        ),
+                        const SizedBox(height: 14),
+                      ],
 
                       InkWell(
                         onTap: _pickCoverImage,
