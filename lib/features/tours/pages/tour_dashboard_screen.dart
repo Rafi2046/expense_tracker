@@ -22,7 +22,6 @@ import 'package:expense_tracker/features/tours/widgets/tour_dashboard_stats_row.
 import 'package:expense_tracker/features/tours/widgets/tour_dashboard_expense_chart.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_dashboard_member_list.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_dashboard_recent_activity.dart';
-import 'package:expense_tracker/features/tours/widgets/tour_dashboard_quick_actions.dart';
 import 'package:expense_tracker/features/tours/widgets/create_tour_sheet.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -430,7 +429,21 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               ),
             ],
             const SizedBox(height: 12),
-            TourDashboardStatsRow(expenseCount: expenses.length),
+            TourDashboardStatsRow(
+              expenseCount: expenses.length,
+              onAddExpense: tour.isCompleted
+                  ? null
+                  : () {
+                      if (_ensureMinimumMembers()) {
+                        AddExpenseSheet.show(
+                          context,
+                          tourId: widget.tourId,
+                          participants: participants,
+                          currency: tour.currency,
+                        );
+                      }
+                    },
+            ),
             if (expenses.isEmpty)
               const TourDashboardRecentActivity()
             else
@@ -447,28 +460,6 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               ),
           ],
         ),
-      ),
-      floatingActionButton: TourDashboardQuickActions(
-        isCompleted: tour.isCompleted,
-        onAddExpense: () {
-          if (tour.isCompleted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(context.translate('tour_completed_no_expense')),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-            return;
-          }
-          if (_ensureMinimumMembers()) {
-            AddExpenseSheet.show(
-              context,
-              tourId: widget.tourId,
-              participants: participants,
-              currency: tour.currency,
-            );
-          }
-        },
       ),
     );
   }

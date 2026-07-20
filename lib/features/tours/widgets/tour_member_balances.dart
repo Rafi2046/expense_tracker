@@ -133,7 +133,14 @@ class TourMemberBalances extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF064E3B).withValues(alpha: 0.1) : const Color(0xFFF0FDF4),
+                      color: isDark
+                          ? const Color(0xFF064E3B).withValues(alpha: 0.25)
+                          : const Color(0xFFF0FDF4),
+                      border: isDark
+                          ? const Border(
+                              top: BorderSide(color: Color(0xFF064E3B), width: 1),
+                            )
+                          : null,
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(16),
                         bottomRight: Radius.circular(16),

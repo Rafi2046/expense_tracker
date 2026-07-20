@@ -28,7 +28,7 @@ class TourSummaryRow extends StatelessWidget {
             theme: theme,
             label: context.translate('total_spent_card'),
             value: totalSpentText,
-            icon: LucideIcons.creditCard,
+            icon: LucideIcons.receipt,
             iconColor: isDark ? const Color(0xFF818CF8) : const Color(0xFF4F46E5),
             iconBgColor: isDark ? const Color(0xFF1E1E3F) : const Color(0xFFEEF2FF),
             valueColor: theme.colorScheme.onSurface,
@@ -40,7 +40,7 @@ class TourSummaryRow extends StatelessWidget {
             theme: theme,
             label: isSettled ? context.translate('all_settled_card') : context.translate('outstanding_card'),
             value: isSettled ? '✓' : outstandingText,
-            icon: isSettled ? LucideIcons.checkCircle : LucideIcons.arrowLeftRight,
+            icon: isSettled ? LucideIcons.checkCircle : LucideIcons.alertCircle,
             iconColor: isSettled ? const Color(0xFF10B981) : const Color(0xFFEF4444),
             iconBgColor: isSettled
                 ? (isDark ? const Color(0xFF064E3B) : const Color(0xFFECFDF5))
