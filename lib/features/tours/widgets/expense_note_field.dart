@@ -28,18 +28,49 @@ class ExpenseNoteField extends StatelessWidget {
           fontWeight: FontWeight.w400,
           color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
         ),
-        border: InputBorder.none,
-        isDense: true,
-        contentPadding: const EdgeInsets.symmetric(vertical: 2),
+        filled: true,
+        fillColor: theme.brightness == Brightness.dark
+            ? Colors.white.withValues(alpha: 0.05)
+            : const Color(0xFFF8F9FA),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 14,
+        ),
         prefixIcon: Padding(
-          padding: const EdgeInsets.only(right: 8),
+          padding: const EdgeInsets.only(left: 4),
           child: Icon(
             LucideIcons.stickyNote,
             size: 18,
             color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
           ),
         ),
-        prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+        prefixIconConstraints: const BoxConstraints(minWidth: 36, minHeight: 0),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: theme.brightness == Brightness.dark
+                ? const Color(0xFF334155)
+                : const Color(0xFFE5E7EB),
+            width: 1,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: theme.brightness == Brightness.dark
+                ? const Color(0xFF334155)
+                : const Color(0xFFE5E7EB),
+            width: 1,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Color(0xFF2EBD85),
+            width: 1.5,
+          ),
+        ),
+        isDense: true,
       ),
     );
   }

@@ -111,40 +111,54 @@ class ExpenseHeroSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.p14,
-              vertical: AppSpacing.p12,
+          TextField(
+            controller: titleController,
+            textAlign: TextAlign.start,
+            onChanged: (_) => onChanged(),
+            style: AppTextStyles.bodyBold.copyWith(
+              fontSize: AppFontSizes.size15,
+              color: theme.colorScheme.onSurface,
+              fontWeight: FontWeight.w500,
             ),
-            decoration: BoxDecoration(
-              color: _sectionBg(theme),
-              borderRadius: BorderRadius.circular(AppSpacing.r10),
-              border: Border.all(
-                color: theme.dividerColor.withValues(alpha: 0.1),
-                width: 1,
-              ),
-            ),
-            child: TextField(
-              controller: titleController,
-              textAlign: TextAlign.start,
-              onChanged: (_) => onChanged(),
-              style: AppTextStyles.bodyBold.copyWith(
+            decoration: InputDecoration(
+              hintText: context.translate('expense_title_hint'),
+              hintStyle: AppTextStyles.bodyBold.copyWith(
                 fontSize: AppFontSizes.size15,
-                color: theme.colorScheme.onSurface,
-                fontWeight: FontWeight.w500,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
+                fontWeight: FontWeight.w400,
               ),
-              decoration: InputDecoration(
-                hintText: context.translate('expense_title_hint'),
-                hintStyle: AppTextStyles.bodyBold.copyWith(
-                  fontSize: AppFontSizes.size15,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
-                  fontWeight: FontWeight.w400,
+              filled: true,
+              fillColor: _sectionBg(theme),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.p14,
+                vertical: AppSpacing.p16,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppSpacing.r10),
+                borderSide: BorderSide(
+                  color: theme.brightness == Brightness.dark
+                      ? const Color(0xFF334155)
+                      : const Color(0xFFE5E7EB),
+                  width: 1,
                 ),
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.zero,
               ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppSpacing.r10),
+                borderSide: BorderSide(
+                  color: theme.brightness == Brightness.dark
+                      ? const Color(0xFF334155)
+                      : const Color(0xFFE5E7EB),
+                  width: 1,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppSpacing.r10),
+                borderSide: BorderSide(
+                  color: AppColors.activeGreen,
+                  width: 1.5,
+                ),
+              ),
+              isDense: true,
             ),
           ),
         ],

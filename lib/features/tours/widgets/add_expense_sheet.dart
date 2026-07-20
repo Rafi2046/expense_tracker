@@ -788,15 +788,13 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       // Notes section
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: _sectionWrapper(
-                          theme,
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _sectionLabel(theme, context.translate('notes_section')),
-                              ExpenseNoteField(theme: theme, controller: _noteController),
-                            ],
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _sectionLabel(theme, context.translate('notes_section')),
+                            const SizedBox(height: 8),
+                            ExpenseNoteField(theme: theme, controller: _noteController),
+                          ],
                         ),
                       ),
                       const SizedBox(height: AppSpacing.h16),
