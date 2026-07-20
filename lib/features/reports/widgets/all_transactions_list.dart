@@ -104,9 +104,11 @@ class AllTransactionsList extends StatelessWidget {
     }
 
     return Column(
-      children: List.generate(filtered.length * 2 - 1, (i) {
-        if (i.isOdd) return const SizedBox(height: 10);
-        final index = i ~/ 2;
+      children: [
+        const SizedBox(height: 4),
+        ...List.generate(filtered.length * 2 - 1, (i) {
+          if (i.isOdd) return const SizedBox(height: 10);
+          final index = i ~/ 2;
         final tx = filtered[index];
         final isCredit = tx.type == 'Income' || tx.type == 'Payment In';
         final isTransaction = tx.type == 'Income' || tx.type == 'Expense';
@@ -248,6 +250,7 @@ class AllTransactionsList extends StatelessWidget {
           ),
         );
       }),
+      ],
     );
   }
 }
