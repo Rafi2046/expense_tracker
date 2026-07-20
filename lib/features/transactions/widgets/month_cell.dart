@@ -28,7 +28,7 @@ class MonthCell extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: 68,
-        margin: const EdgeInsets.only(right: 10),
+
         decoration: BoxDecoration(
           gradient: isSelected
               ? const LinearGradient(
@@ -65,13 +65,18 @@ class MonthCell extends StatelessWidget {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              DateFormat('MMM', locale).format(month).toUpperCase(),
-              style: AppTextStyles.label.copyWith(
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                color: isSelected ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
-                letterSpacing: 0.5,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                DateFormat('MMM', locale).format(month).toUpperCase(),
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.label.copyWith(
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                  color: isSelected ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+                  letterSpacing: 0.5,
+                ),
               ),
             ),
             const SizedBox(height: 1),

@@ -24,6 +24,7 @@ class MonthGrid extends StatelessWidget {
       child: ListView.builder(
         controller: scrollController,
         scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         itemCount: months.length,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
@@ -31,12 +32,15 @@ class MonthGrid extends StatelessWidget {
           final isSelected = index == selectedIndex;
           final isCurrent = index == 6;
 
-          return MonthCell(
-            month: month,
-            isSelected: isSelected,
-            isCurrent: isCurrent,
-            onTap: () => onMonthTap(index),
-            locale: locale,
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: MonthCell(
+              month: month,
+              isSelected: isSelected,
+              isCurrent: isCurrent,
+              onTap: () => onMonthTap(index),
+              locale: locale,
+            ),
           );
         },
       ),
