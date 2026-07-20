@@ -70,9 +70,15 @@ class PartyStatementDummyCardView extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFFF2FBF7),
+              color: isDark
+                  ? AppColors.activeGreen.withValues(alpha: 0.1)
+                  : const Color(0xFFF2FBF7),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFD8F3E5)),
+              border: Border.all(
+                color: isDark
+                    ? AppColors.activeGreen.withValues(alpha: 0.2)
+                    : const Color(0xFFD8F3E5),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,9 +97,15 @@ class PartyStatementDummyCardView extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFF5F5),
+              color: isDark
+                  ? AppColors.activeRed.withValues(alpha: 0.1)
+                  : const Color(0xFFFFF5F5),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFFAD1D1)),
+              border: Border.all(
+                color: isDark
+                    ? AppColors.activeRed.withValues(alpha: 0.2)
+                    : const Color(0xFFFAD1D1),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

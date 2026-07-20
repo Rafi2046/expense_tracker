@@ -141,9 +141,15 @@ class PartyStatementDummyTableView extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE8F8F5),
+                      color: isDark
+                          ? AppColors.activeGreen.withValues(alpha: 0.1)
+                          : const Color(0xFFE8F8F5),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFD1F2E5)),
+                      border: Border.all(
+                        color: isDark
+                            ? AppColors.activeGreen.withValues(alpha: 0.2)
+                            : const Color(0xFFD1F2E5),
+                      ),
                     ),
                     child: Text('৳ ${e.amount.toStringAsFixed(0)}',
                         textAlign: TextAlign.center,
@@ -160,9 +166,15 @@ class PartyStatementDummyTableView extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFDE8E8),
+                      color: isDark
+                          ? AppColors.activeRed.withValues(alpha: 0.1)
+                          : const Color(0xFFFDE8E8),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFFAD1D1)),
+                      border: Border.all(
+                        color: isDark
+                            ? AppColors.activeRed.withValues(alpha: 0.2)
+                            : const Color(0xFFFAD1D1),
+                      ),
                     ),
                     child: Text('৳ ${e.amount.toStringAsFixed(0)}',
                         textAlign: TextAlign.center,
