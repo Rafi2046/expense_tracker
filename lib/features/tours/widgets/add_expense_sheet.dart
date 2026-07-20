@@ -85,7 +85,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   bool _isSaving = false;
   String? _validationError;
   DateTime _selectedDate = DateTime.now();
-  XFile? _receiptImage;
+  List<XFile> _receiptImages = [];
 
   @override
   void initState() {
@@ -99,8 +99,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       _selectedCategory = edit.category;
       if (edit.note != null) _noteController.text = edit.note!;
       _selectedDate = edit.date;
-      if (edit.receiptPath != null) {
-        _receiptImage = XFile(edit.receiptPath!);
+      if (edit.receiptPaths.isNotEmpty) {
+        _receiptImages = edit.receiptPaths.map((p) => XFile(p)).toList();
       }
     } else {
       if (widget.participants.isNotEmpty) {
@@ -278,13 +278,20 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     });
   }
 
-  Future<void> _pickReceipt(ImageSource source) async {
-    final file = await _picker.pickImage(
-      source: source,
-      maxWidth: 1200,
-      imageQuality: 80,
-    );
-    if (file != null) setState(() => _receiptImage = file);
+  Future<void> _pickReceipts(ImageSource source) async {
+    if (source == ImageSource.camera) {
+      final file = await _picker.pickImage(
+        source: source,
+        maxWidth: 1200,
+        imageQuality: 80,
+      );
+      if (file != null) setState(() => _receiptImages.add(file));
+    } else {
+      final files = await _picker.pickMultiImage(
+        imageQuality: 80,
+      );
+      if (files.isNotEmpty) setState(() => _receiptImages.addAll(files));
+    }
   }
 
   void _showReceiptSourceSheet() {
@@ -366,7 +373,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       ),
       onTap: () {
         Navigator.pop(ctx);
-        _pickReceipt(source);
+        _pickReceipts(source);
       },
     );
   }
@@ -412,18 +419,24 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     );
   }
 
-  Future<String?> _persistReceipt(String? path) async {
-    if (path == null || path.isEmpty) return null;
-    final file = File(path);
-    if (!file.existsSync()) return null;
+  Future<List<String>> _persistReceipts(List<XFile> files) async {
+    if (files.isEmpty) return [];
     final dir = await getApplicationDocumentsDirectory();
     final receiptDir = Directory('${dir.path}/receipts');
     if (!receiptDir.existsSync()) receiptDir.createSync();
-    final ext = path.contains('.') ? path.split('.').last : 'jpg';
-    final newName = '${DateTime.now().microsecondsSinceEpoch}.$ext';
-    final newPath = '${receiptDir.path}/$newName';
-    await file.copy(newPath);
-    return newPath;
+    final paths = <String>[];
+    for (final file in files) {
+      final path = file.path;
+      if (path.isEmpty) continue;
+      final f = File(path);
+      if (!f.existsSync()) continue;
+      final ext = path.contains('.') ? path.split('.').last : 'jpg';
+      final newName = '${DateTime.now().microsecondsSinceEpoch}_${paths.length}.$ext';
+      final newPath = '${receiptDir.path}/$newName';
+      await f.copy(newPath);
+      paths.add(newPath);
+    }
+    return paths;
   }
 
   Future<void> _save() async {
@@ -449,7 +462,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
           ? null
           : _noteController.text.trim(),
       date: _selectedDate,
-      receiptPath: await _persistReceipt(_receiptImage?.path),
+      receiptPaths: await _persistReceipts(_receiptImages),
     );
 
     if (!mounted) return;
@@ -679,10 +692,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: ExpenseReceiptPicker(
                           theme: theme,
-                          receiptPath: _receiptImage?.path,
-                          receiptName: _receiptImage?.name,
+                          receiptPaths: _receiptImages.map((f) => f.path).toList(),
                           onPick: _showReceiptSourceSheet,
-                          onClear: () => setState(() => _receiptImage = null),
+                          onClear: (i) => setState(() => _receiptImages.removeAt(i)),
                         ),
                       ),
                       const SizedBox(height: AppSpacing.h24),

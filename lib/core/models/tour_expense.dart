@@ -11,7 +11,7 @@ class TourExpense {
   final String? category;
   final String? note;
   final DateTime date;
-  final String? receiptPath;
+  final List<String> receiptPaths;
   final DateTime createdAt;
   final String syncStatus;
   final bool isDeleted;
@@ -28,7 +28,7 @@ class TourExpense {
     this.category,
     this.note,
     required this.date,
-    this.receiptPath,
+    this.receiptPaths = const [],
     DateTime? createdAt,
     this.syncStatus = 'synced',
     this.isDeleted = false,
@@ -47,7 +47,7 @@ class TourExpense {
     String? category,
     String? note,
     DateTime? date,
-    String? receiptPath,
+    List<String>? receiptPaths,
     DateTime? createdAt,
     String? syncStatus,
     bool? isDeleted,
@@ -64,7 +64,7 @@ class TourExpense {
         category: category ?? this.category,
         note: note ?? this.note,
         date: date ?? this.date,
-        receiptPath: receiptPath ?? this.receiptPath,
+        receiptPaths: receiptPaths ?? this.receiptPaths,
         createdAt: createdAt ?? this.createdAt,
         syncStatus: syncStatus ?? this.syncStatus,
         isDeleted: isDeleted ?? this.isDeleted,
@@ -95,6 +95,24 @@ class TourExpense {
     return <String, double>{};
   }
 
+  static String? _encodeReceiptPaths(List<String> paths) {
+    if (paths.isEmpty) return null;
+    return jsonEncode(paths);
+  }
+
+  static List<String> _decodeReceiptPaths(dynamic raw) {
+    if (raw == null) return [];
+    final s = raw.toString();
+    if (s.isEmpty) return [];
+    if (s.startsWith('[')) {
+      try {
+        final decoded = jsonDecode(s);
+        if (decoded is List) return decoded.cast<String>();
+      } catch (_) {}
+    }
+    return [s];
+  }
+
   Map<String, dynamic> toMap() => {
     'tourId': tourId,
     'title': title,
@@ -104,7 +122,7 @@ class TourExpense {
     'category': category,
     'note': note,
     'date': date.toIso8601String(),
-    'receiptPath': receiptPath,
+    'receiptPath': _encodeReceiptPaths(receiptPaths),
     'createdAt': createdAt.toIso8601String(),
     'isDeleted': isDeleted,
     'lastModified': lastModified.toIso8601String(),
@@ -126,7 +144,7 @@ class TourExpense {
       category: map['category'] as String?,
       note: map['note'] as String?,
       date: DateTime.parse(map['date'] as String),
-      receiptPath: map['receiptPath'] as String?,
+      receiptPaths: _decodeReceiptPaths(map['receiptPath']),
       createdAt: map['createdAt'] != null
           ? DateTime.parse(map['createdAt'] as String)
           : null,
@@ -150,7 +168,7 @@ class TourExpense {
     'category': category,
     'note': note,
     'date': date.toIso8601String(),
-    'receiptPath': receiptPath,
+    'receiptPath': _encodeReceiptPaths(receiptPaths),
     'createdAt': createdAt.toIso8601String(),
     'syncStatus': syncStatus,
     'isDeleted': isDeleted ? 1 : 0,
@@ -169,7 +187,7 @@ class TourExpense {
       category: json['category'] as String?,
       note: json['note'] as String?,
       date: DateTime.parse(json['date'] as String),
-      receiptPath: json['receiptPath'] as String?,
+      receiptPaths: _decodeReceiptPaths(json['receiptPath']),
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'] as String)
           : null,

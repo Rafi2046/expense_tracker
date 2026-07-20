@@ -148,7 +148,7 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
                     currency: tour.currency,
                     isDark: isDark,
                   ),
-                  if (expenses.any((e) => e.receiptPath != null && e.receiptPath!.isNotEmpty)) ...[
+                  if (expenses.any((e) => e.receiptPaths.isNotEmpty)) ...[
                     const SizedBox(height: 32),
                     InvoiceSectionTitleWidget(title: context.translate('receipts_section')),
                     const SizedBox(height: 16),

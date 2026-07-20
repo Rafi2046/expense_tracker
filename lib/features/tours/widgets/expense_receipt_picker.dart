@@ -1,40 +1,48 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/features/tours/widgets/full_screen_image_viewer.dart';
 
 class ExpenseReceiptPicker extends StatelessWidget {
   final ThemeData theme;
-  final String? receiptPath;
-  final String? receiptName;
+  final List<String> receiptPaths;
   final VoidCallback onPick;
-  final VoidCallback onClear;
+  final void Function(int index) onClear;
 
   const ExpenseReceiptPicker({
     super.key,
     required this.theme,
-    required this.receiptPath,
-    required this.receiptName,
+    required this.receiptPaths,
     required this.onPick,
     required this.onClear,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (receiptPath != null) {
-      return _buildThumbnail();
-    }
-    return _buildButton(context);
+    if (receiptPaths.isEmpty) return _buildAddButton(context);
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      alignment: WrapAlignment.start,
+      runAlignment: WrapAlignment.start,
+      crossAxisAlignment: WrapCrossAlignment.start,
+      children: [
+        for (var i = 0; i < receiptPaths.length; i++)
+          _buildThumbnail(context, i),
+        _buildGridAddButton(context),
+      ],
+    );
   }
 
-  Widget _buildButton(BuildContext context) {
+  Widget _buildAddButton(BuildContext context) {
     return GestureDetector(
       onTap: onPick,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
@@ -61,47 +69,78 @@ class ExpenseReceiptPicker extends StatelessWidget {
     );
   }
 
-  Widget _buildThumbnail() {
+  Widget _buildGridAddButton(BuildContext context) {
     return GestureDetector(
       onTap: onPick,
       child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(8),
+        width: 80,
+        height: 80,
         decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: theme.dividerColor.withValues(alpha: 0.2),
+            width: 1.5,
+          ),
         ),
-        child: Row(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.file(
-                File(receiptPath!),
-                width: 44, height: 44, fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                receiptName ?? '',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.bodySmall.copyWith(color: theme.colorScheme.onSurface),
-              ),
-            ),
-            GestureDetector(
-              onTap: onClear,
-              child: Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.activeRed.withValues(alpha: 0.08),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(LucideIcons.x, size: 14, color: AppColors.activeRed.withValues(alpha: 0.7)),
+            Icon(LucideIcons.plus, size: 22,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.25)),
+            const SizedBox(height: 2),
+            Text(
+              context.translate('add'),
+              style: AppTextStyles.caption.copyWith(
+                fontSize: 10,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildThumbnail(BuildContext context, int index) {
+    return GestureDetector(
+      onTap: () => FullScreenImageViewer.show(context, receiptPaths, index: index),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.file(
+              File(receiptPaths[index]),
+              width: 80,
+              height: 80,
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(LucideIcons.imageOff, size: 28,
+                    color: Colors.grey.shade400),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 4,
+            right: 4,
+            child: GestureDetector(
+              onTap: () => onClear(index),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.6),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(LucideIcons.x, size: 10, color: Colors.white),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
