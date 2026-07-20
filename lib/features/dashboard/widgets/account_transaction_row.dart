@@ -121,8 +121,10 @@ class AccountTransactionRow extends StatelessWidget {
                         debtProvider.settleDebtItem(rawItem.id);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(context.translate('debt_settled', namedArgs: {'name': rawItem.name})),
-                            duration: const Duration(seconds: 2),
+                            content: Text(context.translate('debt_settled', namedArgs: {'name': rawItem.name}),
+                              style: const TextStyle(color: Colors.white)),
+                            backgroundColor: const Color(0xFF1E293B),
+                            duration: const Duration(seconds: 3),
                           ),
                         );
                       },

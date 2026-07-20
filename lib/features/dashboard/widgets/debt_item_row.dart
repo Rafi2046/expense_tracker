@@ -125,7 +125,9 @@ class DebtItemRow extends StatelessWidget {
         Future.microtask(() => debtProvider.settleDebtItem(id));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(context.translate('debt_settled', namedArgs: {'name': name})),
+            content: Text(context.translate('debt_settled', namedArgs: {'name': name}),
+              style: const TextStyle(color: Colors.white)),
+            backgroundColor: const Color(0xFF1E293B),
             duration: const Duration(seconds: 3),
             action: SnackBarAction(
               label: context.translate('undo'),
@@ -143,13 +145,6 @@ class DebtItemRow extends StatelessWidget {
           color: theme.cardColor,
           borderRadius: BorderRadius.circular(AppSpacing.r8),
           border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF0F0F0)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(AppSpacing.r8),
@@ -159,7 +154,7 @@ class DebtItemRow extends StatelessWidget {
                 left: 0,
                 top: 0,
                 bottom: 0,
-                child: Container(width: 4, color: themeColor),
+                child: Container(width: 3, color: themeColor),
               ),
               ListTile(
                 onTap: () {
@@ -209,14 +204,14 @@ class DebtItemRow extends StatelessWidget {
                   );
                 },
                 contentPadding: const EdgeInsets.only(
-                  left: 20,
-                  right: 16,
-                  top: 6,
-                  bottom: 6,
+                  left: 16,
+                  right: 12,
+                  top: 2,
+                  bottom: 2,
                 ),
                 leading: Container(
-                  width: 38,
-                  height: 38,
+                  width: 32,
+                  height: 32,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
@@ -236,7 +231,7 @@ class DebtItemRow extends StatelessWidget {
                   child: Text(
                     _getInitials(item.name),
                     style: TextStyle(
-                      fontSize: AppFontSizes.size14,
+                      fontSize: AppFontSizes.size12,
                       fontWeight: FontWeight.bold,
                       color: _getAvatarFg(context, item.name),
                     ),
@@ -245,17 +240,17 @@ class DebtItemRow extends StatelessWidget {
                 title: Text(
                   item.name,
                   style: TextStyle(
-                    fontSize: AppFontSizes.size15,
+                    fontSize: AppFontSizes.size14,
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
                 subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 2.0),
+                  padding: const EdgeInsets.only(top: 1.0),
                   child: Text(
                     item.detail,
                     style: TextStyle(
-                      fontSize: AppFontSizes.size13,
+                      fontSize: AppFontSizes.size12,
                       color: AppColors.textMuted,
                     ),
                   ),
@@ -264,7 +259,7 @@ class DebtItemRow extends StatelessWidget {
                   amount: item.amount,
                   isMasked: isMasked,
                   style: TextStyle(
-                    fontSize: AppFontSizes.size15,
+                    fontSize: AppFontSizes.size14,
                     fontWeight: FontWeight.bold,
                     color: themeColor,
                   ),

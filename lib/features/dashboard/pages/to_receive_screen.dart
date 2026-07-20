@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
+import 'package:expense_tracker/features/dashboard/pages/debt_list_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/debt_item_row.dart';
 import 'package:expense_tracker/features/dashboard/widgets/debt_total_card.dart';
@@ -61,51 +62,33 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
   Widget build(BuildContext context) {
     final debtProvider = context.watch<DebtProvider>();
     final items = debtProvider.toReceiveUnpaid;
+    final displayItems = items.length > 4 ? items.sublist(0, 4) : items;
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: theme.appBarTheme.backgroundColor,
+        backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(
-            LucideIcons.arrowLeft,
-            color: theme.appBarTheme.iconTheme?.color,
-          ),
+          icon: Icon(LucideIcons.arrowLeft),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           context.translate('to_receive'),
           style: AppTextStyles.appbarTitle.copyWith(
-            color: theme.appBarTheme.titleTextStyle?.color,
-            fontFamily: TextStyle().fontFamily,
+            color: isDark ? Colors.white : null,
             fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
       ),
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).padding.bottom + 88,
-        ),
-        child: FloatingActionButton(
-          onPressed: () => AddEditDebtSheet.show(
-            context: context,
-                            payeeLabel: context.translate('payee_label'),
-            themeColor: theme.primaryColor,
-            isReceive: true,
-          ),
-          backgroundColor: theme.primaryColor,
-          elevation: 2,
-          child: Icon(LucideIcons.plus, color: Colors.white, size: 28),
-        ),
-      ),
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
               child: DebtTotalCard(
                 title: context.translate('total_owed_to_you'),
                 amount: debtProvider.totalToReceive,
@@ -124,9 +107,8 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
             ),
             if (items.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
+                padding: const EdgeInsets.only(
+                  left: 16.0, right: 16.0, top: 8.0,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -154,55 +136,73 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                         ),
                       ],
                     ),
-                    if (!_showGuide)
-                      IconButton(
-                        constraints: const BoxConstraints(),
-                        padding: EdgeInsets.zero,
-                        icon: Icon(
-                          LucideIcons.info,
-                          color: Colors.grey.shade400,
-                          size: 20,
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => DebtListScreen(
+                              items: items,
+                              title: context.translate('all_collections'),
+                              themeColor: theme.primaryColor,
+                              isReceive: true,
+                            ),
+                          ),
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        foregroundColor: theme.primaryColor,
+                        textStyle: AppTextStyles.label.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: theme.primaryColor,
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _showGuide = true;
-                          });
-                        },
-                        tooltip: context.translate('show_guide'),
                       ),
+                      child: Text(context.translate('see_all')),
+                    ),
                   ],
                 ),
               ),
 
             Expanded(
               child: items.isEmpty
-                  ? Center(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              AppImages.pendingPayments,
-                              height: 120,
-                              width: 120,
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              context.translate('no_pending_payments'),
-                              style: AppTextStyles.reportTileTitle.copyWith(color: Colors.grey.shade500),
-                            ),
-                          ],
-                        ),
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          const Spacer(),
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.asset(
+                                AppImages.pendingPayments,
+                                height: 120,
+                                width: 120,
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                context.translate('no_pending_payments'),
+                                style: AppTextStyles.reportTileTitle.copyWith(color: Colors.grey.shade500),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          _buildInlineAddButton(context, theme),
+                        ],
                       ),
                     )
                   : ListView.builder(
-                      itemCount: items.length,
+                      itemCount: displayItems.length + 1,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 8,
                       ),
                       itemBuilder: (context, index) {
-                        final item = items[index];
+                        if (index == displayItems.length) {
+                          return _buildInlineAddButton(context, theme);
+                        }
+                        final item = displayItems[index];
                         return DebtItemRow(
                           item: item,
                           themeColor: theme.primaryColor,
@@ -210,7 +210,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                           onEditTap: () => AddEditDebtSheet.show(
                             context: context,
                             item: item,
-            payeeLabel: context.translate('payee_label'),
+                            payeeLabel: context.translate('payee_label'),
                             themeColor: theme.primaryColor,
                             isReceive: true,
                           ),
@@ -220,6 +220,53 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                     ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInlineAddButton(BuildContext context, ThemeData theme) {
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 8, 0, 16),
+      child: GestureDetector(
+        onTap: () => AddEditDebtSheet.show(
+          context: context,
+          payeeLabel: context.translate('payee_label'),
+          themeColor: theme.primaryColor,
+          isReceive: true,
+        ),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: isDark
+                ? theme.primaryColor.withValues(alpha: 0.06)
+                : theme.primaryColor.withValues(alpha: 0.04),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isDark
+                  ? theme.primaryColor.withValues(alpha: 0.2)
+                  : theme.primaryColor.withValues(alpha: 0.15),
+              width: 1.2,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(LucideIcons.plus, size: 18, color: theme.primaryColor),
+              const SizedBox(width: 8),
+              Text(
+                context.translate('add_new'),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: theme.primaryColor,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
