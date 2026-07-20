@@ -1421,12 +1421,18 @@ class TourProvider extends ChangeNotifier {
         }
 
         String? finalCover = tour.coverPhoto;
-        if (existingCover != null && existingCover.isNotEmpty && !existingCover.startsWith('http')) {
-          finalCover = existingCover; // Prefer local custom photo
-        } else if ((finalCover == null || finalCover.isEmpty) &&
-            existingCover != null &&
-            existingCover.isNotEmpty) {
-          finalCover = existingCover;
+        // Never let Firestore's null/empty coverPhoto overwrite a valid local one
+        final existingTour = _tours.where((t) => t.id == tour.id).firstOrNull;
+        final currentCover = existingTour?.coverPhoto;
+        if (currentCover != null && currentCover.isNotEmpty) {
+          // In-memory has a valid cover — keep it regardless of Firestore
+          finalCover = currentCover;
+        } else if (existingCover != null && existingCover.isNotEmpty) {
+          if (finalCover == null || finalCover.isEmpty) {
+            finalCover = existingCover;
+          } else if (!existingCover.startsWith('http')) {
+            finalCover = existingCover;
+          }
         }
 
         final updatedTour = tour.copyWith(
@@ -1487,7 +1493,7 @@ class TourProvider extends ChangeNotifier {
   Future<void> _syncTourToSharedCollection(Tour tour) async {
     final map = tour.toMap();
     if (tour.coverPhoto != null && !tour.coverPhoto!.startsWith('http')) {
-      map['coverPhoto'] = null; // Don't sync local paths
+      map.remove('coverPhoto'); // Don't sync local paths — remove key entirely so it won't overwrite later
     }
     await _sharedToursCollection.doc(tour.id).set(map);
   }
@@ -1497,7 +1503,7 @@ class TourProvider extends ChangeNotifier {
     if (col == null) return;
     final map = tour.toMap();
     if (tour.coverPhoto != null && !tour.coverPhoto!.startsWith('http')) {
-      map['coverPhoto'] = null; // Don't sync local paths
+      map.remove('coverPhoto'); // Don't sync local paths
     }
     await col.doc(tour.id).set(map);
   }
@@ -1593,12 +1599,19 @@ class TourProvider extends ChangeNotifier {
         }
 
         String? finalCover = tour.coverPhoto;
-        if (existingCover != null && existingCover.isNotEmpty && !existingCover.startsWith('http')) {
-          finalCover = existingCover; // Prefer local custom photo
-        } else if ((finalCover == null || finalCover.isEmpty) &&
-            existingCover != null &&
-            existingCover.isNotEmpty) {
-          finalCover = existingCover;
+        // Never let Firestore's null/empty coverPhoto overwrite a valid local one
+        final idx = _tours.indexWhere((t) => t.id == tourId);
+        final currentTour = idx != -1 ? _tours[idx] : null;
+        final currentCover = currentTour?.coverPhoto;
+        if (currentCover != null && currentCover.isNotEmpty) {
+          // In-memory has a valid cover — keep it regardless of Firestore
+          finalCover = currentCover;
+        } else if (existingCover != null && existingCover.isNotEmpty) {
+          if (finalCover == null || finalCover.isEmpty) {
+            finalCover = existingCover;
+          } else if (!existingCover.startsWith('http')) {
+            finalCover = existingCover;
+          }
         }
 
         final updatedTour = tour.copyWith(
@@ -1608,7 +1621,6 @@ class TourProvider extends ChangeNotifier {
 
         final localService = TourLocalService(db);
         await localService.upsertTour(updatedTour);
-        final idx = _tours.indexWhere((t) => t.id == tourId);
         if (idx != -1) {
           final old = _tours[idx];
           _tours[idx] = updatedTour;

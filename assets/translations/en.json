@@ -237,6 +237,7 @@
   "reset_link_sent_title": "Reset Link Sent!",
   "reset_link_sent_subtitle": "We have sent a password reset link to your email. Please click the link in your inbox to set your new password, then return here to log in.",
   "back_to_login": "Back to Login",
+  "resend_email_link": "Didn't receive the email? Resend",
   "welcome_back": "Welcome Back",
   "biometric_subtitle": "Authenticate to continue your financial journey",
   "login_subtitle": "Sign in to continue your financial journey",
