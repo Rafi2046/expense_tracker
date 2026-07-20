@@ -1,5 +1,7 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
+import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 
@@ -39,11 +41,37 @@ class ReportStatCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          PrivacyMaskedText(
-            amount: amount,
-            isMasked: isMasked,
-            style: AppTextStyles.reportStatValue.copyWith(
-              color: isPositive ? theme.primaryColor : AppColors.activeRed,
+          GestureDetector(
+            onTap: () {
+              final formatted = context.formatAmount(amount, listen: false);
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: Text(title),
+                  content: Text(
+                    formatted,
+                    style: AppTextStyles.reportStatValue.copyWith(
+                      color: isPositive
+                          ? theme.primaryColor
+                          : AppColors.activeRed,
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: Text(context.translate('ok')),
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: PrivacyMaskedText(
+              amount: amount,
+              isMasked: isMasked,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.reportStatValue.copyWith(
+                color: isPositive ? theme.primaryColor : AppColors.activeRed,
+              ),
             ),
           ),
         ],

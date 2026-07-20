@@ -36,7 +36,9 @@ class PartyStatementSelector extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected ? theme.primaryColor : (isDark ? theme.cardColor : const Color(0xFFF1F2F4)),
+            color: isSelected
+                ? theme.primaryColor
+                : (isDark ? theme.cardColor : const Color(0xFFF1F2F4)),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
@@ -46,7 +48,9 @@ class PartyStatementSelector extends StatelessWidget {
                 partyName ?? context.translate('select_party'),
                 style: AppTextStyles.reportTileTitle.copyWith(
                   fontSize: AppFontSizes.size14,
-                  color: isSelected ? Colors.white : theme.colorScheme.onSurface,
+                  color: isSelected
+                      ? Colors.white
+                      : theme.colorScheme.onSurface,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 ),
               ),
@@ -54,7 +58,7 @@ class PartyStatementSelector extends StatelessWidget {
               Icon(
                 LucideIcons.chevronDown,
                 color: isSelected ? Colors.white : theme.colorScheme.onSurface,
-                size: 18,
+                size: 8,
               ),
             ],
           ),

@@ -120,7 +120,7 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
             topRight: Radius.circular(AppSpacing.br20),
           ),
         ),
-        padding: EdgeInsets.fromLTRB(20, 20, 20, bottomInset + 20),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, bottomInset + 24),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(

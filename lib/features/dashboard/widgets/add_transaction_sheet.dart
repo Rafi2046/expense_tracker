@@ -446,7 +446,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                       AppSpacing.p24,
                       0,
                       AppSpacing.p24,
-                      bottomInset,
+                      bottomInset + 24,
                     ),
                     child: TransactionSaveButton(
                       onPressed: () async {

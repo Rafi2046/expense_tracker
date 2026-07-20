@@ -8,12 +8,14 @@ class PrivacyMaskedText extends StatelessWidget {
   final double amount;
   final TextStyle? style;
   final bool? isMasked;
+  final TextOverflow? overflow;
 
   const PrivacyMaskedText({
     super.key,
     required this.amount,
     this.style,
     this.isMasked,
+    this.overflow,
   });
 
   @override
@@ -26,6 +28,7 @@ class PrivacyMaskedText extends StatelessWidget {
       displayText,
       style: style,
       softWrap: false,
+      overflow: overflow,
     );
   }
 }
