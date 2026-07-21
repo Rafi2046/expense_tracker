@@ -6,7 +6,6 @@ import 'package:expense_tracker/features/dashboard/pages/weekly_summary_screen.d
 import 'package:expense_tracker/features/dashboard/pages/daily_summary_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class NotificationDetailsScreen extends StatelessWidget {
   final NotificationItem item;
@@ -160,7 +159,12 @@ class NotificationDetailsScreen extends StatelessWidget {
                     }
                   : isDaily
                       ? () {
-                          _showDailySummaryOptionsDialog(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const DailySummaryScreen(),
+                            ),
+                          );
                         }
                       : null,
               borderRadius: cardRadius,
@@ -255,118 +259,5 @@ class NotificationDetailsScreen extends StatelessWidget {
     );
   }
 
-  void _showDailySummaryOptionsDialog(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final primaryColor = isDark ? const Color(0xFF8E75C8) : AppColors.buttonColor;
 
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          backgroundColor: theme.cardColor,
-          surfaceTintColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: primaryColor.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  LucideIcons.calendarDays,
-                  color: primaryColor,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                context.translate('daily_summary'),
-                style: AppTextStyles.h3.copyWith(
-                  color: theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Explore your daily breakdown and insights.",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              // Option 1: View Daily Summary
-              InkWell(
-                onTap: () {
-                  Navigator.pop(ctx); // Close dialog
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const DailySummaryScreen(),
-                    ),
-                  );
-                },
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  decoration: BoxDecoration(
-                    color: primaryColor.withValues(alpha: 0.08),
-                    border: Border.all(
-                      color: primaryColor.withValues(alpha: 0.3),
-                      width: 1.5,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(LucideIcons.pieChart, color: primaryColor, size: 20),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          context.translate('view_daily_summary') != 'view_daily_summary'
-                              ? context.translate('view_daily_summary')
-                              : "View Daily Summary",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                      Icon(LucideIcons.chevronRight, color: primaryColor, size: 18),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(
-                context.translate('cancel'),
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: isDark ? Colors.grey.shade400 : AppColors.textMuted,
-                ),
-              ),
-            ),
-          ],
-          actionsAlignment: MainAxisAlignment.center,
-        ).animate().fade(duration: 200.ms).scale(begin: const Offset(0.9, 0.9), duration: 200.ms);
-      },
-    );
-  }
 }
