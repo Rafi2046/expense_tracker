@@ -35,24 +35,24 @@ class TourCardBackground extends StatelessWidget {
                 )
         else
           _buildGradientFallback(),
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 160,
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withValues(alpha: 0.85),
-                ],
+        if (coverPhoto != null && coverPhoto!.isNotEmpty)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.15),
+                    Colors.black.withValues(alpha: 0.35),
+                    Colors.black.withValues(alpha: 0.7),
+                    Colors.black.withValues(alpha: 0.9),
+                  ],
+                  stops: const [0.0, 0.3, 0.65, 1.0],
+                ),
               ),
             ),
           ),
-        ),
       ],
     );
   }
