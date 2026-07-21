@@ -64,7 +64,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1018341294472',
     projectId: 'expense-tracker-8a3c5',
     storageBucket: 'expense-tracker-8a3c5.firebasestorage.app',
-    iosBundleId: 'com.example.expenseTracker',
+    iosBundleId: 'com.imprintapp.budgetmint',
+    iosClientId:
+        '1018341294472-7h3fdun40tjjej98rm8oq1vr1djp908k.apps.googleusercontent.com',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -73,7 +75,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1018341294472',
     projectId: 'expense-tracker-8a3c5',
     storageBucket: 'expense-tracker-8a3c5.firebasestorage.app',
-    iosBundleId: 'com.example.expenseTracker',
+    iosBundleId: 'com.imprintapp.budgetmint',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

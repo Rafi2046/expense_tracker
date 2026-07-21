@@ -9,6 +9,21 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
+  /// iOS OAuth client from Firebase / Google Cloud Console.
+  static const String _iosGoogleClientId =
+      '1018341294472-7h3fdun40tjjej98rm8oq1vr1djp908k.apps.googleusercontent.com';
+
+  /// Web client ID required so Google returns an idToken Firebase can verify.
+  static const String _webGoogleClientId =
+      '1018341294472-on5co00vr8j4qadbqm3i70isbbfp7r26.apps.googleusercontent.com';
+
+  Future<void> _ensureGoogleSignInInitialized() async {
+    await _googleSignIn.initialize(
+      clientId: Platform.isIOS ? _iosGoogleClientId : null,
+      serverClientId: _webGoogleClientId,
+    );
+  }
+
   String _friendlyMessage(dynamic error) {
     if (error is SocketException) {
       return 'No internet connection. Please check your network and try again.';
@@ -61,6 +76,24 @@ class AuthService {
       }
       return error.description ?? 'Google Sign-In failed. Please try again.';
     }
+    if (error is SignInWithAppleAuthorizationException) {
+      switch (error.code) {
+        case AuthorizationErrorCode.canceled:
+          return '';
+        case AuthorizationErrorCode.notHandled:
+        case AuthorizationErrorCode.notInteractive:
+          return 'Apple Sign-In could not be completed. Please try again.';
+        case AuthorizationErrorCode.failed:
+        case AuthorizationErrorCode.unknown:
+          return 'Apple Sign-In is not available. Ensure Sign in with Apple is enabled for this app.';
+        case AuthorizationErrorCode.invalidResponse:
+          return 'Invalid response from Apple Sign-In. Please try again.';
+        case AuthorizationErrorCode.credentialExport:
+        case AuthorizationErrorCode.credentialImport:
+        case AuthorizationErrorCode.matchedExcludedCredential:
+          return 'Apple Sign-In credential error. Please try again.';
+      }
+    }
     return error.toString();
   }
 
@@ -96,7 +129,7 @@ class AuthService {
 
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      await _googleSignIn.initialize();
+      await _ensureGoogleSignInInitialized();
 
       final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
 

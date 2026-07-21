@@ -10,7 +10,7 @@ import 'package:expense_tracker/features/settings/widgets/delete_confirmation_bo
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
-
+import 'dart:io';
 
 class DeleteAccountDialog extends StatefulWidget {
   const DeleteAccountDialog({super.key});
@@ -121,6 +121,13 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
         await user.reauthenticateWithCredential(credential);
       } else if (isGoogleUser) {
         final googleSignIn = GoogleSignIn.instance;
+        await googleSignIn.initialize(
+          clientId: Platform.isIOS
+              ? '1018341294472-7h3fdun40tjjej98rm8oq1vr1djp908k.apps.googleusercontent.com'
+              : null,
+          serverClientId:
+              '1018341294472-on5co00vr8j4qadbqm3i70isbbfp7r26.apps.googleusercontent.com',
+        );
         await googleSignIn.signOut();
         final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
         final googleAuth = googleUser.authentication;

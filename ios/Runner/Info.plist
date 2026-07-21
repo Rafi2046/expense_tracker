@@ -53,6 +53,22 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Google Sign-In -->
+	<key>GIDClientID</key>
+	<string>1018341294472-7h3fdun40tjjej98rm8oq1vr1djp908k.apps.googleusercontent.com</string>
+	<key>GIDServerClientID</key>
+	<string>1018341294472-on5co00vr8j4qadbqm3i70isbbfp7r26.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1018341294472-7h3fdun40tjjej98rm8oq1vr1djp908k</string>
+			</array>
+		</dict>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
