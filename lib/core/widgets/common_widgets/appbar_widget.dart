@@ -31,9 +31,17 @@ class HomepageAppbarWidget extends StatelessWidget
     final profileProvider = context.watch<ProfileProvider>();
     final isMasked = context.watch<PrivacyProvider>().isMasked;
     final currentProfile = profileProvider.currentProfile;
-    final displayName = currentProfile.id == 'default_profile' ? session.firstName : currentProfile.name;
-    final photoUrl = currentProfile.id == 'default_profile' ? session.photoUrl : null;
-    final initials = currentProfile.id == 'default_profile' ? session.initials : (currentProfile.name.isNotEmpty ? currentProfile.name.substring(0, 1).toUpperCase() : 'P');
+    final displayName = currentProfile.id == 'default_profile'
+        ? session.firstName
+        : currentProfile.name;
+    final photoUrl = currentProfile.id == 'default_profile'
+        ? session.photoUrl
+        : null;
+    final initials = currentProfile.id == 'default_profile'
+        ? session.initials
+        : (currentProfile.name.isNotEmpty
+              ? currentProfile.name.substring(0, 1).toUpperCase()
+              : 'P');
 
     return AppBar(
       automaticallyImplyLeading: false,
@@ -65,7 +73,9 @@ class HomepageAppbarWidget extends StatelessWidget
                       child: _resolveImage(photoUrl) == null
                           ? Text(
                               initials,
-                              style: AppTextStyles.bodyBold.copyWith(color: theme.colorScheme.onSurface),
+                              style: AppTextStyles.bodyBold.copyWith(
+                                color: theme.colorScheme.onSurface,
+                              ),
                             )
                           : null,
                     ),
@@ -75,7 +85,9 @@ class HomepageAppbarWidget extends StatelessWidget
                         displayName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
+                        style: AppTextStyles.h3.copyWith(
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 4),

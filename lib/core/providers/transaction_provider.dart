@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/core/services/notification_service.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../models/transaction_models.dart';
@@ -1066,6 +1067,11 @@ class TransactionProvider extends ChangeNotifier {
     notifyListeners();
     NotificationService.instance.cancelEodReminderForToday();
 
+    // Budget threshold check (only for expenses)
+    if (!uniqueTransaction.isIncome) {
+      _checkBudgetThreshold();
+    }
+
     docRef
         .set(uniqueTransaction.toMap())
         .then((_) async {
@@ -1076,6 +1082,33 @@ class TransactionProvider extends ChangeNotifier {
         .catchError((error) {
           debugPrint('Firestore addTransaction error: $error');
         });
+  }
+
+  /// Checks if the current month's expense has crossed budget thresholds
+  /// and fires a notification if so.
+  Future<void> _checkBudgetThreshold() async {
+    try {
+      final budgetAmount = await _db.readBudget(profileId: _activeProfileId);
+      if (budgetAmount == null || budgetAmount <= 0) return;
+
+      final currentExpense = monthlyExpense;
+
+      // Read currency code from SharedPrefs, resolve symbol
+      const symbols = {
+        'BDT': '\u09F3', 'USD': r'$', 'EUR': '\u20AC', 'GBP': '\u00A3',
+        'INR': '\u20B9', 'JPY': '\u00A5', 'AED': '\u062F.\u0625', 'CAD': r'$',
+      };
+      final currencyCode = SharedPrefsHelper.getString('selected_currency_code') ?? 'USD';
+      final currencySymbol = symbols[currencyCode] ?? r'$';
+
+      await NotificationService.instance.checkBudgetThreshold(
+        budgetAmount: budgetAmount,
+        currentMonthExpense: currentExpense,
+        currencySymbol: currencySymbol,
+      );
+    } catch (e) {
+      debugPrint('TransactionProvider._checkBudgetThreshold error: $e');
+    }
   }
 
   void transferBalance(double amount, String fromAccount, String toAccount) {
