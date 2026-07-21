@@ -92,6 +92,7 @@ class HomepageAppbarWidget extends StatelessWidget
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(width: 4),
               IconButton(
                 onPressed: () {
                   HapticFeedback.lightImpact();
@@ -100,15 +101,16 @@ class HomepageAppbarWidget extends StatelessWidget
                 icon: Icon(
                   isMasked ? LucideIcons.shield : LucideIcons.shieldOff,
                   color: AppColors.notificationIcon,
-                  size: 26,
+                  size: 22,
                 ),
               ),
+              const SizedBox(width: 4),
               IconButton(
                 onPressed: notificationOnTap,
                 icon: const Icon(
                   LucideIcons.bell,
                   color: AppColors.notificationIcon,
-                  size: 26,
+                  size: 22,
                 ),
               ),
             ],
