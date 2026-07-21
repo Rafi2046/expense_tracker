@@ -1645,11 +1645,6 @@ class DatabaseHelper {
       await txn.delete('debt_items');
       await txn.delete('budget');
       await txn.delete('notes');
-      await txn.delete('tours');
-      await txn.delete('tour_participants');
-      await txn.delete('tour_expenses');
-      await txn.delete('tour_expense_shares');
-      await txn.delete('tour_settlements');
       await txn.delete('profiles');
     });
   }

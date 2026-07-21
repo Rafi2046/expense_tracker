@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/providers/privacy_provider.dart';
 import 'package:expense_tracker/core/providers/session_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -29,7 +27,6 @@ class HomepageAppbarWidget extends StatelessWidget
     final theme = Theme.of(context);
     final session = context.watch<SessionProvider>();
     final profileProvider = context.watch<ProfileProvider>();
-    final isMasked = context.watch<PrivacyProvider>().isMasked;
     final currentProfile = profileProvider.currentProfile;
     final displayName = currentProfile.id == 'default_profile'
         ? session.firstName
@@ -40,8 +37,8 @@ class HomepageAppbarWidget extends StatelessWidget
     final initials = currentProfile.id == 'default_profile'
         ? session.initials
         : (currentProfile.name.isNotEmpty
-        ? currentProfile.name.substring(0, 1).toUpperCase()
-        : 'P');
+            ? currentProfile.name.substring(0, 1).toUpperCase()
+            : 'P');
 
     return AppBar(
       automaticallyImplyLeading: false,
@@ -72,11 +69,11 @@ class HomepageAppbarWidget extends StatelessWidget
                       backgroundImage: _resolveImage(photoUrl),
                       child: _resolveImage(photoUrl) == null
                           ? Text(
-                        initials,
-                        style: AppTextStyles.bodyBold.copyWith(
-                          color: theme.colorScheme.onSurface,
-                        ),
-                      )
+                              initials,
+                              style: AppTextStyles.bodyBold.copyWith(
+                                color: theme.colorScheme.onSurface,
+                              ),
+                            )
                           : null,
                     ),
                     const SizedBox(width: 8),
@@ -101,39 +98,17 @@ class HomepageAppbarWidget extends StatelessWidget
               ),
             ),
           ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              InkWell(
-                onTap: () {
-                  HapticFeedback.lightImpact();
-                  context.read<PrivacyProvider>().toggle();
-                },
-                borderRadius: BorderRadius.circular(20),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Icon(
-                    isMasked ? LucideIcons.shield : LucideIcons.shieldOff,
-                    color: AppColors.notificationIcon,
-                    size: 22,
-                  ),
-                ),
+          InkWell(
+            onTap: notificationOnTap,
+            borderRadius: BorderRadius.circular(20),
+            child: const Padding(
+              padding: EdgeInsets.all(4.0),
+              child: Icon(
+                LucideIcons.bell,
+                color: AppColors.notificationIcon,
+                size: 22,
               ),
-              const SizedBox(width: 4),
-              InkWell(
-                onTap: notificationOnTap,
-                borderRadius: BorderRadius.circular(20),
-                child: const Padding(
-                  padding: EdgeInsets.all(4.0),
-                  child: Icon(
-                    LucideIcons.bell,
-                    color: AppColors.notificationIcon,
-                    size: 22,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 4),
-            ],
+            ),
           ),
         ],
       ),

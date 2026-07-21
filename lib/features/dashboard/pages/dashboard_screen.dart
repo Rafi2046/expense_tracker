@@ -1,12 +1,16 @@
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/providers/privacy_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/appbar_widget.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
+import 'package:flutter/services.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/features/dashboard/pages/expense_insights_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/recent_activity_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/income_insights_screen.dart';
@@ -98,6 +102,86 @@ class DashboardScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Privacy Mode Card
+                Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF22262E)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF3A3F4A)
+                          : Colors.grey.shade200,
+                      width: 0.8,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.03),
+                        blurRadius: 6,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 6,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          context.watch<PrivacyProvider>().isMasked
+                              ? LucideIcons.shield
+                              : LucideIcons.shieldOff,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey.shade500
+                              : Colors.grey.shade600,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          context.translate('privacy_mode'),
+                          style: AppTextStyles.bodyBold.copyWith(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.grey.shade400
+                                    : Colors.grey.shade700,
+                          ),
+                        ),
+                        const Spacer(),
+                        Transform.scale(
+                          scale: 0.7,
+                          child: Switch(
+                            value: context.watch<PrivacyProvider>().isMasked,
+                            onChanged: (_) {
+                              HapticFeedback.lightImpact();
+                              context.read<PrivacyProvider>().toggle();
+                            },
+                            activeThumbColor: Theme.of(context).primaryColor,
+                            inactiveTrackColor:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.grey.shade700
+                                    : Colors.grey.shade300,
+                            thumbColor:
+                                WidgetStateProperty.resolveWith((states) {
+                              if (states.contains(WidgetState.selected)) {
+                                return Colors.white;
+                              }
+                              return Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.grey.shade400
+                                  : Colors.white;
+                            }),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 DashboardStatsRow(
                   isLoading: isLoading,
                   incomeTitle:

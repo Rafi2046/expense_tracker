@@ -101,6 +101,7 @@ void main() async {
       path: 'assets/translations',
       fallbackLocale: const Locale('en'),
       startLocale: Locale(savedLanguageCode),
+      saveLocale: false,
       child: MultiProvider(
       providers: [
         ChangeNotifierProvider(
