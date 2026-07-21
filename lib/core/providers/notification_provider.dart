@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/utils/database_helper.dart';
 import 'package:flutter/material.dart';
 
 enum NotificationType {
@@ -23,23 +24,94 @@ class NotificationItem {
     required this.type,
     this.isRead = false,
   });
+
+  factory NotificationItem.fromMap(Map<String, dynamic> map) {
+    return NotificationItem(
+      id: map['id'] as String,
+      title: map['title'] as String,
+      description: map['body'] as String,
+      dateTime: DateTime.parse(map['timestamp'] as String),
+      type: _parseType(map['type'] as String),
+      isRead: (map['is_read'] as int) == 1,
+    );
+  }
+
+  static NotificationType _parseType(String value) {
+    switch (value) {
+      case 'alert':
+        return NotificationType.alert;
+      case 'update':
+        return NotificationType.update;
+      case 'credit':
+        return NotificationType.credit;
+      case 'system':
+        return NotificationType.system;
+      default:
+        return NotificationType.alert;
+    }
+  }
+
+  static String typeToString(NotificationType type) {
+    switch (type) {
+      case NotificationType.alert:
+        return 'alert';
+      case NotificationType.update:
+        return 'update';
+      case NotificationType.credit:
+        return 'credit';
+      case NotificationType.system:
+        return 'system';
+    }
+  }
 }
 
 class NotificationProvider extends ChangeNotifier {
-  final List<NotificationItem> _notifications = [];
+  final DatabaseHelper _db = DatabaseHelper.instance;
+  List<NotificationItem> _notifications = [];
+  String _activeProfileId;
+  bool _isLoading = false;
+
+  NotificationProvider({String initialProfileId = 'default_profile'})
+      : _activeProfileId = initialProfileId;
 
   List<NotificationItem> get notifications => List.unmodifiable(_notifications);
-
   bool get hasUnread => _notifications.any((n) => !n.isRead);
+  bool get isLoading => _isLoading;
 
-  void markAllAsRead() {
-    for (var n in _notifications) {
-      n.isRead = true;
-    }
+  void updateProfileId(String newProfileId) {
+    if (_activeProfileId == newProfileId) return;
+    _activeProfileId = newProfileId;
+    loadNotifications();
+  }
+
+  Future<void> loadNotifications() async {
+    _isLoading = true;
+    notifyListeners();
+
+    final rows = await _db.getInAppNotifications(profileId: _activeProfileId);
+    _notifications = rows.map((row) => NotificationItem.fromMap(row)).toList();
+    _isLoading = false;
     notifyListeners();
   }
 
-  void markAsRead(String id) {
+  Future<void> addNotification({
+    required String title,
+    required String body,
+    NotificationType type = NotificationType.alert,
+  }) async {
+    final id = 'notif_${DateTime.now().millisecondsSinceEpoch}';
+    await _db.insertInAppNotification(
+      id: id,
+      title: title,
+      body: body,
+      type: NotificationItem.typeToString(type),
+      profileId: _activeProfileId,
+    );
+    await loadNotifications();
+  }
+
+  Future<void> markAsRead(String id) async {
+    await _db.markInAppNotificationRead(id);
     final index = _notifications.indexWhere((n) => n.id == id);
     if (index != -1) {
       _notifications[index].isRead = true;
@@ -47,7 +119,16 @@ class NotificationProvider extends ChangeNotifier {
     }
   }
 
-  void deleteNotification(String id) {
+  Future<void> markAllAsRead() async {
+    await _db.markAllInAppNotificationsRead(profileId: _activeProfileId);
+    for (var n in _notifications) {
+      n.isRead = true;
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteNotification(String id) async {
+    await _db.deleteInAppNotification(id);
     _notifications.removeWhere((n) => n.id == id);
     notifyListeners();
   }
@@ -57,10 +138,5 @@ class NotificationProvider extends ChangeNotifier {
       _notifications.insert(index, item);
       notifyListeners();
     }
-  }
-
-  void addNotification(NotificationItem item) {
-    _notifications.add(item);
-    notifyListeners();
   }
 }

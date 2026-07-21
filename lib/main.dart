@@ -22,6 +22,7 @@ import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/account_provider.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:expense_tracker/core/services/notification_service.dart';
+import 'package:expense_tracker/core/services/weekly_summary_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -84,6 +85,9 @@ void main() async {
   final initialProfileId =
       SharedPrefsHelper.getString(SharedPrefsHelper.activeProfileKey) ?? 'default_profile';
   debugPrint('main: initial active profile = $initialProfileId');
+
+  // Fire weekly summary check (non-blocking — runs async in background)
+  WeeklySummaryService.checkAndGenerate(profileId: initialProfileId);
 
   final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
   const supportedLangCodes = ['en', 'bn', 'hi', 'ur'];
@@ -165,7 +169,14 @@ void main() async {
         ChangeNotifierProvider(create: (_) => BiometricAuthProvider()),
         ChangeNotifierProvider(create: (_) => CurrencyProvider()),
         ChangeNotifierProvider(create: (_) => PrivacyProvider()),
-        ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProxyProvider<ProfileManagerProvider, NotificationProvider>(
+          create: (_) => NotificationProvider(initialProfileId: initialProfileId)
+            ..loadNotifications(),
+          update: (_, pm, notifProvider) {
+            notifProvider!.updateProfileId(pm.activeProfileId);
+            return notifProvider;
+          },
+        ),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProxyProvider3<

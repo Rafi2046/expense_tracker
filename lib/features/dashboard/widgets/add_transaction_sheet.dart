@@ -303,7 +303,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   'action': action,
                   'amount': context.formatAmount(amount, listen: false),
                 }),
-                style: TextStyle(fontWeight: FontWeight.w600),
+                style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
               ),
             ],
           ),

@@ -1101,11 +1101,21 @@ class TransactionProvider extends ChangeNotifier {
       final currencyCode = SharedPrefsHelper.getString('selected_currency_code') ?? 'USD';
       final currencySymbol = symbols[currencyCode] ?? r'$';
 
-      await NotificationService.instance.checkBudgetThreshold(
+      final result = await NotificationService.instance.checkBudgetThreshold(
         budgetAmount: budgetAmount,
         currentMonthExpense: currentExpense,
         currencySymbol: currencySymbol,
       );
+
+      if (result != null) {
+        await _db.insertInAppNotification(
+          id: 'budget_notif_${DateTime.now().millisecondsSinceEpoch}',
+          title: result.title,
+          body: result.body,
+          type: 'alert',
+          profileId: _activeProfileId,
+        );
+      }
     } catch (e) {
       debugPrint('TransactionProvider._checkBudgetThreshold error: $e');
     }

@@ -44,7 +44,7 @@ class DatabaseHelper {
 
       return await openDatabase(
         path,
-        version: 17,
+        version: 18,
         onCreate: _createDB,
         onUpgrade: _onUpgrade,
       );
@@ -226,6 +226,17 @@ class DatabaseHelper {
         syncStatus TEXT NOT NULL DEFAULT 'synced',
         isDeleted INTEGER NOT NULL DEFAULT 0,
         lastModified TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE in_app_notifications (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        body TEXT NOT NULL,
+        timestamp TEXT NOT NULL,
+        type TEXT NOT NULL DEFAULT 'alert',
+        is_read INTEGER NOT NULL DEFAULT 0,
+        profileId TEXT NOT NULL DEFAULT 'default_profile'
       )
     ''');
   }
@@ -543,6 +554,19 @@ class DatabaseHelper {
       if (!hasPhotoUrl) {
         await db.execute('ALTER TABLE tour_participants ADD COLUMN photoUrl TEXT');
       }
+    }
+    if (oldVersion < 18) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS in_app_notifications (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL,
+          body TEXT NOT NULL,
+          timestamp TEXT NOT NULL,
+          type TEXT NOT NULL DEFAULT 'alert',
+          is_read INTEGER NOT NULL DEFAULT 0,
+          profileId TEXT NOT NULL DEFAULT 'default_profile'
+        )
+      ''');
     }
   }
 
@@ -1479,6 +1503,115 @@ class DatabaseHelper {
     return Sqflite.firstIntValue(result) ?? 0;
   }
 
+  // ─── In-App Notifications ──────────────────────────────────────────────
+
+  Future<void> insertInAppNotification({
+    required String id,
+    required String title,
+    required String body,
+    required String type,
+    String profileId = 'default_profile',
+  }) async {
+    final db = await instance.database;
+    await db.insert('in_app_notifications', {
+      'id': id,
+      'title': title,
+      'body': body,
+      'timestamp': DateTime.now().toIso8601String(),
+      'type': type,
+      'is_read': 0,
+      'profileId': profileId,
+    });
+  }
+
+  Future<List<Map<String, dynamic>>> getInAppNotifications({
+    String profileId = 'default_profile',
+  }) async {
+    final db = await instance.database;
+    return db.query(
+      'in_app_notifications',
+      where: 'profileId = ?',
+      whereArgs: [profileId],
+      orderBy: 'timestamp DESC',
+    );
+  }
+
+  Future<void> markInAppNotificationRead(String id) async {
+    final db = await instance.database;
+    await db.update(
+      'in_app_notifications',
+      {'is_read': 1},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> markAllInAppNotificationsRead({
+    String profileId = 'default_profile',
+  }) async {
+    final db = await instance.database;
+    await db.update(
+      'in_app_notifications',
+      {'is_read': 1},
+      where: 'profileId = ?',
+      whereArgs: [profileId],
+    );
+  }
+
+  Future<void> deleteInAppNotification(String id) async {
+    final db = await instance.database;
+    await db.delete(
+      'in_app_notifications',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<int> getUnreadNotificationCount({
+    String profileId = 'default_profile',
+  }) async {
+    final db = await instance.database;
+    final result = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM in_app_notifications WHERE profileId = ? AND is_read = 0',
+      [profileId],
+    );
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
+  /// Returns total expense and top category for the last [days] days.
+  /// Result: { 'total': double, 'topCategory': String?, 'topAmount': double, 'transactionCount': int }
+  Future<Map<String, dynamic>> getWeeklyExpenseSummary({
+    int days = 7,
+    String profileId = 'default_profile',
+  }) async {
+    final db = await instance.database;
+    final cutoff = DateTime.now().subtract(Duration(days: days)).toIso8601String();
+
+    final totalResult = await db.rawQuery(
+      '''SELECT COALESCE(SUM(amount), 0.0) as total, COUNT(*) as count
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ?''',
+      [profileId, cutoff],
+    );
+
+    final topResult = await db.rawQuery(
+      '''SELECT category, SUM(amount) as catTotal
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ?
+         GROUP BY category
+         ORDER BY catTotal DESC
+         LIMIT 1''',
+      [profileId, cutoff],
+    );
+
+    return {
+      'total': (totalResult.first['total'] as num).toDouble(),
+      'transactionCount': Sqflite.firstIntValue(totalResult) ?? 0,
+      'topCategory': topResult.isNotEmpty ? topResult.first['category'] as String : null,
+      'topAmount': topResult.isNotEmpty ? (topResult.first['catTotal'] as num).toDouble() : 0.0,
+    };
+  }
+
   /// Deletes a profile and ALL associated data (transactions, categories,
   /// debt_items, budget, notes) in a single transaction.
   Future<void> deleteProfileAndData(String profileId) async {
@@ -1498,6 +1631,7 @@ class DatabaseHelper {
       await txn.delete('budget', where: 'profileId = ?', whereArgs: [profileId]);
       await txn.delete('notes', where: 'profileId = ?', whereArgs: [profileId]);
       await txn.delete('accounts', where: 'profileId = ?', whereArgs: [profileId]);
+      await txn.delete('in_app_notifications', where: 'profileId = ?', whereArgs: [profileId]);
       await txn.delete('profiles', where: 'id = ?', whereArgs: [profileId]);
     });
   }
