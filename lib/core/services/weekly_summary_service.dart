@@ -63,11 +63,12 @@ class WeeklySummaryService {
         .replaceAll('{symbol}', symbol)
         .replaceAll('{amount}', total.toStringAsFixed(2));
 
-    // Fire push notification
+    // Fire push notification with payload for tap navigation
     await NotificationService.instance.showNotification(
       id: _notificationId,
       title: title,
       body: body,
+      payload: 'weekly_summary',
     );
 
     // Save to in-app notifications

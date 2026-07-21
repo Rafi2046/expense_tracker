@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/features/dashboard/pages/weekly_summary_screen.dart';
 import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:expense_tracker/features/reports/pages/all_transactions_report_screen.dart';
 import 'package:expense_tracker/features/reports/pages/bank_statement_screen.dart';
@@ -126,6 +127,14 @@ class ViewReportsScreen extends StatelessWidget {
                 titleKey: 'bank_statement',
                 subtitleKey: 'bank_account_summary',
                 destination: BankStatementScreen(),
+              ),
+              const ReportItem(
+                icon: LucideIcons.calendarCheck,
+                title: 'Weekly Summary',
+                subtitle: 'Weekly expense breakdown',
+                titleKey: 'weekly_summary',
+                subtitleKey: 'weekly_summary_subtitle',
+                destination: WeeklySummaryScreen(),
               ),
             ]),
 

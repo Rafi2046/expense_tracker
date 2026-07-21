@@ -148,8 +148,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => NotificationDetailsScreen(
-                                          item: item),
+                                      builder: (_) => NotificationDetailsScreen(item: item),
                                     ),
                                   );
                                 },

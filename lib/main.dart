@@ -26,6 +26,7 @@ import 'package:expense_tracker/core/services/weekly_summary_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'features/dashboard/pages/weekly_summary_screen.dart';
 import 'features/splash/pages/splash_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -74,9 +75,49 @@ void main() async {
   try {
     debugPrint('main: initializing NotificationService...');
     await NotificationService.instance.init();
+
+    // Wire notification tap handler
+    NotificationService.onNotificationTapHandler = (payload) {
+      debugPrint('onNotificationTapHandler: payload=$payload');
+
+      // Handle both payload-based and ID-based routing
+      final isWeeklySummary = payload == 'weekly_summary' || payload == 'id:4001';
+
+      if (isWeeklySummary) {
+        final context = NotificationService.navigatorKey.currentContext;
+        if (context == null) {
+          debugPrint('onNotificationTapHandler: navigatorKey context is null');
+          return;
+        }
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const WeeklySummaryScreen(),
+            ),
+          );
+        });
+      }
+    };
+
     debugPrint('main: NotificationService initialization complete');
   } catch (e) {
     debugPrint('main: NotificationService initialization error: $e');
+  }
+
+  // Handle app launch from notification tap (backup when onDidReceiveNotificationResponse doesn't fire)
+  try {
+    final launchDetails = await NotificationService.instance.getNotificationAppLaunchDetails();
+    if (launchDetails?.didNotificationLaunchApp ?? false) {
+      final payload = launchDetails?.notificationResponse?.payload;
+      debugPrint('main: app launched from notification, payload=$payload');
+      // Store in SharedPrefs so MyApp can pick it up after the widget tree is built
+      if (payload == 'weekly_summary') {
+        SharedPrefsHelper.setString('_pending_nav', 'weekly_summary');
+      }
+    }
+  } catch (e) {
+    debugPrint('main: getNotificationAppLaunchDetails error: $e');
   }
 
   // Read saved profile ID ONCE, before any provider is created.
@@ -295,6 +336,7 @@ class MyApp extends StatelessWidget {
     debugPrint('MyApp: build called');
     final themeProvider = context.watch<ThemeProvider>();
     return MaterialApp(
+      navigatorKey: NotificationService.navigatorKey,
       debugShowCheckedModeBanner: false,
       themeMode: themeProvider.themeMode,
       theme: AppTheme.lightTheme,
@@ -303,7 +345,26 @@ class MyApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       home: SplashScreen(),
-      builder: (context, child) => AppLockManager(child: child!),
+      builder: (context, child) {
+        // Handle pending navigation from notification tap (one-shot at startup)
+        final pendingNav = SharedPrefsHelper.getString('_pending_nav');
+        if (pendingNav != null) {
+          SharedPrefsHelper.remove('_pending_nav');
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final navContext = NotificationService.navigatorKey.currentContext;
+            if (navContext == null) return;
+            if (pendingNav == 'weekly_summary') {
+              Navigator.push(
+                navContext,
+                MaterialPageRoute(
+                  builder: (_) => const WeeklySummaryScreen(),
+                ),
+              );
+            }
+          });
+        }
+        return AppLockManager(child: child!);
+      },
     );
   }
 }

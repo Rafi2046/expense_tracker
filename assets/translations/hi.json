@@ -1043,5 +1043,18 @@
   "buddy_singular": "buddy",
   "buddies_plural": "buddies",
   "tour_singular": "tour",
-  "tours_plural": "tours"
+  "tours_plural": "tours",
+  "weekly_summary": "साप्ताहिक सारांश",
+  "weekly_summary_subtitle": "साप्ताहिक खर्च का विवरण",
+  "view_weekly_summary": "साप्ताहिक सारांश देखें",
+  "top_category": "शीर्ष श्रेणी",
+  "no_expenses_this_week": "इस सप्ताह कोई खर्च नहीं",
+  "tap_now": "अभी टैप करें",
+  "daily_average": "दैनिक औसत",
+  "peak_spike": "उच्चतम एकल खर्च",
+  "weekly_insights": "साप्ताहिक अंतर्दृष्टि",
+  "avg_per_day": "औसत / दिन",
+  "versus_last_week": "पिछले सप्ताह की तुलना में",
+  "trend": "ट्रेंड",
+  "no_insights": "अंतर्दृष्टि के लिए पर्याप्त डेटा नहीं है"
 }

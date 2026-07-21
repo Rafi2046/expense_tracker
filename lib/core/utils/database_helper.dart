@@ -1612,6 +1612,75 @@ class DatabaseHelper {
     };
   }
 
+  /// Returns premium weekly expense summary including daily amounts,
+  /// category breakdowns, highest transaction, and previous week's total.
+  Future<Map<String, dynamic>> getPremiumWeeklySummary({
+    required String profileId,
+  }) async {
+    final db = await instance.database;
+    final now = DateTime.now();
+    final cutoff = now.subtract(const Duration(days: 7)).toIso8601String();
+    final prevCutoff = now.subtract(const Duration(days: 14)).toIso8601String();
+
+    // 1. Total spent & count
+    final totalResult = await db.rawQuery(
+      '''SELECT COALESCE(SUM(amount), 0.0) as total, COUNT(*) as count
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ?''',
+      [profileId, cutoff],
+    );
+
+    // 2. Category breakdown
+    final categoryResult = await db.rawQuery(
+      '''SELECT category, SUM(amount) as amount, COUNT(*) as count
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ?
+         GROUP BY category
+         ORDER BY amount DESC''',
+      [profileId, cutoff],
+    );
+
+    // 3. Daily breakdown
+    final dailyResult = await db.rawQuery(
+      '''SELECT SUBSTR(dateTime, 1, 10) as dateStr, SUM(amount) as amount
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ?
+         GROUP BY dateStr
+         ORDER BY dateStr ASC''',
+      [profileId, cutoff],
+    );
+
+    // 4. Highest transaction
+    final highestResult = await db.rawQuery(
+      '''SELECT note, category, amount, dateTime
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ?
+         ORDER BY amount DESC
+         LIMIT 1''',
+      [profileId, cutoff],
+    );
+
+    // 5. Previous week's total
+    final prevTotalResult = await db.rawQuery(
+      '''SELECT COALESCE(SUM(amount), 0.0) as prevTotal
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime < ?''',
+      [profileId, prevCutoff, cutoff],
+    );
+
+    final total = (totalResult.first['total'] as num).toDouble();
+    final count = Sqflite.firstIntValue(totalResult) ?? 0;
+
+    return {
+      'total': total,
+      'transactionCount': count,
+      'categoryBreakdown': categoryResult,
+      'dailyBreakdown': dailyResult,
+      'highestTransaction': highestResult.isNotEmpty ? highestResult.first : null,
+      'previousTotal': (prevTotalResult.first['prevTotal'] as num).toDouble(),
+    };
+  }
+
   /// Deletes a profile and ALL associated data (transactions, categories,
   /// debt_items, budget, notes) in a single transaction.
   Future<void> deleteProfileAndData(String profileId) async {

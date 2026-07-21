@@ -13,9 +13,15 @@ class ReportTile extends StatelessWidget {
   });
 
   void _pushReport(BuildContext context) {
-    Navigator.of(context, rootNavigator: true).push(
-      MaterialPageRoute(builder: (_) => item.destination),
-    );
+    if (item.titleKey == 'weekly_summary') {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => item.destination),
+      );
+    } else {
+      Navigator.of(context, rootNavigator: true).push(
+        MaterialPageRoute(builder: (_) => item.destination),
+      );
+    }
   }
 
   @override

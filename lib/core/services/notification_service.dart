@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -18,6 +18,10 @@ class NotificationService {
   NotificationService._();
 
   static final NotificationService instance = NotificationService._();
+
+  /// Global navigator key — set from main() and used by MaterialApp.
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
@@ -51,6 +55,29 @@ class NotificationService {
     'bn': 'আজকের খরচ লগ করতে ভুলবেন না!',
   };
 
+  /// External handler set by main() to navigate based on notification payload.
+  static void Function(String payload)? onNotificationTapHandler;
+
+  /// Called when the user taps a local notification.
+  void _onNotificationTap(NotificationResponse response) {
+    debugPrint('_onNotificationTap: type=${response.notificationResponseType} '
+        'payload=${response.payload} id=${response.id} input=${response.input}');
+    final payload = response.payload;
+    if (payload == null || payload.isEmpty) {
+      debugPrint('_onNotificationTap: payload is null/empty, routing by id=${response.id}');
+      // Fallback: route by notification ID
+      if (onNotificationTapHandler != null) {
+        onNotificationTapHandler!('id:${response.id}');
+      }
+      return;
+    }
+    if (onNotificationTapHandler == null) {
+      debugPrint('_onNotificationTap: handler is null, skipping');
+      return;
+    }
+    onNotificationTapHandler!(payload);
+  }
+
   // ── Init ──
 
   Future<void> init() async {
@@ -74,12 +101,15 @@ class NotificationService {
       requestSoundPermission: true,
     );
 
-    const initSettings = InitializationSettings(
+    final initSettings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
     );
 
-    await _plugin.initialize(settings: initSettings);
+    await _plugin.initialize(
+      settings: initSettings,
+      onDidReceiveNotificationResponse: _onNotificationTap,
+    );
 
     // Android 13+ runtime permission
     final androidPlugin = _plugin
@@ -295,6 +325,11 @@ class NotificationService {
       ),
       payload: payload,
     );
+  }
+
+  /// Returns launch details when the app was opened via a notification tap.
+  Future<NotificationAppLaunchDetails?> getNotificationAppLaunchDetails() {
+    return _plugin.getNotificationAppLaunchDetails();
   }
 
   // ── Budget Threshold ──

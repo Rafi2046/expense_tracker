@@ -1043,5 +1043,18 @@
   "buddy_singular": "buddy",
   "buddies_plural": "buddies",
   "tour_singular": "tour",
-  "tours_plural": "tours"
+  "tours_plural": "tours",
+  "weekly_summary": "ہفتہ وار خلاصہ",
+  "weekly_summary_subtitle": "ہفتہ وار اخراجات کا بیان",
+  "view_weekly_summary": "ہفتہ وار خلاصہ دیکھیں",
+  "top_category": "سب سے اوپر کا زمرہ",
+  "no_expenses_this_week": "اس ہفتے کوئی اخراجات نہیں",
+  "tap_now": "ابھی کلک کریں",
+  "daily_average": "روزانہ کا اوسط",
+  "peak_spike": "سب سے زیادہ واحد خرچ",
+  "weekly_insights": "ہفتہ وار بصیرت",
+  "avg_per_day": "اوسط / دن",
+  "versus_last_week": "پچھلے ہفتے کے مقابلے",
+  "trend": "رجحان",
+  "no_insights": "ابھی بصیرت کے لیے کافی ڈیٹا نہیں ہے"
 }

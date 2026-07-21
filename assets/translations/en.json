@@ -1060,5 +1060,18 @@
   "buddy_singular": "buddy",
   "buddies_plural": "buddies",
   "tour_singular": "tour",
-  "tours_plural": "tours"
+  "tours_plural": "tours",
+  "weekly_summary": "Weekly Summary",
+  "weekly_summary_subtitle": "Weekly expense breakdown",
+  "view_weekly_summary": "View Weekly Summary",
+  "top_category": "Top Category",
+  "no_expenses_this_week": "No expenses this week",
+  "tap_now": "Tap now",
+  "daily_average": "Daily Average",
+  "peak_spike": "Highest Expense",
+  "weekly_insights": "Weekly Insights",
+  "avg_per_day": "Avg / Day",
+  "versus_last_week": "vs last week",
+  "trend": "Trend",
+  "no_insights": "Not enough data for insights yet"
 }

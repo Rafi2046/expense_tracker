@@ -1053,5 +1053,18 @@
   "buddy_singular": "buddy",
   "buddies_plural": "buddies",
   "tour_singular": "tour",
-  "tours_plural": "tours"
+  "tours_plural": "tours",
+  "weekly_summary": "সাপ্তাহিক সারসংক্ষেপ",
+  "weekly_summary_subtitle": "সাপ্তাহিক খরচের বিবরণ",
+  "view_weekly_summary": "সাপ্তাহিক সারসংক্ষেপ দেখুন",
+  "top_category": "সর্বোচ্চ খরচের ক্যাটাগরি",
+  "no_expenses_this_week": "এই সপ্তাহে কোনো খরচ নেই",
+  "tap_now": "এখনই ট্যাপ করুন",
+  "daily_average": "দৈনিক গড়",
+  "peak_spike": "সর্বোচ্চ একক খরচ",
+  "weekly_insights": "সাপ্তাহিক অন্তর্দৃষ্টি",
+  "avg_per_day": "গড় / দিন",
+  "versus_last_week": "গত সপ্তাহের তুলনায়",
+  "trend": "ট্রেন্ড",
+  "no_insights": "অন্তর্দৃষ্টির জন্য পর্যাপ্ত তথ্য নেই"
 }

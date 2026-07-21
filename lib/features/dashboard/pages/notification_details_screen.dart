@@ -1,6 +1,8 @@
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
+import 'package:expense_tracker/features/dashboard/pages/weekly_summary_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -140,15 +142,78 @@ class NotificationDetailsScreen extends StatelessWidget {
 
             // ── Message Section ──
             sectionLabel(context.translate('message_label')),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: cardBg,
-                border: cardBorder,
-                borderRadius: cardRadius,
+            InkWell(
+              onTap: item.id.startsWith('weekly_summary_')
+                  ? () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const WeeklySummaryScreen(),
+                        ),
+                      );
+                    }
+                  : null,
+              borderRadius: cardRadius,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: cardBg,
+                  border: item.id.startsWith('weekly_summary_')
+                      ? Border.all(
+                          color: isDark
+                              ? const Color(0xFF8E75C8).withValues(alpha: 0.5)
+                              : AppColors.buttonColor.withValues(alpha: 0.3),
+                          width: 1.5,
+                        )
+                      : cardBorder,
+                  borderRadius: cardRadius,
+                  boxShadow: item.id.startsWith('weekly_summary_')
+                      ? [
+                          BoxShadow(
+                            color: (isDark
+                                    ? const Color(0xFF8E75C8)
+                                    : AppColors.buttonColor)
+                                .withValues(alpha: 0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          )
+                        ]
+                      : null,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    valueText(item.description),
+                    if (item.id.startsWith('weekly_summary_')) ...[
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            context.translate('tap_now'),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: isDark
+                                  ? const Color(0xFF8E75C8)
+                                  : AppColors.buttonColor,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Icon(
+                            LucideIcons.arrowRight,
+                            size: 14,
+                            color: isDark
+                                ? const Color(0xFF8E75C8)
+                                : AppColors.buttonColor,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ],
+                ),
               ),
-              child: valueText(item.description),
             ),
             SizedBox(height: sectionGap),
 
