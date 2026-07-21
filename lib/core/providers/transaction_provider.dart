@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/core/services/notification_service.dart';
+import 'package:expense_tracker/core/services/daily_summary_service.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -441,11 +442,11 @@ class TransactionProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   List<String> get expenseCategories => List.unmodifiable(
-    _categoryItems.where((c) => !c.isIncome).map((c) => c.name),
+    _categoryItems.where((c) => !c.isIncome).map((c) => c.name).toSet(),
   );
 
   List<String> get incomeCategories => List.unmodifiable(
-    _categoryItems.where((c) => c.isIncome).map((c) => c.name),
+    _categoryItems.where((c) => c.isIncome).map((c) => c.name).toSet(),
   );
 
   List<TransactionItem> get transactions => List.unmodifiable(_transactions);
@@ -1066,6 +1067,7 @@ class TransactionProvider extends ChangeNotifier {
     _transactions.insert(0, uniqueTransaction);
     notifyListeners();
     NotificationService.instance.cancelEodReminderForToday();
+    DailySummaryService.updateDailyNotification(profileId: _activeProfileId);
 
     // Budget threshold check (only for expenses)
     if (!uniqueTransaction.isIncome) {
@@ -1198,6 +1200,7 @@ class TransactionProvider extends ChangeNotifier {
     _pendingIds.add(id);
     _transactions.removeAt(index);
     notifyListeners();
+    DailySummaryService.updateDailyNotification(profileId: _activeProfileId);
 
     _firestore
         .collection('users')
@@ -1241,6 +1244,7 @@ class TransactionProvider extends ChangeNotifier {
     _pendingIds.add(updated.id);
     _transactions[index] = updated;
     notifyListeners();
+    DailySummaryService.updateDailyNotification(profileId: _activeProfileId);
 
     _firestore
         .collection('users')

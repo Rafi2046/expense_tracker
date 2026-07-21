@@ -23,10 +23,12 @@ import 'package:expense_tracker/core/providers/account_provider.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:expense_tracker/core/services/notification_service.dart';
 import 'package:expense_tracker/core/services/weekly_summary_service.dart';
+import 'package:expense_tracker/core/services/daily_summary_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'features/dashboard/pages/weekly_summary_screen.dart';
+import 'features/dashboard/pages/daily_summary_screen.dart';
 import 'features/splash/pages/splash_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -80,20 +82,31 @@ void main() async {
     NotificationService.onNotificationTapHandler = (payload) {
       debugPrint('onNotificationTapHandler: payload=$payload');
 
+      final context = NotificationService.navigatorKey.currentContext;
+      if (context == null) {
+        debugPrint('onNotificationTapHandler: navigatorKey context is null');
+        return;
+      }
+
       // Handle both payload-based and ID-based routing
       final isWeeklySummary = payload == 'weekly_summary' || payload == 'id:4001';
+      final isDailySummary = payload == 'daily_summary' || payload == 'id:5001';
 
       if (isWeeklySummary) {
-        final context = NotificationService.navigatorKey.currentContext;
-        if (context == null) {
-          debugPrint('onNotificationTapHandler: navigatorKey context is null');
-          return;
-        }
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) => const WeeklySummaryScreen(),
+            ),
+          );
+        });
+      } else if (isDailySummary) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const DailySummaryScreen(),
             ),
           );
         });
@@ -114,6 +127,8 @@ void main() async {
       // Store in SharedPrefs so MyApp can pick it up after the widget tree is built
       if (payload == 'weekly_summary') {
         SharedPrefsHelper.setString('_pending_nav', 'weekly_summary');
+      } else if (payload == 'daily_summary') {
+        SharedPrefsHelper.setString('_pending_nav', 'daily_summary');
       }
     }
   } catch (e) {
@@ -127,8 +142,9 @@ void main() async {
       SharedPrefsHelper.getString(SharedPrefsHelper.activeProfileKey) ?? 'default_profile';
   debugPrint('main: initial active profile = $initialProfileId');
 
-  // Fire weekly summary check (non-blocking — runs async in background)
+  // Fire weekly/daily summary checks (non-blocking — runs async in background)
   WeeklySummaryService.checkAndGenerate(profileId: initialProfileId);
+  DailySummaryService.updateDailyNotification(profileId: initialProfileId);
 
   final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
   const supportedLangCodes = ['en', 'bn', 'hi', 'ur'];
@@ -358,6 +374,13 @@ class MyApp extends StatelessWidget {
                 navContext,
                 MaterialPageRoute(
                   builder: (_) => const WeeklySummaryScreen(),
+                ),
+              );
+            } else if (pendingNav == 'daily_summary') {
+              Navigator.push(
+                navContext,
+                MaterialPageRoute(
+                  builder: (_) => const DailySummaryScreen(),
                 ),
               );
             }

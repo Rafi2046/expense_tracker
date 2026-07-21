@@ -1742,6 +1742,97 @@ class DatabaseHelper {
     }
   }
 
+  // Returns today's total expense amount
+  Future<double> getDailyExpenseTotal({
+    required String profileId,
+  }) async {
+    if (kIsWeb) return 0.0;
+    final db = await instance.database;
+    final now = DateTime.now();
+    final todayStart = DateTime(now.year, now.month, now.day).toIso8601String();
+    final todayEnd = DateTime(now.year, now.month, now.day, 23, 59, 59, 999).toIso8601String();
+
+    final result = await db.rawQuery(
+      '''SELECT COALESCE(SUM(amount), 0.0) as total
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?''',
+      [profileId, todayStart, todayEnd],
+    );
+    return (result.first['total'] as num?)?.toDouble() ?? 0.0;
+  }
+
+  /// Returns premium daily summary details including category breakdowns, highest expense,
+  /// and comparison with the average daily spending of the last 7 days.
+  Future<Map<String, dynamic>> getPremiumDailySummary({
+    required String profileId,
+  }) async {
+    if (kIsWeb) {
+      return {
+        'total': 0.0,
+        'transactionCount': 0,
+        'categoryBreakdown': [],
+        'highestTransaction': null,
+        'averageDaily': 0.0,
+      };
+    }
+    final db = await instance.database;
+    final now = DateTime.now();
+    final todayStart = DateTime(now.year, now.month, now.day).toIso8601String();
+    final todayEnd = DateTime(now.year, now.month, now.day, 23, 59, 59, 999).toIso8601String();
+
+    final lastWeekStart = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 7)).toIso8601String();
+    final yesterdayEnd = DateTime(now.year, now.month, now.day).subtract(const Duration(milliseconds: 1)).toIso8601String();
+
+    // 1. Today's total & count
+    final totalResult = await db.rawQuery(
+      '''SELECT COALESCE(SUM(amount), 0.0) as total, COUNT(*) as count
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?''',
+      [profileId, todayStart, todayEnd],
+    );
+
+    // 2. Category breakdown
+    final categoryResult = await db.rawQuery(
+      '''SELECT category, SUM(amount) as amount, COUNT(*) as count
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?
+         GROUP BY category
+         ORDER BY amount DESC''',
+      [profileId, todayStart, todayEnd],
+    );
+
+    // 3. Highest transaction today
+    final highestResult = await db.rawQuery(
+      '''SELECT note, category, amount, dateTime
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?
+         ORDER BY amount DESC
+         LIMIT 1''',
+      [profileId, todayStart, todayEnd],
+    );
+
+    // 4. Last 7 days total (excluding today) for average comparison
+    final prevTotalResult = await db.rawQuery(
+      '''SELECT COALESCE(SUM(amount), 0.0) as prevTotal
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?''',
+      [profileId, lastWeekStart, yesterdayEnd],
+    );
+
+    final total = (totalResult.first['total'] as num).toDouble();
+    final count = Sqflite.firstIntValue(totalResult) ?? 0;
+    final last7DaysTotal = (prevTotalResult.first['prevTotal'] as num).toDouble();
+    final averageDaily = last7DaysTotal / 7.0;
+
+    return {
+      'total': total,
+      'transactionCount': count,
+      'categoryBreakdown': categoryResult,
+      'highestTransaction': highestResult.isNotEmpty ? highestResult.first : null,
+      'averageDaily': averageDaily,
+    };
+  }
+
   // Close database connection
   Future close() async {
     if (kIsWeb) return;
