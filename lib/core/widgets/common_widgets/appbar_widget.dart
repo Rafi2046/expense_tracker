@@ -116,7 +116,6 @@ class HomepageAppbarWidget extends StatelessWidget
                   size: 22,
                 ),
               ),
-              const SizedBox(width: 4),
               IconButton(
                 onPressed: notificationOnTap,
                 icon: const Icon(
