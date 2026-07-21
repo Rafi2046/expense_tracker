@@ -118,7 +118,7 @@ class DashboardStatCard extends StatelessWidget {
               Icon(
                 LucideIcons.chevronRight,
                 color: AppColors.textMuted,
-                size: 20,
+                size: 18,
               ),
             ],
           ),
