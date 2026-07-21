@@ -144,6 +144,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               child: NotificationCard(
                                 item: item,
                                 onTap: () {
+                                  context.read<NotificationProvider>().markAsRead(item.id);
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(

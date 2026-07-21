@@ -1098,13 +1098,14 @@ class TransactionProvider extends ChangeNotifier {
         'BDT': '\u09F3', 'USD': r'$', 'EUR': '\u20AC', 'GBP': '\u00A3',
         'INR': '\u20B9', 'JPY': '\u00A5', 'AED': '\u062F.\u0625', 'CAD': r'$',
       };
-      final currencyCode = SharedPrefsHelper.getString('selected_currency_code') ?? 'USD';
+      final currencyCode = SharedPrefsHelper.getString('selected_currency_code') ?? 'BDT';
       final currencySymbol = symbols[currencyCode] ?? r'$';
 
       final result = await NotificationService.instance.checkBudgetThreshold(
         budgetAmount: budgetAmount,
         currentMonthExpense: currentExpense,
         currencySymbol: currencySymbol,
+        profileId: _activeProfileId,
       );
 
       if (result != null) {

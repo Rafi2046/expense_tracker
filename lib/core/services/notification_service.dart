@@ -1,0 +1,380 @@
+import 'dart:io';
+
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:timezone/data/latest.dart' as tz_data;
+import 'package:timezone/timezone.dart' as tz;
+
+class BudgetThresholdResult {
+  final String title;
+  final String body;
+
+  const BudgetThresholdResult({required this.title, required this.body});
+}
+
+class NotificationService {
+  NotificationService._();
+
+  static final NotificationService instance = NotificationService._();
+
+  final FlutterLocalNotificationsPlugin _plugin =
+      FlutterLocalNotificationsPlugin();
+
+  bool _initialized = false;
+  tz.Location? _location;
+
+  /// In-memory guard: tracks (profileId, threshold, month) combos already notified
+  /// in the current session. Combined with SharedPrefs persistence for app restarts.
+  final Set<String> _budgetNotifiedKeys = {};
+
+  // ── Locale-based strings ──
+
+  static const Map<String, String> _morningTitles = {
+    'en': 'Morning Greeting',
+    'bn': 'সকালের শুভেচ্ছা',
+  };
+
+  static const Map<String, String> _morningBodies = {
+    'en': 'Good Morning! Start your day fresh.',
+    'bn': 'সুপ্রভাত! নতুন দিন শুরু করুন।',
+  };
+
+  static const Map<String, String> _eodTitles = {
+    'en': 'Daily Reminder',
+    'bn': 'দৈনিক রিমাইন্ডার',
+  };
+
+  static const Map<String, String> _eodBodies = {
+    'en': "Don't forget to log today's expenses!",
+    'bn': 'আজকের খরচ লগ করতে ভুলবেন না!',
+  };
+
+  // ── Init ──
+
+  Future<void> init() async {
+    if (_initialized) return;
+
+    // Timezone setup
+    tz_data.initializeTimeZones();
+    try {
+      final timezoneInfo = await FlutterTimezone.getLocalTimezone();
+      _location = tz.getLocation(timezoneInfo.identifier);
+    } catch (_) {
+      _location = tz.getLocation('UTC');
+    }
+
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
+    const iosSettings = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
+    const initSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
+    );
+
+    await _plugin.initialize(settings: initSettings);
+
+    // Android 13+ runtime permission
+    final androidPlugin = _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+    if (androidPlugin != null) {
+      await androidPlugin.requestNotificationsPermission();
+    }
+
+    // Notification channels
+    if (androidPlugin != null) {
+      await androidPlugin.createNotificationChannel(
+        const AndroidNotificationChannel(
+          'budget_alerts',
+          'Budget Alerts',
+          description: 'Notifications about budget thresholds (80% / 100%)',
+          importance: Importance.high,
+          playSound: true,
+        ),
+      );
+      await androidPlugin.createNotificationChannel(
+        const AndroidNotificationChannel(
+          'daily_reminders',
+          'Daily Reminders',
+          description: 'Morning greetings and end-of-day reminders',
+          importance: Importance.high,
+          playSound: true,
+        ),
+      );
+    }
+
+    // Schedule recurring notifications
+    await _scheduleMorningGreeting();
+    await _scheduleEodReminder();
+
+    _initialized = true;
+  }
+
+  // ── Locale detection ──
+
+  String _detectLocale() {
+    final saved = SharedPrefsHelper.getString('app_language_code');
+    if (saved != null) return saved;
+    return Platform.localeName.split('_').first;
+  }
+
+  // ── Morning Greeting (daily at 8:00 AM) ──
+
+  Future<void> _scheduleMorningGreeting() async {
+    if (_location == null) return;
+
+    final locale = _detectLocale();
+    final title = _morningTitles[locale] ?? _morningTitles['en']!;
+    final body = _morningBodies[locale] ?? _morningBodies['en']!;
+
+    final now = tz.TZDateTime.now(_location!);
+    var scheduledDate = tz.TZDateTime(
+      _location!,
+      now.year,
+      now.month,
+      now.day,
+      8,
+      0,
+    );
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+
+    await _plugin.zonedSchedule(
+      id: 2001,
+      title: title,
+      body: body,
+      scheduledDate: scheduledDate,
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'daily_reminders',
+          'Daily Reminders',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
+  Future<void> rescheduleMorningGreeting() async {
+    await _plugin.cancel(id: 2001);
+    await _scheduleMorningGreeting();
+  }
+
+  // ── End-of-Day Reminder (daily at 10:00 PM) ──
+
+  Future<void> _scheduleEodReminder() async {
+    if (_location == null) return;
+
+    final locale = _detectLocale();
+    final title = _eodTitles[locale] ?? _eodTitles['en']!;
+    final body = _eodBodies[locale] ?? _eodBodies['en']!;
+
+    final now = tz.TZDateTime.now(_location!);
+    var scheduledDate = tz.TZDateTime(
+      _location!,
+      now.year,
+      now.month,
+      now.day,
+      22,
+      0,
+    );
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+
+    await _plugin.zonedSchedule(
+      id: 3001,
+      title: title,
+      body: body,
+      scheduledDate: scheduledDate,
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'daily_reminders',
+          'Daily Reminders',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
+  Future<void> cancelEodReminderForToday() async {
+    await _plugin.cancel(id: 3001);
+    // Reschedule starting from tomorrow so future days still fire
+    await _scheduleEodStartingTomorrow();
+  }
+
+  Future<void> _scheduleEodStartingTomorrow() async {
+    if (_location == null) return;
+
+    final locale = _detectLocale();
+    final title = _eodTitles[locale] ?? _eodTitles['en']!;
+    final body = _eodBodies[locale] ?? _eodBodies['en']!;
+
+    final now = tz.TZDateTime.now(_location!);
+    final scheduledDate = tz.TZDateTime(
+      _location!,
+      now.year,
+      now.month,
+      now.day + 1,
+      22,
+      0,
+    );
+
+    await _plugin.zonedSchedule(
+      id: 3001,
+      title: title,
+      body: body,
+      scheduledDate: scheduledDate,
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'daily_reminders',
+          'Daily Reminders',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
+  // ── Public helper for one-off notifications ──
+
+  Future<void> showNotification({
+    required int id,
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
+    await _plugin.show(
+      id: id,
+      title: title,
+      body: body,
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'daily_reminders',
+          'Daily Reminders',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      payload: payload,
+    );
+  }
+
+  // ── Budget Threshold ──
+
+  Future<BudgetThresholdResult?> checkBudgetThreshold({
+    required double budgetAmount,
+    required double currentMonthExpense,
+    required String currencySymbol,
+    String profileId = 'default_profile',
+  }) async {
+    if (budgetAmount <= 0) return null;
+
+    final ratio = currentMonthExpense / budgetAmount;
+
+    if (ratio < 0.8) return null;
+
+    final now = DateTime.now();
+    final monthKey = '${now.year}-${now.month.toString().padLeft(2, '0')}';
+
+    // In-memory guard: notification already fired in this session?
+    final threshold = ratio >= 1.0 ? 'exceed' : 'warn';
+    final notifyKey = '${monthKey}_${profileId}_$threshold';
+    if (_budgetNotifiedKeys.contains(notifyKey)) {
+      debugPrint('checkBudgetThreshold: SKIP (in-memory) $notifyKey');
+      return null;
+    }
+
+    // SharedPrefs guard: notification already fired in a previous session?
+    final prefsKey = 'budget_${threshold}_month_$profileId';
+    final lastNotified = SharedPrefsHelper.getString(prefsKey);
+    if (lastNotified == monthKey) {
+      debugPrint('checkBudgetThreshold: SKIP (SharedPrefs) $prefsKey=$monthKey');
+      return null;
+    }
+
+    final String title;
+    final String body;
+    final int notificationId;
+
+    if (ratio >= 1.0) {
+      title = 'Budget Exceeded';
+      body =
+          'You have exceeded your monthly budget of '
+          '$currencySymbol${budgetAmount.toStringAsFixed(2)}. '
+          'Current spending: $currencySymbol${currentMonthExpense.toStringAsFixed(2)}.';
+      notificationId = 1001;
+    } else {
+      title = 'Budget Warning';
+      body =
+          'You have used ${(ratio * 100).toStringAsFixed(0)}% '
+          'of your monthly budget '
+          '($currencySymbol${currentMonthExpense.toStringAsFixed(2)} '
+          'of $currencySymbol${budgetAmount.toStringAsFixed(2)}).';
+      notificationId = 1002;
+    }
+
+    await _plugin.show(
+      id: notificationId,
+      title: title,
+      body: body,
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'budget_alerts',
+          'Budget Alerts',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+    );
+
+    // Persist + in-memory: never re-notify the same threshold level this month
+    _budgetNotifiedKeys.add(notifyKey);
+    await SharedPrefsHelper.setString(prefsKey, monthKey);
+    debugPrint('checkBudgetThreshold: FIRED $notifyKey');
+
+    return BudgetThresholdResult(title: title, body: body);
+  }
+}

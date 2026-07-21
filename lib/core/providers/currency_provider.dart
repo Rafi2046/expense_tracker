@@ -101,6 +101,10 @@ class CurrencyProvider extends ChangeNotifier {
       (c) => c.code == savedCode,
       orElse: () => _currencies.first,
     );
+    // Persist default so notification services always find a saved code
+    if (savedCode == null) {
+      SharedPrefsHelper.setString(_prefsKey, _selectedCurrency.code);
+    }
     _baseCurrencyCode =
         SharedPrefsHelper.getString(_basePrefsKey) ?? _currencies.first.code;
   }
