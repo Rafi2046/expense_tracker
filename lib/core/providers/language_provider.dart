@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/services/notification_service.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -60,6 +61,7 @@ class LanguageProvider extends ChangeNotifier {
       if (context.mounted) {
         await context.setLocale(Locale(code));
       }
+      await NotificationService.instance.rescheduleMorningGreeting();
       notifyListeners();
     }
   }

@@ -95,9 +95,27 @@ class AuthService {
     }
   }
 
+  bool _googleInitialized = false;
+
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      await _googleSignIn.initialize();
+      // Sign out first to force account picker to show (avoids stale session)
+      try {
+        await _googleSignIn.signOut();
+      } catch (_) {}
+
+      // initialize() only needs to be called once per app session.
+      // Android uses SHA-1 + google-services.json — no clientId needed.
+      if (!_googleInitialized) {
+        if (!Platform.isAndroid) {
+          await _googleSignIn.initialize(
+            clientId: '1018341294472-on5co00vr8j4qadbqm3i70isbbfp7r26.apps.googleusercontent.com',
+          );
+        } else {
+          await _googleSignIn.initialize();
+        }
+        _googleInitialized = true;
+      }
 
       final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
 
@@ -112,14 +130,21 @@ class AuthService {
       if (e.code == GoogleSignInExceptionCode.canceled) {
         return null;
       }
+      _googleInitialized = false; // reset so next attempt re-initializes
       throw Exception(_friendlyMessage(e));
     } on SocketException {
       throw Exception(
         'No internet connection. Please check your network and try again.',
       );
     } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-credential') {
+        throw Exception(
+          'Google Sign-In failed. Please make sure Google Sign-In is enabled in Firebase Console and the SHA-1 fingerprint is registered.',
+        );
+      }
       throw Exception(_friendlyMessage(e));
     } catch (e) {
+      _googleInitialized = false; // reset on unknown errors
       throw Exception(_friendlyMessage(e));
     }
   }

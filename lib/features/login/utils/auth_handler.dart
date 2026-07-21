@@ -37,7 +37,10 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
   void showError(dynamic e) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+      SnackBar(
+        content: Text(e.toString(), style: const TextStyle(color: Colors.white)),
+        backgroundColor: Colors.red,
+      ),
     );
   }
 
@@ -86,7 +89,10 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
       if (password.trim().isEmpty) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.translate('please_enter_password'))),
+            SnackBar(
+              content: Text(context.translate('please_enter_password'), style: const TextStyle(color: Colors.white)),
+              backgroundColor: Colors.red,
+            ),
           );
         }
         return;
@@ -118,7 +124,10 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
     if (email.trim().isEmpty || password.trim().isEmpty) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.translate('please_enter_email_password'))),
+          SnackBar(
+            content: Text(context.translate('please_enter_email_password'), style: const TextStyle(color: Colors.white)),
+            backgroundColor: Colors.red,
+          ),
         );
       }
       return;
