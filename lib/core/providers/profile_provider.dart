@@ -468,6 +468,8 @@ class ProfileProvider extends ChangeNotifier {
 
     debugPrint('ProfileProvider.finalizeProfileCreation: saving ${newProfile.name} (${newProfile.id})');
 
+    _knownProfileIds.add(newProfile.id);
+
     try {
       await DatabaseHelper.instance.insertProfile({
         'id': newProfile.id,

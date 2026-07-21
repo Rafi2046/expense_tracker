@@ -1,12 +1,12 @@
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_selection_sheet.dart';
-import 'package:expense_tracker/features/dashboard/widgets/premium_upgrade_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/profile_name_input_field.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 
@@ -30,10 +30,80 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
     super.dispose();
   }
 
-  void _showPremiumUpgrade(BuildContext context) {
+  void _showMaxProfilesSheet(BuildContext context) {
     _isCreating = false;
     if (mounted) setState(() {});
-    PremiumUpgradeSheet.show(context);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        padding: EdgeInsets.fromLTRB(24, 20, 24, 20 + bottomPadding),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: isDark ? Colors.white24 : Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Icon(
+              LucideIcons.userRoundCog,
+              size: 40,
+              color: const Color(0xFF2EBD85),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              context.translate('max_profiles_reached'),
+              style: AppTextStyles.h2.copyWith(
+                fontWeight: FontWeight.w700,
+                color: theme.textTheme.titleLarge?.color,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              context.translate('max_profiles_description'),
+              textAlign: TextAlign.center,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: theme.textTheme.bodySmall?.color,
+              ),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              height: 45,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF2EBD85),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Text(
+                  context.translate('got_it'),
+                  style: TextStyle(
+                    fontSize: AppFontSizes.size16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _showCategoryBottomSheet(
@@ -54,7 +124,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
             final newProfile = await provider.finalizeProfileCreation();
             if (!context.mounted) return;
             if (newProfile == null) {
-              _showPremiumUpgrade(context);
+              _showMaxProfilesSheet(context);
               return;
             }
             _isCreating = false;
@@ -78,7 +148,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
           icon: Icon(LucideIcons.arrowLeft, color: theme.iconTheme.color),
           onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: theme.appBarTheme.backgroundColor ?? theme.colorScheme.surface,
+        backgroundColor: theme.colorScheme.surface,
         elevation: 0,
         scrolledUnderElevation: 0,
       ),
@@ -126,7 +196,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
                     final newProfile = await provider.finalizeProfileCreation();
                     if (!context.mounted) return;
                     if (newProfile == null) {
-                      _showPremiumUpgrade(context);
+                      _showMaxProfilesSheet(context);
                       return;
                     }
                     _isCreating = false;
