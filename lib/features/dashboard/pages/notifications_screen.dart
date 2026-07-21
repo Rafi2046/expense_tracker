@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -74,12 +75,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ),
       ),
       body: provider.isLoading
-          ? Center(
-              child: CircularProgressIndicator(
-                color:
-                    isDark ? const Color(0xFF8E75C8) : AppColors.buttonColor,
-              ),
-            )
+          ? _buildShimmerSkeleton(context, isDark)
           : Column(
               children: [
                 if (allNotifications.isNotEmpty) ...[
@@ -203,6 +199,84 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildShimmerSkeleton(BuildContext context, bool isDark) {
+    final shimmerColor = isDark ? Colors.white10 : Colors.black12;
+    final baseColor = isDark ? const Color(0xFF2E323E) : Colors.grey.shade200;
+    final borderColor = isDark ? const Color(0xFF3A3F4A) : const Color(0xFFE5E7EB);
+
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF22262E) : Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: borderColor, width: 1),
+          ),
+          child: Row(
+            children: [
+              // Icon skeleton
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: baseColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Title skeleton
+                        Container(
+                          width: 120,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: baseColor,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        // Time skeleton
+                        Container(
+                          width: 40,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            color: baseColor,
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    // Description skeleton
+                    Container(
+                      width: double.infinity,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: baseColor,
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )
+            .animate(onPlay: (controller) => controller.repeat())
+            .shimmer(duration: 1500.ms, color: shimmerColor);
+      },
     );
   }
 }

@@ -79,17 +79,28 @@ class NotificationProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   void updateProfileId(String newProfileId) {
+    debugPrint('NotificationProvider: updateProfileId: old=$_activeProfileId, new=$newProfileId');
     if (_activeProfileId == newProfileId) return;
     _activeProfileId = newProfileId;
     loadNotifications();
   }
 
   Future<void> loadNotifications() async {
+    final loadingProfileId = _activeProfileId;
+    debugPrint('NotificationProvider: loadNotifications starting for $loadingProfileId');
     _isLoading = true;
     notifyListeners();
 
-    final rows = await _db.getInAppNotifications(profileId: _activeProfileId);
+    final rows = await _db.getInAppNotifications(profileId: loadingProfileId);
+    
+    // Ignore results from outdated profile loads to prevent race conditions
+    if (_activeProfileId != loadingProfileId) {
+      debugPrint('NotificationProvider: loadNotifications ABORTED (outdated loading profile: $loadingProfileId, active is $_activeProfileId)');
+      return;
+    }
+
     _notifications = rows.map((row) => NotificationItem.fromMap(row)).toList();
+    debugPrint('NotificationProvider: loadNotifications finished for $_activeProfileId. Loaded ${_notifications.length} rows.');
     _isLoading = false;
     notifyListeners();
   }
@@ -133,8 +144,15 @@ class NotificationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void insertNotification(int index, NotificationItem item) {
+  Future<void> insertNotification(int index, NotificationItem item) async {
     if (index >= 0 && index <= _notifications.length) {
+      await _db.insertInAppNotification(
+        id: item.id,
+        title: item.title,
+        body: item.description,
+        type: NotificationItem.typeToString(item.type),
+        profileId: _activeProfileId,
+      );
       _notifications.insert(index, item);
       notifyListeners();
     }

@@ -213,7 +213,8 @@ class ProfileProvider extends ChangeNotifier {
       _lastLoadedUid = currentUid;
 
       // Remember current selection so force-reloads don't reset it
-      final preservedProfileId = force ? _currentProfile.id : _initialProfileId;
+      final savedId = SharedPrefsHelper.getString(SharedPrefsHelper.activeProfileKey);
+      final preservedProfileId = savedId ?? (force ? _currentProfile.id : _initialProfileId);
 
       _profiles.clear();
       _knownProfileIds.clear();
@@ -238,12 +239,17 @@ class ProfileProvider extends ChangeNotifier {
           continue;
         }
         var rowUid = row['uid'] as String?;
+        debugPrint('ProfileProvider._loadFromDb: profile id=$id, rowUid=$rowUid, currentUid=$currentUid');
         if (rowUid == null && currentUid != null) {
           final db = await DatabaseHelper.instance.database;
           await db.update('profiles', {'uid': currentUid}, where: 'id = ?', whereArgs: [id]);
           rowUid = currentUid;
+          debugPrint('ProfileProvider._loadFromDb: updated profile $id uid to $currentUid');
         }
-        if (rowUid != currentUid) continue;
+        if (id != preservedProfileId && currentUid != null && rowUid != currentUid) {
+          debugPrint('ProfileProvider._loadFromDb: SKIPPED profile $id because rowUid ($rowUid) != currentUid ($currentUid)');
+          continue;
+        }
 
         final name = row['name'] as String;
         final type = row['type'] as String;
