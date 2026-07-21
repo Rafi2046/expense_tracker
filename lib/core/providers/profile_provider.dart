@@ -460,9 +460,7 @@ class ProfileProvider extends ChangeNotifier {
     final newProfile = UserProfile(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: _creationName.trim(),
-      type: _creationProfileType == 'business'
-          ? 'Business ($_selectedCategory)'
-          : 'Personal',
+      type: 'Secondary',
       uid: currentUid,
     );
 

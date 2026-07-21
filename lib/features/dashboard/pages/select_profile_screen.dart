@@ -64,7 +64,7 @@ class SelectProfileScreen extends StatelessWidget {
                 text: context.translate('continue'),
                 backgroundColor: const Color(0xFF2EBD85),
                 onPressed: () async {
-                  if (provider.profiles.length >= 2) {
+                  if (provider.profiles.length >= 3) {
                     _showMaxProfilesSheet(context);
                     return;
                   }
