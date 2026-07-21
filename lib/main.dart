@@ -21,6 +21,7 @@ import 'package:expense_tracker/core/providers/expense_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/account_provider.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
+import 'package:expense_tracker/core/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -67,6 +68,14 @@ void main() async {
     debugPrint('main: Firebase initialization complete');
   } catch (e) {
     debugPrint('main: Firebase initialization error: $e');
+  }
+
+  try {
+    debugPrint('main: initializing NotificationService...');
+    await NotificationService.instance.init();
+    debugPrint('main: NotificationService initialization complete');
+  } catch (e) {
+    debugPrint('main: NotificationService initialization error: $e');
   }
 
   // Read saved profile ID ONCE, before any provider is created.

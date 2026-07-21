@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/core/services/notification_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../models/transaction_models.dart';
@@ -1063,6 +1064,7 @@ class TransactionProvider extends ChangeNotifier {
     debugPrint('DIAG PROVIDER STORE: uniqueTransaction.dateTime=${uniqueTransaction.dateTime} month=${uniqueTransaction.dateTime.month}');
     _transactions.insert(0, uniqueTransaction);
     notifyListeners();
+    NotificationService.instance.cancelEodReminderForToday();
 
     docRef
         .set(uniqueTransaction.toMap())
@@ -1120,6 +1122,7 @@ class TransactionProvider extends ChangeNotifier {
     _transactions.insert(0, expenseItem);
     _transactions.insert(0, incomeItem);
     notifyListeners();
+    NotificationService.instance.cancelEodReminderForToday();
 
     final batch = _firestore.batch();
     batch.set(txRef.doc(expenseItem.id), expenseItem.toMap());
