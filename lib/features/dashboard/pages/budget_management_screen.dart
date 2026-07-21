@@ -42,6 +42,15 @@ class BudgetManagementScreen extends StatelessWidget {
             color: theme.colorScheme.onSurface,
           ),
         ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(
+            color: theme.brightness == Brightness.dark
+                ? const Color(0xFF2D2D2D)
+                : Colors.grey.shade200,
+            height: 1,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(
