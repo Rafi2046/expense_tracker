@@ -1083,5 +1083,13 @@
   "logged_this_month": "इस महीने लॉग किया गया",
   "monthly_trend": "मासिक ट्रेंड",
   "highest_expense_this_month": "इस महीने का सर्वोच्च खर्च",
-  "no_expenses_this_month": "इस महीने कोई खर्च लॉग नहीं हुआ"
+  "no_expenses_this_month": "इस महीने कोई खर्च लॉग नहीं हुआ",
+  "notif_budget_exceeded_title": "बजट पार हो गया",
+  "notif_budget_exceeded_body": "आपने अपना मासिक बजट {budget} पार कर लिया है। वर्तमान खर्च: {amount}।",
+  "notif_budget_warning_title": "बजट चेतावनी",
+  "notif_budget_warning_body": "आपने अपने मासिक बजट का {percent}% उपयोग कर लिया है ({budget} में से {amount})।",
+  "notif_weekly_summary_title": "साप्ताहिक सारांश",
+  "notif_weekly_summary_body": "पिछले सप्ताह आपने {amount} खर्च किए। अपनी आदतों की समीक्षा करने के लिए टैप करें!",
+  "notif_monthly_summary_title": "मासिक सारांश",
+  "notif_monthly_summary_body": "इस महीने आपने {amount} खर्च किए। अपनी आदतों की समीक्षा करने के लिए टैप करें!"
 }

@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
+import 'package:expense_tracker/core/utils/notification_localizer.dart';
 import 'package:expense_tracker/features/dashboard/pages/weekly_summary_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/daily_summary_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/monthly_summary_screen.dart';
@@ -36,6 +37,9 @@ class NotificationDetailsScreen extends StatelessWidget {
     final cardBorder = Border.all(color: Colors.white.withValues(alpha: 0.1));
     final cardRadius = BorderRadius.circular(12);
     final sectionGap = 24.0;
+
+    final displayTitle = NotificationLocalizer.resolveTitle(context, item);
+    final displayBody = NotificationLocalizer.resolveBody(context, item);
 
     final isWeekly = item.id.startsWith('weekly_summary_');
     final isDaily = item.id.startsWith('daily_summary_');
@@ -143,7 +147,7 @@ class NotificationDetailsScreen extends StatelessWidget {
                 border: cardBorder,
                 borderRadius: cardRadius,
               ),
-              child: valueText(item.title, bold: true),
+              child: valueText(displayTitle, bold: true),
             ),
             SizedBox(height: sectionGap),
 
@@ -209,7 +213,7 @@ class NotificationDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    valueText(item.description),
+                    valueText(displayBody),
                     if (isInteractiveSummary) ...[
                       const SizedBox(height: 12),
                       Row(
@@ -269,6 +273,4 @@ class NotificationDetailsScreen extends StatelessWidget {
       ),
     );
   }
-
-
 }

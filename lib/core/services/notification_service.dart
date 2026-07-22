@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -8,10 +9,22 @@ import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
 class BudgetThresholdResult {
+  /// Localized strings for the OS tray notification (frozen at fire time).
   final String title;
   final String body;
 
-  const BudgetThresholdResult({required this.title, required this.body});
+  /// Translation keys + args for in-app SQLite storage.
+  final String titleKey;
+  final String bodyKey;
+  final Map<String, String> args;
+
+  const BudgetThresholdResult({
+    required this.title,
+    required this.body,
+    required this.titleKey,
+    required this.bodyKey,
+    required this.args,
+  });
 }
 
 class NotificationService {
@@ -379,6 +392,12 @@ class NotificationService {
     final now = DateTime.now();
     final monthKey = '${now.year}-${now.month.toString().padLeft(2, '0')}';
 
+    final budgetFormatted =
+        '$currencySymbol${budgetAmount.toStringAsFixed(2)}';
+    final amountFormatted =
+        '$currencySymbol${currentMonthExpense.toStringAsFixed(2)}';
+    final percentFormatted = (ratio * 100).toStringAsFixed(0);
+
     BudgetThresholdResult? result;
 
     // ── 100% Exceeded (independent check) ──
@@ -388,11 +407,12 @@ class NotificationService {
         monthKey: monthKey,
         profileId: profileId,
         notificationId: 1001,
-        title: 'Budget Exceeded',
-        body:
-            'You have exceeded your monthly budget of '
-            '$currencySymbol${budgetAmount.toStringAsFixed(2)}. '
-            'Current spending: $currencySymbol${currentMonthExpense.toStringAsFixed(2)}.',
+        titleKey: 'notif_budget_exceeded_title',
+        bodyKey: 'notif_budget_exceeded_body',
+        args: {
+          'budget': budgetFormatted,
+          'amount': amountFormatted,
+        },
       );
       if (result != null) return result;
     }
@@ -404,12 +424,13 @@ class NotificationService {
         monthKey: monthKey,
         profileId: profileId,
         notificationId: 1002,
-        title: 'Budget Warning',
-        body:
-            'You have used ${(ratio * 100).toStringAsFixed(0)}% '
-            'of your monthly budget '
-            '($currencySymbol${currentMonthExpense.toStringAsFixed(2)} '
-            'of $currencySymbol${budgetAmount.toStringAsFixed(2)}).',
+        titleKey: 'notif_budget_warning_title',
+        bodyKey: 'notif_budget_warning_body',
+        args: {
+          'percent': percentFormatted,
+          'amount': amountFormatted,
+          'budget': budgetFormatted,
+        },
       );
     }
 
@@ -421,8 +442,9 @@ class NotificationService {
     required String monthKey,
     required String profileId,
     required int notificationId,
-    required String title,
-    required String body,
+    required String titleKey,
+    required String bodyKey,
+    required Map<String, String> args,
   }) async {
     final notifyKey = '${monthKey}_${profileId}_${thresholdKey}pct';
     if (_budgetNotifiedKeys.contains(notifyKey)) {
@@ -436,6 +458,10 @@ class NotificationService {
       debugPrint('checkBudgetThreshold: SKIP (SharedPrefs) $prefsKey=$monthKey');
       return null;
     }
+
+    // Resolve OS tray text in the current app language at fire time.
+    final title = tr(titleKey);
+    final body = tr(bodyKey, namedArgs: args);
 
     debugPrint('checkBudgetThreshold: FIRING $notifyKey | monthKey=$monthKey | prefsKey=$prefsKey');
 
@@ -466,6 +492,12 @@ class NotificationService {
     await SharedPrefsHelper.setString(prefsKey, monthKey);
     debugPrint('checkBudgetThreshold: FIRED $notifyKey');
 
-    return BudgetThresholdResult(title: title, body: body);
+    return BudgetThresholdResult(
+      title: title,
+      body: body,
+      titleKey: titleKey,
+      bodyKey: bodyKey,
+      args: args,
+    );
   }
 }

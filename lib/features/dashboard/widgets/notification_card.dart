@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
+import 'package:expense_tracker/core/utils/notification_localizer.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -51,6 +52,8 @@ class NotificationCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final typeColor = _getTypeColor(item.type);
     final typeIcon = _getTypeIcon(item.type);
+    final title = NotificationLocalizer.resolveTitle(context, item);
+    final body = NotificationLocalizer.resolveBody(context, item);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -90,7 +93,7 @@ class NotificationCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              item.title,
+                              title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -115,7 +118,7 @@ class NotificationCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        item.description,
+                        body,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

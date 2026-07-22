@@ -1093,5 +1093,13 @@
   "logged_this_month": "এই মাসে লগ করা হয়েছে",
   "monthly_trend": "মাসিক ট্রেন্ড",
   "highest_expense_this_month": "এই মাসের সর্বোচ্চ খরচ",
-  "no_expenses_this_month": "এই মাসে কোনো খরচ লগ হয়নি"
+  "no_expenses_this_month": "এই মাসে কোনো খরচ লগ হয়নি",
+  "notif_budget_exceeded_title": "বাজেট অতিক্রম করেছে",
+  "notif_budget_exceeded_body": "আপনি আপনার মাসিক বাজেট {budget} অতিক্রম করেছেন। বর্তমান খরচ: {amount}।",
+  "notif_budget_warning_title": "বাজেট সতর্কতা",
+  "notif_budget_warning_body": "আপনি আপনার মাসিক বাজেটের {percent}% ব্যবহার করেছেন ({budget} এর মধ্যে {amount})।",
+  "notif_weekly_summary_title": "সাপ্তাহিক সারসংক্ষেপ",
+  "notif_weekly_summary_body": "গত সপ্তাহে আপনার মোট খরচ ছিল {amount}। হিসাব দেখতে ট্যাপ করুন!",
+  "notif_monthly_summary_title": "মাসিক সারসংক্ষেপ",
+  "notif_monthly_summary_body": "এই মাসে আপনার মোট খরচ ছিল {amount}। হিসাব দেখতে ট্যাপ করুন!"
 }

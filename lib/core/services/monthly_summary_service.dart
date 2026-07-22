@@ -22,21 +22,23 @@ class MonthlySummaryService {
     'CAD': r'$',
   };
 
+  /// Localized strings for OS tray push (frozen at fire time).
   static const Map<String, String> _titles = {
     'en': 'Monthly Summary',
-    'bn': 'মাসিক সারসংক্ষেप',
+    'bn': 'মাসিক সারসংক্ষেপ',
     'hi': 'मासिक सारांश',
     'ur': 'ماہانہ خلاصہ',
   };
 
   static const Map<String, String> _bodies = {
-    'en': 'You spent {symbol}{amount} this month. Tap to review your habits!',
-    'bn': 'এই মাসে আপনার মোট খরচ ছিল {symbol}{amount}। হিসাব দেখতে ট্যাপ করুন!',
-    'hi': 'इस महीने आपने कुल {symbol}{amount} खर्च किए। अपनी आदतों की समीक्षा करने के लिए टैप करें!',
-    'ur': 'اس مہینے آپ نے کل {symbol}{amount} خرچ کیے۔ اپنی عادات کا جائزہ لینے کے لیے ٹیپ کریں!',
+    'en': 'You spent {amount} this month. Tap to review your habits!',
+    'bn': 'এই মাসে আপনার মোট খরচ ছিল {amount}। হিসাব দেখতে ট্যাপ করুন!',
+    'hi': 'इस महीने आपने कुल {amount} खर्च किए। अपनी आदतों की समीक्षा करने के लिए टैप करें!',
+    'ur': 'اس مہینے آپ نے کل {amount} خرچ کیے۔ اپنی عادات کا جائزہ لینے کے لیے ٹیپ کریں!',
   };
 
-  static Future<({String title, String body})> _buildContent({
+  static Future<({String pushTitle, String pushBody, String formattedAmount})>
+      _buildContent({
     required String profileId,
   }) async {
     final db = DatabaseHelper.instance;
@@ -46,14 +48,18 @@ class MonthlySummaryService {
     final currencyCode =
         SharedPrefsHelper.getString('selected_currency_code') ?? 'BDT';
     final symbol = _currencySymbols[currencyCode] ?? r'$';
+    final formattedAmount = '$symbol${total.toStringAsFixed(2)}';
 
     final locale = _detectLocale();
-    final title = _titles[locale] ?? _titles['en']!;
-    final body = (_bodies[locale] ?? _bodies['en']!)
-        .replaceAll('{symbol}', symbol)
-        .replaceAll('{amount}', total.toStringAsFixed(2));
+    final pushTitle = _titles[locale] ?? _titles['en']!;
+    final pushBody = (_bodies[locale] ?? _bodies['en']!)
+        .replaceAll('{amount}', formattedAmount);
 
-    return (title: title, body: body);
+    return (
+      pushTitle: pushTitle,
+      pushBody: pushBody,
+      formattedAmount: formattedAmount,
+    );
   }
 
   static Future<void> checkAndGenerate({required String profileId}) async {
@@ -81,18 +87,19 @@ class MonthlySummaryService {
     // Fire push notification with payload for tap navigation
     await NotificationService.instance.showNotification(
       id: _notificationId,
-      title: content.title,
-      body: content.body,
+      title: content.pushTitle,
+      body: content.pushBody,
       payload: 'monthly_summary',
     );
 
-    // Save to in-app notifications
+    // Save keys + preformatted amount for in-app localization
     await db.insertInAppNotification(
       id: 'monthly_summary_${DateTime.now().millisecondsSinceEpoch}',
-      title: content.title,
-      body: content.body,
+      title: 'notif_monthly_summary_title',
+      body: 'notif_monthly_summary_body',
       type: 'alert',
       profileId: profileId,
+      args: {'amount': content.formattedAmount},
     );
     NotificationProvider.notifyDataChanged();
 

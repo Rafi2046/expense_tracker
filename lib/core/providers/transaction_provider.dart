@@ -1114,10 +1114,11 @@ class TransactionProvider extends ChangeNotifier {
       if (result != null) {
         await _db.insertInAppNotification(
           id: 'budget_notif_${DateTime.now().millisecondsSinceEpoch}',
-          title: result.title,
-          body: result.body,
+          title: result.titleKey,
+          body: result.bodyKey,
           type: 'alert',
           profileId: _activeProfileId,
+          args: result.args,
         );
         NotificationProvider.notifyDataChanged();
       }

@@ -44,7 +44,7 @@ class DatabaseHelper {
 
       return await openDatabase(
         path,
-        version: 18,
+        version: 19,
         onCreate: _createDB,
         onUpgrade: _onUpgrade,
       );
@@ -236,7 +236,8 @@ class DatabaseHelper {
         timestamp TEXT NOT NULL,
         type TEXT NOT NULL DEFAULT 'alert',
         is_read INTEGER NOT NULL DEFAULT 0,
-        profileId TEXT NOT NULL DEFAULT 'default_profile'
+        profileId TEXT NOT NULL DEFAULT 'default_profile',
+        args_json TEXT
       )
     ''');
   }
@@ -567,6 +568,15 @@ class DatabaseHelper {
           profileId TEXT NOT NULL DEFAULT 'default_profile'
         )
       ''');
+    }
+    if (oldVersion < 19) {
+      final columns = await db.rawQuery('PRAGMA table_info(in_app_notifications)');
+      final hasArgsJson = columns.any((col) => col['name'] == 'args_json');
+      if (!hasArgsJson) {
+        await db.execute(
+          'ALTER TABLE in_app_notifications ADD COLUMN args_json TEXT',
+        );
+      }
     }
   }
 
@@ -1511,6 +1521,7 @@ class DatabaseHelper {
     required String body,
     required String type,
     String profileId = 'default_profile',
+    Map<String, String>? args,
   }) async {
     final db = await instance.database;
     await db.insert('in_app_notifications', {
@@ -1521,6 +1532,7 @@ class DatabaseHelper {
       'type': type,
       'is_read': 0,
       'profileId': profileId,
+      'args_json': args == null || args.isEmpty ? null : jsonEncode(args),
     }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 

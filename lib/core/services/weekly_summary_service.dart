@@ -23,17 +23,19 @@ class WeeklySummaryService {
     'CAD': r'$',
   };
 
+  /// Localized strings for OS tray push (frozen at fire time).
   static const Map<String, String> _titles = {
     'en': 'Weekly Summary',
     'bn': 'সাপ্তাহিক সারসংক্ষেপ',
   };
 
   static const Map<String, String> _bodies = {
-    'en': 'You spent {symbol}{amount} last week. Tap to review your habits!',
-    'bn': 'গত সপ্তাহে আপনার মোট খরচ ছিল {symbol}{amount}। হিসাব দেখতে ট্যাপ করুন!',
+    'en': 'You spent {amount} last week. Tap to review your habits!',
+    'bn': 'গত সপ্তাহে আপনার মোট খরচ ছিল {amount}। হিসাব দেখতে ট্যাপ করুন!',
   };
 
-  static Future<({String title, String body})> _buildContent({
+  static Future<({String pushTitle, String pushBody, String formattedAmount})>
+      _buildContent({
     required String profileId,
   }) async {
     final db = DatabaseHelper.instance;
@@ -43,14 +45,18 @@ class WeeklySummaryService {
     final currencyCode =
         SharedPrefsHelper.getString('selected_currency_code') ?? 'BDT';
     final symbol = _currencySymbols[currencyCode] ?? r'$';
+    final formattedAmount = '$symbol${total.toStringAsFixed(2)}';
 
     final locale = _detectLocale();
-    final title = _titles[locale] ?? _titles['en']!;
-    final body = (_bodies[locale] ?? _bodies['en']!)
-        .replaceAll('{symbol}', symbol)
-        .replaceAll('{amount}', total.toStringAsFixed(2));
+    final pushTitle = _titles[locale] ?? _titles['en']!;
+    final pushBody = (_bodies[locale] ?? _bodies['en']!)
+        .replaceAll('{amount}', formattedAmount);
 
-    return (title: title, body: body);
+    return (
+      pushTitle: pushTitle,
+      pushBody: pushBody,
+      formattedAmount: formattedAmount,
+    );
   }
 
   static Future<void> checkAndGenerate({required String profileId}) async {
@@ -76,18 +82,19 @@ class WeeklySummaryService {
     // Fire push notification with payload for tap navigation
     await NotificationService.instance.showNotification(
       id: _notificationId,
-      title: content.title,
-      body: content.body,
+      title: content.pushTitle,
+      body: content.pushBody,
       payload: 'weekly_summary',
     );
 
-    // Save to in-app notifications
+    // Save keys + preformatted amount for in-app localization
     await db.insertInAppNotification(
       id: 'weekly_summary_${DateTime.now().millisecondsSinceEpoch}',
-      title: content.title,
-      body: content.body,
+      title: 'notif_weekly_summary_title',
+      body: 'notif_weekly_summary_body',
       type: 'weekly_summary',
       profileId: profileId,
+      args: {'amount': content.formattedAmount},
     );
     NotificationProvider.notifyDataChanged();
 

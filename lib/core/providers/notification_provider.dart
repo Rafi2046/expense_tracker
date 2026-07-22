@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/services/weekly_summary_service.dart';
 import 'package:expense_tracker/core/services/daily_summary_service.dart';
 import 'package:expense_tracker/core/services/monthly_summary_service.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 enum NotificationType {
   alert,
@@ -13,10 +14,14 @@ enum NotificationType {
 
 class NotificationItem {
   final String id;
+  /// Translation key for new rows, or legacy plain-text title.
   final String title;
+  /// Translation key for new rows, or legacy plain-text body.
   final String description;
   final DateTime dateTime;
   final NotificationType type;
+  /// Named args for localization (e.g. preformatted `{amount}`, `{budget}`).
+  final Map<String, String> args;
   bool isRead;
 
   NotificationItem({
@@ -25,6 +30,7 @@ class NotificationItem {
     required this.description,
     required this.dateTime,
     required this.type,
+    this.args = const {},
     this.isRead = false,
   });
 
@@ -35,8 +41,24 @@ class NotificationItem {
       description: map['body'] as String,
       dateTime: DateTime.parse(map['timestamp'] as String),
       type: _parseType(map['type'] as String),
+      args: _parseArgs(map['args_json']),
       isRead: (map['is_read'] as int) == 1,
     );
+  }
+
+  static Map<String, String> _parseArgs(dynamic raw) {
+    if (raw == null) return const {};
+    final text = raw is String ? raw : raw.toString();
+    if (text.isEmpty) return const {};
+    try {
+      final decoded = jsonDecode(text);
+      if (decoded is! Map) return const {};
+      return decoded.map(
+        (key, value) => MapEntry(key.toString(), value.toString()),
+      );
+    } catch (_) {
+      return const {};
+    }
   }
 
   static NotificationType _parseType(String value) {
@@ -149,6 +171,7 @@ class NotificationProvider extends ChangeNotifier {
     required String title,
     required String body,
     NotificationType type = NotificationType.alert,
+    Map<String, String>? args,
   }) async {
     final id = 'notif_${DateTime.now().millisecondsSinceEpoch}';
     await _db.insertInAppNotification(
@@ -157,6 +180,7 @@ class NotificationProvider extends ChangeNotifier {
       body: body,
       type: NotificationItem.typeToString(type),
       profileId: _activeProfileId,
+      args: args,
     );
     await loadNotifications();
   }
@@ -195,6 +219,7 @@ class NotificationProvider extends ChangeNotifier {
         body: item.description,
         type: NotificationItem.typeToString(item.type),
         profileId: _activeProfileId,
+        args: item.args.isEmpty ? null : item.args,
       );
       _notifications.insert(index, item);
       await _refreshUnreadCount();

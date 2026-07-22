@@ -1100,5 +1100,13 @@
   "logged_this_month": "Logged this month",
   "monthly_trend": "Monthly Trend",
   "highest_expense_this_month": "Highest Expense This Month",
-  "no_expenses_this_month": "No expenses logged this month"
+  "no_expenses_this_month": "No expenses logged this month",
+  "notif_budget_exceeded_title": "Budget Exceeded",
+  "notif_budget_exceeded_body": "You have exceeded your monthly budget of {budget}. Current spending: {amount}.",
+  "notif_budget_warning_title": "Budget Warning",
+  "notif_budget_warning_body": "You have used {percent}% of your monthly budget ({amount} of {budget}).",
+  "notif_weekly_summary_title": "Weekly Summary",
+  "notif_weekly_summary_body": "You spent {amount} last week. Tap to review your habits!",
+  "notif_monthly_summary_title": "Monthly Summary",
+  "notif_monthly_summary_body": "You spent {amount} this month. Tap to review your habits!"
 }

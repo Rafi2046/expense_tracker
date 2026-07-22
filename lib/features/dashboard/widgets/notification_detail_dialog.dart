@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
+import 'package:expense_tracker/core/utils/notification_localizer.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -38,6 +39,8 @@ Future<void> showNotificationDetails(
 ) async {
   final theme = Theme.of(context);
   final isDark = theme.brightness == Brightness.dark;
+  final displayTitle = NotificationLocalizer.resolveTitle(context, item);
+  final displayBody = NotificationLocalizer.resolveBody(context, item);
   provider.markAsRead(item.id);
   return showDialog(
     context: context,
@@ -50,7 +53,7 @@ Future<void> showNotificationDetails(
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              item.title,
+              displayTitle,
               style: AppTextStyles.h3
                   .copyWith(color: theme.colorScheme.onSurface),
             ),
@@ -58,7 +61,7 @@ Future<void> showNotificationDetails(
         ],
       ),
       content: Text(
-        item.description,
+        displayBody,
         style: AppTextStyles.body.copyWith(
           color: isDark ? Colors.grey.shade300 : AppColors.loginTitle,
           height: 1.4,
