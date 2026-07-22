@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/core/providers/session_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class HomepageAppbarWidget extends StatelessWidget
@@ -27,6 +29,7 @@ class HomepageAppbarWidget extends StatelessWidget
     final theme = Theme.of(context);
     final session = context.watch<SessionProvider>();
     final profileProvider = context.watch<ProfileProvider>();
+    final unreadCount = context.watch<NotificationProvider>().unreadCount;
     final currentProfile = profileProvider.currentProfile;
     final displayName = currentProfile.id == 'default_profile'
         ? session.firstName
@@ -102,12 +105,27 @@ class HomepageAppbarWidget extends StatelessWidget
           InkWell(
             onTap: notificationOnTap,
             borderRadius: BorderRadius.circular(20),
-            child: const Padding(
-              padding: EdgeInsets.all(4.0),
-              child: Icon(
-                LucideIcons.bell,
-                color: AppColors.notificationIcon,
-                size: 22,
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Badge(
+                isLabelVisible: unreadCount > 0,
+                backgroundColor: Colors.red.shade600,
+                textColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                label: Text(
+                  unreadCount.toString(),
+                  style: AppTextStyles.caption.copyWith(
+                    fontSize: AppFontSizes.size10,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    height: 1.1,
+                  ),
+                ),
+                child: const Icon(
+                  LucideIcons.bell,
+                  color: AppColors.notificationIcon,
+                  size: 22,
+                ),
               ),
             ),
           ),
@@ -130,4 +148,3 @@ class HomepageAppbarWidget extends StatelessWidget
     return null;
   }
 }
-

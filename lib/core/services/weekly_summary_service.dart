@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/core/services/notification_service.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
@@ -88,6 +89,7 @@ class WeeklySummaryService {
       type: 'weekly_summary',
       profileId: profileId,
     );
+    NotificationProvider.notifyDataChanged();
 
     // Mark as generated for this week
     await SharedPrefsHelper.setString(

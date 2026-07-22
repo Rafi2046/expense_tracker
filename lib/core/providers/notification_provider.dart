@@ -73,13 +73,31 @@ class NotificationProvider extends ChangeNotifier {
   List<NotificationItem> _notifications = [];
   String _activeProfileId;
   bool _isLoading = false;
+  int _unreadCount = 0;
+
+  /// Wired from main() so external writers (budget alerts, summaries)
+  /// can refresh the badge without a BuildContext.
+  static VoidCallback? onDataChanged;
+
+  /// Call after inserting in-app notifications outside this provider.
+  static void notifyDataChanged() => onDataChanged?.call();
 
   NotificationProvider({String initialProfileId = 'default_profile'})
       : _activeProfileId = initialProfileId;
 
   List<NotificationItem> get notifications => List.unmodifiable(_notifications);
-  bool get hasUnread => _notifications.any((n) => !n.isRead);
+  int get unreadCount => _unreadCount;
+  bool get hasUnread => _unreadCount > 0;
   bool get isLoading => _isLoading;
+
+  Future<void> _refreshUnreadCount({String? profileId}) async {
+    final targetProfileId = profileId ?? _activeProfileId;
+    final count = await _db.getUnreadNotificationCount(
+      profileId: targetProfileId,
+    );
+    if (_activeProfileId != targetProfileId) return;
+    _unreadCount = count;
+  }
 
   void updateProfileId(String newProfileId) {
     debugPrint('NotificationProvider: updateProfileId: old=$_activeProfileId, new=$newProfileId');
@@ -97,6 +115,7 @@ class NotificationProvider extends ChangeNotifier {
     if (_activeProfileId == profileId) {
       final rows = await _db.getInAppNotifications(profileId: profileId);
       _notifications = rows.map((row) => NotificationItem.fromMap(row)).toList();
+      await _refreshUnreadCount(profileId: profileId);
       notifyListeners();
     }
   }
@@ -116,7 +135,12 @@ class NotificationProvider extends ChangeNotifier {
     }
 
     _notifications = rows.map((row) => NotificationItem.fromMap(row)).toList();
-    debugPrint('NotificationProvider: loadNotifications finished for $_activeProfileId. Loaded ${_notifications.length} rows.');
+    await _refreshUnreadCount(profileId: loadingProfileId);
+    if (_activeProfileId != loadingProfileId) {
+      debugPrint('NotificationProvider: loadNotifications ABORTED after unread count (outdated)');
+      return;
+    }
+    debugPrint('NotificationProvider: loadNotifications finished for $_activeProfileId. Loaded ${_notifications.length} rows. Unread=$_unreadCount');
     _isLoading = false;
     notifyListeners();
   }
@@ -142,8 +166,9 @@ class NotificationProvider extends ChangeNotifier {
     final index = _notifications.indexWhere((n) => n.id == id);
     if (index != -1) {
       _notifications[index].isRead = true;
-      notifyListeners();
     }
+    await _refreshUnreadCount();
+    notifyListeners();
   }
 
   Future<void> markAllAsRead() async {
@@ -151,12 +176,14 @@ class NotificationProvider extends ChangeNotifier {
     for (var n in _notifications) {
       n.isRead = true;
     }
+    await _refreshUnreadCount();
     notifyListeners();
   }
 
   Future<void> deleteNotification(String id) async {
     await _db.deleteInAppNotification(id);
     _notifications.removeWhere((n) => n.id == id);
+    await _refreshUnreadCount();
     notifyListeners();
   }
 
@@ -170,6 +197,7 @@ class NotificationProvider extends ChangeNotifier {
         profileId: _activeProfileId,
       );
       _notifications.insert(index, item);
+      await _refreshUnreadCount();
       notifyListeners();
     }
   }

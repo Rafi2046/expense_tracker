@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/core/services/notification_service.dart';
 import 'package:expense_tracker/core/services/daily_summary_service.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
@@ -1118,6 +1119,7 @@ class TransactionProvider extends ChangeNotifier {
           type: 'alert',
           profileId: _activeProfileId,
         );
+        NotificationProvider.notifyDataChanged();
       }
     } catch (e) {
       debugPrint('TransactionProvider._checkBudgetThreshold error: $e');

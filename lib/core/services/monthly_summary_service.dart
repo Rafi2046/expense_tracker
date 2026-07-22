@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/core/services/notification_service.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
@@ -93,6 +94,7 @@ class MonthlySummaryService {
       type: 'alert',
       profileId: profileId,
     );
+    NotificationProvider.notifyDataChanged();
 
     // Mark as generated for this month
     await SharedPrefsHelper.setString(

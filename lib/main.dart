@@ -384,10 +384,16 @@ class MyApp extends StatelessWidget {
           _budgetWired = true;
           WidgetsBinding.instance.addPostFrameCallback((_) {
             final tx = context.read<TransactionProvider>();
+            final notif = context.read<NotificationProvider>();
             BudgetProvider.onBudgetChanged = (profileId) {
               if (profileId == tx.activeProfileId) {
                 tx.checkBudgetThreshold();
               }
+            };
+            // Keep dashboard badge in sync when notifications are
+            // inserted outside NotificationProvider (budget, summaries).
+            NotificationProvider.onDataChanged = () {
+              notif.loadNotifications();
             };
           });
         }
