@@ -87,6 +87,7 @@ class HomepageAppbarWidget extends StatelessWidget
                         ),
                       ),
                     ),
+
                     const SizedBox(width: 4),
                     Icon(
                       LucideIcons.chevronDown,
