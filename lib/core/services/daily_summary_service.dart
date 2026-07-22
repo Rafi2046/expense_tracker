@@ -28,22 +28,22 @@ class DailySummaryService {
     'en': {
       'daily_summary': 'Daily Summary',
       'spent_today': 'You spent {amount} today',
-      'daily_reminder_body': "Don't forget to log today's expenses!",
+      'no_expenses_today': 'No expenses logged today.',
     },
     'bn': {
       'daily_summary': 'দৈনিক সারসংক্ষেপ',
       'spent_today': 'আজ আপনি মোট {amount} খরচ করেছেন',
-      'daily_reminder_body': 'আজকের খরচ লগ করতে ভুলবেন না!',
+      'no_expenses_today': 'আজ কোনো খরচ লগ হয়নি।',
     },
     'hi': {
       'daily_summary': 'दैनिक सारांश',
       'spent_today': 'आज आपने कुल {amount} खर्च किए',
-      'daily_reminder_body': 'आज के खर्चों को दर्ज करना न भूलें!',
+      'no_expenses_today': 'आज कोई खर्च लॉग नहीं किया गया।',
     },
     'ur': {
       'daily_summary': 'روزانہ کا خلاصہ',
       'spent_today': 'آج آپ نے کل {amount} خرچ کیے',
-      'daily_reminder_body': 'آج کے اخراجات درج کرنا نہ بھولیں!',
+      'no_expenses_today': 'آج کوئی اخراجات درج نہیں کیے گئے۔',
     },
   };
 
@@ -53,42 +53,42 @@ class DailySummaryService {
     return Platform.localeName.split('_').first;
   }
 
+  static Future<({String title, String body, String payload})> _buildContent({
+    required String profileId,
+  }) async {
+    final db = DatabaseHelper.instance;
+    final total = await db.getDailyExpenseTotal(profileId: profileId);
+
+    final currencyCode =
+        SharedPrefsHelper.getString('selected_currency_code') ?? 'BDT';
+    final symbol = _currencySymbols[currencyCode] ?? r'$';
+    final amountStr = '$symbol${total.toStringAsFixed(2)}';
+
+    final locale = _detectLocale();
+    final strings = _localizedStrings[locale] ?? _localizedStrings['en']!;
+
+    final title = strings['daily_summary']!;
+    final body = total > 0
+        ? strings['spent_today']!.replaceAll('{amount}', amountStr)
+        : strings['no_expenses_today']!;
+
+    return (title: title, body: body, payload: 'daily_summary');
+  }
+
   static Future<void> updateDailyNotification({
     required String profileId,
   }) async {
     try {
-      final db = DatabaseHelper.instance;
-      // Get today's total expenses
-      final total = await db.getDailyExpenseTotal(profileId: profileId);
-
-      final currencyCode =
-          SharedPrefsHelper.getString('selected_currency_code') ?? 'BDT';
-      final symbol = _currencySymbols[currencyCode] ?? r'$';
-      final amountStr = '$symbol${total.toStringAsFixed(2)}';
-
-      final locale = _detectLocale();
-      final strings = _localizedStrings[locale] ?? _localizedStrings['en']!;
-
-      final title = strings['daily_summary']!;
-
-      final String body;
-      final String payload;
-      if (total > 0) {
-        body = strings['spent_today']!.replaceAll('{amount}', amountStr);
-        payload = 'daily_summary';
-      } else {
-        body = strings['daily_reminder_body']!;
-        payload = 'daily_reminder';
-      }
+      final content = await _buildContent(profileId: profileId);
 
       // Schedule (or re-schedule) tonight's 11:59 PM local notification with
       // the up-to-date total. No in-app notification is inserted here —
       // the daily summary notification fires exactly once per night.
       await _scheduleTonightNotification(
         id: _notificationId,
-        title: title,
-        body: body,
-        payload: payload,
+        title: content.title,
+        body: content.body,
+        payload: content.payload,
       );
     } catch (e) {
       debugPrint('DailySummaryService.updateDailyNotification error: $e');

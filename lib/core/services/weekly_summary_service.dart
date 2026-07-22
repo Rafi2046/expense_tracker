@@ -32,6 +32,26 @@ class WeeklySummaryService {
     'bn': 'গত সপ্তাহে আপনার মোট খরচ ছিল {symbol}{amount}। হিসাব দেখতে ট্যাপ করুন!',
   };
 
+  static Future<({String title, String body})> _buildContent({
+    required String profileId,
+  }) async {
+    final db = DatabaseHelper.instance;
+    final summary = await db.getWeeklyExpenseSummary(profileId: profileId);
+    final total = (summary['total'] as num?)?.toDouble() ?? 0.0;
+
+    final currencyCode =
+        SharedPrefsHelper.getString('selected_currency_code') ?? 'BDT';
+    final symbol = _currencySymbols[currencyCode] ?? r'$';
+
+    final locale = _detectLocale();
+    final title = _titles[locale] ?? _titles['en']!;
+    final body = (_bodies[locale] ?? _bodies['en']!)
+        .replaceAll('{symbol}', symbol)
+        .replaceAll('{amount}', total.toStringAsFixed(2));
+
+    return (title: title, body: body);
+  }
+
   static Future<void> checkAndGenerate({required String profileId}) async {
     // Only generate on Mondays
     if (DateTime.now().weekday != DateTime.monday) return;
@@ -50,32 +70,21 @@ class WeeklySummaryService {
     // No expenses → no notification
     if (total <= 0) return;
 
-    // Resolve currency symbol
-    final currencyCode =
-        SharedPrefsHelper.getString('selected_currency_code') ?? 'BDT';
-    final symbol = _currencySymbols[currencyCode] ?? r'$';
-
-    // Detect locale for localized message
-    final locale = _detectLocale();
-
-    final title = _titles[locale] ?? _titles['en']!;
-    final body = (_bodies[locale] ?? _bodies['en']!)
-        .replaceAll('{symbol}', symbol)
-        .replaceAll('{amount}', total.toStringAsFixed(2));
+    final content = await _buildContent(profileId: profileId);
 
     // Fire push notification with payload for tap navigation
     await NotificationService.instance.showNotification(
       id: _notificationId,
-      title: title,
-      body: body,
+      title: content.title,
+      body: content.body,
       payload: 'weekly_summary',
     );
 
     // Save to in-app notifications
     await db.insertInAppNotification(
       id: 'weekly_summary_${DateTime.now().millisecondsSinceEpoch}',
-      title: title,
-      body: body,
+      title: content.title,
+      body: content.body,
       type: 'weekly_summary',
       profileId: profileId,
     );
