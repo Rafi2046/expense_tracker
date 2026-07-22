@@ -376,69 +376,92 @@ class NotificationService {
     if (budgetAmount <= 0) return null;
 
     final ratio = currentMonthExpense / budgetAmount;
-
-    if (ratio < 0.8) return null;
-
     final now = DateTime.now();
     final monthKey = '${now.year}-${now.month.toString().padLeft(2, '0')}';
 
-    // In-memory guard: notification already fired in this session?
-    final threshold = ratio >= 1.0 ? 'exceed' : 'warn';
-    final notifyKey = '${monthKey}_${profileId}_$threshold';
+    BudgetThresholdResult? result;
+
+    // ── 100% Exceeded (independent check) ──
+    if (ratio >= 1.0) {
+      result = await _fireIfNotNotified(
+        thresholdKey: '100',
+        monthKey: monthKey,
+        profileId: profileId,
+        notificationId: 1001,
+        title: 'Budget Exceeded',
+        body:
+            'You have exceeded your monthly budget of '
+            '$currencySymbol${budgetAmount.toStringAsFixed(2)}. '
+            'Current spending: $currencySymbol${currentMonthExpense.toStringAsFixed(2)}.',
+      );
+      if (result != null) return result;
+    }
+
+    // ── 80% Warning (independent check) ──
+    if (ratio >= 0.8) {
+      result = await _fireIfNotNotified(
+        thresholdKey: '80',
+        monthKey: monthKey,
+        profileId: profileId,
+        notificationId: 1002,
+        title: 'Budget Warning',
+        body:
+            'You have used ${(ratio * 100).toStringAsFixed(0)}% '
+            'of your monthly budget '
+            '($currencySymbol${currentMonthExpense.toStringAsFixed(2)} '
+            'of $currencySymbol${budgetAmount.toStringAsFixed(2)}).',
+      );
+    }
+
+    return result;
+  }
+
+  Future<BudgetThresholdResult?> _fireIfNotNotified({
+    required String thresholdKey,
+    required String monthKey,
+    required String profileId,
+    required int notificationId,
+    required String title,
+    required String body,
+  }) async {
+    final notifyKey = '${monthKey}_${profileId}_${thresholdKey}pct';
     if (_budgetNotifiedKeys.contains(notifyKey)) {
       debugPrint('checkBudgetThreshold: SKIP (in-memory) $notifyKey');
       return null;
     }
 
-    // SharedPrefs guard: notification already fired in a previous session?
-    final prefsKey = 'budget_${threshold}_month_$profileId';
+    final prefsKey = 'budget_${thresholdKey}pct_warned_${monthKey}_$profileId';
     final lastNotified = SharedPrefsHelper.getString(prefsKey);
     if (lastNotified == monthKey) {
       debugPrint('checkBudgetThreshold: SKIP (SharedPrefs) $prefsKey=$monthKey');
       return null;
     }
 
-    final String title;
-    final String body;
-    final int notificationId;
+    debugPrint('checkBudgetThreshold: FIRING $notifyKey | monthKey=$monthKey | prefsKey=$prefsKey');
 
-    if (ratio >= 1.0) {
-      title = 'Budget Exceeded';
-      body =
-          'You have exceeded your monthly budget of '
-          '$currencySymbol${budgetAmount.toStringAsFixed(2)}. '
-          'Current spending: $currencySymbol${currentMonthExpense.toStringAsFixed(2)}.';
-      notificationId = 1001;
-    } else {
-      title = 'Budget Warning';
-      body =
-          'You have used ${(ratio * 100).toStringAsFixed(0)}% '
-          'of your monthly budget '
-          '($currencySymbol${currentMonthExpense.toStringAsFixed(2)} '
-          'of $currencySymbol${budgetAmount.toStringAsFixed(2)}).';
-      notificationId = 1002;
+    try {
+      await _plugin.show(
+        id: notificationId,
+        title: title,
+        body: body,
+        notificationDetails: const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'budget_alerts',
+            'Budget Alerts',
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+        ),
+      );
+    } catch (e) {
+      debugPrint('checkBudgetThreshold: _plugin.show error: $e');
     }
 
-    await _plugin.show(
-      id: notificationId,
-      title: title,
-      body: body,
-      notificationDetails: const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'budget_alerts',
-          'Budget Alerts',
-          importance: Importance.high,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails(
-          presentAlert: true,
-          presentBadge: true,
-          presentSound: true,
-        ),
-      ),
-    );
-
-    // Persist + in-memory: never re-notify the same threshold level this month
     _budgetNotifiedKeys.add(notifyKey);
     await SharedPrefsHelper.setString(prefsKey, monthKey);
     debugPrint('checkBudgetThreshold: FIRED $notifyKey');

@@ -359,6 +359,9 @@ Future<void> verifyFirestoreSchema() async {
   }
 }
 
+/// Tracks whether the BudgetProvider → TransactionProvider callback has been wired.
+bool _budgetWired = false;
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -377,6 +380,18 @@ class MyApp extends StatelessWidget {
       locale: context.locale,
       home: SplashScreen(),
       builder: (context, child) {
+        if (!_budgetWired) {
+          _budgetWired = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final tx = context.read<TransactionProvider>();
+            BudgetProvider.onBudgetChanged = (profileId) {
+              if (profileId == tx.activeProfileId) {
+                tx.checkBudgetThreshold();
+              }
+            };
+          });
+        }
+
         // Handle pending navigation from notification tap (one-shot at startup)
         final pendingNav = SharedPrefsHelper.getString('_pending_nav');
         if (pendingNav != null) {

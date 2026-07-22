@@ -9,6 +9,9 @@ class BudgetProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DatabaseHelper _db = DatabaseHelper.instance;
 
+  /// Fired after the budget amount changes (local or remote).
+  static void Function(String profileId)? onBudgetChanged;
+
   User? _firebaseUser;
   StreamSubscription<User?>? _authSubscription;
   StreamSubscription<DocumentSnapshot>? _firestoreSubscription;
@@ -72,6 +75,7 @@ class BudgetProvider extends ChangeNotifier {
             _amount = remoteAmount;
             _db.insertOrUpdateBudget(_amount, syncStatus: 'synced', profileId: _activeProfileId);
             notifyListeners();
+            onBudgetChanged?.call(_activeProfileId);
           }
         }
         _isLoading = false;
@@ -151,6 +155,8 @@ class BudgetProvider extends ChangeNotifier {
     }).catchError((error) {
       debugPrint('Firestore setBudget error: $error');
     });
+
+    onBudgetChanged?.call(_activeProfileId);
   }
 
   void updateProfileId(String id) {

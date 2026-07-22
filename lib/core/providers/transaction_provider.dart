@@ -1071,7 +1071,7 @@ class TransactionProvider extends ChangeNotifier {
 
     // Budget threshold check (only for expenses)
     if (!uniqueTransaction.isIncome) {
-      _checkBudgetThreshold();
+      checkBudgetThreshold();
     }
 
     docRef
@@ -1088,7 +1088,7 @@ class TransactionProvider extends ChangeNotifier {
 
   /// Checks if the current month's expense has crossed budget thresholds
   /// and fires a notification if so.
-  Future<void> _checkBudgetThreshold() async {
+  Future<void> checkBudgetThreshold() async {
     try {
       final budgetAmount = await _db.readBudget(profileId: _activeProfileId);
       if (budgetAmount == null || budgetAmount <= 0) return;
