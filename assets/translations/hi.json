@@ -1068,5 +1068,13 @@
   "avg_per_day": "औसत / दिन",
   "versus_last_week": "पिछले सप्ताह की तुलना में",
   "trend": "ट्रेंड",
-  "no_insights": "अंतर्दृष्टि के लिए पर्याप्त डेटा नहीं है"
+  "no_insights": "अंतर्दृष्टि के लिए पर्याप्त डेटा नहीं है",
+  "monthly_summary": "मासिक सारांश",
+  "monthly_summary_subtitle": "मासिक खर्च का अवलोकन",
+  "view_monthly_summary": "मासिक सारांश देखें",
+  "monthly_expenses": "इस महीने का खर्च",
+  "logged_this_month": "इस महीने लॉग किया गया",
+  "monthly_trend": "मासिक ट्रेंड",
+  "highest_expense_this_month": "इस महीने का सर्वोच्च खर्च",
+  "no_expenses_this_month": "इस महीने कोई खर्च लॉग नहीं हुआ"
 }

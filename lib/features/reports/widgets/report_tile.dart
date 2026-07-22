@@ -13,7 +13,7 @@ class ReportTile extends StatelessWidget {
   });
 
   void _pushReport(BuildContext context) {
-    if (item.titleKey == 'weekly_summary' || item.titleKey == 'daily_summary') {
+    if (item.titleKey == 'weekly_summary' || item.titleKey == 'daily_summary' || item.titleKey == 'monthly_summary') {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (_) => item.destination),
       );

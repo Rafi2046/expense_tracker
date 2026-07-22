@@ -24,11 +24,13 @@ import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:expense_tracker/core/services/notification_service.dart';
 import 'package:expense_tracker/core/services/weekly_summary_service.dart';
 import 'package:expense_tracker/core/services/daily_summary_service.dart';
+import 'package:expense_tracker/core/services/monthly_summary_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'features/dashboard/pages/weekly_summary_screen.dart';
 import 'features/dashboard/pages/daily_summary_screen.dart';
+import 'features/dashboard/pages/monthly_summary_screen.dart';
 import 'features/splash/pages/splash_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -91,6 +93,7 @@ void main() async {
       // Handle both payload-based and ID-based routing
       final isWeeklySummary = payload == 'weekly_summary' || payload == 'id:4001';
       final isDailySummary = payload == 'daily_summary' || payload == 'id:5001';
+      final isMonthlySummary = payload == 'monthly_summary' || payload == 'id:6001';
 
       if (isWeeklySummary) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -107,6 +110,15 @@ void main() async {
             context,
             MaterialPageRoute(
               builder: (_) => const DailySummaryScreen(),
+            ),
+          );
+        });
+      } else if (isMonthlySummary) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const MonthlySummaryScreen(),
             ),
           );
         });
@@ -129,6 +141,8 @@ void main() async {
         SharedPrefsHelper.setString('_pending_nav', 'weekly_summary');
       } else if (payload == 'daily_summary') {
         SharedPrefsHelper.setString('_pending_nav', 'daily_summary');
+      } else if (payload == 'monthly_summary') {
+        SharedPrefsHelper.setString('_pending_nav', 'monthly_summary');
       }
     }
   } catch (e) {
@@ -142,9 +156,10 @@ void main() async {
       SharedPrefsHelper.getString(SharedPrefsHelper.activeProfileKey) ?? 'default_profile';
   debugPrint('main: initial active profile = $initialProfileId');
 
-  // Fire weekly/daily summary checks (non-blocking — runs async in background)
+  // Fire weekly/daily/monthly summary checks (non-blocking — runs async in background)
   WeeklySummaryService.checkAndGenerate(profileId: initialProfileId);
   DailySummaryService.updateDailyNotification(profileId: initialProfileId);
+  MonthlySummaryService.checkAndGenerate(profileId: initialProfileId);
 
   final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
   const supportedLangCodes = ['en', 'bn', 'hi', 'ur'];
@@ -381,6 +396,13 @@ class MyApp extends StatelessWidget {
                 navContext,
                 MaterialPageRoute(
                   builder: (_) => const DailySummaryScreen(),
+                ),
+              );
+            } else if (pendingNav == 'monthly_summary') {
+              Navigator.push(
+                navContext,
+                MaterialPageRoute(
+                  builder: (_) => const MonthlySummaryScreen(),
                 ),
               );
             }

@@ -1068,5 +1068,13 @@
   "avg_per_day": "اوسط / دن",
   "versus_last_week": "پچھلے ہفتے کے مقابلے",
   "trend": "رجحان",
-  "no_insights": "ابھی بصیرت کے لیے کافی ڈیٹا نہیں ہے"
+  "no_insights": "ابھی بصیرت کے لیے کافی ڈیٹا نہیں ہے",
+  "monthly_summary": "ماہانہ خلاصہ",
+  "monthly_summary_subtitle": "ماہانہ اخراجات کا خلاصہ",
+  "view_monthly_summary": "ماہانہ خلاصہ دیکھیں",
+  "monthly_expenses": "اس مہینے کے اخراجات",
+  "logged_this_month": "اس مہینے درج کیا گیا",
+  "monthly_trend": "ماہانہ رجحان",
+  "highest_expense_this_month": "اس مہینے کا سب سے زیادہ خرچ",
+  "no_expenses_this_month": "اس مہینے کوئی اخراجات درج نہیں کیے گئے"
 }

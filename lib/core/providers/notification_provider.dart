@@ -1,4 +1,7 @@
 import 'package:expense_tracker/core/utils/database_helper.dart';
+import 'package:expense_tracker/core/services/weekly_summary_service.dart';
+import 'package:expense_tracker/core/services/daily_summary_service.dart';
+import 'package:expense_tracker/core/services/monthly_summary_service.dart';
 import 'package:flutter/material.dart';
 
 enum NotificationType {
@@ -83,6 +86,19 @@ class NotificationProvider extends ChangeNotifier {
     if (_activeProfileId == newProfileId) return;
     _activeProfileId = newProfileId;
     loadNotifications();
+    _generateSummariesForProfile();
+  }
+
+  Future<void> _generateSummariesForProfile() async {
+    final profileId = _activeProfileId;
+    await WeeklySummaryService.checkAndGenerate(profileId: profileId);
+    await DailySummaryService.updateDailyNotification(profileId: profileId);
+    await MonthlySummaryService.checkAndGenerate(profileId: profileId);
+    if (_activeProfileId == profileId) {
+      final rows = await _db.getInAppNotifications(profileId: profileId);
+      _notifications = rows.map((row) => NotificationItem.fromMap(row)).toList();
+      notifyListeners();
+    }
   }
 
   Future<void> loadNotifications() async {

@@ -4,6 +4,7 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/features/dashboard/pages/weekly_summary_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/daily_summary_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/monthly_summary_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -38,7 +39,8 @@ class NotificationDetailsScreen extends StatelessWidget {
 
     final isWeekly = item.id.startsWith('weekly_summary_');
     final isDaily = item.id.startsWith('daily_summary_');
-    final isInteractiveSummary = isWeekly || isDaily;
+    final isMonthly = item.id.startsWith('monthly_summary_');
+    final isInteractiveSummary = isWeekly || isDaily || isMonthly;
 
     Widget sectionLabel(String text) {
       return Padding(
@@ -166,7 +168,16 @@ class NotificationDetailsScreen extends StatelessWidget {
                             ),
                           );
                         }
-                      : null,
+                      : isMonthly
+                          ? () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const MonthlySummaryScreen(),
+                                ),
+                              );
+                            }
+                          : null,
               borderRadius: cardRadius,
               child: Container(
                 width: double.infinity,

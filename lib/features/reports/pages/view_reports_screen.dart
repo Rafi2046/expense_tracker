@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/pages/weekly_summary_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/daily_summary_screen.dart';
+import 'package:expense_tracker/features/dashboard/pages/monthly_summary_screen.dart';
 import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:expense_tracker/features/reports/pages/all_transactions_report_screen.dart';
 import 'package:expense_tracker/features/reports/pages/bank_statement_screen.dart';
@@ -144,6 +145,14 @@ class ViewReportsScreen extends StatelessWidget {
                 titleKey: 'daily_summary',
                 subtitleKey: 'daily_summary_subtitle',
                 destination: DailySummaryScreen(),
+              ),
+              const ReportItem(
+                icon: LucideIcons.calendarDays,
+                title: 'Monthly Summary',
+                subtitle: 'Monthly expense overview',
+                titleKey: 'monthly_summary',
+                subtitleKey: 'monthly_summary_subtitle',
+                destination: MonthlySummaryScreen(),
               ),
             ]),
 

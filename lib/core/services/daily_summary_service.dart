@@ -96,10 +96,10 @@ class DailySummaryService {
             '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 
         await db.insertInAppNotification(
-          id: 'daily_summary_$dateKey',
+          id: 'daily_summary_${profileId}_$dateKey',
           title: title,
           body: body,
-          type: 'alert', // Changed from 'update' to 'alert' to make the icon red like weekly summary
+          type: 'alert',
           profileId: profileId,
         );
       }

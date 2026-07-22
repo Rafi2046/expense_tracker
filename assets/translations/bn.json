@@ -1078,5 +1078,13 @@
   "avg_per_day": "গড় / দিন",
   "versus_last_week": "গত সপ্তাহের তুলনায়",
   "trend": "ট্রেন্ড",
-  "no_insights": "অন্তর্দৃষ্টির জন্য পর্যাপ্ত তথ্য নেই"
+  "no_insights": "অন্তর্দৃষ্টির জন্য পর্যাপ্ত তথ্য নেই",
+  "monthly_summary": "মাসিক সারসংক্ষেপ",
+  "monthly_summary_subtitle": "মাসিক খরচের সারসংক্ষেপ",
+  "view_monthly_summary": "মাসিক সারসংক্ষেপ দেখুন",
+  "monthly_expenses": "এই মাসের খরচ",
+  "logged_this_month": "এই মাসে লগ করা হয়েছে",
+  "monthly_trend": "মাসিক ট্রেন্ড",
+  "highest_expense_this_month": "এই মাসের সর্বোচ্চ খরচ",
+  "no_expenses_this_month": "এই মাসে কোনো খরচ লগ হয়নি"
 }

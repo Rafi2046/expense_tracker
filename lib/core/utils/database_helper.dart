@@ -1521,7 +1521,7 @@ class DatabaseHelper {
       'type': type,
       'is_read': 0,
       'profileId': profileId,
-    });
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<List<Map<String, dynamic>>> getInAppNotifications({
@@ -1823,6 +1823,107 @@ class DatabaseHelper {
     final count = Sqflite.firstIntValue(totalResult) ?? 0;
     final last7DaysTotal = (prevTotalResult.first['prevTotal'] as num).toDouble();
     final averageDaily = last7DaysTotal / 7.0;
+
+    return {
+      'total': total,
+      'transactionCount': count,
+      'categoryBreakdown': categoryResult,
+      'highestTransaction': highestResult.isNotEmpty ? highestResult.first : null,
+      'averageDaily': averageDaily,
+    };
+  }
+
+  /// Returns total expense, transaction count, and top category for the current month.
+  /// Result: { 'total': double, 'transactionCount': int, 'topCategory': String?, 'topAmount': double }
+  Future<Map<String, dynamic>> getMonthlyExpenseSummary({
+    required String profileId,
+  }) async {
+    if (kIsWeb) {
+      return {'total': 0.0, 'transactionCount': 0, 'topCategory': null, 'topAmount': 0.0};
+    }
+    final db = await instance.database;
+    final now = DateTime.now();
+    final monthStart = DateTime(now.year, now.month, 1).toIso8601String();
+    final monthEnd = DateTime(now.year, now.month + 1, 0, 23, 59, 59, 999).toIso8601String();
+
+    final totalResult = await db.rawQuery(
+      '''SELECT COALESCE(SUM(amount), 0.0) as total, COUNT(*) as count
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?''',
+      [profileId, monthStart, monthEnd],
+    );
+
+    final topResult = await db.rawQuery(
+      '''SELECT category, SUM(amount) as catTotal
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?
+         GROUP BY category
+         ORDER BY catTotal DESC
+         LIMIT 1''',
+      [profileId, monthStart, monthEnd],
+    );
+
+    return {
+      'total': (totalResult.first['total'] as num).toDouble(),
+      'transactionCount': Sqflite.firstIntValue(totalResult) ?? 0,
+      'topCategory': topResult.isNotEmpty ? topResult.first['category'] as String : null,
+      'topAmount': topResult.isNotEmpty ? (topResult.first['catTotal'] as num).toDouble() : 0.0,
+    };
+  }
+
+  /// Returns premium monthly expense summary including category breakdowns,
+  /// highest transaction, and daily average for the month.
+  Future<Map<String, dynamic>> getPremiumMonthlySummary({
+    required String profileId,
+  }) async {
+    if (kIsWeb) {
+      return {
+        'total': 0.0,
+        'transactionCount': 0,
+        'categoryBreakdown': [],
+        'highestTransaction': null,
+        'averageDaily': 0.0,
+      };
+    }
+    final db = await instance.database;
+    final now = DateTime.now();
+    final monthStart = DateTime(now.year, now.month, 1).toIso8601String();
+    final monthEnd = DateTime(now.year, now.month + 1, 0, 23, 59, 59, 999).toIso8601String();
+
+    // 1. Total spent & count
+    final totalResult = await db.rawQuery(
+      '''SELECT COALESCE(SUM(amount), 0.0) as total, COUNT(*) as count
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?''',
+      [profileId, monthStart, monthEnd],
+    );
+
+    // 2. Category breakdown
+    final categoryResult = await db.rawQuery(
+      '''SELECT category, SUM(amount) as amount, COUNT(*) as count
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?
+         GROUP BY category
+         ORDER BY amount DESC''',
+      [profileId, monthStart, monthEnd],
+    );
+
+    // 3. Highest transaction
+    final highestResult = await db.rawQuery(
+      '''SELECT note, category, amount, dateTime
+         FROM transactions
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?
+         ORDER BY amount DESC
+         LIMIT 1''',
+      [profileId, monthStart, monthEnd],
+    );
+
+    final total = (totalResult.first['total'] as num).toDouble();
+    final count = Sqflite.firstIntValue(totalResult) ?? 0;
+
+    // 4. Daily average: total / days elapsed this month
+    final daysElapsed = now.day;
+    final averageDaily = daysElapsed > 0 ? total / daysElapsed : 0.0;
 
     return {
       'total': total,
