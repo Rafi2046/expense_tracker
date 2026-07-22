@@ -73,11 +73,11 @@ class LedgerTransactionList extends StatelessWidget {
     grouped.forEach((dateHeader, txs) {
       listItems.add(
         Padding(
-          padding: const EdgeInsets.only(top: 20.0, bottom: 8.0, left: 4.0),
+          padding: const EdgeInsets.only(bottom: 8.0, left: 4.0),
           child: Text(
             dateHeader.toUpperCase(),
             style: AppTextStyles.reportStatLabel.copyWith(
-              color: isDark ? Colors.grey.shade400 : Colors.grey.shade800,
+              color: isDark ? Colors.white60 : const Color(0xFF6B7280),
               fontWeight: FontWeight.w800,
               letterSpacing: 1.0,
             ),

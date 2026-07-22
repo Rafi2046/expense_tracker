@@ -17,42 +17,43 @@ class TourCurrencySelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = theme.brightness == Brightness.dark;
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark
+    final borderColor = theme.colorScheme.onSurface.withValues(alpha: 0.12);
+    return DropdownButtonFormField<String>(
+      value: value,
+      decoration: InputDecoration(
+        labelText: context.translate('currency'),
+        hintStyle: TextStyle(
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
+        ),
+        filled: true,
+        fillColor: isDark
             ? Colors.white.withValues(alpha: 0.05)
             : Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderColor),
         ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
-      child: DropdownButtonFormField<String>(
-        initialValue: value,
-        decoration: InputDecoration(
-          labelText: context.translate('currency'),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        ),
-        dropdownColor: theme.colorScheme.surface,
-        items: const [
-          DropdownMenuItem(value: 'USD', child: Text('\$ USD')),
-          DropdownMenuItem(value: 'BDT', child: Text('৳ BDT')),
-          DropdownMenuItem(value: 'EUR', child: Text('€ EUR')),
-          DropdownMenuItem(value: 'GBP', child: Text('£ GBP')),
-          DropdownMenuItem(value: 'INR', child: Text('₹ INR')),
-          DropdownMenuItem(value: 'JPY', child: Text('¥ JPY')),
-        ],
-        onChanged: (v) {
-          if (v != null) onChanged(v);
-        },
-        style: AppTextStyles.reportTileTitle.copyWith(
-          fontWeight: FontWeight.w400,
-          color: theme.colorScheme.onSurface,
-        ),
+      dropdownColor: theme.colorScheme.surface,
+      items: const [
+        DropdownMenuItem(value: 'USD', child: Text('\$ USD')),
+        DropdownMenuItem(value: 'BDT', child: Text('৳ BDT')),
+        DropdownMenuItem(value: 'EUR', child: Text('€ EUR')),
+        DropdownMenuItem(value: 'GBP', child: Text('£ GBP')),
+        DropdownMenuItem(value: 'INR', child: Text('₹ INR')),
+        DropdownMenuItem(value: 'JPY', child: Text('¥ JPY')),
+      ],
+      onChanged: (v) {
+        if (v != null) onChanged(v);
+      },
+      style: AppTextStyles.reportTileTitle.copyWith(
+        fontWeight: FontWeight.w400,
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
       ),
     );
   }

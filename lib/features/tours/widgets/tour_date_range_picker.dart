@@ -19,8 +19,8 @@ class TourDateRangePicker extends StatelessWidget {
     required this.onPickEndDate,
   });
 
-  String _formatDate(DateTime? d) {
-    if (d == null) return 'Select';
+  String _formatDate(BuildContext context, DateTime? d, {required bool isStart}) {
+    if (d == null) return isStart ? context.translate('start_date') : context.translate('end_date');
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return '${d.day} ${months[d.month - 1]} ${d.year}';
   }
@@ -59,11 +59,12 @@ class TourDateRangePicker extends StatelessWidget {
               Expanded(
                 child: _DateButton(
                   label: context.translate('start_label'),
-                  dateText: _formatDate(startDate),
+                  dateText: _formatDate(context, startDate, isStart: true),
                   icon: LucideIcons.calendarDays,
                   onTap: onPickStartDate,
                   textColor: textColor,
                   isDark: isDark,
+                  isPlaceholder: startDate == null,
                 ),
               ),
               Padding(
@@ -76,11 +77,12 @@ class TourDateRangePicker extends StatelessWidget {
               Expanded(
                 child: _DateButton(
                   label: context.translate('end_label'),
-                  dateText: _formatDate(endDate),
+                  dateText: _formatDate(context, endDate, isStart: false),
                   icon: LucideIcons.calendarCheck,
                   onTap: onPickEndDate,
                   textColor: textColor,
                   isDark: isDark,
+                  isPlaceholder: endDate == null,
                 ),
               ),
             ],
@@ -98,6 +100,7 @@ class _DateButton extends StatelessWidget {
   final VoidCallback onTap;
   final Color textColor;
   final bool isDark;
+  final bool isPlaceholder;
 
   const _DateButton({
     required this.label,
@@ -106,6 +109,7 @@ class _DateButton extends StatelessWidget {
     required this.onTap,
     required this.textColor,
     required this.isDark,
+    this.isPlaceholder = false,
   });
 
   @override
@@ -127,7 +131,9 @@ class _DateButton extends StatelessWidget {
             Text(dateText,
               style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.w500,
-                color: textColor,
+                color: isPlaceholder
+                    ? textColor.withValues(alpha: 0.35)
+                    : textColor,
               ),
               textAlign: TextAlign.center,
             ),

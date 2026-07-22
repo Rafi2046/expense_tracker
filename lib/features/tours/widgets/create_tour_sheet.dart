@@ -295,7 +295,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                           theme: theme,
                           controller: nameController,
                         ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: 16),
 
                         TourDateRangePicker(
                           theme: theme,
@@ -304,14 +304,14 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                           onPickStartDate: () => _pickDate(isStart: true),
                           onPickEndDate: () => _pickDate(isStart: false),
                         ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: 16),
 
                         TourCurrencySelector(
                           theme: theme,
                           value: selectedCurrency,
                           onChanged: (v) => setState(() => selectedCurrency = v),
                         ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: 16),
 
                         TourDescriptionField(
                           theme: theme,

@@ -117,10 +117,13 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
             ),
           ),
           if (_checkedCapability)
-            Switch(
-              value: provider.isEnabled && isAvailable,
-              onChanged: isAvailable && !_isProcessing ? _onToggle : null,
-              activeThumbColor: theme.primaryColor,
+            Transform.scale(
+              scale: 0.7,
+              child: Switch(
+                value: provider.isEnabled && isAvailable,
+                onChanged: isAvailable && !_isProcessing ? _onToggle : null,
+                activeThumbColor: theme.primaryColor,
+              ),
             )
           else
             const SizedBox(

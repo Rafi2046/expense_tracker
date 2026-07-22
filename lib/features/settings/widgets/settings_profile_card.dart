@@ -24,11 +24,15 @@ class SettingsProfileCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E293B),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF32235B), Color(0xFF6A53A1)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: const Color(0xFF6A53A1).withValues(alpha: 0.18),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),

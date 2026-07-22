@@ -210,17 +210,15 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        gradient: LinearGradient(
-                          colors: isDark
-                              ? [const Color(0xFF312E81), const Color(0xFF1E1B4B)]
-                              : [const Color(0xFF6366F1), const Color(0xFF4F46E5)],
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF32235B), Color(0xFF6A53A1)],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: (isDark ? Colors.black : const Color(0xFF6366F1))
-                                .withValues(alpha: isDark ? 0.3 : 0.2),
+                            color: const Color(0xFF6A53A1)
+                                .withValues(alpha: 0.2),
                             blurRadius: 15,
                             offset: const Offset(0, 6),
                           ),

@@ -363,100 +363,107 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         bottom: false,
         child: Stack(
           children: [
-            RefreshIndicator(
-              color: const Color(0xFF6A53A1),
-              onRefresh: () async {
-                await context.read<ProfileProvider>().reload();
-                provider.updateProfileId(provider.activeProfileId);
-                await Future.delayed(const Duration(milliseconds: 800));
-              },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.only(
-                  left: AppSpacing.p16,
-                  right: AppSpacing.p16,
-                  top: AppSpacing.p20,
-                  bottom: 120,
-                ),
-                child: Skeletonizer(
+            Column(
+              children: [
+                Skeletonizer(
                   enabled: isLoading,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // 1. Stats Summary Cards (Income vs Expense + Net Balance)
-                      TransactionSummaryCard(
-                        isMasked: _localMasked,
-                        onToggleMask: () =>
-                            setState(() => _localMasked = !_localMasked),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // 2. Period Selector (Daily / Monthly / Yearly) + Filter
-                      TransactionPeriodSelector(
-                        selectedPeriod: provider.selectedPeriod,
-                        isDark: isDark,
-                        onPeriodChanged: (period) =>
-                            provider.setSelectedPeriod(period),
-                        onFilterTap: () => _showSortFilterBottomSheet(context),
-                      ),
-                      const SizedBox(height: 12),
-
-                      // 3. Date / Month Selector based on selected period
-                      if (provider.selectedPeriod == TransactionPeriod.monthly)
-                        const TransactionsMonthSelector()
-                      else
-                        TransactionDateSelector(
-                          provider: provider,
-                          isDark: isDark,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: AppSpacing.p20,
+                      left: AppSpacing.p16,
+                      right: AppSpacing.p16,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // 1. Stats Summary Cards
+                        TransactionSummaryCard(
+                          isMasked: _localMasked,
+                          onToggleMask: () =>
+                              setState(() => _localMasked = !_localMasked),
                         ),
+                        const SizedBox(height: 16),
 
-                      // 4. Transactions List
-                      const SizedBox(height: 16),
-                      LedgerTransactionList(
-                        isMasked: _localMasked,
-                        isLoading: isLoading,
-                      ),
-                    ],
+                        // 2. Period Selector + Filter
+                        TransactionPeriodSelector(
+                          selectedPeriod: provider.selectedPeriod,
+                          isDark: isDark,
+                          onPeriodChanged: (period) =>
+                              provider.setSelectedPeriod(period),
+                          onFilterTap: () =>
+                              _showSortFilterBottomSheet(context),
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+
+                // 3. Date / Month Selector — outside RefreshIndicator
+                if (provider.selectedPeriod == TransactionPeriod.monthly)
+                  const TransactionsMonthSelector()
+                else
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.p16),
+                    child: TransactionDateSelector(
+                      provider: provider,
+                      isDark: isDark,
+                    ),
+                  ),
+
+                const SizedBox(height: 16),
+
+                // 4. Scrollable Transactions List
+                Expanded(
+                  child: RefreshIndicator(
+                    color: const Color(0xFF6A53A1),
+                    onRefresh: () async {
+                      await context.read<ProfileProvider>().reload();
+                      provider.updateProfileId(provider.activeProfileId);
+                      await Future.delayed(const Duration(milliseconds: 800));
+                    },
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.only(bottom: 120),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.p16),
+                        child: LedgerTransactionList(
+                          isMasked: _localMasked,
+                          isLoading: isLoading,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             Positioned(
               right: 16,
-              bottom: MediaQuery.of(context).padding.bottom + 24,
+              bottom: MediaQuery.of(context).padding.bottom + 8,
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(28),
                   onTap: () => _showAddOptions(context),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF2ECC71),
-                      borderRadius: BorderRadius.circular(28),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF32235B), Color(0xFF6A53A1)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF2ECC71).withValues(alpha: 0.4),
+                          color: const Color(0xFF6A53A1).withValues(alpha: 0.4),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
                       ],
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(LucideIcons.plus, color: Colors.white, size: 20),
-                        const SizedBox(width: 8),
-                        Text(
-                          context.translate('add'),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: AppFontSizes.size14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: const Icon(LucideIcons.plus, color: Colors.white, size: 22),
                   ),
                 ),
               ),
