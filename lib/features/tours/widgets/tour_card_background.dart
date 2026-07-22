@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/features/tours/widgets/tour_image.dart';
 
 class TourCardBackground extends StatelessWidget {
   final String? coverPhoto;
@@ -13,29 +13,25 @@ class TourCardBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasCover = coverPhoto != null && coverPhoto!.isNotEmpty;
+
     return Stack(
       children: [
-        if (coverPhoto != null && coverPhoto!.isNotEmpty)
-          coverPhoto!.startsWith('http')
-              ? Image.network(
-                  coverPhoto!,
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      _buildGradientFallback(),
-                )
-              : Image.file(
-                  File(coverPhoto!),
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      _buildGradientFallback(),
-                )
+        if (hasCover)
+          Positioned.fill(
+            child: TourImage(
+              source: coverPhoto,
+              width: double.infinity,
+              height: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  _buildGradientFallback(),
+              placeholder: _buildGradientFallback(),
+            ),
+          )
         else
           _buildGradientFallback(),
-        if (coverPhoto != null && coverPhoto!.isNotEmpty)
+        if (hasCover)
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(

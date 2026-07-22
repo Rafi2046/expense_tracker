@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
@@ -6,6 +5,7 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/widgets/full_screen_image_viewer.dart';
+import 'package:expense_tracker/features/tours/widgets/tour_image.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourExpenseDetailsSheet extends StatelessWidget {
@@ -159,41 +159,43 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                   separatorBuilder: (_, _) => const SizedBox(width: 10),
                   itemBuilder: (ctx, i) {
                     final path = expense.receiptPaths[i];
+                    final notFound = Container(
+                      width: 160,
+                      height: 160,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: isDark ? const Color(0xFF1E1E2E) : const Color(0xFFF8F9FA),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFE2E8F0),
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(LucideIcons.imageOff, color: Colors.grey.shade400),
+                          const SizedBox(height: 8),
+                          Text(
+                            context.translate('receipt_image_not_found'),
+                            textAlign: TextAlign.center,
+                            style: AppTextStyles.caption.copyWith(color: const Color(0xFF9CA3AF)),
+                          ),
+                        ],
+                      ),
+                    );
                     return GestureDetector(
                       onTap: () => FullScreenImageViewer.show(
                         context, expense.receiptPaths, index: i,
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: Image.file(
-                          File(path),
+                        child: TourImage(
+                          source: path,
                           width: 160,
                           height: 160,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Container(
-                            width: 160,
-                            height: 160,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: isDark ? const Color(0xFF1E1E2E) : const Color(0xFFF8F9FA),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFE2E8F0),
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(LucideIcons.imageOff, color: Colors.grey.shade400),
-                                const SizedBox(height: 8),
-                                Text(
-                                  context.translate('receipt_image_not_found'),
-                                  textAlign: TextAlign.center,
-                                  style: AppTextStyles.caption.copyWith(color: const Color(0xFF9CA3AF)),
-                                ),
-                              ],
-                            ),
-                          ),
+                          errorBuilder: (_, _, _) => notFound,
+                          placeholder: notFound,
                         ),
                       ),
                     );

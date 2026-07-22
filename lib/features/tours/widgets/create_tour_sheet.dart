@@ -1,13 +1,13 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/features/tours/utils/tour_image_codec.dart';
+import 'package:expense_tracker/features/tours/widgets/tour_image.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'tour_name_field.dart';
 import 'tour_date_range_picker.dart';
@@ -181,30 +181,26 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
         imageQuality: 85,
       );
       if (picked != null && mounted) {
-        final permanentPath = await _saveImagePermanently(picked.path);
-        if (mounted) {
-          setState(() => coverPhotoPath = permanentPath);
+        final encoded = await TourImageCodec.encodeFile(
+          picked.path,
+          isCover: true,
+        );
+        if (encoded != null && mounted) {
+          setState(() => coverPhotoPath = encoded);
+        } else if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(context.translate('something_went_wrong')),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
         }
       }
     }
   }
 
-  Future<String> _saveImagePermanently(String tempPath) async {
-    try {
-      final appDir = await getApplicationDocumentsDirectory();
-      final fileName = 'tour_cover_${DateTime.now().microsecondsSinceEpoch}.jpg';
-      final savedImage = await File(tempPath).copy('${appDir.path}/$fileName');
-      return savedImage.path;
-    } catch (e) {
-      return tempPath;
-    }
-  }
-
-  bool get _hasValidCoverPhoto {
-    if (coverPhotoPath == null || coverPhotoPath!.isEmpty) return false;
-    if (coverPhotoPath!.startsWith('http')) return true;
-    return File(coverPhotoPath!).existsSync();
-  }
+  bool get _hasValidCoverPhoto =>
+      TourImageCodec.detect(coverPhotoPath) != TourImageSourceKind.none;
 
   @override
   Widget build(BuildContext context) {
@@ -218,6 +214,8 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
     final isOwner = widget.tourToEdit == null ||
         (widget.tourToEdit!.ownerUid == null && widget.tourToEdit!.inviteCode == null) ||
         (currentUid != null && widget.tourToEdit!.ownerUid != null && widget.tourToEdit!.ownerUid == currentUid);
+    final coverProvider = TourImageResolver.provider(coverPhotoPath);
+    final hasCover = _hasValidCoverPhoto && coverProvider != null;
 
     return Padding(
       padding: EdgeInsets.only(bottom: viewInsets),
@@ -326,11 +324,11 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                           height: 210,
                           clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
-                            color: _hasValidCoverPhoto
+                            color: hasCover
                                 ? null
                                 : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.shade50),
                             borderRadius: BorderRadius.circular(12),
-                            border: _hasValidCoverPhoto
+                            border: hasCover
                                 ? null
                                 : Border.all(
                                     color: isDark
@@ -338,13 +336,14 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                         : Colors.grey.shade300,
                                     width: 1,
                                   ),
-                            image: _hasValidCoverPhoto
-                                ? (coverPhotoPath!.startsWith('http')
-                                    ? DecorationImage(image: NetworkImage(coverPhotoPath!), fit: BoxFit.cover)
-                                    : DecorationImage(image: FileImage(File(coverPhotoPath!)), fit: BoxFit.cover))
+                            image: hasCover
+                                ? DecorationImage(
+                                    image: coverProvider,
+                                    fit: BoxFit.cover,
+                                  )
                                 : null,
                           ),
-                          child: !_hasValidCoverPhoto
+                          child: !hasCover
                               ? Center(
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

@@ -1,9 +1,9 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/widgets/full_screen_image_viewer.dart';
+import 'package:expense_tracker/features/tours/widgets/tour_image.dart';
 
 class ExpenseReceiptPicker extends StatelessWidget {
   final ThemeData theme;
@@ -108,12 +108,22 @@ class ExpenseReceiptPicker extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.file(
-              File(receiptPaths[index]),
+            child: TourImage(
+              source: receiptPaths[index],
               width: 80,
               height: 80,
               fit: BoxFit.cover,
               errorBuilder: (_, _, _) => Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(LucideIcons.imageOff, size: 28,
+                    color: Colors.grey.shade400),
+              ),
+              placeholder: Container(
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(

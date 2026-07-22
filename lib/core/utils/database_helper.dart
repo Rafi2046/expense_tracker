@@ -7,6 +7,7 @@ import '../model/account_model.dart';
 import '../providers/note_provider.dart';
 import '../providers/transaction_provider.dart';
 import '../providers/debt_provider.dart';
+import '../../features/tours/utils/tour_image_codec.dart';
 import 'shared_prefs_helper.dart';
 
 class DatabaseHelper {
@@ -44,7 +45,7 @@ class DatabaseHelper {
 
       return await openDatabase(
         path,
-        version: 19,
+        version: 20,
         onCreate: _createDB,
         onUpgrade: _onUpgrade,
       );
@@ -578,6 +579,94 @@ class DatabaseHelper {
         );
       }
     }
+    if (oldVersion < 20) {
+      // Reuse existing TEXT columns (coverPhoto / receiptPath): convert
+      // surviving local file paths → compressed Base64 (`b64:…`). HTTP URLs
+      // and values already in Base64 form are left unchanged. No ALTER TABLE.
+      await _migrateTourImagesToBase64(db);
+    }
+  }
+
+  /// Migrates tour cover photos and expense receipt paths from local file
+  /// paths into `b64:`-prefixed Base64 JPEG strings for Auto Backup survival.
+  Future<void> _migrateTourImagesToBase64(Database db) async {
+    try {
+      final tours = await db.query('tours', columns: ['id', 'coverPhoto']);
+      for (final row in tours) {
+        final id = row['id'] as String?;
+        if (id == null) continue;
+        final cover = row['coverPhoto'] as String?;
+        final migrated = await TourImageCodec.migrateStoredValue(
+          cover,
+          isCover: true,
+        );
+        if (migrated != cover) {
+          await db.update(
+            'tours',
+            {'coverPhoto': migrated},
+            where: 'id = ?',
+            whereArgs: [id],
+          );
+        }
+      }
+
+      final expenses = await db.query(
+        'tour_expenses',
+        columns: ['id', 'receiptPath'],
+      );
+      for (final row in expenses) {
+        final id = row['id'] as String?;
+        if (id == null) continue;
+        final raw = row['receiptPath'];
+        if (raw == null) continue;
+
+        final paths = _decodeReceiptPathsForMigration(raw);
+        if (paths.isEmpty) continue;
+
+        final migrated = <String>[];
+        var changed = false;
+        for (final path in paths) {
+          final next = await TourImageCodec.migrateStoredValue(
+            path,
+            isCover: false,
+          );
+          if (next != path) changed = true;
+          if (next != null && next.isNotEmpty) {
+            migrated.add(next);
+          } else if (next == null && path.isNotEmpty) {
+            // Dead path cleared — treat as change even if list shrinks.
+            changed = true;
+          }
+        }
+
+        if (!changed) continue;
+
+        await db.update(
+          'tour_expenses',
+          {
+            'receiptPath': migrated.isEmpty ? null : jsonEncode(migrated),
+          },
+          where: 'id = ?',
+          whereArgs: [id],
+        );
+      }
+    } catch (e) {
+      debugPrint('Tour image Base64 migration failed: $e');
+    }
+  }
+
+  List<String> _decodeReceiptPathsForMigration(dynamic raw) {
+    final s = raw.toString();
+    if (s.isEmpty) return [];
+    if (s.startsWith('[')) {
+      try {
+        final decoded = jsonDecode(s);
+        if (decoded is List) {
+          return decoded.map((e) => e.toString()).toList();
+        }
+      } catch (_) {}
+    }
+    return [s];
   }
 
   // Helper method to read web notes

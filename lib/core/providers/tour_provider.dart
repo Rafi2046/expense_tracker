@@ -15,6 +15,7 @@ import '../utils/shared_prefs_helper.dart';
 import '../constants/app_constants.dart';
 import '../services/invite_code_service.dart';
 import '../services/tour_local_service.dart';
+import '../../features/tours/utils/tour_image_codec.dart';
 
 class TourProvider extends ChangeNotifier {
   static void Function(String message)? onNotification;
@@ -131,8 +132,27 @@ class TourProvider extends ChangeNotifier {
     await _loadTours();
   }
 
-  Future<String> _uploadTourCoverPhoto(String tourId, String localPath) async {
-    String cleanedPath = localPath;
+  /// Uploads a cover photo to Firebase Storage.
+  /// Accepts either a `b64:` Base64 string or a legacy local file path.
+  Future<String> _uploadTourCoverPhoto(String tourId, String coverValue) async {
+    final storageRef = FirebaseStorage.instance
+        .ref()
+        .child('tour_covers')
+        .child('$tourId.jpg');
+
+    if (TourImageCodec.isBase64(coverValue)) {
+      final bytes = TourImageCodec.decode(coverValue);
+      if (bytes == null || bytes.isEmpty) {
+        throw Exception('Cover photo Base64 is empty or invalid');
+      }
+      final TaskSnapshot snapshot = await storageRef.putData(
+        bytes,
+        SettableMetadata(contentType: 'image/jpeg'),
+      );
+      return await snapshot.ref.getDownloadURL();
+    }
+
+    String cleanedPath = coverValue;
     if (cleanedPath.startsWith('file://')) {
       cleanedPath = cleanedPath.replaceFirst('file://', '');
     }
@@ -140,12 +160,11 @@ class TourProvider extends ChangeNotifier {
     if (!await file.exists()) {
       throw Exception('Cover photo file does not exist locally: $cleanedPath');
     }
-    final storageRef = FirebaseStorage.instance
-        .ref()
-        .child('tour_covers')
-        .child('$tourId.jpg');
 
-    final UploadTask uploadTask = storageRef.putFile(file);
+    final UploadTask uploadTask = storageRef.putFile(
+      file,
+      SettableMetadata(contentType: 'image/jpeg'),
+    );
     final TaskSnapshot snapshot = await uploadTask;
     return await snapshot.ref.getDownloadURL();
   }
@@ -157,7 +176,7 @@ class TourProvider extends ChangeNotifier {
         ? await _inviteCodeService.generateUniqueCode()
         : null;
 
-    // 1. Save locally first with local cover photo path
+    // 1. Save locally first (cover may be Base64 until Storage upload completes)
     final enriched = tour.copyWith(
       inviteCode: code,
       ownerUid: uid,
@@ -233,7 +252,7 @@ class TourProvider extends ChangeNotifier {
   Future<void> updateTour(Tour tour) async {
     final db = await _db.database;
 
-    // 1. Save locally first with whatever path we have (local or http)
+    // 1. Save locally first (Base64, HTTP URL, or legacy path)
     final updated = tour.copyWith(
       lastModified: DateTime.now(),
     );
@@ -1493,7 +1512,7 @@ class TourProvider extends ChangeNotifier {
   Future<void> _syncTourToSharedCollection(Tour tour) async {
     final map = tour.toMap();
     if (tour.coverPhoto != null && !tour.coverPhoto!.startsWith('http')) {
-      map.remove('coverPhoto'); // Don't sync local paths — remove key entirely so it won't overwrite later
+      map.remove('coverPhoto'); // Don't sync Base64 / local paths — keep Firestore URL-only
     }
     await _sharedToursCollection.doc(tour.id).set(map);
   }
@@ -1503,7 +1522,7 @@ class TourProvider extends ChangeNotifier {
     if (col == null) return;
     final map = tour.toMap();
     if (tour.coverPhoto != null && !tour.coverPhoto!.startsWith('http')) {
-      map.remove('coverPhoto'); // Don't sync local paths
+      map.remove('coverPhoto'); // Don't sync Base64 / local paths
     }
     await col.doc(tour.id).set(map);
   }

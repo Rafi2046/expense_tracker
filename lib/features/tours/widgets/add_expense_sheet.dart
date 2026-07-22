@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
@@ -12,6 +10,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/features/tours/utils/expense_split_calculator.dart';
+import 'package:expense_tracker/features/tours/utils/tour_image_codec.dart';
 import 'package:expense_tracker/features/tours/widgets/expense_category_selector.dart';
 import 'package:expense_tracker/features/tours/widgets/expense_participant_selector.dart';
 import 'package:expense_tracker/features/tours/widgets/expense_split_type_selector.dart';
@@ -85,7 +84,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   bool _isSaving = false;
   String? _validationError;
   DateTime _selectedDate = DateTime.now();
-  List<XFile> _receiptImages = [];
+  /// Temp file paths (new picks) and/or already-stored `b64:` / http values (edit).
+  List<String> _receiptImages = [];
 
   @override
   void initState() {
@@ -100,7 +100,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       if (edit.note != null) _noteController.text = edit.note!;
       _selectedDate = edit.date;
       if (edit.receiptPaths.isNotEmpty) {
-        _receiptImages = edit.receiptPaths.map((p) => XFile(p)).toList();
+        _receiptImages = List<String>.from(edit.receiptPaths);
       }
     } else {
       if (widget.participants.isNotEmpty) {
@@ -285,12 +285,18 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         maxWidth: 1200,
         imageQuality: 80,
       );
-      if (file != null) setState(() => _receiptImages.add(file));
+      if (file != null) {
+        setState(() => _receiptImages.add(file.path));
+      }
     } else {
       final files = await _picker.pickMultiImage(
         imageQuality: 80,
       );
-      if (files.isNotEmpty) setState(() => _receiptImages.addAll(files));
+      if (files.isNotEmpty) {
+        setState(() {
+          _receiptImages.addAll(files.map((f) => f.path));
+        });
+      }
     }
   }
 
@@ -419,24 +425,23 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     );
   }
 
-  Future<List<String>> _persistReceipts(List<XFile> files) async {
-    if (files.isEmpty) return [];
-    final dir = await getApplicationDocumentsDirectory();
-    final receiptDir = Directory('${dir.path}/receipts');
-    if (!receiptDir.existsSync()) receiptDir.createSync();
-    final paths = <String>[];
-    for (final file in files) {
-      final path = file.path;
-      if (path.isEmpty) continue;
-      final f = File(path);
-      if (!f.existsSync()) continue;
-      final ext = path.contains('.') ? path.split('.').last : 'jpg';
-      final newName = '${DateTime.now().microsecondsSinceEpoch}_${paths.length}.$ext';
-      final newPath = '${receiptDir.path}/$newName';
-      await f.copy(newPath);
-      paths.add(newPath);
+  /// Compresses and Base64-encodes new receipt files; passes through existing
+  /// `b64:` / network values unchanged. Result is stored as JSON in `receiptPath`.
+  Future<List<String>> _persistReceipts(List<String> values) async {
+    if (values.isEmpty) return [];
+    final encoded = <String>[];
+    for (final value in values) {
+      if (value.isEmpty) continue;
+      if (TourImageCodec.isNetwork(value) || TourImageCodec.isBase64(value)) {
+        encoded.add(value);
+        continue;
+      }
+      final result = await TourImageCodec.encodeFile(value, isCover: false);
+      if (result != null) {
+        encoded.add(result);
+      }
     }
-    return paths;
+    return encoded;
   }
 
   Future<void> _save() async {
@@ -692,7 +697,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: ExpenseReceiptPicker(
                           theme: theme,
-                          receiptPaths: _receiptImages.map((f) => f.path).toList(),
+                          receiptPaths: _receiptImages,
                           onPick: _showReceiptSourceSheet,
                           onClear: (i) => setState(() => _receiptImages.removeAt(i)),
                         ),
