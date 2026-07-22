@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -9,6 +10,7 @@ class CustomTextFieldWidget extends StatefulWidget {
   final bool obscureText;
   final Widget? trailingLabelWidget;
   final TextEditingController? controller;
+  final TextInputType? keyboardType;
 
   const CustomTextFieldWidget({
     super.key,
@@ -17,6 +19,7 @@ class CustomTextFieldWidget extends StatefulWidget {
     this.obscureText = false,
     this.trailingLabelWidget,
     this.controller,
+    this.keyboardType,
   });
 
   @override
@@ -35,6 +38,16 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final fieldRadius = BorderRadius.circular(AppSpacing.authFieldBorderRadius);
+    final borderSide = BorderSide(
+      color: isDark ? Colors.grey.shade600 : AppColors.borderColor,
+      width: 1.5,
+    );
+    final focusedBorderSide = BorderSide(
+      color: isDark ? Colors.grey.shade500 : AppColors.borderColor,
+      width: 1.5,
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -51,44 +64,73 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
             if (widget.trailingLabelWidget != null) widget.trailingLabelWidget!,
           ],
         ),
-        const SizedBox(height: 4),
-        TextFormField(
-          controller: widget.controller,
-          obscureText: _obscureText,
-          style: AppTextStyles.textFieldHint.copyWith(
-            color: isDark ? Colors.white : null,
-          ),
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            hintStyle: TextStyle(
-              color: isDark ? Colors.grey.shade400 : AppColors.loginLabelColor,
+        const SizedBox(height: AppSpacing.s4),
+        SizedBox(
+          height: AppSpacing.authFieldHeight,
+          child: TextFormField(
+            controller: widget.controller,
+            obscureText: _obscureText,
+            keyboardType: widget.keyboardType,
+            style: AppTextStyles.textFieldHint.copyWith(
+              color: isDark ? Colors.white : null,
             ),
-
-            suffixIcon: widget.obscureText
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
-                    icon: Icon(
-                      _obscureText ? LucideIcons.eye : LucideIcons.eyeOff,
-                      color: isDark ? Colors.grey.shade400 : null,
-                    ),
-                  )
-                : null,
-
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.zero,
-              borderSide: BorderSide(
-                color: isDark ? Colors.grey.shade600 : AppColors.borderColor,
-                width: 1.5,
+            textAlignVertical: TextAlignVertical.center,
+            decoration: InputDecoration(
+              hintText: widget.hintText,
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.p12,
+                vertical: AppSpacing.p14,
               ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: isDark ? Colors.grey.shade500 : AppColors.borderColor,
-                width: 1.5,
+              hintStyle: TextStyle(
+                color: isDark ? Colors.grey.shade400 : AppColors.loginLabelColor,
+              ),
+
+              suffixIcon: widget.obscureText
+                  ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(
+                        minWidth: 40,
+                        minHeight: 40,
+                      ),
+                      tooltip: _obscureText
+                          ? 'Show password'
+                          : 'Hide password',
+                      icon: Icon(
+                        // State-based: eyeOff while hidden, eye while visible.
+                        _obscureText ? LucideIcons.eyeOff : LucideIcons.eye,
+                        size: 20,
+                        color: isDark
+                            ? Colors.grey.shade400
+                            : AppColors.loginLabelColor,
+                      ),
+                    )
+                  : null,
+              suffixIconConstraints: const BoxConstraints(
+                minWidth: 44,
+                minHeight: AppSpacing.authFieldHeight,
+              ),
+
+              enabledBorder: OutlineInputBorder(
+                borderRadius: fieldRadius,
+                borderSide: borderSide,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: fieldRadius,
+                borderSide: focusedBorderSide,
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: fieldRadius,
+                borderSide: borderSide,
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: fieldRadius,
+                borderSide: focusedBorderSide,
               ),
             ),
           ),

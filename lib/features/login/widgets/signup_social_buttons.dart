@@ -1,10 +1,6 @@
-import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_images.dart';
-import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
-import 'package:expense_tracker/features/login/widgets/custom_round_button.dart';
+import 'package:expense_tracker/features/login/widgets/social_provider_buttons.dart';
 
 class SignupSocialButtons extends StatelessWidget {
   final bool isDark;
@@ -22,52 +18,12 @@ class SignupSocialButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Divider(
-                color: isDark ? Colors.grey.shade700 : AppColors.dividerColor,
-                thickness: 2,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
-              child: Text(
-                context.translate('or_sign_up_with'),
-                style: TextStyle(
-                  color: isDark ? Colors.grey.shade400 : AppColors.dividerOrColor,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Divider(
-                color: isDark ? Colors.grey.shade700 : AppColors.dividerColor,
-                thickness: 2,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: AppSpacing.s8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CustomRoundButton(
-              imagePath: AppImages.googleLogo,
-              onPressed: isLoading ? () {} : onGoogleSignUp,
-            ),
-            if (Platform.isIOS || Platform.isMacOS) ...[
-              const SizedBox(width: 24),
-              CustomRoundButton(
-                imagePath: AppImages.appleLogo,
-                iconSize: 26,
-                onPressed: isLoading ? () {} : onAppleSignUp!,
-              ),
-            ],
-          ],
-        ),
-      ],
+    return SocialProviderButtons(
+      isDark: isDark,
+      isLoading: isLoading,
+      dividerText: context.translate('or_sign_up_with'),
+      onGoogle: onGoogleSignUp,
+      onApple: onAppleSignUp,
     );
   }
 }

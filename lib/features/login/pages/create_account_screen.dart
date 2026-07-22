@@ -1,8 +1,10 @@
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
+import 'package:expense_tracker/core/utils/email_validator.dart';
 import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
 import 'package:expense_tracker/features/login/pages/verify_email_screen.dart';
+import 'package:expense_tracker/features/login/pages/login_screen.dart';
 import 'package:expense_tracker/features/login/widgets/signup_form.dart';
 import 'package:expense_tracker/features/login/widgets/signup_header.dart';
 import 'package:expense_tracker/features/login/widgets/signup_login_link.dart';
@@ -38,6 +40,22 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     super.dispose();
   }
 
+  String _emailErrorMessage(EmailValidationFailure? failure) {
+    switch (failure) {
+      case EmailValidationFailure.empty:
+        return context.translate('please_enter_email');
+      case EmailValidationFailure.disposable:
+        return context.translate('email_disposable_not_allowed');
+      case EmailValidationFailure.notReal:
+        return context.translate('please_enter_real_email');
+      case EmailValidationFailure.noMx:
+        return context.translate('email_domain_invalid');
+      case EmailValidationFailure.badFormat:
+      case null:
+        return context.translate('please_enter_valid_email');
+    }
+  }
+
   // 3. Handle Email/Password Sign Up
   Future<void> _handleSignUp() async {
     final name = _nameController.text.trim();
@@ -45,7 +63,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
 
-    // Validation
+    // Validation — stay on this screen for any failure
     if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
       _showErrorSnackBar(context.translate('please_fill_fields'));
       return;
@@ -64,7 +82,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     setState(() => _isLoading = true);
 
     try {
-      // Create user
+      // Deep email check (format + fake/gibberish + disposable + MX)
+      final emailResult = await EmailValidator.validate(email);
+      if (!emailResult.isValid) {
+        if (mounted) {
+          _showErrorSnackBar(_emailErrorMessage(emailResult.failure));
+        }
+        return;
+      }
+
+      // Create user only after email passes validation
       final userCredential = await _authService.signUpWithEmail(email, password);
 
       // Update Firebase Profile with the user's Full Name
@@ -72,7 +99,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         await userCredential.user!.updateDisplayName(name);
 
         if (mounted) {
-          // Navigate to Verify Email Screen and clear history
+          // Navigate to Verify Email Screen only after successful signup
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const VerifyEmailScreen(isFromSignup: true)),
@@ -81,7 +108,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         }
       }
     } catch (e) {
-      _showErrorSnackBar(e.toString());
+      // Firebase invalid-email / other auth errors — stay here, show alert
+      _showErrorSnackBar(e.toString().replaceFirst('Exception: ', ''));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -128,6 +156,18 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     }
   }
 
+  void _navigateToLogin() {
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+      return;
+    }
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      (route) => false,
+    );
+  }
+
   // Helper method for errors
   void _showErrorSnackBar(String message) {
     if (!mounted) return;
@@ -140,7 +180,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
+    return PopScope(
+      canPop: Navigator.canPop(context),
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) _navigateToLogin();
+      },
+      child: Scaffold(
       backgroundColor: isDark ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
@@ -179,7 +224,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           ),
                           SignupLoginLink(
                             isDark: isDark,
-                            onLoginTap: () => Navigator.pop(context),
+                            onLoginTap: _navigateToLogin,
                           ),
                         ],
                       ),
@@ -191,6 +236,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           },
         ),
       ),
+    ),
     );
   }
 }

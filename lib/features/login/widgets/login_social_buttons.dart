@@ -1,12 +1,7 @@
-import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_images.dart';
-import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
-import 'package:expense_tracker/features/login/widgets/custom_button.dart';
+import 'package:expense_tracker/features/login/widgets/social_provider_buttons.dart';
 
 class LoginSocialButtons extends StatelessWidget {
   final bool isDark;
@@ -28,61 +23,13 @@ class LoginSocialButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Divider(
-                color: isDark ? Colors.grey.shade700 : AppColors.dividerColor,
-                thickness: 2,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.p16,
-              ),
-              child: Text(
-                context.translate('or'),
-                style: TextStyle(
-                  color: isDark ? Colors.grey.shade400 : AppColors.dividerOrColor,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Divider(
-                color: isDark ? Colors.grey.shade700 : AppColors.dividerColor,
-                thickness: 2,
-              ),
-            ),
-          ],
+        SocialProviderButtons(
+          isDark: isDark,
+          isLoading: isLoading,
+          dividerText: context.translate('or'),
+          onGoogle: onGoogleSignIn,
+          onApple: onAppleSignIn,
         ),
-        const SizedBox(height: AppSpacing.s16),
-        CustomButton(
-          leading: Image.asset(AppImages.googleLogo),
-          showBorder: true,
-          borderColor: isDark ? Colors.grey.shade600 : AppColors.borderColor,
-          text: context.translate('continue_with_google'),
-          textColor: isDark ? Colors.white : AppColors.googleTextColor,
-          fontFamily: GoogleFonts.inter().fontFamily,
-          onPressed: isLoading ? () {} : onGoogleSignIn,
-          backgroundColor: isDark ? Colors.grey.shade700 : AppColors.white,
-        ),
-        if (Platform.isIOS || Platform.isMacOS)
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: CustomButton(
-              leading: Transform.scale(
-                scale: 1.4,
-                child: Image.asset(AppImages.appleLogo),
-              ),
-              showBorder: true,
-              borderColor: isDark ? Colors.grey.shade600 : AppColors.borderColor,
-              text: context.translate('continue_with_apple'),
-              textColor: isDark ? Colors.white : AppColors.googleTextColor,
-              fontFamily: GoogleFonts.inter().fontFamily,
-              onPressed: isLoading ? () {} : onAppleSignIn!,
-          backgroundColor: isDark ? Colors.grey.shade700 : AppColors.white,
-            ),
-          ),
         const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

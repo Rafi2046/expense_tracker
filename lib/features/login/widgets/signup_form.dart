@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
@@ -9,7 +10,7 @@ class SignupForm extends StatelessWidget {
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
   final bool isLoading;
-  final VoidCallback onSignUp;
+  final Future<void> Function() onSignUp;
 
   const SignupForm({
     super.key,
@@ -24,6 +25,7 @@ class SignupForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: AppSpacing.authFieldGroupGap,
       children: [
         CustomTextFieldWidget(
           controller: nameController,
@@ -34,6 +36,7 @@ class SignupForm extends StatelessWidget {
           controller: emailController,
           label: context.translate('email_address'),
           hintText: context.translate('email_hint'),
+          keyboardType: TextInputType.emailAddress,
         ),
         CustomTextFieldWidget(
           controller: passwordController,
@@ -47,10 +50,9 @@ class SignupForm extends StatelessWidget {
           hintText: '••••••••',
           obscureText: true,
         ),
-        const SizedBox(height: 16),
         CustomButton(
-          text: isLoading ? context.translate('creating_account') : context.translate('sign_up'),
-          onPressed: isLoading ? () {} : onSignUp,
+          text: context.translate('sign_up'),
+          onPressed: isLoading ? null : onSignUp,
         ),
       ],
     );
