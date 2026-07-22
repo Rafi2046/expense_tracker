@@ -183,6 +183,10 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
   ) async {
     setState(() => _isSharing = true);
     try {
+      final shareText = context.translate(
+        'share_invoice_text',
+        namedArgs: {'name': tour.name},
+      );
       final imageBytes = await _screenshotController.capture(
         pixelRatio: 3.0,
         delay: const Duration(milliseconds: 100),
@@ -191,11 +195,14 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/tour_invoice_${tour.id.substring(0, 8)}.png');
       await file.writeAsBytes(imageBytes);
+      if (!mounted) return;
       await SharePlus.instance.share(
-        ShareParams(files: [XFile(file.path)], text: context.translate('share_invoice_text', namedArgs: {'name': tour.name})),
+        ShareParams(files: [XFile(file.path)], text: shareText),
       );
-    } catch (_) {}
-    if (mounted) setState(() => _isSharing = false);
+    } catch (_) {
+    } finally {
+      if (mounted) setState(() => _isSharing = false);
+    }
   }
 
   void _showSettlementDetail(BuildContext context, String fromName, String toName, double amount, String currency) {

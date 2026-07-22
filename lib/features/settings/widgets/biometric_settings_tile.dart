@@ -48,6 +48,7 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
           localizedReason: context.translate('biometric_reason'),
         );
         if (!verified) {
+          if (!mounted) return;
           messenger.showSnackBar(
             SnackBar(content: Text(context.translate('biometric_failed'))),
           );

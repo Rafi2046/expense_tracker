@@ -44,6 +44,7 @@ class ReportBottomActions extends StatelessWidget {
       await OpenFilex.open(file.path);
     } catch (e) {
       messenger.hideCurrentSnackBar();
+      if (!context.mounted) return;
       messenger.showSnackBar(_errorSnackBar(context.translate('failed_to_download_pdf').replaceAll('{error}', e.toString())));
     }
   }
@@ -64,6 +65,7 @@ class ReportBottomActions extends StatelessWidget {
       await OpenFilex.open(file.path);
     } catch (e) {
       messenger.hideCurrentSnackBar();
+      if (!context.mounted) return;
       messenger.showSnackBar(_errorSnackBar(context.translate('failed_to_export_excel').replaceAll('{error}', e.toString())));
     }
   }
@@ -83,6 +85,7 @@ class ReportBottomActions extends StatelessWidget {
         name: title,
       );
     } catch (e) {
+      if (!context.mounted) return;
       messenger.showSnackBar(
         _errorSnackBar(context.translate('failed_to_print').replaceAll('{error}', e.toString())),
       );
@@ -120,6 +123,7 @@ class ReportBottomActions extends StatelessWidget {
       }
     } catch (e) {
       messenger.hideCurrentSnackBar();
+      if (!context.mounted) return;
       messenger.showSnackBar(_errorSnackBar(context.translate('failed_to_share').replaceAll('{error}', e.toString())));
     }
   }

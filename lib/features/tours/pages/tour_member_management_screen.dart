@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
@@ -217,17 +218,22 @@ class _TourMemberManagementScreenState
             ),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(ctx);
-              context.read<TourProvider>().removeParticipant(memberId).catchError((e) {
+              final messenger = ScaffoldMessenger.of(context);
+              final tourProvider = context.read<TourProvider>();
+              try {
+                await tourProvider.removeParticipant(memberId);
+              } catch (e) {
                 debugPrint('removeParticipant error: $e');
-                if (context.mounted) {
-                  // ignore: use_build_context_synchronously
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(context.translate('error_prefix', namedArgs: {'error': e.toString()}))),
-                  );
-                }
-              });
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      tr('error_prefix', namedArgs: {'error': e.toString()}),
+                    ),
+                  ),
+                );
+              }
             },
             child: Text(
               context.translate('remove_anyway_button'),
@@ -265,17 +271,22 @@ class _TourMemberManagementScreenState
             ),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(ctx);
-              context.read<TourProvider>().removeParticipant(memberId).catchError((e) {
+              final messenger = ScaffoldMessenger.of(context);
+              final tourProvider = context.read<TourProvider>();
+              try {
+                await tourProvider.removeParticipant(memberId);
+              } catch (e) {
                 debugPrint('removeParticipant error: $e');
-                if (context.mounted) {
-                  // ignore: use_build_context_synchronously
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(context.translate('error_prefix', namedArgs: {'error': e.toString()}))),
-                  );
-                }
-              });
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      tr('error_prefix', namedArgs: {'error': e.toString()}),
+                    ),
+                  ),
+                );
+              }
             },
             child: Text(
               context.translate('remove_button'),

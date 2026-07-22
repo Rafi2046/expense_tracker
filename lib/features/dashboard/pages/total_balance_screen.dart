@@ -493,9 +493,8 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
 
     if (confirmed == true) {
       await acctProv.deleteAccountByName(accountName);
-      if (mounted) {
-        context.read<TransactionProvider>().reloadFromDatabase();
-      }
+      if (!mounted) return;
+      context.read<TransactionProvider>().reloadFromDatabase();
       messenger.showSnackBar(
         SnackBar(
           content: Text(context.translate('account_deleted_message', namedArgs: {'account_name': accountName})),

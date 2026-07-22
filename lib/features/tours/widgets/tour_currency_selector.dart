@@ -19,7 +19,7 @@ class TourCurrencySelector extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final borderColor = theme.colorScheme.onSurface.withValues(alpha: 0.12);
     return DropdownButtonFormField<String>(
-      value: value,
+      initialValue: value,
       decoration: InputDecoration(
         labelText: context.translate('currency'),
         hintStyle: TextStyle(

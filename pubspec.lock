@@ -57,14 +57,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  carousel_slider:
-    dependency: "direct main"
-    description:
-      name: carousel_slider
-      sha256: febf4b0163e0242adc13d7a863b04965351f59e7dfea56675c7c2caa7bcd7476
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.2"
   characters:
     dependency: transitive
     description:
@@ -145,14 +137,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.7"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      sha256: "41e005c33bd814be4d3096aff55b1908d419fde52ca656c8c47719ec745873cd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.9"
   dbus:
     dependency: transitive
     description:
@@ -313,30 +297,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.9.1"
-  firebase_messaging:
-    dependency: "direct main"
-    description:
-      name: firebase_messaging
-      sha256: "30ad2d59bcd86117dc49d278c8998a0fb390c5a3202f6e43e4bd215d3f1d0556"
-      url: "https://pub.dev"
-    source: hosted
-    version: "16.4.3"
-  firebase_messaging_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_messaging_platform_interface
-      sha256: "4d144cb42b9a5a42855596be2d7682d32c50169f42e7df2cb3278ecf935e7d63"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.9.2"
-  firebase_messaging_web:
-    dependency: transitive
-    description:
-      name: firebase_messaging_web
-      sha256: fcd25d0b9da55766ef4d28ae05a7460f5189635d6b42607adcd9f08818fd35f0
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.3"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -483,14 +443,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_otp_text_field:
-    dependency: "direct main"
-    description:
-      name: flutter_otp_text_field
-      sha256: e7e589dc51cde120d63da6db55f3cef618f5d013d12adba76137ca1a51ce1390
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.5.1+1"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -781,14 +733,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
-  lottie:
-    dependency: "direct main"
-    description:
-      name: lottie
-      sha256: "377d87b8dcef640c04717e93afb86a510f0e1117a399ab94dc4b3f39c85eaa87"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.3.0"
   lucide_icons_flutter:
     dependency: "direct main"
     description:
@@ -813,14 +757,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.0"
-  material_symbols_icons:
-    dependency: "direct main"
-    description:
-      name: material_symbols_icons
-      sha256: "49c532dd0b74544e9d8d93ec0f821d52ec532e7c9263c889ebe71b1be4f34ba7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2951.0"
   meta:
     dependency: transitive
     description:
@@ -1013,14 +949,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.0"
-  salomon_bottom_bar:
-    dependency: "direct main"
-    description:
-      name: salomon_bottom_bar
-      sha256: e20abf2e449749432223a8b4e6647c212eef6c2b638e0ed8cc92eff9529c2b48
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.3.2"
   screenshot:
     dependency: "direct main"
     description:

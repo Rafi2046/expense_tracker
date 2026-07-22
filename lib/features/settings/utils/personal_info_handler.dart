@@ -89,12 +89,14 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
           '${directory.path}/profile_${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg',
         );
 
+        if (!mounted) return;
         setState(() {
           localImageFile = localFile;
           photoUrl = localFile.path;
         });
       }
     } catch (e) {
+      if (!context.mounted) return;
       messenger.showSnackBar(
         SnackBar(
           content: Text(context.translate('error_selecting_image', namedArgs: {'error': e.toString()})),
