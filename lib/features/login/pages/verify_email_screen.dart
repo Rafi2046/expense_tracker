@@ -15,6 +15,7 @@ import 'package:expense_tracker/features/login/widgets/sync_loading_overlay.dart
 import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/login/pages/login_screen.dart';
+import 'package:expense_tracker/features/login/pages/create_account_screen.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
   final bool isFromSignup;
@@ -210,6 +211,36 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     }
   }
 
+  /// Deletes the unverified account so the user can sign up with a real email.
+  Future<void> _handleChangeEmail() async {
+    _timer?.cancel();
+    _cooldownTimer?.cancel();
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null && !user.emailVerified) {
+        await user.delete();
+      } else {
+        await _authService.signOut();
+      }
+    } catch (_) {
+      await _authService.signOut();
+    }
+
+    if (mounted) {
+      // Keep LoginScreen under CreateAccount so "Log in" can pop safely.
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (route) => false,
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const CreateAccountScreen()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -337,6 +368,18 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     borderColor: theme.primaryColor,
                   ),
                   const SizedBox(height: AppSpacing.h24),
+
+                  if (widget.isFromSignup)
+                    TextButton(
+                      onPressed: _handleChangeEmail,
+                      child: Text(
+                        context.translate('change_email_address'),
+                        style: AppTextStyles.bodyBold.copyWith(
+                          color: theme.primaryColor,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
 
                   // Cancel / Sign Out
                   TextButton.icon(

@@ -58,6 +58,15 @@ class AppSpacing {
   static const double h48 = 48.0;
   static const double h50 = 50.0;
   static const double h80 = 80.0;
+
+  /// Login / sign-up text field and primary button height (kept in sync).
+  static const double authFieldHeight = h50;
+
+  /// Shared corner radius for auth text fields and buttons.
+  static const double authFieldBorderRadius = br8;
+
+  /// Space between label+field groups on auth screens (not label-to-input).
+  static const double authFieldGroupGap = s16;
   static const double h90 = 90.0;
   static const double h100 = 100.0;
   static const double h140 = 140.0;

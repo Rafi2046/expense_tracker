@@ -127,15 +127,11 @@ class _LoginScreenState extends State<LoginScreen>
 
                       if (!biometricMode || hasPasswordProvider)
                         CustomButton(
-                          text: isLoading
-                              ? (biometricMode
-                                    ? context.translate('verifying')
-                                    : context.translate('signing_in'))
-                              : (biometricMode
-                                    ? context.translate('sign_in_with_password')
-                                    : context.translate('sign_in')),
+                          text: biometricMode
+                              ? context.translate('sign_in_with_password')
+                              : context.translate('sign_in'),
                           onPressed: isLoading
-                              ? () {}
+                              ? null
                               : () => handleEmailLogin(
                                     biometricMode: biometricMode,
                                     email: _emailController.text,
