@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:expense_tracker/core/services/notification_service.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -81,28 +81,15 @@ class DailySummaryService {
         payload = 'daily_reminder';
       }
 
-      // Schedule tonight's local notification
+      // Schedule (or re-schedule) tonight's 11:59 PM local notification with
+      // the up-to-date total. No in-app notification is inserted here —
+      // the daily summary notification fires exactly once per night.
       await _scheduleTonightNotification(
         id: _notificationId,
         title: title,
         body: body,
         payload: payload,
       );
-
-      // Save/update today's in-app notification if total > 0
-      if (total > 0) {
-        final now = DateTime.now();
-        final dateKey =
-            '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-
-        await db.insertInAppNotification(
-          id: 'daily_summary_${profileId}_$dateKey',
-          title: title,
-          body: body,
-          type: 'alert',
-          profileId: profileId,
-        );
-      }
     } catch (e) {
       debugPrint('DailySummaryService.updateDailyNotification error: $e');
     }
@@ -114,8 +101,6 @@ class DailySummaryService {
     required String body,
     required String payload,
   }) async {
-    final plugin = FlutterLocalNotificationsPlugin();
-
     // Timezone setup
     tz_data.initializeTimeZones();
     tz.Location location;
@@ -140,27 +125,11 @@ class DailySummaryService {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 
-    await plugin.zonedSchedule(
+    await NotificationService.instance.showScheduledNotification(
       id: id,
       title: title,
       body: body,
       scheduledDate: scheduledDate,
-      notificationDetails: const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'daily_reminders',
-          'Daily Reminders',
-          importance: Importance.max,
-          priority: Priority.high,
-          playSound: true,
-        ),
-        iOS: DarwinNotificationDetails(
-          presentAlert: true,
-          presentBadge: true,
-          presentSound: true,
-        ),
-      ),
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
       payload: payload,
     );
   }

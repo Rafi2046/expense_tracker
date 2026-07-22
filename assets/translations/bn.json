@@ -489,6 +489,7 @@
   "delete_debt": "দেনা মুছুন",
   "delete_entries_for": "\"{name}\"-এর সব এন্ট্রি মুছবেন?",
   "delete_expense": "খরচ মুছুন",
+  "delete_income": "আয় মুছুন",
   "delete_expense_confirm": "আপনি কি নিশ্চিতভাবে এই খরচটি মুছতে চান? এই কাজটি পূর্বাবস্থায় ফেরানো যাবে না।",
   "delete_note_message": "আপনি কি নিশ্চিতভাবে এই নোটটি স্থায়ীভাবে মুছতে চান?",
   "delete_note_title": "নোট মুছবেন?",

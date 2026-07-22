@@ -60,7 +60,7 @@ class DailyCategoryTile extends StatelessWidget {
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    '(${(percentage * 100).toStringAsFixed(0)}%)',
+                    '(${(percentage * 100).toStringAsFixed(1)}%)',
                     style: TextStyle(
                       fontSize: AppFontSizes.size10,
                       color: isDark ? Colors.grey.shade500 : AppColors.textMuted,

@@ -44,20 +44,27 @@ class WeeklyCategoryTile extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      item.name,
-                      style: TextStyle(
-                        fontSize: AppFontSizes.size13,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.onSurface,
+                    Expanded(
+                      child: Text(
+                        item.name,
+                        style: TextStyle(
+                          fontSize: AppFontSizes.size12,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    PrivacyMaskedText(
-                      amount: item.amount,
-                      style: TextStyle(
-                        fontSize: AppFontSizes.size13,
-                        fontWeight: FontWeight.w700,
-                        color: Theme.of(context).colorScheme.onSurface,
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: PrivacyMaskedText(
+                        amount: item.amount,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: AppFontSizes.size12,
+                          fontWeight: FontWeight.w700,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
                     ),
                   ],
@@ -79,7 +86,7 @@ class WeeklyCategoryTile extends StatelessWidget {
                     ),
                     const SizedBox(width: 16),
                     Text(
-                      "$count ${count == 1 ? 'tx' : 'txs'} (${(item.percentage * 100).toStringAsFixed(0)}%)",
+                      "$count ${count == 1 ? 'tx' : 'txs'} (${(item.percentage * 100).toStringAsFixed(1)}%)",
                       style: TextStyle(
                         fontSize: AppFontSizes.size10,
                         color: Colors.grey.shade500,

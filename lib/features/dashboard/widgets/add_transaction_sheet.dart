@@ -325,6 +325,97 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
     }
   }
 
+  Future<void> _delete(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final nav = Navigator.of(context);
+    final provider = context.read<TransactionProvider>();
+    final titleText = context.translate(widget.isIncome ? 'delete_income' : 'delete_expense');
+    final confirmText = context.translate('delete_transaction_confirmation');
+    final cancelText = context.translate('cancel');
+    final deleteText = context.translate('delete_button');
+    final successMsg = context.translate('transaction_deleted_success');
+    final txId = widget.transaction?.id;
+
+    if (txId == null) return;
+
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) {
+        final theme = Theme.of(ctx);
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            titleText,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: AppFontSizes.size16,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+          content: Text(
+            confirmText,
+            style: TextStyle(
+              fontSize: AppFontSizes.size14,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(
+                cancelText,
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.activeRed,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                deleteText,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      provider.deleteTransaction(txId);
+      nav.pop();
+
+      messenger.showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(LucideIcons.trash2, color: Colors.white),
+              const SizedBox(width: AppSpacing.w8),
+              Text(
+                successMsg,
+                style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+              ),
+            ],
+          ),
+          backgroundColor: AppColors.activeRed,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -448,17 +539,36 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                       AppSpacing.p24,
                       bottomInset + 24,
                     ),
-                    child: TransactionSaveButton(
-                      onPressed: () async {
-                        await _save(context);
-                      },
-                      themeColor: themeColor,
-                      isEditing: widget.isEditing,
-                      title: widget.isEditing
-                          ? (widget.isIncome
-                                ? context.translate('update_income')
-                                : context.translate('update_expense'))
-                          : (widget.isIncome ? context.translate('save_income') : context.translate('save_expense')),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TransactionSaveButton(
+                          onPressed: () async {
+                            await _save(context);
+                          },
+                          themeColor: AppColors.activeGreen,
+                          isEditing: widget.isEditing,
+                          title: widget.isEditing
+                              ? (widget.isIncome
+                                    ? context.translate('update_income')
+                                    : context.translate('update_expense'))
+                              : (widget.isIncome ? context.translate('save_income') : context.translate('save_expense')),
+                        ),
+                        if (widget.isEditing) ...[
+                          const SizedBox(height: 12),
+                          TransactionSaveButton(
+                            onPressed: () async {
+                              await _delete(context);
+                            },
+                            themeColor: AppColors.activeRed,
+                            isEditing: false,
+                            icon: LucideIcons.trash2,
+                            title: widget.isIncome
+                                ? context.translate('delete_income')
+                                : context.translate('delete_expense'),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 
 class DailySummaryUtils {
@@ -43,6 +44,7 @@ class DailySummaryUtils {
     required double highestAmount,
   }) {
     final List<String> insights = [];
+    final sym = context.currencySymbol;
 
     // Insight 1: Today's spending level vs. 7-day average
     if (total == 0) {
@@ -51,7 +53,7 @@ class DailySummaryUtils {
       final diffPercent = ((total - averageDaily) / averageDaily * 100).round();
       if (diffPercent > 20) {
         insights.add(
-          'Your spending today is $diffPercent% higher than your recent 7-day daily average of \$${averageDaily.toStringAsFixed(2)}. Consider reviewing your budget!'
+          'Your spending today is $diffPercent% higher than your recent 7-day daily average of $sym${averageDaily.toStringAsFixed(2)}. Consider reviewing your budget!'
         );
       } else if (diffPercent < -20) {
         insights.add(
@@ -59,7 +61,7 @@ class DailySummaryUtils {
         );
       } else {
         insights.add(
-          'Your daily spending is right on track, matching your recent 7-day average of \$${averageDaily.toStringAsFixed(2)}.'
+          'Your daily spending is right on track, matching your recent 7-day average of $sym${averageDaily.toStringAsFixed(2)}.'
         );
       }
     } else {
@@ -72,7 +74,7 @@ class DailySummaryUtils {
     if (topCategory != null && total > 0) {
       final share = (topAmount / total * 100).round();
       insights.add(
-        'Most of your money today went into $topCategory, which accounts for $share% of your total spending (\$${topAmount.toStringAsFixed(2)}).'
+        'Most of your money today went into $topCategory, which accounts for $share% of your total spending ($sym${topAmount.toStringAsFixed(2)}).'
       );
     }
 

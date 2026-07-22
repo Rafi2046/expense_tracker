@@ -136,49 +136,44 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                       ),
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                    child: Row(
-                      children: [
-                        Icon(LucideIcons.calendarRange, color: activeColor, size: 20),
-                        const SizedBox(width: 12),
-                        Text(
-                          _monthLabel(),
-                          style: AppTextStyles.bodyBold.copyWith(
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      _monthLabel(),
+                      style: AppTextStyles.bodyBold.copyWith(
+                        color: theme.colorScheme.onSurface,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
 
                   if (total > 0) ...[
                     // ── Stat Cards ──
-                    Row(
-                      children: [
-                        Expanded(
-                          child: DailyStatCard(
-                            title: context.translate('monthly_expenses'),
-                            amount: total,
-                            subtitle: '${context.translate('logged_this_month')}: $count',
-                            icon: LucideIcons.wallet,
-                            gradientColors: isDark
-                                ? [const Color(0xFF22262E), const Color(0xFF1E2129)]
-                                : [Colors.white, Colors.white],
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            child: DailyStatCard(
+                              title: context.translate('monthly_expenses'),
+                              amount: total,
+                              subtitle: '${context.translate('logged_this_month')}: $count',
+                              gradientColors: isDark
+                                  ? [const Color(0xFF22262E), const Color(0xFF1E2129)]
+                                  : [Colors.white, Colors.white],
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: DailyStatCard(
-                            title: context.translate('daily_average'),
-                            amount: averageDaily,
-                            subtitle: context.translate('monthly_trend'),
-                            icon: LucideIcons.trendingUp,
-                            gradientColors: isDark
-                                ? [const Color(0xFF22262E), const Color(0xFF1E2129)]
-                                : [Colors.white, Colors.white],
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: DailyStatCard(
+                              title: context.translate('daily_average'),
+                              amount: averageDaily,
+                              subtitle: context.translate('monthly_trend'),
+                              gradientColors: isDark
+                                  ? [const Color(0xFF22262E), const Color(0xFF1E2129)]
+                                  : [Colors.white, Colors.white],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 16),
 
@@ -188,7 +183,6 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                         title: context.translate('highest_expense_this_month'),
                         amount: highestAmount,
                         subtitle: '$highestCategory${highestTx?['note'] != null && (highestTx!['note'] as String).isNotEmpty ? " (${highestTx['note']})" : ""}',
-                        icon: LucideIcons.alertTriangle,
                         gradientColors: isDark
                             ? [const Color(0xFF22262E), const Color(0xFF1E2129)]
                             : [Colors.white, Colors.white],

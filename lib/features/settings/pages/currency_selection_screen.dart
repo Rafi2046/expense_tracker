@@ -162,7 +162,6 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                       isSelected: isCurrent,
                       onTap: () {
                         provider.selectCurrency(currency.code);
-                        Navigator.pop(context);
                       },
                     );
                   },

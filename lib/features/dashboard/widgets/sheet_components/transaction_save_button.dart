@@ -7,6 +7,7 @@ class TransactionSaveButton extends StatefulWidget {
   final Color themeColor;
   final String title;
   final bool isEditing;
+  final IconData? icon;
 
   const TransactionSaveButton({
     super.key,
@@ -14,6 +15,7 @@ class TransactionSaveButton extends StatefulWidget {
     required this.themeColor,
     required this.title,
     this.isEditing = false,
+    this.icon,
   });
 
   @override
@@ -82,9 +84,10 @@ class _TransactionSaveButtonState extends State<TransactionSaveButton>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                widget.isEditing
-                    ? LucideIcons.checkCircle
-                    : LucideIcons.save,
+                widget.icon ??
+                    (widget.isEditing
+                        ? LucideIcons.checkCircle
+                        : LucideIcons.save),
                 color: Colors.white,
                 size: 20,
               ),

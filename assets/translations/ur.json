@@ -489,6 +489,7 @@
   "delete_debt": "قرض حذف کریں",
   "delete_entries_for": "\"{name}\" کے تمام اندراجات حذف کریں؟",
   "delete_expense": "خرچ حذف کریں",
+  "delete_income": "آمدنی مٹائیں",
   "delete_expense_confirm": "کیا آپ واقعی یہ خرچ حذف کرنا چاہتے ہیں؟ یہ عمل واپس نہیں لیا جا سکتا۔",
   "delete_note_message": "کیا آپ واقعی اس نوٹ کو مستقل طور پر حذف کرنا چاہتے ہیں؟",
   "delete_note_title": "نوٹ حذف کریں؟",

@@ -1606,7 +1606,7 @@ class DatabaseHelper {
 
     return {
       'total': (totalResult.first['total'] as num).toDouble(),
-      'transactionCount': Sqflite.firstIntValue(totalResult) ?? 0,
+      'transactionCount': (totalResult.first['count'] as num).toInt(),
       'topCategory': topResult.isNotEmpty ? topResult.first['category'] as String : null,
       'topAmount': topResult.isNotEmpty ? (topResult.first['catTotal'] as num).toDouble() : 0.0,
     };
@@ -1669,7 +1669,7 @@ class DatabaseHelper {
     );
 
     final total = (totalResult.first['total'] as num).toDouble();
-    final count = Sqflite.firstIntValue(totalResult) ?? 0;
+    final count = (totalResult.first['count'] as num).toInt();
 
     return {
       'total': total,
@@ -1820,7 +1820,7 @@ class DatabaseHelper {
     );
 
     final total = (totalResult.first['total'] as num).toDouble();
-    final count = Sqflite.firstIntValue(totalResult) ?? 0;
+    final count = (totalResult.first['count'] as num).toInt();
     final last7DaysTotal = (prevTotalResult.first['prevTotal'] as num).toDouble();
     final averageDaily = last7DaysTotal / 7.0;
 
@@ -1865,7 +1865,7 @@ class DatabaseHelper {
 
     return {
       'total': (totalResult.first['total'] as num).toDouble(),
-      'transactionCount': Sqflite.firstIntValue(totalResult) ?? 0,
+      'transactionCount': (totalResult.first['count'] as num).toInt(),
       'topCategory': topResult.isNotEmpty ? topResult.first['category'] as String : null,
       'topAmount': topResult.isNotEmpty ? (topResult.first['catTotal'] as num).toDouble() : 0.0,
     };
@@ -1919,7 +1919,7 @@ class DatabaseHelper {
     );
 
     final total = (totalResult.first['total'] as num).toDouble();
-    final count = Sqflite.firstIntValue(totalResult) ?? 0;
+    final count = (totalResult.first['count'] as num).toInt();
 
     // 4. Daily average: total / days elapsed this month
     final daysElapsed = now.day;

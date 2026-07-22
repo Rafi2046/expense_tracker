@@ -332,6 +332,39 @@ class NotificationService {
     return _plugin.getNotificationAppLaunchDetails();
   }
 
+  // ── Scheduled notification (used by DailySummaryService) ──
+
+  Future<void> showScheduledNotification({
+    required int id,
+    required String title,
+    required String body,
+    required tz.TZDateTime scheduledDate,
+    String? payload,
+  }) async {
+    await _plugin.zonedSchedule(
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: scheduledDate,
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'daily_reminders',
+          'Daily Reminders',
+          importance: Importance.max,
+          priority: Priority.high,
+          playSound: true,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      payload: payload,
+    );
+  }
+
   // ── Budget Threshold ──
 
   Future<BudgetThresholdResult?> checkBudgetThreshold({

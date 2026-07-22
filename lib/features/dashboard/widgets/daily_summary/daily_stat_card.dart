@@ -8,8 +8,9 @@ class DailyStatCard extends StatelessWidget {
   final String? value;
   final double? amount;
   final String subtitle;
-  final IconData icon;
+  final IconData? icon;
   final List<Color>? gradientColors;
+  final List<Color>? iconGradient;
 
   const DailyStatCard({
     super.key,
@@ -17,8 +18,9 @@ class DailyStatCard extends StatelessWidget {
     this.value,
     this.amount,
     required this.subtitle,
-    required this.icon,
+    this.icon,
     this.gradientColors,
+    this.iconGradient,
   });
 
   @override
@@ -33,12 +35,19 @@ class DailyStatCard extends StatelessWidget {
     final borderThemeColor = isDark ? const Color(0xFF3A3F4A) : const Color(0xFFE5E7EB);
 
     final valueStyle = TextStyle(
-      fontSize: AppFontSizes.size20,
+      fontSize: AppFontSizes.size16,
       fontWeight: FontWeight.bold,
       color: theme.colorScheme.onSurface,
     );
 
+    final defaultIconGradient = isDark
+        ? [const Color(0xFF8E75C8), const Color(0xFF6B5BA7)]
+        : [const Color(0xFF1B6B45), const Color(0xFF2EBD85)];
+
+    final colors = iconGradient ?? defaultIconGradient;
+
     return Container(
+      constraints: const BoxConstraints(minHeight: 110),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: baseGradient,
@@ -60,7 +69,7 @@ class DailyStatCard extends StatelessWidget {
                 )
               ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
       child: Row(
         children: [
           Expanded(
@@ -78,9 +87,13 @@ class DailyStatCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 if (amount != null)
-                  PrivacyMaskedText(
-                    amount: amount!,
-                    style: valueStyle,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: PrivacyMaskedText(
+                      amount: amount!,
+                      style: valueStyle,
+                    ),
                   )
                 else
                   Text(
@@ -95,22 +108,38 @@ class DailyStatCard extends StatelessWidget {
                     color: isDark ? Colors.grey.shade500 : AppColors.loginSubTitle,
                     fontWeight: FontWeight.w500,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: isDark ? Colors.white.withValues(alpha: 0.05) : theme.colorScheme.primary.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(12),
+          const SizedBox(width: 10),
+          if (icon != null)
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: colors,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: colors.first.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Icon(
+                icon!,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
-            child: Icon(
-              icon,
-              color: isDark ? const Color(0xFF8E75C8) : theme.colorScheme.primary,
-              size: 20,
-            ),
-          ),
         ],
       ),
     );

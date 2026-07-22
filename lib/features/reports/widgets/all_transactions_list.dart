@@ -114,7 +114,7 @@ class AllTransactionsList extends StatelessWidget {
         final isTransaction = tx.type == 'Income' || tx.type == 'Expense';
 
         return Dismissible(
-          key: ValueKey(tx.id),
+          key: ValueKey('${tx.id}_$index'),
           direction: DismissDirection.endToStart,
           confirmDismiss: (_) async {
             return await showDialog<bool>(

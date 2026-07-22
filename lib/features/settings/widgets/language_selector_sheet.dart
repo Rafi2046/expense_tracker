@@ -144,9 +144,6 @@ class LanguageSelectorSheet extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         await provider.changeLanguage(lang.code, context);
-        if (context.mounted) {
-          Navigator.pop(context);
-        }
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),

@@ -489,6 +489,7 @@
   "delete_debt": "कर्ज हटाएं",
   "delete_entries_for": "\"{name}\" के सभी प्रविष्टियाँ हटाएं?",
   "delete_expense": "खर्च हटाएं",
+  "delete_income": "आय हटाएं",
   "delete_expense_confirm": "क्या आप वाकई यह खर्च हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।",
   "delete_note_message": "क्या आप वाकई इस नोट को स्थायी रूप से हटाना चाहते हैं?",
   "delete_note_title": "नोट हटाएं?",

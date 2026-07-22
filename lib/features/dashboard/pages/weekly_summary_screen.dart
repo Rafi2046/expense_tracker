@@ -202,55 +202,61 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                   const SizedBox(height: 16),
 
                   // ── Total Spent Main Header Card ──
-                  Container(
+                  SizedBox(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: LinearGradient(
-                        colors: isDark
-                            ? [const Color(0xFF312E81), const Color(0xFF1E1B4B)]
-                            : [const Color(0xFF6366F1), const Color(0xFF4F46E5)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: (isDark ? Colors.black : const Color(0xFF6366F1))
-                              .withValues(alpha: isDark ? 0.3 : 0.2),
-                          blurRadius: 15,
-                          offset: const Offset(0, 6),
+                    height: 130,
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        gradient: LinearGradient(
+                          colors: isDark
+                              ? [const Color(0xFF312E81), const Color(0xFF1E1B4B)]
+                              : [const Color(0xFF6366F1), const Color(0xFF4F46E5)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          context.translate('total_spent'),
-                          style: TextStyle(
-                            fontSize: AppFontSizes.size12,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white.withValues(alpha: 0.7),
+                        boxShadow: [
+                          BoxShadow(
+                            color: (isDark ? Colors.black : const Color(0xFF6366F1))
+                                .withValues(alpha: isDark ? 0.3 : 0.2),
+                            blurRadius: 15,
+                            offset: const Offset(0, 6),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            PrivacyMaskedText(
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            context.translate('total_spent'),
+                            style: TextStyle(
+                              fontSize: AppFontSizes.size12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white.withValues(alpha: 0.7),
+                            ),
+                          ),
+                          const Spacer(),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: PrivacyMaskedText(
                               amount: total,
                               style: TextStyle(
-                                fontSize: AppFontSizes.size32,
+                                fontSize: AppFontSizes.size16,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
                             ),
-                            WeeklyComparisonBadge(total: total, previousTotal: previousTotal),
-                          ],
-                        ),
-                      ],
+                          ),
+                          const SizedBox(height: 8),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: WeeklyComparisonBadge(total: total, previousTotal: previousTotal),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -264,12 +270,16 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                           icon: LucideIcons.calculator,
                           iconColor: const Color(0xFF3B82F6),
                           isDark: isDark,
-                          child: PrivacyMaskedText(
-                            amount: total / 7.0,
-                            style: TextStyle(
-                              fontSize: AppFontSizes.size14,
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.onSurface,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: PrivacyMaskedText(
+                              amount: total / 7.0,
+                              style: TextStyle(
+                                fontSize: AppFontSizes.size16,
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.onSurface,
+                              ),
                             ),
                           ),
                         ),
@@ -284,7 +294,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                           child: Text(
                             '$count',
                             style: TextStyle(
-                              fontSize: AppFontSizes.size14,
+                              fontSize: AppFontSizes.size16,
                               fontWeight: FontWeight.bold,
                               color: theme.colorScheme.onSurface,
                             ),
@@ -307,71 +317,73 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                         width: 1,
                       ),
                     ),
-                    child: Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: 36,
-                          height: 36,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF59E0B).withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(8),
+                        Text(
+                          context.translate('peak_spike'),
+                          style: TextStyle(
+                            fontSize: AppFontSizes.size10,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey.shade500,
                           ),
-                          child: const Icon(LucideIcons.arrowUpRight, color: Color(0xFFF59E0B), size: 18),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        const SizedBox(height: 2),
+                        if (highestAmount > 0) ...[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                context.translate('peak_spike'),
-                                style: TextStyle(
-                                  fontSize: AppFontSizes.size10,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey.shade500,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              if (highestAmount > 0) ...[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      child: Text(
-                                        highestTx?['note'] as String? ?? highestCategory,
+                                    Text(
+                                      highestTx?['note'] as String? ?? highestCategory,
+                                      style: TextStyle(
+                                        fontSize: AppFontSizes.size13,
+                                        fontWeight: FontWeight.w600,
+                                        color: theme.colorScheme.onSurface,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    if (highestCategory.isNotEmpty) ...[
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        highestCategory,
                                         style: TextStyle(
-                                          fontSize: AppFontSizes.size13,
-                                          fontWeight: FontWeight.w600,
-                                          color: theme.colorScheme.onSurface,
+                                          fontSize: AppFontSizes.size10,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey.shade500,
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    PrivacyMaskedText(
-                                      amount: highestAmount,
-                                      style: TextStyle(
-                                        fontSize: AppFontSizes.size14,
-                                        fontWeight: FontWeight.bold,
-                                        color: theme.colorScheme.onSurface,
-                                      ),
-                                    ),
+                                    ],
                                   ],
                                 ),
-                              ] else ...[
-                                Text(
-                                  '—',
-                                  style: TextStyle(
-                                    fontSize: AppFontSizes.size13,
-                                    fontWeight: FontWeight.bold,
-                                    color: theme.colorScheme.onSurface,
-                                  ),
+                              ),
+                              const SizedBox(width: 8),
+                              PrivacyMaskedText(
+                                amount: highestAmount,
+                                style: TextStyle(
+                                  fontSize: AppFontSizes.size14,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.onSurface,
                                 ),
-                              ],
+                              ),
                             ],
                           ),
-                        ),
+                        ] else ...[
+                          Text(
+                            '—',
+                            style: TextStyle(
+                              fontSize: AppFontSizes.size13,
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -411,49 +423,65 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                             child: AnimatedSwitcher(
                               duration: const Duration(milliseconds: 300),
                               child: _selectedTabIndex == 0
-                                  ? Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        SfCircularChart(
-                                          margin: EdgeInsets.zero,
-                                          series: <CircularSeries<CategoryBreakdownItem, String>>[
-                                            DoughnutSeries<CategoryBreakdownItem, String>(
-                                              dataSource: doughnutItems,
-                                              xValueMapper: (CategoryBreakdownItem item, _) => item.name,
-                                              yValueMapper: (CategoryBreakdownItem item, _) => item.amount,
-                                              pointColorMapper: (CategoryBreakdownItem item, _) => item.color,
-                                              innerRadius: '75%',
-                                              startAngle: 270,
-                                              endAngle: 270,
-                                              dataLabelSettings: const DataLabelSettings(isVisible: false),
-                                              animationDuration: 800,
-                                            ),
-                                          ],
-                                        ),
-                                        FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                context.translate('total'),
-                                                style: TextStyle(
-                                                  fontSize: AppFontSizes.size10,
-                                                  color: Colors.grey.shade500,
-                                                  fontWeight: FontWeight.w500,
+                                  ? SfCircularChart(
+                                      margin: EdgeInsets.zero,
+                                      annotations: <CircularChartAnnotation>[
+                                        CircularChartAnnotation(
+                                          widget: LayoutBuilder(
+                                            builder: (context, constraints) {
+                                              final chartSize = constraints.maxWidth < constraints.maxHeight
+                                                  ? constraints.maxWidth
+                                                  : constraints.maxHeight;
+                                              final innerDiameter = chartSize * 0.55;
+                                              return SizedBox(
+                                                width: innerDiameter,
+                                                height: innerDiameter,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(4),
+                                                  child: Center(
+                                                    child: FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: [
+                                                          Text(
+                                                            context.translate('total'),
+                                                            style: TextStyle(
+                                                              fontSize: AppFontSizes.size10,
+                                                              color: Colors.grey.shade500,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 4),
+                                                          PrivacyMaskedText(
+                                                            amount: total,
+                                                            style: TextStyle(
+                                                              fontSize: AppFontSizes.size18,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: theme.colorScheme.onSurface,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              PrivacyMaskedText(
-                                                amount: total,
-                                                style: TextStyle(
-                                                  fontSize: AppFontSizes.size18,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: theme.colorScheme.onSurface,
-                                                ),
-                                              ),
-                                            ],
+                                              );
+                                            },
                                           ),
+                                        ),
+                                      ],
+                                      series: <CircularSeries<CategoryBreakdownItem, String>>[
+                                        DoughnutSeries<CategoryBreakdownItem, String>(
+                                          dataSource: doughnutItems,
+                                          xValueMapper: (CategoryBreakdownItem item, _) => item.name,
+                                          yValueMapper: (CategoryBreakdownItem item, _) => item.amount,
+                                          pointColorMapper: (CategoryBreakdownItem item, _) => item.color,
+                                          innerRadius: '75%',
+                                          startAngle: 270,
+                                          endAngle: 270,
+                                          dataLabelSettings: const DataLabelSettings(isVisible: false),
+                                          animationDuration: 800,
                                         ),
                                       ],
                                     )
