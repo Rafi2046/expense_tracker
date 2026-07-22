@@ -17,9 +17,10 @@ import 'package:expense_tracker/features/tours/widgets/tour_list_empty_state.dar
 import 'package:expense_tracker/features/tours/widgets/join_tour_sheet.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
-import 'package:expense_tracker/features/tours/widgets/tour_create_button.dart';
 import 'package:expense_tracker/features/tours/widgets/delete_tour_dialog.dart';
 import 'package:expense_tracker/features/tours/widgets/complete_tour_dialog.dart';
+import 'package:expense_tracker/features/tours/utils/tour_insights_data.dart';
+import 'package:expense_tracker/features/tours/widgets/tour_insights_card.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourListScreen extends StatefulWidget {
@@ -70,6 +71,8 @@ class _TourListScreenState extends State<TourListScreen> {
 
   final Map<String, double> _totalSpent = {};
   int _currentPageIndex = 0;
+  TourInsightsData? _insights;
+  bool _insightsLoading = false;
   String? _lastProfileId;
   int _lastTourHash = 0;
   late final PageController _pageController;
@@ -77,9 +80,10 @@ class _TourListScreenState extends State<TourListScreen> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(viewportFraction: 0.85);
+    _pageController = PageController(viewportFraction: 0.92);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadCounts();
+      _loadInsights(_currentPageIndex);
       TourProvider.onNotification = (msg) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -130,6 +134,23 @@ class _TourListScreenState extends State<TourListScreen> {
       debugPrint('TourListScreen._loadCounts error: $e');
     }
     if (mounted) setState(() {});
+    _loadInsights(_currentPageIndex);
+  }
+
+  Future<void> _loadInsights(int index) async {
+    final provider = context.read<TourProvider>();
+    final tours = provider.tours;
+    if (index < 0 || index >= tours.length) return;
+    final tour = tours[index];
+    if (!mounted) return;
+    setState(() => _insightsLoading = true);
+    final data = await TourInsightsData.load(tour.id);
+    if (mounted) {
+      setState(() {
+        _insights = data;
+        _insightsLoading = false;
+      });
+    }
   }
 
   void _openCreateTourSheet() {
@@ -296,7 +317,10 @@ class _TourListScreenState extends State<TourListScreen> {
     if (_lastProfileId != activeProfileId || _lastTourHash != currentHash) {
       _lastProfileId = activeProfileId;
       _lastTourHash = currentHash;
-      WidgetsBinding.instance.addPostFrameCallback((_) => _loadCounts());
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _loadCounts();
+        _loadInsights(_currentPageIndex);
+      });
     }
 
     final photoUrl = currentProfile.id == 'default_profile'
@@ -310,10 +334,6 @@ class _TourListScreenState extends State<TourListScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: tours.isNotEmpty
-          ? TourCreateButton(onPressed: _showCreateJoinSheet)
-          : null,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -360,9 +380,9 @@ class _TourListScreenState extends State<TourListScreen> {
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: constraints.maxHeight),
             child: Padding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 top: 4,
-                bottom: MediaQuery.of(context).padding.bottom + 16,
+                bottom: 40,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,6 +394,7 @@ class _TourListScreenState extends State<TourListScreen> {
                       itemCount: tours.length,
                       onPageChanged: (index) {
                         setState(() => _currentPageIndex = index);
+                        _loadInsights(index);
                       },
                        itemBuilder: (context, index) {
                         final tour = tours[index];
@@ -434,7 +455,46 @@ class _TourListScreenState extends State<TourListScreen> {
                       );
                     }).toList(),
                   ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: TourInsightsCard(
+                      insights: _insights,
+                      currency: tours[_currentPageIndex].currency,
+                      isLoading: _insightsLoading,
+                    ),
+                  ),
                   const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        onPressed: _showCreateJoinSheet,
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(
+                            color: AppColors.activeGreen,
+                            width: 1.2,
+                          ),
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: AppColors.activeGreen,
+                          padding:
+                              const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          '+ Add New',
+                          style: AppTextStyles.body.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.activeGreen,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),

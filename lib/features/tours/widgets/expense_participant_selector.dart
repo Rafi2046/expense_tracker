@@ -36,6 +36,8 @@ class ExpenseParticipantSelector extends StatefulWidget {
 class _ExpenseParticipantSelectorState
     extends State<ExpenseParticipantSelector> {
   double _totalPaid = 0;
+  final Set<String> _autoDistributedIds = {};
+  bool _isDistributing = false;
 
   @override
   void initState() {
@@ -48,6 +50,18 @@ class _ExpenseParticipantSelectorState
     super.didUpdateWidget(oldWidget);
     if (oldWidget.paidByAmounts != widget.paidByAmounts) {
       _recalcTotal();
+      _isDistributing = true;
+      for (final entry in widget.paidByAmounts.entries) {
+        final c = widget.amountControllers[entry.key];
+        if (c != null) {
+          final v = entry.value;
+          final text = v == v.roundToDouble()
+              ? v.toStringAsFixed(0)
+              : v.toStringAsFixed(2);
+          if (c.text != text) c.text = text;
+        }
+      }
+      _isDistributing = false;
     }
   }
 
@@ -63,24 +77,21 @@ class _ExpenseParticipantSelectorState
     final updated = Map<String, double>.from(widget.paidByAmounts);
     if (updated.containsKey(id)) {
       updated.remove(id);
+      _autoDistributedIds.remove(id);
     } else {
-      final remaining = widget.totalAmount - _totalPaid;
-      if (remaining > 0) {
-        updated[id] = (remaining * 100).round() / 100.0;
-      } else if (widget.paidByAmounts.isEmpty) {
-        updated[id] = widget.totalAmount;
-      } else {
-        updated[id] = 0;
-      }
-      // Focus the new amount field
+      updated[id] = 0;
+      _autoDistributedIds.add(id);
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        widget.amountControllers[id]?.selection = TextSelection.collapsed(offset: 0);
+        widget.amountControllers[id]?.selection =
+            TextSelection.collapsed(offset: 0);
       });
     }
     widget.onPaidByChanged(updated);
   }
 
   void _updateAmount(String id, String text) {
+    if (_isDistributing) return;
+    _autoDistributedIds.remove(id);
     final value = double.tryParse(text) ?? 0;
     final updated = Map<String, double>.from(widget.paidByAmounts);
     if (value <= 0 && text.trim().isEmpty) {
@@ -88,12 +99,64 @@ class _ExpenseParticipantSelectorState
     } else {
       updated[id] = value;
     }
+    _autoDistributeRemaining(updated);
     widget.onPaidByChanged(updated);
+  }
+
+  void _autoDistributeRemaining(Map<String, double> updated) {
+    final toggledIds = updated.keys.toList();
+    if (toggledIds.length < 2) return;
+
+    final autoIds =
+        toggledIds.where((i) => _autoDistributedIds.contains(i)).toList();
+
+    final allSum = updated.values.fold(0.0, (a, b) => a + b);
+
+    if (allSum > widget.totalAmount) {
+      final excess = allSum - widget.totalAmount;
+      double remainingExcess = excess;
+
+      for (final id in autoIds) {
+        final current = updated[id] ?? 0;
+        if (current <= 0) continue;
+        final reduction = current < remainingExcess ? current : remainingExcess;
+        updated[id] = current - reduction;
+        remainingExcess -= reduction;
+        if (remainingExcess <= 0) break;
+      }
+
+      while (remainingExcess > 0) {
+        String? largestId;
+        double largestAmt = -1;
+        for (final id in toggledIds) {
+          if (_autoDistributedIds.contains(id)) continue;
+          final amt = updated[id] ?? 0;
+          if (amt > largestAmt) {
+            largestAmt = amt;
+            largestId = id;
+          }
+        }
+        if (largestId == null || largestAmt <= 0) break;
+        final reduction =
+            largestAmt < remainingExcess ? largestAmt : remainingExcess;
+        updated[largestId] = largestAmt - reduction;
+        remainingExcess -= reduction;
+      }
+    } else if (allSum < widget.totalAmount) {
+      if (autoIds.isEmpty) return;
+      final remaining = widget.totalAmount - allSum;
+      final share = remaining / autoIds.length;
+      for (final id in autoIds) {
+        final rounded = (share * 100).round() / 100.0;
+        updated[id] = rounded;
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final diff = (widget.totalAmount * 100).round() - (_totalPaid * 100).round();
+    final diff =
+        (widget.totalAmount * 100).round() - (_totalPaid * 100).round();
     final isBalanced = diff == 0;
 
     return Column(
@@ -141,7 +204,8 @@ class _ExpenseParticipantSelectorState
                             value: selected,
                             activeColor: AppColors.activeGreen,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(AppSpacing.r4),
+                              borderRadius:
+                                  BorderRadius.circular(AppSpacing.r4),
                             ),
                             side: WidgetStateBorderSide.resolveWith(
                               (_) => BorderSide(
@@ -159,7 +223,6 @@ class _ExpenseParticipantSelectorState
                           color: color,
                           radius: 14,
                           fontSize: AppFontSizes.size10,
-                          backgroundColor: selected ? null : null,
                         ),
                         const SizedBox(width: AppSpacing.s8),
                         Text(
@@ -181,7 +244,8 @@ class _ExpenseParticipantSelectorState
                       width: 110,
                       child: TextField(
                         controller: widget.amountControllers[p.id],
-                        keyboardType: const TextInputType.numberWithOptions(
+                        keyboardType:
+                            const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
                         inputFormatters: [
@@ -198,34 +262,42 @@ class _ExpenseParticipantSelectorState
                         decoration: InputDecoration(
                           hintText: '0.00',
                           hintStyle: AppTextStyles.bodySmall.copyWith(
-                            color: widget.theme.colorScheme.onSurface.withValues(alpha: 0.35),
+                            color: widget.theme.colorScheme.onSurface
+                                .withValues(alpha: 0.35),
                           ),
                           prefixText: '${widget.currencySymbol} ',
                           prefixStyle: AppTextStyles.bodySmall.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: widget.theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                            color: widget.theme.colorScheme.onSurface
+                                .withValues(alpha: 0.45),
                           ),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(AppSpacing.r8),
+                            borderRadius:
+                                BorderRadius.circular(AppSpacing.r8),
                             borderSide: BorderSide(
-                              color: widget.theme.dividerColor.withValues(alpha: 0.2),
+                              color: widget.theme.dividerColor
+                                  .withValues(alpha: 0.2),
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(AppSpacing.r8),
+                            borderRadius:
+                                BorderRadius.circular(AppSpacing.r8),
                             borderSide: BorderSide(
-                              color: widget.theme.dividerColor.withValues(alpha: 0.2),
+                              color: widget.theme.dividerColor
+                                  .withValues(alpha: 0.2),
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(AppSpacing.r8),
+                            borderRadius:
+                                BorderRadius.circular(AppSpacing.r8),
                             borderSide: const BorderSide(
                               color: AppColors.activeGreen,
                               width: 1.5,
                             ),
                           ),
                           filled: true,
-                          fillColor: widget.theme.brightness == Brightness.dark
+                          fillColor: widget.theme.brightness ==
+                                  Brightness.dark
                               ? Colors.grey.shade900.withValues(alpha: 0.4)
                               : Colors.grey.shade50,
                           contentPadding: const EdgeInsets.symmetric(
@@ -247,9 +319,12 @@ class _ExpenseParticipantSelectorState
         Row(
           children: [
             Icon(
-              isBalanced ? LucideIcons.checkCircle : LucideIcons.alertCircle,
+              isBalanced
+                  ? LucideIcons.checkCircle
+                  : LucideIcons.alertCircle,
               size: 14,
-              color: isBalanced ? AppColors.activeGreen : AppColors.activeRed,
+              color:
+                  isBalanced ? AppColors.activeGreen : AppColors.activeRed,
             ),
             const SizedBox(width: AppSpacing.s6),
             Text(
