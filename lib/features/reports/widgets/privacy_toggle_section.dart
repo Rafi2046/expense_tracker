@@ -37,7 +37,7 @@ class PrivacyToggleSection extends StatelessWidget {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
@@ -63,15 +63,15 @@ class PrivacyToggleSection extends StatelessWidget {
               onToggle();
             },
             child: Container(
-              width: 36,
-              height: 36,
+              width: 32,
+              height: 32,
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 isMasked ? LucideIcons.shield : LucideIcons.shieldOff,
-                size: 20,
+                size: 16,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),

@@ -14,16 +14,16 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
   StreamSubscription<User?>? _authSubscription;
 
   static const _categoryColors = [
-    Color(0xFF2EBD85),
-    Color(0xFFFFC107),
-    Color(0xFFF06292),
-    Color(0xFF5C6BC0),
-    Color(0xFFAB47BC),
-    Color(0xFFD1C4E9),
-    Color(0xFFE91E63),
-    Color(0xFF26C6DA),
-    Color(0xFF42A5F5),
-    Color(0xFF26A69A),
+    Color(0xFF10B981), // Emerald green
+    Color(0xFFF59E0B), // Amber
+    Color(0xFFEC4899), // Hot pink
+    Color(0xFF6366F1), // Indigo
+    Color(0xFF8B5CF6), // Violet
+    Color(0xFF06B6D4), // Cyan
+    Color(0xFFEF4444), // Red
+    Color(0xFF14B8A6), // Teal
+    Color(0xFF3B82F6), // Blue
+    Color(0xFFF97316), // Orange
   ];
 
   ExpenseAnalyticsProvider() {
