@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 class DebtSheetHeader extends StatelessWidget {
   final String titleText;
@@ -20,11 +21,8 @@ class DebtSheetHeader extends StatelessWidget {
       children: [
         Text(
           titleText,
-          style: TextStyle(
-            fontSize: AppFontSizes.size18,
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
+          style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.bold,
+            color: theme.colorScheme.onSurface),
         ),
         IconButton(
           icon: Icon(

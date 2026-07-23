@@ -8,6 +8,8 @@ import 'package:expense_tracker/features/settings/widgets/currency_search_bar.da
 import 'package:expense_tracker/features/settings/widgets/currency_list_tile.dart';
 import 'package:expense_tracker/features/settings/widgets/currency_list_header.dart';
 import 'package:expense_tracker/features/settings/widgets/currency_empty_state.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CurrencySelectionScreen extends StatefulWidget {
   const CurrencySelectionScreen({super.key});
@@ -118,14 +120,14 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
           children: [
             // Current Currency Pinned flat card
             if (!_isSearching || filtered.contains(selectedCurrency)) ...[
               CurrencyListHeader(
                 title: context.translate('current_currency'),
                 letterSpacing: 1.2,
-                padding: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.only(bottom: AppSpacing.p8),
               ),
               CurrencyListTile(
                 currency: selectedCurrency,
@@ -135,7 +137,7 @@ class _CurrencySelectionScreenState extends State<CurrencySelectionScreen> {
                   Navigator.pop(context);
                 },
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: AppSpacing.s12),
             ],
 
             // Grouped Region List

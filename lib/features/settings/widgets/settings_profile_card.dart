@@ -3,6 +3,8 @@ import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class SettingsProfileCard extends StatelessWidget {
   final String name;
@@ -22,14 +24,14 @@ class SettingsProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF32235B), Color(0xFF6A53A1)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF6A53A1).withValues(alpha: 0.18),
@@ -42,7 +44,7 @@ class SettingsProfileCard extends StatelessWidget {
         children: [
           // Circle Avatar with subtle ring
           Container(
-            padding: const EdgeInsets.all(1.5),
+            padding: const EdgeInsets.all(AppSpacing.p4),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.2),
               shape: BoxShape.circle,
@@ -57,7 +59,7 @@ class SettingsProfileCard extends StatelessWidget {
                       : const AssetImage(AppImages.avatarImage)),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.s12),
 
           // User Info
           Expanded(
@@ -71,7 +73,7 @@ class SettingsProfileCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.h3.copyWith(color: Colors.white),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSpacing.s4),
                 Text(
                   email,
                   maxLines: 1,
@@ -84,7 +86,7 @@ class SettingsProfileCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.s12),
 
           // Edit Button with translucent circle overlay
           Container(

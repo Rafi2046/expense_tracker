@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 
@@ -36,12 +37,15 @@ class TourDateRangePicker extends StatelessWidget {
         color: isDark
             ? Colors.white.withValues(alpha: 0.05)
             : Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: textColor.withValues(alpha: 0.1),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.p16,
+        vertical: AppSpacing.p12,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -53,7 +57,7 @@ class TourDateRangePicker extends StatelessWidget {
               color: textColor.withValues(alpha: 0.6),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           Row(
             children: [
               Expanded(
@@ -68,7 +72,7 @@ class TourDateRangePicker extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8),
                 child: Icon(LucideIcons.arrowRight,
                   size: 18,
                   color: textColor.withValues(alpha: alpha),
@@ -117,17 +121,20 @@ class _DateButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.p12,
+          vertical: AppSpacing.p12,
+        ),
         decoration: BoxDecoration(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
               : Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.r8),
         ),
         child: Column(
           children: [
             Icon(icon, size: 18, color: textColor.withValues(alpha: 0.5)),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSpacing.h4),
             Text(dateText,
               style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.w500,

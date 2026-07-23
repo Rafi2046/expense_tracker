@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'year_selector.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class MonthCell extends StatelessWidget {
   const MonthCell({
@@ -42,7 +44,7 @@ class MonthCell extends StatelessWidget {
               : isCurrent
                   ? (isDark ? Colors.grey.shade800 : const Color(0xFFECEFF1))
                   : (isDark ? Theme.of(context).cardColor : Colors.white),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           border: Border.all(
             color: isSelected
                 ? Colors.transparent

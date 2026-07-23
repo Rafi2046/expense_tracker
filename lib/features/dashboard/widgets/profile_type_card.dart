@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class ProfileTypeCard extends StatelessWidget {
   final IconData icon;
@@ -25,7 +28,7 @@ class ProfileTypeCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(AppSpacing.p12),
         decoration: BoxDecoration(
           color: isSelected
               ? const Color(0xFF2EBD85).withValues(alpha: 0.12)
@@ -36,7 +39,7 @@ class ProfileTypeCard extends StatelessWidget {
                 : theme.dividerColor,
             width: 1.5,
           ),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
         ),
         child: Row(
           children: [
@@ -61,26 +64,20 @@ class ProfileTypeCard extends StatelessWidget {
                 size: 22,
               ),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: AppSpacing.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size15,
-                      fontWeight: FontWeight.w600,
-                      color: theme.textTheme.titleMedium?.color,
-                    ),
+                    style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600,
+                      color: theme.textTheme.titleMedium?.color),
                   ),
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSpacing.s4),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size12,
-                      color: theme.textTheme.bodySmall?.color,
-                    ),
+                    style: AppTextStyles.label.copyWith(color: theme.textTheme.bodySmall?.color),
                   ),
                 ],
               ),

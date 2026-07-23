@@ -25,7 +25,7 @@ class TourListEmptyState extends StatelessWidget {
     return Center(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p40, vertical: AppSpacing.p16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -42,7 +42,7 @@ class TourListEmptyState extends StatelessWidget {
                       : AppColors.activeGreen,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.s16),
               Text(
                 context.translate('your_journey_starts'),
                 style: AppTextStyles.sectionHeaderTitle.copyWith(
@@ -57,7 +57,7 @@ class TourListEmptyState extends StatelessWidget {
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
               FilledButton.icon(
                 onPressed: onCreateTour,
                 icon: Icon(LucideIcons.plus, size: 20),
@@ -65,16 +65,16 @@ class TourListEmptyState extends StatelessWidget {
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.activeGreen,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 42,
-                    vertical: 14,
+                    horizontal: AppSpacing.p40,
+                    vertical: AppSpacing.p16,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                   elevation: 0,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
               OutlinedButton.icon(
                 onPressed: onJoinTour ?? () => _showJoinSheet(context),
                 icon: Icon(LucideIcons.qrCode, size: 18),
@@ -85,11 +85,11 @@ class TourListEmptyState extends StatelessWidget {
                     color: AppColors.activeGreen.withValues(alpha: 0.3),
                   ),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 42,
-                    vertical: 14,
+                    horizontal: AppSpacing.p40,
+                    vertical: AppSpacing.p16,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                 ),
               ),

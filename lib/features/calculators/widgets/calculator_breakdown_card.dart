@@ -1,6 +1,8 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_legend_item.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CalculatorBreakdownCard extends StatelessWidget {
   final String title;
@@ -28,10 +30,10 @@ class CalculatorBreakdownCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1), width: 1.0),
       ),
       child: Column(
@@ -41,9 +43,9 @@ class CalculatorBreakdownCard extends StatelessWidget {
             title,
             style: AppTextStyles.profileCardTitle.copyWith(color: theme.colorScheme.onSurface),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
           ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppSpacing.r8),
             child: Container(
               height: 12,
               width: double.infinity,
@@ -64,7 +66,7 @@ class CalculatorBreakdownCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.s12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class AppTheme {
   // ── Brand (single primary / secondary pair) ─────────────────────
@@ -110,10 +112,19 @@ class AppTheme {
         surfaceContainerHighest: surfaceContainerHighestDark,
       );
 
+  // ── Shape tokens (radii 12 / 16) ─────────────────────────────────
+  static RoundedRectangleBorder get shapeMedium => RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
+      );
+
+  static RoundedRectangleBorder get shapeLarge => RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
+      );
+
   /// Reusable card decoration using ColorScheme outline/surface tokens.
   static BoxDecoration cardDecoration({
     required bool isDark,
-    double radius = 14,
+    double radius = AppSpacing.r12,
     double borderWidth = 1,
   }) {
     return BoxDecoration(
@@ -126,6 +137,19 @@ class AppTheme {
     );
   }
 
+  static TextTheme _textThemeFor(ColorScheme scheme, TextTheme base) {
+    final themed = GoogleFonts.workSansTextTheme(base).apply(
+      bodyColor: scheme.onSurface,
+      displayColor: scheme.onSurface,
+    );
+    return themed.copyWith(
+      bodySmall: themed.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+      labelMedium: themed.labelMedium?.copyWith(color: scheme.onSurfaceVariant),
+      labelSmall: themed.labelSmall?.copyWith(color: scheme.onSurfaceVariant),
+      titleSmall: themed.titleSmall?.copyWith(color: scheme.onSurfaceVariant),
+    );
+  }
+
   /// Shared Switch styling — inactive track must stay visible on white cards.
   static SwitchThemeData _switchTheme(ColorScheme scheme, {required bool isLight}) {
     return SwitchThemeData(
@@ -133,7 +157,6 @@ class AppTheme {
         if (states.contains(WidgetState.selected)) {
           return scheme.primary.withValues(alpha: isLight ? 0.5 : 0.55);
         }
-        // Light: onSurfaceVariant wash — outline/surfaceContainerHighest are too pale on white.
         return isLight
             ? scheme.onSurfaceVariant.withValues(alpha: 0.38)
             : scheme.surfaceContainerHighest;
@@ -155,23 +178,57 @@ class AppTheme {
 
   static ThemeData get lightTheme {
     final scheme = lightColorScheme;
+    final textTheme = _textThemeFor(scheme, ThemeData.light().textTheme);
+    final fontFamily = GoogleFonts.workSans().fontFamily;
+
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: scheme,
+      fontFamily: fontFamily,
+      textTheme: textTheme,
       primaryColor: brandPrimaryLight,
       scaffoldBackgroundColor: backgroundLight,
       cardColor: surfaceLight,
       switchTheme: _switchTheme(scheme, isLight: true),
-      dialogTheme: const DialogThemeData(
+      cardTheme: CardThemeData(
+        color: surfaceLight,
+        elevation: 0,
+        shape: shapeMedium.copyWith(
+          side: BorderSide(color: scheme.outline, width: 1),
+        ),
+      ),
+      dialogTheme: DialogThemeData(
         backgroundColor: surfaceLight,
+        shape: shapeLarge,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: scheme.primary,
+          foregroundColor: scheme.onPrimary,
+          shape: shapeMedium,
+          elevation: 0,
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(shape: shapeMedium),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(shape: shapeMedium),
+      ),
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: surfaceLight,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.r16)),
+        ),
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: surfaceLight,
         elevation: 0,
         scrolledUnderElevation: 0,
         iconTheme: IconThemeData(color: scheme.onSurface),
-        titleTextStyle: TextStyle(
+        titleTextStyle: textTheme.titleLarge?.copyWith(
           color: scheme.onSurface,
           fontSize: AppFontSizes.size18,
           fontWeight: FontWeight.bold,
@@ -181,49 +238,85 @@ class AppTheme {
         color: scheme.outlineVariant,
         thickness: 1.0,
       ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: scheme.surfaceContainerLowest,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
+          borderSide: BorderSide(color: scheme.outline),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
+          borderSide: BorderSide(color: scheme.outline),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
+          borderSide: BorderSide(color: scheme.primary, width: 1.5),
+        ),
+        labelStyle: TextStyle(color: scheme.onSurfaceVariant),
+        hintStyle: TextStyle(color: scheme.onSurfaceVariant),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: scheme.surfaceContainerHighest,
+        labelStyle: TextStyle(color: scheme.onSurface, fontFamily: fontFamily),
+        side: BorderSide(color: scheme.outlineVariant),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.r8),
+        ),
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: scheme.primary,
+        foregroundColor: scheme.onPrimary,
+        shape: shapeMedium,
+      ),
     );
   }
 
   static ThemeData get darkTheme {
     final scheme = darkColorScheme;
+    final textTheme = _textThemeFor(scheme, ThemeData.dark().textTheme);
+    final fontFamily = GoogleFonts.workSans().fontFamily;
+
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: scheme,
+      fontFamily: fontFamily,
+      textTheme: textTheme,
       primaryColor: brandPrimaryDark,
       scaffoldBackgroundColor: backgroundDark,
       cardColor: surfaceDark,
       switchTheme: _switchTheme(scheme, isLight: false),
-      textTheme: TextTheme(
-        titleLarge: TextStyle(color: scheme.onSurface),
-        titleMedium: TextStyle(color: scheme.onSurface),
-        titleSmall: TextStyle(color: scheme.onSurface),
-        bodyLarge: TextStyle(color: scheme.onSurface),
-        bodyMedium: TextStyle(color: scheme.onSurface),
-        bodySmall: TextStyle(color: scheme.onSurfaceVariant),
-        labelLarge: TextStyle(color: scheme.onSurface),
-        labelMedium: TextStyle(color: scheme.onSurfaceVariant),
-        labelSmall: TextStyle(color: scheme.onSurfaceVariant),
-      ),
       cardTheme: CardThemeData(
         color: surfaceDark,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
+        shape: shapeMedium.copyWith(
           side: BorderSide(color: scheme.outline, width: 1),
         ),
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: surfaceDark,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+        shape: shapeLarge,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: scheme.primary,
+          foregroundColor: scheme.onPrimary,
+          shape: shapeMedium,
+          elevation: 0,
         ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(shape: shapeMedium),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(shape: shapeMedium),
       ),
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: surfaceDark,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.r16)),
         ),
       ),
       appBarTheme: AppBarTheme(
@@ -232,7 +325,7 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         iconTheme: IconThemeData(color: scheme.onSurface),
-        titleTextStyle: TextStyle(
+        titleTextStyle: textTheme.titleLarge?.copyWith(
           color: scheme.onSurface,
           fontSize: AppFontSizes.size18,
           fontWeight: FontWeight.bold,
@@ -246,15 +339,15 @@ class AppTheme {
         filled: true,
         fillColor: scheme.surfaceContainer,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           borderSide: BorderSide(color: scheme.outline),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           borderSide: BorderSide(color: scheme.outline),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           borderSide: BorderSide(color: scheme.primary, width: 1.5),
         ),
         labelStyle: TextStyle(color: scheme.onSurfaceVariant),
@@ -262,15 +355,16 @@ class AppTheme {
       ),
       chipTheme: ChipThemeData(
         backgroundColor: scheme.surfaceContainerHighest,
-        labelStyle: TextStyle(color: scheme.onSurface),
+        labelStyle: TextStyle(color: scheme.onSurface, fontFamily: fontFamily),
         side: BorderSide(color: scheme.outlineVariant),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.r8),
         ),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: scheme.primary,
         foregroundColor: scheme.onPrimary,
+        shape: shapeMedium,
       ),
     );
   }

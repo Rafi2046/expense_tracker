@@ -3,10 +3,11 @@ import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'debt_sheet_header.dart';
 import 'debt_form_fields.dart';
 import 'debt_save_button.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 class AddEditDebtSheet extends StatefulWidget {
   final DebtItem? item;
@@ -35,7 +36,7 @@ class AddEditDebtSheet extends StatefulWidget {
       backgroundColor: Theme.of(context).cardColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSpacing.br20),
+          top: Radius.circular(AppSpacing.br24),
         ),
       ),
       builder: (context) {
@@ -85,13 +86,8 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
         ? (widget.isReceive ? context.translate('add_owed_entry') : context.translate('add_owed_entry_to_give'))
         : (widget.isReceive ? context.translate('edit_owed_entry') : context.translate('edit_owed_entry_to_give'));
 
-    final inputStyle = TextStyle(
-      fontSize: AppFontSizes.size14,
-      color: theme.colorScheme.onSurface,
-    );
-    final labelStyle = TextStyle(
-      fontSize: AppFontSizes.size14,
-      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+    final inputStyle = AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface);
+    final labelStyle = AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
     );
     final enabledBorderSide = BorderSide(
       color:
@@ -116,11 +112,11 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
           decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(AppSpacing.br20),
-            topRight: Radius.circular(AppSpacing.br20),
+            topLeft: Radius.circular(AppSpacing.br24),
+            topRight: Radius.circular(AppSpacing.br24),
           ),
         ),
-        padding: EdgeInsets.fromLTRB(20, 20, 20, bottomInset + 24),
+        padding: EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p16, AppSpacing.p16, bottomInset + AppSpacing.p24),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -132,7 +128,7 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                   titleText: titleText,
                   onClose: () => Navigator.of(context).pop(),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.s16),
                 DebtFormFields(
                   nameController: _nameController,
                   detailController: _detailController,
@@ -159,7 +155,7 @@ class _AddEditDebtSheetState extends State<AddEditDebtSheet> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s16),
                 DebtSaveButton(
                   themeColor: widget.themeColor,
                   onPressed: () {

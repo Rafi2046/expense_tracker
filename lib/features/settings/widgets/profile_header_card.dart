@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ProfileHeaderCard extends StatelessWidget {
   final String displayName;
@@ -26,10 +28,10 @@ class ProfileHeaderCard extends StatelessWidget {
     final primaryColor = isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1);
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -57,7 +59,7 @@ class ProfileHeaderCard extends StatelessWidget {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.all(2.0),
+              padding: const EdgeInsets.all(AppSpacing.p4),
               child: CircleAvatar(
                 radius: 40,
                 backgroundColor: isDark ? Colors.grey.shade900 : Colors.grey.shade100,
@@ -71,14 +73,14 @@ class ProfileHeaderCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: AppSpacing.s12),
           Text(
             displayName,
             textAlign: TextAlign.center,
             style: AppTextStyles.h1.copyWith(color: theme.colorScheme.onSurface),
           ),
           if (occupation.isNotEmpty) ...[
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSpacing.s4),
             Text(
               occupation,
               textAlign: TextAlign.center,

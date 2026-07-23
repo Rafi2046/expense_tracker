@@ -14,6 +14,8 @@ import 'package:expense_tracker/features/settings/widgets/profile_photo_picker.d
 import 'package:expense_tracker/features/settings/widgets/profile_name_field.dart';
 import 'package:expense_tracker/features/settings/widgets/profile_save_button.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class EditProfileDialog extends StatefulWidget {
   const EditProfileDialog({super.key});
@@ -56,13 +58,13 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
       context: context,
       backgroundColor: Theme.of(context).cardColor,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
       ),
       builder: (ctx) {
         final isDark = Theme.of(ctx).brightness == Brightness.dark;
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.p16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -72,7 +74,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                     color: Theme.of(ctx).colorScheme.onSurface,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -81,16 +83,16 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                       child: Column(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(AppSpacing.p16),
                             decoration: BoxDecoration(
                               color: isDark
                                   ? Colors.grey.shade800
                                   : const Color(0xFFF3E8FF),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(AppSpacing.r16),
                             ),
                             child: const Icon(LucideIcons.image, size: 32),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: AppSpacing.s8),
                           Text(context.translate('gallery'), style: AppTextStyles.label),
                         ],
                       ),
@@ -100,16 +102,16 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                       child: Column(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(AppSpacing.p16),
                             decoration: BoxDecoration(
                               color: isDark
                                   ? Colors.grey.shade800
                                   : const Color(0xFFF3E8FF),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(AppSpacing.r16),
                             ),
                             child: const Icon(LucideIcons.camera, size: 32),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: AppSpacing.s8),
                           Text(context.translate('camera'), style: AppTextStyles.label),
                         ],
                       ),
@@ -232,19 +234,19 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
 
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
       ),
       backgroundColor: theme.cardColor,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24.0),
+      insetPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24),
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(AppSpacing.p16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ProfileDialogHeader(title: context.translate('edit_profile')),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.s16),
               ProfilePhotoPicker(
                 localImageFile: _localImageFile,
                 photoUrl: _photoUrlController.text,
@@ -253,15 +255,15 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                 primaryColor: primaryColor,
                 onTap: _pickProfileImage,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
               ProfileNameField(controller: _nameController),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.s16),
               CustomTextFieldWidget(
                 label: context.translate('profile_photo_url'),
                 hintText: context.translate('photo_url_hint'),
                 controller: _photoUrlController,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
               ProfileSaveButton(
                 isLoading: _isLoading,
                 isDark: isDark,

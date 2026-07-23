@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_stat_card.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class DashboardStatsRow extends StatelessWidget {
   final bool isLoading;
@@ -62,23 +63,21 @@ class DashboardStatsRow extends StatelessWidget {
                   value: PrivacyMaskedText(
                     amount: calendarMonthIncome,
                     style: AppTextStyles.reportTileTitle.copyWith(
-                      color: AppColors.activeGreen,
-                    ),
+                      color: AppColors.activeGreen),
                   ),
                   isPositive: isCalendarIncomeTrendGood,
                   isTrend: false,
                   onTap: onIncomeTap,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.s8),
               Expanded(
                 child: DashboardStatCard(
                   title: expenseTitle,
                   value: PrivacyMaskedText(
                     amount: calendarMonthExpense,
                     style: AppTextStyles.reportTileTitle.copyWith(
-                      color: AppColors.activeRed,
-                    ),
+                      color: AppColors.activeRed),
                   ),
                   isPositive: isCalendarExpenseTrendGood,
                   isTrend: false,
@@ -88,7 +87,7 @@ class DashboardStatsRow extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.s8),
         Skeletonizer(
           enabled: isLoading,
           child: Row(
@@ -99,13 +98,11 @@ class DashboardStatsRow extends StatelessWidget {
                   value: PrivacyMaskedText(
                     amount: totalToReceive,
                     style: AppTextStyles.reportTileTitle.copyWith(
-                      color: AppColors.activeGreen,
-                    ),
+                      color: AppColors.activeGreen),
                   ),
                   statusText: Text(
                     '$toReceivePendingCount $pendingLabel',
                     style: AppTextStyles.caption.copyWith(
-                      fontSize: AppFontSizes.size10,
                     ),
                   ),
                   isPositive: true,
@@ -113,20 +110,18 @@ class DashboardStatsRow extends StatelessWidget {
                   onTap: onToReceiveTap,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.s8),
               Expanded(
                 child: DashboardStatCard(
                   title: toGiveTitle,
                   value: PrivacyMaskedText(
                     amount: totalToGive,
                     style: AppTextStyles.reportTileTitle.copyWith(
-                      color: AppColors.activeRed,
-                    ),
+                      color: AppColors.activeRed),
                   ),
                   statusText: Text(
                     '$toGivePendingCount $pendingLabel',
                     style: AppTextStyles.caption.copyWith(
-                      fontSize: AppFontSizes.size10,
                     ),
                   ),
                   isPositive: false,

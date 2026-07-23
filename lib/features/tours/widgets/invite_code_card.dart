@@ -3,10 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class InviteCodeCard extends StatelessWidget {
   final String inviteCode;
@@ -43,12 +44,12 @@ class InviteCodeCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: isDark
             ? Colors.white.withValues(alpha: 0.04)
             : AppColors.activeGreen.withValues(alpha: 0.04),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
@@ -69,26 +70,23 @@ class InviteCodeCard extends StatelessWidget {
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: AppSpacing.s8),
                 Text(
                   _formattedCode,
-                  style: GoogleFonts.jetBrainsMono(
-                    fontSize: AppFontSizes.size24,
-                    fontWeight: FontWeight.w800,
+                  style: AppTextStyles.displayMedium.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w800,
                     letterSpacing: 2,
-                    color: AppColors.activeGreen,
-                  ),
+                    color: AppColors.activeGreen),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.s8),
           _IconButton(
             icon: LucideIcons.copy,
             onTap: () => _onCopy(context),
             tooltip: context.translate('tooltip_copy'),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.s8),
           _IconButton(
             icon: LucideIcons.share,
             onTap: () => _onShare(context),
@@ -121,12 +119,12 @@ class _IconButton extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(AppSpacing.p8),
           decoration: BoxDecoration(
             color: isDark
                 ? Colors.white.withValues(alpha: 0.08)
                 : AppColors.activeGreen.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
           ),
           child: Icon(icon, size: 20, color: AppColors.activeGreen),
         ),

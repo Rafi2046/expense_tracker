@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class AccountCard extends StatelessWidget {
   final String title;
@@ -32,7 +33,7 @@ class AccountCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF3F4F6), width: 1.2),
         boxShadow: [
           BoxShadow(
@@ -45,9 +46,9 @@ class AccountCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         onLongPress: onLongPress,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p12),
           child: Row(
             children: [
               // Icon Container (Smaller)
@@ -56,12 +57,12 @@ class AccountCard extends StatelessWidget {
                 height: 36,
                 decoration: BoxDecoration(
                   color: iconBg,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                 ),
                 alignment: Alignment.center,
                 child: Icon(icon, color: iconColor, size: 18),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.s12),
 
               // Labels
               Expanded(
@@ -72,10 +73,10 @@ class AccountCard extends StatelessWidget {
                       title,
                       style: AppTextStyles.bodyBold.copyWith(color: theme.colorScheme.onSurface),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSpacing.s4),
                     Text(
                       subtitle,
-                      style: AppTextStyles.label.copyWith(fontSize: AppFontSizes.size11),
+                      style: AppTextStyles.label,
                     ),
                   ],
                 ),
@@ -84,7 +85,7 @@ class AccountCard extends StatelessWidget {
               // Balance
               balance,
               if (trailing != null) ...[
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.s4),
                 trailing!,
               ],
             ],

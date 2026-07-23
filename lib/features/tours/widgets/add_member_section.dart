@@ -53,7 +53,7 @@ class AddMemberSection extends StatelessWidget {
                   : AppColors.containerColorGrey,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.p16,
-                vertical: AppSpacing.p14,
+                vertical: AppSpacing.p16,
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSpacing.br12),
@@ -98,20 +98,16 @@ class AddMemberSection extends StatelessWidget {
                 onPressed: onAddMember,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.activeGreen,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppSpacing.br12),
-                  ),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.p20,
+                    horizontal: AppSpacing.p16,
                     vertical: AppSpacing.p12,
                   ),
                   elevation: 0,
                 ),
                 child: Text(
                   context.translate('add'),
-                  style: TextStyle(
+                  style: AppTextStyles.bodyBold.copyWith(
                     color: AppColors.white,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

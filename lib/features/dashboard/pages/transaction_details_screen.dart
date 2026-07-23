@@ -4,9 +4,10 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'package:expense_tracker/features/dashboard/widgets/transaction_detail_cards.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TransactionDetailsScreen extends StatelessWidget {
   final TransactionItem transaction;
@@ -65,19 +66,19 @@ class TransactionDetailsScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TransactionInfoRow(transaction: transaction),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
               CategoryDetailCard(category: transaction.category),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
               AmountPaymentDetailCard(transaction: transaction),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
               if (transaction.note.isNotEmpty) ...[
                 MemoDetailCard(note: transaction.note),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.s12),
               ],
               const SyncStatusCard(),
             ],
@@ -95,7 +96,7 @@ class TransactionDetailsScreen extends StatelessWidget {
         final onSurface = theme.colorScheme.onSurface;
         return AlertDialog(
           backgroundColor: theme.colorScheme.surface,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r8)),
           title: Text(
             context.translate('delete_transaction'),
             style: AppTextStyles.h3.copyWith(color: onSurface),
@@ -112,7 +113,6 @@ class TransactionDetailsScreen extends StatelessWidget {
               child: Text(
                 context.translate('cancel'),
                 style: AppTextStyles.label.copyWith(
-                  fontSize: AppFontSizes.size13,
                   color: onSurface.withValues(alpha: 0.5),
                 ),
               ),
@@ -137,10 +137,8 @@ class TransactionDetailsScreen extends StatelessWidget {
               child: Text(
                 context.translate('delete'),
                 style: AppTextStyles.label.copyWith(
-                  fontSize: AppFontSizes.size13,
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+                  fontWeight: FontWeight.bold),
               ),
             ),
           ],

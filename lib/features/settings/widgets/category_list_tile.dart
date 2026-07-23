@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class CategoryListTile extends StatelessWidget {
   final String categoryName;
@@ -23,10 +26,10 @@ class CategoryListTile extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: AppSpacing.p8),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: isDark
               ? const Color(0xFF2D2D2D)
@@ -38,29 +41,26 @@ class CategoryListTile extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                vertical: 12.0,
-                horizontal: 8.0,
+                vertical: AppSpacing.p12,
+                horizontal: AppSpacing.p8,
               ),
               child: Row(
                 children: [
                   Icon(LucideIcons.tag, color: themeColor),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppSpacing.s12),
                   Expanded(
                     child: Text(
                       categoryName,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: AppFontSizes.size15,
-                        fontWeight: FontWeight.w400,
-                        color: theme.colorScheme.onSurface,
-                      ),
+                      style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w400,
+                        color: theme.colorScheme.onSurface),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: AppSpacing.s4),
           if (onEdit != null)
             IconButton(
               icon: Icon(

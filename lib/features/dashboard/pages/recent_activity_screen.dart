@@ -7,6 +7,8 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class RecentActivityScreen extends StatelessWidget {
   const RecentActivityScreen({super.key});
@@ -52,12 +54,12 @@ class RecentActivityScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RecentActivityDateHeader(label: g.dateLabel),
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.s8),
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
             color: t.cardColor,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
             boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03), blurRadius: 10, offset: const Offset(0, 3))],
             border: Border.all(color: t.dividerTheme.color ?? const Color(0xFFF0F0F0), width: 1),
           ),
@@ -72,7 +74,7 @@ class RecentActivityScreen extends StatelessWidget {
             }),
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.s24),
       ],
     );
   }

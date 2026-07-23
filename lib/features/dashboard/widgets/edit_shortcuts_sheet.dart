@@ -3,8 +3,9 @@ import 'package:expense_tracker/core/providers/shortcut_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class EditShortcutsSheet extends StatefulWidget {
   const EditShortcutsSheet({super.key});
@@ -85,7 +86,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
     return Container(
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
       ),
       child: SafeArea(
         top: false,
@@ -93,49 +94,46 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
           mainAxisSize: MainAxisSize.min, // ম্যাজিক: শিট এখন শুধু কন্টেন্ট অনুযায়ী সাইজ হবে
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
             Center(
               child: Container(
-                width: 36,
-                height: 4,
+                width: AppSpacing.s32,
+                height: AppSpacing.s4,
                 decoration: BoxDecoration(
                   color: Colors.grey.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 32, 20, 4),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p32, AppSpacing.p16, AppSpacing.p4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     context.translate('edit_quick_actions'),
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size18,
-                      fontWeight: FontWeight.w600,
+                    style: AppTextStyles.h2.copyWith(
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.s4),
                   Text(
                     context.translate('drag_to_reorder_toggle_to_show'),
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size12,
-                      color: Colors.grey.shade500,
+                    style: AppTextStyles.label.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
             Flexible( // Expanded এর বদলে Flexible দেওয়া হলো যেন জোর করে বড় না হয়
               child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                padding: const EdgeInsets.fromLTRB(AppSpacing.p16, 0, AppSpacing.p16, 0),
                 child: Container(
                   decoration: BoxDecoration(
                     color: rowBg,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(AppSpacing.r16),
                     border: Border.all(color: divider, width: 0.5),
                   ),
                   child: ReorderableListView.builder(
@@ -160,7 +158,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
 
                       return Container(
                         key: ValueKey(item.id),
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
                         decoration: BoxDecoration(
                           border: isLast
                               ? null
@@ -174,22 +172,21 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                               index: index,
                               child: Icon(LucideIcons.gripHorizontal, size: 18, color: Colors.grey.shade400),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: AppSpacing.s12),
                             Container(
-                              width: 34,
-                              height: 34,
+                              width: AppSpacing.s32,
+                              height: AppSpacing.s32,
                               decoration: BoxDecoration(
                                 color: themeColor.withValues(alpha: 0.12),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(_icon(item.id), size: 16, color: themeColor),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: AppSpacing.s12),
                             Expanded(
                               child: Text(
                                 context.translate(item.id),
-                                style: TextStyle(
-                                  fontSize: AppFontSizes.size14,
+                                style: AppTextStyles.body.copyWith(
                                   fontWeight: FontWeight.w500,
                                   color: Theme.of(context).colorScheme.onSurface,
                                 ),
@@ -197,17 +194,16 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                             ),
                             if (isLocked)
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p4),
                                 decoration: BoxDecoration(
                                   color: Colors.grey.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(AppSpacing.r16),
                                 ),
                                 child: Text(
                                   context.translate('always_on'),
-                                  style: TextStyle(
-                                    fontSize: AppFontSizes.size10,
+                                  style: AppTextStyles.caption.copyWith(
                                     fontWeight: FontWeight.w500,
-                                    color: Colors.grey.shade500,
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                                   ),
                                 ),
                               )
@@ -216,7 +212,7 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
                                 value: item.isEnabled,
                                 activeColor: AppColors.activeGreen,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4),
+                                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                                 ),
                                 onChanged: (checked) {
                                   setState(() {
@@ -234,36 +230,34 @@ class _EditShortcutsSheetState extends State<EditShortcutsSheet> {
             ),
             Padding(
               // নিচের বাটনের স্পেস কমানো হয়েছে (৪০ থেকে ২৪ করা হলো)
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p24, AppSpacing.p16, AppSpacing.p24),
               child: Row(
                 children: [
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context),
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.p16),
                         side: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
                       ),
                       child: Text(
                         context.translate('cancel'),
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: AppTextStyles.bodyBold,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppSpacing.s12),
                   Expanded(
                     child: ElevatedButton(
                       onPressed: _save,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.activeGreen,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.p16),
                         elevation: 0,
                       ),
                       child: Text(
                         context.translate('save'),
-                        style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+                        style: AppTextStyles.bodyBold.copyWith(color: Colors.white),
                       ),
                     ),
                   ),

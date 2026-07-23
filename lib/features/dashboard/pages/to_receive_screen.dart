@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ToReceiveScreen extends StatefulWidget {
   const ToReceiveScreen({super.key});
@@ -79,8 +81,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
           context.translate('to_receive'),
           style: AppTextStyles.appbarTitle.copyWith(
             color: isDark ? Colors.white : null,
-            fontWeight: FontWeight.w600,
-          ),
+            fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -88,7 +89,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p16, AppSpacing.p16, AppSpacing.p4),
               child: DebtTotalCard(
                 title: context.translate('total_owed_to_you'),
                 amount: debtProvider.totalToReceive,
@@ -108,7 +109,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
             if (items.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(
-                  left: 16.0, right: 16.0, top: 8.0,
+                  left: AppSpacing.p16, right: AppSpacing.p16, top: AppSpacing.p8,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,15 +120,15 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                           context.translate('pending_collections'),
                           style: AppTextStyles.sectionHeaderTitle.copyWith(color: theme.colorScheme.onSurface),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppSpacing.s8),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
+                            horizontal: AppSpacing.p8,
+                            vertical: AppSpacing.p4,
                           ),
                           decoration: BoxDecoration(
                             color: theme.primaryColor.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppSpacing.r12),
                           ),
                           child: Text(
                             '${items.length}',
@@ -151,12 +152,11 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                         );
                       },
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p4),
                         foregroundColor: theme.primaryColor,
                         textStyle: AppTextStyles.label.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: theme.primaryColor,
-                        ),
+                          color: theme.primaryColor),
                       ),
                       child: Text(context.translate('see_all')),
                     ),
@@ -167,7 +167,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
             Expanded(
               child: items.isEmpty
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
                       child: Column(
                         children: [
                           const Spacer(),
@@ -179,7 +179,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                                 height: 120,
                                 width: 120,
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: AppSpacing.s12),
                               Text(
                                 context.translate('no_pending_payments'),
                                 style: AppTextStyles.reportTileTitle.copyWith(color: Colors.grey.shade500),
@@ -195,8 +195,8 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
                   : ListView.builder(
                       itemCount: displayItems.length + 1,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
+                        horizontal: AppSpacing.p16,
+                        vertical: AppSpacing.p8,
                       ),
                       itemBuilder: (context, index) {
                         if (index == displayItems.length) {
@@ -229,7 +229,7 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
     final isDark = theme.brightness == Brightness.dark;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 8, 0, 16),
+      padding: const EdgeInsets.fromLTRB(0, AppSpacing.p8, 0, AppSpacing.p16),
       child: GestureDetector(
         onTap: () => AddEditDebtSheet.show(
           context: context,
@@ -239,12 +239,12 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
         ),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
           decoration: BoxDecoration(
             color: isDark
                 ? theme.primaryColor.withValues(alpha: 0.06)
                 : theme.primaryColor.withValues(alpha: 0.04),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
             border: Border.all(
               color: isDark
                   ? theme.primaryColor.withValues(alpha: 0.2)
@@ -256,14 +256,11 @@ class _ToReceiveScreenState extends State<ToReceiveScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(LucideIcons.plus, size: 18, color: theme.primaryColor),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.s8),
               Text(
                 context.translate('add_new'),
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: theme.primaryColor,
-                ),
+                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600,
+                  color: theme.primaryColor),
               ),
             ],
           ),

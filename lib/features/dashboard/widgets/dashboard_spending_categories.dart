@@ -3,7 +3,10 @@ import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class _DonutItem {
   final String label;
@@ -35,14 +38,14 @@ class DashboardSpendingCategories extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p16, AppSpacing.p16, AppSpacing.p16),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         border: Border.all(
           color: Theme.of(context).dividerTheme.color ?? AppColors.dividerColor.withValues(alpha: 0.5),
           width: 1.0,
         ),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppSpacing.r8),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.01),
@@ -56,12 +59,10 @@ class DashboardSpendingCategories extends StatelessWidget {
         children: [
           // Header Label
           Padding(
-            padding: const EdgeInsets.only(left: 4.0, bottom: 8.0),
+            padding: const EdgeInsets.only(left: AppSpacing.p4, bottom: AppSpacing.p8),
             child: Text(
               context.translate('top_spending_categories').toUpperCase(),
-              style: TextStyle(
-                fontSize: AppFontSizes.size11,
-                fontWeight: FontWeight.bold,
+              style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.bold,
                 color: isDark ? Colors.white60 : AppColors.loginSubTitle.withValues(alpha: 0.8),
                 fontFamily: TextStyle().fontFamily,
                 letterSpacing: 1.2,
@@ -99,19 +100,15 @@ class DashboardSpendingCategories extends StatelessWidget {
                     children: [
                       Text(
                         '${percentage.toStringAsFixed(0)}%',
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size20,
-                          fontWeight: FontWeight.bold,
+                        style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.onSurface,
                           fontFamily: TextStyle().fontFamily,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: AppSpacing.s4),
                       Text(
                         context.translate(categoryName.toLowerCase()),
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size11,
-                          color: AppColors.textMuted,
+                        style: AppTextStyles.caption.copyWith(color: AppColors.textMuted,
                           fontWeight: FontWeight.w500,
                           fontFamily: TextStyle().fontFamily,
                         ),

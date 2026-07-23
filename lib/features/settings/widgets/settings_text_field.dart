@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class SettingsTextField extends StatelessWidget {
   final String label;
@@ -29,14 +30,13 @@ class SettingsTextField extends StatelessWidget {
           label,
           style: AppTextStyles.bodySmall.copyWith(
             fontWeight: FontWeight.w600,
-            color: isDark ? Colors.grey.shade400 : Colors.black54,
-          ),
+            color: isDark ? Colors.grey.shade400 : Colors.black54),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: AppSpacing.s8),
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
-          style: TextStyle(fontSize: AppFontSizes.size15, color: theme.colorScheme.onSurface),
+          style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
             filled: true,
             fillColor: isDark ? theme.cardColor : const Color(0xFFF5F6F8),
@@ -46,18 +46,18 @@ class SettingsTextField extends StatelessWidget {
               size: 18,
             ),
             hintText: hintText,
-            hintStyle: TextStyle(fontSize: AppFontSizes.size14, color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            hintStyle: AppTextStyles.body.copyWith(color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
+            contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               borderSide: BorderSide(color: isDark ? Colors.grey.shade700 : Colors.grey.shade300, width: 1),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               borderSide: BorderSide(color: isDark ? const Color(0xFF8E75C8) : const Color(0xFF6A53A1), width: 1.5),
             ),
           ),

@@ -3,8 +3,9 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class LanguageSelectorSheet extends StatelessWidget {
   const LanguageSelectorSheet({super.key});
@@ -37,8 +38,8 @@ class LanguageSelectorSheet extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(28),
-            topRight: Radius.circular(28),
+            topLeft: Radius.circular(AppSpacing.r24),
+            topRight: Radius.circular(AppSpacing.r24),
           ),
         ),
         padding: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 32.0 + MediaQuery.of(context).padding.bottom),
@@ -53,17 +54,17 @@ class LanguageSelectorSheet extends StatelessWidget {
                 height: 5,
                 decoration: BoxDecoration(
                   color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.s24),
 
             // Header Section with premium layout
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(AppSpacing.p8),
                   decoration: BoxDecoration(
                     color: iconBgColor,
                     shape: BoxShape.circle,
@@ -74,7 +75,7 @@ class LanguageSelectorSheet extends StatelessWidget {
                     size: 22,
                   ),
                 ),
-                const SizedBox(width: 14),
+                const SizedBox(width: AppSpacing.s12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,20 +84,19 @@ class LanguageSelectorSheet extends StatelessWidget {
                         context.translate('change_language'),
                         style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: AppSpacing.s4),
                       Text(
                         context.translate('language_select_subtitle'),
                         style: AppTextStyles.label.copyWith(
                           color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
-                          fontWeight: FontWeight.w400,
-                        ),
+                          fontWeight: FontWeight.w400),
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.s24),
 
             // 2x2 Language Selection Cards
             Column(
@@ -104,15 +104,15 @@ class LanguageSelectorSheet extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(child: _buildLanguageCard(context, languages[0], currentLanguage, languageProvider)),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppSpacing.s12),
                     Expanded(child: _buildLanguageCard(context, languages[1], currentLanguage, languageProvider)),
                   ],
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.s12),
                 Row(
                   children: [
                     Expanded(child: _buildLanguageCard(context, languages[2], currentLanguage, languageProvider)),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppSpacing.s12),
                     Expanded(child: _buildLanguageCard(context, languages[3], currentLanguage, languageProvider)),
                   ],
                 ),
@@ -147,10 +147,10 @@ class LanguageSelectorSheet extends StatelessWidget {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppSpacing.p16),
         decoration: BoxDecoration(
           color: cardBg,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppSpacing.r24),
           border: Border.all(
             color: borderColor,
             width: isSelected ? 2.0 : 1.0,
@@ -173,27 +173,25 @@ class LanguageSelectorSheet extends StatelessWidget {
                 // Flag display
                 Text(
                   lang.flag,
-                  style: const TextStyle(fontSize: AppFontSizes.size36),
+                  style: AppTextStyles.displayLarge,
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: AppSpacing.s12),
                 
                 // Name
                 Text(
                   lang.name,
                   style: AppTextStyles.h3.copyWith(
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                    color: theme.colorScheme.onSurface,
-                  ),
+                    color: theme.colorScheme.onSurface),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSpacing.s4),
 
                 // Native Subtitle
                 Text(
                   _getNativeName(lang.code),
                   style: AppTextStyles.label.copyWith(
                     color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
-                    fontWeight: FontWeight.w400,
-                  ),
+                    fontWeight: FontWeight.w400),
                 ),
               ],
             ),

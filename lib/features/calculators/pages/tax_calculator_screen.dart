@@ -9,6 +9,8 @@ import 'package:expense_tracker/features/calculators/widgets/calculator_text_fie
 import 'package:expense_tracker/features/calculators/widgets/calculator_type_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TaxCalculatorScreen extends StatefulWidget {
   const TaxCalculatorScreen({super.key});
@@ -129,7 +131,7 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(AppSpacing.p16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -150,7 +152,7 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
                   _recalculateSilently();
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.s16),
 
               CalculatorResultCard(
                 label: context.translate('tax_amount'),
@@ -165,7 +167,7 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
                 ],
                 bottomItem: CalculatorResultItem(title: context.translate('total_amount'), value: context.formatAmount(_totalAmount), isCenter: true),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
 
               CalculatorInfoCard(
                 title: context.translate('tax_calculation_info'),
@@ -181,29 +183,29 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
 
               CalculatorTextField(
                 label: '${context.translate('amount_label')} ($symbol)',
                 hintText: context.translate('amount_label'),
                 controller: _amountController,
                 prefix: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 8),
+                  padding: const EdgeInsets.only(left: AppSpacing.p16, right: AppSpacing.p8),
                   child: Text(symbol, style: AppTextStyles.h3.copyWith(color: primaryCalcColor)),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.s16),
 
               CalculatorTextField(
                 label: context.translate('tax_rate'),
                 hintText: context.translate('tax_rate'),
                 controller: _rateController,
                 suffix: Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 16),
+                  padding: const EdgeInsets.only(left: AppSpacing.p8, right: AppSpacing.p16),
                   child: Text('%', style: AppTextStyles.h3.copyWith(color: primaryCalcColor)),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
 
               ElevatedButton(
                 onPressed: _performCalculation,
@@ -213,7 +215,7 @@ class _TaxCalculatorScreenState extends State<TaxCalculatorScreen> {
                   minimumSize: const Size.fromHeight(52),
                   elevation: 0,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                 ),
                 child: Text(

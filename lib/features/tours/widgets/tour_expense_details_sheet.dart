@@ -7,6 +7,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/widgets/full_screen_image_viewer.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_image.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TourExpenseDetailsSheet extends StatelessWidget {
   final TourExpense expense;
@@ -56,8 +58,8 @@ class TourExpenseDetailsSheet extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(AppSpacing.r24),
+          topRight: Radius.circular(AppSpacing.r24),
         ),
         border: Border.all(
           color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFF1F5F9),
@@ -77,15 +79,15 @@ class TourExpenseDetailsSheet extends StatelessWidget {
             child: Container(
               width: 40,
               height: 4,
-              margin: const EdgeInsets.symmetric(vertical: 12),
+              margin: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
               decoration: BoxDecoration(
                 color: isDark ? const Color(0xFF4B5563) : const Color(0xFFD1D5DB),
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24, vertical: AppSpacing.p8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -101,12 +103,12 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                         ),
                       ),
                       if (expense.category != null) ...[
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSpacing.s4),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p4),
                           decoration: BoxDecoration(
                             color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFE2E8F0),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(AppSpacing.r8),
                           ),
                           child: Text(
                             expense.category!,
@@ -132,40 +134,40 @@ class TourExpenseDetailsSheet extends StatelessWidget {
           ),
           const Divider(indent: 24, endIndent: 24, height: 24),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24),
             child: Column(
               children: [
                 _buildDetailRow(theme, context.translate('paid_by_detail'), payerName),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.s12),
                 _buildDetailRow(theme, context.translate('date_time_detail'), formattedDate),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.s12),
                 _buildDetailRow(theme, context.translate('split_method_detail'), splitLabel),
                 if (expense.note != null && expense.note!.isNotEmpty) ...[
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.s12),
                   _buildDetailRow(theme, context.translate('note_detail'), expense.note!),
                 ],
               ],
             ),
           ),
           if (expense.receiptPaths.isNotEmpty) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24),
               child: SizedBox(
                 height: 160,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: expense.receiptPaths.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: 10),
+                  separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.s8),
                   itemBuilder: (ctx, i) {
                     final path = expense.receiptPaths[i];
                     final notFound = Container(
                       width: 160,
                       height: 160,
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(AppSpacing.p16),
                       decoration: BoxDecoration(
                         color: isDark ? const Color(0xFF1E1E2E) : const Color(0xFFF8F9FA),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppSpacing.r12),
                         border: Border.all(
                           color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFE2E8F0),
                         ),
@@ -174,7 +176,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(LucideIcons.imageOff, color: Colors.grey.shade400),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: AppSpacing.s8),
                           Text(
                             context.translate('receipt_image_not_found'),
                             textAlign: TextAlign.center,
@@ -188,7 +190,7 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                         context, expense.receiptPaths, index: i,
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppSpacing.r12),
                         child: TourImage(
                           source: path,
                           width: 160,
@@ -204,15 +206,15 @@ class TourExpenseDetailsSheet extends StatelessWidget {
               ),
             ),
           ],
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.s24),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 if (onEdit != null)
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.only(bottom: AppSpacing.p12),
                     child: ElevatedButton.icon(
                       onPressed: onEdit,
                       icon: Icon(LucideIcons.edit, color: Colors.white, size: 18),
@@ -223,10 +225,10 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF4F46E5),
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
                         elevation: 0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                         ),
                       ),
                     ),
@@ -242,10 +244,10 @@ class TourExpenseDetailsSheet extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.activeRed,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppSpacing.r12),
                     ),
                   ),
                 ),

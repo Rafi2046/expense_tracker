@@ -196,8 +196,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                    vertical: 40.0,
+                    horizontal: AppSpacing.p24,
+                    vertical: AppSpacing.p40,
                   ),
                   child: Column(
                     spacing: AppSpacing.s16,

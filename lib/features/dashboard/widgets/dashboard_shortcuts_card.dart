@@ -7,8 +7,9 @@ import 'package:expense_tracker/features/dashboard/widgets/edit_shortcuts_sheet.
 import 'package:expense_tracker/features/dashboard/pages/add_party_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 class DashboardShortcutsCard extends StatelessWidget {
   const DashboardShortcutsCard({super.key});
@@ -83,7 +84,7 @@ class DashboardShortcutsCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: cardBg,
         borderRadius: BorderRadius.circular(AppSpacing.r8),
@@ -107,28 +108,22 @@ class DashboardShortcutsCard extends StatelessWidget {
             children: [
               Text(
                 context.translate('quick_actions'),
-                style: TextStyle(
-                  fontSize: AppFontSizes.size15,
-                  fontWeight: FontWeight.w700,
+                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700,
                   letterSpacing: -0.2,
-                  color: scheme.onSurface,
-                ),
+                  color: scheme.onSurface),
               ),
               GestureDetector(
                 onTap: () => EditShortcutsSheet.show(context),
                 behavior: HitTestBehavior.opaque,
                 child: Text(
                   context.translate('edit_menu'),
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size12,
-                    fontWeight: FontWeight.w600,
-                    color: labelColor,
-                  ),
+                  style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600,
+                    color: labelColor),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: AppSpacing.s16),
           if (gridItems.isEmpty)
             for (final item in addParty)
               _buildRowItem(context, item, scheme, subLabelColor)
@@ -142,7 +137,7 @@ class DashboardShortcutsCard extends StatelessWidget {
             ),
             if (addParty.isNotEmpty) ...[
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
                 child: Container(height: 1, color: dividerColor),
               ),
               for (final item in addParty)
@@ -179,17 +174,14 @@ class DashboardShortcutsCard extends StatelessWidget {
             ),
             child: Icon(_icon(item.id), size: 17, color: _iconColor(item.id, scheme)),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           Text(
             context.translate(item.id),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: AppFontSizes.size10,
-              fontWeight: FontWeight.w600,
-              color: labelColor,
-            ),
+            style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600,
+              color: labelColor),
           ),
         ],
       ),
@@ -220,22 +212,19 @@ class DashboardShortcutsCard extends StatelessWidget {
             ),
             child: Icon(_icon(item.id), size: 17, color: _iconColor(item.id, scheme)),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   context.translate(item.id),
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size13,
-                    fontWeight: FontWeight.w600,
-                    color: scheme.onSurface,
-                  ),
+                  style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600,
+                    color: scheme.onSurface),
                 ),
                 Text(
                   context.translate('always_on'),
-                  style: TextStyle(fontSize: AppFontSizes.size10, color: subLabelColor),
+                  style: AppTextStyles.caption.copyWith(color: subLabelColor),
                 ),
               ],
             ),

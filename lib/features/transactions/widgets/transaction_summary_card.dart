@@ -4,10 +4,11 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TransactionSummaryCard extends StatelessWidget {
   final bool isMasked;
@@ -47,7 +48,7 @@ class TransactionSummaryCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF6A53A1).withValues(alpha: 0.18),
@@ -56,7 +57,7 @@ class TransactionSummaryCard extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -67,26 +68,23 @@ class TransactionSummaryCard extends StatelessWidget {
                   context.translate('net_balance').toUpperCase(),
                   style: AppTextStyles.reportStatLabel.copyWith(
                     color: Colors.white70,
-                    letterSpacing: 1.0,
-                  ),
+                    letterSpacing: 1.0),
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p4),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(AppSpacing.r24),
                 ),
                 child: Text(
                   _formatPeriodLabel(provider),
                   style: AppTextStyles.caption.copyWith(
-                    fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                    color: Colors.white),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.s8),
               GestureDetector(
                 onTap: () {
                   HapticFeedback.lightImpact();
@@ -100,7 +98,7 @@ class TransactionSummaryCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.s4),
 
           // Net Balance Value
           PrivacyMaskedText(
@@ -108,14 +106,13 @@ class TransactionSummaryCard extends StatelessWidget {
             isMasked: isMasked,
             style: AppTextStyles.reportLargeValue.copyWith(
               color: Colors.white,
-              letterSpacing: -0.5,
-            ),
+              letterSpacing: -0.5),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
 
           // Divider
           Container(height: 1, color: Colors.white.withValues(alpha: 0.15)),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
 
           // Income vs Expense row
           Row(
@@ -124,7 +121,7 @@ class TransactionSummaryCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(6),
+                      padding: const EdgeInsets.all(AppSpacing.p8),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.15),
                         shape: BoxShape.circle,
@@ -135,7 +132,7 @@ class TransactionSummaryCard extends StatelessWidget {
                         size: 14,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSpacing.s8),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,17 +141,15 @@ class TransactionSummaryCard extends StatelessWidget {
                             context.translate('income'),
                             style: AppTextStyles.caption.copyWith(
                               color: Colors.white70,
-                              fontWeight: FontWeight.w500,
-                            ),
+                              fontWeight: FontWeight.w500),
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: AppSpacing.s4),
                           PrivacyMaskedText(
                             amount: totalIncome,
                             isMasked: isMasked,
                             style: AppTextStyles.bodySmall.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                              color: Colors.white),
                           ),
                         ],
                       ),
@@ -168,13 +163,13 @@ class TransactionSummaryCard extends StatelessWidget {
                 height: 28,
                 color: Colors.white.withValues(alpha: 0.15),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.s12),
 
               Expanded(
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(6),
+                      padding: const EdgeInsets.all(AppSpacing.p8),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.15),
                         shape: BoxShape.circle,
@@ -185,7 +180,7 @@ class TransactionSummaryCard extends StatelessWidget {
                         size: 14,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSpacing.s8),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,17 +189,15 @@ class TransactionSummaryCard extends StatelessWidget {
                             context.translate('expense'),
                             style: AppTextStyles.caption.copyWith(
                               color: Colors.white70,
-                              fontWeight: FontWeight.w500,
-                            ),
+                              fontWeight: FontWeight.w500),
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: AppSpacing.s4),
                           PrivacyMaskedText(
                             amount: totalExpense,
                             isMasked: isMasked,
                             style: AppTextStyles.bodySmall.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                              color: Colors.white),
                           ),
                         ],
                       ),

@@ -1,9 +1,10 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class DeleteAccountReauthBody extends StatelessWidget {
   final bool isPasswordUser;
@@ -35,14 +36,12 @@ class DeleteAccountReauthBody extends StatelessWidget {
           context.translate('verify_identity_delete'),
           textAlign: TextAlign.center,
           style: AppTextStyles.bodySmall.copyWith(
-            fontSize: AppFontSizes.size14,
             color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
-            height: 1.5,
-          ),
+            height: 1.5),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.s16),
         if (isGoogleUser || isAppleUser) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           SizedBox(
             width: double.infinity,
             child: CustomButton(
@@ -66,18 +65,17 @@ class DeleteAccountReauthBody extends StatelessWidget {
             decoration: InputDecoration(
               hintText: context.translate('enter_password'),
               hintStyle: AppTextStyles.body.copyWith(
-                color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
-              ),
+                color: isDark ? Colors.grey.shade600 : Colors.grey.shade400),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 borderSide: BorderSide(color: borderColor),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 borderSide: BorderSide(color: borderColor),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 borderSide: BorderSide(color: AppColors.activeRed, width: 2),
               ),
               fillColor: isDark
@@ -86,7 +84,7 @@ class DeleteAccountReauthBody extends StatelessWidget {
               filled: true,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.s24),
           SizedBox(
             width: double.infinity,
             child: CustomButton(

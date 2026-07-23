@@ -67,17 +67,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 onTap: () {
                   provider.updateSortOption(option);
                 },
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 12,
+                    vertical: AppSpacing.p8,
+                    horizontal: AppSpacing.p12,
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? accentColor.withValues(alpha: 0.05)
                         : Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                   child: Row(
                     children: [
@@ -86,19 +86,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         size: 16,
                         color: isSelected ? accentColor : Colors.grey,
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.s12),
                       Expanded(
                         child: Text(
                           title,
-                          style: TextStyle(
+                          style: AppTextStyles.body.copyWith(
                             fontWeight: isSelected
                                 ? FontWeight.bold
                                 : FontWeight.w500,
                             color: isSelected
                                 ? accentColor
-                                : (isDarkSheet
-                                      ? Colors.white70
-                                      : Colors.black87),
+                                : Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),
@@ -121,17 +119,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 onTap: () {
                   provider.transactionTypeFilter = filter;
                 },
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 12,
+                    vertical: AppSpacing.p8,
+                    horizontal: AppSpacing.p12,
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? color.withValues(alpha: 0.05)
                         : Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                   child: Row(
                     children: [
@@ -140,19 +138,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         size: 16,
                         color: isSelected ? color : Colors.grey,
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.s12),
                       Expanded(
                         child: Text(
                           title,
-                          style: TextStyle(
+                          style: AppTextStyles.body.copyWith(
                             fontWeight: isSelected
                                 ? FontWeight.bold
                                 : FontWeight.w500,
                             color: isSelected
                                 ? color
-                                : (isDarkSheet
-                                      ? Colors.white70
-                                      : Colors.black87),
+                                : Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),
@@ -167,11 +163,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
+                  topLeft: Radius.circular(AppSpacing.r24),
+                  topRight: Radius.circular(AppSpacing.r24),
                 ),
               ),
-              padding: EdgeInsets.fromLTRB(20, 16, 20, 16 + bottomInset),
+              padding: EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p16, AppSpacing.p16, AppSpacing.p16 + bottomInset),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -185,19 +181,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           color: isDarkSheet
                               ? Colors.grey.shade700
                               : Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSpacing.s12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           'Sort & Filter',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                          style: AppTextStyles.h2.copyWith(
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
@@ -210,16 +204,15 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    const Text(
+                    const SizedBox(height: AppSpacing.s16),
+                    Text(
                       'SORT BY',
-                      style: TextStyle(
-                        fontSize: 11,
+                      style: AppTextStyles.caption.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.s8),
                     buildSortItem(
                       'Latest',
                       TransactionSortOption.latest,
@@ -235,18 +228,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       TransactionSortOption.amountLowToHigh,
                       Icons.trending_up,
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSpacing.s12),
                     const Divider(),
-                    const SizedBox(height: 12),
-                    const Text(
+                    const SizedBox(height: AppSpacing.s12),
+                    Text(
                       'FILTER BY',
-                      style: TextStyle(
-                        fontSize: 11,
+                      style: AppTextStyles.caption.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.s8),
                     buildTypeItem(
                       'All Transactions',
                       TransactionTypeFilter.all,
@@ -265,7 +257,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       Icons.arrow_upward,
                       const Color(0xFFF1948A),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.s8),
                   ],
                 ),
               ),
@@ -282,14 +274,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
         padding: EdgeInsets.fromLTRB(
-          20,
-          20,
-          20,
-          20 + MediaQuery.of(ctx).padding.bottom,
+          AppSpacing.p16,
+          AppSpacing.p16,
+          AppSpacing.p16,
+          AppSpacing.p16 + MediaQuery.of(ctx).padding.bottom,
         ),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r16)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -299,10 +291,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               height: 4,
               decoration: BoxDecoration(
                 color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.s24),
             _AddOptionTile(
               icon: LucideIcons.wallet,
               label: context.translate('add_income'),
@@ -314,7 +306,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 AddTransactionSheet.show(context: context, isIncome: true);
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
             _AddOptionTile(
               icon: LucideIcons.creditCard,
               label: context.translate('add_expense'),
@@ -326,7 +318,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 AddTransactionSheet.show(context: context, isIncome: false);
               },
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.s8),
           ],
         ),
       ),
@@ -368,7 +360,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   enabled: isLoading,
                   child: Padding(
                     padding: const EdgeInsets.only(
-                      top: AppSpacing.p20,
+                      top: AppSpacing.p16,
                       left: AppSpacing.p16,
                       right: AppSpacing.p16,
                     ),
@@ -381,7 +373,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           onToggleMask: () =>
                               setState(() => _localMasked = !_localMasked),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.s16),
 
                         // 2. Period Selector + Filter
                         TransactionPeriodSelector(
@@ -392,7 +384,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           onFilterTap: () =>
                               _showSortFilterBottomSheet(context),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSpacing.s12),
                       ],
                     ),
                   ),
@@ -411,7 +403,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     ),
                   ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.s16),
 
                 // 4. Scrollable Transactions List
                 Expanded(
@@ -423,7 +415,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       await Future.delayed(const Duration(milliseconds: 800));
                     },
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.only(bottom: 120),
+                      padding: const EdgeInsets.only(bottom: AppSpacing.p48),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: AppSpacing.p16),
@@ -443,10 +435,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(28),
+                  borderRadius: BorderRadius.circular(AppSpacing.r24),
                   onTap: () => _showAddOptions(context),
                   child: Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(AppSpacing.p16),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: [Color(0xFF32235B), Color(0xFF6A53A1)],
@@ -497,12 +489,12 @@ class _AddOptionTile extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.p16),
           decoration: BoxDecoration(
             color: bgColor,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(AppSpacing.r16),
           ),
           child: Row(
             children: [
@@ -511,11 +503,11 @@ class _AddOptionTile extends StatelessWidget {
                 height: 44,
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                 ),
                 child: Icon(icon, color: color, size: 22),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: AppSpacing.s16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -526,7 +518,7 @@ class _AddOptionTile extends StatelessWidget {
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSpacing.s4),
                     Text(
                       subtitle,
                       style: AppTextStyles.reportTransactionSubtitle.copyWith(

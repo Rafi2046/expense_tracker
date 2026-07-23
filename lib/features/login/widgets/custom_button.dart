@@ -105,12 +105,11 @@ class CustomButton extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     if (leading != null)
-                      SizedBox(
-                        width: 24,
+                      SizedBox(width: AppSpacing.s24,
                         height: 24,
                         child: FittedBox(fit: BoxFit.contain, child: leading!),
                       ),
-                    if (leading != null) const SizedBox(width: 12),
+                    if (leading != null) const SizedBox(width: AppSpacing.s12),
                     SizedBox(
                       width: 220,
                       child: Text(
@@ -122,10 +121,9 @@ class CustomButton extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (trailing != null) const SizedBox(width: 12),
+                    if (trailing != null) const SizedBox(width: AppSpacing.s12),
                     if (trailing != null)
-                      SizedBox(
-                        width: 24,
+                      SizedBox(width: AppSpacing.s24,
                         height: 24,
                         child: FittedBox(fit: BoxFit.contain, child: trailing!),
                       ),

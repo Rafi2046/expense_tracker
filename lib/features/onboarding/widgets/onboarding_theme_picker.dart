@@ -4,6 +4,10 @@ import 'package:expense_tracker/core/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class OnboardingThemePicker extends StatefulWidget {
   final bool isDark;
@@ -101,7 +105,7 @@ class _OnboardingThemePickerState extends State<OnboardingThemePicker>
     final unselectedBorder = isDark ? Colors.white24 : Colors.grey.shade200;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 28),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24),
       child: AnimatedBuilder(
         animation: _staggerController,
         builder: (context, child) => Column(
@@ -116,7 +120,7 @@ class _OnboardingThemePickerState extends State<OnboardingThemePicker>
                 child: _buildHeroIcon(),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppSpacing.s32),
             // ─── Title ───
             Transform.translate(
               offset: Offset(0, _titleSlide.value),
@@ -125,16 +129,13 @@ class _OnboardingThemePickerState extends State<OnboardingThemePicker>
                 child: Text(
                   context.translate('onboarding_theme_title'),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
+                  style: AppTextStyles.displayLarge.copyWith(fontWeight: FontWeight.w800,
                     color: textColor,
-                    letterSpacing: -0.8,
-                  ),
+                    letterSpacing: -0.8),
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
             // ─── Subtitle ───
             Transform.translate(
               offset: Offset(0, _subtitleSlide.value),
@@ -143,16 +144,13 @@ class _OnboardingThemePickerState extends State<OnboardingThemePicker>
                 child: Text(
                   context.translate('onboarding_theme_subtitle'),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: subTextColor,
+                  style: AppTextStyles.body.copyWith(color: subTextColor,
                     height: 1.5,
-                    letterSpacing: 0.1,
-                  ),
+                    letterSpacing: 0.1),
                 ),
               ),
             ),
-            const SizedBox(height: 36),
+            const SizedBox(height: AppSpacing.s32),
             // ─── Theme Cards ───
             Transform.translate(
               offset: Offset(0, _cardsSlide.value),
@@ -170,7 +168,7 @@ class _OnboardingThemePickerState extends State<OnboardingThemePicker>
                       textColor: textColor,
                       onTap: () => themeProvider.setThemeMode(ThemeMode.light),
                     )),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppSpacing.s12),
                     Expanded(child: _ThemeCard(
                       icon: LucideIcons.moonStar,
                       label: 'Dark',
@@ -181,7 +179,7 @@ class _OnboardingThemePickerState extends State<OnboardingThemePicker>
                       textColor: textColor,
                       onTap: () => themeProvider.setThemeMode(ThemeMode.dark),
                     )),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppSpacing.s12),
                     Expanded(child: _ThemeCard(
                       icon: LucideIcons.smartphone,
                       label: 'System',
@@ -354,10 +352,10 @@ class _ThemeCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
-        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.p24, horizontal: AppSpacing.p8),
         decoration: BoxDecoration(
           color: cardBg,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           border: Border.all(
             color: isSelected ? selectedBorder : unselectedBorder,
             width: isSelected ? 2 : 1,
@@ -381,7 +379,7 @@ class _ThemeCard extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 color: isSelected
                     ? selectedBorder.withValues(alpha: 0.12)
                     : Colors.transparent,
@@ -394,12 +392,10 @@ class _ThemeCard extends StatelessWidget {
                     : textColor.withValues(alpha: 0.5),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSpacing.s8),
             Text(
               label,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+              style: AppTextStyles.body.copyWith(fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: isSelected
                     ? selectedBorder
                     : textColor.withValues(alpha: 0.6),
@@ -408,7 +404,7 @@ class _ThemeCard extends StatelessWidget {
             // Selected indicator dot
             AnimatedContainer(
               duration: const Duration(milliseconds: 250),
-              margin: const EdgeInsets.only(top: 8),
+              margin: const EdgeInsets.only(top: AppSpacing.p8),
               width: isSelected ? 6 : 0,
               height: isSelected ? 6 : 0,
               decoration: BoxDecoration(

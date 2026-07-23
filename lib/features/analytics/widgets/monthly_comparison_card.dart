@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class MonthlyComparisonCard extends StatelessWidget {
   final double currentAmount;
@@ -32,10 +34,10 @@ class MonthlyComparisonCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.06),
@@ -58,17 +60,17 @@ class MonthlyComparisonCard extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppSpacing.s8),
               Text(
                 context.translate('monthly_comparison'),
                 style: AppTextStyles.h2.copyWith(color: onSurface),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppSpacing.s16),
 
           Row(
             children: [
@@ -83,7 +85,7 @@ class MonthlyComparisonCard extends StatelessWidget {
                   onSurface: onSurface,
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.s12),
               Expanded(
                 child: _MonthCard(
                   label: context.translate('last_month'),
@@ -97,14 +99,14 @@ class MonthlyComparisonCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
 
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.all(AppSpacing.p12),
             decoration: BoxDecoration(
               color: changeColor.withValues(alpha: isDark ? 0.15 : 0.08),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,7 +125,7 @@ class MonthlyComparisonCard extends StatelessWidget {
                       color: changeColor,
                       size: 16,
                     ),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: AppSpacing.s8),
                     Text(
                       netChangeText,
                       style: AppTextStyles.bodyBold.copyWith(
@@ -164,12 +166,12 @@ class _MonthCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(AppSpacing.p12),
       decoration: BoxDecoration(
         color: isDark
             ? Colors.white.withValues(alpha: 0.05)
             : const Color(0xFFF8F9FA),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
@@ -187,7 +189,7 @@ class _MonthCard extends StatelessWidget {
               color: Colors.grey.shade500,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: AppSpacing.s8),
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
@@ -200,9 +202,9 @@ class _MonthCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.s8),
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(AppSpacing.r8),
             child: LinearProgressIndicator(
               value: progress,
               backgroundColor: isDark

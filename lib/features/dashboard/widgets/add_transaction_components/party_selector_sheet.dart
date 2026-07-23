@@ -3,8 +3,9 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 String _getInitials(String name) {
   if (name.trim().isEmpty) return '?';
@@ -40,11 +41,11 @@ class PartySelectorSheet extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(AppSpacing.r24),
+          topRight: Radius.circular(AppSpacing.r24),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24, vertical: AppSpacing.p16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +56,7 @@ class PartySelectorSheet extends StatelessWidget {
               height: 5,
               decoration: BoxDecoration(
                 color: isDark ? Colors.white24 : Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
               ),
             ),
           ),
@@ -65,11 +66,8 @@ class PartySelectorSheet extends StatelessWidget {
             children: [
               Text(
                 context.translate('link_to_party_optional'),
-                style: TextStyle(
-                  fontSize: AppFontSizes.size18,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
-                ),
+                style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface),
               ),
               if (selectedPartyName != null)
                 TextButton(
@@ -111,9 +109,7 @@ class PartySelectorSheet extends StatelessWidget {
                         : (isDark ? Colors.white12 : Colors.grey.shade100),
                     child: Text(
                       initials,
-                      style: TextStyle(
-                        fontSize: AppFontSizes.size13,
-                        fontWeight: FontWeight.w600,
+                      style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600,
                         color: isSelected
                             ? Colors.white
                             : (isDark ? Colors.white60 : Colors.black54),
@@ -122,21 +118,15 @@ class PartySelectorSheet extends StatelessWidget {
                   ),
                   title: Text(
                     name,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size15,
-                      fontWeight: isSelected
+                    style: AppTextStyles.body.copyWith(fontWeight: isSelected
                           ? FontWeight.w600
                           : FontWeight.w400,
-                      color: theme.colorScheme.onSurface,
-                    ),
+                      color: theme.colorScheme.onSurface),
                   ),
                   subtitle: party.phone != null
                       ? Text(
                           party.phone!,
-                          style: TextStyle(
-                            fontSize: AppFontSizes.size12,
-                            color: isDark ? Colors.white38 : Colors.grey,
-                          ),
+                          style: AppTextStyles.label.copyWith(color: isDark ? Colors.white38 : Colors.grey),
                         )
                       : null,
                   trailing: isSelected

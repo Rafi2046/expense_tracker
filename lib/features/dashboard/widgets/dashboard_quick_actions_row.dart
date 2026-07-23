@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:expense_tracker/features/dashboard/widgets/budget_summary_card.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_shortcuts_card.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class DashboardQuickActionsRow extends StatelessWidget {
   final bool isLoading;
@@ -21,9 +23,9 @@ class DashboardQuickActionsRow extends StatelessWidget {
           enabled: isLoading,
           child: BudgetSummaryCard(monthlyExpense: monthlyExpense),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.s8),
         const DashboardShortcutsCard(),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.s8),
       ],
     );
   }

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 Color _sectionBg(ThemeData theme) => theme.brightness == Brightness.dark
@@ -31,8 +30,8 @@ class ExpenseHeroSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p16, AppSpacing.p16, AppSpacing.p12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -42,7 +41,7 @@ class ExpenseHeroSection extends StatelessWidget {
             AppColors.activeGreen.withValues(alpha: 0.02),
           ],
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
         border: Border.all(
           color: AppColors.activeGreen.withValues(alpha: 0.1),
           width: 1,
@@ -62,7 +61,7 @@ class ExpenseHeroSection extends StatelessWidget {
                   color: AppColors.activeGreen.withValues(alpha: 0.5),
                 ),
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppSpacing.s4),
               IntrinsicWidth(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(
@@ -81,11 +80,9 @@ class ExpenseHeroSection extends StatelessWidget {
                     textAlign: TextAlign.center,
                     onChanged: (_) => onChanged(),
                     style: AppTextStyles.displayLarge.copyWith(
-                      fontSize: AppFontSizes.size36,
                       fontWeight: FontWeight.w700,
                       color: theme.colorScheme.onSurface,
-                      height: 1.2,
-                    ),
+                      height: 1.2),
                     autofocus: true,
                     cursorColor: AppColors.activeGreen,
                     cursorWidth: 3,
@@ -93,11 +90,9 @@ class ExpenseHeroSection extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: '0.00',
                       hintStyle: AppTextStyles.displayLarge.copyWith(
-                        fontSize: AppFontSizes.size36,
                         fontWeight: FontWeight.w300,
                         color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.15,
-                        ),
+                          alpha: 0.15),
                       ),
                       border: InputBorder.none,
                       filled: false,
@@ -110,31 +105,28 @@ class ExpenseHeroSection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.s12),
           TextField(
             controller: titleController,
             textAlign: TextAlign.start,
             onChanged: (_) => onChanged(),
             style: AppTextStyles.bodyBold.copyWith(
-              fontSize: AppFontSizes.size15,
               color: theme.colorScheme.onSurface,
-              fontWeight: FontWeight.w500,
-            ),
+              fontWeight: FontWeight.w500),
             decoration: InputDecoration(
               hintText: context.translate('expense_title_hint'),
               hintStyle: AppTextStyles.bodyBold.copyWith(
-                fontSize: AppFontSizes.size15,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
                 fontWeight: FontWeight.w400,
               ),
               filled: true,
               fillColor: _sectionBg(theme),
               contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.p14,
+                horizontal: AppSpacing.p16,
                 vertical: AppSpacing.p16,
               ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppSpacing.r10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 borderSide: BorderSide(
                   color: theme.brightness == Brightness.dark
                       ? const Color(0xFF334155)
@@ -143,7 +135,7 @@ class ExpenseHeroSection extends StatelessWidget {
                 ),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppSpacing.r10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 borderSide: BorderSide(
                   color: theme.brightness == Brightness.dark
                       ? const Color(0xFF334155)
@@ -152,7 +144,7 @@ class ExpenseHeroSection extends StatelessWidget {
                 ),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppSpacing.r10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 borderSide: BorderSide(
                   color: AppColors.activeGreen,
                   width: 1.5,

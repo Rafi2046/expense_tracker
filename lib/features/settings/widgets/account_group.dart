@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 
 import 'biometric_settings_tile.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class AccountGroup extends StatefulWidget {
   final Function(String) onSnackBar;
@@ -78,7 +80,7 @@ class _AccountGroupState extends State<AccountGroup> {
                     color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+                    padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p16, AppSpacing.p16, AppSpacing.p16),
                     child: _isGoogleUser 
                         ? const InlineGoogleNotice() 
                         : InlinePasswordForm(

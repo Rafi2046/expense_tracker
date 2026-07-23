@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class OverallBalanceCard extends StatelessWidget {
   final double totalBalance;
@@ -20,14 +22,14 @@ class OverallBalanceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18.0),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF0C4E3C), Color(0xFF1E8262)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF0C4E3C).withValues(alpha: 0.18),
@@ -63,7 +65,7 @@ class OverallBalanceCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: AppSpacing.s8),
           PrivacyMaskedText(
             amount: totalBalance,
             isMasked: isMasked,

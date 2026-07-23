@@ -2,8 +2,8 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class SortBySheet extends StatelessWidget {
   final ReportSortOption currentOption;
@@ -22,7 +22,7 @@ class SortBySheet extends StatelessWidget {
       context: context,
       backgroundColor: theme.cardColor,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
       ),
       builder: (context) => SortBySheet(currentOption: currentOption),
     );
@@ -43,15 +43,15 @@ class SortBySheet extends StatelessWidget {
             child: Container(
               width: 36,
               height: 4,
-              margin: const EdgeInsets.only(top: 10, bottom: 8),
+              margin: const EdgeInsets.only(top: AppSpacing.p8, bottom: AppSpacing.p8),
               decoration: BoxDecoration(
                 color: isDark ? Colors.white24 : Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
             child:             Text(
               context.translate('sort_by'),
             style: AppTextStyles.h3.copyWith(
@@ -102,7 +102,7 @@ class SortBySheet extends StatelessWidget {
     return InkWell(
       onTap: () => Navigator.pop(context, option),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
         child: Row(
           children: [
             Icon(
@@ -110,12 +110,11 @@ class SortBySheet extends StatelessWidget {
               color: isDark ? Colors.white60 : Colors.grey.shade600,
               size: 18,
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: AppSpacing.s16),
             Expanded(
               child: Text(
                 title,
-                style: AppTextStyles.reportTileTitle.copyWith(
-                  fontSize: AppFontSizes.size14,
+                style: AppTextStyles.bodyBold.copyWith(
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   color: isSelected ? theme.colorScheme.onSurface : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),

@@ -2,6 +2,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class GenderSelectorSection extends StatelessWidget {
   final String selectedGender;
@@ -29,7 +31,7 @@ class GenderSelectorSection extends StatelessWidget {
             color: isDark ? Colors.grey.shade400 : Colors.black54,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.s8),
         Row(
           children: ['Male', 'Female'].map((gender) {
             final genderLabel = context.translate(gender.toLowerCase());
@@ -49,7 +51,7 @@ class GenderSelectorSection extends StatelessWidget {
                   height: 46,
                   decoration: BoxDecoration(
                     color: isSelected ? activeColor : inputBg,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                     border: Border.all(
                       color: isSelected ? activeColor : Colors.transparent,
                       width: 1,

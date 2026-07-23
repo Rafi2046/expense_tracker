@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CalculatorLegendItem extends StatelessWidget {
   final String label;
@@ -23,10 +25,10 @@ class CalculatorLegendItem extends StatelessWidget {
           height: 12,
           decoration: BoxDecoration(
             color: color,
-            borderRadius: BorderRadius.circular(3),
+            borderRadius: BorderRadius.circular(AppSpacing.r8),
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSpacing.s8),
         Text(
           '$label (${(ratio * 100).toStringAsFixed(0)}%)',
           style: AppTextStyles.label.copyWith(

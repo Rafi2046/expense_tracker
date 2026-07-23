@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 
@@ -12,14 +12,17 @@ class SettleUpSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppSpacing.p16,
+        horizontal: AppSpacing.p24,
+      ),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF0F766E), Color(0xFF059669)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF059669).withValues(alpha: 0.3),
@@ -37,27 +40,28 @@ class SettleUpSummaryCard extends StatelessWidget {
               letterSpacing: 1.2,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: AppSpacing.s8),
           Text(
             formattedAmount,
-            style: const TextStyle(
-              fontSize: AppFontSizes.size32,
+            style: AppTextStyles.displayLarge.copyWith(
               fontWeight: FontWeight.w800,
               color: Colors.white,
               fontFamily: 'JetBrainsMono',
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.p12,
+              vertical: AppSpacing.p4,
+            ),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppSpacing.r24),
             ),
             child: Text(
               context.translate('outstanding_balances_settle'),
               style: AppTextStyles.caption.copyWith(
-                fontSize: AppFontSizes.size10,
                 fontWeight: FontWeight.w500,
                 color: Colors.white70,
               ),

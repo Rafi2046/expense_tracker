@@ -219,14 +219,14 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: AppSpacing.h80, height: AppSpacing.h80,
+              width: AppSpacing.h48, height: AppSpacing.h48,
               decoration: BoxDecoration(
                 color: AppColors.activeGreen.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(LucideIcons.checkCircle, size: 44, color: AppColors.activeGreen),
             ),
-            const SizedBox(height: AppSpacing.h20),
+            const SizedBox(height: AppSpacing.h24),
             Text(context.translate('all_settled_up'), style: AppTextStyles.cardValueGreen),
             const SizedBox(height: AppSpacing.s8),
             Text(

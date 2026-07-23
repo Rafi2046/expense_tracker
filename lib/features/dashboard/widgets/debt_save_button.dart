@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 class DebtSaveButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -29,11 +30,8 @@ class DebtSaveButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           label,
-          style: TextStyle(
-            fontSize: AppFontSizes.size15,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
+            color: Colors.white),
         ),
       ),
     );

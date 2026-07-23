@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class WeeklyComparisonBadge extends StatelessWidget {
   final double total;
@@ -33,23 +36,20 @@ class WeeklyComparisonBadge extends StatelessWidget {
     final label = "${isDecrease ? '-' : '+'}${percent.toStringAsFixed(1)}% ${context.translate('versus_last_week')}";
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p4),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(arrowIcon, color: badgeColor, size: 12),
-          const SizedBox(width: 4),
+          const SizedBox(width: AppSpacing.s4),
           Text(
             label,
-            style: TextStyle(
-              fontSize: AppFontSizes.size10,
-              fontWeight: FontWeight.bold,
-              color: badgeColor,
-            ),
+            style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.bold,
+              color: badgeColor),
           ),
         ],
       ),

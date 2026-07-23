@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -96,8 +95,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
-              vertical: 20.0,
+              horizontal: AppSpacing.p24,
+              vertical: AppSpacing.p16,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -117,16 +116,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       context.translate('forgot_password_title'),
                       textAlign: TextAlign.center,
                       style: AppTextStyles.loginTitle.copyWith(
-                        fontSize: AppFontSizes.size28,
-                        color: isDark ? Colors.white : null,
-                      ),
+                        color: isDark ? Colors.white : null),
                     ),
                     Text(
                       context.translate('forgot_password_subtitle'),
                       textAlign: TextAlign.center,
                       style: AppTextStyles.loginSubTitle.copyWith(
-                        color: isDark ? Colors.grey.shade400 : null,
-                      ),
+                        color: isDark ? Colors.grey.shade400 : null),
                     ),
                   ],
                 ),
@@ -149,8 +145,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     Text(
                       context.translate('remember_password'),
                       style: AppTextStyles.accountText.copyWith(
-                        color: isDark ? Colors.grey.shade400 : null,
-                      ),
+                        color: isDark ? Colors.grey.shade400 : null),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -164,8 +159,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       child: Text(
                         context.translate('log_in'),
                         style: AppTextStyles.signUpText.copyWith(
-                          color: isDark ? Colors.white : null,
-                        ),
+                          color: isDark ? Colors.white : null),
                       ),
                     ),
                   ],

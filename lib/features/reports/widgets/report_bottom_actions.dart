@@ -5,8 +5,8 @@ import 'package:expense_tracker/core/services/export_service.dart';
 import 'package:expense_tracker/core/services/pdf_export_service.dart';
 import 'package:expense_tracker/features/reports/widgets/share_report_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ReportBottomActions extends StatelessWidget {
@@ -133,19 +133,18 @@ class ReportBottomActions extends StatelessWidget {
     return SnackBar(
       content: Row(
         children: [
-          const SizedBox(
-            width: 18,
+          const SizedBox(width: AppSpacing.s16,
             height: 18,
             child: CircularProgressIndicator(
               strokeWidth: 2,
               color: Colors.white,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.s12),
           Flexible(
             child: Text(
               context.translate('generating_report'),
-              style: const TextStyle(color: Colors.white, fontSize: AppFontSizes.size14),
+              style: AppTextStyles.body.copyWith(color: Colors.white),
             ),
           ),
         ],
@@ -161,12 +160,12 @@ class ReportBottomActions extends StatelessWidget {
     return SnackBar(
       content: Row(
         children: [
-          Icon(LucideIcons.alertCircle, color: Colors.white, size: 20),
-          const SizedBox(width: 10),
+          Icon(LucideIcons.alertCircle, color: Colors.white, size: AppSpacing.s16),
+          const SizedBox(width: AppSpacing.s8),
           Flexible(
             child: Text(
               message,
-              style: const TextStyle(color: Colors.white, fontSize: AppFontSizes.size14),
+              style: AppTextStyles.body.copyWith(color: Colors.white),
             ),
           ),
         ],
@@ -183,12 +182,12 @@ class ReportBottomActions extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
+        padding: const EdgeInsets.only(left: AppSpacing.p16, right: AppSpacing.p16, bottom: AppSpacing.p24),
         child: Container(
           height: 64,
           decoration: BoxDecoration(
             color: theme.cardColor,
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(AppSpacing.r24),
             border: Border.all(
               color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1),
               width: 1.0,
@@ -202,7 +201,7 @@ class ReportBottomActions extends StatelessWidget {
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12, horizontal: AppSpacing.p8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -255,14 +254,12 @@ class ReportBottomActions extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: theme.primaryColor, size: 16),
-            const SizedBox(height: 2),
+            const SizedBox(height: AppSpacing.s4),
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
                 label,
-                style: TextStyle(
-                  fontSize: AppFontSizes.size10,
-                  fontFamily: GoogleFonts.workSans().fontFamily,
+                style: AppTextStyles.partyFormHint.copyWith(
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                 ),

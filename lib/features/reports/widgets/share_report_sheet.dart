@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class ShareReportSheet extends StatelessWidget {
   const ShareReportSheet({super.key});
@@ -23,8 +24,8 @@ class ShareReportSheet extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(AppSpacing.r24),
+          topRight: Radius.circular(AppSpacing.r24),
         ),
       ),
       child: Column(
@@ -36,17 +37,17 @@ class ShareReportSheet extends StatelessWidget {
             child: Container(
               width: 36,
               height: 4,
-              margin: const EdgeInsets.only(top: 10, bottom: 8),
+              margin: const EdgeInsets.only(top: AppSpacing.p8, bottom: AppSpacing.p8),
               decoration: BoxDecoration(
                 color: isDark ? Colors.white24 : Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
               ),
             ),
           ),
 
           // Header
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
             child: Text(
               context.translate('share_report_title'),
               style: AppTextStyles.h3.copyWith(
@@ -59,13 +60,13 @@ class ShareReportSheet extends StatelessWidget {
           // Share Options
           ListTile(
             onTap: () => Navigator.pop(context, 'image'),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+            contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p4),
             leading: Container(
               width: 36,
               height: 36,
               decoration: BoxDecoration(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
               child: Icon(
                 LucideIcons.image,
@@ -84,13 +85,13 @@ class ShareReportSheet extends StatelessWidget {
           Divider(color: theme.dividerTheme.color ?? const Color(0xFFF8FAFC), height: 1),
           ListTile(
             onTap: () => Navigator.pop(context, 'pdf'),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+            contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p4),
             leading: Container(
               width: 36,
               height: 36,
               decoration: BoxDecoration(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
               child: Icon(
                 LucideIcons.file,
@@ -106,7 +107,7 @@ class ShareReportSheet extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
         ],
       ),
     );

@@ -10,17 +10,16 @@ import 'package:expense_tracker/features/dashboard/widgets/transaction_list_cont
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class IncomeQuarterlySection extends StatelessWidget {
   final bool isMasked;
 
   const IncomeQuarterlySection({super.key, required this.isMasked});
 
-  TextStyle get _amountStyle => TextStyle(
-    fontSize: AppFontSizes.size15,
-    fontWeight: FontWeight.bold,
+  TextStyle get _amountStyle => AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
     color: const Color(0xFF2EBD85),
     fontFamily: TextStyle().fontFamily,
   );
@@ -38,7 +37,7 @@ class IncomeQuarterlySection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         QuarterlyTrendChart(data: analytics.quarterlyChartData),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.s24),
         TransactionListContainer(
           title: context.translate('major_quarterly_earnings').replaceAll('{quarter}', quarterTitle),
           trailing: TextButton(
@@ -65,7 +64,7 @@ class IncomeQuarterlySection extends StatelessWidget {
           children: quarterlyTransactions.isEmpty
               ? [
                    Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24.0),
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.p24),
                     child: Center(child: Text(context.translate('no_income_this_quarter'))),
                   )
                 ]

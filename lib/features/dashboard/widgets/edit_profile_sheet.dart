@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
 import 'package:expense_tracker/features/dashboard/utils/profile_sheet_handler.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class EditProfileSheet extends StatefulWidget {
   final UserProfile profile;
@@ -52,15 +55,15 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
 
     return Container(
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
       ),
       child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
         child: Container(
           color: theme.colorScheme.surface,
           child: SafeArea(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(24, 12, 24, 24 + bottom),
+              padding: EdgeInsets.fromLTRB(AppSpacing.p24, AppSpacing.p12, AppSpacing.p24, AppSpacing.p24 + bottom),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -70,44 +73,35 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                       height: 4,
                       decoration: BoxDecoration(
                         color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(2),
+                        borderRadius: BorderRadius.circular(AppSpacing.r8),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.s16),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         context.translate('edit_profile'),
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size20,
-                          fontWeight: FontWeight.w800,
-                          color: theme.textTheme.titleLarge?.color,
-                        ),
+                        style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w800,
+                          color: theme.textTheme.titleLarge?.color),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.s16),
                     TextField(
                       controller: _nameController,
-                      style: TextStyle(
-                        fontSize: AppFontSizes.size15,
-                        color: theme.textTheme.bodyLarge?.color,
-                      ),
+                      style: AppTextStyles.body.copyWith(color: theme.textTheme.bodyLarge?.color),
                       decoration: InputDecoration(
                         labelText: context.translate('profile_name'),
-                        labelStyle: TextStyle(
-                          fontSize: AppFontSizes.size13,
-                          color: theme.textTheme.bodySmall?.color,
-                        ),
+                        labelStyle: AppTextStyles.bodySmall.copyWith(color: theme.textTheme.bodySmall?.color),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                           borderSide: BorderSide(color: theme.dividerColor),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                           borderSide: BorderSide(color: theme.dividerColor),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                           borderSide: const BorderSide(
                             color: Color(0xFF2EBD85),
                             width: 2,
@@ -117,7 +111,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                         filled: true,
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.s16),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -127,23 +121,20 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                           backgroundColor: const Color(0xFF2EBD85),
                           elevation: 0,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppSpacing.r12),
                           ),
                         ),
                         child: Text(
                           context.translate('save'),
-                          style: TextStyle(
-                            fontSize: AppFontSizes.size16,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
+                          style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700,
+                            color: Colors.white),
                         ),
                       ),
                     ),
                     if (!isDefault) ...[
-                      const SizedBox(height: 32),
+                      const SizedBox(height: AppSpacing.s32),
                       const Divider(),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.s16),
                       Row(
                         children: [
                           Icon(
@@ -151,28 +142,24 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                             color: const Color(0xFFDC3545),
                             size: 18,
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSpacing.s8),
                           Text(
                             context.translate('danger_zone'),
-                            style: TextStyle(
-                              fontSize: AppFontSizes.size12,
-                              fontWeight: FontWeight.w800,
+                            style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w800,
                               color: const Color(0xFFDC3545),
                               letterSpacing: 1.2,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: AppSpacing.s8),
                       Text(
                         context.translate('delete_profile_warning'),
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size12,
-                          color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                        style: AppTextStyles.label.copyWith(color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                           height: 1.4,
                         ),
                       ),
-                      const SizedBox(height: 14),
+                      const SizedBox(height: AppSpacing.s12),
                       SizedBox(
                         width: double.infinity,
                         height: 48,
@@ -181,16 +168,14 @@ class _EditProfileSheetState extends State<EditProfileSheet> with ProfileSheetHa
                           icon: Icon(LucideIcons.trash, color: Color(0xFFDC3545)),
                           label: Text(
                             context.translate('delete_profile'),
-                            style: TextStyle(
-                              fontSize: AppFontSizes.size15,
-                              fontWeight: FontWeight.w600,
+                            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600,
                               color: const Color(0xFFDC3545),
                             ),
                           ),
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Color(0xFFDC3545)),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(AppSpacing.r12),
                             ),
                           ),
                         ),

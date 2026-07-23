@@ -1,8 +1,9 @@
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CurrencyListTile extends StatelessWidget {
   final CurrencyInfo currency;
@@ -34,10 +35,7 @@ class CurrencyListTile extends StatelessWidget {
       alignment: Alignment.center,
       child: Text(
         currency.flag,
-        style: const TextStyle(
-          fontSize: AppFontSizes.size22,
-          height: 1.25,
-        ),
+        style: AppTextStyles.h1.copyWith(height: 1.25),
       ),
     );
   }
@@ -55,16 +53,16 @@ class CurrencyListTile extends StatelessWidget {
       return Container(
         decoration: BoxDecoration(
           color: theme.cardColor,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           border: Border.all(color: borderColor, width: 1),
         ),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
             onTap: onTap,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
               child: tile,
             ),
           ),
@@ -85,7 +83,7 @@ class CurrencyListTile extends StatelessWidget {
     return Row(
       children: [
         _buildFlagIcon(context),
-        const SizedBox(width: 14),
+        const SizedBox(width: AppSpacing.s12),
         Expanded(
           child: Column(
             mainAxisAlignment: isCard ? MainAxisAlignment.start : MainAxisAlignment.center,
@@ -95,10 +93,9 @@ class CurrencyListTile extends StatelessWidget {
                 currency.name,
                 style: AppTextStyles.reportTileTitle.copyWith(
                   color: theme.colorScheme.onSurface,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                ),
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: AppSpacing.s4),
               Text(
                 currency.code,
                 style: AppTextStyles.label.copyWith(
@@ -116,7 +113,7 @@ class CurrencyListTile extends StatelessWidget {
           ),
         ),
         if (isSelected) ...[
-          const SizedBox(width: 14),
+          const SizedBox(width: AppSpacing.s12),
           Icon(
             LucideIcons.checkCircle,
             color: activeGreenColor,

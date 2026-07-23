@@ -2,7 +2,6 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DashboardStatCard extends StatelessWidget {
@@ -47,7 +46,7 @@ class DashboardStatCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppSpacing.r8),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p8),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -64,19 +63,17 @@ class DashboardStatCard extends StatelessWidget {
                         child: value,
                       ),
                     ),
-                    SizedBox(height: AppSpacing.h2),
+                    SizedBox(height: AppSpacing.h4),
                     Text(
                       title,
                       style: AppTextStyles.caption.copyWith(
-                        fontSize: AppFontSizes.size10,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textMuted,
-                      ),
+                        color: AppColors.textMuted),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     if (hasBottomContent) ...[
-                      SizedBox(height: AppSpacing.h2),
+                      SizedBox(height: AppSpacing.h4),
                       if (hasTrendIndicator)
                         Row(
                           mainAxisSize: MainAxisSize.min,
@@ -88,14 +85,14 @@ class DashboardStatCard extends StatelessWidget {
                                   : AppColors.activeRed,
                               size: 13,
                             ),
-                            const SizedBox(width: 3),
+                            const SizedBox(width: AppSpacing.s4),
                             Flexible(
                               child: Text(
                                 percentageText!,
                                 style: (isPositive
                                         ? AppTextStyles.cardTrendGreen
                                         : AppTextStyles.cardTrendRed)
-                                    .copyWith(fontSize: AppFontSizes.size10),
+                                    ,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),

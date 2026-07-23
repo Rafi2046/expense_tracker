@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_format_utils.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class InvoiceCategoryBreakdownWidget extends StatelessWidget {
   final Map<String, double> categoryTotals;
@@ -24,10 +25,10 @@ class InvoiceCategoryBreakdownWidget extends StatelessWidget {
     final total = categoryTotals.values.fold(0.0, (a, b) => a + b);
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF9FAFB),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(
           color: isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB),
         ),
@@ -36,7 +37,7 @@ class InvoiceCategoryBreakdownWidget extends StatelessWidget {
         children: sorted.map((e) {
           final pct = total > 0 ? e.value / total : 0.0;
           return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: AppSpacing.p12),
             child: Column(
               children: [
                 Row(
@@ -51,17 +52,15 @@ class InvoiceCategoryBreakdownWidget extends StatelessWidget {
                     ),
                     Text(
                       formatAmount(e.value, currency),
-                      style: GoogleFonts.jetBrainsMono(
-                        fontSize: AppFontSizes.size13,
-                        fontWeight: FontWeight.w700,
+                      style: AppTextStyles.bodySmall.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w700,
                         color: isDark ? Colors.white : const Color(0xFF111827),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: AppSpacing.s8),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                   child: LinearProgressIndicator(
                     value: pct,
                     backgroundColor: isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB),

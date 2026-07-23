@@ -75,7 +75,7 @@ class TourCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           boxShadow: [
             BoxShadow(
               color: scheme.onSurface.withValues(alpha: 0.18),
@@ -85,7 +85,7 @@ class TourCard extends StatelessWidget {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           child: Stack(
             children: [
               TourCardBackground(
@@ -100,7 +100,7 @@ class TourCard extends StatelessWidget {
                   children: [
                     TourCardStatusBadge(isCompleted: tour.isCompleted),
                     if (onDelete != null || onToggleComplete != null || onEdit != null) ...[
-                      const SizedBox(width: 6),
+                      const SizedBox(width: AppSpacing.s8),
                       TourCardMenuButton(
                         isCompleted: tour.isCompleted,
                         isOwner: isOwner,
@@ -117,7 +117,7 @@ class TourCard extends StatelessWidget {
                 left: 0,
                 right: 0,
                 child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.p20),
+                  padding: const EdgeInsets.all(AppSpacing.p16),
                   child: TourCardBottomContent(
                     name: tour.name,
                     memberCount: memberCount,

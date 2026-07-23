@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ExitDialog extends StatelessWidget {
   const ExitDialog({super.key});
@@ -14,12 +16,12 @@ class ExitDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
       ),
       backgroundColor: Colors.white,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24.0),
+      insetPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(AppSpacing.p16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -38,14 +40,14 @@ class ExitDialog extends StatelessWidget {
                 size: 32,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
 
             // Title
             Text(
               context.translate('exit_app'),
               style: AppTextStyles.profileTitle.copyWith(color: Colors.black87),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
 
             // Subtitle Description
             Text(
@@ -57,7 +59,7 @@ class ExitDialog extends StatelessWidget {
                 height: 1.4,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.s24),
 
             // Actions Row
             Row(
@@ -73,7 +75,7 @@ class ExitDialog extends StatelessWidget {
                     borderColor: AppColors.dividerColor,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.s12),
 
                 // Exit Button
                 Expanded(

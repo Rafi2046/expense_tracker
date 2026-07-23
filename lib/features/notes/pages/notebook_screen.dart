@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class NotebookScreen extends StatefulWidget {
   const NotebookScreen({super.key});
@@ -117,7 +119,7 @@ class _NotebookScreenState extends State<NotebookScreen> {
                       )
                     : ListView.builder(
                     itemCount: notesList.length,
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(AppSpacing.p16),
                     itemBuilder: (context, index) {
                       final note = notesList[index];
                       return NotebookNoteCard(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TourCardMenuButton extends StatelessWidget {
   final bool isCompleted;
@@ -34,7 +36,7 @@ class TourCardMenuButton extends StatelessWidget {
     return PopupMenuButton<String>(
       offset: const Offset(0, 40),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
       ),
       onSelected: (value) {
         if (value == 'edit') onEdit?.call();
@@ -48,7 +50,7 @@ class TourCardMenuButton extends StatelessWidget {
             child: Row(
               children: [
                 Icon(LucideIcons.pencil, size: 18, color: greyColor),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.s8),
                 Text(editLabel, style: TextStyle(color: greyColor)),
               ],
             ),
@@ -63,7 +65,7 @@ class TourCardMenuButton extends StatelessWidget {
                   size: 18,
                   color: isCompleted ? greyColor : greenColor,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.s8),
                 Text(
                   isCompleted ? markActiveLabel : markCompletedLabel,
                   style: TextStyle(
@@ -79,7 +81,7 @@ class TourCardMenuButton extends StatelessWidget {
             child: Row(
               children: [
                 Icon(LucideIcons.trash, size: 18, color: redColor),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.s8),
                 Text(deleteLabel,
                     style: TextStyle(color: redColor)),
               ],
@@ -87,10 +89,10 @@ class TourCardMenuButton extends StatelessWidget {
           ),
       ],
       child: Container(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.all(AppSpacing.p8),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppSpacing.r24),
           border: Border.all(
             color: Colors.white.withValues(alpha: 0.2),
             width: 0.5,

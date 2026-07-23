@@ -1,5 +1,7 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CalculatorResultItem extends StatelessWidget {
   final String title;
@@ -22,12 +24,12 @@ class CalculatorResultItem extends StatelessWidget {
           title,
           style: AppTextStyles.calculatorResultLabel,
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: AppSpacing.s4),
         Text(
           value,
-          style: AppTextStyles.calculatorResultAmount.copyWith(
-            fontSize: isCenter ? 20 : 16,
-          ),
+          style: isCenter
+              ? AppTextStyles.h1
+              : AppTextStyles.calculatorResultAmount,
         ),
       ],
     );

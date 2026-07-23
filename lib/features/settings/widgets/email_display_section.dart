@@ -1,6 +1,8 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class EmailDisplaySection extends StatelessWidget {
   final String userEmail;
@@ -23,13 +25,13 @@ class EmailDisplaySection extends StatelessWidget {
           context.translate('email_address'),
           style: AppTextStyles.partyFormLabel.copyWith(color: isDark ? Colors.grey.shade400 : null),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: AppSpacing.s8),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
           decoration: BoxDecoration(
             color: isDark ? theme.cardColor : const Color(0xFFF9F9FB),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
             border: Border.all(color: borderColor, width: 1.0),
           ),
           child: Row(

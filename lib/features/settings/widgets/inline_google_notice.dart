@@ -2,6 +2,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class InlineGoogleNotice extends StatelessWidget {
   const InlineGoogleNotice({super.key});
@@ -13,10 +15,10 @@ class InlineGoogleNotice extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.p16),
           decoration: BoxDecoration(
             color: theme.cardColor,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
             border: Border.all(color: theme.dividerColor, width: 1.0),
           ),
           child: Column(
@@ -26,12 +28,12 @@ class InlineGoogleNotice extends StatelessWidget {
                 color: theme.primaryColor,
                 size: 36,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.s8),
               Text(
                 context.translate('google_signin_active'),
               style: AppTextStyles.bodyBold.copyWith(color: theme.colorScheme.onSurface),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: AppSpacing.s8),
               Text(
                 context.translate('google_password_notice'),
                 textAlign: TextAlign.center,

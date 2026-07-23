@@ -13,6 +13,8 @@ import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.d
 import 'package:expense_tracker/features/reports/widgets/report_date_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartyStatementScreen extends StatefulWidget {
   final String? initialPartyName;
@@ -84,7 +86,7 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
         leading: Align(
           alignment: Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 4.0),
+            padding: const EdgeInsets.only(left: AppSpacing.p4),
             child: BackButton(color: theme.appBarTheme.iconTheme?.color),
           ),
         ),
@@ -95,7 +97,7 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
           ),
         ),
         centerTitle: true,
-        actions: const [PartyStatementViewToggle(), SizedBox(width: 8)],
+        actions: const [PartyStatementViewToggle(), SizedBox(width: AppSpacing.s8)],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
@@ -109,9 +111,9 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
-                top: 12.0,
+                left: AppSpacing.p16,
+                right: AppSpacing.p16,
+                top: AppSpacing.p12,
                 bottom: 120.0,
               ),
               child: Column(
@@ -122,13 +124,13 @@ class _PartyStatementScreenState extends State<PartyStatementScreen> {
                     onToggle: () =>
                         setState(() => _localMasked = !_localMasked),
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: AppSpacing.s12),
                   const ReportDateSelector(),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.s12),
                   const PartyStatementSelector(),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.s16),
                   const PartyStatementProfileHeader(),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSpacing.s16),
                   PartyStatementContent(
                     isMasked: _localMasked,
                     isLoading:

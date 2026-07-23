@@ -6,6 +6,8 @@ import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/income_summary_card.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class IncomeSummaryRow extends StatelessWidget {
   final IncomeAnalyticsProvider analytics;
@@ -65,7 +67,7 @@ class IncomeSummaryRow extends StatelessWidget {
                     : AppColors.activeRed,
                 size: 16,
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppSpacing.s4),
               Text(
                 '$sign${change.toStringAsFixed(1)}%',
                 style: AppTextStyles.bodySmall.copyWith(
@@ -120,7 +122,7 @@ class IncomeSummaryRow extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -143,7 +145,7 @@ class IncomeSummaryRow extends StatelessWidget {
                         : AppColors.activeRed,
                     size: 16,
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: AppSpacing.s4),
                   Text(
                     '$sign${change.toStringAsFixed(1)}%',
                     style: AppTextStyles.bodySmall.copyWith(
@@ -208,9 +210,9 @@ class IncomeSummaryRow extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.s12),
           ClipRRect(
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: BorderRadius.circular(AppSpacing.r24),
             child: LinearProgressIndicator(
               value: progress.clamp(0.0, 1.0),
               backgroundColor:

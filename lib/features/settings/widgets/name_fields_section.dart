@@ -2,6 +2,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/features/settings/widgets/settings_text_field.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class NameFieldsSection extends StatelessWidget {
   final TextEditingController firstNameController;
@@ -25,7 +27,7 @@ class NameFieldsSection extends StatelessWidget {
             prefixIcon: LucideIcons.user,
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: AppSpacing.s16),
         Expanded(
           child: SettingsTextField(
             label: context.translate('last_name'),

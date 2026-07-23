@@ -2,8 +2,11 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/models/transaction_models.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class RecentActivityItemCard extends StatelessWidget {
   final TransactionItem transaction;
@@ -26,7 +29,7 @@ class RecentActivityItemCard extends StatelessWidget {
     return InkWell(
       onTap: onTap != null ? () => onTap!(tx) : null,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p12),
         child: Row(
           children: [
             Container(
@@ -38,7 +41,7 @@ class RecentActivityItemCard extends StatelessWidget {
                     : (isDark
                         ? Colors.white.withValues(alpha: 0.08)
                         : const Color(0xFFF3F4F6)),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
               ),
               child: Icon(
                 icon,
@@ -48,27 +51,21 @@ class RecentActivityItemCard extends StatelessWidget {
                 size: 17,
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSpacing.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     tx.note.isEmpty ? tx.category : tx.note,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size13,
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface,
-                    ),
+                    style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.s4),
                   Text(
                     '${tx.category}  •  ${_formatTime(tx.dateTime)}',
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size10,
-                      color: Colors.grey.shade400,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    style: AppTextStyles.caption.copyWith(color: Colors.grey.shade400,
+                      fontWeight: FontWeight.w400),
                   ),
                 ],
               ),
@@ -78,19 +75,13 @@ class RecentActivityItemCard extends StatelessWidget {
               children: [
                 Text(
                   isInc ? '+' : '-',
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size12,
-                    fontWeight: FontWeight.w700,
-                    color: isInc ? AppColors.activeGreen : AppColors.expensePink,
-                  ),
+                  style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w700,
+                    color: isInc ? AppColors.activeGreen : AppColors.expensePink),
                 ),
                 PrivacyMaskedText(
                   amount: tx.amount,
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size12,
-                    fontWeight: FontWeight.w700,
-                    color: isInc ? AppColors.activeGreen : AppColors.expensePink,
-                  ),
+                  style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w700,
+                    color: isInc ? AppColors.activeGreen : AppColors.expensePink),
                 ),
               ],
             ),

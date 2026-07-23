@@ -15,7 +15,7 @@ class OverBudgetWarning extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.p12,
-        vertical: AppSpacing.p10,
+        vertical: AppSpacing.p8,
       ),
       decoration: BoxDecoration(
         color: AppColors.activeRed.withValues(alpha: 0.1),

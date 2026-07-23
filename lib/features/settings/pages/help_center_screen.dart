@@ -2,13 +2,15 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class HelpCenterScreen extends StatelessWidget {
   const HelpCenterScreen({super.key});
 
   Widget _buildFaqSection(BuildContext context, ThemeData theme, _FaqItem faq) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
+      padding: const EdgeInsets.only(bottom: AppSpacing.p24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -16,17 +18,15 @@ class HelpCenterScreen extends StatelessWidget {
             faq.question,
             style: AppTextStyles.reportTileTitle.copyWith(
               fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
-              fontSize: 15,
+              color: theme.colorScheme.onSurface
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           Text(
             faq.answer,
             style: AppTextStyles.bodySmall.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
-              height: 1.6,
-              fontSize: 13.5,
+              height: 1.6
             ),
           ),
         ],
@@ -82,12 +82,12 @@ class HelpCenterScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
               color: theme.cardColor,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppSpacing.r24),
               border: Border.all(
                 color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFE5E7EB),
                 width: 1.0,
@@ -100,7 +100,7 @@ class HelpCenterScreen extends StatelessWidget {
                 ),
               ],
             ),
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(AppSpacing.p24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -108,20 +108,19 @@ class HelpCenterScreen extends StatelessWidget {
                   context.translate('faq'),
                   style: AppTextStyles.profileTitle.copyWith(
                     color: theme.colorScheme.onSurface,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 20,
+                    fontWeight: FontWeight.w800
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: AppSpacing.s8),
                 Text(
                   context.translate('faq_subtitle'),
                   style: AppTextStyles.caption.copyWith(
                     color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.s16),
                 const Divider(),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s16),
                 
                 ...faqs.map((faq) => _buildFaqSection(context, theme, faq)),
               ],

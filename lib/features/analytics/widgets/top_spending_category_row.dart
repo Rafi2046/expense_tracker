@@ -2,7 +2,8 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TopSpendingCategoryItem {
   final String title;
@@ -53,7 +54,7 @@ class TopSpendingCategoryRow extends StatelessWidget {
     final barPct = maxAmount > 0 ? item.amount / maxAmount : 0.0;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -71,11 +72,11 @@ class TopSpendingCategoryRow extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                 ),
                 child: Icon(item.icon, color: _barColor, size: 18),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.s12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,9 +85,9 @@ class TopSpendingCategoryRow extends StatelessWidget {
                       item.title,
                       style: AppTextStyles.bodyBold.copyWith(color: onSurface),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSpacing.s4),
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(3),
+                      borderRadius: BorderRadius.circular(AppSpacing.r8),
                       child: LinearProgressIndicator(
                         value: barPct,
                         backgroundColor: isDark
@@ -99,7 +100,7 @@ class TopSpendingCategoryRow extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.s12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -110,26 +111,23 @@ class TopSpendingCategoryRow extends StatelessWidget {
                       isMasked: isMasked,
                       style: AppTextStyles.bodySmall.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: onSurface,
-                      ),
+                        color: onSurface),
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.s4),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p4),
                     decoration: BoxDecoration(
                       color: AppColors.activeRed.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(AppSpacing.r8),
                     ),
                     child: Text(
                       item.percentage < 1
                           ? '${item.percentage.toStringAsFixed(1)}%'
                           : '${item.percentage.toStringAsFixed(0)}%',
                       style: AppTextStyles.caption.copyWith(
-                        fontSize: AppFontSizes.size10,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.activeRed,
-                      ),
+                        color: AppColors.activeRed),
                     ),
                   ),
                 ],

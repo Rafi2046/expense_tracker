@@ -1,5 +1,7 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CalculatorTextField extends StatelessWidget {
   final String label;
@@ -32,11 +34,11 @@ class CalculatorTextField extends StatelessWidget {
               label,
               style: AppTextStyles.calculatorLabel.copyWith(color: isDark ? Colors.grey.shade400 : null),
             ),
-        const SizedBox(height: 6),
+        const SizedBox(height: AppSpacing.s8),
         Container(
           decoration: BoxDecoration(
             color: theme.cardColor,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
             border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1), width: 1.0),
           ),
           child: TextFormField(
@@ -47,7 +49,7 @@ class CalculatorTextField extends StatelessWidget {
               hintText: hintText,
               hintStyle: AppTextStyles.textFieldHint.copyWith(color: isDark ? Colors.grey.shade400 : Colors.grey.shade400),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
               prefixIcon: prefix,
               suffixIcon: suffix,
               prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),

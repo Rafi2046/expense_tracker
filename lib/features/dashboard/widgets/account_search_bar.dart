@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class AccountSearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -29,21 +32,21 @@ class AccountSearchBar extends StatelessWidget {
             height: 38,
             decoration: BoxDecoration(
               color: theme.cardColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8),
             child: Row(
               children: [
                 Icon(LucideIcons.search, color: Colors.grey, size: 18),
-                const SizedBox(width: 6),
+                const SizedBox(width: AppSpacing.s8),
                 Expanded(
                   child: TextField(
                     controller: controller,
-                    style: TextStyle(fontSize: AppFontSizes.size13, color: theme.colorScheme.onSurface),
+                    style: AppTextStyles.bodySmall.copyWith(color: theme.colorScheme.onSurface),
                     decoration: InputDecoration(
                       hintText: context.translate('search_transactions'),
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: AppFontSizes.size13),
+                      hintStyle: AppTextStyles.bodySmall.copyWith(color: Colors.grey),
                       border: InputBorder.none,
                       isDense: true,
                     ),
@@ -62,14 +65,14 @@ class AccountSearchBar extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: AppSpacing.s8),
         // Filter icon button
         Container(
           height: 38,
           width: 38,
           decoration: BoxDecoration(
             color: theme.cardColor,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
             border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
           ),
           child: IconButton(

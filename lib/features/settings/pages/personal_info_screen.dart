@@ -4,6 +4,8 @@ import 'package:expense_tracker/features/settings/utils/personal_info_handler.da
 import 'package:expense_tracker/features/settings/widgets/personal_info_view.dart';
 import 'package:expense_tracker/features/settings/widgets/personal_info_edit.dart';
 import 'package:expense_tracker/features/settings/widgets/profile_app_bar.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PersonalInfoScreen extends StatefulWidget {
   const PersonalInfoScreen({super.key});
@@ -44,7 +46,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen>
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24, vertical: AppSpacing.p24),
             child: isEditing
                 ? PersonalInfoEdit(
                     firstNameController: firstNameController,

@@ -15,18 +15,21 @@ class ExpenseValidationBanner extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24),
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.p12,
+              vertical: AppSpacing.p8,
+            ),
             decoration: BoxDecoration(
               color: AppColors.activeRed.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
             child: Row(
               children: [
                 Icon(LucideIcons.alertCircle, size: 16, color: AppColors.activeRed.withValues(alpha: 0.8)),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.s8),
                 Expanded(
                   child: Text(
                     error!,

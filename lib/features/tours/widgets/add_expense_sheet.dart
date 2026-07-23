@@ -306,10 +306,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpacing.p16),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -319,17 +319,17 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               height: 4,
               decoration: BoxDecoration(
                 color: theme.dividerColor.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.s16),
             Text(
               context.translate('attach_receipt'),
               style: AppTextStyles.h2.copyWith(
                 color: theme.colorScheme.onSurface,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.s16),
             _buildReceiptOption(
               ctx,
               theme,
@@ -337,7 +337,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               context.translate('take_photo'),
               ImageSource.camera,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSpacing.s4),
             _buildReceiptOption(
               ctx,
               theme,
@@ -345,7 +345,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               context.translate('choose_from_gallery'),
               ImageSource.gallery,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.s8),
           ],
         ),
       ),
@@ -360,13 +360,13 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     ImageSource source,
   ) {
     return ListTile(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r12)),
       leading: Container(
         width: 40,
         height: 40,
         decoration: BoxDecoration(
           color: AppColors.activeGreen.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
         ),
         child: Icon(icon, color: AppColors.activeGreen, size: 20),
       ),
@@ -593,7 +593,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   Widget _sectionWrapper(ThemeData theme, Widget child) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.p20),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: _sectionBg(theme),
         borderRadius: BorderRadius.circular(AppSpacing.r16),
@@ -604,7 +604,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   Widget _sectionLabel(ThemeData theme, String label) {
     return Padding(
-      padding: const EdgeInsets.only(left: 2, bottom: AppSpacing.s12),
+      padding: const EdgeInsets.only(left: AppSpacing.p4, bottom: AppSpacing.s12),
       child: Text(
         label,
         style: AppTextStyles.caption.copyWith(
@@ -645,7 +645,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         child: Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -694,7 +694,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       ),
                       const SizedBox(height: AppSpacing.h24),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
                         child: ExpenseReceiptPicker(
                           theme: theme,
                           receiptPaths: _receiptImages,
@@ -705,7 +705,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       const SizedBox(height: AppSpacing.h24),
                       // Paid By section
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
                         child: _sectionWrapper(
                           theme,
                           Column(
@@ -729,7 +729,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       const SizedBox(height: AppSpacing.h24),
                       // Split section
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
                         child: _sectionWrapper(
                           theme,
                           Column(
@@ -792,12 +792,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                       const SizedBox(height: AppSpacing.h24),
                       // Notes section
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _sectionLabel(theme, context.translate('notes_section')),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: AppSpacing.s8),
                             ExpenseNoteField(theme: theme, controller: _noteController),
                           ],
                         ),

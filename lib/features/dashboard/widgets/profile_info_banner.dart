@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class ProfileInfoBanner extends StatelessWidget {
   const ProfileInfoBanner({super.key});
@@ -10,12 +13,12 @@ class ProfileInfoBanner extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p8),
       decoration: BoxDecoration(
         color: isDark
             ? theme.colorScheme.onSurface.withValues(alpha: 0.06)
             : const Color(0xFFF4F5FB),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,14 +28,11 @@ class ProfileInfoBanner extends StatelessWidget {
             color: theme.textTheme.bodySmall?.color,
             size: 18,
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSpacing.s8),
           Expanded(
             child: Text(
               'You can also create & manage multiple profiles from the homepage later.',
-              style: TextStyle(
-                fontSize: AppFontSizes.size12,
-                color: theme.textTheme.bodySmall?.color,
-              ),
+              style: AppTextStyles.label.copyWith(color: theme.textTheme.bodySmall?.color),
             ),
           ),
         ],

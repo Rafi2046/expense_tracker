@@ -9,17 +9,16 @@ import 'package:expense_tracker/features/dashboard/widgets/income_trend_chart.da
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class IncomeMonthlySection extends StatelessWidget {
   final bool isMasked;
 
   const IncomeMonthlySection({super.key, required this.isMasked});
 
-  TextStyle get _amountStyle => TextStyle(
-    fontSize: AppFontSizes.size15,
-    fontWeight: FontWeight.bold,
+  TextStyle get _amountStyle => AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
     color: const Color(0xFF2EBD85),
     fontFamily: TextStyle().fontFamily,
   );
@@ -34,15 +33,14 @@ class IncomeMonthlySection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         IncomeTrendChart(data: analytics.monthlyChartData),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.s24),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               context.translate('recent_income'),
               style: AppTextStyles.sectionHeaderTitle.copyWith(
-                color: theme.colorScheme.onSurface,
-              ),
+                color: theme.colorScheme.onSurface),
             ),
             TextButton(
               onPressed: () => Navigator.push(
@@ -64,10 +62,10 @@ class IncomeMonthlySection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.s12),
         monthlyTransactions.isEmpty
             ?  Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24.0),
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.p24),
                 child: Center(child: Text(context.translate('no_income_this_month'))),
               )
             : ListView.separated(
@@ -75,7 +73,7 @@ class IncomeMonthlySection extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: monthlyTransactions.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 12),
+                separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.s12),
                 itemBuilder: (context, index) {
                   final tx = monthlyTransactions[index];
                   IconData icon;

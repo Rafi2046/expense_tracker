@@ -1,7 +1,10 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class BudgetStatusItem {
   final String categoryName;
@@ -30,7 +33,7 @@ class DashboardBudgetStatus extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.fromLTRB(14, 12, 14, 16),
+        padding: const EdgeInsets.fromLTRB(AppSpacing.p12, AppSpacing.p12, AppSpacing.p12, AppSpacing.p16),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           border: Border.all(
@@ -39,7 +42,7 @@ class DashboardBudgetStatus extends StatelessWidget {
                 AppColors.dividerColor.withValues(alpha: 0.5),
             width: 1.0,
           ),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.r8),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.01),
@@ -53,12 +56,10 @@ class DashboardBudgetStatus extends StatelessWidget {
           children: [
             // Header Label
             Padding(
-              padding: const EdgeInsets.only(left: 2.0, bottom: 10.0),
+              padding: const EdgeInsets.only(left: AppSpacing.p4, bottom: AppSpacing.p8),
               child: Text(
                 context.translate('budget_status').toUpperCase(),
-                style: TextStyle(
-                  fontSize: AppFontSizes.size10,
-                  fontWeight: FontWeight.bold,
+                style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.bold,
                   color: isDark
                       ? Colors.white60
                       : AppColors.loginSubTitle.withValues(alpha: 0.8),
@@ -74,14 +75,14 @@ class DashboardBudgetStatus extends StatelessWidget {
               padding: EdgeInsets.zero,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: items.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.s12),
               itemBuilder: (context, index) {
                 final item = items[index];
                 final labelColor = isDark
                     ? Colors.white70
                     : const Color(0xFF31394D);
                 return Padding(
-                  padding: const EdgeInsets.only(left: 2.0, right: 2.0),
+                  padding: const EdgeInsets.only(left: AppSpacing.p4, right: AppSpacing.p4),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -90,27 +91,23 @@ class DashboardBudgetStatus extends StatelessWidget {
                         children: [
                           Text(
                             context.translate(item.categoryName.toLowerCase()),
-                            style: TextStyle(
-                              fontSize: AppFontSizes.size12,
-                              fontWeight: FontWeight.w600,
+                            style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600,
                               color: labelColor,
                               fontFamily: TextStyle().fontFamily,
                             ),
                           ),
                           Text(
                             '${item.percentage.toStringAsFixed(0)}%',
-                            style: TextStyle(
-                              fontSize: AppFontSizes.size12,
-                              fontWeight: FontWeight.bold,
+                            style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold,
                               color: labelColor,
                               fontFamily: TextStyle().fontFamily,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: AppSpacing.s8),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
+                        borderRadius: BorderRadius.circular(AppSpacing.r24),
                         child: LinearProgressIndicator(
                           value: item.percentage / 100.0,
                           backgroundColor: isDark

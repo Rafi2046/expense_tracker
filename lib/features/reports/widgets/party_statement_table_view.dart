@@ -10,6 +10,8 @@ import 'package:expense_tracker/features/reports/widgets/party_statement_table_h
 import 'package:expense_tracker/features/reports/widgets/party_statement_table_row.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartyStatementTableView extends StatelessWidget {
   final bool isMasked;
@@ -46,7 +48,7 @@ class PartyStatementTableView extends StatelessWidget {
           isDark: isDark,
           label: context.translate('net_balance'),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.s24),
 
         PartyStatementTableHeader(
           entryCount: transactions.length,
@@ -54,15 +56,15 @@ class PartyStatementTableView extends StatelessWidget {
           giveTotal: giveTotal,
           isMasked: isMasked,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.s8),
         Divider(color: theme.dividerColor, height: 1),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.s12),
 
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: transactions.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 10),
+          separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.s8),
           itemBuilder: (context, index) {
             final entry = transactions[index];
 

@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ProfilePhotoPicker extends StatelessWidget {
   final File? localImageFile;
@@ -30,7 +32,7 @@ class ProfilePhotoPicker extends StatelessWidget {
           alignment: Alignment.bottomRight,
           children: [
             Container(
-              padding: const EdgeInsets.all(3.0),
+              padding: const EdgeInsets.all(AppSpacing.p4),
               decoration: BoxDecoration(
                 color: primaryColor,
                 shape: BoxShape.circle,
@@ -42,7 +44,7 @@ class ProfilePhotoPicker extends StatelessWidget {
               ),
             ),
             Container(
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(AppSpacing.p8),
               decoration: BoxDecoration(
                 color: primaryColor,
                 shape: BoxShape.circle,

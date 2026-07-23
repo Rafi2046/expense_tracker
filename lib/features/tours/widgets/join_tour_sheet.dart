@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/tour_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/tours/pages/join_request_waiting_screen.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class JoinTourSheet extends StatefulWidget {
   const JoinTourSheet({super.key});
@@ -74,12 +73,12 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+            topLeft: Radius.circular(AppSpacing.r16),
+            topRight: Radius.circular(AppSpacing.r16),
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.fromLTRB(24, 24, 24, bottomPadding + 20),
+          padding: EdgeInsets.fromLTRB(AppSpacing.p24, AppSpacing.p24, AppSpacing.p24, bottomPadding + AppSpacing.p16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,28 +86,28 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
               Center(
                 child: Container(
                   width: 36,
-                  height: 4,
+                  height: AppSpacing.h4,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.s16),
               Text(
                 context.translate('join_invite_code'),
                 style: AppTextStyles.h2.copyWith(
                   color: theme.colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: AppSpacing.s8),
               Text(
                 context.translate('join_tour_subtitle'),
                 style: AppTextStyles.bodySmall.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
               TextField(
                 controller: _codeController,
                 enabled: !_isLoading,
@@ -119,8 +118,8 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
                   FilteringTextInputFormatter.allow(RegExp(r'[A-Za-z0-9]')),
                   UpperCaseTextFormatter(),
                 ],
-                style: GoogleFonts.jetBrainsMono(
-                  fontSize: AppFontSizes.size28,
+                style: AppTextStyles.displayLarge.copyWith(
+                  fontFamily: 'JetBrainsMono',
                   fontWeight: FontWeight.w700,
                   letterSpacing: 2.0,
                   color: theme.colorScheme.onSurface,
@@ -128,8 +127,8 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
                 decoration: InputDecoration(
                   counterText: '',
                   hintText: context.translate('enter_code_hint'),
-                  hintStyle: GoogleFonts.jetBrainsMono(
-                    fontSize: AppFontSizes.size15,
+                  hintStyle: AppTextStyles.bodyBold.copyWith(
+                    fontFamily: 'JetBrainsMono',
                     fontWeight: FontWeight.w500,
                     letterSpacing: 1.5,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.15),
@@ -137,35 +136,35 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
                   filled: true,
                   fillColor: theme.colorScheme.onSurface.withValues(alpha: 0.04),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(AppSpacing.r16),
                     borderSide: BorderSide(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(AppSpacing.r16),
                     borderSide: BorderSide(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(AppSpacing.r16),
                     borderSide: const BorderSide(
                       color: AppColors.activeGreen,
                       width: 1.5,
                     ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 20,
+                    horizontal: AppSpacing.p16,
+                    vertical: AppSpacing.p16,
                   ),
                 ),
                 onChanged: (_) => setState(() {}),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.s16),
               SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: AppSpacing.authFieldHeight,
                 child: ElevatedButton(
                   onPressed:
                       _codeController.text.trim().length == 6 && !_isLoading
@@ -178,13 +177,13 @@ class _JoinTourSheetState extends State<JoinTourSheet> {
                         AppColors.activeGreen.withValues(alpha: 0.3),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(AppSpacing.r16),
                     ),
                   ),
                   child: _isLoading
                       ? const SizedBox(
-                          width: 20,
-                          height: 20,
+                          width: AppSpacing.s24,
+                          height: AppSpacing.s24,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             color: Colors.white,

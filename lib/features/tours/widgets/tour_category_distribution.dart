@@ -1,8 +1,11 @@
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/utils/tour_insights_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class TourCategoryDistribution extends StatelessWidget {
   final List<CategoryBreakdownItem> items;
@@ -42,14 +45,11 @@ class TourCategoryDistribution extends StatelessWidget {
 
     if (isEmpty || grandTotal == 0) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.p32),
         child: Center(
           child: Text(
             context.translate('no_expenses_yet'),
-            style: TextStyle(
-              fontSize: AppFontSizes.size13,
-              color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
-            ),
+            style: AppTextStyles.bodySmall.copyWith(color: isDark ? Colors.grey.shade500 : Colors.grey.shade600),
           ),
         ),
       );
@@ -59,13 +59,12 @@ class TourCategoryDistribution extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: SizedBox(
-            height: 14,
+          borderRadius: BorderRadius.circular(AppSpacing.r8),
+          child: SizedBox(height: AppSpacing.s12,
             child: Row(
               children: [
                 for (int i = 0; i < items.length; i++) ...[
-                  if (i > 0) const SizedBox(width: 1.5),
+                  if (i > 0) const SizedBox(width: AppSpacing.s4),
                   Expanded(
                     flex: (items[i].percentage * 1000).round().clamp(1, 1000),
                     child: Container(
@@ -76,7 +75,7 @@ class TourCategoryDistribution extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.s16),
         ...items.map((item) => _buildRow(item, isDark, theme)),
       ],
     );
@@ -85,7 +84,7 @@ class TourCategoryDistribution extends StatelessWidget {
   Widget _buildRow(CategoryBreakdownItem item, bool isDark, ThemeData theme) {
     final color = _categoryColor(item.name, isDark);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: AppSpacing.p16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -97,35 +96,26 @@ class TourCategoryDistribution extends StatelessWidget {
               shape: BoxShape.circle,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.s12),
           Expanded(
             child: Text(
               item.name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: AppFontSizes.size13,
-                fontWeight: FontWeight.w500,
-                color: theme.colorScheme.onSurface,
-              ),
+              style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w500,
+                color: theme.colorScheme.onSurface),
             ),
           ),
           Text(
             _pct(item.percentage),
-            style: TextStyle(
-              fontSize: AppFontSizes.size12,
-              fontWeight: FontWeight.w500,
-              color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
-            ),
+            style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w500,
+              color: isDark ? Colors.grey.shade500 : Colors.grey.shade600),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.s12),
           Text(
             _compact(item.amount),
-            style: TextStyle(
-              fontSize: AppFontSizes.size14,
-              fontWeight: FontWeight.w700,
-              color: theme.colorScheme.onSurface,
-            ),
+            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w700,
+              color: theme.colorScheme.onSurface),
           ),
         ],
       ),

@@ -1,6 +1,8 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ProfileAvatarSection extends StatelessWidget {
   final String partyName;
@@ -19,11 +21,11 @@ class ProfileAvatarSection extends StatelessWidget {
     final primaryColor = theme.colorScheme.primary;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.p24, AppSpacing.p24, AppSpacing.p24, AppSpacing.p16),
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(3.5),
+            padding: const EdgeInsets.all(AppSpacing.p4),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: LinearGradient(
@@ -55,7 +57,7 @@ class ProfileAvatarSection extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: AppSpacing.s12),
           Text(
             partyName,
             textAlign: TextAlign.center,
@@ -68,7 +70,7 @@ class ProfileAvatarSection extends StatelessWidget {
               height: 1.25,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.s4),
           Text(
             context.translate('party_account'),
             style: AppTextStyles.label.copyWith(

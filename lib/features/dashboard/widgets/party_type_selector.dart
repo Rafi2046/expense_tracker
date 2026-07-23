@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class PartyTypeSelector extends StatelessWidget {
   final bool isReceive;
@@ -22,7 +25,7 @@ class PartyTypeSelector extends StatelessWidget {
           isActive: isReceive,
           onTap: () => onToggleChanged(true),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.s12),
         _buildAnimatedPill(
           context: context,
           label: context.translate('to_give'),
@@ -49,10 +52,10 @@ class PartyTypeSelector extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeInOut,
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
           decoration: BoxDecoration(
             color: isActive ? theme.primaryColor : (isDark ? Colors.white10 : const Color(0xFFF1F2F4)),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppSpacing.r24),
             boxShadow: isActive
                 ? [
                     BoxShadow(
@@ -65,9 +68,7 @@ class PartyTypeSelector extends StatelessWidget {
           ),
           child: Text(
             label,
-            style: TextStyle(
-              fontSize: AppFontSizes.size12,
-              fontWeight: FontWeight.w600,
+            style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600,
               color: isActive ? Colors.white : (isDark ? Colors.white60 : const Color(0xFF31394D)),
             ),
           ),

@@ -11,6 +11,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class SyncLoadingOverlay extends StatefulWidget {
   final SyncService syncService;
@@ -95,7 +97,7 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
         backgroundColor: theme.scaffoldBackgroundColor,
         body: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p32),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -112,7 +114,7 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
                     size: 64,
                     color: const Color(0xFFE53935),
                   ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.s24),
                  Text(
                   _hasError ? context.translate('sync_failed') : context.translate('sync_restoring_data'),
                   style: AppTextStyles.h1.copyWith(
@@ -120,7 +122,7 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.s12),
                 Text(
                   _hasError
                       ? _errorMessage ?? context.translate('unexpected_sync_error')
@@ -131,7 +133,7 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: AppSpacing.s32),
                 if (_hasError) ...[
                   Row(
                     children: [
@@ -141,7 +143,7 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
                           child: Text(context.translate('skip')),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.s12),
                       Expanded(
                         child: FilledButton(
                           onPressed: _retry,

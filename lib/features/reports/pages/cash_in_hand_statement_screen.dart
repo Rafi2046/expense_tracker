@@ -10,6 +10,8 @@ import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.d
 import 'package:expense_tracker/features/reports/widgets/report_date_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CashInHandStatementScreen extends StatefulWidget {
   const CashInHandStatementScreen({super.key});
@@ -70,9 +72,9 @@ class _CashInHandStatementScreenState extends State<CashInHandStatementScreen> {
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
-                top: 12.0,
+                left: AppSpacing.p16,
+                right: AppSpacing.p16,
+                top: AppSpacing.p12,
                 bottom: 82.0,
               ),
               child: Column(
@@ -82,12 +84,12 @@ class _CashInHandStatementScreenState extends State<CashInHandStatementScreen> {
                     isMasked: _localMasked,
                     onToggle: () => setState(() => _localMasked = !_localMasked),
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: AppSpacing.s12),
                   const ReportDateSelector(),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.s12),
                   if (isNotEmpty) ...[
                     CashStatementBalanceCard(isMasked: _localMasked),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.s16),
                   ],
                   CashStatementList(isMasked: _localMasked),
                 ],

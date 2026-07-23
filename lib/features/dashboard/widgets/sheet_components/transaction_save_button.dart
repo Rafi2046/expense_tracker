@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class TransactionSaveButton extends StatefulWidget {
   final VoidCallback onPressed;
@@ -78,7 +81,7 @@ class _TransactionSaveButtonState extends State<TransactionSaveButton>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -91,15 +94,12 @@ class _TransactionSaveButtonState extends State<TransactionSaveButton>
                 color: Colors.white,
                 size: 20,
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppSpacing.s8),
               Text(
                 widget.title,
-                style: TextStyle(
-                  fontSize: AppFontSizes.size16,
-                  fontWeight: FontWeight.w700,
+                style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700,
                   color: Colors.white,
-                  letterSpacing: 0.2,
-                ),
+                  letterSpacing: 0.2),
               ),
             ],
           ),

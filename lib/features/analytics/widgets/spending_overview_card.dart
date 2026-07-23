@@ -2,6 +2,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class SpendingDistributionItem {
   final String category;
@@ -36,10 +38,10 @@ class SpendingOverviewCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.06),
@@ -62,25 +64,25 @@ class SpendingOverviewCard extends StatelessWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppSpacing.s8),
               Text(
                 context.translate('distribution'),
                 style: AppTextStyles.h2.copyWith(color: onSurface),
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.s4),
           Padding(
-            padding: const EdgeInsets.only(left: 14),
+            padding: const EdgeInsets.only(left: AppSpacing.p12),
             child: Text(
               context.translate('current_month_distribution'),
               style: AppTextStyles.caption.copyWith(color: Colors.grey.shade500),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
 
           Row(
             children: [
@@ -118,7 +120,7 @@ class SpendingOverviewCard extends StatelessWidget {
                             width: innerDiameter,
                             height: innerDiameter,
                             child: Padding(
-                              padding: const EdgeInsets.all(6),
+                              padding: const EdgeInsets.all(AppSpacing.p8),
                               child: Center(
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
@@ -129,7 +131,7 @@ class SpendingOverviewCard extends StatelessWidget {
                                         context.translate('total'),
                                         style: AppTextStyles.body.copyWith(color: Colors.grey.shade500),
                                       ),
-                                      const SizedBox(height: 4),
+                                      const SizedBox(height: AppSpacing.s4),
                                       totalAmount,
                                     ],
                                   ),
@@ -143,7 +145,7 @@ class SpendingOverviewCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: AppSpacing.s12),
               Expanded(
                 flex: 10,
                 child: ConstrainedBox(
@@ -151,7 +153,7 @@ class SpendingOverviewCard extends StatelessWidget {
                   child: ListView(
                     children: items.map((item) {
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
+                        padding: const EdgeInsets.only(bottom: AppSpacing.p8),
                         child: Row(
                           children: [
                             Container(
@@ -159,10 +161,10 @@ class SpendingOverviewCard extends StatelessWidget {
                               height: 10,
                               decoration: BoxDecoration(
                                 color: item.color,
-                                borderRadius: BorderRadius.circular(3),
+                                borderRadius: BorderRadius.circular(AppSpacing.r8),
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: AppSpacing.s8),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,9 +175,9 @@ class SpendingOverviewCard extends StatelessWidget {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(height: 2),
+                                  const SizedBox(height: AppSpacing.s4),
                                   ClipRRect(
-                                    borderRadius: BorderRadius.circular(2),
+                                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                                     child: LinearProgressIndicator(
                                       value: item.percentage / 100,
                                       backgroundColor: isDark
@@ -188,7 +190,7 @@ class SpendingOverviewCard extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 6),
+                            const SizedBox(width: AppSpacing.s8),
                             Text(
                               item.percentage < 1
                                   ? '${item.percentage.toStringAsFixed(1)}%'

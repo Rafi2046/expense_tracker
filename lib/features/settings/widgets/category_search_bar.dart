@@ -1,7 +1,10 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class CategorySearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -23,10 +26,10 @@ class CategorySearchBar extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.only(left: 14, right: 6, top: 4, bottom: 4),
+      padding: const EdgeInsets.only(left: AppSpacing.p12, right: AppSpacing.p8, top: AppSpacing.p4, bottom: AppSpacing.p4),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: isDark
               ? const Color(0xFF2D2D2D)
@@ -39,21 +42,15 @@ class CategorySearchBar extends StatelessWidget {
             child: TextField(
               controller: controller,
               textInputAction: TextInputAction.done,
-              style: TextStyle(
-                color: theme.colorScheme.onSurface,
-                fontSize: AppFontSizes.size15,
-              ),
+              style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: context.translate('enter_category_name_hint'),
-                hintStyle: TextStyle(
-                  color: isDark
+                hintStyle: AppTextStyles.body.copyWith(color: isDark
                       ? Colors.grey.shade600
-                      : Colors.grey.shade400,
-                  fontSize: AppFontSizes.size14,
-                ),
+                      : Colors.grey.shade400),
                 border: InputBorder.none,
                 isDense: true,
-                contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
               ),
               onSubmitted: onSubmitted,
             ),
@@ -62,7 +59,7 @@ class CategorySearchBar extends StatelessWidget {
             onPressed: onAddPressed,
             icon: Icon(LucideIcons.plusCircle,
                 color: themeColor, size: 30),
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(AppSpacing.p8),
             constraints: const BoxConstraints(),
             splashRadius: 24,
           ),

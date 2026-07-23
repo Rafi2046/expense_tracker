@@ -1,8 +1,9 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartyStatementNetBalanceCard extends StatelessWidget {
   final double netBalance;
@@ -66,7 +67,7 @@ class PartyStatementNetBalanceCard extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: cardBgGradient,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(color: cardBorderColor),
         boxShadow: [
           BoxShadow(
@@ -77,7 +78,7 @@ class PartyStatementNetBalanceCard extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         child: IntrinsicHeight(
           child: Row(
             children: [
@@ -85,8 +86,8 @@ class PartyStatementNetBalanceCard extends StatelessWidget {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 18,
+                    horizontal: AppSpacing.p16,
+                    vertical: AppSpacing.p16,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,20 +104,17 @@ class PartyStatementNetBalanceCard extends StatelessWidget {
                                         ? AppColors.activeRed
                                         : const Color(0xFFDC3545))
                                     .withValues(alpha: 0.7),
-                          fontSize: AppFontSizes.size12,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.5,
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: AppSpacing.s8),
                       PrivacyMaskedText(
                         amount: netBalance.abs(),
                         isMasked: isMasked,
                         style: AppTextStyles.reportLargeValue.copyWith(
                           color: cardAccentColor,
-                          fontSize: AppFontSizes.size24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                          fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),

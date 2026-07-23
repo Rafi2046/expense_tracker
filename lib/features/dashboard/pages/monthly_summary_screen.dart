@@ -4,7 +4,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
@@ -14,6 +13,8 @@ import '../widgets/daily_summary/daily_stat_card.dart';
 import '../widgets/daily_summary/daily_category_tile.dart';
 import '../widgets/daily_summary/daily_insights_card.dart';
 import '../widgets/daily_summary/daily_summary_utils.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class MonthlySummaryScreen extends StatefulWidget {
   const MonthlySummaryScreen({super.key});
@@ -129,21 +130,20 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: isDark ? const Color(0xFF22262E) : Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(AppSpacing.r16),
                       border: Border.all(
                         color: isDark ? const Color(0xFF3A3F4A) : const Color(0xFFE5E7EB),
                         width: 1.2,
                       ),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
                     child: Text(
                       _monthLabel(),
                       style: AppTextStyles.bodyBold.copyWith(
-                        color: theme.colorScheme.onSurface,
-                      ),
+                        color: theme.colorScheme.onSurface),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.s16),
 
                   if (total > 0) ...[
                     // ── Stat Cards ──
@@ -161,7 +161,7 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                                   : [Colors.white, Colors.white],
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: AppSpacing.s12),
                           Expanded(
                             child: DailyStatCard(
                               title: context.translate('daily_average'),
@@ -175,7 +175,7 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.s16),
 
                     // ── Highest Expense Card ──
                     if (highestAmount > 0) ...[
@@ -187,7 +187,7 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                             ? [const Color(0xFF22262E), const Color(0xFF1E2129)]
                             : [Colors.white, Colors.white],
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.s16),
                     ],
 
                     // ── Category Distribution Chart Card ──
@@ -195,25 +195,22 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: isDark ? const Color(0xFF22262E) : Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(AppSpacing.r16),
                         border: Border.all(
                           color: isDark ? const Color(0xFF3A3F4A) : const Color(0xFFE5E7EB),
                           width: 1.2,
                         ),
                       ),
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(AppSpacing.p16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             context.translate('distribution'),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: AppFontSizes.size14,
-                              color: theme.colorScheme.onSurface,
-                            ),
+                            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.onSurface),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: AppSpacing.s12),
                           SizedBox(
                             height: 180,
                             child: SfCircularChart(
@@ -235,7 +232,7 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSpacing.s16),
                           ConstrainedBox(
                             constraints: BoxConstraints(
                               maxHeight: doughnutItems.length > 4 ? 290 : double.infinity,
@@ -263,15 +260,15 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.s16),
                   ] else ...[
                     // Empty State View
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(vertical: 60, horizontal: AppSpacing.p16),
                       decoration: BoxDecoration(
                         color: isDark ? const Color(0xFF22262E) : Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(AppSpacing.r16),
                         border: Border.all(
                           color: isDark ? const Color(0xFF3A3F4A) : const Color(0xFFE5E7EB),
                           width: 1.2,
@@ -281,7 +278,7 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(AppSpacing.p16),
                             decoration: BoxDecoration(
                               color: activeColor.withValues(alpha: 0.08),
                               shape: BoxShape.circle,
@@ -292,19 +289,16 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                               color: activeColor,
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSpacing.s16),
                           Text(
                             context.translate('no_expenses_this_month'),
-                            style: TextStyle(
-                              color: theme.colorScheme.onSurface,
-                              fontSize: AppFontSizes.size14,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface,
+                              fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.s16),
                   ],
 
                   // ── Insights Card ──
@@ -321,7 +315,7 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
     final borderColor = isDark ? const Color(0xFF3A3F4A) : const Color(0xFFE5E7EB);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -331,10 +325,10 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
             height: 54,
             decoration: BoxDecoration(
               color: isDark ? const Color(0xFF22262E) : Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppSpacing.r16),
               border: Border.all(color: borderColor, width: 1.2),
             ),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSpacing.p16),
             child: Row(
               children: [
                 Container(
@@ -345,19 +339,19 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                     shape: BoxShape.circle,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.s12),
                 Container(
                   width: 140,
                   height: 14,
                   decoration: BoxDecoration(
                     color: baseColor,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
 
           // Stats row
           Row(
@@ -367,10 +361,10 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                   height: 110,
                   decoration: BoxDecoration(
                     color: isDark ? const Color(0xFF22262E) : Colors.white,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(AppSpacing.r16),
                     border: Border.all(color: borderColor, width: 1.2),
                   ),
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(AppSpacing.p16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -380,41 +374,41 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                         height: 12,
                         decoration: BoxDecoration(
                           color: baseColor,
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(AppSpacing.r8),
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.s12),
                       Container(
                         width: 90,
                         height: 24,
                         decoration: BoxDecoration(
                           color: baseColor,
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(AppSpacing.r8),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.s8),
                       Container(
                         width: 55,
                         height: 10,
                         decoration: BoxDecoration(
                           color: baseColor,
-                          borderRadius: BorderRadius.circular(3),
+                          borderRadius: BorderRadius.circular(AppSpacing.r8),
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.s12),
               Expanded(
                 child: Container(
                   height: 110,
                   decoration: BoxDecoration(
                     color: isDark ? const Color(0xFF22262E) : Colors.white,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(AppSpacing.r16),
                     border: Border.all(color: borderColor, width: 1.2),
                   ),
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(AppSpacing.p16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -424,25 +418,25 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
                         height: 12,
                         decoration: BoxDecoration(
                           color: baseColor,
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(AppSpacing.r8),
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.s12),
                       Container(
                         width: 90,
                         height: 24,
                         decoration: BoxDecoration(
                           color: baseColor,
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(AppSpacing.r8),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.s8),
                       Container(
                         width: 55,
                         height: 10,
                         decoration: BoxDecoration(
                           color: baseColor,
-                          borderRadius: BorderRadius.circular(3),
+                          borderRadius: BorderRadius.circular(AppSpacing.r8),
                         ),
                       ),
                     ],
@@ -451,7 +445,7 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
 
           // Highest expense skeleton
           Container(
@@ -459,11 +453,11 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
             height: 80,
             decoration: BoxDecoration(
               color: isDark ? const Color(0xFF22262E) : Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppSpacing.r16),
               border: Border.all(color: borderColor, width: 1.2),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
 
           // Distribution skeleton
           Container(
@@ -471,11 +465,11 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
             height: 240,
             decoration: BoxDecoration(
               color: isDark ? const Color(0xFF22262E) : Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppSpacing.r16),
               border: Border.all(color: borderColor, width: 1.2),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
 
           // Insights skeleton
           Container(
@@ -483,7 +477,7 @@ class _MonthlySummaryScreenState extends State<MonthlySummaryScreen> {
             height: 150,
             decoration: BoxDecoration(
               color: isDark ? const Color(0xFF22262E) : Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppSpacing.r16),
               border: Border.all(color: borderColor, width: 1.2),
             ),
           ),

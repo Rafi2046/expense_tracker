@@ -1,5 +1,4 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -11,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartyStatementTransactionTile extends StatelessWidget {
   final String entryId;
@@ -64,9 +65,9 @@ class PartyStatementTransactionTile extends StatelessWidget {
 
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(AppSpacing.r16),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         onTap: () {
           if (entryId.startsWith('tx_')) {
             final originalId = entryId.substring(3);
@@ -97,10 +98,10 @@ class PartyStatementTransactionTile extends StatelessWidget {
           }
         },
         child: Container(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(AppSpacing.p12),
           decoration: BoxDecoration(
             color: theme.cardColor,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppSpacing.r16),
             boxShadow: [
               BoxShadow(
                 color: isDark
@@ -126,11 +127,11 @@ class PartyStatementTransactionTile extends StatelessWidget {
                 height: 42,
                 decoration: BoxDecoration(
                   color: iconBgColor,
-                  borderRadius: BorderRadius.circular(13),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                 ),
                 child: Icon(leadingIcon, color: iconFgColor, size: 20),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.s12),
 
               Expanded(
                 child: Column(
@@ -142,20 +143,18 @@ class PartyStatementTransactionTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.bodyBold.copyWith(
                         color: theme.colorScheme.onSurface,
-                        letterSpacing: -0.15,
-                      ),
+                        letterSpacing: -0.15),
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: AppSpacing.s4),
                     Text(
                       DateFormat('dd MMM yyyy • h:mm a').format(dateTime),
                       style: AppTextStyles.caption.copyWith(
-                        color: isDark ? Colors.white38 : Colors.grey.shade500,
-                      ),
+                        color: isDark ? Colors.white38 : Colors.grey.shade500),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppSpacing.s8),
 
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -167,36 +166,32 @@ class PartyStatementTransactionTile extends StatelessWidget {
                         isInflow ? '+ ' : '\u2212 ',
                         style: AppTextStyles.reportTransactionTitle.copyWith(
                           color: typeColor,
-                          letterSpacing: -0.2,
-                        ),
+                          letterSpacing: -0.2),
                       ),
                       PrivacyMaskedText(
                         amount: amount,
                         isMasked: isMasked,
                         style: AppTextStyles.reportTransactionTitle.copyWith(
                           color: typeColor,
-                          letterSpacing: -0.2,
-                        ),
+                          letterSpacing: -0.2),
                       ),
                     ],
                   ),
                   if (isOpeningBalance)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
+                        horizontal: AppSpacing.p8,
+                        vertical: AppSpacing.p4,
                       ),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(AppSpacing.r24),
                       ),
                       child: Text(
                         context.translate('opening'),
                         style: AppTextStyles.caption.copyWith(
-                          fontSize: AppFontSizes.size10,
                           fontWeight: FontWeight.w600,
-                          color: theme.colorScheme.primary,
-                        ),
+                          color: theme.colorScheme.primary),
                       ),
                     ),
                 ],

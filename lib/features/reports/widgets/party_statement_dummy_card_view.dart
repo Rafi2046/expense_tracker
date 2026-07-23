@@ -5,6 +5,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartyStatementDummyCardView extends StatelessWidget {
   final List<PartyStatementEntry> entries;
@@ -24,13 +26,13 @@ class PartyStatementDummyCardView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildBalanceBanner(context),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.s12),
         _buildMoneyFlowRow(context),
-        const SizedBox(height: 28),
+        const SizedBox(height: AppSpacing.s24),
         Text(context.translate('transactions'), style: AppTextStyles.reportTransactionTitle),
-        const SizedBox(height: 14),
+        const SizedBox(height: AppSpacing.s12),
         ...entries.map((e) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.only(bottom: AppSpacing.p8),
               child: _buildTransactionTile(context, e),
             )),
       ],
@@ -40,12 +42,12 @@ class PartyStatementDummyCardView extends StatelessWidget {
   Widget _buildBalanceBanner(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
       decoration: BoxDecoration(
         color: isDark
             ? AppColors.activeGreen.withValues(alpha: 0.15)
             : const Color(0xFFF4FBF9),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(
             color: isDark
                 ? AppColors.activeGreen.withValues(alpha: 0.3)
@@ -56,7 +58,7 @@ class PartyStatementDummyCardView extends StatelessWidget {
         children: [
           Text(context.translate('total_receivables'),
               style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600)),
-          const SizedBox(height: 6),
+          const SizedBox(height: AppSpacing.s8),
           Text('৳ 5,300', style: AppTextStyles.displayMedium),
         ],
       ),
@@ -68,12 +70,12 @@ class PartyStatementDummyCardView extends StatelessWidget {
       children: [
         Expanded(
           child: Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(AppSpacing.p12),
             decoration: BoxDecoration(
               color: isDark
                   ? AppColors.activeGreen.withValues(alpha: 0.1)
                   : const Color(0xFFF2FBF7),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               border: Border.all(
                 color: isDark
                     ? AppColors.activeGreen.withValues(alpha: 0.2)
@@ -86,21 +88,21 @@ class PartyStatementDummyCardView extends StatelessWidget {
                 Text(context.translate('money_in'),
                     style: AppTextStyles.reportStatLabel
                         .copyWith(fontWeight: FontWeight.w600)),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.s4),
                 Text('৳ 0,000', style: AppTextStyles.bodyBold),
               ],
             ),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.s12),
         Expanded(
           child: Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(AppSpacing.p12),
             decoration: BoxDecoration(
               color: isDark
                   ? AppColors.activeRed.withValues(alpha: 0.1)
                   : const Color(0xFFFFF5F5),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               border: Border.all(
                 color: isDark
                     ? AppColors.activeRed.withValues(alpha: 0.2)
@@ -113,7 +115,7 @@ class PartyStatementDummyCardView extends StatelessWidget {
                 Text(context.translate('money_out'),
                     style: AppTextStyles.reportStatLabel
                         .copyWith(fontWeight: FontWeight.w600)),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.s4),
                 Text('৳ 0,000', style: AppTextStyles.bodyBold),
               ],
             ),
@@ -126,10 +128,10 @@ class PartyStatementDummyCardView extends StatelessWidget {
   Widget _buildTransactionTile(BuildContext context, PartyStatementEntry e) {
     final theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(AppSpacing.p12),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         boxShadow: [
           BoxShadow(
               color: Colors.black.withValues(alpha: isDark ? 0.22 : 0.04),
@@ -150,7 +152,7 @@ class PartyStatementDummyCardView extends StatelessWidget {
                   : (isDark
                       ? AppColors.activeRed.withValues(alpha: 0.14)
                       : const Color(0xFFFDE9EB)),
-              borderRadius: BorderRadius.circular(13),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
             child: Icon(
               e.isInflow ? LucideIcons.arrowDownLeft : LucideIcons.arrowUpRight,
@@ -158,7 +160,7 @@ class PartyStatementDummyCardView extends StatelessWidget {
               size: 20,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,7 +170,7 @@ class PartyStatementDummyCardView extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.bodyBold
                         .copyWith(color: theme.colorScheme.onSurface)),
-                const SizedBox(height: 5),
+                const SizedBox(height: AppSpacing.s4),
                 Text(DateFormat('dd MMM yyyy').format(e.dateTime),
                     style: AppTextStyles.caption.copyWith(
                         color: isDark ? Colors.white38 : Colors.grey.shade500)),

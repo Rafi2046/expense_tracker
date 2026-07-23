@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_stat_card.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class DashboardBalanceCard extends StatelessWidget {
   final bool isLoading;
@@ -40,13 +41,11 @@ class DashboardBalanceCard extends StatelessWidget {
               value: Text(
                 totalBalanceLabel,
                 style: AppTextStyles.reportTileTitle.copyWith(
-                  color: AppColors.activeGreen,
-                ),
+                  color: AppColors.activeGreen),
               ),
               statusText: PrivacyMaskedText(
                 amount: totalBalance,
                 style: AppTextStyles.caption.copyWith(
-                  fontSize: AppFontSizes.size10,
                 ),
               ),
               isPositive: true,
@@ -54,15 +53,14 @@ class DashboardBalanceCard extends StatelessWidget {
               onTap: onCashBankTap,
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.s8),
           Expanded(
             child: DashboardStatCard(
               title: reportsTitle,
               value: Text(
                 reportsLabel,
                 style: AppTextStyles.reportTileTitle.copyWith(
-                  color: AppColors.activeGreen,
-                ),
+                  color: AppColors.activeGreen),
               ),
               isPositive: true,
               isTrend: false,

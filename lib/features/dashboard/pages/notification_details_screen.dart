@@ -8,6 +8,8 @@ import 'package:expense_tracker/features/dashboard/pages/daily_summary_screen.da
 import 'package:expense_tracker/features/dashboard/pages/monthly_summary_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class NotificationDetailsScreen extends StatelessWidget {
   final NotificationItem item;
@@ -35,7 +37,7 @@ class NotificationDetailsScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final cardBg = theme.colorScheme.surface;
     final cardBorder = Border.all(color: Colors.white.withValues(alpha: 0.1));
-    final cardRadius = BorderRadius.circular(12);
+    final cardRadius = BorderRadius.circular(AppSpacing.r12);
     final sectionGap = 24.0;
 
     final displayTitle = NotificationLocalizer.resolveTitle(context, item);
@@ -48,14 +50,11 @@ class NotificationDetailsScreen extends StatelessWidget {
 
     Widget sectionLabel(String text) {
       return Padding(
-        padding: EdgeInsets.only(bottom: 8),
+        padding: EdgeInsets.only(bottom: AppSpacing.p8),
         child: Text(
           text,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey.shade500,
-          ),
+          style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w500,
+            color: Colors.grey.shade500),
         ),
       );
     }
@@ -63,8 +62,7 @@ class NotificationDetailsScreen extends StatelessWidget {
     Widget valueText(String text, {bool bold = false}) {
       return Text(
         text,
-        style: TextStyle(
-          fontSize: bold ? 16 : 15,
+        style: (bold ? AppTextStyles.h3 : AppTextStyles.body).copyWith(
           fontWeight: bold ? FontWeight.w600 : FontWeight.normal,
           color: theme.colorScheme.onSurface,
           height: bold ? null : 1.5,
@@ -74,7 +72,7 @@ class NotificationDetailsScreen extends StatelessWidget {
 
     Widget metaRow(String label, String value) {
       return Padding(
-        padding: EdgeInsets.only(bottom: 10),
+        padding: EdgeInsets.only(bottom: AppSpacing.p8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -82,19 +80,13 @@ class NotificationDetailsScreen extends StatelessWidget {
               width: 110,
               child: Text(
                 label,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade500,
-                ),
+                style: AppTextStyles.body.copyWith(color: Colors.grey.shade500),
               ),
             ),
             Expanded(
               child: Text(
                 value,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: theme.colorScheme.onSurface,
-                ),
+                style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface),
               ),
             ),
           ],
@@ -133,7 +125,7 @@ class NotificationDetailsScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+        padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p8, AppSpacing.p16, AppSpacing.p32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -141,7 +133,7 @@ class NotificationDetailsScreen extends StatelessWidget {
             sectionLabel(context.translate('title_label')),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpacing.p16),
               decoration: BoxDecoration(
                 color: cardBg,
                 border: cardBorder,
@@ -185,7 +177,7 @@ class NotificationDetailsScreen extends StatelessWidget {
               borderRadius: cardRadius,
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSpacing.p16),
                 decoration: BoxDecoration(
                   color: cardBg,
                   border: isInteractiveSummary
@@ -215,21 +207,19 @@ class NotificationDetailsScreen extends StatelessWidget {
                   children: [
                     valueText(displayBody),
                     if (isInteractiveSummary) ...[
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.s12),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
                             context.translate('tap_now'),
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
                               color: isDark
                                   ? const Color(0xFF8E75C8)
                                   : AppColors.buttonColor,
                             ),
                           ),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: AppSpacing.s4),
                           Icon(
                             LucideIcons.arrowRight,
                             size: 14,
@@ -249,7 +239,7 @@ class NotificationDetailsScreen extends StatelessWidget {
             // ── Metadata Section (no label) ──
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpacing.p16),
               decoration: BoxDecoration(
                 color: cardBg,
                 border: cardBorder,

@@ -8,6 +8,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
   final firstNameController = TextEditingController();
@@ -67,7 +69,7 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
       context: context,
       backgroundColor: Theme.of(context).cardColor,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
       ),
       builder: (_) => const ImagePickerSheet(),
     );

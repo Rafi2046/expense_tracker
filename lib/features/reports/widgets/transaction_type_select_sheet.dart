@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class TransactionTypeSelectSheet extends StatelessWidget {
   final String selectedType;
@@ -40,8 +41,8 @@ class TransactionTypeSelectSheet extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(AppSpacing.r24),
+          topRight: Radius.circular(AppSpacing.r24),
         ),
       ),
       child: Column(
@@ -53,17 +54,17 @@ class TransactionTypeSelectSheet extends StatelessWidget {
             child: Container(
               width: 36,
               height: 4,
-              margin: const EdgeInsets.only(top: 10, bottom: 8),
+              margin: const EdgeInsets.only(top: AppSpacing.p8, bottom: AppSpacing.p8),
               decoration: BoxDecoration(
                 color: isDark ? Colors.white24 : Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
               ),
             ),
           ),
 
           // Header
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
             child: Text(
               context.translate('select_transaction_type'),
               style: AppTextStyles.h3.copyWith(
@@ -88,7 +89,7 @@ class TransactionTypeSelectSheet extends StatelessWidget {
 
               return ListTile(
                 onTap: () => Navigator.pop(context, type),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+                contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p4),
                 title: Text(
                   (() {
                     if (type == 'All Transactions') return context.translate('all_transactions');
@@ -129,7 +130,7 @@ class TransactionTypeSelectSheet extends StatelessWidget {
               );
             },
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
         ],
       ),
     );

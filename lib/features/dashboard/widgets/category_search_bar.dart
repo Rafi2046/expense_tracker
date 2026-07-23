@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class CategorySearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -22,31 +25,25 @@ class CategorySearchBar extends StatelessWidget {
     final theme = Theme.of(context);
     return TextField(
       controller: controller,
-      style: TextStyle(
-        fontSize: AppFontSizes.size15,
-        color: theme.colorScheme.onSurface,
-      ),
+      style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface),
       decoration: InputDecoration(
         hintText: context.translate('search_category'),
-        hintStyle: TextStyle(
-          fontSize: AppFontSizes.size15,
-          color: isDark ? Colors.white38 : Colors.grey.shade400,
-        ),
+        hintStyle: AppTextStyles.body.copyWith(color: isDark ? Colors.white38 : Colors.grey.shade400),
         prefixIcon: Icon(
           LucideIcons.search,
           color: isDark ? Colors.white38 : Colors.grey.shade400,
           size: 20,
         ),
         contentPadding: const EdgeInsets.symmetric(
-          vertical: 12,
-          horizontal: 16,
+          vertical: AppSpacing.p12,
+          horizontal: AppSpacing.p16,
         ),
         filled: true,
         fillColor: isDark
             ? theme.colorScheme.onSurface.withValues(alpha: 0.04)
             : Colors.transparent,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           borderSide: BorderSide(
             color: isDark
                 ? theme.colorScheme.onSurface.withValues(alpha: 0.15)
@@ -55,7 +52,7 @@ class CategorySearchBar extends StatelessWidget {
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           borderSide: BorderSide(
             color: isDark
                 ? theme.colorScheme.onSurface.withValues(alpha: 0.15)
@@ -64,7 +61,7 @@ class CategorySearchBar extends StatelessWidget {
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           borderSide: BorderSide(color: activeThemeColor, width: 1.5),
         ),
       ),

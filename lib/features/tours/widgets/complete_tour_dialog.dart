@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 Future<bool> showCompleteTourDialog(BuildContext context, String tourName, bool isCompleted) async {
   final theme = Theme.of(context);
@@ -9,7 +11,7 @@ Future<bool> showCompleteTourDialog(BuildContext context, String tourName, bool 
     context: context,
     builder: (ctx) => AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
       ),
       backgroundColor: theme.colorScheme.surface,
       title: Text(
@@ -30,7 +32,7 @@ Future<bool> showCompleteTourDialog(BuildContext context, String tourName, bool 
               color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           Text(
             tourName,
             style: AppTextStyles.bodyBold.copyWith(

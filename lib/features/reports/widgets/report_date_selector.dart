@@ -1,10 +1,10 @@
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/select_date_option_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ReportDateSelector extends StatelessWidget {
@@ -40,10 +40,10 @@ class ReportDateSelector extends StatelessWidget {
     final subtitle = reportsProvider.getDateRangeSubtitle(selectedOption, dateRange);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p8),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
       ),
       child: Row(
@@ -51,19 +51,18 @@ class ReportDateSelector extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(LucideIcons.calendar, color: isDark ? Colors.white60 : Colors.grey.shade600, size: 16),
-              const SizedBox(width: 8),
+              Icon(LucideIcons.calendar, color: isDark ? Colors.white60 : Colors.grey.shade600, size: AppSpacing.s16),
+              const SizedBox(width: AppSpacing.s8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     _translateTitle(context, title),
-                    style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: AppFontSizes.size14, color: theme.colorScheme.onSurface),
+                    style: AppTextStyles.bodyBold.copyWith(color: theme.colorScheme.onSurface),
                   ),
                   Text(
                     _translateSubtitle(context, subtitle),
-                    style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                      fontSize: AppFontSizes.size11,
+                    style: AppTextStyles.caption.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
@@ -86,9 +85,9 @@ class ReportDateSelector extends StatelessWidget {
             },
             child: Text(
               context.translate('change'),
-              style: AppTextStyles.reportSectionHeader.copyWith(
+              style: AppTextStyles.caption.copyWith(
                 color: theme.primaryColor,
-                fontSize: AppFontSizes.size11,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),

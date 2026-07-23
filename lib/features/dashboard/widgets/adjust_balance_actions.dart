@@ -4,10 +4,13 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_transaction_sheet.dart';
 import 'transfer_dialog.dart';
 import 'new_account_dialog.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/features/dashboard/widgets/adjust_balance_header.dart';
 import 'package:expense_tracker/features/dashboard/widgets/balance_action_list.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 /// Central helper function to show the overall Adjust Balance Bottom Sheet.
 void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}) {
@@ -21,11 +24,11 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
         decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+            topLeft: Radius.circular(AppSpacing.r24),
+            topRight: Radius.circular(AppSpacing.r24),
           ),
         ),
-        padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(ctx).padding.bottom + 20),
+        padding: EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p16, AppSpacing.p16, MediaQuery.of(ctx).padding.bottom + AppSpacing.p16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +47,7 @@ void showAdjustBalanceBottomSheet(BuildContext context, {String? initialAccount}
                 showTransferDialog(context, initialFromAccount: initialAccount);
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
           ],
         ),
       );
@@ -64,11 +67,11 @@ void showAddReduceChoiceSheet(BuildContext context) {
         decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+            topLeft: Radius.circular(AppSpacing.r24),
+            topRight: Radius.circular(AppSpacing.r24),
           ),
         ),
-        padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(ctx).padding.bottom + 20),
+        padding: EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p16, AppSpacing.p16, MediaQuery.of(ctx).padding.bottom + AppSpacing.p16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,25 +82,21 @@ void showAddReduceChoiceSheet(BuildContext context) {
                 height: 4,
                 decoration: BoxDecoration(
                   color: isDark ? Colors.white24 : Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
             Text(
               context.translate('choose_transaction_type'),
-              style: TextStyle(
-                fontSize: AppFontSizes.size16,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-              ),
+              style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onSurface),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
             Row(
               children: [
                 Expanded(
-                  child: SizedBox(
-                    height: 46,
+                  child: SizedBox(height: AppSpacing.s48,
                     child: TextButton.icon(
                       icon: Icon(
                         LucideIcons.arrowDown,
@@ -106,9 +105,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                       ),
                       label: Text(
                         context.translate('add_income'),
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size13,
-                          fontWeight: FontWeight.bold,
+                        style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold,
                           color: isDark ? theme.primaryColor : const Color(0xFF006C49),
                         ),
                       ),
@@ -117,7 +114,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                             ? theme.primaryColor.withValues(alpha: 0.15)
                             : const Color(0xFFE6F3EE),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                         ),
                       ),
                       onPressed: () {
@@ -131,10 +128,9 @@ void showAddReduceChoiceSheet(BuildContext context) {
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.s12),
                 Expanded(
-                  child: SizedBox(
-                    height: 46,
+                  child: SizedBox(height: AppSpacing.s48,
                     child: TextButton.icon(
                       icon: Icon(
                         LucideIcons.arrowUp,
@@ -143,9 +139,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                       ),
                       label: Text(
                         context.translate('add_expense'),
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size13,
-                          fontWeight: FontWeight.bold,
+                        style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold,
                           color: isDark ? AppColors.activeRed : const Color(0xFFD9383A),
                         ),
                       ),
@@ -154,7 +148,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                             ? AppColors.activeRed.withValues(alpha: 0.15)
                             : const Color(0xFFFDECEC),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                         ),
                       ),
                       onPressed: () {
@@ -170,7 +164,7 @@ void showAddReduceChoiceSheet(BuildContext context) {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
           ],
         ),
       );

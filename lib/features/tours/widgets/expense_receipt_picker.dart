@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/widgets/full_screen_image_viewer.dart';
@@ -24,8 +25,8 @@ class ExpenseReceiptPicker extends StatelessWidget {
     if (receiptPaths.isEmpty) return _buildAddButton(context);
 
     return Wrap(
-      spacing: 8,
-      runSpacing: 8,
+      spacing: AppSpacing.s8,
+      runSpacing: AppSpacing.s8,
       alignment: WrapAlignment.start,
       runAlignment: WrapAlignment.start,
       crossAxisAlignment: WrapCrossAlignment.start,
@@ -42,9 +43,9 @@ class ExpenseReceiptPicker extends StatelessWidget {
       onTap: onPick,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.p16),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           border: Border.all(
             color: theme.dividerColor.withValues(alpha: 0.2),
             width: 1.5,
@@ -55,7 +56,7 @@ class ExpenseReceiptPicker extends StatelessWidget {
           children: [
             Icon(LucideIcons.receipt, size: 18,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSpacing.s8),
             Text(
               context.translate('add_receipt'),
               style: AppTextStyles.bodySmall.copyWith(
@@ -76,7 +77,7 @@ class ExpenseReceiptPicker extends StatelessWidget {
         width: 80,
         height: 80,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           border: Border.all(
             color: theme.dividerColor.withValues(alpha: 0.2),
             width: 1.5,
@@ -87,11 +88,10 @@ class ExpenseReceiptPicker extends StatelessWidget {
           children: [
             Icon(LucideIcons.plus, size: 22,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.25)),
-            const SizedBox(height: 2),
+            const SizedBox(height: AppSpacing.h4),
             Text(
               context.translate('add'),
               style: AppTextStyles.caption.copyWith(
-                fontSize: 10,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
               ),
             ),
@@ -107,7 +107,7 @@ class ExpenseReceiptPicker extends StatelessWidget {
       child: Stack(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
             child: TourImage(
               source: receiptPaths[index],
               width: 80,
@@ -118,7 +118,7 @@ class ExpenseReceiptPicker extends StatelessWidget {
                 height: 80,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                 ),
                 child: Icon(LucideIcons.imageOff, size: 28,
                     color: Colors.grey.shade400),
@@ -128,7 +128,7 @@ class ExpenseReceiptPicker extends StatelessWidget {
                 height: 80,
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                 ),
                 child: Icon(LucideIcons.imageOff, size: 28,
                     color: Colors.grey.shade400),
@@ -136,12 +136,12 @@ class ExpenseReceiptPicker extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 4,
-            right: 4,
+            top: AppSpacing.s4,
+            right: AppSpacing.s4,
             child: GestureDetector(
               onTap: () => onClear(index),
               child: Container(
-                padding: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(AppSpacing.p4),
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: 0.6),
                   shape: BoxShape.circle,

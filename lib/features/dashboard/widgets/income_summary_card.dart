@@ -2,8 +2,9 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class IncomeSummaryCard extends StatelessWidget {
   final String label;
@@ -33,11 +34,11 @@ class IncomeSummaryCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: theme.cardColor,
         border: Border.all(color: theme.dividerTheme.color ?? AppColors.dividerColor, width: 1.0),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,41 +61,39 @@ class IncomeSummaryCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           amount,
           if (percentageText != null && compareText != null) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
             Row(
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
+                    horizontal: AppSpacing.p8,
+                    vertical: AppSpacing.p4,
                   ),
                   decoration: BoxDecoration(
                     color: isDark 
                         ? AppColors.activeGreen.withValues(alpha: 0.15) 
                         : AppColors.selectionGreenBg,
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
                   child: Text(
                     percentageText!,
                     style: AppTextStyles.summaryCardTrendText,
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.s8),
                 Text(
                   compareText!,
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size13,
-                    color: isDark ? Colors.white70 : AppColors.loginSubTitle,
+                  style: AppTextStyles.bodySmall.copyWith(color: isDark ? Colors.white70 : AppColors.loginSubTitle,
                     fontFamily: TextStyle().fontFamily,
                   ),
                 ),
               ],
             ),
           ] else if (percentageText != null) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.s8),
             Row(
               children: [
                 const Icon(
@@ -102,12 +101,10 @@ class IncomeSummaryCard extends StatelessWidget {
                   color: AppColors.activeGreen,
                   size: 16,
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.s4),
                 Text(
                   percentageText!,
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size13,
-                    fontWeight: FontWeight.bold,
+                  style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold,
                     color: AppColors.activeGreen,
                     fontFamily: TextStyle().fontFamily,
                   ),
@@ -116,14 +113,14 @@ class IncomeSummaryCard extends StatelessWidget {
             ),
           ],
           if (showDivider) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
             Container(
               height: 1,
               color: (theme.dividerTheme.color ?? AppColors.dividerColor).withValues(alpha: 0.5),
             ),
           ],
           if (bottomContent != null) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
             bottomContent!,
           ],
         ],

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class DailyStatCard extends StatelessWidget {
   final String title;
@@ -34,11 +37,8 @@ class DailyStatCard extends StatelessWidget {
 
     final borderThemeColor = isDark ? const Color(0xFF3A3F4A) : const Color(0xFFE5E7EB);
 
-    final valueStyle = TextStyle(
-      fontSize: AppFontSizes.size16,
-      fontWeight: FontWeight.bold,
-      color: theme.colorScheme.onSurface,
-    );
+    final valueStyle = AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold,
+      color: theme.colorScheme.onSurface);
 
     final defaultIconGradient = isDark
         ? [const Color(0xFF8E75C8), const Color(0xFF6B5BA7)]
@@ -54,7 +54,7 @@ class DailyStatCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(
           color: borderThemeColor,
           width: 1.2,
@@ -69,7 +69,7 @@ class DailyStatCard extends StatelessWidget {
                 )
               ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p16),
       child: Row(
         children: [
           Expanded(
@@ -79,13 +79,10 @@ class DailyStatCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size11,
-                    fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.grey.shade400 : AppColors.textMuted,
-                  ),
+                  style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600,
+                    color: isDark ? Colors.grey.shade400 : AppColors.textMuted),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.s8),
                 if (amount != null)
                   FittedBox(
                     fit: BoxFit.scaleDown,
@@ -100,21 +97,18 @@ class DailyStatCard extends StatelessWidget {
                     value ?? '',
                     style: valueStyle,
                   ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.s4),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size9,
-                    color: isDark ? Colors.grey.shade500 : AppColors.loginSubTitle,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: AppTextStyles.caption.copyWith(color: isDark ? Colors.grey.shade500 : AppColors.loginSubTitle,
+                    fontWeight: FontWeight.w500),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSpacing.s8),
           if (icon != null)
             Container(
               width: 42,
@@ -125,7 +119,7 @@ class DailyStatCard extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 boxShadow: [
                   BoxShadow(
                     color: colors.first.withValues(alpha: 0.3),

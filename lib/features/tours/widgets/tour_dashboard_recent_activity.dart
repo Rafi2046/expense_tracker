@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TourDashboardRecentActivity extends StatelessWidget {
   const TourDashboardRecentActivity({super.key});
@@ -12,7 +14,7 @@ class TourDashboardRecentActivity extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     return Padding(
       padding: EdgeInsets.only(
-        top: 4,
+        top: AppSpacing.p4,
         bottom: MediaQuery.of(context).padding.bottom + 100,
       ),
       child: Center(
@@ -27,7 +29,7 @@ class TourDashboardRecentActivity extends StatelessWidget {
                 color: theme.colorScheme.onSurface,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSpacing.s4),
             Text(
               context.translate('tap_to_add_first_expense'),
               style: AppTextStyles.bodySmall.copyWith(

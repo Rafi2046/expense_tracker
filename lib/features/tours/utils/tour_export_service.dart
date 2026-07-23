@@ -14,7 +14,6 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TourExportService {
@@ -70,10 +69,10 @@ class TourExportService {
     final isAllSettled = totalOutstanding == 0;
 
     return Container(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(AppSpacing.p32),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
         boxShadow: [
           BoxShadow(
@@ -92,7 +91,7 @@ class TourExportService {
           _buildTotalSpentBadge(totalSpent, tour.currency),
           const SizedBox(height: AppSpacing.s24),
           _buildDivider(),
-          const SizedBox(height: AppSpacing.s20),
+          const SizedBox(height: AppSpacing.s24),
           _buildSectionLabel(
             isAllSettled ? 'SETTLEMENT STATUS' : 'PAYMENTS REQUIRED',
           ),
@@ -103,7 +102,7 @@ class TourExportService {
             ..._buildSettlementList(settlements, pById, tour.currency),
           const SizedBox(height: AppSpacing.s24),
           _buildDivider(),
-          const SizedBox(height: AppSpacing.s20),
+          const SizedBox(height: AppSpacing.s24),
           _buildFooter(),
         ],
       ),
@@ -115,8 +114,8 @@ class TourExportService {
       children: [
         Container(
           padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.p20,
-            vertical: AppSpacing.p10,
+            horizontal: AppSpacing.p16,
+            vertical: AppSpacing.p8,
           ),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
@@ -124,7 +123,7 @@ class TourExportService {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(AppSpacing.r25),
+            borderRadius: BorderRadius.circular(AppSpacing.r24),
             boxShadow: [
               BoxShadow(
                 color: const Color(0xFF059669).withValues(alpha: 0.3),
@@ -144,17 +143,14 @@ class TourExportService {
               const SizedBox(width: AppSpacing.s8),
               Text(
                 'SETTLEMENT REPORT',
-                style: GoogleFonts.jetBrainsMono(
-                  fontSize: AppFontSizes.size10,
-                  fontWeight: FontWeight.w800,
+                style: AppTextStyles.caption.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w800,
                   color: AppColors.white,
-                  letterSpacing: 3.0,
-                ),
+                  letterSpacing: 3.0),
               ),
             ],
           ),
         ),
-        const SizedBox(height: AppSpacing.s20),
+        const SizedBox(height: AppSpacing.s24),
         Text(
           tour.name,
           textAlign: TextAlign.center,
@@ -172,7 +168,7 @@ class TourExportService {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
-        vertical: AppSpacing.p20,
+        vertical: AppSpacing.p16,
         horizontal: AppSpacing.p24,
       ),
       decoration: BoxDecoration(
@@ -191,12 +187,10 @@ class TourExportService {
               color: const Color(0xFF6B7280),
             ),
           ),
-          const SizedBox(height: AppSpacing.s6),
+          const SizedBox(height: AppSpacing.s8),
           Text(
             _formatAmount(totalSpent, currency),
-            style: GoogleFonts.jetBrainsMono(
-              fontSize: AppFontSizes.size32,
-              fontWeight: FontWeight.w800,
+            style: AppTextStyles.displayLarge.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w800,
               color: const Color(0xFF059669),
               letterSpacing: -1.0,
             ),
@@ -224,9 +218,7 @@ class TourExportService {
   static Widget _buildSectionLabel(String label) {
     return Text(
       label,
-      style: GoogleFonts.jetBrainsMono(
-        fontSize: AppFontSizes.size10,
-        fontWeight: FontWeight.w700,
+      style: AppTextStyles.caption.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w700,
         color: const Color(0xFF9CA3AF),
         letterSpacing: 2.0,
       ),
@@ -237,7 +229,7 @@ class TourExportService {
     return Container(
       padding: const EdgeInsets.symmetric(
         vertical: AppSpacing.p24,
-        horizontal: AppSpacing.p20,
+        horizontal: AppSpacing.p16,
       ),
       decoration: BoxDecoration(
         color: const Color(0xFFF0FDF9),
@@ -286,7 +278,7 @@ class TourExportService {
         padding: const EdgeInsets.all(AppSpacing.p16),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           border: Border.all(color: const Color(0xFFF3F4F6)),
           boxShadow: [
             BoxShadow(
@@ -311,11 +303,8 @@ class TourExportService {
                     ),
                     Text(
                       _formatAmount(s.amount, currency),
-                      style: GoogleFonts.jetBrainsMono(
-                        fontSize: AppFontSizes.size16,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.activeGreen,
-                      ),
+                      style: AppTextStyles.h3.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w800,
+                        color: AppColors.activeGreen),
                     ),
                   ],
                 ),
@@ -345,8 +334,7 @@ class TourExportService {
             name.isNotEmpty ? String.fromCharCode(name.runes.first).toUpperCase() : '?',
             style: AppTextStyles.bodyBold.copyWith(
               fontWeight: FontWeight.w700,
-              color: textColor,
-            ),
+              color: textColor),
           ),
         ),
         const SizedBox(width: AppSpacing.s8),
@@ -374,16 +362,14 @@ class TourExportService {
           size: 14,
           color: Colors.grey.shade400,
         ),
-        const SizedBox(width: AppSpacing.s6),
+        const SizedBox(width: AppSpacing.s8),
         Flexible(
           child: Text(
             tr('generated_via_budgetmint_footer'),
             style: AppTextStyles.caption.copyWith(
-              fontSize: AppFontSizes.size9,
               color: Colors.grey.shade400,
               fontWeight: FontWeight.w500,
-              letterSpacing: 0.3,
-            ),
+              letterSpacing: 0.3),
           ),
         ),
       ],

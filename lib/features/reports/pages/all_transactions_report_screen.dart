@@ -1,6 +1,5 @@
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
@@ -48,8 +47,8 @@ class _AllTransactionsReportScreenState extends State<AllTransactionsReportScree
         decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
+            topLeft: Radius.circular(AppSpacing.r24),
+            topRight: Radius.circular(AppSpacing.r24),
           ),
         ),
         child: Column(
@@ -59,12 +58,12 @@ class _AllTransactionsReportScreenState extends State<AllTransactionsReportScree
               child: Container(
                 width: 36,
                 height: 4,
-                margin: const EdgeInsets.only(top: 10, bottom: 8),
+                margin: const EdgeInsets.only(top: AppSpacing.p8, bottom: AppSpacing.p8),
                 decoration: BoxDecoration(
                   color: theme.brightness == Brightness.dark
                       ? Colors.white24
                       : Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                 ),
               ),
             ),
@@ -110,7 +109,7 @@ class _AllTransactionsReportScreenState extends State<AllTransactionsReportScree
                 );
               },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
           ],
         ),
       ),
@@ -173,7 +172,7 @@ class _AllTransactionsReportScreenState extends State<AllTransactionsReportScree
               padding: const EdgeInsets.only(
                 left: AppSpacing.p16,
                 right: AppSpacing.p16,
-                top: AppSpacing.p20,
+                top: AppSpacing.p16,
                 bottom: 120,
               ),
               child: Column(
@@ -183,13 +182,13 @@ class _AllTransactionsReportScreenState extends State<AllTransactionsReportScree
                     isMasked: _localMasked,
                     onToggle: () => setState(() => _localMasked = !_localMasked),
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: AppSpacing.s12),
                   const ReportDateSelector(),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.s12),
                   const AllTransactionsFilterBar(),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.s16),
                   AllTransactionsSummaryGrid(isMasked: _localMasked),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSpacing.s24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -200,23 +199,20 @@ class _AllTransactionsReportScreenState extends State<AllTransactionsReportScree
                       GestureDetector(
                         onTap: () => _showAddOptions(context),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p8),
                           decoration: BoxDecoration(
                             color: theme.primaryColor.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(AppSpacing.r24),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(LucideIcons.plus, size: 16, color: theme.primaryColor),
-                              const SizedBox(width: 6),
+                              const SizedBox(width: AppSpacing.s8),
                               Text(
                                 context.translate('Add New'),
-                                style: TextStyle(
-                                  fontSize: AppFontSizes.size13,
-                                  fontWeight: FontWeight.w600,
-                                  color: theme.primaryColor,
-                                ),
+                                style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600,
+                                  color: theme.primaryColor),
                               ),
                             ],
                           ),
@@ -224,7 +220,7 @@ class _AllTransactionsReportScreenState extends State<AllTransactionsReportScree
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.s12),
                   AllTransactionsList(
                     isMasked: _localMasked,
                     isLoading: txProvider.isLoading || _isScreenLoading,

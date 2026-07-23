@@ -13,6 +13,8 @@ import 'package:expense_tracker/features/reports/widgets/report_bottom_actions.d
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartiesReportScreen extends StatefulWidget {
   const PartiesReportScreen({super.key});
@@ -79,8 +81,7 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
         title: Text(
           context.translate('parties_report'),
           style: AppTextStyles.reportAppBarTitle.copyWith(
-            color: theme.appBarTheme.titleTextStyle?.color,
-          ),
+            color: theme.appBarTheme.titleTextStyle?.color),
         ),
         centerTitle: true,
         bottom: PreferredSize(
@@ -96,9 +97,9 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
-                top: 12.0,
+                left: AppSpacing.p16,
+                right: AppSpacing.p16,
+                top: AppSpacing.p12,
                 bottom: 120.0,
               ),
               child: Column(
@@ -114,19 +115,19 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
                     },
                     isDark: isDark,
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.s16),
                   PartiesReportFilterChips(
                     selectedFilter: _selectedFilter,
                     onFilterChanged: (filter) =>
                         setState(() => _selectedFilter = filter),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.s16),
                   PartiesReportSummaryHeader(
                     totalToReceive: totalToReceive,
                     totalToGive: totalToGive,
                     isMasked: _localMasked,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSpacing.s16),
                   displayList.isEmpty
                       ? PartiesReportEmptyState(isDark: isDark)
                       : ListView.separated(
@@ -134,7 +135,7 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: displayList.length,
                           separatorBuilder: (context, index) =>
-                              const SizedBox(height: 10),
+                              const SizedBox(height: AppSpacing.s8),
                           itemBuilder: (context, index) {
                             final item = displayList[index];
                             return Dismissible(
@@ -176,17 +177,17 @@ class _PartiesReportScreenState extends State<PartiesReportScreen> {
                               },
                               background: Container(
                                 alignment: Alignment.centerRight,
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
                                 decoration: BoxDecoration(
                                   color: Colors.red.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                                   border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Text(context.translate('delete'), style: AppTextStyles.bodyBold.copyWith(color: Colors.red.shade400, fontSize: 14)),
-                                    const SizedBox(width: 8),
+                                    Text(context.translate('delete'), style: AppTextStyles.bodyBold.copyWith(color: Colors.red.shade400)),
+                                    const SizedBox(width: AppSpacing.s8),
                                     Icon(LucideIcons.trash2, color: Colors.red.shade400, size: 22),
                                   ],
                                 ),

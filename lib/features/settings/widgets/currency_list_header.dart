@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CurrencyListHeader extends StatelessWidget {
   final String title;
@@ -10,7 +12,7 @@ class CurrencyListHeader extends StatelessWidget {
     super.key,
     required this.title,
     this.letterSpacing = 1.5,
-    this.padding = const EdgeInsets.only(top: 22.0, bottom: 8.0),
+    this.padding = const EdgeInsets.only(top: AppSpacing.p24, bottom: AppSpacing.p8),
   });
 
   @override

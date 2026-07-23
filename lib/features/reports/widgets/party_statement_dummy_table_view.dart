@@ -1,10 +1,10 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/model/party_statement_entry.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class PartyStatementDummyTableView extends StatelessWidget {
   final List<PartyStatementEntry> entries;
@@ -24,11 +24,11 @@ class PartyStatementDummyTableView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildNetBalanceBanner(context),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.s24),
         _buildSummaryRow(context),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.s16),
         ...entries.map((e) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.only(bottom: AppSpacing.p8),
               child: _buildTableRow(context, e),
             )),
       ],
@@ -38,12 +38,12 @@ class PartyStatementDummyTableView extends StatelessWidget {
   Widget _buildNetBalanceBanner(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
       decoration: BoxDecoration(
         color: isDark
             ? AppColors.activeGreen.withValues(alpha: 0.15)
             : const Color(0xFFF4FBF9),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(
             color: isDark
                 ? AppColors.activeGreen.withValues(alpha: 0.3)
@@ -54,7 +54,7 @@ class PartyStatementDummyTableView extends StatelessWidget {
         children: [
           Text(context.translate('net_balance'),
               style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600)),
-          const SizedBox(height: 6),
+          const SizedBox(height: AppSpacing.s8),
           Text('৳ 5,300', style: AppTextStyles.displayMedium),
         ],
       ),
@@ -70,7 +70,7 @@ class PartyStatementDummyTableView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(context.translate('transactions'), style: AppTextStyles.reportStatLabel),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.s4),
               Text('5 entries', style: AppTextStyles.caption),
             ],
           ),
@@ -82,7 +82,7 @@ class PartyStatementDummyTableView extends StatelessWidget {
               Text(context.translate('debit'),
                   style: AppTextStyles.reportStatLabel
                       .copyWith(color: AppColors.activeGreen)),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.s4),
               Text('৳ 0,000',
                   style: AppTextStyles.caption
                       .copyWith(color: AppColors.activeGreen)),
@@ -96,7 +96,7 @@ class PartyStatementDummyTableView extends StatelessWidget {
               Text(context.translate('credit'),
                   style: AppTextStyles.reportStatLabel
                       .copyWith(color: AppColors.activeRed)),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.s4),
               Text('৳ 0,000',
                   style: AppTextStyles.caption
                       .copyWith(color: AppColors.activeRed)),
@@ -110,11 +110,11 @@ class PartyStatementDummyTableView extends StatelessWidget {
   Widget _buildTableRow(BuildContext context, PartyStatementEntry e) {
     final theme = Theme.of(context);
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: AppSpacing.p8),
+      padding: const EdgeInsets.all(AppSpacing.p12),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(color: theme.dividerColor),
       ),
       child: Row(
@@ -127,10 +127,10 @@ class PartyStatementDummyTableView extends StatelessWidget {
                 Text(e.description,
                     style: AppTextStyles.bodySmall
                         .copyWith(fontWeight: FontWeight.w600)),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.s4),
                 Text(DateFormat('dd MMM yyyy').format(e.dateTime),
                     style: AppTextStyles.caption
-                        .copyWith(fontSize: AppFontSizes.size10)),
+                        ),
               ],
             ),
           ),
@@ -139,12 +139,12 @@ class PartyStatementDummyTableView extends StatelessWidget {
             child: e.isInflow
                 ? Container(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p8),
                     decoration: BoxDecoration(
                       color: isDark
                           ? AppColors.activeGreen.withValues(alpha: 0.1)
                           : const Color(0xFFE8F8F5),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppSpacing.r12),
                       border: Border.all(
                         color: isDark
                             ? AppColors.activeGreen.withValues(alpha: 0.2)
@@ -154,7 +154,6 @@ class PartyStatementDummyTableView extends StatelessWidget {
                     child: Text('৳ ${e.amount.toStringAsFixed(0)}',
                         textAlign: TextAlign.center,
                         style: AppTextStyles.reportTransactionTitle.copyWith(
-                            fontSize: AppFontSizes.size12,
                             color: AppColors.activeGreen)),
                   )
                 : const SizedBox.shrink(),
@@ -164,12 +163,12 @@ class PartyStatementDummyTableView extends StatelessWidget {
             child: !e.isInflow
                 ? Container(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p8),
                     decoration: BoxDecoration(
                       color: isDark
                           ? AppColors.activeRed.withValues(alpha: 0.1)
                           : const Color(0xFFFDE8E8),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppSpacing.r12),
                       border: Border.all(
                         color: isDark
                             ? AppColors.activeRed.withValues(alpha: 0.2)
@@ -179,7 +178,6 @@ class PartyStatementDummyTableView extends StatelessWidget {
                     child: Text('৳ ${e.amount.toStringAsFixed(0)}',
                         textAlign: TextAlign.center,
                         style: AppTextStyles.reportTransactionTitle.copyWith(
-                            fontSize: AppFontSizes.size12,
                             color: AppColors.activeRed)),
                   )
                 : const SizedBox.shrink(),

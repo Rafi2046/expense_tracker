@@ -30,6 +30,8 @@ import 'package:expense_tracker/features/dashboard/pages/total_balance_screen.da
 import 'package:expense_tracker/features/dashboard/pages/budget_management_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -119,7 +121,7 @@ class DashboardScreen extends StatelessWidget {
                     context.read<PrivacyProvider>().toggle();
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.s12),
                 DashboardStatsRow(
                   isLoading: isLoading,
                   incomeTitle:
@@ -172,7 +174,7 @@ class DashboardScreen extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.s8),
                 DashboardBalanceCard(
                   isLoading: isLoading,
                   cashBankTitle:
@@ -198,7 +200,7 @@ class DashboardScreen extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.s8),
                 DashboardQuickActionsRow(
                   isLoading: isLoading,
                   monthlyExpense: txProvider.calendarMonthExpense,
@@ -222,7 +224,7 @@ class DashboardScreen extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.s8),
                 DashboardSummaryFooter(
                   topCategoryName: expenseAnalytics.monthlyCategories.isNotEmpty
                       ? expenseAnalytics.monthlyCategories.first.name

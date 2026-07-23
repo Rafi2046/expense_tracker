@@ -5,6 +5,8 @@ import 'package:expense_tracker/features/reports/widgets/party_statement_net_bal
 import 'package:expense_tracker/features/reports/widgets/party_statement_transaction_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartyStatementCardView extends StatelessWidget {
   final bool isMasked;
@@ -47,7 +49,7 @@ class PartyStatementCardView extends StatelessWidget {
           isMasked: isMasked,
           isDark: isDark,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.s12),
 
         Row(
           children: [
@@ -59,7 +61,7 @@ class PartyStatementCardView extends StatelessWidget {
                 isDark: isDark,
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSpacing.s12),
             Expanded(
               child: PartyStatementMoneyFlowCard(
                 isInflow: false,
@@ -70,7 +72,7 @@ class PartyStatementCardView extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 28),
+        const SizedBox(height: AppSpacing.s24),
 
         Text(
           'Transactions',
@@ -79,13 +81,13 @@ class PartyStatementCardView extends StatelessWidget {
             letterSpacing: -0.2,
           ),
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: AppSpacing.s12),
 
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: transactions.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 10),
+          separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.s8),
           itemBuilder: (context, index) {
             final entry = transactions[index];
             return PartyStatementTransactionTile(

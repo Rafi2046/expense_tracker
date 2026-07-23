@@ -1,8 +1,9 @@
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartiesReportEmptyState extends StatelessWidget {
   final bool isDark;
@@ -18,7 +19,7 @@ class PartiesReportEmptyState extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 60.0),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.p48 + AppSpacing.p12),
         child: Column(
           children: [
             Icon(
@@ -26,11 +27,10 @@ class PartiesReportEmptyState extends StatelessWidget {
               color: isDark ? Colors.white24 : Colors.grey.shade300,
               size: 48,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
             Text(
               context.translate('no_parties_found'),
               style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                fontSize: AppFontSizes.size14,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),

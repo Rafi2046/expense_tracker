@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class DailyCategoryTile extends StatelessWidget {
   final String categoryName;
@@ -23,11 +26,11 @@ class DailyCategoryTile extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: AppSpacing.p12),
+      padding: const EdgeInsets.all(AppSpacing.p12),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF22262E) : Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: isDark ? const Color(0xFF3A3F4A) : const Color(0xFFE5E7EB),
           width: 1,
@@ -49,39 +52,30 @@ class DailyCategoryTile extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.s8),
                   Text(
                     categoryName,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: AppFontSizes.size12,
-                      color: theme.colorScheme.onSurface,
-                    ),
+                    style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface),
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: AppSpacing.s8),
                   Text(
                     '(${(percentage * 100).toStringAsFixed(1)}%)',
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size10,
-                      color: isDark ? Colors.grey.shade500 : AppColors.textMuted,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: AppTextStyles.caption.copyWith(color: isDark ? Colors.grey.shade500 : AppColors.textMuted,
+                      fontWeight: FontWeight.w500),
                   ),
                 ],
               ),
               PrivacyMaskedText(
                 amount: amount,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppFontSizes.size12,
-                  color: theme.colorScheme.onSurface,
-                ),
+                style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.s8),
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(AppSpacing.r8),
             child: LinearProgressIndicator(
               value: percentage,
               backgroundColor: isDark ? const Color(0xFF2E323E) : Colors.grey.shade100,

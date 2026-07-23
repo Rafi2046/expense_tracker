@@ -190,8 +190,7 @@ class _JoinRequestWaitingScreenState extends State<JoinRequestWaitingScreen> {
                       : (_requestStatus == 'approved' ? context.translate('join_request_approved_title') : context.translate('declined_title')),
                   style: AppTextStyles.h1.copyWith(
                     color: isDark ? Colors.white : theme.colorScheme.onSurface,
-                    fontWeight: FontWeight.w700,
-                  ),
+                    fontWeight: FontWeight.w700),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: AppSpacing.h12),
@@ -218,7 +217,7 @@ class _JoinRequestWaitingScreenState extends State<JoinRequestWaitingScreen> {
                   ),
                   decoration: BoxDecoration(
                     color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.containerColorGrey,
-                    borderRadius: BorderRadius.circular(AppSpacing.br10),
+                    borderRadius: BorderRadius.circular(AppSpacing.br12),
                     border: Border.all(
                       color: isDark ? Colors.white10 : AppColors.dividerColor.withValues(alpha: 0.5),
                     ),
@@ -228,16 +227,13 @@ class _JoinRequestWaitingScreenState extends State<JoinRequestWaitingScreen> {
                       Text(
                         context.translate('tour_name_label_in_dialog'),
                         style: AppTextStyles.label.copyWith(
-                          fontSize: 11,
-                          color: isDark ? Colors.white54 : AppColors.textMuted,
-                        ),
+                          color: isDark ? Colors.white54 : AppColors.textMuted),
                       ),
                       const SizedBox(height: AppSpacing.h4),
                       Text(
                         widget.tour.name,
                         style: AppTextStyles.bodyBold.copyWith(
-                          color: isDark ? theme.colorScheme.primary : theme.primaryColor,
-                          fontSize: 16,
+                          color: isDark ? theme.colorScheme.primary : theme.primaryColor
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -258,15 +254,13 @@ class _JoinRequestWaitingScreenState extends State<JoinRequestWaitingScreen> {
                       label: Text(
                         context.translate('cancel_request'),
                         style: AppTextStyles.bodyBold.copyWith(
-                          fontSize: 14,
-                          color: AppColors.activeRed,
-                        ),
+                          color: AppColors.activeRed),
                       ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.activeRed,
                         side: const BorderSide(color: AppColors.activeRed),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                         ),
                       ),
                     ),
@@ -281,15 +275,14 @@ class _JoinRequestWaitingScreenState extends State<JoinRequestWaitingScreen> {
                         backgroundColor: theme.primaryColor,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                         ),
                       ),
                       child: Text(
                         context.translate('close'),
                         style: AppTextStyles.reportTileTitle.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
+                          color: Colors.white),
                       ),
                     ),
                   ),

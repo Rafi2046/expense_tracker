@@ -2,6 +2,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CurrencySearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -22,13 +24,13 @@ class CurrencySearchBar extends StatelessWidget {
       height: 40,
       decoration: BoxDecoration(
         color: isDark ? theme.cardColor : const Color(0xFFF3F4F6),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12),
       child: Row(
         children: [
           Icon(LucideIcons.search, color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF), size: 18),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.s8),
           Expanded(
             child: TextField(
               controller: controller,

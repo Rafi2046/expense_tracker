@@ -1,7 +1,10 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class TransactionNoteInput extends StatelessWidget {
   final TextEditingController controller;
@@ -21,24 +24,18 @@ class TransactionNoteInput extends StatelessWidget {
     return TextFormField(
       controller: controller,
       maxLines: 2,
-      style: TextStyle(
-        fontSize: AppFontSizes.size15,
-        color: theme.colorScheme.onSurface,
-      ),
+      style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface),
       decoration: InputDecoration(
         hintText: context.translate('note_hint'),
-        hintStyle: TextStyle(
-          fontSize: AppFontSizes.size14,
-          color: isDark ? Colors.white24 : Colors.grey.shade400,
-        ),
+        hintStyle: AppTextStyles.body.copyWith(color: isDark ? Colors.white24 : Colors.grey.shade400),
         prefixIcon: Padding(
-          padding: const EdgeInsets.only(left: 14, right: 10, bottom: 14),
+          padding: const EdgeInsets.only(left: AppSpacing.p12, right: AppSpacing.p8, bottom: AppSpacing.p12),
           child: Container(
             width: 38,
             height: 38,
             decoration: BoxDecoration(
               color: themeColor.withValues(alpha: isDark ? 0.15 : 0.08),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
             child: Icon(
               LucideIcons.notepadText,
@@ -52,9 +49,9 @@ class TransactionNoteInput extends StatelessWidget {
         fillColor: isDark
             ? theme.colorScheme.onSurface.withValues(alpha: 0.04)
             : Colors.grey.shade50,
-        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.p16, horizontal: AppSpacing.p16),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           borderSide: BorderSide(
             color: isDark
                 ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
@@ -63,7 +60,7 @@ class TransactionNoteInput extends StatelessWidget {
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           borderSide: BorderSide(
             color: isDark
                 ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
@@ -72,7 +69,7 @@ class TransactionNoteInput extends StatelessWidget {
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           borderSide: BorderSide(
             color: themeColor.withValues(alpha: 0.5),
             width: 1.5,

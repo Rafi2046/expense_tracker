@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/account_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class NewAccountDialog extends StatefulWidget {
   const NewAccountDialog({super.key});
@@ -34,7 +35,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
 
     return AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
       ),
       backgroundColor: theme.cardColor,
       title: Row(
@@ -44,12 +45,12 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
             height: 32,
             decoration: BoxDecoration(
               color: theme.primaryColor.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSpacing.r8),
             ),
             alignment: Alignment.center,
             child: Icon(LucideIcons.wallet, color: theme.primaryColor, size: 18),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSpacing.s8),
           Text(
             context.translate('create_account'),
             style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
@@ -73,20 +74,20 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
                 filled: true,
                 fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                   borderSide: BorderSide(color: theme.dividerTheme.color ?? const Color(0xFFE5E7EB)),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                   borderSide: BorderSide(color: theme.dividerTheme.color ?? const Color(0xFFE5E7EB)),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p12),
               ),
               validator: (val) => (val == null || val.trim().isEmpty)
                   ? context.translate('enter_account_name')
                   : null,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
             TextFormField(
               controller: _balanceController,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -100,14 +101,14 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
                 filled: true,
                 fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                   borderSide: BorderSide(color: theme.dividerTheme.color ?? const Color(0xFFE5E7EB)),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                   borderSide: BorderSide(color: theme.dividerTheme.color ?? const Color(0xFFE5E7EB)),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p12),
               ),
               validator: (val) {
                 if (val == null || val.isEmpty) return context.translate('enter_initial_balance');
@@ -127,8 +128,7 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
           ),
         ),
         _isSubmitting
-            ? const SizedBox(
-                width: 24,
+            ? const SizedBox(width: AppSpacing.s24,
                 height: 24,
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
@@ -138,13 +138,13 @@ class _NewAccountDialogState extends State<NewAccountDialog> {
                   backgroundColor: theme.primaryColor,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
                 ),
                 child: Text(
                   context.translate('create'),
-                  style: AppTextStyles.bodyBold.copyWith(color: Colors.white, fontSize: AppFontSizes.size13),
+                  style: AppTextStyles.bodyBold.copyWith(color: Colors.white),
                 ),
               ),
       ],

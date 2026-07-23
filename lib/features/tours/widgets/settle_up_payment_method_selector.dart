@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class SettleUpPaymentMethodSelector extends StatelessWidget {
   final ThemeData theme;
@@ -39,8 +40,8 @@ class SettleUpPaymentMethodSelector extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(AppSpacing.r24),
+          topRight: Radius.circular(AppSpacing.r24),
         ),
       ),
       child: Padding(
@@ -51,52 +52,52 @@ class SettleUpPaymentMethodSelector extends StatelessWidget {
             Center(
               child: Container(
                 width: 40, height: 4,
-                margin: const EdgeInsets.only(top: 12, bottom: 16),
+                margin: const EdgeInsets.only(top: AppSpacing.p12, bottom: AppSpacing.p16),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
               ),
             ),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+              margin: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.p16, horizontal: AppSpacing.p24),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [Color(0xFF0F766E), Color(0xFF059669)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppSpacing.r16),
               ),
               child: Column(
                 children: [
                   Text(context.translate('settlement_amount_label'),
-                    style: AppTextStyles.cardTitle.copyWith(fontSize: AppFontSizes.size10, fontWeight: FontWeight.w700, color: Colors.white70, letterSpacing: 1.5),
+                    style: AppTextStyles.cardTitle.copyWith( fontWeight: FontWeight.w700, color: Colors.white70, letterSpacing: 1.5),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: AppSpacing.s8),
                   Text(amount,
-                    style: GoogleFonts.jetBrainsMono(fontSize: AppFontSizes.size36, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -1),
+                    style: AppTextStyles.displayLarge.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -1),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.s24),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
               child: Row(
                 children: [
                   Expanded(
                     child: Column(
                       children: [
                         CircleAvatar(radius: 28, backgroundColor: fromColor,
-                          child: Text(fromInitials, style: AppTextStyles.bodySmall.copyWith(fontSize: AppFontSizes.size14, fontWeight: FontWeight.w700, color: Colors.white)),
+                          child: Text(fromInitials, style: AppTextStyles.bodySmall.copyWith( fontWeight: FontWeight.w700, color: Colors.white)),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: AppSpacing.s8),
                         Text(fromName, maxLines: 1, overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: AppSpacing.s4),
                         Text(context.translate('pays_label'),
                           style: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
                         ),
@@ -111,18 +112,18 @@ class SettleUpPaymentMethodSelector extends StatelessWidget {
                     ),
                     child: Icon(LucideIcons.arrowRight, color: AppColors.activeGreen, size: 24),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: AppSpacing.s16),
                   Expanded(
                     child: Column(
                       children: [
                         CircleAvatar(radius: 28, backgroundColor: toColor,
-                          child: Text(toInitials, style: AppTextStyles.bodySmall.copyWith(fontSize: AppFontSizes.size14, fontWeight: FontWeight.w700, color: Colors.white)),
+                          child: Text(toInitials, style: AppTextStyles.bodySmall.copyWith( fontWeight: FontWeight.w700, color: Colors.white)),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: AppSpacing.s8),
                         Text(toName, maxLines: 1, overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600, color: theme.colorScheme.onSurface),
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: AppSpacing.s4),
                         Text(context.translate('receives_label'),
                           style: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
                         ),
@@ -132,9 +133,9 @@ class SettleUpPaymentMethodSelector extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: AppSpacing.s24),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
               child: SizedBox(
                 width: double.infinity,
                 height: 48,
@@ -142,16 +143,16 @@ class SettleUpPaymentMethodSelector extends StatelessWidget {
                   onPressed: onMarkSettled,
                   style: FilledButton.styleFrom(
                     backgroundColor: AppColors.activeGreen,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r12)),
                     elevation: 0,
                   ),
                   child: Text(context.translate('mark_as_settled'),
-                    style: AppTextStyles.bodyBold.copyWith(fontSize: AppFontSizes.size15, color: Colors.white),
+                    style: AppTextStyles.bodyBold.copyWith( color: Colors.white),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
           ],
         ),
       ),

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/date_range_picker_sheet.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class SelectDateOptionSheet extends StatelessWidget {
   final DateRangeOption currentOption;
@@ -24,7 +24,7 @@ class SelectDateOptionSheet extends StatelessWidget {
       backgroundColor: theme.cardColor,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
       ),
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.75,
@@ -74,15 +74,15 @@ class SelectDateOptionSheet extends StatelessWidget {
           child: Container(
             width: 36,
             height: 4,
-            margin: const EdgeInsets.only(top: 10, bottom: 8),
+            margin: const EdgeInsets.only(top: AppSpacing.p8, bottom: AppSpacing.p8),
             decoration: BoxDecoration(
               color: isDark ? Colors.white24 : Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 6.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
           child: Text(
             context.translate('select_date'),
             style: AppTextStyles.h3.copyWith(
@@ -135,7 +135,7 @@ class SelectDateOptionSheet extends StatelessWidget {
         }
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
         child: Row(
           children: [
             Expanded(
@@ -144,18 +144,16 @@ class SelectDateOptionSheet extends StatelessWidget {
                 children: [
                   Text(
                     _translateTitle(context, title),
-                    style: AppTextStyles.reportTileTitle.copyWith(
-                      fontSize: AppFontSizes.size14,
+                    style: AppTextStyles.bodyBold.copyWith(
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                       color: isSelected ? theme.colorScheme.onSurface : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSpacing.s4),
                   Text(
                     _translateSubtitle(context, subtitle),
-                    style: AppTextStyles.reportTransactionSubtitle.copyWith(
+                    style: AppTextStyles.caption.copyWith(
                       color: isDark ? Colors.white30 : Colors.grey.shade400,
-                      fontSize: AppFontSizes.size11,
                     ),
                   ),
                 ],

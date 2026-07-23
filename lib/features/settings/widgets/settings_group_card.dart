@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class SettingsGroupCard extends StatelessWidget {
   final String title;
@@ -40,15 +41,13 @@ class SettingsGroupCard extends StatelessWidget {
       children: [
         // Group Header Title
         Padding(
-          padding: const EdgeInsets.only(left: 4.0, bottom: 8.0),
+          padding: const EdgeInsets.only(left: AppSpacing.p4, bottom: AppSpacing.p8),
           child: Text(
             title.toUpperCase(),
             style: AppTextStyles.caption.copyWith(
-              fontSize: AppFontSizes.size12,
               fontWeight: FontWeight.w700,
               color: Colors.grey.shade500,
-              letterSpacing: 1.2,
-            ),
+              letterSpacing: 1.2),
           ),
         ),
 
@@ -57,7 +56,7 @@ class SettingsGroupCard extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             color: theme.cardColor,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.03),
@@ -71,7 +70,7 @@ class SettingsGroupCard extends StatelessWidget {
             ),
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
             child: Column(
               children: items,
             ),

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class OnboardingNavigationButtons extends StatefulWidget {
   final bool isLastPage;
@@ -49,7 +53,7 @@ class _OnboardingNavigationButtonsState
           onTap: widget.onPressed,
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppSpacing.r16),
               gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
@@ -74,7 +78,7 @@ class _OnboardingNavigationButtonsState
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppSpacing.r16),
               child: Stack(
                 children: [
                   // Shimmer sweep
@@ -90,20 +94,17 @@ class _OnboardingNavigationButtonsState
                           widget.isLastPage
                               ? context.translate('onboarding_get_started')
                               : context.translate('onboarding_next'),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
+                          style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700,
                             color: Colors.white,
-                            letterSpacing: 0.3,
-                          ),
+                            letterSpacing: 0.3),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: AppSpacing.s8),
                         Container(
                           width: 28,
                           height: 28,
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(AppSpacing.r8),
                           ),
                           child: Icon(
                             widget.isLastPage

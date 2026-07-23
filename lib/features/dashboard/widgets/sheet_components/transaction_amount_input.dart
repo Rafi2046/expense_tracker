@@ -1,6 +1,9 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class TransactionAmountInput extends StatelessWidget {
   final TextEditingController controller;
@@ -21,7 +24,7 @@ class TransactionAmountInput extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.p24, horizontal: AppSpacing.p16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isDark
@@ -36,7 +39,7 @@ class TransactionAmountInput extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
         border: Border.all(
           color: themeColor.withValues(alpha: isDark ? 0.15 : 0.1),
           width: 1,
@@ -47,14 +50,12 @@ class TransactionAmountInput extends StatelessWidget {
           // ── "Amount" floating label ──
           Text(
             context.translate('amount_label').toUpperCase(),
-            style: TextStyle(
-              fontSize: AppFontSizes.size10,
-              fontWeight: FontWeight.w700,
+            style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w700,
               color: themeColor.withValues(alpha: 0.5),
               letterSpacing: 1.5,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
 
           // ── The actual input ──
           Center(
@@ -66,12 +67,10 @@ class TransactionAmountInput extends StatelessWidget {
                 children: [
                   // Currency prefix
                   Padding(
-                    padding: const EdgeInsets.only(right: 4),
+                    padding: const EdgeInsets.only(right: AppSpacing.p4),
                     child: Text(
                       currencySymbol,
-                      style: TextStyle(
-                        fontSize: AppFontSizes.size28,
-                        fontWeight: FontWeight.w700,
+                      style: AppTextStyles.displayLarge.copyWith(fontWeight: FontWeight.w700,
                         color: themeColor.withValues(alpha: 0.45),
                       ),
                     ),
@@ -84,17 +83,12 @@ class TransactionAmountInput extends StatelessWidget {
                         controller: controller,
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size40,
-                          fontWeight: FontWeight.w800,
+                        style: AppTextStyles.displayLarge.copyWith(fontWeight: FontWeight.w800,
                           color: themeColor,
-                          letterSpacing: -1,
-                        ),
+                          letterSpacing: -1),
                         decoration: InputDecoration(
                           hintText: '0.00',
-                          hintStyle: TextStyle(
-                            fontSize: AppFontSizes.size40,
-                            fontWeight: FontWeight.w800,
+                          hintStyle: AppTextStyles.displayLarge.copyWith(fontWeight: FontWeight.w800,
                             color: isDark
                                 ? Colors.white.withValues(alpha: 0.08)
                                 : Colors.grey.shade200,

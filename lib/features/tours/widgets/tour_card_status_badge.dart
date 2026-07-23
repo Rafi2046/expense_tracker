@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 
@@ -16,10 +17,13 @@ class TourCardStatusBadge extends StatelessWidget {
     final label = isCompleted ? context.translate('completed') : context.translate('active');
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.p12,
+        vertical: AppSpacing.p4,
+      ),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: isCompleted ? 0.1 : 0.15),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
         border: Border.all(
           color: Colors.white.withValues(alpha: isCompleted ? 0.12 : 0.2),
           width: 0.5,
@@ -36,7 +40,7 @@ class TourCardStatusBadge extends StatelessWidget {
               shape: BoxShape.circle,
             ),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: AppSpacing.s4),
           Text(
             label,
             style: AppTextStyles.caption.copyWith(

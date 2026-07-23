@@ -7,6 +7,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'party_statement_contact_chip_data.dart';
 import 'party_statement_contact_details_grid.dart';
 import 'party_statement_profile_avatar.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartyStatementProfileHeader extends StatelessWidget {
   const PartyStatementProfileHeader({super.key});
@@ -65,7 +67,7 @@ class PartyStatementProfileHeader extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
         boxShadow: [
           BoxShadow(
             color: isDark

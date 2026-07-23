@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/models/transaction_models.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_recent_activity.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class DashboardTransactionList extends StatelessWidget {
   final bool isLoading;
@@ -99,40 +100,38 @@ class DashboardTransactionList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Recent Activity',
                 style: AppTextStyles.bodyBold.copyWith(
-                  color: theme.colorScheme.onSurface,
-                ),
+                  color: theme.colorScheme.onSurface),
               ),
               Text(
                 'View All',
                 style: AppTextStyles.caption.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                  fontWeight: FontWeight.w600),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.s8),
         Skeletonizer(
           enabled: true,
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
               color: theme.cardColor,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
             child: Column(
               children: List.generate(5, (i) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 14.0,
-                    vertical: 11.0,
+                    horizontal: AppSpacing.p12,
+                    vertical: AppSpacing.p12,
                   ),
                   child: Row(
                     children: [
@@ -143,10 +142,10 @@ class DashboardTransactionList extends StatelessWidget {
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.08,
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSpacing.s8),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,17 +154,14 @@ class DashboardTransactionList extends StatelessWidget {
                               'Transaction Title',
                               style: AppTextStyles.bodySmall.copyWith(
                                 fontWeight: FontWeight.w600,
-                                color: theme.colorScheme.onSurface,
-                              ),
+                                color: theme.colorScheme.onSurface),
                             ),
-                            const SizedBox(height: 2),
+                            const SizedBox(height: AppSpacing.s4),
                             Text(
                               'Category  •  Today',
                               style: AppTextStyles.caption.copyWith(
-                                fontSize: AppFontSizes.size10,
                                 color: theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.5,
-                                ),
+                                  alpha: 0.5),
                               ),
                             ),
                           ],
@@ -176,8 +172,7 @@ class DashboardTransactionList extends StatelessWidget {
                         style: AppTextStyles.label.copyWith(
                           fontWeight: FontWeight.w700,
                           color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.5,
-                          ),
+                            alpha: 0.5),
                         ),
                       ),
                     ],

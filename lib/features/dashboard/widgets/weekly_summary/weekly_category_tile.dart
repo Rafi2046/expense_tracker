@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_breakdown_item.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class WeeklyCategoryTile extends StatelessWidget {
   final CategoryBreakdownItem item;
@@ -20,7 +23,7 @@ class WeeklyCategoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.p4),
       child: Row(
         children: [
           Container(
@@ -28,7 +31,7 @@ class WeeklyCategoryTile extends StatelessWidget {
             height: 36,
             decoration: BoxDecoration(
               color: item.color.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSpacing.r8),
             ),
             child: Icon(
               icon,
@@ -36,7 +39,7 @@ class WeeklyCategoryTile extends StatelessWidget {
               size: 18,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,35 +50,31 @@ class WeeklyCategoryTile extends StatelessWidget {
                     Expanded(
                       child: Text(
                         item.name,
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size12,
-                          fontWeight: FontWeight.w600,
+                        style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSpacing.s8),
                     Flexible(
                       child: PrivacyMaskedText(
                         amount: item.amount,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size12,
-                          fontWeight: FontWeight.w700,
+                        style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w700,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: AppSpacing.s8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(3),
+                        borderRadius: BorderRadius.circular(AppSpacing.r8),
                         child: LinearProgressIndicator(
                           value: item.percentage,
                           minHeight: 5,
@@ -84,14 +83,11 @@ class WeeklyCategoryTile extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: AppSpacing.s16),
                     Text(
                       "$count ${count == 1 ? 'tx' : 'txs'} (${(item.percentage * 100).toStringAsFixed(1)}%)",
-                      style: TextStyle(
-                        fontSize: AppFontSizes.size10,
-                        color: Colors.grey.shade500,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: AppTextStyles.caption.copyWith(color: Colors.grey.shade500,
+                        fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),

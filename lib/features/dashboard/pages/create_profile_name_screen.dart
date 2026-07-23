@@ -6,9 +6,10 @@ import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CreateProfileNameScreen extends StatefulWidget {
   final bool isBusiness;
@@ -42,9 +43,9 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
       builder: (_) => Container(
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
         ),
-        padding: EdgeInsets.fromLTRB(24, 20, 24, 20 + bottomPadding),
+        padding: EdgeInsets.fromLTRB(AppSpacing.p24, AppSpacing.p16, AppSpacing.p24, AppSpacing.p16 + bottomPadding),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -53,32 +54,30 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
               height: 4,
               decoration: BoxDecoration(
                 color: isDark ? Colors.white24 : Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.s16),
             Icon(
               LucideIcons.userRoundCog,
               size: 40,
               color: const Color(0xFF2EBD85),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
             Text(
               context.translate('max_profiles_reached'),
               style: AppTextStyles.h2.copyWith(
                 fontWeight: FontWeight.w700,
-                color: theme.textTheme.titleLarge?.color,
-              ),
+                color: theme.textTheme.titleLarge?.color),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.s8),
             Text(
               context.translate('max_profiles_description'),
               textAlign: TextAlign.center,
               style: AppTextStyles.bodySmall.copyWith(
-                color: theme.textTheme.bodySmall?.color,
-              ),
+                color: theme.textTheme.bodySmall?.color),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.s16),
             SizedBox(
               width: double.infinity,
               height: 45,
@@ -87,16 +86,13 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF2EBD85),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                 ),
                 child: Text(
                   context.translate('got_it'),
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size16,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
+                  style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700,
+                    color: Colors.white),
                 ),
               ),
             ),
@@ -115,7 +111,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
       isScrollControlled: true,
       backgroundColor: Theme.of(context).canvasColor,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
       ),
       builder: (ctx) {
         return CategorySelectionSheetContent(
@@ -154,7 +150,7 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -162,16 +158,16 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
                 context.translate('create_account'),
                 style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w800, color: theme.textTheme.titleLarge?.color),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: AppSpacing.s8),
               Text(
                 context.translate('enter_details_to_start'),
                 style: AppTextStyles.bodySmall.copyWith(color: theme.textTheme.bodySmall?.color),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
 
               ProfileNameInputField(controller: _nameController),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
 
               CustomButton(
                 text: _isCreating ? context.translate('creating') : context.translate('continue'),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CategoryEmptyState extends StatelessWidget {
   final bool isDark;
@@ -19,7 +21,7 @@ class CategoryEmptyState extends StatelessWidget {
             width: 100,
             height: 100,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           Text(
             context.translate('no_categories_yet'),
             style: AppTextStyles.body.copyWith(

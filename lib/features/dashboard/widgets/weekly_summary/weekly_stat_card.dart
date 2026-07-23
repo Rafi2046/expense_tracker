@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class WeeklyStatCard extends StatelessWidget {
   final String label;
@@ -21,10 +24,10 @@ class WeeklyStatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppSpacing.p12),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: isDark ? const Color(0xFF2D323F) : Colors.grey.shade200,
           width: 1,
@@ -36,24 +39,21 @@ class WeeklyStatCard extends StatelessWidget {
           Row(
             children: [
               Icon(icon, color: iconColor, size: 14),
-              const SizedBox(width: 6),
+              const SizedBox(width: AppSpacing.s8),
               Expanded(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.centerLeft,
                   child: Text(
                     label,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size10,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey.shade500,
-                    ),
+                    style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w500,
+                      color: Colors.grey.shade500),
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           child,
         ],
       ),

@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
@@ -34,13 +35,13 @@ class AllTransactionsList extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: 6,
-          separatorBuilder: (context, index) => const SizedBox(height: 10),
+          separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.s8),
           itemBuilder: (context, index) {
             return Container(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(AppSpacing.p12),
               decoration: BoxDecoration(
                 color: theme.cardColor,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
               ),
               child: Row(
@@ -53,7 +54,7 @@ class AllTransactionsList extends StatelessWidget {
                         context.translate('title'),
                         style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppSpacing.s4),
                       Text(
                         '${context.translate('category')}  •  01 Jan 2024',
                         style: AppTextStyles.reportTransactionSubtitle.copyWith(
@@ -77,7 +78,7 @@ class AllTransactionsList extends StatelessWidget {
     if (filtered.isEmpty) {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 40.0),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.p40),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -89,7 +90,7 @@ class AllTransactionsList extends StatelessWidget {
                 fit: BoxFit.contain,
               ),
 
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
               Text(
                 context.translate('no_transactions_matched_filters'),
                 style: AppTextStyles.reportTileTitle.copyWith(
@@ -105,9 +106,9 @@ class AllTransactionsList extends StatelessWidget {
 
     return Column(
       children: [
-        const SizedBox(height: 4),
+        const SizedBox(height: AppSpacing.s4),
         ...List.generate(filtered.length * 2 - 1, (i) {
-          if (i.isOdd) return const SizedBox(height: 10);
+          if (i.isOdd) return const SizedBox(height: AppSpacing.s8);
           final index = i ~/ 2;
         final tx = filtered[index];
         final isCredit = tx.type == 'Income' || tx.type == 'Payment In';
@@ -166,11 +167,11 @@ class AllTransactionsList extends StatelessWidget {
           },
           background: Container(
             alignment: Alignment.centerRight,
-            padding: const EdgeInsets.only(right: 24),
-            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.only(right: AppSpacing.p24),
+            margin: const EdgeInsets.only(bottom: AppSpacing.s8),
             decoration: BoxDecoration(
               color: AppColors.activeRed,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
             child: const Icon(LucideIcons.trash, color: Colors.white, size: 28),
           ),
@@ -205,10 +206,10 @@ class AllTransactionsList extends StatelessWidget {
               }
             },
             child: Container(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(AppSpacing.p12),
               decoration: BoxDecoration(
                 color: theme.cardColor,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
               ),
               child: Row(
@@ -224,7 +225,7 @@ class AllTransactionsList extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSpacing.s4),
                         Text(
                           '${tx.subtitle} • ${DateFormat('dd MMM yyyy').format(tx.dateTime)}',
                           maxLines: 1,
@@ -236,7 +237,7 @@ class AllTransactionsList extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppSpacing.s12),
                   PrivacyMaskedText(
                     amount: tx.amount,
                     isMasked: isMasked,

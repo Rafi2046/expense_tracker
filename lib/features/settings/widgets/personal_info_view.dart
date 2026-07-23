@@ -3,6 +3,8 @@ import 'package:expense_tracker/features/settings/widgets/profile_header_card.da
 import 'package:expense_tracker/features/settings/widgets/personal_info_details_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PersonalInfoView extends StatelessWidget {
   final User user;
@@ -41,7 +43,7 @@ class PersonalInfoView extends StatelessWidget {
           localImageFile: localImageFile,
           photoUrl: photoUrl,
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.s24),
         PersonalInfoDetailsCard(
           phone: phone,
           dob: dob,

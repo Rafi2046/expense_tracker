@@ -14,7 +14,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -57,8 +56,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           style: AppTextStyles.h2.copyWith(
             fontWeight: FontWeight.w700,
             color: theme.colorScheme.onSurface,
-            letterSpacing: -0.3,
-          ),
+            letterSpacing: -0.3),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
@@ -76,7 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.s16,
-              vertical: 18.0,
+              vertical: AppSpacing.p16,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,11 +103,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     );
                   },
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s16),
 
                 // Settings Groups
                 AccountGroup(onSnackBar: (msg) => _showSnackBar(context, msg)),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s16),
 
                 ManagementGroup(
                   onShowReportSelector: () {
@@ -121,36 +119,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     );
                   },
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s16),
 
                 PreferencesGroup(
                   onSnackBar: (msg) => _showSnackBar(context, msg),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s16),
 
                 const UtilitiesGroup(),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s16),
 
                 SupportGroup(onSnackBar: (msg) => _showSnackBar(context, msg)),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.s24),
                 // Delete Account Danger Zone
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.red.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                     border: Border.all(color: Colors.red.shade200, width: 1.2),
                   ),
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                     onTap: () => showDialog(
                       context: context,
                       builder: (_) => const DeleteAccountDialog(),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 14,
+                        horizontal: AppSpacing.p16,
+                        vertical: AppSpacing.p12,
                       ),
                       child: Row(
                         children: [
@@ -159,7 +157,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             color: Colors.red.shade400,
                             size: 22,
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(width: AppSpacing.s16),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,16 +166,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   context.translate('delete_account'),
                                   style: AppTextStyles.label.copyWith(
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.red.shade400,
-                                  ),
+                                    color: Colors.red.shade400),
                                 ),
-                                const SizedBox(height: 2),
+                                const SizedBox(height: AppSpacing.s4),
                                 Text(
                                   context.translate('delete_account_subtitle'),
                                   style: AppTextStyles.caption.copyWith(
-                                    fontSize: AppFontSizes.size10,
-                                    color: Colors.red.shade300,
-                                  ),
+                                    color: Colors.red.shade300),
                                 ),
                               ],
                             ),
@@ -192,25 +187,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.s12),
                 // Logout button
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.red.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                     border: Border.all(color: Colors.red.shade200, width: 1.2),
                   ),
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                     onTap: () => showDialog(
                       context: context,
                       builder: (_) => const LogoutDialog(),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 14,
+                        horizontal: AppSpacing.p16,
+                        vertical: AppSpacing.p12,
                       ),
                       child: Row(
                         children: [
@@ -219,13 +214,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             color: Colors.red.shade400,
                             size: 22,
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(width: AppSpacing.s16),
                           Text(
                             context.translate('logout'),
                             style: AppTextStyles.label.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: Colors.red.shade400,
-                            ),
+                              color: Colors.red.shade400),
                           ),
                           const Spacer(),
                           Icon(
@@ -238,7 +232,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 150),
+                const SizedBox(height: AppSpacing.s48 * 3),
                 // Spacer to scroll past floating bottom nav
               ],
             ),

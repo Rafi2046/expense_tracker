@@ -1,8 +1,9 @@
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 class PartySelectorTile extends StatelessWidget {
   final String? selectedPartyName;
@@ -35,7 +36,7 @@ class PartySelectorTile extends StatelessWidget {
           color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.04)
               : Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           border: Border.all(
             color: isDark
                 ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
@@ -63,26 +64,21 @@ class PartySelectorTile extends StatelessWidget {
                     : (isDark ? Colors.white30 : Colors.grey.shade400),
               ),
             ),
-            const SizedBox(width: AppSpacing.w14),
+            const SizedBox(width: AppSpacing.w16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     context.translate('party'),
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size10,
-                      color: isDark ? Colors.white38 : Colors.grey.shade500,
+                    style: AppTextStyles.caption.copyWith(color: isDark ? Colors.white38 : Colors.grey.shade500,
                       fontWeight: FontWeight.w600,
-                      letterSpacing: 0.3,
-                    ),
+                      letterSpacing: 0.3),
                   ),
                   const SizedBox(height: AppSpacing.s4),
                   Text(
                     selectedPartyName ?? context.translate('link_to_party_optional'),
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size15,
-                      fontWeight: hasValue ? FontWeight.w600 : FontWeight.w400,
+                    style: AppTextStyles.body.copyWith(fontWeight: hasValue ? FontWeight.w600 : FontWeight.w400,
                       color: hasValue
                           ? theme.colorScheme.onSurface
                           : (isDark ? Colors.white24 : Colors.grey.shade400),

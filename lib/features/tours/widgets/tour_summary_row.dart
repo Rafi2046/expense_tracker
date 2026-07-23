@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TourSummaryRow extends StatelessWidget {
   final String totalSpentText;
@@ -33,7 +34,7 @@ class TourSummaryRow extends StatelessWidget {
             valueColor: scheme.onSurface,
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSpacing.s8),
         Expanded(
           child: _buildSummaryCard(
             scheme: scheme,
@@ -59,10 +60,10 @@ class TourSummaryRow extends StatelessWidget {
     required Color valueColor,
   }) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppSpacing.p12),
       decoration: BoxDecoration(
         color: scheme.surface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: scheme.outline,
           width: 1.2,
@@ -87,15 +88,13 @@ class TourSummaryRow extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.caption.copyWith(
-                    fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.w700,
                     color: scheme.onSurfaceVariant,
-                    letterSpacing: 1.0,
-                  ),
+                    letterSpacing: 1.0),
                 ),
               ),
               Container(
-                padding: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(AppSpacing.p4),
                 decoration: BoxDecoration(
                   color: iconBgColor,
                   shape: BoxShape.circle,
@@ -104,14 +103,13 @@ class TourSummaryRow extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: AppSpacing.s8),
           Text(
             value,
             style: AppTextStyles.h2.copyWith(
               fontWeight: FontWeight.w800,
               color: valueColor,
-              letterSpacing: -0.5,
-            ),
+              letterSpacing: -0.5),
           ),
         ],
       ),

@@ -2,6 +2,8 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TimeFrameSelector extends StatelessWidget {
   final List<String> timeFrames;
@@ -21,10 +23,10 @@ class TimeFrameSelector extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
         border: Border.all(color: theme.dividerTheme.color ?? AppColors.dividerColor, width: 1.0),
       ),
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.all(AppSpacing.p4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: timeFrames.map((tf) {
@@ -36,12 +38,12 @@ class TimeFrameSelector extends StatelessWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? theme.primaryColor
                       : Colors.transparent,
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(AppSpacing.r24),
                 ),
                 child: Text(
                   context.translate(tf.toLowerCase()),

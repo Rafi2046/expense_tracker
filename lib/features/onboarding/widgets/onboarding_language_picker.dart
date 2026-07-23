@@ -3,6 +3,10 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class OnboardingLanguagePicker extends StatefulWidget {
   final bool isDark;
@@ -101,7 +105,7 @@ class _OnboardingLanguagePickerState extends State<OnboardingLanguagePicker>
     final unselectedBorder = isDark ? Colors.white24 : Colors.grey.shade200;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 28),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24),
       child: AnimatedBuilder(
         animation: _staggerController,
         builder: (context, child) => Column(
@@ -116,7 +120,7 @@ class _OnboardingLanguagePickerState extends State<OnboardingLanguagePicker>
                 child: _buildHeroIcon(),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppSpacing.s32),
             // ─── Title ───
             Transform.translate(
               offset: Offset(0, _titleSlide.value),
@@ -125,16 +129,13 @@ class _OnboardingLanguagePickerState extends State<OnboardingLanguagePicker>
                 child: Text(
                   context.translate('onboarding_language_title'),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
+                  style: AppTextStyles.displayLarge.copyWith(fontWeight: FontWeight.w800,
                     color: textColor,
-                    letterSpacing: -0.8,
-                  ),
+                    letterSpacing: -0.8),
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
             // ─── Subtitle ───
             Transform.translate(
               offset: Offset(0, _subtitleSlide.value),
@@ -143,16 +144,13 @@ class _OnboardingLanguagePickerState extends State<OnboardingLanguagePicker>
                 child: Text(
                   context.translate('onboarding_language_subtitle'),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: subTextColor,
+                  style: AppTextStyles.body.copyWith(color: subTextColor,
                     height: 1.5,
-                    letterSpacing: 0.1,
-                  ),
+                    letterSpacing: 0.1),
                 ),
               ),
             ),
-            const SizedBox(height: 36),
+            const SizedBox(height: AppSpacing.s32),
             // ─── Language Cards ───
             Transform.translate(
               offset: Offset(0, _cardsSlide.value),
@@ -170,10 +168,10 @@ class _OnboardingLanguagePickerState extends State<OnboardingLanguagePicker>
                         duration: const Duration(milliseconds: 250),
                         curve: Curves.easeOut,
                         width: 140,
-                        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.p16, horizontal: AppSpacing.p12),
                         decoration: BoxDecoration(
                           color: cardBg,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(AppSpacing.r16),
                           border: Border.all(
                             color: isSelected ? selectedBorder : unselectedBorder,
                             width: isSelected ? 2 : 1,
@@ -191,14 +189,12 @@ class _OnboardingLanguagePickerState extends State<OnboardingLanguagePicker>
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(lang.flag, style: const TextStyle(fontSize: 32)),
-                            const SizedBox(height: 8),
+                            Text(lang.flag, style: AppTextStyles.displayLarge),
+                            const SizedBox(height: AppSpacing.s8),
                             Text(
                               lang.name,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                              style: AppTextStyles.body.copyWith(fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                                 color: isSelected
                                     ? selectedBorder
                                     : textColor.withValues(alpha: 0.6),
@@ -207,7 +203,7 @@ class _OnboardingLanguagePickerState extends State<OnboardingLanguagePicker>
                             // Selected indicator dot
                             AnimatedContainer(
                               duration: const Duration(milliseconds: 250),
-                              margin: const EdgeInsets.only(top: 8),
+                              margin: const EdgeInsets.only(top: AppSpacing.p8),
                               width: isSelected ? 6 : 0,
                               height: isSelected ? 6 : 0,
                               decoration: BoxDecoration(

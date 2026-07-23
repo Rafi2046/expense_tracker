@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class WeeklySegmentControl extends StatelessWidget {
   final int selectedIndex;
@@ -18,16 +19,14 @@ class WeeklySegmentControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Container(
-      height: 44,
-      padding: const EdgeInsets.all(4),
+      height: AppSpacing.s48,
+      padding: const EdgeInsets.all(AppSpacing.p4),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E222B) : Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: isDark ? const Color(0xFF2D323F) : Colors.grey.shade200,
-          width: 1,
-        ),
+        color: scheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
+        border: Border.all(color: scheme.outline, width: 1),
       ),
       child: Row(
         children: [
@@ -40,16 +39,15 @@ class WeeklySegmentControl extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: selectedIndex == 0 ? activeColor : Colors.transparent,
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(AppSpacing.r16),
                 ),
                 child: Text(
                   context.translate('distribution'),
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size12,
+                  style: AppTextStyles.label.copyWith(
                     fontWeight: FontWeight.bold,
                     color: selectedIndex == 0
-                        ? Colors.white
-                        : (isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+                        ? scheme.onPrimary
+                        : scheme.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -64,16 +62,15 @@ class WeeklySegmentControl extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: selectedIndex == 1 ? activeColor : Colors.transparent,
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(AppSpacing.r16),
                 ),
                 child: Text(
                   context.translate('trend'),
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size12,
+                  style: AppTextStyles.label.copyWith(
                     fontWeight: FontWeight.bold,
                     color: selectedIndex == 1
-                        ? Colors.white
-                        : (isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+                        ? scheme.onPrimary
+                        : scheme.onSurfaceVariant,
                   ),
                 ),
               ),

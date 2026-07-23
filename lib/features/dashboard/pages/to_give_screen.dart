@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ToGiveScreen extends StatefulWidget {
   const ToGiveScreen({super.key});
@@ -80,8 +82,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
           context.translate('to_give'),
           style: AppTextStyles.appbarTitle.copyWith(
             color: isDark ? Colors.white : null,
-            fontWeight: FontWeight.w600,
-          ),
+            fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -89,7 +90,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p16, AppSpacing.p16, AppSpacing.p4),
               child: DebtTotalCard(
                 title: context.translate('total_you_owe'),
                 amount: debtProvider.totalToGive,
@@ -109,7 +110,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
             if (items.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(
-                  left: 16.0, right: 16.0, top: 8.0,
+                  left: AppSpacing.p16, right: AppSpacing.p16, top: AppSpacing.p8,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -120,15 +121,15 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                           context.translate('active_payables'),
                           style: AppTextStyles.sectionHeaderTitle.copyWith(color: theme.colorScheme.onSurface),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppSpacing.s8),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
+                            horizontal: AppSpacing.p8,
+                            vertical: AppSpacing.p4,
                           ),
                           decoration: BoxDecoration(
                             color: AppColors.activeRed.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppSpacing.r12),
                           ),
                           child: Text(
                             '${items.length}',
@@ -152,12 +153,11 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                         );
                       },
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p4),
                         foregroundColor: AppColors.activeRed,
                         textStyle: AppTextStyles.label.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: AppColors.activeRed,
-                        ),
+                          color: AppColors.activeRed),
                       ),
                       child: Text(context.translate('see_all')),
                     ),
@@ -168,7 +168,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
             Expanded(
               child: items.isEmpty
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
                       child: Column(
                         children: [
                           const Spacer(),
@@ -180,7 +180,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                                 height: 120,
                                 width: 120,
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: AppSpacing.s12),
                               Text(
                                 context.translate('no_pending_debts'),
                                 style: AppTextStyles.reportTileTitle.copyWith(color: Colors.grey.shade500),
@@ -196,8 +196,8 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
                   : ListView.builder(
                       itemCount: displayItems.length + 1,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
+                        horizontal: AppSpacing.p16,
+                        vertical: AppSpacing.p8,
                       ),
                       itemBuilder: (context, index) {
                         if (index == displayItems.length) {
@@ -230,7 +230,7 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
     final isDark = theme.brightness == Brightness.dark;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 8, 0, 16),
+      padding: const EdgeInsets.fromLTRB(0, AppSpacing.p8, 0, AppSpacing.p16),
       child: GestureDetector(
         onTap: () => AddEditDebtSheet.show(
           context: context,
@@ -240,12 +240,12 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
         ),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
           decoration: BoxDecoration(
             color: isDark
                 ? AppColors.activeRed.withValues(alpha: 0.06)
                 : AppColors.activeRed.withValues(alpha: 0.04),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
             border: Border.all(
               color: isDark
                   ? AppColors.activeRed.withValues(alpha: 0.2)
@@ -257,14 +257,11 @@ class _ToGiveScreenState extends State<ToGiveScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(LucideIcons.plus, size: 18, color: AppColors.activeRed),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.s8),
               Text(
                 context.translate('add_new'),
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.activeRed,
-                ),
+                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600,
+                  color: AppColors.activeRed),
               ),
             ],
           ),

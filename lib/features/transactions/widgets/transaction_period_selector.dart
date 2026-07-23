@@ -1,8 +1,9 @@
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TransactionPeriodSelector extends StatelessWidget {
   final TransactionPeriod selectedPeriod;
@@ -26,16 +27,15 @@ class TransactionPeriodSelector extends StatelessWidget {
       child: GestureDetector(
         onTap: () => onPeriodChanged(period),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
           decoration: BoxDecoration(
             color: isSelected ? accentColor : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
           ),
           child: Text(
             label,
             textAlign: TextAlign.center,
             style: AppTextStyles.bodyBold.copyWith(
-              fontSize: AppFontSizes.size12,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
               color: isSelected ? Colors.white : (isDark ? Colors.white60 : const Color(0xFF6B7280)),
             ),
@@ -51,24 +51,24 @@ class TransactionPeriodSelector extends StatelessWidget {
       children: [
         Expanded(
           child: Container(
-            padding: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(AppSpacing.p4),
             decoration: BoxDecoration(
               color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFF0F1F3),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
             child: Row(
               children: [
                 _buildSegment('Daily', TransactionPeriod.daily),
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.s4),
                 _buildSegment('Monthly', TransactionPeriod.monthly),
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.s4),
                 _buildSegment('Yearly', TransactionPeriod.yearly),
               ],
             ),
           ),
         ),
         if (onFilterTap != null) ...[
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSpacing.s8),
           GestureDetector(
             onTap: onFilterTap,
             child: Container(
@@ -76,7 +76,7 @@ class TransactionPeriodSelector extends StatelessWidget {
               height: 40,
               decoration: BoxDecoration(
                 color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFF0F1F3),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
               ),
               child: Icon(
                 LucideIcons.slidersHorizontal,

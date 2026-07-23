@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ProfilePhotoSection extends StatelessWidget {
   final File? localImageFile;
@@ -24,10 +26,10 @@ class ProfilePhotoSection extends StatelessWidget {
     final borderColor = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1);
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.p24, horizontal: AppSpacing.p16),
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -42,7 +44,7 @@ class ProfilePhotoSection extends StatelessWidget {
           alignment: Alignment.bottomRight,
           children: [
             Container(
-              padding: const EdgeInsets.all(2.0),
+              padding: const EdgeInsets.all(AppSpacing.p4),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: cardBg,
@@ -70,7 +72,7 @@ class ProfilePhotoSection extends StatelessWidget {
             GestureDetector(
               onTap: onPickImage,
               child: Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(AppSpacing.p8),
                 decoration: BoxDecoration(
                   color: primaryColor,
                   shape: BoxShape.circle,

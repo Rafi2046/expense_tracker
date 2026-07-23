@@ -2,8 +2,9 @@ import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 class DebtTotalCard extends StatelessWidget {
   final String title;
@@ -53,7 +54,7 @@ class DebtTotalCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(AppSpacing.p16),
             child: Row(
               children: [
                 Expanded(
@@ -62,27 +63,21 @@ class DebtTotalCard extends StatelessWidget {
                     children: [
                       Text(
                         title.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size11,
-                          fontWeight: FontWeight.bold,
+                        style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.bold,
                           color: Colors.white70,
-                          letterSpacing: 1.0,
-                        ),
+                          letterSpacing: 1.0),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.s8),
                       PrivacyMaskedText(
                         amount: amount,
                         isMasked: isMasked,
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                        style: AppTextStyles.displayLarge.copyWith(fontWeight: FontWeight.bold,
+                          color: Colors.white),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.s12),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -97,7 +92,7 @@ class DebtTotalCard extends StatelessWidget {
                         color: Colors.white60,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSpacing.s12),
                     Icon(
                       cardIcon,
                       color: Colors.white.withValues(alpha: 0.15),
@@ -116,12 +111,12 @@ class DebtTotalCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
                         height: 1,
                         color: Colors.white.withValues(alpha: 0.15),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 12, 12, 16),
+                        padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p12, AppSpacing.p12, AppSpacing.p16),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -130,22 +125,20 @@ class DebtTotalCard extends StatelessWidget {
                               color: Colors.white,
                               size: 18,
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: AppSpacing.s8),
                             Expanded(
                               child: Text(
                                 guideText,
-                                style: TextStyle(
-                                  fontSize: AppFontSizes.size12,
-                                  color: Colors.white.withValues(alpha: 0.9),
+                                style: AppTextStyles.label.copyWith(color: Colors.white.withValues(alpha: 0.9),
                                   height: 1.4,
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: AppSpacing.s8),
                             GestureDetector(
                               onTap: onDismissGuide,
                               child: Container(
-                                padding: const EdgeInsets.all(4),
+                                padding: const EdgeInsets.all(AppSpacing.p4),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withValues(alpha: 0.1),
                                   shape: BoxShape.circle,

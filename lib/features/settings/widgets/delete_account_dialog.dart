@@ -11,6 +11,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 
 class DeleteAccountDialog extends StatefulWidget {
@@ -174,11 +176,11 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
     final theme = Theme.of(context);
 
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r16)),
       backgroundColor: theme.cardColor,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24.0),
+      insetPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(AppSpacing.p16),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,

@@ -3,7 +3,6 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 
@@ -73,8 +72,7 @@ class BudgetCategoryProgressList extends StatelessWidget {
               Text(
                 '$currency ${_formatAmount(totalExpense)}',
                 style: AppTextStyles.cardStatusText.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                  fontWeight: FontWeight.w600),
               ),
             ],
           ),
@@ -132,7 +130,7 @@ class _CategoryProgressRow extends StatelessWidget {
     final barPct = barValue * 100;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.p14),
+      padding: const EdgeInsets.only(bottom: AppSpacing.p16),
       child: Container(
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF1E1E2E) : Colors.white,
@@ -160,14 +158,14 @@ class _CategoryProgressRow extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: item.color,
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    bottomLeft: Radius.circular(20),
+                    topLeft: Radius.circular(AppSpacing.r24),
+                    bottomLeft: Radius.circular(AppSpacing.r24),
                   ),
                 ),
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+                  padding: const EdgeInsets.fromLTRB(AppSpacing.p12, AppSpacing.p12, AppSpacing.p12, AppSpacing.p12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -181,7 +179,6 @@ class _CategoryProgressRow extends StatelessWidget {
                                 Text(
                                   item.name,
                                   style: AppTextStyles.reportTileTitle.copyWith(
-                                    fontSize: AppFontSizes.size15,
                                     color: isDark
                                         ? Colors.white
                                         : const Color(0xFF1A1A2E),
@@ -189,13 +186,11 @@ class _CategoryProgressRow extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                const SizedBox(height: AppSpacing.s2),
+                                const SizedBox(height: AppSpacing.s4),
                                 Text(
                                   '${item.percentage.toStringAsFixed(1)}% of total',
                                   style: AppTextStyles.cardStatusText.copyWith(
-                                    fontSize: AppFontSizes.size11,
-                                    color: AppColors.textMuted,
-                                  ),
+                                    color: AppColors.textMuted),
                                 ),
                               ],
                             ),
@@ -206,21 +201,18 @@ class _CategoryProgressRow extends StatelessWidget {
                               Text(
                                 '$currency ${_formatAmount(item.amount)}',
                                 style: AppTextStyles.reportTileTitle.copyWith(
-                                  fontSize: AppFontSizes.size16,
                                   fontWeight: FontWeight.w700,
                                   color: isDark
                                       ? Colors.white
                                       : const Color(0xFF1A1A2E),
                                 ),
                               ),
-                              const SizedBox(height: AppSpacing.s2),
+                              const SizedBox(height: AppSpacing.s4),
                               Text(
                                 '${barPct.toStringAsFixed(1)}% ${hasBudget ? context.translate('of_budget') : context.translate('of_spending')}',
                                 style: AppTextStyles.cardStatusText.copyWith(
-                                  fontSize: AppFontSizes.size11,
                                   color: item.color,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                  fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
@@ -228,7 +220,7 @@ class _CategoryProgressRow extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.s12),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppSpacing.r8),
                         child: LinearProgressIndicator(
                           value: barValue,
                           minHeight: 8,

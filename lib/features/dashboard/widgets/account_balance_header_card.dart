@@ -4,6 +4,8 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/reports/pages/bank_statement_screen.dart';
 import 'package:expense_tracker/features/reports/pages/cash_in_hand_statement_screen.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class AccountBalanceHeaderCard extends StatelessWidget {
   final String accountType;
@@ -23,10 +25,10 @@ class AccountBalanceHeaderCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), width: 1.2),
         boxShadow: [
           BoxShadow(
@@ -46,7 +48,7 @@ class AccountBalanceHeaderCard extends StatelessWidget {
                 'Current Balance',
                 style: AppTextStyles.label,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.s4),
               PrivacyMaskedText(
                 amount: balance,
                 style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.bold, color: primaryColor),
@@ -73,9 +75,9 @@ class AccountBalanceHeaderCard extends StatelessWidget {
                 side: BorderSide(color: primaryColor.withValues(alpha: 0.15)),
                 backgroundColor: primaryColor.withValues(alpha: 0.1),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p8),
               ),
             ),
         ],

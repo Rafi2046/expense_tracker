@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class AdjustBalanceHeader extends StatelessWidget {
   final String title;
@@ -24,21 +27,18 @@ class AdjustBalanceHeader extends StatelessWidget {
             height: 4,
             decoration: BoxDecoration(
               color: isDark ? Colors.white24 : Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.s16),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               title,
-              style: TextStyle(
-                fontSize: AppFontSizes.size16,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-              ),
+              style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onSurface),
             ),
             IconButton(
               icon: Icon(
@@ -49,7 +49,7 @@ class AdjustBalanceHeader extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.s16),
       ],
     );
   }

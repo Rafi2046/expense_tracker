@@ -3,6 +3,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/providers/note_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 String _formatDate(DateTime dt) {
   final months = [
@@ -22,10 +24,10 @@ Widget _buildCategoryBadge(BuildContext context, String category) {
   };
 
   return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p4),
     decoration: BoxDecoration(
       color: bg,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppSpacing.r12),
     ),
     child: Text(
       category,
@@ -68,11 +70,11 @@ class NotebookNoteCard extends StatelessWidget {
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
+        margin: const EdgeInsets.only(bottom: AppSpacing.p12),
         decoration: BoxDecoration(
           color: scheme.errorContainer,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           border: Border.all(color: scheme.error.withValues(alpha: 0.35)),
         ),
         child: Row(
@@ -82,7 +84,7 @@ class NotebookNoteCard extends StatelessWidget {
               context.translate('swipe_to_delete'),
               style: AppTextStyles.bodyBold.copyWith(color: scheme.error),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSpacing.s8),
             Icon(LucideIcons.trash, color: scheme.error, size: 24),
           ],
         ),
@@ -94,10 +96,10 @@ class NotebookNoteCard extends StatelessWidget {
         onDeleted();
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: const EdgeInsets.only(bottom: AppSpacing.p12),
         decoration: BoxDecoration(
           color: cardColor,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           border: Border.all(color: scheme.outlineVariant),
           boxShadow: [
             BoxShadow(
@@ -108,10 +110,10 @@ class NotebookNoteCard extends StatelessWidget {
           ],
         ),
         child: InkWell(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(AppSpacing.p16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -128,7 +130,7 @@ class NotebookNoteCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSpacing.s8),
                     GestureDetector(
                       onTap: () async {
                         final confirm = await onConfirmDelete();
@@ -144,7 +146,7 @@ class NotebookNoteCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.s8),
                 Text(
                   note.content,
                   maxLines: 2,
@@ -154,7 +156,7 @@ class NotebookNoteCard extends StatelessWidget {
                     color: scheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.s16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

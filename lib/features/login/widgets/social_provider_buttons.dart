@@ -73,7 +73,7 @@ class SocialProviderButtons extends StatelessWidget {
         ),
         if (Platform.isIOS || Platform.isMacOS)
           Padding(
-            padding: const EdgeInsets.only(top: 12),
+            padding: const EdgeInsets.only(top: AppSpacing.p12),
             child: CustomButton(
               leading: Transform.scale(
                 scale: 1.4,

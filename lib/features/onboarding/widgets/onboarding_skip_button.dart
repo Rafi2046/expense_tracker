@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class OnboardingSkipButton extends StatelessWidget {
   final VoidCallback onSkip;
@@ -17,9 +19,9 @@ class OnboardingSkipButton extends StatelessWidget {
     return GestureDetector(
       onTap: onSkip,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppSpacing.r24),
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
               : Colors.grey.shade100,

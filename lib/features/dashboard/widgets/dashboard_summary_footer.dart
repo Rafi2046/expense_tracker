@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_spending_categories.dart';
 import 'package:expense_tracker/features/dashboard/widgets/dashboard_budget_status.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class DashboardSummaryFooter extends StatelessWidget {
   final String topCategoryName;
@@ -24,12 +26,12 @@ class DashboardSummaryFooter extends StatelessWidget {
           categoryName: topCategoryName,
           percentage: topCategoryPercentage,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.s8),
         DashboardBudgetStatus(
           onTap: onBudgetTap,
           items: budgetItems,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.s16),
       ],
     );
   }

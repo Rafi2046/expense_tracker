@@ -23,7 +23,6 @@ import 'package:expense_tracker/features/dashboard/widgets/sheet_components/tran
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AddTransactionSheet extends StatefulWidget {
@@ -184,15 +183,12 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
             context: context,
             builder: (ctx) => AlertDialog(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppSpacing.r16),
               ),
               title: Text(
                 context.translate('balance_will_go_negative'),
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppFontSizes.size16,
-                  color: theme.colorScheme.onSurface,
-                ),
+                style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface),
               ),
               content: Text(
                 context.translate('balance_warning_body', namedArgs: {
@@ -201,11 +197,8 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                       : _paymentMethod,
                   'amount': context.formatAmount(projected, listen: false),
                 }),
-                style: TextStyle(
-                  fontSize: AppFontSizes.size14,
-                  color: theme.colorScheme.onSurfaceVariant,
-                  height: 1.45,
-                ),
+                style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurfaceVariant,
+                  height: 1.45),
               ),
               actions: [
                 TextButton(
@@ -223,7 +216,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.activeRed,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppSpacing.r8),
                     ),
                   ),
                   child: Text(
@@ -344,22 +337,16 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         final theme = Theme.of(ctx);
         return AlertDialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppSpacing.r16),
           ),
           title: Text(
             titleText,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: AppFontSizes.size16,
-              color: theme.colorScheme.onSurface,
-            ),
+            style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface),
           ),
           content: Text(
             confirmText,
-            style: TextStyle(
-              fontSize: AppFontSizes.size14,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
+            style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
           actions: [
             TextButton(
@@ -377,7 +364,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.activeRed,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
               ),
               child: Text(
@@ -432,8 +419,8 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
         borderRadius: _isHidden
             ? BorderRadius.zero
             : const BorderRadius.only(
-                topLeft: Radius.circular(AppSpacing.br20),
-                topRight: Radius.circular(AppSpacing.br20),
+                topLeft: Radius.circular(AppSpacing.br24),
+                topRight: Radius.circular(AppSpacing.br24),
               ),
       ),
       child: _isHidden
@@ -445,7 +432,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(
                       AppSpacing.p24,
-                      AppSpacing.p20,
+                      AppSpacing.p16,
                       AppSpacing.p24,
                       0,
                     ),
@@ -455,7 +442,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                       onClose: () => Navigator.pop(context),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSpacing.s16),
                   Expanded(
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.symmetric(
@@ -469,7 +456,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                             themeColor: themeColor,
                             currencySymbol: context.currencySymbol,
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: AppSpacing.s16),
                           CategorySelector(
                             selectedCategory: _selectedCategory,
                             themeColor: themeColor,
@@ -526,12 +513,12 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                             controller: _noteController,
                             themeColor: themeColor,
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: AppSpacing.s12),
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.s16),
                   Padding(
                     padding: EdgeInsets.fromLTRB(
                       AppSpacing.p24,
@@ -555,7 +542,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                               : (widget.isIncome ? context.translate('save_income') : context.translate('save_expense')),
                         ),
                         if (widget.isEditing) ...[
-                          const SizedBox(height: 12),
+                          const SizedBox(height: AppSpacing.s12),
                           TransactionSaveButton(
                             onPressed: () async {
                               await _delete(context);
@@ -674,8 +661,8 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
           decoration: BoxDecoration(
             color: theme.cardColor,
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
+              topLeft: Radius.circular(AppSpacing.r24),
+              topRight: Radius.circular(AppSpacing.r24),
             ),
           ),
           padding: EdgeInsets.fromLTRB(
@@ -691,16 +678,16 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                   height: 4,
                   decoration: BoxDecoration(
                     color: isDark ? Colors.white24 : Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.s16),
               Text(
                 context.translate('select_account'),
                 style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
               ...accounts.map((account) => ListTile(
                 leading: Icon(
                   account.name == 'Cash'
@@ -721,8 +708,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                     color: theme.colorScheme.onSurface,
                     fontWeight: _paymentMethod == account.name
                         ? FontWeight.bold
-                        : FontWeight.normal,
-                  ),
+                        : FontWeight.normal),
                 ),
                 trailing: _paymentMethod == account.name
                     ? Icon(LucideIcons.check, color: theme.primaryColor, size: 18)

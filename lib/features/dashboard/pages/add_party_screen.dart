@@ -13,6 +13,8 @@ import 'package:expense_tracker/features/dashboard/widgets/party_save_button.dar
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class AddPartyScreen extends StatelessWidget {
   final DebtItem? partyToEdit;
@@ -82,7 +84,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -94,7 +96,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
                           provider.setPickedImage(path, bytes);
                         },
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSpacing.s24),
                       PartyFormFields(
                         nameController: provider.nameController,
                         phoneController: provider.phoneController,
@@ -116,14 +118,14 @@ class _AddPartyFormState extends State<AddPartyForm> {
                             ? Column(
                                 key: const ValueKey('expanded_inputs'),
                                 children: [
-                                  const SizedBox(height: 12),
+                                  const SizedBox(height: AppSpacing.s12),
                                   PartySegmentedTabs(
                                     activeIndex: provider.activeTabIndex,
                                     onTabChanged: (index) {
                                       provider.setTabIndex(index);
                                     },
                                   ),
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: AppSpacing.s16),
                                   AnimatedSwitcher(
                                     duration: const Duration(milliseconds: 200),
                                     child: provider.activeTabIndex == 0
@@ -136,7 +138,7 @@ class _AddPartyFormState extends State<AddPartyForm> {
                                                 currencySymbol: context.currencySymbol,
                                                 onSelectDate: () => provider.selectDate(context),
                                               ),
-                                              const SizedBox(height: 20),
+                                              const SizedBox(height: AppSpacing.s16),
                                               PartyTypeSelector(
                                                 isReceive: provider.isReceive,
                                                 onToggleChanged: (value) {

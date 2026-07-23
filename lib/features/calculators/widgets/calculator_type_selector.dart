@@ -1,5 +1,7 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CalculatorTypeSelector extends StatelessWidget {
   final String title1;
@@ -26,10 +28,10 @@ class CalculatorTypeSelector extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(AppSpacing.p4),
       decoration: BoxDecoration(
         color: trackBg,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
       ),
       child: Row(
         children: [
@@ -37,10 +39,10 @@ class CalculatorTypeSelector extends StatelessWidget {
             child: GestureDetector(
               onTap: onTap1,
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
                 decoration: BoxDecoration(
                   color: isSelected1 ? pillBg : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                   boxShadow: isSelected1
                       ? [
                           BoxShadow(
@@ -67,10 +69,10 @@ class CalculatorTypeSelector extends StatelessWidget {
             child: GestureDetector(
               onTap: onTap2,
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
                 decoration: BoxDecoration(
                   color: !isSelected1 ? pillBg : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                   boxShadow: !isSelected1
                       ? [
                           BoxShadow(

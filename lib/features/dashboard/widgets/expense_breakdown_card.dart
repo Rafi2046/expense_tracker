@@ -2,7 +2,10 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class ExpenseBreakdownItem {
   final String title;
@@ -43,14 +46,14 @@ class ExpenseBreakdownCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: theme.cardColor,
         border: Border.all(
           color: (theme.dividerTheme.color ?? AppColors.dividerColor).withValues(alpha: 0.5),
           width: 1.0,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
@@ -65,9 +68,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
           // Title
           RichText(
             text: TextSpan(
-              style: TextStyle(
-                fontSize: AppFontSizes.size16,
-                fontWeight: FontWeight.bold,
+              style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
                 fontFamily: TextStyle().fontFamily,
               ),
@@ -75,16 +76,13 @@ class ExpenseBreakdownCard extends StatelessWidget {
                 TextSpan(text: '${context.translate('expense_breakdown')} '),
                 TextSpan(
                   text: suffixText,
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size13,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.textMuted,
-                  ),
+                  style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w400,
+                    color: AppColors.textMuted),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
 
           // Items list
           ListView.separated(
@@ -92,7 +90,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 12),
+            separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.s12),
             itemBuilder: (context, index) {
               final item = items[index];
               final rawAmount = double.tryParse(item.amount) ?? 0.0;
@@ -108,11 +106,11 @@ class ExpenseBreakdownCard extends StatelessWidget {
                               ? AppColors.activeGreen.withValues(alpha: 0.15)
                               : item.iconBgColor.withValues(alpha: 0.2))
                           : item.iconBgColor,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppSpacing.r12),
                     ),
                     child: Icon(item.icon, color: item.iconColor, size: 24),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: AppSpacing.s16),
 
                   // Texts
                   Expanded(
@@ -126,14 +124,12 @@ class ExpenseBreakdownCard extends StatelessWidget {
                                 ? context.translate(lowerTitle) 
                                 : item.title;
                           })(),
-                          style: TextStyle(
-                            fontSize: AppFontSizes.size15,
-                            fontWeight: FontWeight.bold,
+                          style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
                             color: theme.colorScheme.onSurface,
                             fontFamily: TextStyle().fontFamily,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSpacing.s4),
                         Text(
                           (() {
                             final subtitle = item.subtitle;
@@ -146,9 +142,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                             }
                             return subtitle;
                           })(),
-                          style: TextStyle(
-                            fontSize: AppFontSizes.size12,
-                            color: AppColors.textMuted,
+                          style: AppTextStyles.label.copyWith(color: AppColors.textMuted,
                             fontFamily: TextStyle().fontFamily,
                           ),
                         ),
@@ -160,9 +154,7 @@ class ExpenseBreakdownCard extends StatelessWidget {
                   PrivacyMaskedText(
                     amount: rawAmount,
                     isMasked: isMasked,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size14,
-                      fontWeight: FontWeight.w600,
+                    style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600,
                       color: theme.colorScheme.onSurface,
                       fontFamily: TextStyle().fontFamily,
                     ),

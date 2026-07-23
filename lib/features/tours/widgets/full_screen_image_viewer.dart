@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_image.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 /// Fullscreen pager for tour images stored as network URLs, Base64, or legacy paths.
 class FullScreenImageViewer extends StatefulWidget {
@@ -62,7 +63,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
         foregroundColor: Colors.white,
         title: Text(
           '${_currentIndex + 1} / ${widget.imagePaths.length}',
-          style: const TextStyle(fontSize: AppFontSizes.size16),
+          style: AppTextStyles.h3,
         ),
         leading: IconButton(
           icon: const Icon(Icons.close, color: Colors.white),

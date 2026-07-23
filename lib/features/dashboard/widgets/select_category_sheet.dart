@@ -6,8 +6,9 @@ import 'package:expense_tracker/features/dashboard/widgets/category_list_row.dar
 import 'package:expense_tracker/features/dashboard/widgets/category_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 class SelectCategorySheet extends StatefulWidget {
   final bool isIncome;
@@ -70,10 +71,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
           widget.isIncome
               ? context.translate('add_new_income_category')
               : context.translate('add_new_expense_category'),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: AppFontSizes.size16,
-          ),
+          style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold),
         ),
         content: TextField(
           controller: textController,
@@ -81,15 +79,15 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
           decoration: InputDecoration(
             hintText: context.translate('category_name'),
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
+              horizontal: AppSpacing.p16,
+              vertical: AppSpacing.p12,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSpacing.r8),
               borderSide: BorderSide(color: Colors.grey.shade300),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSpacing.r8),
               borderSide: BorderSide(
                 color: widget.isIncome
                     ? AppColors.activeGreen
@@ -116,7 +114,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                   ? AppColors.activeGreen
                   : AppColors.activeRed,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
             ),
             onPressed: () {
@@ -162,14 +160,11 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
         ),
         title: Text(
           context.translate('rename_category'),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: AppFontSizes.size16,
-          ),
+          style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold),
         ),
         content: TextField(
           controller: controller,
@@ -177,15 +172,15 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
           decoration: InputDecoration(
             hintText: context.translate('category_name'),
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
+              horizontal: AppSpacing.p16,
+              vertical: AppSpacing.p12,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSpacing.r8),
               borderSide: BorderSide(color: Colors.grey.shade300),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSpacing.r8),
               borderSide: BorderSide(color: themeColor, width: 2),
             ),
           ),
@@ -205,7 +200,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
             style: ElevatedButton.styleFrom(
               backgroundColor: themeColor,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
             ),
             onPressed: () {
@@ -281,11 +276,11 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
         decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
+            topLeft: Radius.circular(AppSpacing.r24),
+            topRight: Radius.circular(AppSpacing.r24),
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -300,23 +295,20 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                     color: isDark
                         ? Colors.white.withValues(alpha: 0.16)
                         : Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                 ),
               ),
-              const SizedBox(height: 18),
+              const SizedBox(height: AppSpacing.s16),
 
               Text(
                 widget.isIncome
                     ? context.translate('select_category_for_income')
                     : context.translate('select_category_for_expense'),
-                style: TextStyle(
-                  fontSize: AppFontSizes.size18,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
-                ),
+                style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.s16),
 
               CategorySearchBar(
                 controller: _searchController,
@@ -328,13 +320,13 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                   });
                 },
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
 
               AddNewCategoryTile(
                 isDark: isDark,
                 onTap: () => _showAddNewCategoryDialog(context, provider),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.s16),
 
               // Scrollable List
               ConstrainedBox(
@@ -344,13 +336,10 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                 child: filteredCategories.isEmpty
                     ? Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.all(AppSpacing.p16),
                           child: Text(
                             context.translate('no_categories_found'),
-                            style: TextStyle(
-                              color: isDark ? Colors.white38 : Colors.grey.shade400,
-                              fontSize: AppFontSizes.size14,
-                            ),
+                            style: AppTextStyles.body.copyWith(color: isDark ? Colors.white38 : Colors.grey.shade400),
                           ),
                         ),
                       )
@@ -400,7 +389,7 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
                         },
                       ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.s8),
             ],
           ),
         ),

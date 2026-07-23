@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/login/widgets/social_provider_buttons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class LoginSocialButtons extends StatelessWidget {
   final bool isDark;
@@ -30,7 +32,7 @@ class LoginSocialButtons extends StatelessWidget {
           onGoogle: onGoogleSignIn,
           onApple: onAppleSignIn,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.s8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

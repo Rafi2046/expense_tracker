@@ -1,5 +1,7 @@
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TransactionEmptyState extends StatelessWidget {
   const TransactionEmptyState({super.key});
@@ -8,7 +10,7 @@ class TransactionEmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 60.0),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.p48 + AppSpacing.p12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -18,7 +20,7 @@ class TransactionEmptyState extends StatelessWidget {
               height: 200,
               fit: BoxFit.contain,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
           ],
         ),
       ),

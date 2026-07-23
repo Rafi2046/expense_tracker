@@ -6,9 +6,10 @@ import 'package:expense_tracker/core/providers/account_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TransferDialog extends StatefulWidget {
   final String? initialFromAccount;
@@ -50,7 +51,7 @@ class _TransferDialogState extends State<TransferDialog> {
 
     if (fromAccounts.isEmpty || toAccounts.isEmpty) {
       return AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r16)),
         title: Text(context.translate('transfer_btn'), style: AppTextStyles.h3),
         content: Text(
           context.translate('need_two_accounts'),
@@ -74,7 +75,7 @@ class _TransferDialogState extends State<TransferDialog> {
     }
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r16)),
       backgroundColor: theme.cardColor,
       title: Row(
         children: [
@@ -83,12 +84,12 @@ class _TransferDialogState extends State<TransferDialog> {
             height: 32,
             decoration: BoxDecoration(
               color: theme.primaryColor.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSpacing.r8),
             ),
             alignment: Alignment.center,
             child: Icon(LucideIcons.arrowLeftRight, color: theme.primaryColor, size: 18),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSpacing.s8),
           Text(
             context.translate('transfer_balance'),
             style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
@@ -114,16 +115,16 @@ class _TransferDialogState extends State<TransferDialog> {
                       filled: true,
                       fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(AppSpacing.r12),
                         borderSide: BorderSide(color: theme.dividerTheme.color ?? const Color(0xFFE5E7EB)),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p8),
                     ),
                     items: accounts
                         .where((a) => a.name != _toAccount)
                         .map((a) => DropdownMenuItem(
                               value: a.name,
-                              child: Text(a.name, style: AppTextStyles.body.copyWith(fontSize: AppFontSizes.size13)),
+                              child: Text(a.name, style: AppTextStyles.body),
                             ))
                         .toList(),
                     onChanged: (val) {
@@ -139,7 +140,7 @@ class _TransferDialogState extends State<TransferDialog> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8),
                   child: Icon(LucideIcons.arrowRight, color: theme.colorScheme.onSurfaceVariant, size: 18),
                 ),
                 Expanded(
@@ -152,16 +153,16 @@ class _TransferDialogState extends State<TransferDialog> {
                       filled: true,
                       fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(AppSpacing.r12),
                         borderSide: BorderSide(color: theme.dividerTheme.color ?? const Color(0xFFE5E7EB)),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p8),
                     ),
                     items: accounts
                         .where((a) => a.name != _fromAccount)
                         .map((a) => DropdownMenuItem(
                               value: a.name,
-                              child: Text(a.name, style: AppTextStyles.body.copyWith(fontSize: AppFontSizes.size13)),
+                              child: Text(a.name, style: AppTextStyles.body),
                             ))
                         .toList(),
                     onChanged: (val) {
@@ -178,7 +179,7 @@ class _TransferDialogState extends State<TransferDialog> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
             TextFormField(
               controller: _amountController,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -190,10 +191,10 @@ class _TransferDialogState extends State<TransferDialog> {
                 filled: true,
                 fillColor: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                   borderSide: BorderSide(color: theme.dividerTheme.color ?? const Color(0xFFE5E7EB)),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p12),
               ),
               validator: (val) {
                 if (val == null || val.isEmpty) return context.translate('enter_amount');
@@ -214,10 +215,10 @@ class _TransferDialogState extends State<TransferDialog> {
           style: ElevatedButton.styleFrom(
             backgroundColor: theme.primaryColor,
             foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r8)),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
           ),
-          child: Text(context.translate('transfer_btn'), style: AppTextStyles.bodyBold.copyWith(color: Colors.white, fontSize: AppFontSizes.size13)),
+          child: Text(context.translate('transfer_btn'), style: AppTextStyles.bodyBold.copyWith(color: Colors.white)),
         ),
       ],
     );
@@ -241,7 +242,7 @@ class _TransferDialogState extends State<TransferDialog> {
       final proceed = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r16)),
           title: Text(context.translate('balance_will_go_negative'),
             style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
           ),

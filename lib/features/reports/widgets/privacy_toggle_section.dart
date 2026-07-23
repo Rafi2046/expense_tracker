@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -22,36 +22,35 @@ class PrivacyToggleSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p8),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: theme.dividerTheme.color ?? (isDark ? Colors.white12 : const Color(0xFFE8EAEE)),
-          width: 1,
+          width: AppSpacing.w1,
         ),
       ),
       child: Row(
         children: [
           Container(
-            width: 32,
-            height: 32,
+            width: AppSpacing.s32,
+            height: AppSpacing.s32,
             decoration: BoxDecoration(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
             child: Icon(
               isMasked ? LucideIcons.lock : LucideIcons.lockOpen,
-              size: 16,
+              size: AppSpacing.s16,
               color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSpacing.s8),
           Expanded(
             child: Text(
               context.translate(isMasked ? 'amounts_hidden' : 'amounts_visible'),
-              style: GoogleFonts.workSans(
-                fontSize: AppFontSizes.size13,
+              style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
               ),
@@ -63,15 +62,15 @@ class PrivacyToggleSection extends StatelessWidget {
               onToggle();
             },
             child: Container(
-              width: 32,
-              height: 32,
+              width: AppSpacing.s32,
+              height: AppSpacing.s32,
               decoration: BoxDecoration(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
               ),
               child: Icon(
                 isMasked ? LucideIcons.shield : LucideIcons.shieldOff,
-                size: 16,
+                size: AppSpacing.s16,
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),

@@ -3,6 +3,8 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/settings/widgets/info_row_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PersonalInfoDetailsCard extends StatelessWidget {
   final String phone;
@@ -35,11 +37,11 @@ class PersonalInfoDetailsCard extends StatelessWidget {
             letterSpacing: 1.2,
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.s8),
         Container(
           decoration: BoxDecoration(
             color: cardBg,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppSpacing.r16),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.02),
@@ -49,7 +51,7 @@ class PersonalInfoDetailsCard extends StatelessWidget {
             ],
             border: Border.all(color: borderColor, width: 1),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
           child: Column(
             children: [
               InfoRowTile(

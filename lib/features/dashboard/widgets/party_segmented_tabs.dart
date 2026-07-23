@@ -1,6 +1,8 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartySegmentedTabs extends StatelessWidget {
   final int activeIndex;
@@ -19,10 +21,10 @@ class PartySegmentedTabs extends StatelessWidget {
 
     return Container(
       height: 40,
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(AppSpacing.p4),
       decoration: BoxDecoration(
         color: isDark ? Colors.white10 : const Color(0xFFF1F2F4),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -41,7 +43,7 @@ class PartySegmentedTabs extends StatelessWidget {
                   height: 32,
                   decoration: BoxDecoration(
                     color: isDark ? theme.cardColor : Colors.white,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(AppSpacing.r16),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),

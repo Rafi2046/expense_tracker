@@ -4,8 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class BiometricSettingsTile extends StatefulWidget {
   const BiometricSettingsTile({super.key});
@@ -73,7 +74,7 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
     final bool isAvailable = _checkedCapability && _canCheckBiometrics;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
       child: Row(
         children: [
           Icon(
@@ -83,7 +84,7 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
                 : (isDark ? Colors.white30 : Colors.grey.shade400),
             size: 22,
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: AppSpacing.s16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,7 +98,7 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
                         : theme.colorScheme.onSurface.withValues(alpha: 0.4),
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSpacing.s4),
                 Text(
                   _isProcessing
                       ? context.translate('authenticating')
@@ -105,7 +106,6 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
                           ? context.translate('use_face_id')
                           : context.translate('not_available')),
                   style: AppTextStyles.caption.copyWith(
-                    fontSize: AppFontSizes.size9,
                     color: _isProcessing
                         ? theme.primaryColor
                         : (isAvailable
@@ -129,8 +129,7 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
               ),
             )
           else
-            const SizedBox(
-              width: 36,
+            const SizedBox(width: AppSpacing.s32,
               height: 36,
               child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
             ),

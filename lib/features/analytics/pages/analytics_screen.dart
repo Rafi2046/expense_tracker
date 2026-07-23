@@ -12,6 +12,8 @@ import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -192,7 +194,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         bottom: false,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 18.0),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
             child: Skeletonizer(
               enabled: isLoading,
               child: Column(
@@ -206,19 +208,19 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     ),
                     items: spendingItems,
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: AppSpacing.s16),
                   MonthlyComparisonCard(
                     currentAmount: totalExpense,
                     previousAmount: prevExpense,
                     netChangeText: changeText,
                     isMasked: _localMasked,
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: AppSpacing.s16),
                   TopSpendingCategoriesCard(
                     items: topItems,
                     isMasked: _localMasked,
                   ),
-                  const SizedBox(height: 100),
+                  const SizedBox(height: AppSpacing.s48 + AppSpacing.s48 + AppSpacing.s4),
                 ],
               ),
             ),

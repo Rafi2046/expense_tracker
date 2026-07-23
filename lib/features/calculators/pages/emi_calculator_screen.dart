@@ -11,6 +11,8 @@ import 'package:expense_tracker/features/calculators/widgets/calculator_text_fie
 import 'package:expense_tracker/features/calculators/widgets/glossary_label.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class EmiCalculatorScreen extends StatefulWidget {
   const EmiCalculatorScreen({super.key});
@@ -117,7 +119,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(AppSpacing.p16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -134,7 +136,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 ],
                 bottomItem: CalculatorResultItem(title: context.translate('total_payable'), value: context.formatAmount(_totalPayment), isCenter: true),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
 
               CalculatorBreakdownCard(
                 title: context.translate('payment_breakdown'),
@@ -145,7 +147,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 color2: AppColors.expensePink,
                 ratio2: interestRatio,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
 
               CalculatorTextField(
                 label: '${context.translate('loan_amount')} ($symbol)',
@@ -156,11 +158,11 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 hintText: context.translate('loan_amount'),
                 controller: _amountController,
                 prefix: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 8),
+                  padding: const EdgeInsets.only(left: AppSpacing.p16, right: AppSpacing.p8),
                   child: Text(symbol, style: AppTextStyles.h3.copyWith(color: primaryCalcColor)),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.s16),
 
               CalculatorTextField(
                 label: context.translate('loan_interest_rate'),
@@ -171,11 +173,11 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 hintText: context.translate('interest'),
                 controller: _rateController,
                 suffix: Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 16),
+                  padding: const EdgeInsets.only(left: AppSpacing.p8, right: AppSpacing.p16),
                   child: Text('%', style: AppTextStyles.h3.copyWith(color: primaryCalcColor)),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.s16),
 
               CalculatorTextField(
                 label: context.translate('loan_tenure'),
@@ -186,11 +188,11 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                 hintText: context.translate('years_label'),
                 controller: _tenureController,
                 suffix: Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 16),
+                  padding: const EdgeInsets.only(left: AppSpacing.p8, right: AppSpacing.p16),
                   child: Text(context.translate('years_label'), style: AppTextStyles.bodyBold.copyWith(color: primaryCalcColor)),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
 
               ElevatedButton(
                 onPressed: _performCalculation,
@@ -200,7 +202,7 @@ class _EmiCalculatorScreenState extends State<EmiCalculatorScreen> {
                   minimumSize: const Size.fromHeight(52),
                   elevation: 0,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                 ),
                 child: Text(

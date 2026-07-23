@@ -8,8 +8,11 @@ import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/pages/transaction_details_screen.dart';
 import 'package:expense_tracker/features/dashboard/widgets/add_edit_debt_sheet.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class AccountTransactionRow extends StatelessWidget {
   final Map<String, dynamic> item;
@@ -42,10 +45,10 @@ class AccountTransactionRow extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: AppSpacing.p8),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1), width: 1.2),
       ),
       child: InkWell(
@@ -69,7 +72,7 @@ class AccountTransactionRow extends StatelessWidget {
               builder: (sheetContext) => Container(
                 decoration: BoxDecoration(
                   color: theme.cardColor,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r16)),
                 ),
                 padding: EdgeInsets.only(
                   bottom: MediaQuery.of(sheetContext).viewInsets.bottom + MediaQuery.of(sheetContext).padding.bottom + 16,
@@ -78,12 +81,12 @@ class AccountTransactionRow extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      margin: const EdgeInsets.symmetric(vertical: 12),
+                      margin: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
                       width: 40,
                       height: 4,
                       decoration: BoxDecoration(
                         color: theme.dividerTheme.color ?? Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(2),
+                        borderRadius: BorderRadius.circular(AppSpacing.r8),
                       ),
                     ),
                     ListTile(
@@ -172,9 +175,9 @@ class AccountTransactionRow extends StatelessWidget {
             );
           }
         },
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(AppSpacing.p12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -184,9 +187,7 @@ class AccountTransactionRow extends StatelessWidget {
                 children: [
                   Text(
                     isIncome ? 'Income #1' : 'Expense #1',
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size10,
-                      fontWeight: FontWeight.w600,
+                    style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600,
                       color: isIncome
                           ? const Color(0xFF2EBD85)
                           : const Color(0xFFDC3545),
@@ -197,25 +198,19 @@ class AccountTransactionRow extends StatelessWidget {
                     children: [
                       Text(
                         amountPrefix,
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size14,
-                          fontWeight: FontWeight.bold,
-                          color: amountColor,
-                        ),
+                        style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
+                          color: amountColor),
                       ),
                       PrivacyMaskedText(
                         amount: amount,
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size14,
-                          fontWeight: FontWeight.bold,
-                          color: amountColor,
-                        ),
+                        style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
+                          color: amountColor),
                       ),
                     ],
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.s4),
 
               // Row 2: Title & Running Balance
               Row(
@@ -225,38 +220,31 @@ class AccountTransactionRow extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: TextStyle(
-                        fontSize: AppFontSizes.size14,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onSurface,
-                      ),
+                      style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onSurface),
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 3,
+                      horizontal: AppSpacing.p8,
+                      vertical: AppSpacing.p4,
                     ),
                     decoration: BoxDecoration(
                       color: isDark ? Colors.white10 : const Color(0xFFE6F3EE),
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(AppSpacing.r8),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           'Bal: ',
-                          style: TextStyle(
-                            fontSize: AppFontSizes.size10,
-                            fontWeight: FontWeight.w600,
+                          style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600,
                             color: isDark ? theme.primaryColor : const Color(0xFF006C49),
                           ),
                         ),
                         PrivacyMaskedText(
                           amount: runningBal,
-                          style: TextStyle(
-                            fontSize: AppFontSizes.size10,
-                            fontWeight: FontWeight.w600,
+                          style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600,
                             color: isDark ? theme.primaryColor : const Color(0xFF006C49),
                           ),
                         ),
@@ -265,7 +253,7 @@ class AccountTransactionRow extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.s8),
 
               // Row 3: Date/Time & Category Icon/Tag
               Row(
@@ -273,22 +261,17 @@ class AccountTransactionRow extends StatelessWidget {
                 children: [
                   Text(
                     DateFormat('dd MMM yyyy • h:mm a').format(dateTime),
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size11,
-                      color: AppColors.textMuted,
-                    ),
+                    style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
                   ),
                   isPartyDebt
                       ? Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(LucideIcons.users, size: 12, color: const Color(0xFF7C3AED)),
-                            const SizedBox(width: 4),
+                            const SizedBox(width: AppSpacing.s4),
                             Text(
                               displayCategory,
-                              style: TextStyle(
-                                fontSize: AppFontSizes.size10,
-                                color: const Color(0xFF7C3AED),
+                              style: AppTextStyles.caption.copyWith(color: const Color(0xFF7C3AED),
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -296,11 +279,8 @@ class AccountTransactionRow extends StatelessWidget {
                         )
                       : Text(
                           displayCategory,
-                          style: TextStyle(
-                            fontSize: AppFontSizes.size10,
-                            color: AppColors.textMuted,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: AppTextStyles.caption.copyWith(color: AppColors.textMuted,
+                            fontWeight: FontWeight.w500),
                         ),
                 ],
               ),

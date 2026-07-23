@@ -203,27 +203,27 @@ class _TourListScreenState extends State<TourListScreen> {
         return Container(
           decoration: BoxDecoration(
             color: theme.scaffoldBackgroundColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r16)),
           ),
-          padding: EdgeInsets.fromLTRB(0, 16, 0, bottomInset + 80),
+          padding: EdgeInsets.fromLTRB(0, AppSpacing.p16, 0, bottomInset + AppSpacing.p48),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 width: 40,
                 height: 4,
-                margin: const EdgeInsets.only(bottom: 16),
+                margin: const EdgeInsets.only(bottom: AppSpacing.p16),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade400,
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
               ),
               ListTile(
                 leading: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(AppSpacing.p8),
                   decoration: BoxDecoration(
                     color: AppColors.activeGreen.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                   child: Icon(LucideIcons.plusCircle,
                       color: AppColors.activeGreen, size: 24),
@@ -237,13 +237,13 @@ class _TourListScreenState extends State<TourListScreen> {
                   _openCreateTourSheet();
                 },
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.s4),
               ListTile(
                 leading: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(AppSpacing.p8),
                   decoration: BoxDecoration(
                     color: AppColors.activeGreen.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                   child: Icon(LucideIcons.qrCode,
                       color: AppColors.activeGreen, size: 24),
@@ -278,7 +278,7 @@ class _TourListScreenState extends State<TourListScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: theme.colorScheme.surface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r16)),
         title: Text(
           '${context.translate('all_tours')} (${names.length})',
           style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface),
@@ -287,7 +287,7 @@ class _TourListScreenState extends State<TourListScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: names.map((n) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.p4),
             child: Text(n,
                 style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface)),
           )).toList(),
@@ -381,8 +381,8 @@ class _TourListScreenState extends State<TourListScreen> {
             constraints: BoxConstraints(minHeight: constraints.maxHeight),
             child: Padding(
               padding: const EdgeInsets.only(
-                top: 4,
-                bottom: 40,
+                top: AppSpacing.p4,
+                bottom: AppSpacing.p40,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -402,7 +402,7 @@ class _TourListScreenState extends State<TourListScreen> {
                         final isOwner = (tour.ownerUid == null && tour.inviteCode == null) || (currentUid != null && tour.ownerUid != null && tour.ownerUid == currentUid);
 
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8),
                           child: TourCard(
                             tour: tour,
                             memberCount: _memberCounts[tour.id] ?? 0,
@@ -434,7 +434,7 @@ class _TourListScreenState extends State<TourListScreen> {
                       },
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.s14),
+                  const SizedBox(height: AppSpacing.s16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: tours.asMap().entries.map((entry) {
@@ -443,30 +443,30 @@ class _TourListScreenState extends State<TourListScreen> {
                       return AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
-                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.p4),
                         width: isActive ? 24 : 6,
                         height: 6,
                         decoration: BoxDecoration(
                           color: isActive
                               ? AppColors.activeGreen
                               : AppColors.activeGreen.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(3),
+                          borderRadius: BorderRadius.circular(AppSpacing.r8),
                         ),
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.s16),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
                     child: TourInsightsCard(
                       insights: _insights,
                       currency: tours[_currentPageIndex].currency,
                       isLoading: _insightsLoading,
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSpacing.s24),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
                     child: SizedBox(
                       width: double.infinity,
                       child: OutlinedButton(
@@ -479,9 +479,9 @@ class _TourListScreenState extends State<TourListScreen> {
                           backgroundColor: Colors.transparent,
                           foregroundColor: AppColors.activeGreen,
                           padding:
-                              const EdgeInsets.symmetric(vertical: 14),
+                              const EdgeInsets.symmetric(vertical: AppSpacing.p16),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppSpacing.r12),
                           ),
                         ),
                         child: Text(
@@ -494,7 +494,7 @@ class _TourListScreenState extends State<TourListScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: AppSpacing.s40),
                 ],
               ),
             ),

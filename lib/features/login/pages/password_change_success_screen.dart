@@ -1,7 +1,6 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
@@ -22,7 +21,7 @@ class PasswordChangeSuccessScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24, vertical: AppSpacing.p16),
             child: Column(
               spacing: AppSpacing.s16,
 
@@ -40,8 +39,7 @@ class PasswordChangeSuccessScreen extends StatelessWidget {
                   context.translate('reset_link_sent_title'),
                   textAlign: TextAlign.center,
                   style: AppTextStyles.loginTitle.copyWith(
-                    color: theme.colorScheme.onSurface,
-                  ),
+                    color: theme.colorScheme.onSurface),
                 ),
   
                 Text(
@@ -52,7 +50,7 @@ class PasswordChangeSuccessScreen extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s16),
 
                 CustomButton(
                   text: context.translate('back_to_login'),
@@ -66,7 +64,7 @@ class PasswordChangeSuccessScreen extends StatelessWidget {
                 ),
 
                 if (email != null) ...[
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppSpacing.s4),
                   GestureDetector(
                     onTap: () => _resendEmail(context),
                     child: Text(
@@ -74,8 +72,7 @@ class PasswordChangeSuccessScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: AppTextStyles.label.copyWith(
                         color: AppColors.activeGreen,
-                        fontWeight: FontWeight.w600,
-                        fontSize: AppFontSizes.size13,
+                        fontWeight: FontWeight.w600
                       ),
                     ),
                   ),

@@ -1,7 +1,10 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class FinancialHealthBanner extends StatelessWidget {
   final double percentageChange;
@@ -30,7 +33,7 @@ class FinancialHealthBanner extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
       ),
       child: Stack(
         children: [
@@ -44,28 +47,24 @@ class FinancialHealthBanner extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p16, AppSpacing.p16, AppSpacing.p16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   context.translate('financial_health'),
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size15,
-                    fontWeight: FontWeight.bold,
+                  style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
                     color: Colors.white,
                     fontFamily: TextStyle().fontFamily,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: AppSpacing.s8),
                 Text(
                   context.translate('income_health_change_message')
                       .replaceAll('{direction}', context.translate(direction))
                       .replaceAll('{change}', '$sign${percentageChange.toStringAsFixed(1)}')
                       .replaceAll('{period}', context.translate(period)),
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size12,
-                    color: Colors.white.withValues(alpha: 0.85),
+                  style: AppTextStyles.label.copyWith(color: Colors.white.withValues(alpha: 0.85),
                     fontFamily: TextStyle().fontFamily,
                     height: 1.3,
                   ),

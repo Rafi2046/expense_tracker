@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class LoginBiometricSection extends StatelessWidget {
   final Animation<double> biometricAnim;
@@ -29,7 +32,7 @@ class LoginBiometricSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.s8),
         Center(
           child: GestureDetector(
             onTap: onBiometricTap,
@@ -56,43 +59,35 @@ class LoginBiometricSection extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: AppSpacing.s4),
         Text(
           biometricFailed
               ? context.translate('biometric_failed')
               : context.translate('tap_to_unlock'),
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: AppFontSizes.size13,
-            color: biometricFailed
+          style: AppTextStyles.bodySmall.copyWith(color: biometricFailed
                 ? const Color(0xFFE53935)
                 : theme.primaryColor.withValues(alpha: 0.7),
           ),
         ),
         if (hasPasswordProvider) ...[
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.s4),
           Text(
             context.translate('or_enter_password'),
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: AppFontSizes.size12,
-              color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
-            ),
+            style: AppTextStyles.label.copyWith(color: isDark ? Colors.grey.shade400 : Colors.grey.shade500),
           ),
         ],
         if (!hasPasswordProvider)
           Padding(
-            padding: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.only(top: AppSpacing.p8),
             child: GestureDetector(
               onTap: onSwitchAccount,
               child: Text(
                 context.translate('switch_account'),
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: AppFontSizes.size14,
-                  color: theme.primaryColor,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppTextStyles.body.copyWith(color: theme.primaryColor,
+                  fontWeight: FontWeight.w600),
               ),
             ),
           ),

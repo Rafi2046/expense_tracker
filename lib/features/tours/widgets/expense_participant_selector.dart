@@ -4,7 +4,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/features/tours/widgets/expense_participant_avatar.dart';
 
@@ -182,7 +181,7 @@ class _ExpenseParticipantSelectorState
                 color: selected
                     ? color.withValues(alpha: 0.08)
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(AppSpacing.r10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 border: Border.all(
                   color: selected
                       ? color.withValues(alpha: 0.4)
@@ -197,15 +196,14 @@ class _ExpenseParticipantSelectorState
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(
-                          width: 22,
+                        SizedBox(width: AppSpacing.s24,
                           height: 22,
                           child: Checkbox(
                             value: selected,
                             activeColor: AppColors.activeGreen,
                             shape: RoundedRectangleBorder(
                               borderRadius:
-                                  BorderRadius.circular(AppSpacing.r4),
+                                  BorderRadius.circular(AppSpacing.r8),
                             ),
                             side: WidgetStateBorderSide.resolveWith(
                               (_) => BorderSide(
@@ -222,7 +220,6 @@ class _ExpenseParticipantSelectorState
                           name: p.name,
                           color: color,
                           radius: 14,
-                          fontSize: AppFontSizes.size10,
                         ),
                         const SizedBox(width: AppSpacing.s8),
                         Text(
@@ -257,8 +254,7 @@ class _ExpenseParticipantSelectorState
                         textAlign: TextAlign.right,
                         style: AppTextStyles.bodySmall.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: widget.theme.colorScheme.onSurface,
-                        ),
+                          color: widget.theme.colorScheme.onSurface),
                         decoration: InputDecoration(
                           hintText: '0.00',
                           hintStyle: AppTextStyles.bodySmall.copyWith(
@@ -301,7 +297,7 @@ class _ExpenseParticipantSelectorState
                               ? Colors.grey.shade900.withValues(alpha: 0.4)
                               : Colors.grey.shade50,
                           contentPadding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.p10,
+                            horizontal: AppSpacing.p8,
                             vertical: AppSpacing.s8,
                           ),
                           isDense: true,
@@ -326,15 +322,14 @@ class _ExpenseParticipantSelectorState
               color:
                   isBalanced ? AppColors.activeGreen : AppColors.activeRed,
             ),
-            const SizedBox(width: AppSpacing.s6),
+            const SizedBox(width: AppSpacing.s8),
             Text(
               'Total paid: $_totalPaid / ${widget.totalAmount}',
               style: AppTextStyles.caption.copyWith(
                 fontWeight: FontWeight.w600,
                 color: isBalanced
                     ? AppColors.activeGreen
-                    : AppColors.activeRed,
-              ),
+                    : AppColors.activeRed),
             ),
           ],
         ),

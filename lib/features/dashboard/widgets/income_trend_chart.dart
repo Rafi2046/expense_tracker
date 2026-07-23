@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'dart:math' show max;
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class ChartData {
   final String month;
@@ -32,11 +35,11 @@ class IncomeTrendChart extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: theme.cardColor,
         border: Border.all(color: theme.dividerTheme.color ?? AppColors.dividerColor, width: 1.0),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,9 +49,7 @@ class IncomeTrendChart extends StatelessWidget {
             children: [
               Text(
                 context.translate('income_trend'),
-                style: TextStyle(
-                  fontSize: AppFontSizes.size18,
-                  fontWeight: FontWeight.bold,
+                style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
                   fontFamily: TextStyle().fontFamily,
                 ),
@@ -70,7 +71,7 @@ class IncomeTrendChart extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
           SizedBox(
             height: 200,
             child: SfCartesianChart(
@@ -79,9 +80,7 @@ class IncomeTrendChart extends StatelessWidget {
               primaryXAxis: CategoryAxis(
                 majorGridLines: const MajorGridLines(width: 0),
                 axisLine: const AxisLine(width: 0),
-                labelStyle: TextStyle(
-                  fontSize: AppFontSizes.size11,
-                  color: AppColors.textMuted,
+                labelStyle: AppTextStyles.caption.copyWith(color: AppColors.textMuted,
                   fontWeight: FontWeight.w600,
                   fontFamily: TextStyle().fontFamily,
                 ),
@@ -97,9 +96,7 @@ class IncomeTrendChart extends StatelessWidget {
                 maximum: computedMax,
                 interval: computedInterval,
                 labelFormat: '{value}',
-                labelStyle: TextStyle(
-                  fontSize: AppFontSizes.size11,
-                  color: AppColors.textMuted,
+                labelStyle: AppTextStyles.caption.copyWith(color: AppColors.textMuted,
                   fontWeight: FontWeight.w600,
                   fontFamily: TextStyle().fontFamily,
                 ),
@@ -112,9 +109,7 @@ class IncomeTrendChart extends StatelessWidget {
                   }
                   return ChartAxisLabel(
                     label,
-                    TextStyle(
-                      fontSize: AppFontSizes.size11,
-                      color: AppColors.textMuted,
+                    AppTextStyles.caption.copyWith(color: AppColors.textMuted,
                       fontWeight: FontWeight.w600,
                       fontFamily: TextStyle().fontFamily,
                     ),
@@ -130,8 +125,8 @@ class IncomeTrendChart extends StatelessWidget {
                       ? primaryColor
                       : primaryColor.withValues(alpha: 0.4),
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(4),
-                    topRight: Radius.circular(4),
+                    topLeft: Radius.circular(AppSpacing.r8),
+                    topRight: Radius.circular(AppSpacing.r8),
                   ),
                   width: 0.5,
                 ),

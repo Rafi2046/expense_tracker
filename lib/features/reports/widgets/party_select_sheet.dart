@@ -3,10 +3,9 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class PartySelectSheet extends StatefulWidget {
   final String? selectedPartyName;
@@ -84,8 +83,8 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(AppSpacing.r24),
+          topRight: Radius.circular(AppSpacing.r24),
         ),
       ),
       child: Column(
@@ -95,17 +94,17 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
             child: Container(
               width: 36,
               height: 4,
-              margin: const EdgeInsets.only(top: 10),
+              margin: const EdgeInsets.only(top: AppSpacing.p8),
               decoration: BoxDecoration(
                 color: isDark ? Colors.white24 : Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
               ),
             ),
           ),
 
           // Header row
           Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 12.0, bottom: 8.0),
+            padding: const EdgeInsets.only(left: AppSpacing.p16, right: AppSpacing.p16, top: AppSpacing.p12, bottom: AppSpacing.p8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -117,20 +116,19 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.s12),
                 TextButton(
                   onPressed: () => Navigator.pop(context, 'clear_selection'),
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p4),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   child: Text(
                     context.translate('clear').toUpperCase(),
-                    style: GoogleFonts.workSans(
+                    style: AppTextStyles.label.copyWith(
                       color: AppColors.activeRed,
                       fontWeight: FontWeight.w600,
-                      fontSize: AppFontSizes.size12,
                     ),
                   ),
                 ),
@@ -141,7 +139,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
 
           // Search Box
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
             child: TextFormField(
               controller: _searchController,
               onChanged: (val) {
@@ -149,24 +147,24 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                   _searchQuery = val;
                 });
               },
-              style: GoogleFonts.workSans(fontSize: AppFontSizes.size14, color: theme.colorScheme.onSurface),
+              style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: context.translate('search_parties'),
-                hintStyle: GoogleFonts.workSans(fontSize: AppFontSizes.size14, color: isDark ? Colors.white30 : Colors.grey.shade400),
-                prefixIcon: Icon(LucideIcons.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
+                hintStyle: AppTextStyles.body.copyWith(color: isDark ? Colors.white30 : Colors.grey.shade400),
+                prefixIcon: Icon(LucideIcons.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: AppSpacing.s16),
                 filled: true,
                 fillColor: isDark ? theme.colorScheme.onSurface.withValues(alpha: 0.05) : const Color(0xFFF8FAFC),
-                contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+                contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.p8, horizontal: AppSpacing.p16),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                   borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                   borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                   borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
                 ),
               ),
@@ -181,7 +179,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(LucideIcons.users, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSpacing.s12),
                         Text(
                           context.translate('no_parties_found'),
                           style: AppTextStyles.reportTileTitle.copyWith(
@@ -193,7 +191,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                     ),
                   )
                 : ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
                     itemCount: filteredParties.length,
                     separatorBuilder: (context, index) => Divider(
                       color: theme.dividerTheme.color ?? const Color(0xFFF8FAFC),
@@ -205,7 +203,7 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
 
                       return ListTile(
                         onTap: () => Navigator.pop(context, party.name),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p4),
                         leading: Container(
                           width: 36,
                           height: 36,
@@ -219,10 +217,9 @@ class _PartySelectSheetState extends State<PartySelectSheet> {
                           child: Center(
                             child: Text(
                               _getInitials(party.name),
-                              style: GoogleFonts.workSans(
+                              style: AppTextStyles.bodySmall.copyWith(
                                 color: theme.colorScheme.onSurface,
                                 fontWeight: FontWeight.bold,
-                                fontSize: AppFontSizes.size13,
                               ),
                             ),
                           ),

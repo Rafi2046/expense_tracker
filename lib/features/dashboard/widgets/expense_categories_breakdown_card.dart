@@ -3,6 +3,8 @@ import 'package:expense_tracker/features/dashboard/widgets/category_breakdown_it
 import 'package:expense_tracker/features/dashboard/widgets/category_breakdown_header.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_breakdown_chart.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_breakdown_list.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ExpenseCategoriesBreakdownCard extends StatelessWidget {
   final String suffixText;
@@ -28,10 +30,10 @@ class ExpenseCategoriesBreakdownCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.06),
@@ -44,14 +46,14 @@ class ExpenseCategoriesBreakdownCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CategoryBreakdownHeader(suffixText: suffixText),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
           Row(
             children: [
               CategoryBreakdownChart(
                 categories: categories,
                 totalAmount: totalAmount,
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: AppSpacing.s12),
               CategoryBreakdownList(
                 categories: categories,
                 isDark: isDark,

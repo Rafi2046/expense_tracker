@@ -7,6 +7,8 @@ import 'package:expense_tracker/features/dashboard/widgets/income_transaction_ro
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class IncomeTransactionListScreen extends StatelessWidget {
   final String title;
@@ -53,9 +55,9 @@ class IncomeTransactionListScreen extends StatelessWidget {
               ),
             )
           : ListView.separated(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpacing.p16),
               itemCount: transactions.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 12),
+              separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s12),
               itemBuilder: (context, index) {
                 final tx = transactions[index];
                 final categoryLower = tx.category.toLowerCase();

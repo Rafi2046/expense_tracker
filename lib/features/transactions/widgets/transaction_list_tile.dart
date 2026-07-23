@@ -3,6 +3,8 @@ import 'package:expense_tracker/core/utils/category_utils.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TransactionListTile extends StatelessWidget {
   final String title;
@@ -43,10 +45,10 @@ class TransactionListTile extends StatelessWidget {
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: AppSpacing.p8),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(
           color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF1F1F1),
           width: 1.0,
@@ -61,9 +63,9 @@ class TransactionListTile extends StatelessWidget {
       ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.p8, AppSpacing.p8, AppSpacing.p8, AppSpacing.p8),
           child: Row(
             children: [
               Icon(
@@ -71,7 +73,7 @@ class TransactionListTile extends StatelessWidget {
                 color: isDark ? Colors.white70 : Colors.grey.shade600,
                 size: 22,
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: AppSpacing.s12),
 
               Expanded(
                 child: Column(
@@ -86,7 +88,7 @@ class TransactionListTile extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 3),
+                    const SizedBox(height: AppSpacing.s4),
                     Text(
                       title.isNotEmpty ? '$title  •  $dateText' : dateText,
                       style: AppTextStyles.reportTransactionSubtitle.copyWith(

@@ -1,7 +1,10 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class ExpenseTimeFrameSelector extends StatelessWidget {
   final List<String> timeFrames;
@@ -26,26 +29,24 @@ class ExpenseTimeFrameSelector extends StatelessWidget {
           final isSelected = tf == selectedTimeFrame;
 
           return Padding(
-            padding: const EdgeInsets.only(right: 12.0),
+            padding: const EdgeInsets.only(right: AppSpacing.p12),
             child: GestureDetector(
               onTap: () => onTimeFrameChanged(tf),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 150),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 10.0,
+                  horizontal: AppSpacing.p16,
+                  vertical: AppSpacing.p8,
                 ),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? AppColors.expensePink
                       : (isDark ? Colors.white12 : AppColors.chipBackground),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
                 child: Text(
                   context.translate(tf.toLowerCase()),
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size14,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                  style: AppTextStyles.body.copyWith(fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                     color: isSelected ? Colors.white : theme.colorScheme.onSurface,
                     fontFamily: TextStyle().fontFamily,
                   ),

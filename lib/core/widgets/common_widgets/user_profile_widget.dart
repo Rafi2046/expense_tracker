@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class UserProfile {
   final String id;
@@ -78,17 +80,17 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
 
     return Container(
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
       ),
       child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
         child: Material(
           color: theme.colorScheme.surface,
           child: Container(
             constraints: BoxConstraints(maxHeight: widget.maxHeight),
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(AppSpacing.p16),
               child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,16 +102,16 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                 color: theme.textTheme.titleLarge?.color,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSpacing.s4),
             Text(
               context.translate('choose_profile_to_manage'),
               style: AppTextStyles.bodySmall.copyWith(color: theme.textTheme.bodySmall?.color),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.s16),
 
             if (!profileProvider.isReady)
               const Padding(
-                padding: EdgeInsets.symmetric(vertical: 24),
+                padding: EdgeInsets.symmetric(vertical: AppSpacing.p24),
                 child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
               )
             else
@@ -143,7 +145,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                     children: [
                       if (profile.id == 'default_profile') ...[
                         Icon(LucideIcons.star, size: 13, color: theme.colorScheme.secondary),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: AppSpacing.s4),
                       ],
                       Text(
                         _profileLabel(profile),
@@ -182,7 +184,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                         ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSpacing.s8),
                       isSelected
                           ? Icon(LucideIcons.circleDot, color: theme.colorScheme.primary)
                           : Icon(LucideIcons.circle, color: theme.colorScheme.onSurfaceVariant),
@@ -201,7 +203,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                 ),
               ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
 
             SizedBox(
               width: double.infinity,
@@ -222,7 +224,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: theme.colorScheme.primary),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
                 ),
               ),

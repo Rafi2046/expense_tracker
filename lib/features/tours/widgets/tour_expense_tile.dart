@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 
@@ -48,7 +49,7 @@ class TourExpenseTile extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(
           color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFF1F5F9),
           width: 1.2,
@@ -64,10 +65,13 @@ class TourExpenseTile extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.p16,
+              vertical: AppSpacing.p16,
+            ),
             child: Row(
               children: [
                 CircleAvatar(
@@ -80,7 +84,7 @@ class TourExpenseTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.s12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +97,7 @@ class TourExpenseTile extends StatelessWidget {
                           color: theme.colorScheme.onSurface,
                         ),
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: AppSpacing.h4),
                       Text(
                         '${payerName.split(' ').first} \u00B7 ${_splitLabel(context)} \u00B7 $formattedDate',
                         maxLines: 1,
@@ -105,7 +109,7 @@ class TourExpenseTile extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.s8),
                 Text(
                   formatAmount(expense.amount),
                   style: AppTextStyles.h3.copyWith(

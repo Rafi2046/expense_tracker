@@ -1,6 +1,10 @@
 import 'dart:math' as math;
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class OnboardingPage extends StatefulWidget {
   final IconData icon;
@@ -134,13 +138,13 @@ class _OnboardingPageState extends State<OnboardingPage>
     final subTextColor = isDark ? Colors.white70 : const Color(0xFF6B7280);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 28),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24),
       child: AnimatedBuilder(
         animation: _staggerController,
         builder: (context, child) => Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 32),
+            const SizedBox(height: AppSpacing.s32),
             Transform.translate(
               offset: Offset(0, _heroSlide.value),
               child: Opacity(
@@ -148,7 +152,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                 child: _buildHeroIcon(),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.s24),
             Transform.translate(
               offset: Offset(0, _titleSlide.value),
               child: Opacity(
@@ -156,17 +160,14 @@ class _OnboardingPageState extends State<OnboardingPage>
                 child: Text(
                   widget.title,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
+                  style: AppTextStyles.displayMedium.copyWith(fontWeight: FontWeight.w800,
                     color: textColor,
                     letterSpacing: -0.6,
-                    height: 1.2,
-                  ),
+                    height: 1.2),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.s8),
             Transform.translate(
               offset: Offset(0, _subtitleSlide.value),
               child: Opacity(
@@ -174,24 +175,21 @@ class _OnboardingPageState extends State<OnboardingPage>
                 child: Text(
                   widget.subtitle,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: subTextColor,
+                  style: AppTextStyles.body.copyWith(color: subTextColor,
                     height: 1.45,
-                    letterSpacing: 0.1,
-                  ),
+                    letterSpacing: 0.1),
                 ),
               ),
             ),
             if (widget.features.isNotEmpty) ...[
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.s16),
               Transform.translate(
                 offset: Offset(0, _featuresSlide.value),
                 child: Opacity(
                   opacity: _featuresFade.value,
                   child: Column(
                     children: widget.features.map((f) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      padding: const EdgeInsets.symmetric(vertical: AppSpacing.p4),
                       child: _PremiumFeatureCard(
                         feature: f,
                         isDark: isDark,
@@ -202,7 +200,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                 ),
               ),
             ],
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.s24),
           ],
         ),
       ),
@@ -363,7 +361,7 @@ class _PremiumFeatureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: isDark
               ? feature.color.withValues(alpha: 0.15)
@@ -383,7 +381,7 @@ class _PremiumFeatureCard extends StatelessWidget {
               ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         child: Row(
           children: [
             // Gradient accent bar on left
@@ -403,7 +401,7 @@ class _PremiumFeatureCard extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p8),
                 child: Row(
                   children: [
                     // Icon with gradient background
@@ -411,7 +409,7 @@ class _PremiumFeatureCard extends StatelessWidget {
                       width: 34,
                       height: 34,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(9),
+                        borderRadius: BorderRadius.circular(AppSpacing.r8),
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -423,13 +421,11 @@ class _PremiumFeatureCard extends StatelessWidget {
                       ),
                       child: Icon(feature.icon, size: 16, color: feature.color),
                     ),
-                    const SizedBox(width: 14),
+                    const SizedBox(width: AppSpacing.s12),
                     Expanded(
                       child: Text(
                         context.translate(feature.labelKey),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                        style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w500,
                           color: isDark ? Colors.white.withValues(alpha: 0.85) : const Color(0xFF374151),
                           height: 1.3,
                           letterSpacing: 0.05,

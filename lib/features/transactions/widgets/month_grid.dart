@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'month_cell.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class MonthGrid extends StatelessWidget {
   const MonthGrid({
@@ -19,13 +21,12 @@ class MonthGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
+    return SizedBox(height: AppSpacing.s48,
       child: ListView.builder(
         controller: scrollController,
         scrollDirection: Axis.horizontal,
         clipBehavior: Clip.none,
-        padding: const EdgeInsets.only(left: 16.0, right: 32.0),
+        padding: const EdgeInsets.only(left: AppSpacing.p16, right: AppSpacing.p32),
         itemCount: months.length,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
@@ -34,7 +35,7 @@ class MonthGrid extends StatelessWidget {
           final isCurrent = index == 6;
 
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p4),
             child: MonthCell(
               month: month,
               isSelected: isSelected,

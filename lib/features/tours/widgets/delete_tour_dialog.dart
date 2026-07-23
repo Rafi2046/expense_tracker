@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 Future<bool> showDeleteTourDialog(BuildContext context, String tourName, {bool isOwner = true}) async {
   final result = await showDialog<bool>(
     context: context,
     builder: (ctx) => AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
       ),
       backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
       title: Text(
@@ -26,7 +28,7 @@ Future<bool> showDeleteTourDialog(BuildContext context, String tourName, {bool i
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           Text(
             tourName,
             style: AppTextStyles.body.copyWith(

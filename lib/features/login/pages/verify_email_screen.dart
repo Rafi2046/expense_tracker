@@ -287,8 +287,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     context.translate('verify_email_title'),
                     style: AppTextStyles.h1.copyWith(
                       color: theme.colorScheme.onSurface,
-                      fontWeight: FontWeight.w700,
-                    ),
+                      fontWeight: FontWeight.w700),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: AppSpacing.h12),
@@ -315,7 +314,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       color: isDark
                           ? theme.cardColor
                           : AppColors.containerColorGrey,
-                      borderRadius: BorderRadius.circular(AppSpacing.br10),
+                      borderRadius: BorderRadius.circular(AppSpacing.br12),
                       border: Border.all(
                         color: isDark
                             ? Colors.white10
@@ -325,8 +324,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     child: Text(
                       email,
                       style: AppTextStyles.bodyBold.copyWith(
-                        color: theme.primaryColor,
-                        fontSize: 15,
+                        color: theme.primaryColor
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -338,8 +336,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     context.translate('verify_email_guideline'),
                     style: AppTextStyles.bodySmall.copyWith(
                       color: theme.colorScheme.onSurfaceVariant.withValues(
-                        alpha: 0.8,
-                      ),
+                        alpha: 0.8),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -375,8 +372,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       child: Text(
                         context.translate('change_email_address'),
                         style: AppTextStyles.bodyBold.copyWith(
-                          color: theme.primaryColor,
-                          fontSize: 14,
+                          color: theme.primaryColor
                         ),
                       ),
                     ),
@@ -392,8 +388,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     label: Text(
                       context.translate('cancel_and_sign_out'),
                       style: AppTextStyles.bodyBold.copyWith(
-                        color: AppColors.activeRed,
-                        fontSize: 14,
+                        color: AppColors.activeRed
                       ),
                     ),
                   ),

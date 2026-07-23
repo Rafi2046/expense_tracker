@@ -14,6 +14,8 @@ import 'tour_date_range_picker.dart';
 import 'tour_currency_selector.dart';
 import 'tour_description_field.dart';
 import 'create_tour_submit_button.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CreateTourSheet extends StatefulWidget {
   final Function(Tour tour) onTourCreated;
@@ -141,33 +143,31 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
         final sTheme = Theme.of(sCtx);
         return AlertDialog(
           backgroundColor: sTheme.colorScheme.surface,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r24)),
           contentPadding: EdgeInsets.zero,
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.s16),
               Text(context.translate('cover_photo_label'),
                 style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w600, color: sTheme.colorScheme.onSurface),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.s16),
               ListTile(
                 leading: Icon(LucideIcons.camera, color: sTheme.colorScheme.onSurface),
                 title: Text(context.translate('take_photo'), style: AppTextStyles.reportTileTitle.copyWith(
                   fontWeight: FontWeight.w400,
-                  color: sTheme.colorScheme.onSurface,
-                )),
+                  color: sTheme.colorScheme.onSurface)),
                 onTap: () => Navigator.pop(sCtx, ImageSource.camera),
               ),
               ListTile(
                 leading: Icon(LucideIcons.image, color: sTheme.colorScheme.onSurface),
                 title: Text(context.translate('choose_from_gallery'), style: AppTextStyles.reportTileTitle.copyWith(
                   fontWeight: FontWeight.w400,
-                  color: sTheme.colorScheme.onSurface,
-                )),
+                  color: sTheme.colorScheme.onSurface)),
                 onTap: () => Navigator.pop(sCtx, ImageSource.gallery),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.s8),
             ],
           ),
         );
@@ -226,12 +226,12 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
+            topLeft: Radius.circular(AppSpacing.r24),
+            topRight: Radius.circular(AppSpacing.r24),
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.fromLTRB(24, 12, 24, 20 + bottomInset),
+          padding: EdgeInsets.fromLTRB(AppSpacing.p24, AppSpacing.p12, AppSpacing.p24, AppSpacing.p16 + bottomInset),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -239,10 +239,10 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                 child: Container(
                   width: 36,
                   height: 4,
-                  margin: const EdgeInsets.only(bottom: 8),
+                  margin: const EdgeInsets.only(bottom: AppSpacing.p8),
                   decoration: BoxDecoration(
                     color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
                 ),
               ),
@@ -255,37 +255,33 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                       Text(
                         widget.tourToEdit != null ? context.translate('edit_tour_title') : context.translate('create_tour_title'),
                         style: AppTextStyles.h3.copyWith(
-                          color: theme.colorScheme.onSurface,
-                        ),
+                          color: theme.colorScheme.onSurface),
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSpacing.s24),
 
                       if (!isOwner) ...[
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppSpacing.s8),
                         Container(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(AppSpacing.p12),
                           decoration: BoxDecoration(
                             color: Colors.amber.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(AppSpacing.r8),
                             border: Border.all(color: Colors.amber.withValues(alpha: 0.3)),
                           ),
                           child: Row(
                             children: [
                               const Icon(LucideIcons.info, size: 16, color: Colors.amber),
-                              const SizedBox(width: 8),
+                              const SizedBox(width: AppSpacing.s8),
                               Expanded(
                                 child: Text(
                                   'Only the creator can edit tour details. You can only change the cover photo.',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: isDark ? Colors.amber.shade200 : Colors.amber.shade900,
-                                  ),
+                                  style: AppTextStyles.label.copyWith(color: isDark ? Colors.amber.shade200 : Colors.amber.shade900),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.s16),
                       ],
 
                       if (isOwner) ...[
@@ -293,7 +289,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                           theme: theme,
                           controller: nameController,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.s16),
 
                         TourDateRangePicker(
                           theme: theme,
@@ -302,20 +298,20 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                           onPickStartDate: () => _pickDate(isStart: true),
                           onPickEndDate: () => _pickDate(isStart: false),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.s16),
 
                         TourCurrencySelector(
                           theme: theme,
                           value: selectedCurrency,
                           onChanged: (v) => setState(() => selectedCurrency = v),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.s16),
 
                         TourDescriptionField(
                           theme: theme,
                           controller: descriptionController,
                         ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: AppSpacing.s12),
                       ],
 
                       InkWell(
@@ -327,7 +323,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                             color: hasCover
                                 ? null
                                 : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.shade50),
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppSpacing.r12),
                             border: hasCover
                                 ? null
                                 : Border.all(
@@ -350,7 +346,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                     children: [
                                       Icon(LucideIcons.imagePlus,
                                         color: theme.colorScheme.onSurface.withValues(alpha: 0.35), size: 22),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: AppSpacing.s8),
                                       Text(context.translate('add_cover_photo'),
                                         style: AppTextStyles.bodyBold.copyWith(
                                           fontWeight: FontWeight.w400,
@@ -377,12 +373,11 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                       children: [
                                         Icon(LucideIcons.imagePlus,
                                           color: Colors.white, size: 22),
-                                        const SizedBox(width: 8),
+                                        const SizedBox(width: AppSpacing.s8),
                                         Text(context.translate('change_cover_photo'),
                                           style: AppTextStyles.bodyBold.copyWith(
                                             fontWeight: FontWeight.w400,
-                                            color: Colors.white,
-                                          ),
+                                            color: Colors.white),
                                         ),
                                       ],
                                     ),
@@ -390,7 +385,7 @@ class _CreateTourSheetState extends State<CreateTourSheet> {
                                 ),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: AppSpacing.s16),
 
                       CreateTourSubmitButton(
                         onPressed: _handleSubmit,

@@ -7,6 +7,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/lock_screen_overlay.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class AppLockManager extends StatefulWidget {
   final Widget child;
@@ -91,7 +93,7 @@ class _AppLockManagerState extends State<AppLockManager> with WidgetsBindingObse
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(LucideIcons.lock, color: Colors.white, size: 48),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.s16),
                       Text(
                         context.translate('app_locked'),
                         style: AppTextStyles.h2.copyWith(

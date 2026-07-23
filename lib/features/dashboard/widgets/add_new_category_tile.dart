@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class AddNewCategoryTile extends StatelessWidget {
   final bool isDark;
@@ -31,12 +34,9 @@ class AddNewCategoryTile extends StatelessWidget {
             width: 1.5,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
           ),
-          textStyle: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: AppFontSizes.size14,
-          ),
+          textStyle: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
         ),
         onPressed: onTap,
       ),

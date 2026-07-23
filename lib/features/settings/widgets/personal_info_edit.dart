@@ -8,6 +8,8 @@ import 'package:expense_tracker/features/settings/widgets/gender_selector_sectio
 import 'package:expense_tracker/features/settings/widgets/occupation_field_section.dart';
 import 'package:expense_tracker/features/settings/widgets/email_display_section.dart';
 import 'package:expense_tracker/features/settings/widgets/action_buttons_section.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PersonalInfoEdit extends StatelessWidget {
   final TextEditingController firstNameController;
@@ -57,28 +59,28 @@ class PersonalInfoEdit extends StatelessWidget {
           photoUrl: photoUrl,
           onPickImage: onPickImage,
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.s24),
         NameFieldsSection(
           firstNameController: firstNameController,
           lastNameController: lastNameController,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.s16),
         PhoneFieldSection(phoneController: phoneController),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.s16),
         DateOfBirthSection(
           dobController: dobController,
           onSelectDate: onSelectDate,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.s16),
         GenderSelectorSection(
           selectedGender: selectedGender,
           onGenderChanged: onGenderChanged,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.s16),
         OccupationFieldSection(occupationController: occupationController),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.s16),
         EmailDisplaySection(userEmail: userEmail),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.s24),
         ActionButtonsSection(
           isLoading: isLoading,
           onSave: onSave,

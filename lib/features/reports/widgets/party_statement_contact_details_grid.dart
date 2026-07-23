@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'party_statement_contact_chip.dart';
 import 'party_statement_contact_chip_data.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class ContactDetailsGrid extends StatelessWidget {
   final List<ContactChipData> contactDetails;
@@ -9,14 +10,14 @@ class ContactDetailsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (contactDetails.isEmpty) return const SizedBox(height: 8);
+    if (contactDetails.isEmpty) return const SizedBox(height: AppSpacing.s8);
 
     final theme = Theme.of(context);
 
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p32),
           child: Container(
             height: 1,
             decoration: BoxDecoration(
@@ -33,7 +34,7 @@ class ContactDetailsGrid extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p16, AppSpacing.p16, AppSpacing.p24),
           child: LayoutBuilder(
             builder: (context, constraints) {
               final useTwoColumns = constraints.maxWidth > 300;
@@ -48,7 +49,7 @@ class ContactDetailsGrid extends StatelessWidget {
                           child: ContactChip(data: contactDetails[i]),
                         ),
                         if (i + 1 < contactDetails.length) ...[
-                          const SizedBox(width: 12),
+                          const SizedBox(width: AppSpacing.s12),
                           Expanded(
                             child: ContactChip(data: contactDetails[i + 1]),
                           ),
@@ -58,7 +59,7 @@ class ContactDetailsGrid extends StatelessWidget {
                     ),
                   );
                   if (i + 2 < contactDetails.length) {
-                    rows.add(const SizedBox(height: 10));
+                    rows.add(const SizedBox(height: AppSpacing.s8));
                   }
                 }
                 return Column(children: rows);
@@ -66,7 +67,7 @@ class ContactDetailsGrid extends StatelessWidget {
                 return Column(
                   children: contactDetails
                       .map((data) => Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.only(bottom: AppSpacing.p8),
                             child: ContactChip(data: data),
                           ))
                       .toList(),

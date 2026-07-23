@@ -1,6 +1,9 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class CategoryBreakdownHeader extends StatelessWidget {
   final String suffixText;
@@ -25,29 +28,23 @@ class CategoryBreakdownHeader extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: AppSpacing.s8),
             Text(
               context.translate('categories_breakdown'),
-              style: TextStyle(
-                fontSize: AppFontSizes.size16,
-                fontWeight: FontWeight.w700,
-                color: onSurface,
-              ),
+              style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700,
+                color: onSurface),
             ),
           ],
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: AppSpacing.s4),
         Padding(
-          padding: const EdgeInsets.only(left: 14),
+          padding: const EdgeInsets.only(left: AppSpacing.p12),
           child: Text(
             suffixText,
-            style: TextStyle(
-              fontSize: AppFontSizes.size12,
-              color: Colors.grey.shade500,
-            ),
+            style: AppTextStyles.label.copyWith(color: Colors.grey.shade500),
           ),
         ),
       ],

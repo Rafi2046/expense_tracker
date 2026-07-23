@@ -2,8 +2,11 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/core/utils/notification_localizer.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class NotificationCard extends StatelessWidget {
   final NotificationItem item;
@@ -56,10 +59,10 @@ class NotificationCard extends StatelessWidget {
     final body = NotificationLocalizer.resolveBody(context, item);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: AppSpacing.p8),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF22262E) : Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: isDark ? const Color(0xFF3A3F4A) : const Color(0xFFE5E7EB),
           width: 1,
@@ -69,9 +72,9 @@ class NotificationCard extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p12),
             child: Row(
               children: [
                 Container(
@@ -79,11 +82,11 @@ class NotificationCard extends StatelessWidget {
                   height: 36,
                   decoration: BoxDecoration(
                     color: typeColor.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
                   child: Icon(typeIcon, color: typeColor, size: 18),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.s12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,44 +99,35 @@ class NotificationCard extends StatelessWidget {
                               title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: AppFontSizes.size13,
-                                color: theme.colorScheme.onSurface,
-                              ),
+                              style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600,
+                                color: theme.colorScheme.onSurface),
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSpacing.s8),
                           Text(
                             _getTimeAgo(item.dateTime),
-                            style: TextStyle(
-                              fontSize: AppFontSizes.size10,
-                              color: isDark
+                            style: AppTextStyles.caption.copyWith(color: isDark
                                   ? Colors.grey.shade500
                                   : AppColors.textMuted,
-                              fontWeight: FontWeight.w500,
-                            ),
+                              fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppSpacing.s4),
                       Text(
                         body,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size11,
-                          color: isDark
+                        style: AppTextStyles.caption.copyWith(color: isDark
                               ? Colors.grey.shade300
                               : AppColors.loginSubTitle,
-                          height: 1.3,
-                        ),
+                          height: 1.3),
                       ),
                     ],
                   ),
                 ),
                 if (!item.isRead) ...[
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.s8),
                   Container(
                     width: 7,
                     height: 7,

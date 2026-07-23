@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 class DataIntegrityWarning extends StatelessWidget {
   const DataIntegrityWarning({super.key});
@@ -24,11 +25,8 @@ class DataIntegrityWarning extends StatelessWidget {
           Flexible(
             child: Text(
               context.translate('data_integrity_warning'),
-              style: TextStyle(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                fontSize: AppFontSizes.size12,
-                fontWeight: FontWeight.w400,
-              ),
+              style: AppTextStyles.label.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                fontWeight: FontWeight.w400),
             ),
           ),
         ],

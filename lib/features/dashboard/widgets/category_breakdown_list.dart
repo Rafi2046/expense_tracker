@@ -1,7 +1,10 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_breakdown_item.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class CategoryBreakdownList extends StatelessWidget {
   final List<CategoryBreakdownItem> categories;
@@ -24,7 +27,7 @@ class CategoryBreakdownList extends StatelessWidget {
         child: ListView(
           children: categories.map((item) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.only(bottom: AppSpacing.p8),
               child: Row(
                 children: [
                   Container(
@@ -32,10 +35,10 @@ class CategoryBreakdownList extends StatelessWidget {
                     height: 10,
                     decoration: BoxDecoration(
                       color: item.color,
-                      borderRadius: BorderRadius.circular(3),
+                      borderRadius: BorderRadius.circular(AppSpacing.r8),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.s8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,17 +59,14 @@ class CategoryBreakdownList extends StatelessWidget {
                                 ? context.translate(lowerName)
                                 : item.name;
                           })(),
-                          style: TextStyle(
-                            fontSize: AppFontSizes.size11,
-                            fontWeight: FontWeight.w600,
-                            color: onSurface,
-                          ),
+                          style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600,
+                            color: onSurface),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: AppSpacing.s4),
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(2),
+                          borderRadius: BorderRadius.circular(AppSpacing.r8),
                           child: LinearProgressIndicator(
                             value: item.percentage / 100,
                             backgroundColor: isDark
@@ -80,14 +80,12 @@ class CategoryBreakdownList extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: AppSpacing.s8),
                   Text(
                     item.percentage < 1
                         ? '${item.percentage.toStringAsFixed(1)}%'
                         : '${item.percentage.toStringAsFixed(0)}%',
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size11,
-                      fontWeight: FontWeight.w700,
+                    style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w700,
                       color: onSurface.withValues(alpha: 0.7),
                     ),
                   ),

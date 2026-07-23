@@ -2,8 +2,9 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class DeleteAccountWarningHeader extends StatelessWidget {
   const DeleteAccountWarningHeader({super.key});
@@ -30,16 +31,14 @@ class DeleteAccountWarningHeader extends StatelessWidget {
             size: 32,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.s16),
         Text(
           context.translate('delete_account'),
           style: AppTextStyles.h1.copyWith(
-            fontSize: AppFontSizes.size22,
             fontWeight: FontWeight.w800,
-            color: theme.colorScheme.onSurface,
-          ),
+            color: theme.colorScheme.onSurface),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.s12),
       ],
     );
   }

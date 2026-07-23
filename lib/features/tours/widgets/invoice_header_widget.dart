@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class InvoiceHeaderWidget extends StatelessWidget {
   final String tourName;
@@ -28,20 +29,16 @@ class InvoiceHeaderWidget extends StatelessWidget {
           children: [
             Text(
               'INVOICE',
-              style: GoogleFonts.jetBrainsMono(
-                fontSize: AppFontSizes.size10,
-                fontWeight: FontWeight.w800,
+              style: AppTextStyles.caption.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w800,
                 color: AppColors.activeGreen,
-                letterSpacing: 3,
-              ),
+                letterSpacing: 3),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: AppSpacing.s8),
             Text(
               tourName,
               style: AppTextStyles.displayLarge.copyWith(
                 letterSpacing: -0.5,
-                color: theme.colorScheme.onSurface,
-              ),
+                color: theme.colorScheme.onSurface),
             ),
           ],
         ),
@@ -54,7 +51,7 @@ class InvoiceHeaderWidget extends StatelessWidget {
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
               ),
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: AppSpacing.s4),
             Text(
               currency,
               style: AppTextStyles.caption.copyWith(

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -75,7 +75,7 @@ class TourMemberBalances extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.only(bottom: AppSpacing.p12),
           child: Text(
             context.translate('balances_label'),
             style: AppTextStyles.h2.copyWith(color: scheme.onSurface),
@@ -84,7 +84,7 @@ class TourMemberBalances extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             color: scheme.surface,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppSpacing.r16),
             border: Border.all(
               color: scheme.outline,
               width: 1.2,
@@ -119,7 +119,7 @@ class TourMemberBalances extends StatelessWidget {
                         height: 1,
                         thickness: 1,
                         indent: 52,
-                        endIndent: 16,
+                        endIndent: AppSpacing.p16,
                         color: scheme.outlineVariant,
                       ),
                   ],
@@ -134,19 +134,19 @@ class TourMemberBalances extends StatelessWidget {
                 InkWell(
                   onTap: onSettleUp,
                   borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(16),
-                    bottomRight: Radius.circular(16),
+                    bottomLeft: Radius.circular(AppSpacing.r16),
+                    bottomRight: Radius.circular(AppSpacing.r16),
                   ),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.p16),
                     decoration: BoxDecoration(
                       color: scheme.primaryContainer.withValues(alpha: 0.5),
                       border: Border(
                         top: BorderSide(color: scheme.primary.withValues(alpha: 0.3), width: 1),
                       ),
                       borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(16),
-                        bottomRight: Radius.circular(16),
+                        bottomLeft: Radius.circular(AppSpacing.r16),
+                        bottomRight: Radius.circular(AppSpacing.r16),
                       ),
                     ),
                     child: Row(
@@ -157,7 +157,7 @@ class TourMemberBalances extends StatelessWidget {
                           size: 16,
                           color: scheme.primary,
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppSpacing.s8),
                         Text(
                           context.translate('settle_up_balances'),
                           style: AppTextStyles.cardTrendGreen.copyWith(color: scheme.primary),
@@ -186,7 +186,10 @@ class TourMemberBalances extends StatelessWidget {
     final avatarBg = _avatarColor(scheme, index);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.p16,
+        vertical: AppSpacing.p12,
+      ),
       child: Row(
         children: [
           CircleAvatar(
@@ -203,12 +206,11 @@ class TourMemberBalances extends StatelessWidget {
                   )
                 : null,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.s12),
           Expanded(
             child: Text(
               p.name,
               style: AppTextStyles.bodyBold.copyWith(
-                fontSize: AppFontSizes.size15,
                 color: scheme.onSurface,
               ),
             ),
@@ -216,12 +218,12 @@ class TourMemberBalances extends StatelessWidget {
           if (isSettled)
             Container(
               padding: const EdgeInsets.symmetric(
-                horizontal: 8,
-                vertical: 4,
+                horizontal: AppSpacing.p8,
+                vertical: AppSpacing.p4,
               ),
               decoration: BoxDecoration(
                 color: scheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
               child: Text(
                 context.translate('settled_label'),
@@ -234,12 +236,12 @@ class TourMemberBalances extends StatelessWidget {
           else if (isOwed)
             Container(
               padding: const EdgeInsets.symmetric(
-                horizontal: 8,
-                vertical: 4,
+                horizontal: AppSpacing.p8,
+                vertical: AppSpacing.p4,
               ),
               decoration: BoxDecoration(
                 color: scheme.primaryContainer.withValues(alpha: 0.6),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
               child: Text(
                 context.translate('gets_back_amount', namedArgs: {'amount': formatAmount(balance)}),
@@ -252,12 +254,12 @@ class TourMemberBalances extends StatelessWidget {
           else
             Container(
               padding: const EdgeInsets.symmetric(
-                horizontal: 8,
-                vertical: 4,
+                horizontal: AppSpacing.p8,
+                vertical: AppSpacing.p4,
               ),
               decoration: BoxDecoration(
                 color: scheme.errorContainer,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
               child: Text(
                 context.translate('owes_amount', namedArgs: {'amount': formatAmount(balance.abs())}),

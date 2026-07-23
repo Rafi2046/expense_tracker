@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_format_utils.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 String _payerNames(Map<String, double> paidBy, Map<String, String> names) {
   final resolved = <String>[];
@@ -39,7 +40,7 @@ class InvoiceLedgerWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF9FAFB),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(
           color: isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB),
         ),
@@ -48,7 +49,7 @@ class InvoiceLedgerWidget extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8, horizontal: AppSpacing.p12),
             color: AppColors.activeGreen,
             child: Row(
               children: [
@@ -59,7 +60,7 @@ class InvoiceLedgerWidget extends StatelessWidget {
             ),
           ),
           ...sorted.map((e) => Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8, horizontal: AppSpacing.p12),
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
@@ -82,10 +83,9 @@ class InvoiceLedgerWidget extends StatelessWidget {
                           color: isDark ? Colors.white : const Color(0xFF111827),
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: AppSpacing.s4),
                       Text(formatShortDate(e.date),
                         style: AppTextStyles.caption.copyWith(
-                          fontSize: AppFontSizes.size9,
                           color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF9CA3AF),
                         ),
                       ),

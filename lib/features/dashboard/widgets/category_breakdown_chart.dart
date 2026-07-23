@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/features/dashboard/widgets/category_breakdown_item.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class CategoryBreakdownChart extends StatelessWidget {
   final List<CategoryBreakdownItem> categories;
@@ -52,7 +55,7 @@ class CategoryBreakdownChart extends StatelessWidget {
                   width: innerDiameter,
                   height: innerDiameter,
                   child: Padding(
-                    padding: const EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(AppSpacing.p8),
                     child: Center(
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
@@ -61,13 +64,10 @@ class CategoryBreakdownChart extends StatelessWidget {
                           children: [
                             Text(
                               context.translate('total'),
-                              style: TextStyle(
-                                fontSize: AppFontSizes.size11,
-                                color: Colors.grey.shade500,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: AppTextStyles.caption.copyWith(color: Colors.grey.shade500,
+                                fontWeight: FontWeight.w500),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: AppSpacing.s4),
                             totalAmount,
                           ],
                         ),

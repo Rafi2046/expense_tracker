@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -48,7 +47,7 @@ class TourCardBottomContent extends StatelessWidget {
                   color: Colors.white.withValues(alpha: 0.7),
                   size: 16,
                 ),
-                const SizedBox(width: AppSpacing.s6),
+                const SizedBox(width: AppSpacing.s8),
                 Text(
                   '$memberCount $memberLabel',
                   style: AppTextStyles.bodySmall.copyWith(
@@ -65,12 +64,11 @@ class TourCardBottomContent extends StatelessWidget {
                   totalLabel,
                   style: AppTextStyles.caption.copyWith(
                     color: Colors.white.withValues(alpha: 0.5),
-                    fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.8,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSpacing.h4),
                 Text(
                   totalSpentFormatted,
                   style: AppTextStyles.displayMedium.copyWith(

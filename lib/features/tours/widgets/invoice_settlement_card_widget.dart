@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_format_utils.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class InvoiceSettlementCardWidget extends StatelessWidget {
   final String fromName;
@@ -29,10 +30,10 @@ class InvoiceSettlementCardWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12, horizontal: AppSpacing.p12),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1E1E2E) : Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFE5E7EB),
         ),
@@ -41,25 +42,22 @@ class InvoiceSettlementCardWidget extends StatelessWidget {
         children: [
           Flexible(child: _PersonChip(name: fromName, isDark: isDark, color: AppColors.activeRed)),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p4),
             child: Icon(LucideIcons.arrowRight, size: 14,
                 color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF)),
           ),
           Flexible(child: _PersonChip(name: toName, isDark: isDark, color: AppColors.activeGreen)),
           const Spacer(),
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.p4, horizontal: AppSpacing.p8),
             decoration: BoxDecoration(
               color: AppColors.activeGreen.withValues(alpha: isDark ? 0.15 : 0.08),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSpacing.r8),
             ),
             child: Text(
               formatAmount(amount, currency),
-              style: GoogleFonts.jetBrainsMono(
-                fontSize: AppFontSizes.size13,
-                fontWeight: FontWeight.w800,
-                color: AppColors.activeGreen,
-              ),
+              style: AppTextStyles.bodySmall.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w800,
+                color: AppColors.activeGreen),
             ),
           ),
         ],
@@ -92,12 +90,11 @@ class _PersonChip extends StatelessWidget {
             name.isNotEmpty ? String.fromCharCode(name.runes.first).toUpperCase() : '?',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.w700,
-              color: color,
-              fontSize: AppFontSizes.size10,
+              color: color
             ),
           ),
         ),
-        const SizedBox(width: 5),
+        const SizedBox(width: AppSpacing.s4),
         Flexible(
           child: Text(
             name,

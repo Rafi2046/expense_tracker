@@ -4,6 +4,8 @@ import 'package:expense_tracker/core/model/party_report_summary.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartyListTile extends StatelessWidget {
   final PartyReportSummary item;
@@ -25,12 +27,12 @@ class PartyListTile extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppSpacing.r12),
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(AppSpacing.p12),
         decoration: BoxDecoration(
           color: theme.cardColor,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           border: Border.all(
             color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1),
           ),
@@ -59,7 +61,7 @@ class PartyListTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.s12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -69,7 +71,7 @@ class PartyListTile extends StatelessWidget {
                         color: theme.colorScheme.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: AppSpacing.s4),
                     Text(
                       '${item.phone ?? context.translate('no_phone')} • ${item.transactionCount} txs',
                       style: AppTextStyles.reportTransactionSubtitle.copyWith(
@@ -91,7 +93,7 @@ class PartyListTile extends StatelessWidget {
                         .withValues(alpha: 0.5),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.s4),
                 PrivacyMaskedText(
                   amount: item.netBalance.abs(),
                   isMasked: isMasked,

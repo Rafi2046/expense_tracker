@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class AmountPaymentDetailCard extends StatelessWidget {
   final TransactionItem transaction;
@@ -17,10 +20,10 @@ class AmountPaymentDetailCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppSpacing.r8),
         border: Border.all(
           color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -41,52 +44,41 @@ class AmountPaymentDetailCard extends StatelessWidget {
             children: [
               Text(
                 'Total Amount',
-                style: TextStyle(
-                  fontSize: AppFontSizes.size14,
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
-                ),
+                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface),
               ),
               Text(
                 context.formatAmount(transaction.amount),
-                style: TextStyle(
-                  fontSize: AppFontSizes.size16,
-                  fontWeight: FontWeight.bold,
+                style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold,
                   color: isIncome ? const Color(0xFF006C49) : const Color(0xFFDC3545),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.s8),
           Divider(
             color: isDark
                 ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
                 : const Color(0xFFF1F1F1),
             height: 1,
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: AppSpacing.s8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Payment Mode',
-                style: TextStyle(
-                  fontSize: AppFontSizes.size14,
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
-                ),
+                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface),
               ),
               Row(
                 children: [
                   Text(
                     transaction.paymentMethod,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size14,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                    ),
+                    style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface),
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: AppSpacing.s4),
                   const Icon(
                     LucideIcons.arrowRight,
                     size: 10,

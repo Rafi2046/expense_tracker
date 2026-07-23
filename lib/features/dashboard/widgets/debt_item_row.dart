@@ -3,9 +3,10 @@ import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 class DebtItemRow extends StatelessWidget {
   final DebtItem item;
@@ -73,8 +74,8 @@ class DebtItemRow extends StatelessWidget {
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
+        margin: const EdgeInsets.only(bottom: AppSpacing.p8),
         decoration: BoxDecoration(
           color: themeColor == scheme.error
               ? scheme.errorContainer
@@ -91,13 +92,10 @@ class DebtItemRow extends StatelessWidget {
           children: [
             Text(
               context.translate('settle'),
-              style: TextStyle(
-                color: themeColor,
-                fontWeight: FontWeight.bold,
-                fontSize: AppFontSizes.size14,
-              ),
+              style: AppTextStyles.body.copyWith(color: themeColor,
+                fontWeight: FontWeight.bold),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSpacing.s8),
             Icon(LucideIcons.checkCircle, color: themeColor, size: 24),
           ],
         ),
@@ -125,7 +123,7 @@ class DebtItemRow extends StatelessWidget {
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
+        margin: const EdgeInsets.only(bottom: AppSpacing.p8),
         decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: BorderRadius.circular(AppSpacing.r8),
@@ -152,7 +150,7 @@ class DebtItemRow extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: theme.cardColor,
                         borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(16),
+                          top: Radius.circular(AppSpacing.r16),
                         ),
                       ),
                       padding: EdgeInsets.only(
@@ -164,12 +162,12 @@ class DebtItemRow extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Container(
-                            margin: const EdgeInsets.symmetric(vertical: 12),
+                            margin: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
                             width: 40,
                             height: 4,
                             decoration: BoxDecoration(
                               color: scheme.outline,
-                              borderRadius: BorderRadius.circular(2),
+                              borderRadius: BorderRadius.circular(AppSpacing.r8),
                             ),
                           ),
                           ListTile(
@@ -207,10 +205,10 @@ class DebtItemRow extends StatelessWidget {
                   );
                 },
                 contentPadding: const EdgeInsets.only(
-                  left: 16,
-                  right: 12,
-                  top: 2,
-                  bottom: 2,
+                  left: AppSpacing.p16,
+                  right: AppSpacing.p12,
+                  top: AppSpacing.p4,
+                  bottom: AppSpacing.p4,
                 ),
                 leading: Container(
                   width: 32,
@@ -235,39 +233,28 @@ class DebtItemRow extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Text(
                     _getInitials(item.name),
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size12,
-                      fontWeight: FontWeight.bold,
+                    style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold,
                       color: _getAvatarFg(context, item.name),
                     ),
                   ),
                 ),
                 title: Text(
                   item.name,
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size14,
-                    fontWeight: FontWeight.bold,
-                    color: scheme.onSurface,
-                  ),
+                  style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
+                    color: scheme.onSurface),
                 ),
                 subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 1.0),
+                  padding: const EdgeInsets.only(top: AppSpacing.w1),
                   child: Text(
                     item.detail,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size12,
-                      color: scheme.onSurfaceVariant,
-                    ),
+                    style: AppTextStyles.label.copyWith(color: scheme.onSurfaceVariant),
                   ),
                 ),
                 trailing: PrivacyMaskedText(
                   amount: item.amount,
                   isMasked: isMasked,
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size14,
-                    fontWeight: FontWeight.bold,
-                    color: themeColor,
-                  ),
+                  style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
+                    color: themeColor),
                 ),
               ),
             ],

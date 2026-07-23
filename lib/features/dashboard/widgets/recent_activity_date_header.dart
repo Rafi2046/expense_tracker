@@ -1,5 +1,7 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class RecentActivityDateHeader extends StatelessWidget {
   final String label;
@@ -9,7 +11,7 @@ class RecentActivityDateHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 2),
+      padding: const EdgeInsets.only(left: AppSpacing.p4, bottom: AppSpacing.p4),
       child: Text(
         label.toUpperCase(),
         style: AppTextStyles.cardTitle,

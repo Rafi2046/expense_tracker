@@ -1,6 +1,8 @@
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/calculators/widgets/calculator_result_item.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class CalculatorResultCard extends StatelessWidget {
   final String label;
@@ -24,14 +26,14 @@ class CalculatorResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: gradientColors,
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
         boxShadow: [
           BoxShadow(
             color: shadowColor.withValues(alpha: 0.25),
@@ -46,20 +48,20 @@ class CalculatorResultCard extends StatelessWidget {
             label.toUpperCase(),
             style: AppTextStyles.calculatorResultLabel,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           Text(
             value,
             style: AppTextStyles.calculatorResultAmount,
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppSpacing.s16),
           const Divider(color: Colors.white24, height: 1),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: subItems,
           ),
           if (bottomItem != null) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
             bottomItem!,
           ],
         ],

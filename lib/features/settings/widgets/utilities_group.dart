@@ -7,6 +7,8 @@ import 'package:expense_tracker/features/settings/widgets/settings_option_row.da
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class UtilitiesGroup extends StatefulWidget {
   const UtilitiesGroup({super.key});
@@ -58,7 +60,7 @@ class _UtilitiesGroupState extends State<UtilitiesGroup> {
             children: [
               // EMI Calculator
               Padding(
-                padding: const EdgeInsets.only(left: 20.0),
+                padding: const EdgeInsets.only(left: AppSpacing.p16),
                 child: SettingsOptionRow(
                   icon: LucideIcons.pieChart,
                   title: context.translate('emi_calculator'),
@@ -75,7 +77,7 @@ class _UtilitiesGroupState extends State<UtilitiesGroup> {
 
               // Interest Calculator
               Padding(
-                padding: const EdgeInsets.only(left: 20.0),
+                padding: const EdgeInsets.only(left: AppSpacing.p16),
                 child: SettingsOptionRow(
                   icon: LucideIcons.percent,
                   title: context.translate('interest_calculator'),
@@ -92,7 +94,7 @@ class _UtilitiesGroupState extends State<UtilitiesGroup> {
 
               // Tax Calculator
               Padding(
-                padding: const EdgeInsets.only(left: 20.0),
+                padding: const EdgeInsets.only(left: AppSpacing.p16),
                 child: SettingsOptionRow(
                   icon: LucideIcons.receipt,
                   title: context.translate('tax_calculator'),

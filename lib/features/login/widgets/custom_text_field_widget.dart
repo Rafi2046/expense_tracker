@@ -80,7 +80,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
               isDense: true,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.p12,
-                vertical: AppSpacing.p14,
+                vertical: AppSpacing.p16,
               ),
               hintStyle: TextStyle(
                 color: isDark ? Colors.grey.shade400 : AppColors.loginLabelColor,

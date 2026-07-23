@@ -3,6 +3,8 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TourDashboardStatsRow extends StatelessWidget {
   final int expenseCount;
@@ -19,7 +21,7 @@ class TourDashboardStatsRow extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     return Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 12),
+      padding: const EdgeInsets.only(top: AppSpacing.p8, bottom: AppSpacing.p12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -31,12 +33,12 @@ class TourDashboardStatsRow extends StatelessWidget {
                   color: theme.colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.s8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8, vertical: AppSpacing.p4),
                 decoration: BoxDecoration(
                   color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFE2E8F0),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                 ),
                 child: Text(
                   '($expenseCount)',
@@ -62,9 +64,9 @@ class TourDashboardStatsRow extends StatelessWidget {
               ),
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.activeGreen,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p8),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                   side: BorderSide(
                     color: AppColors.activeGreen.withValues(alpha: 0.3),
                   ),

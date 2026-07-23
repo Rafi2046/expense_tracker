@@ -3,6 +3,8 @@ import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class InlinePasswordForm extends StatefulWidget {
   final VoidCallback onSuccess;
@@ -125,11 +127,11 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: AppSpacing.s8),
         Container(
           decoration: BoxDecoration(
             color: isDark ? Colors.white10 : const Color(0xFFF5F6F8),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
           ),
           child: TextFormField(
             controller: controller,
@@ -141,7 +143,7 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
                 color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
               suffixIcon: IconButton(
                 onPressed: onToggleObscure,
                 icon: Icon(
@@ -173,7 +175,7 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
             });
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.s16),
         _buildTextField(
           label: context.translate('new_password'),
           hintText: context.translate('min_6_characters'),
@@ -185,7 +187,7 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
             });
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.s16),
         _buildTextField(
           label: context.translate('confirm_new_password'),
           hintText: context.translate('reenter_new_password'),
@@ -197,21 +199,20 @@ class _InlinePasswordFormState extends State<InlinePasswordForm> {
             });
           },
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.s24),
         ElevatedButton(
           onPressed: _isLoading ? null : _updatePassword,
           style: ElevatedButton.styleFrom(
             backgroundColor: Theme.of(context).primaryColor,
             foregroundColor: Colors.white,
             elevation: 0,
-            padding: const EdgeInsets.symmetric(vertical: 14),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
           ),
           child: _isLoading
-              ? const SizedBox(
-                  height: 20,
+              ? const SizedBox(height: AppSpacing.s16,
                   width: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class TransactionSelectorTile extends StatelessWidget {
   final IconData leadingIcon;
@@ -28,14 +31,14 @@ class TransactionSelectorTile extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(AppSpacing.r16),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
         decoration: BoxDecoration(
           color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.04)
               : Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
           border: Border.all(
             color: isDark
                 ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
@@ -50,7 +53,7 @@ class TransactionSelectorTile extends StatelessWidget {
               color: isDark ? Colors.white70 : Colors.grey.shade600,
               size: 22,
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: AppSpacing.s16),
 
             // ── Label + Value (floating label style) ──
             Expanded(
@@ -59,21 +62,16 @@ class TransactionSelectorTile extends StatelessWidget {
                 children: [
                   Text(
                     labelText,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size10,
-                      color: isDark
+                    style: AppTextStyles.caption.copyWith(color: isDark
                           ? Colors.white38
                           : Colors.grey.shade500,
                       fontWeight: FontWeight.w600,
-                      letterSpacing: 0.3,
-                    ),
+                      letterSpacing: 0.3),
                   ),
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSpacing.s4),
                   Text(
                     valueText,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size15,
-                      fontWeight: isValueSelected
+                    style: AppTextStyles.body.copyWith(fontWeight: isValueSelected
                           ? FontWeight.w600
                           : FontWeight.w400,
                       color: isValueSelected
@@ -93,7 +91,7 @@ class TransactionSelectorTile extends StatelessWidget {
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.06)
                     : Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
               child: Icon(
                 trailingIcon,

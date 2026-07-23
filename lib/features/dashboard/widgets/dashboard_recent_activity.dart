@@ -4,7 +4,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/models/transaction_models.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class RecentActivityItem {
   final String title;
@@ -47,7 +48,7 @@ class DashboardRecentActivity extends StatelessWidget {
       children: [
         // Header Row — outside the card
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -66,14 +67,14 @@ class DashboardRecentActivity extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.s8),
 
         // Card
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppSpacing.r8),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.2 : 0.03),
@@ -102,15 +103,15 @@ class DashboardRecentActivity extends StatelessWidget {
         InkWell(
           onTap: () => onItemTap(item),
           borderRadius: BorderRadius.vertical(
-            top: i == 0 ? const Radius.circular(8) : Radius.zero,
+            top: i == 0 ? const Radius.circular(AppSpacing.r8) : Radius.zero,
             bottom: i == items.length - 1
-                ? const Radius.circular(8)
+                ? const Radius.circular(AppSpacing.r8)
                 : Radius.zero,
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: 14.0,
-              vertical: 11.0,
+              horizontal: AppSpacing.p12,
+              vertical: AppSpacing.p12,
             ),
             child: Row(
               children: [
@@ -124,7 +125,7 @@ class DashboardRecentActivity extends StatelessWidget {
                         : (Theme.of(context).brightness == Brightness.dark
                             ? Colors.white.withValues(alpha: 0.08)
                             : const Color(0xFFF3F4F6)),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                   child: Icon(
                     item.icon,
@@ -136,7 +137,7 @@ class DashboardRecentActivity extends StatelessWidget {
                     size: 17,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.s12),
 
                 // Title + subtitle
                 Expanded(
@@ -147,10 +148,10 @@ class DashboardRecentActivity extends StatelessWidget {
                         item.title,
                         style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: AppSpacing.s4),
                       Text(
                         '${context.translate(item.category.toLowerCase())}  •  ${item.timeText}',
-                        style: AppTextStyles.caption.copyWith(fontSize: AppFontSizes.size10, color: Colors.grey.shade400),
+                        style: AppTextStyles.caption.copyWith( color: Colors.grey.shade400),
                       ),
                     ],
                   ),

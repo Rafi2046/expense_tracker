@@ -1,8 +1,9 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartyStatementTableHeader extends StatelessWidget {
   final int entryCount;
@@ -23,7 +24,7 @@ class PartyStatementTableHeader extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8),
       child: Row(
         children: [
           Expanded(
@@ -34,16 +35,13 @@ class PartyStatementTableHeader extends StatelessWidget {
                 Text(
                   'Transactions',
                   style: AppTextStyles.reportStatLabel.copyWith(
-                    color: theme.colorScheme.onSurface,
-                  ),
+                    color: theme.colorScheme.onSurface),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.s4),
                 Text(
                   '$entryCount entries',
                   style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                    fontSize: AppFontSizes.size11,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
+                    color: theme.colorScheme.onSurfaceVariant),
                 ),
               ],
             ),
@@ -56,18 +54,15 @@ class PartyStatementTableHeader extends StatelessWidget {
                 Text(
                   'Debit',
                   style: AppTextStyles.reportStatLabel.copyWith(
-                    color: AppColors.activeGreen,
-                  ),
+                    color: AppColors.activeGreen),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.s4),
                 PrivacyMaskedText(
                   amount: receiveTotal,
                   isMasked: isMasked,
                   style: AppTextStyles.reportTransactionSubtitle.copyWith(
                     color: AppColors.activeGreen,
-                    fontSize: AppFontSizes.size11,
-                    fontWeight: FontWeight.w600,
-                  ),
+                    fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -80,18 +75,15 @@ class PartyStatementTableHeader extends StatelessWidget {
                 Text(
                   'Credit',
                   style: AppTextStyles.reportStatLabel.copyWith(
-                    color: AppColors.activeRed,
-                  ),
+                    color: AppColors.activeRed),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.s4),
                 PrivacyMaskedText(
                   amount: giveTotal,
                   isMasked: isMasked,
                   style: AppTextStyles.reportTransactionSubtitle.copyWith(
                     color: AppColors.activeRed,
-                    fontSize: AppFontSizes.size11,
-                    fontWeight: FontWeight.w600,
-                  ),
+                    fontWeight: FontWeight.w600),
                 ),
               ],
             ),

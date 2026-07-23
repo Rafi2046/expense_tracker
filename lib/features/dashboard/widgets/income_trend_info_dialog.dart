@@ -3,6 +3,8 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class IncomeTrendInfoDialog extends StatelessWidget {
   const IncomeTrendInfoDialog({super.key});
@@ -10,11 +12,11 @@ class IncomeTrendInfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r16)),
       backgroundColor: Colors.white,
       elevation: 5,
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(AppSpacing.p16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,21 +28,21 @@ class IncomeTrendInfoDialog extends StatelessWidget {
                   color: AppColors.buttonColor,
                   size: 24,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.s8),
                 Text(context.translate('income_trend_chart_title'), style: AppTextStyles.dialogTitle),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
             Text(
               context.translate('income_trend_chart_desc'),
               style: AppTextStyles.dialogBody,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 5.0, right: 8.0),
+                  padding: const EdgeInsets.only(top: AppSpacing.p4, right: AppSpacing.p8),
                   child: Container(
                     width: 6,
                     height: 6,
@@ -58,12 +60,12 @@ class IncomeTrendInfoDialog extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.s8),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 5.0, right: 8.0),
+                  padding: const EdgeInsets.only(top: AppSpacing.p4, right: AppSpacing.p8),
                   child: Container(
                     width: 6,
                     height: 6,
@@ -81,7 +83,7 @@ class IncomeTrendInfoDialog extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.s16),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
@@ -89,11 +91,11 @@ class IncomeTrendInfoDialog extends StatelessWidget {
                 style: TextButton.styleFrom(
                   foregroundColor: AppColors.buttonColor,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
+                    horizontal: AppSpacing.p16,
+                    vertical: AppSpacing.p8,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
                 ),
                 child: Text(context.translate('close'), style: AppTextStyles.dialogCloseButton),

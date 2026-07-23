@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class ExpenseSaveButton extends StatelessWidget {
@@ -24,7 +24,12 @@ class ExpenseSaveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final canSave = !isSaving && !hasError;
     return Container(
-      padding: EdgeInsets.fromLTRB(20, 12, 20, bottomInset + 12),
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.p24,
+        AppSpacing.p12,
+        AppSpacing.p24,
+        bottomInset + AppSpacing.p12,
+      ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         boxShadow: [
@@ -37,20 +42,17 @@ class ExpenseSaveButton extends StatelessWidget {
       ),
       child: SizedBox(
         width: double.infinity,
-        height: 50,
+        height: AppSpacing.authFieldHeight,
         child: FilledButton(
           onPressed: canSave ? onSave : null,
           style: FilledButton.styleFrom(
             backgroundColor: AppColors.activeGreen,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
             elevation: 0,
           ),
           child: isSaving
               ? const SizedBox(
-                  width: 22,
-                  height: 22,
+                  width: AppSpacing.s24,
+                  height: AppSpacing.s24,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                     color: Colors.white,
@@ -60,11 +62,10 @@ class ExpenseSaveButton extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(LucideIcons.check, size: 20, color: Colors.white),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSpacing.s8),
                     Text(
                       'Save Expense',
                       style: AppTextStyles.bodyBold.copyWith(
-                        fontSize: AppFontSizes.size15,
                         color: Colors.white,
                       ),
                     ),

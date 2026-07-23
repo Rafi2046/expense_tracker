@@ -5,6 +5,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/bank_statement_list.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class BankStatementDetailsScreen extends StatelessWidget {
   final bool isMasked;
@@ -43,7 +45,7 @@ class BankStatementDetailsScreen extends StatelessWidget {
       body: ListView.separated(
         padding: EdgeInsets.fromLTRB(16, 16, 16, MediaQuery.of(context).padding.bottom + 16),
         itemCount: filtered.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 8),
+        separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.s8),
         itemBuilder: (context, index) => BankStatementList.buildTxCard(context, filtered[index], isMasked),
       ),
     );

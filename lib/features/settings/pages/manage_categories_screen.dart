@@ -8,6 +8,8 @@ import 'package:expense_tracker/features/settings/widgets/manage_categories_head
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ManageCategoriesScreen extends StatefulWidget {
   const ManageCategoriesScreen({super.key});
@@ -82,7 +84,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSpacing.r16),
         ),
         title: Text(
           context.translate('rename_category'),
@@ -94,15 +96,15 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
           decoration: InputDecoration(
             hintText: context.translate('category_name'),
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
+              horizontal: AppSpacing.p16,
+              vertical: AppSpacing.p12,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSpacing.r8),
               borderSide: BorderSide(color: Colors.grey.shade300),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSpacing.r8),
               borderSide: BorderSide(color: themeColor, width: 2),
             ),
           ),
@@ -119,7 +121,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
             style: ElevatedButton.styleFrom(
               backgroundColor: themeColor,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
             ),
             onPressed: () {
@@ -185,7 +187,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       child: Column(
         children: [
           CategorySearchBar(
@@ -194,7 +196,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
             onSubmitted: (_) => _addCategory(isIncome),
             onAddPressed: () => _addCategory(isIncome),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
 
           Expanded(
             child: categories.isEmpty

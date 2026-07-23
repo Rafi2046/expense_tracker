@@ -13,6 +13,8 @@ import 'package:expense_tracker/features/dashboard/utils/transaction_processor.d
 import 'package:expense_tracker/features/dashboard/pages/to_receive_screen.dart';
 import 'package:expense_tracker/features/dashboard/pages/to_give_screen.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 enum AccountTab { all, toReceive, toGive }
 
@@ -89,8 +91,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         title: Text(
           widget.accountType,
           style: AppTextStyles.h3.copyWith(
-            color: theme.appBarTheme.titleTextStyle?.color,
-          ),
+            color: theme.appBarTheme.titleTextStyle?.color),
         ),
         centerTitle: true,
         bottom: PreferredSize(
@@ -103,14 +104,14 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
           child: Column(
             children: [
               AccountBalanceHeaderCard(
                 accountType: widget.accountType,
                 balance: accountBalance,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
               AccountDateSelector(
                 selectedOption: _selectedOption,
                 selectedDateRange: _selectedDateRange,
@@ -121,7 +122,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppSpacing.s8),
               AccountSearchBar(
                 controller: _searchController,
                 searchQuery: _searchQuery,
@@ -139,33 +140,33 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
 
               // Tab Bar
               Container(
-                padding: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(AppSpacing.p4),
                 decoration: BoxDecoration(
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.06)
                       : const Color(0xFFF0F1F3),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                 ),
                 child: Row(
                   children: [
                     _buildTab('All', AccountTab.all),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: AppSpacing.s4),
                     _buildTab('To Receive', AccountTab.toReceive),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: AppSpacing.s4),
                     _buildTab('To Give', AccountTab.toGive),
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppSpacing.s8),
 
               // View All row
               if (hasMore)
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.p8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -189,7 +190,6 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                         child: Text(
                           'View All',
                           style: AppTextStyles.bodyBold.copyWith(
-                            fontSize: 13,
                             color: const Color(0xFF2EBD85),
                           ),
                         ),
@@ -217,7 +217,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
               ),
 
               // Bottom Button: Adjust Balance
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.s8),
               SizedBox(
                 width: double.infinity,
                 height: 46,
@@ -227,7 +227,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                     backgroundColor: theme.primaryColor,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppSpacing.r12),
                     ),
                   ),
                   child: Text(
@@ -266,16 +266,15 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
           decoration: BoxDecoration(
             color: isSelected ? color : Colors.transparent,
-            borderRadius: BorderRadius.circular(11),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
           ),
           child: Text(
             label,
             textAlign: TextAlign.center,
             style: AppTextStyles.bodyBold.copyWith(
-              fontSize: 13,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
               color: isSelected
                   ? Colors.white
@@ -314,7 +313,7 @@ class _AllItemsViewScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
           child: ListView.builder(
             itemCount: items.length,
             itemBuilder: (context, index) => AccountTransactionRow(

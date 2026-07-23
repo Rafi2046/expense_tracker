@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class InvoiceAllSettledWidget extends StatelessWidget {
   final bool isDark;
@@ -12,10 +14,10 @@ class InvoiceAllSettledWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 24),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.p24, horizontal: AppSpacing.p24),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF064E3B) : const Color(0xFFF0FDF9),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(
           color: AppColors.activeGreen.withValues(alpha: isDark ? 0.3 : 0.2),
         ),
@@ -23,14 +25,14 @@ class InvoiceAllSettledWidget extends StatelessWidget {
       child: Column(
         children: [
           Icon(LucideIcons.checkCircle, color: AppColors.activeGreen, size: 44),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.s12),
           Text(
             'All settled up',
             style: AppTextStyles.h2.copyWith(
               color: isDark ? const Color(0xFF6EE7B7) : const Color(0xFF065F46),
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.s4),
           Text(
             'No payments needed \u2014 everyone is even',
             style: AppTextStyles.bodySmall.copyWith(

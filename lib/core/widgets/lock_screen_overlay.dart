@@ -6,6 +6,8 @@ import 'package:expense_tracker/core/providers/app_lock_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class LockScreenOverlay extends StatefulWidget {
   const LockScreenOverlay({super.key});
@@ -112,7 +114,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppSpacing.s32),
             Text(
               context.translate('app_locked'),
               style: AppTextStyles.profileTitle.copyWith(
@@ -121,7 +123,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
                 letterSpacing: 0.3,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.s8),
             Text(
               context.translate('authenticate_to_access'),
               style: AppTextStyles.body.copyWith(
@@ -132,7 +134,7 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
             const Spacer(flex: 1),
             if (_hasError)
               Padding(
-                padding: const EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.only(bottom: AppSpacing.p16),
                 child: Text(
                   _errorMessage,
                   style: AppTextStyles.bodyBold.copyWith(
@@ -144,10 +146,10 @@ class _LockScreenOverlayState extends State<LockScreenOverlay>
               onTap: _authenticate,
               child: Container(
                 width: 200,
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
                 decoration: BoxDecoration(
                   color: theme.primaryColor,
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(AppSpacing.r24),
                 ),
                 alignment: Alignment.center,
                 child: Text(

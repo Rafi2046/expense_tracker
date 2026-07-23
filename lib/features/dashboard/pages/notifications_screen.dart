@@ -1,5 +1,4 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/pages/notification_details_screen.dart';
@@ -10,6 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -85,15 +86,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     unread: unreadCount,
                     read: readCount,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppSpacing.s4),
                 ],
                 Expanded(
                   child: allNotifications.isEmpty
                       ? const NotificationEmptyState()
                       : ListView.builder(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
+                            horizontal: AppSpacing.p16,
+                            vertical: AppSpacing.p8,
                           ),
                           itemCount: allNotifications.length,
                           itemBuilder: (context, index) {
@@ -103,13 +104,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               direction: DismissDirection.endToStart,
                               background: Container(
                                 alignment: Alignment.centerRight,
-                                padding: const EdgeInsets.only(right: 20.0),
-                                margin: const EdgeInsets.only(bottom: 8),
+                                padding: const EdgeInsets.only(right: AppSpacing.p16),
+                                margin: const EdgeInsets.only(bottom: AppSpacing.p8),
                                 decoration: BoxDecoration(
                                   color: isDark
                                       ? Colors.red.withValues(alpha: 0.15)
                                       : Colors.red.shade50,
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                                 ),
                                 child: Icon(
                                   LucideIcons.trash2,
@@ -133,7 +134,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                     ),
                                     behavior: SnackBarBehavior.floating,
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10)),
+                                        borderRadius: BorderRadius.circular(AppSpacing.r12)),
                                   ),
                                 );
                               },
@@ -165,7 +166,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     required int read,
   }) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.p16, AppSpacing.p16, AppSpacing.p16, AppSpacing.p8),
       child: Row(
         children: [
           Expanded(
@@ -177,7 +178,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               isDark: isDark,
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSpacing.s8),
           Expanded(
             child: _SummaryCard(
               label: context.translate('unread'),
@@ -187,7 +188,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               isDark: isDark,
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSpacing.s8),
           Expanded(
             child: _SummaryCard(
               label: context.translate('read'),
@@ -208,15 +209,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     final borderColor = isDark ? const Color(0xFF3A3F4A) : const Color(0xFFE5E7EB);
 
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
       itemCount: 5,
       itemBuilder: (context, index) {
         return Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          margin: const EdgeInsets.only(bottom: AppSpacing.p8),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p12),
           decoration: BoxDecoration(
             color: isDark ? const Color(0xFF22262E) : Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppSpacing.r12),
             border: Border.all(color: borderColor, width: 1),
           ),
           child: Row(
@@ -227,10 +228,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 height: 36,
                 decoration: BoxDecoration(
                   color: baseColor,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.s12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,7 +245,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           height: 12,
                           decoration: BoxDecoration(
                             color: baseColor,
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(AppSpacing.r8),
                           ),
                         ),
                         // Time skeleton
@@ -253,19 +254,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           height: 10,
                           decoration: BoxDecoration(
                             color: baseColor,
-                            borderRadius: BorderRadius.circular(3),
+                            borderRadius: BorderRadius.circular(AppSpacing.r8),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.s8),
                     // Description skeleton
                     Container(
                       width: double.infinity,
                       height: 10,
                       decoration: BoxDecoration(
                         color: baseColor,
-                        borderRadius: BorderRadius.circular(3),
+                        borderRadius: BorderRadius.circular(AppSpacing.r8),
                       ),
                     ),
                   ],
@@ -299,10 +300,10 @@ class _SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF22262E) : Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: isDark ? const Color(0xFF3A3F4A) : const Color(0xFFE5E7EB),
           width: 1,
@@ -311,23 +312,18 @@ class _SummaryCard extends StatelessWidget {
       child: Column(
         children: [
           Icon(icon, size: 20, color: iconColor),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           Text(
             '$count',
-            style: TextStyle(
-              fontSize: AppFontSizes.size18,
-              fontWeight: FontWeight.bold,
+            style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.bold,
               color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: AppSpacing.s4),
           Text(
             label,
-            style: TextStyle(
-              fontSize: AppFontSizes.size10,
-              fontWeight: FontWeight.w500,
-              color: isDark ? Colors.grey.shade500 : AppColors.textMuted,
-            ),
+            style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w500,
+              color: isDark ? Colors.grey.shade500 : AppColors.textMuted),
           ),
         ],
       ),

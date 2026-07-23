@@ -11,9 +11,10 @@ import 'package:expense_tracker/features/reports/pages/parties_report_screen.dar
 import 'package:expense_tracker/features/reports/pages/party_statement_screen.dart';
 import 'package:expense_tracker/features/reports/widgets/report_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ViewReportsScreen extends StatelessWidget {
   const ViewReportsScreen({super.key});
@@ -33,8 +34,7 @@ class ViewReportsScreen extends StatelessWidget {
           context.translate('reports'),
           style: AppTextStyles.h2.copyWith(
             color: theme.appBarTheme.titleTextStyle?.color,
-            letterSpacing: -0.3,
-          ),
+            letterSpacing: -0.3),
         ),
         centerTitle: true,
         bottom: PreferredSize(
@@ -43,21 +43,21 @@ class ViewReportsScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 18.0),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header banner
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [Color(0xFF1B6B45), Color(0xFF2EBD85)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppSpacing.r16),
               ),
               child: Row(
                 children: [
@@ -68,24 +68,22 @@ class ViewReportsScreen extends StatelessWidget {
                         Text(
                           context.translate('financial_reports'),
                           style: AppTextStyles.reportTransactionTitle.copyWith(
-                            color: Colors.white,
-                          ),
+                            color: Colors.white),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSpacing.s4),
                         Text(
                           context.translate('financial_reports_subtitle'),
                           style: AppTextStyles.caption.copyWith(
-                            color: Colors.white70,
-                          ),
+                            color: Colors.white70),
                         ),
                       ],
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(AppSpacing.p8),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppSpacing.r12),
                     ),
                     child: Icon(LucideIcons.barChart, color: Colors.white, size: 22),
                   ),
@@ -93,9 +91,9 @@ class ViewReportsScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 22),
+            const SizedBox(height: AppSpacing.s24),
             _buildSectionLabel(context, context.translate('popular_reports')),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSpacing.s8),
 
             _buildReportCard(context, items: [
               const ReportItem(
@@ -156,9 +154,9 @@ class ViewReportsScreen extends StatelessWidget {
               ),
             ]),
 
-            const SizedBox(height: 22),
+            const SizedBox(height: AppSpacing.s24),
             _buildSectionLabel(context, context.translate('browse_all')),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSpacing.s8),
 
             _buildReportCard(context, items: [
               const ReportItem(
@@ -179,7 +177,7 @@ class ViewReportsScreen extends StatelessWidget {
               ),
             ]),
 
-            SizedBox(height: 20 + MediaQuery.of(context).padding.bottom),
+            SizedBox(height: AppSpacing.s16 + MediaQuery.of(context).padding.bottom),
           ],
         ),
       ),
@@ -188,11 +186,10 @@ class ViewReportsScreen extends StatelessWidget {
 
   Widget _buildSectionLabel(BuildContext context, String label) {
     return Padding(
-      padding: const EdgeInsets.only(left: 2.0),
+      padding: const EdgeInsets.only(left: AppSpacing.p4),
       child: Text(
         label,
         style: AppTextStyles.caption.copyWith(
-          fontSize: AppFontSizes.size10,
           fontWeight: FontWeight.bold,
           color: Theme.of(context).brightness == Brightness.dark ? Colors.white38 : Colors.grey.shade500,
           letterSpacing: 1.2,
@@ -208,7 +205,7 @@ class ViewReportsScreen extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),

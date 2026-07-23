@@ -6,6 +6,7 @@ import 'package:expense_tracker/features/tours/utils/tour_export_service.dart';
 import 'package:expense_tracker/features/tours/utils/tour_invoice_generator.dart';
 import 'package:expense_tracker/features/tours/pages/tour_invoice_screen.dart';
 import 'package:expense_tracker/core/utils/debt_simplifier.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -36,8 +37,8 @@ class TourExportOptionsSheet extends StatelessWidget {
       decoration: BoxDecoration(
         color: scheme.surface,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(AppSpacing.r24),
+          topRight: Radius.circular(AppSpacing.r24),
         ),
         border: Border.all(
           color: scheme.outline,
@@ -45,19 +46,24 @@ class TourExportOptionsSheet extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: EdgeInsets.fromLTRB(24, 12, 24, viewInsets + bottomInset + 8),
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.p24,
+          AppSpacing.p12,
+          AppSpacing.p24,
+          viewInsets + bottomInset + AppSpacing.p8,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
                 Center(
                   child: Container(
-                    width: 40,
-                    height: 4,
-                    margin: const EdgeInsets.only(bottom: 20),
+                    width: AppSpacing.w40,
+                    height: AppSpacing.h4,
+                    margin: const EdgeInsets.only(bottom: AppSpacing.s24),
                     decoration: BoxDecoration(
                       color: scheme.outlineVariant,
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: BorderRadius.circular(AppSpacing.r8),
                     ),
                   ),
                 ),
@@ -68,14 +74,14 @@ class TourExportOptionsSheet extends StatelessWidget {
                     color: scheme.onSurface,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.s4),
                 Text(
                   context.translate('export_report_subtitle'),
                   style: AppTextStyles.bodySmall.copyWith(
                     color: scheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s24),
                 _ExportOptionTile(
                   icon: LucideIcons.image,
                   title: context.translate('share_balances_image'),
@@ -86,7 +92,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                     TourExportService.shareReport(context, tourId);
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.s12),
                 _ExportOptionTile(
                   icon: LucideIcons.fileText,
                   title: context.translate('view_detailed_invoice_title'),
@@ -101,7 +107,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.s12),
                 _ExportOptionTile(
                   icon: LucideIcons.file,
                   title: context.translate('download_pdf_invoice_title'),
@@ -119,7 +125,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.s12),
               ],
             ),
           ),
@@ -149,13 +155,13 @@ class _ExportOptionTile extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppSpacing.r8),
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.p16),
           decoration: BoxDecoration(
             color: scheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppSpacing.r8),
             border: Border.all(
               color: scheme.outline,
             ),
@@ -163,19 +169,19 @@ class _ExportOptionTile extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: AppSpacing.w48,
+                height: AppSpacing.h48,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: gradientColors,
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppSpacing.r16),
                 ),
                 child: Icon(icon, color: scheme.onPrimary, size: 22),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppSpacing.s16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,7 +192,7 @@ class _ExportOptionTile extends StatelessWidget {
                         color: scheme.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSpacing.h4),
                     Text(
                       subtitle,
                       style: AppTextStyles.label.copyWith(

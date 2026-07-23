@@ -9,6 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class LedgerTransactionList extends StatelessWidget {
   final bool isMasked;
@@ -73,7 +75,7 @@ class LedgerTransactionList extends StatelessWidget {
     grouped.forEach((dateHeader, txs) {
       listItems.add(
         Padding(
-          padding: const EdgeInsets.only(bottom: 8.0, left: 4.0),
+          padding: const EdgeInsets.only(bottom: AppSpacing.p8, left: AppSpacing.p4),
           child: Text(
             dateHeader.toUpperCase(),
             style: AppTextStyles.reportStatLabel.copyWith(
@@ -127,11 +129,11 @@ class LedgerTransactionList extends StatelessWidget {
             },
             background: Container(
               alignment: Alignment.centerRight,
-              padding: const EdgeInsets.only(right: 24),
-              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.only(right: AppSpacing.p24),
+              margin: const EdgeInsets.only(bottom: AppSpacing.p8),
               decoration: BoxDecoration(
                 color: AppColors.activeRed,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppSpacing.r16),
               ),
               child: Icon(LucideIcons.trash, color: Colors.white, size: 28),
             ),
@@ -157,7 +159,7 @@ class LedgerTransactionList extends StatelessWidget {
       }
     });
 
-    listItems.add(const SizedBox(height: 100));
+    listItems.add(const SizedBox(height: AppSpacing.s48 + AppSpacing.s48 + AppSpacing.s4));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

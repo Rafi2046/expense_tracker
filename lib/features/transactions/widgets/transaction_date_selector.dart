@@ -2,6 +2,8 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class TransactionDateSelector extends StatelessWidget {
   final TransactionProvider provider;
@@ -32,10 +34,10 @@ class TransactionDateSelector extends StatelessWidget {
 
     return Container(
       height: 50,
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p4),
       decoration: BoxDecoration(
         color: isDark ? Colors.white.withValues(alpha: 0.04) : const Color(0xFFF9FAFB),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.grey.shade200,
         ),
@@ -78,12 +80,12 @@ class TransactionDateSelector extends StatelessWidget {
                   size: 14,
                   color: Theme.of(context).primaryColor,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.s8),
                 Text(
                   label,
-                  style: AppTextStyles.bodyBold.copyWith(
+                  style: AppTextStyles.bodySmall.copyWith(
                     color: Theme.of(context).colorScheme.onSurface,
-                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],

@@ -1,8 +1,11 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class ExpenseChartData {
   final String label;
@@ -59,14 +62,14 @@ class ExpenseTrendChartCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
       decoration: BoxDecoration(
         color: theme.cardColor,
         border: Border.all(
           color: (theme.dividerTheme.color ?? AppColors.dividerColor).withValues(alpha: 0.5),
           width: 1.0,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
@@ -89,14 +92,12 @@ class ExpenseTrendChartCard extends StatelessWidget {
                       if (title != null)
                         Text(
                           title!,
-                          style: TextStyle(
-                            fontSize: AppFontSizes.size13,
-                            fontWeight: FontWeight.w500,
+                          style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w500,
                             color: AppColors.textMuted,
                             fontFamily: TextStyle().fontFamily,
                           ),
                         ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppSpacing.s4),
                       if (amount != null)
                         FittedBox(
                           fit: BoxFit.scaleDown,
@@ -107,7 +108,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                   ),
                 ),
                 if (trendPercentage != null) ...[
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppSpacing.s12),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -116,12 +117,10 @@ class ExpenseTrendChartCard extends StatelessWidget {
                         color: AppColors.expensePink,
                         size: 16,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: AppSpacing.s4),
                       Text(
                         trendPercentage!,
-                        style: TextStyle(
-                          fontSize: AppFontSizes.size13,
-                          fontWeight: FontWeight.bold,
+                        style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.bold,
                           color: AppColors.expensePink,
                           fontFamily: TextStyle().fontFamily,
                         ),
@@ -131,7 +130,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                 ],
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.s24),
           ],
           SizedBox(
             height: 220,
@@ -142,9 +141,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                 majorGridLines: const MajorGridLines(width: 0),
                 axisLine: const AxisLine(width: 0),
                 labelRotation: -45,
-                labelStyle: TextStyle(
-                  fontSize: AppFontSizes.size10,
-                  color: AppColors.textMuted,
+                labelStyle: AppTextStyles.caption.copyWith(color: AppColors.textMuted,
                   fontWeight: FontWeight.w600,
                   fontFamily: TextStyle().fontFamily,
                 ),
@@ -160,9 +157,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                 minimum: minimum,
                 maximum: maximum,
                 interval: interval,
-                labelStyle: TextStyle(
-                  fontSize: AppFontSizes.size11,
-                  color: AppColors.textMuted,
+                labelStyle: AppTextStyles.caption.copyWith(color: AppColors.textMuted,
                   fontWeight: FontWeight.w500,
                   fontFamily: TextStyle().fontFamily,
                 ),
@@ -176,9 +171,7 @@ class ExpenseTrendChartCard extends StatelessWidget {
                   }
                   return ChartAxisLabel(
                     labelText,
-                    TextStyle(
-                      fontSize: AppFontSizes.size11,
-                      color: AppColors.textMuted,
+                    AppTextStyles.caption.copyWith(color: AppColors.textMuted,
                       fontWeight: FontWeight.w500,
                       fontFamily: TextStyle().fontFamily,
                     ),
@@ -195,8 +188,8 @@ class ExpenseTrendChartCard extends StatelessWidget {
                       ? AppColors.expensePink
                       : AppColors.expensePink.withValues(alpha: 0.3),
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(2),
-                    topRight: Radius.circular(2),
+                    topLeft: Radius.circular(AppSpacing.r8),
+                    topRight: Radius.circular(AppSpacing.r8),
                   ),
                   width: 0.15,
                 ),

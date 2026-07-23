@@ -1,6 +1,8 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ProfileSaveButton extends StatelessWidget {
   final bool isLoading;
@@ -36,7 +38,7 @@ class ProfileSaveButton extends StatelessWidget {
             borderColor: borderColor,
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.s12),
         Expanded(
           child: CustomButton(
             text: isLoading ? context.translate('saving') : context.translate('save'),

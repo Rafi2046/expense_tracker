@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 mixin ProfileSheetHandler<T extends StatefulWidget> on State<T> {
   TextEditingController get nameController;
@@ -13,22 +16,16 @@ mixin ProfileSheetHandler<T extends StatefulWidget> on State<T> {
       builder: (ctx) {
         final theme = Theme.of(ctx);
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r16)),
           title: Text(
             'Delete Profile?',
-            style: TextStyle(
-              fontSize: AppFontSizes.size18,
-              fontWeight: FontWeight.w800,
-              color: theme.textTheme.titleLarge?.color,
-            ),
+            style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w800,
+              color: theme.textTheme.titleLarge?.color),
           ),
           content: Text(
             'Are you sure? All data in this profile will be permanently lost.',
-            style: TextStyle(
-              fontSize: AppFontSizes.size14,
-              color: theme.textTheme.bodySmall?.color,
-              height: 1.4,
-            ),
+            style: AppTextStyles.body.copyWith(color: theme.textTheme.bodySmall?.color,
+              height: 1.4),
           ),
           actions: [
             TextButton(

@@ -1,8 +1,11 @@
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class NotificationEmptyState extends StatelessWidget {
   const NotificationEmptyState({super.key});
@@ -14,7 +17,7 @@ class NotificationEmptyState extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32.0),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -32,24 +35,18 @@ class NotificationEmptyState extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.s24),
             Text(
               context.translate('no_notifications'),
-              style: TextStyle(
-                fontSize: AppFontSizes.size18,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-              ),
+              style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onSurface),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.s8),
             Text(
               context.translate('all_caught_up'),
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: AppFontSizes.size14,
-                color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
-                height: 1.4,
-              ),
+              style: AppTextStyles.body.copyWith(color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
+                height: 1.4),
             ),
           ],
         ),

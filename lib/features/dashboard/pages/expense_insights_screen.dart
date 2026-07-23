@@ -12,6 +12,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ExpenseInsightsScreen extends StatefulWidget {
   const ExpenseInsightsScreen({super.key});
@@ -84,7 +86,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.s16),
 
               if (_selectedTimeFrame == 'Daily')
                 ExpenseTrendChartCard(
@@ -138,7 +140,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                 ),
 
               if (_selectedTimeFrame == 'Monthly') ...[
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s16),
                 ExpenseCategoriesBreakdownCard(
                   suffixText: context.translate('this_month_paren'),
                   totalAmount: PrivacyMaskedText(
@@ -150,7 +152,7 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
                   isMasked: _localMasked,
                 ),
               ] else if (_selectedTimeFrame == 'Quarterly') ...[
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s16),
                 ExpenseCategoriesBreakdownCard(
                   suffixText: context.translate('this_quarter_paren'),
                   totalAmount: PrivacyMaskedText(
@@ -164,14 +166,14 @@ class _ExpenseInsightsScreenState extends State<ExpenseInsightsScreen> {
               ],
 
               if (_selectedTimeFrame == 'Quarterly') ...[
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s16),
                 ExpenseBreakdownCard(
                   suffixText: context.translate('this_quarter_paren'),
                   items: provider.quarterlyBreakdowns,
                   isMasked: _localMasked,
                 ),
               ],
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.s16),
             ],
           ),
         ),

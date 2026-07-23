@@ -1,6 +1,7 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/reports/models/report_item.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -31,9 +32,9 @@ class ReportTile extends StatelessWidget {
 
     return InkWell(
       onTap: () => _pushReport(context),
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(AppSpacing.r16),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
         child: Row(
           children: [
             Container(
@@ -41,11 +42,11 @@ class ReportTile extends StatelessWidget {
               height: 38,
               decoration: BoxDecoration(
                 color: theme.primaryColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
               ),
               child: Icon(item.icon, color: theme.primaryColor, size: 18),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: AppSpacing.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +57,7 @@ class ReportTile extends StatelessWidget {
                       color: theme.colorScheme.onSurface,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.s4),
                   Text(
                     context.translate(item.subtitleKey),
                     style: AppTextStyles.caption.copyWith(
@@ -71,7 +72,7 @@ class ReportTile extends StatelessWidget {
               height: 26,
               decoration: BoxDecoration(
                 color: isDark ? Colors.white10 : const Color(0xFFF4F6F9),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
               ),
               child: Icon(
                 LucideIcons.arrowRight,

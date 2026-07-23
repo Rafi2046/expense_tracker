@@ -1,6 +1,9 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class TransactionContainerRow extends StatelessWidget {
   final IconData icon;
@@ -28,7 +31,7 @@ class TransactionContainerRow extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
         child: Row(
           children: [
             Container(
@@ -42,44 +45,38 @@ class TransactionContainerRow extends StatelessWidget {
               ),
               child: Icon(icon, color: AppColors.buttonColor, size: 18),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: AppSpacing.s8),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size14,
-                      fontWeight: FontWeight.bold,
+                    style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                       fontFamily: TextStyle().fontFamily,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.s4),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size11,
-                      color: isDark ? Colors.white60 : Colors.grey.shade600,
+                    style: AppTextStyles.caption.copyWith(color: isDark ? Colors.white60 : Colors.grey.shade600,
                       fontFamily: TextStyle().fontFamily,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSpacing.s8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 amount,
                 if (subAmountLabel != null) ...[
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.s4),
                   Text(
                     subAmountLabel!,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size11,
-                      fontWeight: FontWeight.w500,
+                    style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w500,
                       color: isDark ? Colors.white38 : Colors.grey.shade500,
                       fontFamily: TextStyle().fontFamily,
                     ),

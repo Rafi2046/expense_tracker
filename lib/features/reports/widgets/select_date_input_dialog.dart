@@ -4,8 +4,9 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/reports/models/select_date_input_dialog_result.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class SelectDateInputDialog extends StatefulWidget {
   final DateTimeRange initialRange;
@@ -115,12 +116,12 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
 
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppSpacing.r24),
       ),
       backgroundColor: theme.cardColor,
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(AppSpacing.p24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,11 +129,10 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
               Text(
                 context.translate('select_date'),
                 style: AppTextStyles.reportStatLabel.copyWith(
-                  color: isDark ? Colors.white30 : Colors.grey.shade500,
-                  fontSize: AppFontSizes.size12,
+                  color: isDark ? Colors.white30 : Colors.grey.shade500
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.s8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -140,10 +140,8 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                     child: Text(
                       _rangeText,
                       style: AppTextStyles.reportAppBarTitle.copyWith(
-                        fontSize: AppFontSizes.size22,
                         fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.onSurface,
-                      ),
+                        color: theme.colorScheme.onSurface),
                     ),
                   ),
                   IconButton(
@@ -165,7 +163,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -176,8 +174,7 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                         Text(
                           context.translate('start_date'),
                           style: AppTextStyles.reportStatLabel.copyWith(
-                            color: _startError != null ? AppColors.activeRed : theme.primaryColor,
-                          ),
+                            color: _startError != null ? AppColors.activeRed : theme.primaryColor),
                         ),
                         TextField(
                           controller: _startDateController,
@@ -193,12 +190,12 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                             ),
                             errorText: _startError,
                           ),
-                          style: AppTextStyles.partyFormInput.copyWith(fontSize: AppFontSizes.size15, color: theme.colorScheme.onSurface),
+                          style: AppTextStyles.partyFormInput.copyWith( color: theme.colorScheme.onSurface),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: AppSpacing.s16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,14 +220,14 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                             ),
                             errorText: _endError,
                           ),
-                          style: AppTextStyles.partyFormInput.copyWith(fontSize: AppFontSizes.size15, color: theme.colorScheme.onSurface),
+                          style: AppTextStyles.partyFormInput.copyWith( color: theme.colorScheme.onSurface),
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -239,12 +236,11 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                     child: Text(
                       context.translate('cancel'),
                       style: AppTextStyles.dialogCloseButton.copyWith(
-                        color: theme.primaryColor,
-                        fontSize: AppFontSizes.size15,
+                        color: theme.primaryColor
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: AppSpacing.s16),
                   TextButton(
                     onPressed: isOkEnabled
                         ? () {
@@ -261,7 +257,6 @@ class _SelectDateInputDialogState extends State<SelectDateInputDialog> {
                       context.translate('ok'),
                       style: AppTextStyles.dialogCloseButton.copyWith(
                         color: isOkEnabled ? theme.primaryColor : (isDark ? Colors.white24 : Colors.grey.shade400),
-                        fontSize: AppFontSizes.size15,
                       ),
                     ),
                   ),

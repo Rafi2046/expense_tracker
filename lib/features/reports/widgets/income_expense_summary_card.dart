@@ -2,6 +2,7 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
@@ -23,10 +24,10 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
       ),
       child: Column(
@@ -38,7 +39,7 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: AppSpacing.s8),
           PrivacyMaskedText(
             amount: netProfit.abs(),
             isMasked: isMasked,
@@ -46,7 +47,7 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
               color: netProfit >= 0 ? theme.primaryColor : AppColors.activeRed,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
           Row(
             children: [
               Expanded(
@@ -59,7 +60,7 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSpacing.s4),
                     PrivacyMaskedText(
                       amount: totalIncome,
                       isMasked: isMasked,
@@ -71,7 +72,7 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
                 ),
               ),
               Container(width: 1, height: 30, color: theme.dividerTheme.color ?? Colors.grey.shade100),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppSpacing.s16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +83,7 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSpacing.s4),
                     PrivacyMaskedText(
                       amount: totalExpense,
                       isMasked: isMasked,

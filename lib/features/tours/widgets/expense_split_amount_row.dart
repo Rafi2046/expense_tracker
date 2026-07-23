@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
 import 'package:expense_tracker/features/tours/widgets/expense_participant_avatar.dart';
@@ -62,10 +61,10 @@ class ExpenseSplitAmountRow extends StatelessWidget {
         return Padding(
           padding: EdgeInsets.only(bottom: index < participants.length - 1 ? AppSpacing.s8 : 0),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p10),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
             decoration: BoxDecoration(
               color: theme.colorScheme.surface,
-              borderRadius: BorderRadius.circular(AppSpacing.r10),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               border: Border.all(
                 color: excluded
                     ? theme.dividerColor.withValues(alpha: 0.08)
@@ -75,12 +74,11 @@ class ExpenseSplitAmountRow extends StatelessWidget {
             ),
             child: Row(
               children: [
-                SizedBox(
-                  width: 22, height: 22,
+                SizedBox(width: AppSpacing.s24, height: AppSpacing.s24,
                   child: Checkbox(
                     value: !excluded,
                     activeColor: AppColors.activeGreen,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r4)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r8)),
                     side: WidgetStateBorderSide.resolveWith(
                       (_) => BorderSide(
                         color: excluded
@@ -96,7 +94,6 @@ class ExpenseSplitAmountRow extends StatelessWidget {
                   name: p.name,
                   color: avatarColors[index % avatarColors.length],
                   radius: 14,
-                  fontSize: AppFontSizes.size10,
                   backgroundColor: excluded
                       ? theme.dividerColor.withValues(alpha: 0.3)
                       : null,
@@ -123,7 +120,6 @@ class ExpenseSplitAmountRow extends StatelessWidget {
                         Text(
                           context.translate('joined_later'),
                           style: AppTextStyles.caption.copyWith(
-                            fontSize: AppFontSizes.size10,
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                           ),
                         ),
@@ -161,10 +157,10 @@ class ExpenseSplitAmountRow extends StatelessWidget {
           return Padding(
             padding: EdgeInsets.only(bottom: index < participants.length - 1 ? AppSpacing.s8 : 0),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p10),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(AppSpacing.r10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
                 border: Border.all(
                   color: theme.dividerColor.withValues(alpha: 0.15),
                   width: 1,
@@ -176,7 +172,6 @@ class ExpenseSplitAmountRow extends StatelessWidget {
                     name: p.name,
                     color: avatarColors[index % avatarColors.length],
                     radius: 14,
-                    fontSize: AppFontSizes.size10,
                   ),
                   const SizedBox(width: AppSpacing.s8),
                   Expanded(
@@ -188,16 +183,14 @@ class ExpenseSplitAmountRow extends StatelessWidget {
                           p.name,
                           style: AppTextStyles.bodySmall.copyWith(
                             fontWeight: FontWeight.w500,
-                            color: theme.colorScheme.onSurface,
-                          ),
+                            color: theme.colorScheme.onSurface),
                         ),
                         if (preview != null && (isPercentage || isExact))
                           Text(
                             preview,
                             style: AppTextStyles.caption.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: AppColors.activeGreen,
-                            ),
+                              color: AppColors.activeGreen),
                           ),
                       ],
                     ),
@@ -214,8 +207,7 @@ class ExpenseSplitAmountRow extends StatelessWidget {
                       onChanged: (_) => onCustomValueChanged(p.id),
                       style: AppTextStyles.bodySmall.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface,
-                      ),
+                        color: theme.colorScheme.onSurface),
                       decoration: InputDecoration(
                         hintText: '0',
                         suffixText: suffix,
@@ -228,7 +220,7 @@ class ExpenseSplitAmountRow extends StatelessWidget {
                         ),
                         filled: true,
                         fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s8, vertical: AppSpacing.s6),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s8, vertical: AppSpacing.s8),
                         isDense: true,
                       ),
                     ),
@@ -245,7 +237,7 @@ class ExpenseSplitAmountRow extends StatelessWidget {
             child: GestureDetector(
               onTap: onResetSplit,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.s6),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.s8),
                 decoration: BoxDecoration(
                   color: AppColors.activeGreen.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(AppSpacing.r8),
@@ -254,8 +246,7 @@ class ExpenseSplitAmountRow extends StatelessWidget {
                   context.translate('reset_split'),
                   style: AppTextStyles.label.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.activeGreen,
-                  ),
+                    color: AppColors.activeGreen),
                 ),
               ),
             ),

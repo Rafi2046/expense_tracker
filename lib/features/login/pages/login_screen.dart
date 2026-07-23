@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/features/login/utils/auth_handler.dart';
 import 'package:expense_tracker/features/login/widgets/login_header.dart';
 import 'package:expense_tracker/features/login/widgets/login_email_form.dart';
@@ -13,6 +12,8 @@ import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:expense_tracker/features/login/pages/forgot_password_screen.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/login/pages/create_account_screen.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 class LoginScreen extends StatefulWidget {
   final bool biometricMode;
@@ -82,8 +83,8 @@ class _LoginScreenState extends State<LoginScreen>
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                    vertical: 40.0,
+                    horizontal: AppSpacing.p24,
+                    vertical: AppSpacing.p40,
                   ),
                   child: Column(
                     spacing: AppSpacing.s16,
@@ -157,17 +158,14 @@ class _LoginScreenState extends State<LoginScreen>
                         ),
 
                       if (biometricMode && hasPasswordProvider) ...[
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.s16),
                         GestureDetector(
                           onTap: () => _handleSwitchAccount(context),
                           child: Text(
                             context.translate('switch_account'),
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: AppFontSizes.size14,
-                              color: theme.primaryColor,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: AppTextStyles.body.copyWith(color: theme.primaryColor,
+                              fontWeight: FontWeight.w600),
                           ),
                         ),
                       ],

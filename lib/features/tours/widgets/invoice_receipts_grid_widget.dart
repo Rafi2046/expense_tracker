@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/models/tour_expense.dart';
 import 'package:expense_tracker/features/tours/widgets/full_screen_image_viewer.dart';
@@ -36,7 +36,7 @@ class InvoiceReceiptsGridWidget extends StatelessWidget {
       children: [
         for (var i = 0; i < allPaths.length; i += 2)
           Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: AppSpacing.p12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -49,7 +49,7 @@ class InvoiceReceiptsGridWidget extends StatelessWidget {
                     isDark: isDark,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.s12),
                 if (i + 1 < allPaths.length)
                   Expanded(
                     child: _ReceiptCard(
@@ -105,7 +105,7 @@ class _ReceiptCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF1E1E2E) : Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           border: Border.all(
             color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFE5E7EB),
           ),
@@ -114,7 +114,7 @@ class _ReceiptCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(11)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r12)),
               child: TourImage(
                 source: path,
                 height: 180,
@@ -125,7 +125,12 @@ class _ReceiptCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.p12,
+                AppSpacing.p8,
+                AppSpacing.p12,
+                AppSpacing.p12,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -138,11 +143,10 @@ class _ReceiptCard extends StatelessWidget {
                       color: isDark ? Colors.white : const Color(0xFF374151),
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.h4),
                   Text(
                     formatShortDate(expense.date),
                     style: AppTextStyles.caption.copyWith(
-                      fontSize: AppFontSizes.size10,
                       color: isDark ? const Color(0xFF6B7280) : const Color(0xFF9CA3AF),
                     ),
                   ),

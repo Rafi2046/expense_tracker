@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/utils/category_utils.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class CategoryDetailCard extends StatelessWidget {
   final String category;
@@ -15,10 +18,10 @@ class CategoryDetailCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(AppSpacing.p12),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppSpacing.r8),
         border: Border.all(
           color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -32,14 +35,11 @@ class CategoryDetailCard extends StatelessWidget {
             color: isDark ? Colors.white70 : Colors.grey.shade600,
             size: 20,
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: AppSpacing.s12),
           Text(
             category,
-            style: TextStyle(
-              fontSize: AppFontSizes.size15,
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
-            ),
+            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface),
           ),
         ],
       ),

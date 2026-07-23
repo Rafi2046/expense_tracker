@@ -2,9 +2,10 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/features/login/widgets/custom_button.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class DeleteConfirmationBody extends StatefulWidget {
   final TextEditingController controller;
@@ -37,50 +38,41 @@ class _DeleteConfirmationBodyState extends State<DeleteConfirmationBody> {
           context.translate('delete_confirm_body'),
           textAlign: TextAlign.center,
           style: AppTextStyles.bodySmall.copyWith(
-            fontSize: AppFontSizes.size14,
             color: isDark ? Colors.grey.shade400 : AppColors.loginSubTitle,
-            height: 1.5,
-          ),
+            height: 1.5),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.s16),
         Text(
           context.translate('type_delete_confirm'),
           style: AppTextStyles.label.copyWith(
             color: AppColors.activeRed,
             fontWeight: FontWeight.w700,
-            letterSpacing: 0.5,
-          ),
+            letterSpacing: 0.5),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.s8),
         TextField(
           controller: widget.controller,
           textAlign: TextAlign.center,
           textCapitalization: TextCapitalization.characters,
           inputFormatters: [_UpperCaseInputFormatter()],
-          style: TextStyle(
-            fontSize: AppFontSizes.size18,
-            fontWeight: FontWeight.w800,
+          style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w800,
             color: AppColors.activeRed,
-            letterSpacing: 4,
-          ),
+            letterSpacing: 4),
           decoration: InputDecoration(
             hintText: context.translate('delete'),
-            hintStyle: TextStyle(
-              fontSize: AppFontSizes.size18,
-              fontWeight: FontWeight.w800,
+            hintStyle: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w800,
               color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-              letterSpacing: 4,
-            ),
+              letterSpacing: 4),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               borderSide: BorderSide(color: borderColor),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               borderSide: BorderSide(color: borderColor),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               borderSide: BorderSide(
                 color: widget.canDelete ? AppColors.activeRed : borderColor,
                 width: 2,
@@ -92,7 +84,7 @@ class _DeleteConfirmationBodyState extends State<DeleteConfirmationBody> {
             filled: true,
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.s24),
         SizedBox(
           width: double.infinity,
           child: CustomButton(

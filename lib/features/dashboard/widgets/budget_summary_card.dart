@@ -33,7 +33,7 @@ class BudgetSummaryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppSpacing.br8),
           side: BorderSide(color: AppColors.borderColor.withValues(alpha: 0.2)),
         ),
-        child: const SizedBox(height: 120, width: double.infinity),
+        child: const SizedBox(height: AppSpacing.s48 * 2 + AppSpacing.s24, width: double.infinity),
       );
     }
 
@@ -95,7 +95,7 @@ class BudgetSummaryCard extends StatelessWidget {
                         color: isOver ? AppColors.activeRed : AppColors.activeGreen,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppSpacing.s12),
                     Expanded(
                       child: _SummaryLabel(
                         label: context.translate('remaining'),

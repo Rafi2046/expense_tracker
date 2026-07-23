@@ -13,6 +13,7 @@ import 'package:expense_tracker/features/dashboard/widgets/overall_balance_card.
 import 'package:expense_tracker/features/dashboard/widgets/adjust_balance_actions.dart';
 import 'account_details_screen.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class TotalBalanceScreen extends StatefulWidget {
   const TotalBalanceScreen({super.key});
@@ -91,7 +92,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -100,7 +101,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                 isMasked: _localMasked,
                 onToggleMask: () => setState(() => _localMasked = !_localMasked),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.s16),
 
               // Section Header: All Accounts + New Account
               Row(
@@ -129,7 +130,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
 
               // Accounts list
               Expanded(
@@ -147,7 +148,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                         children: [
                           for (final account in accountProvider.accounts)
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
+                              padding: const EdgeInsets.only(bottom: AppSpacing.p8),
                               child: AccountCard(
                                 title: account.name,
                                 subtitle: _subtitleForAccount(account.name),
@@ -169,7 +170,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
               // Sticky Bottom Adjust Balance Button
               SizedBox(
                 width: double.infinity,
-                height: 46,
+                height: AppSpacing.s48,
                 child: ElevatedButton(
                   onPressed: () => showAdjustBalanceBottomSheet(context),
                   style: ElevatedButton.styleFrom(
@@ -177,9 +178,6 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                     foregroundColor: Colors.white,
                     elevation: 1,
                     shadowColor: theme.primaryColor.withValues(alpha: 0.2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
                   ),
                   child: Text(
                     context.translate('adjust_balance'),
@@ -207,12 +205,12 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
           decoration: BoxDecoration(
             color: theme.cardColor,
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
+              topLeft: Radius.circular(AppSpacing.r16),
+              topRight: Radius.circular(AppSpacing.r16),
             ),
           ),
           padding: EdgeInsets.fromLTRB(
-            20, 20, 20, MediaQuery.of(ctx).padding.bottom + 20,
+            AppSpacing.p16, AppSpacing.p16, AppSpacing.p16, MediaQuery.of(ctx).padding.bottom + 20,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -223,21 +221,21 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                   height: 4,
                   decoration: BoxDecoration(
                     color: isDark ? Colors.white24 : Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.s16),
               Text(
                 account.name,
                 style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.s4),
               Text(
                 isBuiltIn ? context.translate('system_account') : context.translate('custom_account'),
                 style: AppTextStyles.caption.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.s16),
               // Edit Account
               SizedBox(
                 width: double.infinity,
@@ -253,9 +251,9 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                   style: TextButton.styleFrom(
                     backgroundColor: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppSpacing.r12),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
                   ),
                   onPressed: () {
                     Navigator.pop(ctx);
@@ -263,7 +261,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                   },
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.s8),
               // View Details
               SizedBox(
                 width: double.infinity,
@@ -279,9 +277,9 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                   style: TextButton.styleFrom(
                     backgroundColor: isDark ? Colors.white.withValues(alpha: 0.05) : const Color(0xFFF8F9FA),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppSpacing.r12),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
                   ),
                   onPressed: () {
                     Navigator.pop(ctx);
@@ -297,7 +295,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                 ),
               ),
               if (!isBuiltIn) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.s8),
                 // Delete
                 SizedBox(
                   width: double.infinity,
@@ -313,9 +311,9 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.red.withValues(alpha: 0.08),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(AppSpacing.r12),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
                     ),
                     onPressed: () {
                       Navigator.pop(ctx);
@@ -324,7 +322,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                   ),
                 ),
               ],
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.s8),
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
@@ -353,7 +351,6 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         backgroundColor: theme.cardColor,
         title: Text(
           context.translate('edit_account'),
@@ -370,11 +367,11 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                 decoration: InputDecoration(
                   labelText: context.translate('account_name'),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.s16),
               // Initial Balance
               TextField(
                 controller: balanceController,
@@ -382,18 +379,18 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
                 decoration: InputDecoration(
                   labelText: context.translate('initial_balance'),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.s16),
               // Account Type dropdown
               DropdownButtonFormField<String>(
                 initialValue: selectedType,
                 decoration: InputDecoration(
                   labelText: context.translate('account_type'),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                   ),
                 ),
                 items: {selectedType, 'Cash', 'Bank', 'Custom', 'Other'}.map((type) {
@@ -444,7 +441,6 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.primaryColor,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             child: Text(context.translate('save'), style: AppTextStyles.bodyBold.copyWith(color: Colors.white)),
           ),
@@ -460,12 +456,11 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
     final confirmed = await showDialog<bool>(
       context: dialogContext,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         backgroundColor: theme.cardColor,
         title: Row(
           children: [
-            Icon(LucideIcons.alertTriangle, color: Colors.red.shade400, size: 22),
-            const SizedBox(width: 8),
+            Icon(LucideIcons.alertTriangle, color: Colors.red.shade400, size: AppSpacing.s24),
+            const SizedBox(width: AppSpacing.s8),
             Text(context.translate('delete_account'), style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface)),
           ],
         ),
@@ -483,7 +478,6 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red.shade400,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             child: Text(context.translate('delete'), style: AppTextStyles.bodyBold.copyWith(color: Colors.white)),
           ),

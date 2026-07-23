@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ThemeDropdownRow extends StatefulWidget {
   final Function(String) onSnackBar;
@@ -52,7 +54,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
             });
           },
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
             child: Row(
               children: [
                 // Moon icon
@@ -61,7 +63,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
                   color: isDark ? Colors.white70 : Colors.grey.shade600,
                   size: 22,
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: AppSpacing.s16),
                 
                 // Title
                 Expanded(
@@ -85,7 +87,7 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: AppSpacing.s8),
                 ],
                 
                 // Expand / Collapse Chevron
@@ -149,10 +151,10 @@ class _ThemeDropdownRowState extends State<ThemeDropdownRow> {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
         child: Row(
           children: [
-            const SizedBox(width: 36), // Alignment offset with parent icon
+            const SizedBox(width: AppSpacing.s32), // Alignment offset with parent icon
             Expanded(
               child: Text(
                 label,

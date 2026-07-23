@@ -2,8 +2,9 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 class MonthSelectorSheet extends StatelessWidget {
   final List<DateTime> months;
@@ -26,11 +27,11 @@ class MonthSelectorSheet extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(AppSpacing.r24),
+          topRight: Radius.circular(AppSpacing.r24),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24, vertical: AppSpacing.p16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,18 +42,15 @@ class MonthSelectorSheet extends StatelessWidget {
               height: 5,
               decoration: BoxDecoration(
                 color: isDark ? Colors.white24 : Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
               ),
             ),
           ),
           const SizedBox(height: AppSpacing.h16),
           Text(
             context.translate('select_income_month'),
-            style: TextStyle(
-              fontSize: AppFontSizes.size18,
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
-            ),
+            style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface),
           ),
           const SizedBox(height: AppSpacing.h16),
           SizedBox(
@@ -72,13 +70,10 @@ class MonthSelectorSheet extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   title: Text(
                     label,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size15,
-                      fontWeight: isSelected
+                    style: AppTextStyles.body.copyWith(fontWeight: isSelected
                           ? FontWeight.w600
                           : FontWeight.w400,
-                      color: theme.colorScheme.onSurface,
-                    ),
+                      color: theme.colorScheme.onSurface),
                   ),
                   trailing: isSelected
                       ? const Icon(

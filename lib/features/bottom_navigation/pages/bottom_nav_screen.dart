@@ -9,8 +9,9 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class BottomNavScreen extends StatefulWidget {
   const BottomNavScreen({super.key});
@@ -94,7 +95,7 @@ class _AppBottomNavState extends State<BottomNavScreen> {
                 height: 56,
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(AppSpacing.r24),
                   border: Border.all(
                     color:
                         Theme.of(context).dividerTheme.color ??
@@ -144,7 +145,7 @@ class _AppBottomNavState extends State<BottomNavScreen> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppSpacing.r24),
           onTap: () {
             if (index == 1) {
               context.read<TransactionProvider>().setSelectedPeriod(TransactionPeriod.monthly);
@@ -170,10 +171,10 @@ class _AppBottomNavState extends State<BottomNavScreen> {
                       width: 18,
                       decoration: BoxDecoration(
                         color: indicatorColor,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(AppSpacing.r12),
                       ),
                     ),
-                    const SizedBox(height: 3),
+                    const SizedBox(height: AppSpacing.s4),
                   ],
 
                   Icon(
@@ -183,11 +184,10 @@ class _AppBottomNavState extends State<BottomNavScreen> {
                   ),
 
                   if (isSelected) ...[
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSpacing.s4),
                     Text(
                       context.translate(item.title.toLowerCase()),
                       style: AppTextStyles.caption.copyWith(
-                        fontSize: AppFontSizes.size10,
                         fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
                         fontWeight: FontWeight.w600,
                         color: activeColor,

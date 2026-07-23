@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
@@ -66,9 +65,8 @@ class MemberTile extends StatelessWidget {
                     member.name.isNotEmpty
                         ? String.fromCharCode(member.name.runes.first).toUpperCase()
                         : '?',
-                    style: const TextStyle(
+                    style: AppTextStyles.bodyBold.copyWith(
                       color: AppColors.white,
-                      fontWeight: FontWeight.bold,
                     ),
                   )
                 : null,
@@ -77,18 +75,17 @@ class MemberTile extends StatelessWidget {
           Expanded(
             child: Text(
               member.name,
-              style: AppTextStyles.cardTitle.copyWith(
+              style: AppTextStyles.h3.copyWith(
                 color: theme.colorScheme.onSurface,
-                fontSize: AppFontSizes.size16,
                 letterSpacing: 0,
               ),
             ),
           ),
           SizedBox(
-            width: 40,
-            height: 40,
+            width: AppSpacing.w40,
+            height: AppSpacing.h40,
             child: InkWell(
-              borderRadius: BorderRadius.circular(20),
+              customBorder: const CircleBorder(),
               onTap: () => onRemove(member.id),
               child: Icon(
                 LucideIcons.minusCircle,

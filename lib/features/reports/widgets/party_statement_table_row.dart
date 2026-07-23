@@ -1,9 +1,10 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartyStatementTableRow extends StatelessWidget {
   final String description;
@@ -31,11 +32,11 @@ class PartyStatementTableRow extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(AppSpacing.r12),
       child: Container(
         decoration: BoxDecoration(
           color: theme.cardColor,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           border: Border.all(color: theme.dividerColor),
           boxShadow: [
             BoxShadow(
@@ -52,7 +53,7 @@ class PartyStatementTableRow extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(AppSpacing.p12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -60,18 +61,14 @@ class PartyStatementTableRow extends StatelessWidget {
                     Text(
                       description,
                       style: AppTextStyles.reportTransactionTitle.copyWith(
-                        fontSize: AppFontSizes.size13,
                         fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface,
-                      ),
+                        color: theme.colorScheme.onSurface),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: AppSpacing.s4),
                     Text(
                       DateFormat('dd MMM yyyy • h:mm a').format(dateTime),
                       style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                        fontSize: AppFontSizes.size10,
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
+                        color: theme.colorScheme.onSurfaceVariant),
                     ),
                   ],
                 ),
@@ -80,19 +77,19 @@ class PartyStatementTableRow extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p4),
                 alignment: Alignment.center,
                 child: isInflow
                     ? Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 6,
+                          horizontal: AppSpacing.p8,
+                          vertical: AppSpacing.p8,
                         ),
                         decoration: BoxDecoration(
                           color: isDark
                               ? AppColors.activeGreen.withValues(alpha: 0.15)
                               : const Color(0xFFE8F8F5),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                           border: Border.all(
                             color: isDark
                                 ? AppColors.activeGreen.withValues(alpha: 0.3)
@@ -103,10 +100,8 @@ class PartyStatementTableRow extends StatelessWidget {
                           amount: amount,
                           isMasked: isMasked,
                           style: AppTextStyles.reportTransactionTitle.copyWith(
-                            fontSize: AppFontSizes.size12,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.activeGreen,
-                          ),
+                            color: AppColors.activeGreen),
                         ),
                       )
                     : const SizedBox.shrink(),
@@ -115,19 +110,19 @@ class PartyStatementTableRow extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p4),
                 alignment: Alignment.center,
                 child: !isInflow
                     ? Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 6,
+                          horizontal: AppSpacing.p8,
+                          vertical: AppSpacing.p8,
                         ),
                         decoration: BoxDecoration(
                           color: isDark
                               ? AppColors.activeRed.withValues(alpha: 0.15)
                               : const Color(0xFFFDE8E8),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                           border: Border.all(
                             color: isDark
                                 ? AppColors.activeRed.withValues(alpha: 0.3)
@@ -138,10 +133,8 @@ class PartyStatementTableRow extends StatelessWidget {
                           amount: amount,
                           isMasked: isMasked,
                           style: AppTextStyles.reportTransactionTitle.copyWith(
-                            fontSize: AppFontSizes.size12,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.activeRed,
-                          ),
+                            color: AppColors.activeRed),
                         ),
                       )
                     : const SizedBox.shrink(),

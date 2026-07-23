@@ -3,7 +3,10 @@ import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class WeeklyChartData {
   final String dayLabel;
@@ -24,11 +27,11 @@ class WeeklyTrendChart extends StatelessWidget {
     final primaryColor = theme.primaryColor;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: theme.cardColor,
         border: Border.all(color: theme.dividerTheme.color ?? AppColors.dividerColor, width: 1.0),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,9 +41,7 @@ class WeeklyTrendChart extends StatelessWidget {
             children: [
               Text(
                 context.translate('seven_day_trend'),
-                style: TextStyle(
-                  fontSize: AppFontSizes.size18,
-                  fontWeight: FontWeight.bold,
+                style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
                   fontFamily: TextStyle().fontFamily,
                 ),
@@ -52,15 +53,13 @@ class WeeklyTrendChart extends StatelessWidget {
                     height: 10,
                     decoration: BoxDecoration(
                       color: primaryColor,
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: BorderRadius.circular(AppSpacing.r8),
                     ),
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: AppSpacing.s8),
                   Text(
                     'Income (${context.currencySymbol})',
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size11,
-                      color: AppColors.textMuted,
+                    style: AppTextStyles.caption.copyWith(color: AppColors.textMuted,
                       fontWeight: FontWeight.w500,
                       fontFamily: TextStyle().fontFamily,
                     ),
@@ -69,7 +68,7 @@ class WeeklyTrendChart extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
           SizedBox(
             height: 200,
             child: SfCartesianChart(
@@ -84,9 +83,7 @@ class WeeklyTrendChart extends StatelessWidget {
                   final isCurrent = details.text == currentLabel;
                   return ChartAxisLabel(
                     details.text,
-                    TextStyle(
-                      fontSize: AppFontSizes.size11,
-                      color: isCurrent ? theme.colorScheme.onSurface : AppColors.textMuted,
+                    AppTextStyles.caption.copyWith(color: isCurrent ? theme.colorScheme.onSurface : AppColors.textMuted,
                       fontWeight: isCurrent ? FontWeight.bold : FontWeight.w600,
                       fontFamily: TextStyle().fontFamily,
                     ),
@@ -108,8 +105,8 @@ class WeeklyTrendChart extends StatelessWidget {
                       ? primaryColor
                       : primaryColor.withValues(alpha: 0.3),
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(4),
-                    topRight: Radius.circular(4),
+                    topLeft: Radius.circular(AppSpacing.r8),
+                    topRight: Radius.circular(AppSpacing.r8),
                   ),
                   width: 0.4,
                 ),

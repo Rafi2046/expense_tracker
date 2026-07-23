@@ -3,6 +3,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class GlossaryEntry {
   final IconData icon;
@@ -55,11 +57,10 @@ class GlossaryLabel extends StatelessWidget {
             child: Text(
               text,
               style: AppTextStyles.calculatorLabel.copyWith(
-                color: isDark ? Colors.grey.shade400 : null,
-              ),
+                color: isDark ? Colors.grey.shade400 : null),
             ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: AppSpacing.s4),
           Icon(
             LucideIcons.info,
             size: AppFontSizes.size13,
@@ -87,11 +88,11 @@ class _GlossarySheet extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1E293B) : Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 32),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.p24, AppSpacing.p12, AppSpacing.p24, AppSpacing.p32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -100,16 +101,16 @@ class _GlossarySheet extends StatelessWidget {
                 height: 4,
                 decoration: BoxDecoration(
                   color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.s24),
               Container(
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
                   color: (isDark ? const Color(0xFF2EBD85) : const Color(0xFF0C4E3C)).withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(AppSpacing.r16),
                 ),
                 child: Icon(
                   entry.icon,
@@ -117,25 +118,19 @@ class _GlossarySheet extends StatelessWidget {
                   size: 28,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.s16),
               Text(
                 context.translate(entry.titleKey),
-                style: TextStyle(
-                  fontSize: AppFontSizes.size18,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
-                ),
+                style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
               Text(
                 context.translate(entry.descriptionKey),
-                style: TextStyle(
-                  fontSize: AppFontSizes.size14,
-                  fontWeight: FontWeight.w400,
+                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w400,
                   color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                  height: 1.5,
-                ),
+                  height: 1.5),
                 textAlign: TextAlign.center,
               ),
             ],

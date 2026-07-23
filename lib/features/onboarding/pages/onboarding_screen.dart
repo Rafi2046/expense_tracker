@@ -17,6 +17,10 @@ import 'package:expense_tracker/features/login/widgets/sync_loading_overlay.dart
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -301,8 +305,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   bottom: false,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 8,
+                      horizontal: AppSpacing.p16,
+                      vertical: AppSpacing.p8,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -333,25 +337,21 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                               width: 140,
                               height: 140,
                             ),
-                            const SizedBox(height: 32),
+                            const SizedBox(height: AppSpacing.s32),
                             Text(
                               'Welcome to BudgetMint',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                              style: AppTextStyles.displayMedium.copyWith(fontWeight: FontWeight.bold,
                                 color: isDark ? Colors.white : const Color(0xFF1F2937),
                               ),
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: AppSpacing.s12),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 32),
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p32),
                               child: Text(
                                 'Your all-in-one companion to track daily expenses, manage budgets, and split tour bills effortlessly.',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: isDark ? Colors.white70 : const Color(0xFF6B7280),
+                                style: AppTextStyles.body.copyWith(color: isDark ? Colors.white70 : const Color(0xFF6B7280),
                                   height: 1.5,
                                 ),
                               ),
@@ -395,7 +395,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         itemCount: _totalSlides,
                         currentPage: _currentPage,
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSpacing.s24),
                       OnboardingNavigationButtons(
                         isLastPage: isLastPage,
                         onPressed: _onNext,

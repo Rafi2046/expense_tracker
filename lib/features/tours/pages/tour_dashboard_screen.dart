@@ -184,7 +184,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 color: isDark
                     ? const Color(0xFF064E3B).withValues(alpha: 0.2)
                     : AppColors.selectionGreenBg,
-                borderRadius: BorderRadius.circular(AppSpacing.r10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
               ),
               child: const Icon(
                 LucideIcons.userPlus,
@@ -203,7 +203,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 color: isDark
                     ? const Color(0xFF064E3B).withValues(alpha: 0.2)
                     : AppColors.selectionGreenBg,
-                borderRadius: BorderRadius.circular(AppSpacing.r10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
               ),
               child: const Icon(
                 LucideIcons.share,
@@ -220,14 +220,14 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 _openEditTourSheet(tour);
               }
             },
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r12)),
             icon: Container(
               padding: const EdgeInsets.all(AppSpacing.p8),
               decoration: BoxDecoration(
                 color: isDark
                     ? const Color(0xFF064E3B).withValues(alpha: 0.2)
                     : AppColors.selectionGreenBg,
-                borderRadius: BorderRadius.circular(AppSpacing.r10),
+                borderRadius: BorderRadius.circular(AppSpacing.r12),
               ),
               child: const Icon(
                 LucideIcons.moreVertical,
@@ -242,7 +242,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 child: Row(
                   children: [
                     Icon(LucideIcons.pencil, size: 18, color: theme.colorScheme.onSurface),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: AppSpacing.s8),
                     Text(context.translate('edit_tour'), style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface)),
                   ],
                 ),
@@ -283,7 +283,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                         final email = data['email'] as String? ?? '';
 
                         return Container(
-                          margin: const EdgeInsets.only(bottom: 12),
+                          margin: const EdgeInsets.only(bottom: AppSpacing.p12),
                           padding: const EdgeInsets.all(AppSpacing.p16),
                           decoration: BoxDecoration(
                             color: isDark 
@@ -357,9 +357,9 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                                         foregroundColor: AppColors.activeRed,
                                         side: const BorderSide(color: AppColors.activeRed),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                                         ),
-                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
                                       ),
                                       child: Text(context.translate('decline_button')),
                                     ),
@@ -379,9 +379,9 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                                         foregroundColor: Colors.white,
                                         elevation: 0,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(AppSpacing.r12),
                                         ),
-                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
                                       ),
                                       child: Text(context.translate('accept_button')),
                                     ),
@@ -403,14 +403,14 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
               isSettled: isSettled,
             ),
             if (tour.inviteCode != null && tour.inviteCode!.isNotEmpty) ...[
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
               InviteCodeCard(
                 inviteCode: tour.inviteCode!,
                 tourName: tour.name,
               ),
             ],
             if (participants.isNotEmpty) ...[
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
               TourDashboardExpenseChart(
                 participants: participants,
                 balances: netBalances,
@@ -429,7 +429,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 },
               ),
             ],
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
             TourDashboardStatsRow(
               expenseCount: expenses.length,
               onAddExpense: tour.isCompleted
@@ -513,7 +513,7 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r16)),
         backgroundColor: theme.cardColor,
         title: Text(
           context.translate('delete_expense_title'),

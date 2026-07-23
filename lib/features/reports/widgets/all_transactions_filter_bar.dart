@@ -5,8 +5,8 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/party_select_sheet.dart';
 import 'package:expense_tracker/features/reports/widgets/transaction_type_select_sheet.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class AllTransactionsFilterBar extends StatefulWidget {
   const AllTransactionsFilterBar({super.key});
@@ -48,26 +48,26 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
           style: AppTextStyles.partyFormInput.copyWith(color: theme.colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: context.translate('search_transactions'),
-            hintStyle: AppTextStyles.partyFormHint.copyWith(fontSize: AppFontSizes.size14, color: isDark ? Colors.white30 : null),
+            hintStyle: AppTextStyles.partyFormHint.copyWith( color: isDark ? Colors.white30 : null),
             prefixIcon: Icon(LucideIcons.search, color: isDark ? Colors.white30 : Colors.grey.shade400, size: 20),
             filled: true,
             fillColor: theme.cardColor,
-            contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.p8, horizontal: AppSpacing.p16),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               borderSide: BorderSide(color: theme.dividerTheme.color ?? Colors.grey.shade100, width: 1),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               borderSide: BorderSide(color: theme.primaryColor, width: 1.5),
             ),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.s12),
 
         // Chips Row
         Row(
@@ -85,10 +85,10 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                   }
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
                   decoration: BoxDecoration(
                     color: theme.cardColor,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                     border: Border.all(color: theme.dividerTheme.color ?? Colors.transparent, width: 1),
                   ),
                   child: Row(
@@ -104,7 +104,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                           if (type == 'Income') return context.translate('income');
                           return type;
                         })(),
-                        style: AppTextStyles.reportTileTitle.copyWith(fontSize: AppFontSizes.size11, color: theme.colorScheme.onSurface),
+                        style: AppTextStyles.reportTileTitle.copyWith( color: theme.colorScheme.onSurface),
                       ),
                       Icon(
                         LucideIcons.chevronDown,
@@ -116,7 +116,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSpacing.s8),
 
             // Party Selector Chip
             Expanded(
@@ -133,10 +133,10 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                   }
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
                   decoration: BoxDecoration(
                     color: theme.cardColor,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                     border: Border.all(color: theme.dividerTheme.color ?? Colors.transparent, width: 1),
                   ),
                   child: Row(
@@ -144,7 +144,7 @@ class _AllTransactionsFilterBarState extends State<AllTransactionsFilterBar> {
                     children: [
                       Text(
                         reportsProvider.selectedPartyName ?? context.translate('select_party'),
-                        style: AppTextStyles.reportTileTitle.copyWith(fontSize: AppFontSizes.size11, color: theme.colorScheme.onSurface),
+                        style: AppTextStyles.reportTileTitle.copyWith( color: theme.colorScheme.onSurface),
                       ),
                       Icon(
                         LucideIcons.chevronDown,

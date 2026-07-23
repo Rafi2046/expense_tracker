@@ -6,7 +6,6 @@ import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 
@@ -43,9 +42,9 @@ class TourListHeader extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-        AppSpacing.p20,
+        AppSpacing.p16,
         AppSpacing.p12,
-        AppSpacing.p20,
+        AppSpacing.p16,
         0,
       ),
       child: Row(
@@ -57,21 +56,19 @@ class TourListHeader extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
+                    horizontal: AppSpacing.p12,
+                    vertical: AppSpacing.p8,
                   ),
                   decoration: BoxDecoration(
                     color: scheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
                   child: Text(
                     context.translate('where_to_next'),
                     style: AppTextStyles.caption.copyWith(
-                      fontSize: AppFontSizes.size10,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1.5,
-                      color: scheme.primary,
-                    ),
+                      color: scheme.primary),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.s8),
@@ -83,15 +80,14 @@ class TourListHeader extends StatelessWidget {
                       style: AppTextStyles.displayLarge.copyWith(
                         fontWeight: FontWeight.w800,
                         letterSpacing: -0.8,
-                        color: scheme.onSurface,
-                      ),
+                        color: scheme.onSurface),
                     ),
                     if (onViewAll != null && totalTours > 0)
                       TextButton(
                         onPressed: onViewAll,
                         style: TextButton.styleFrom(
                           foregroundColor: scheme.primary,
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12),
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
@@ -99,27 +95,25 @@ class TourListHeader extends StatelessWidget {
                           context.translate('view_all'),
                           style: AppTextStyles.bodySmall.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: scheme.primary,
-                          ),
+                            color: scheme.primary),
                         ),
                       ),
                   ],
                 ),
                 if (totalTours > 0) ...[
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppSpacing.s4),
                   Text(
                     '$totalTours tour${totalTours == 1 ? '' : 's'} · $totalBuddies ${totalBuddies == 1 ? 'buddy' : 'buddies'}',
                     style: AppTextStyles.bodySmall.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: scheme.onSurfaceVariant,
-                    ),
+                      color: scheme.onSurfaceVariant),
                   ),
                 ],
               ],
             ),
           ),
           InkWell(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(AppSpacing.r24),
             onTap: () {
               ProfileSwitchSheet.show(
                 context: context,
@@ -166,8 +160,7 @@ class TourListHeader extends StatelessWidget {
                   initials,
                   style: AppTextStyles.h3.copyWith(
                     color: scheme.onSurface,
-                    fontWeight: FontWeight.w700,
-                  ),
+                    fontWeight: FontWeight.w700),
                 )
                     : null,
               ),

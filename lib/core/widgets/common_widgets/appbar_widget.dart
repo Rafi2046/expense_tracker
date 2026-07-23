@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/core/providers/session_provider.dart';
@@ -9,6 +8,8 @@ import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class HomepageAppbarWidget extends StatelessWidget
     implements PreferredSizeWidget {
@@ -55,11 +56,11 @@ class HomepageAppbarWidget extends StatelessWidget
           Flexible(
             child: InkWell(
               onTap: onProfileTap,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSpacing.r8),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  vertical: 4.0,
-                  horizontal: 8.0,
+                  vertical: AppSpacing.p4,
+                  horizontal: AppSpacing.p8,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -74,24 +75,22 @@ class HomepageAppbarWidget extends StatelessWidget
                           ? Text(
                               initials,
                               style: AppTextStyles.bodyBold.copyWith(
-                                color: theme.colorScheme.onSurface,
-                              ),
+                                color: theme.colorScheme.onSurface),
                             )
                           : null,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSpacing.s8),
                     Flexible(
                       child: Text(
                         displayName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.h3.copyWith(
-                          color: theme.colorScheme.onSurface,
-                        ),
+                          color: theme.colorScheme.onSurface),
                       ),
                     ),
 
-                    const SizedBox(width: 4),
+                    const SizedBox(width: AppSpacing.s4),
                     Icon(
                       LucideIcons.chevronDown,
                       color: theme.colorScheme.onSurface,
@@ -104,22 +103,20 @@ class HomepageAppbarWidget extends StatelessWidget
           ),
           InkWell(
             onTap: notificationOnTap,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppSpacing.r24),
             child: Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding: const EdgeInsets.all(AppSpacing.p4),
               child: Badge(
                 isLabelVisible: unreadCount > 0,
                 backgroundColor: Colors.red.shade600,
                 textColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p4, vertical: 1),
                 label: Text(
                   unreadCount.toString(),
                   style: AppTextStyles.caption.copyWith(
-                    fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
-                    height: 1.1,
-                  ),
+                    height: 1.1),
                 ),
                 child: const Icon(
                   LucideIcons.bell,

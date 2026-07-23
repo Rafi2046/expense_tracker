@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'party_statement_contact_chip_data.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class ContactChip extends StatelessWidget {
   final ContactChipData data;
@@ -15,12 +16,12 @@ class ContactChip extends StatelessWidget {
     final primaryColor = theme.colorScheme.primary;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p12),
       decoration: BoxDecoration(
         color: isDark
             ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
             : primaryColor.withValues(alpha: 0.03),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(
           color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.07)
@@ -43,7 +44,7 @@ class ContactChip extends StatelessWidget {
               color: primaryColor,
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSpacing.s8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,13 +53,12 @@ class ContactChip extends StatelessWidget {
                 Text(
                   data.title,
                   style: AppTextStyles.caption.copyWith(
-                    fontSize: AppFontSizes.size10,
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.38),
                     letterSpacing: 0.4,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSpacing.s4),
                 Text(
                   data.label,
                   maxLines: 1,

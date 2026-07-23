@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -18,15 +19,15 @@ class DateRangeHeader extends StatelessWidget {
           child: Container(
             width: 36,
             height: 4,
-            margin: const EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.only(top: AppSpacing.p8),
             decoration: BoxDecoration(
               color: theme.dividerColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 12.0, right: 16.0, top: 6.0),
+          padding: const EdgeInsets.only(left: AppSpacing.p12, right: AppSpacing.p16, top: AppSpacing.p8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -40,7 +41,7 @@ class DateRangeHeader extends StatelessWidget {
                   color: theme.colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(width: 48),
+              const SizedBox(width: AppSpacing.w48),
             ],
           ),
         ),

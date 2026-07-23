@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/features/tours/widgets/expense_category_icon_data.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
 
 Future<Map<String, dynamic>?> showAddCategoryDialog(BuildContext context) async {
   IconData selectedIcon = categoryIcons.first;
@@ -24,10 +25,7 @@ Future<Map<String, dynamic>?> showAddCategoryDialog(BuildContext context) async 
           backgroundColor: Theme.of(ctx).colorScheme.surface,
           title: Text(
             context.translate('new_category_title'),
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: AppFontSizes.size18,
-            ),
+            style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w600),
           ),
           content: SizedBox(
             width: double.maxFinite,
@@ -41,7 +39,7 @@ Future<Map<String, dynamic>?> showAddCategoryDialog(BuildContext context) async 
                   decoration: InputDecoration(
                     hintText: context.translate('category_name'),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.r10),
+                      borderRadius: BorderRadius.circular(AppSpacing.r12),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.p12,
@@ -61,16 +59,14 @@ Future<Map<String, dynamic>?> showAddCategoryDialog(BuildContext context) async 
                     }
                   },
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: AppSpacing.s8),
                 Text(
                   context.translate('choose_icon'),
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size12,
-                    fontWeight: FontWeight.w600,
+                  style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600,
                     color: isDark ? Colors.grey.shade400 : const Color(0xFF6B7280),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: AppSpacing.s8),
                 Builder(
                     builder: (ctx) {
                       final filtered = searchQuery.isEmpty
@@ -115,7 +111,7 @@ Future<Map<String, dynamic>?> showAddCategoryDialog(BuildContext context) async 
                                         ? Colors.grey.shade800
                                         : const Color(0xFFF3F4F6)),
                                 borderRadius: BorderRadius.circular(
-                                  AppSpacing.r10,
+                                  AppSpacing.r12,
                                 ),
                                 border: Border.all(
                                   color: isSelected

@@ -1,10 +1,13 @@
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/utils/tour_insights_data.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_category_distribution.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_insights_toggle.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_member_distribution.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class TourInsightsCard extends StatefulWidget {
   final TourInsightsData? insights;
@@ -32,10 +35,10 @@ class _TourInsightsCardState extends State<TourInsightsCard> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
@@ -51,7 +54,7 @@ class _TourInsightsCardState extends State<TourInsightsCard> {
             isCategory: _isCategoryView,
             onChanged: (val) => setState(() => _isCategoryView = val),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.s16),
           _buildContent(isDark, theme),
         ],
       ),
@@ -66,15 +69,12 @@ class _TourInsightsCardState extends State<TourInsightsCard> {
     final data = widget.insights;
     if (data == null) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.p24),
         child: Center(
           child: Text(
             context.translate('add_expenses_to_see_breakdown'),
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: AppFontSizes.size12,
-              color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
-            ),
+            style: AppTextStyles.label.copyWith(color: isDark ? Colors.grey.shade500 : Colors.grey.shade600),
           ),
         ),
       );
@@ -109,19 +109,19 @@ class _TourInsightsCardState extends State<TourInsightsCard> {
   Widget _buildShimmer(bool isDark) {
     final base = isDark ? const Color(0xFF2E323E) : Colors.grey.shade200;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
       child: Column(
         children: [
           Container(
             height: 12,
             decoration: BoxDecoration(
               color: base,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSpacing.r8),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppSpacing.s16),
           ...List.generate(4, (i) => Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.only(bottom: AppSpacing.p16),
             child: Row(
               children: [
                 Container(
@@ -130,13 +130,13 @@ class _TourInsightsCardState extends State<TourInsightsCard> {
                     color: base, shape: BoxShape.circle,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.s12),
                 Expanded(
                   child: Container(
                     height: 13,
                     decoration: BoxDecoration(
                       color: base,
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(AppSpacing.r8),
                     ),
                   ),
                 ),
@@ -144,15 +144,15 @@ class _TourInsightsCardState extends State<TourInsightsCard> {
                   width: 40, height: 11,
                   decoration: BoxDecoration(
                     color: base,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.s12),
                 Container(
                   width: 60, height: 13,
                   decoration: BoxDecoration(
                     color: base,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
                 ),
               ],

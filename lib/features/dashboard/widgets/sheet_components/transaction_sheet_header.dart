@@ -1,7 +1,10 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class TransactionSheetHeader extends StatelessWidget {
   final bool isEditing;
@@ -36,11 +39,11 @@ class TransactionSheetHeader extends StatelessWidget {
               color: isDark
                   ? Colors.white.withValues(alpha: 0.16)
                   : Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.s16),
 
         Row(
           children: [
@@ -51,21 +54,15 @@ class TransactionSheetHeader extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size20,
-                      fontWeight: FontWeight.w800,
+                    style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w800,
                       color: theme.colorScheme.onSurface,
-                      letterSpacing: -0.3,
-                    ),
+                      letterSpacing: -0.3),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.s4),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size12,
-                      fontWeight: FontWeight.w400,
-                      color: isDark ? Colors.white38 : Colors.grey.shade500,
-                    ),
+                    style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w400,
+                      color: isDark ? Colors.white38 : Colors.grey.shade500),
                   ),
                 ],
               ),
@@ -75,10 +72,10 @@ class TransactionSheetHeader extends StatelessWidget {
             GestureDetector(
               onTap: onClose,
               child: Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(AppSpacing.p8),
                 decoration: BoxDecoration(
                   color: isDark ? Colors.white10 : Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSpacing.r12),
                 ),
                 child: Icon(
                   LucideIcons.x,

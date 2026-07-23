@@ -1,6 +1,8 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class InfoRowTile extends StatelessWidget {
   final IconData icon;
@@ -22,13 +24,13 @@ class InfoRowTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
       child: InkWell(
         onTap: onTap,
         child: Row(
           children: [
             Icon(icon, color: isDark ? Colors.white70 : Colors.grey.shade600, size: 22),
-            const SizedBox(width: 16),
+            const SizedBox(width: AppSpacing.s16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +42,7 @@ class InfoRowTile extends StatelessWidget {
                       color: isDark ? Colors.grey.shade500 : Colors.grey.shade500,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSpacing.s4),
                   Text(
                     value.isEmpty ? context.translate('not_set') : value,
                     maxLines: 1,
@@ -56,7 +58,7 @@ class InfoRowTile extends StatelessWidget {
               ),
             ),
             if (trailingIcon != null) ...[
-              const SizedBox(width: 6),
+              const SizedBox(width: AppSpacing.s8),
               Icon(trailingIcon, color: isDark ? Colors.white60 : Colors.grey.shade400, size: 14),
             ],
           ],

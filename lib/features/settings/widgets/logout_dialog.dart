@@ -6,6 +6,8 @@ import 'package:expense_tracker/features/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({super.key});
@@ -18,12 +20,12 @@ class LogoutDialog extends StatelessWidget {
 
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
       ),
       backgroundColor: theme.cardColor,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24.0),
+      insetPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(AppSpacing.p16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -42,14 +44,14 @@ class LogoutDialog extends StatelessWidget {
                 size: 32,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.s16),
 
             // Title
             Text(
               context.translate('logout'),
               style: AppTextStyles.profileTitle.copyWith(color: theme.colorScheme.onSurface),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.s12),
 
             // Subtitle Description
             Text(
@@ -60,7 +62,7 @@ class LogoutDialog extends StatelessWidget {
                 height: 1.4,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.s24),
 
             // Actions Row
             Row(
@@ -76,7 +78,7 @@ class LogoutDialog extends StatelessWidget {
                     borderColor: borderColor,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.s12),
 
                 // Logout Button
                 Expanded(

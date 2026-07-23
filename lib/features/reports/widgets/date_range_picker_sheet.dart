@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/reports/widgets/select_date_input_dialog.dart';
 import 'package:expense_tracker/features/reports/widgets/date_range_header.dart';
@@ -88,8 +89,8 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(AppSpacing.r24),
+          topRight: Radius.circular(AppSpacing.r24),
         ),
       ),
       child: Column(
@@ -117,10 +118,10 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
             },
           ),
           const WeekdayHeadings(),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.s8),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
               child: Column(
                 children: [
                   MonthCalendar(
@@ -129,7 +130,7 @@ class _DateRangePickerSheetState extends State<DateRangePickerSheet> {
                     endDate: _endDate,
                     onDateTap: _onDateTap,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSpacing.s24),
                   MonthCalendar(
                     month: _nextMonth,
                     startDate: _startDate,

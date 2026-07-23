@@ -4,9 +4,9 @@ import 'package:expense_tracker/core/providers/note_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 class AddNoteScreen extends StatefulWidget {
   final NoteItem? note;
@@ -106,14 +106,14 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
             icon: Icon(LucideIcons.check, color: activeGreenColor, size: 28),
             onPressed: _saveNote,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.s8),
         ],
       ),
       body: SafeArea(
         child: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -127,7 +127,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.s8),
                 // Chips
                 Row(
                   children: _categories.map((cat) {
@@ -149,7 +149,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     }
 
                     return Padding(
-                      padding: const EdgeInsets.only(right: 10.0),
+                      padding: const EdgeInsets.only(right: AppSpacing.p8),
                       child: ChoiceChip(
                         label: Text(
                           cat,
@@ -173,7 +173,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                         shadowColor: Colors.transparent,
                         surfaceTintColor: Colors.transparent,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(AppSpacing.r16),
                           side: BorderSide(
                             color: isSelected ? textColor.withAlpha(76) : Colors.transparent,
                             width: 1,
@@ -183,7 +183,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     );
                   }).toList(),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSpacing.s16),
                 
                 // Note Title field
                 TextFormField(
@@ -195,18 +195,18 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     filled: true,
                     fillColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.grey.shade50,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(AppSpacing.r16),
                       borderSide: BorderSide.none,
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(AppSpacing.r16),
                       borderSide: BorderSide.none,
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(AppSpacing.r16),
                       borderSide: BorderSide.none,
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -215,11 +215,11 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.s12),
                 
                 // Divider
                 Divider(color: isDark ? const Color(0xFF2D2D2D) : Colors.grey.shade100, height: 1),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.s16),
 
                 // Content text area
                 Expanded(
@@ -230,31 +230,29 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     keyboardType: TextInputType.multiline,
                     textAlignVertical: TextAlignVertical.top,
                     style: AppTextStyles.body.copyWith(
-                      fontSize: AppFontSizes.size15,
                       height: 1.5,
                       color: theme.colorScheme.onSurface,
                     ),
                     decoration: InputDecoration(
                       hintText: context.translate('note_content_hint'),
                       hintStyle: AppTextStyles.body.copyWith(
-                        fontSize: AppFontSizes.size15,
                         color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                       ),
                       filled: true,
                       fillColor: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.grey.shade50,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(AppSpacing.r16),
                         borderSide: BorderSide.none,
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(AppSpacing.r16),
                         borderSide: BorderSide.none,
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(AppSpacing.r16),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.all(16),
+                      contentPadding: const EdgeInsets.all(AppSpacing.p16),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {

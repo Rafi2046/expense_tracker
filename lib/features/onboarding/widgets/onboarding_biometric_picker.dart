@@ -5,6 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class OnboardingBiometricPicker extends StatefulWidget {
   final bool isDark;
@@ -154,7 +158,7 @@ class _OnboardingBiometricPickerState extends State<OnboardingBiometricPicker>
     return Center(
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p24, vertical: AppSpacing.p24),
         child: AnimatedBuilder(
           animation: _staggerController,
           builder: (context, child) => Column(
@@ -169,7 +173,7 @@ class _OnboardingBiometricPickerState extends State<OnboardingBiometricPicker>
                   child: _buildHeroIcon(),
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: AppSpacing.s32),
               // ─── Title ───
               Transform.translate(
                 offset: Offset(0, _titleSlide.value),
@@ -178,16 +182,13 @@ class _OnboardingBiometricPickerState extends State<OnboardingBiometricPicker>
                   child: Text(
                     context.translate('onboarding_biometric_title'),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w800,
+                    style: AppTextStyles.displayLarge.copyWith(fontWeight: FontWeight.w800,
                       color: textColor,
-                      letterSpacing: -0.8,
-                    ),
+                      letterSpacing: -0.8),
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
               // ─── Subtitle ───
               Transform.translate(
                 offset: Offset(0, _subtitleSlide.value),
@@ -196,16 +197,13 @@ class _OnboardingBiometricPickerState extends State<OnboardingBiometricPicker>
                   child: Text(
                     context.translate('onboarding_biometric_subtitle'),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: subTextColor,
+                    style: AppTextStyles.body.copyWith(color: subTextColor,
                       height: 1.5,
-                      letterSpacing: 0.1,
-                    ),
+                      letterSpacing: 0.1),
                   ),
                 ),
               ),
-              const SizedBox(height: 36),
+              const SizedBox(height: AppSpacing.s32),
               // ─── Action Buttons ───
               Transform.translate(
                 offset: Offset(0, _buttonSlide.value),
@@ -224,16 +222,16 @@ class _OnboardingBiometricPickerState extends State<OnboardingBiometricPicker>
                           foregroundColor: Colors.white,
                           backgroundColor: _accentColor,
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 14,
+                            horizontal: AppSpacing.p32,
+                            vertical: AppSpacing.p12,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(AppSpacing.r12),
                         ),
                         elevation: 4,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.s16),
                     TextButton(
                       onPressed: widget.onStepComplete,
                       child: Text(

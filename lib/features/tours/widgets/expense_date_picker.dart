@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class ExpenseDatePicker extends StatelessWidget {
@@ -27,20 +28,23 @@ class ExpenseDatePicker extends StatelessWidget {
     return GestureDetector(
       onTap: onPickDate,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.p12,
+          vertical: AppSpacing.p8,
+        ),
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           border: Border.all(
             color: theme.dividerColor.withValues(alpha: 0.1),
-            width: 1,
+            width: AppSpacing.w1,
           ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(LucideIcons.calendar, size: 14, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
-            const SizedBox(width: 6),
+            const SizedBox(width: AppSpacing.s8),
             Text(
               _formatDate(selectedDate),
               style: AppTextStyles.bodySmall.copyWith(
@@ -48,7 +52,7 @@ class ExpenseDatePicker extends StatelessWidget {
                 color: theme.colorScheme.onSurface,
               ),
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: AppSpacing.s4),
             Icon(LucideIcons.chevronDown, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.3)),
           ],
         ),

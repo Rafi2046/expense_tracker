@@ -1,7 +1,10 @@
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_text_styles.dart';
+
+
 
 class IncomeTransactionRow extends StatelessWidget {
   final IconData icon;
@@ -29,10 +32,10 @@ class IncomeTransactionRow extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(AppSpacing.p12),
         decoration: BoxDecoration(
           color: theme.cardColor,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
           border: Border.all(
             color: isDark
                 ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
@@ -53,26 +56,22 @@ class IncomeTransactionRow extends StatelessWidget {
               ),
               child: Icon(icon, color: AppColors.buttonColor, size: 22),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: AppSpacing.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size15,
-                      fontWeight: FontWeight.bold,
+                    style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                       fontFamily: TextStyle().fontFamily,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppSpacing.s4),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.size12,
-                      color: isDark ? Colors.white60 : Colors.grey.shade600,
+                    style: AppTextStyles.label.copyWith(color: isDark ? Colors.white60 : Colors.grey.shade600,
                       fontFamily: TextStyle().fontFamily,
                     ),
                   ),
@@ -83,12 +82,10 @@ class IncomeTransactionRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 amount,
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.s4),
                 Text(
                   context.translate(status).toUpperCase(),
-                  style: TextStyle(
-                    fontSize: AppFontSizes.size10,
-                    fontWeight: FontWeight.w600,
+                  style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600,
                     color: isDark ? Colors.white38 : Colors.grey.shade500,
                     fontFamily: TextStyle().fontFamily,
                     letterSpacing: 0.5,

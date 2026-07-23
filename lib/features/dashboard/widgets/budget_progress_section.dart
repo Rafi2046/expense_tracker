@@ -31,7 +31,7 @@ class BudgetProgressSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(AppSpacing.br4),
+          borderRadius: BorderRadius.circular(AppSpacing.br8),
           child: LinearProgressIndicator(
             value: clampedPercentage / 100,
             minHeight: 8,
@@ -39,7 +39,7 @@ class BudgetProgressSection extends StatelessWidget {
             valueColor: AlwaysStoppedAnimation<Color>(color),
           ),
         ),
-        const SizedBox(height: AppSpacing.s6),
+        const SizedBox(height: AppSpacing.s8),
         Text(
           context.translate('percent_used', namedArgs: {'percentage': percentage.toStringAsFixed(1)}),
           style: AppTextStyles.cardStatusText.copyWith(color: color),

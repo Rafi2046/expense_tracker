@@ -6,6 +6,8 @@ import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/core/model/category_summary.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class IncomeExpenseCategoryLists extends StatelessWidget {
   final bool isMasked;
@@ -29,11 +31,11 @@ class IncomeExpenseCategoryLists extends StatelessWidget {
             context.translate('incomes_by_category'),
             style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.s12),
           Container(
             decoration: BoxDecoration(
               color: theme.cardColor,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
             ),
             child: ListView.separated(
@@ -44,7 +46,7 @@ class IncomeExpenseCategoryLists extends StatelessWidget {
               itemBuilder: (context, index) {
                 final s = incomeSummaries[index];
                 return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p4),
                   title: Text(
                     s.categoryName,
                     style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
@@ -66,7 +68,7 @@ class IncomeExpenseCategoryLists extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.s24),
         ],
 
         if (expenseSummaries.isNotEmpty) ...[
@@ -74,11 +76,11 @@ class IncomeExpenseCategoryLists extends StatelessWidget {
             context.translate('expenses_by_category'),
             style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.s12),
           Container(
             decoration: BoxDecoration(
               color: theme.cardColor,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSpacing.r12),
               border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
             ),
             child: ListView.separated(
@@ -89,7 +91,7 @@ class IncomeExpenseCategoryLists extends StatelessWidget {
               itemBuilder: (context, index) {
                 final s = expenseSummaries[index];
                 return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p4),
                   title: Text(
                     s.categoryName,
                     style: AppTextStyles.reportTransactionTitle.copyWith(color: theme.colorScheme.onSurface),

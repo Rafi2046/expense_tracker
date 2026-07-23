@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 
@@ -29,25 +29,25 @@ class ExpenseSplitTypeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(AppSpacing.p4),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
       ),
       child: Row(
         children: List.generate(_types.length, (i) {
           final active = splitType == _types[i];
           return Expanded(
             child: Padding(
-              padding: EdgeInsets.only(left: i > 0 ? 4 : 0),
+              padding: EdgeInsets.only(left: i > 0 ? AppSpacing.p4 : 0),
               child: GestureDetector(
                 onTap: () => onSplitTypeChanged(_types[i]),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
                   decoration: BoxDecoration(
                     color: active ? AppColors.activeGreen : Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
                     boxShadow: active
                         ? [BoxShadow(color: AppColors.activeGreen.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 2))]
                         : null,
@@ -55,11 +55,10 @@ class ExpenseSplitTypeSelector extends StatelessWidget {
                   child: Column(
                     children: [
                       Icon(_icons[i], size: 16, color: active ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.3)),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: AppSpacing.h4),
                       Text(
                         context.translate(_labels[i]),
                         style: AppTextStyles.caption.copyWith(
-                          fontSize: AppFontSizes.size10,
                           fontWeight: active ? FontWeight.w600 : FontWeight.w500,
                           color: active ? Colors.white : theme.colorScheme.onSurface.withValues(alpha: 0.4),
                         ),

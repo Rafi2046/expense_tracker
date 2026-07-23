@@ -3,6 +3,8 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartyStatementMoneyFlowCard extends StatelessWidget {
   final bool isInflow;
@@ -37,12 +39,12 @@ class PartyStatementMoneyFlowCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 14,
+        horizontal: AppSpacing.p12,
+        vertical: AppSpacing.p12,
       ),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(color: borderColor),
       ),
       child: Row(
@@ -56,7 +58,7 @@ class PartyStatementMoneyFlowCard extends StatelessWidget {
             ),
             child: Icon(icon, color: color, size: 18),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSpacing.s8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +70,7 @@ class PartyStatementMoneyFlowCard extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 3),
+                const SizedBox(height: AppSpacing.s4),
                 PrivacyMaskedText(
                   amount: amount,
                   isMasked: isMasked,

@@ -6,6 +6,8 @@ import 'package:expense_tracker/features/dashboard/widgets/income_period_selecto
 import 'package:expense_tracker/features/dashboard/widgets/income_summary_row.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class IncomeInsightsScreen extends StatefulWidget {
   const IncomeInsightsScreen({super.key});
@@ -42,19 +44,19 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                 isMasked: _localMasked,
                 onToggleMask: () => setState(() => _localMasked = !_localMasked),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.s16),
               IncomePeriodSelector(
                 selectedTimeFrame: _selectedTimeFrame,
                 onTimeFrameChanged: (tf) {
                   setState(() => _selectedTimeFrame = tf);
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.s16),
               IncomeChartSection(
                 selectedTimeFrame: _selectedTimeFrame,
                 isMasked: _localMasked,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.s16),
               FinancialHealthBanner(
                 percentageChange: _selectedTimeFrame == 'Daily'
                     ? analytics.dailyPercentageChange
@@ -65,7 +67,7 @@ class _IncomeInsightsScreenState extends State<IncomeInsightsScreen> {
                     : analytics.monthlyPercentageChange,
                 period: _selectedTimeFrame.toLowerCase(),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.s8),
             ],
           ),
         ),

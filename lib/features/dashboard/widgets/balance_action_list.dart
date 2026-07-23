@@ -3,6 +3,8 @@ import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/balance_action_tile.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class BalanceActionList extends StatelessWidget {
   final VoidCallback onAddReduceMoney;
@@ -28,7 +30,7 @@ class BalanceActionList extends StatelessWidget {
           iconColor: AppColors.activeRed,
           onTap: onAddReduceMoney,
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.s8),
         BalanceActionTile(
           title: context.translate('transfer_balance'),
           subtitle: context.translate('transfer_balance_subtitle'),

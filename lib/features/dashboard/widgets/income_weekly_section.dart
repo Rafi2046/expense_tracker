@@ -10,17 +10,16 @@ import 'package:expense_tracker/features/dashboard/widgets/weekly_trend_chart.da
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class IncomeWeeklySection extends StatelessWidget {
   final bool isMasked;
 
   const IncomeWeeklySection({super.key, required this.isMasked});
 
-  TextStyle get _amountStyle => TextStyle(
-    fontSize: AppFontSizes.size15,
-    fontWeight: FontWeight.bold,
+  TextStyle get _amountStyle => AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
     color: const Color(0xFF2EBD85),
     fontFamily: TextStyle().fontFamily,
   );
@@ -34,7 +33,7 @@ class IncomeWeeklySection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         WeeklyTrendChart(data: analytics.weeklyChartData),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.s24),
         TransactionListContainer(
           title: context.translate('weekly_activity'),
           trailing: TextButton(
@@ -58,7 +57,7 @@ class IncomeWeeklySection extends StatelessWidget {
           children: weeklyTransactions.isEmpty
               ? [
                    Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24.0),
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.p24),
                     child: Center(child: Text(context.translate('no_income_this_week'))),
                   )
                 ]

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/features/reports/pages/cash_statement_details_screen.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -19,10 +19,10 @@ class CashStatementList extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(AppSpacing.p12),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
         border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1)),
       ),
       child: Row(
@@ -35,18 +35,17 @@ class CashStatementList extends StatelessWidget {
               children: [
                 Text(
                   tx.title,
-                  style: AppTextStyles.reportTransactionTitle.copyWith(fontSize: AppFontSizes.size14, color: theme.colorScheme.onSurface),
+                  style: AppTextStyles.bodyBold.copyWith(color: theme.colorScheme.onSurface),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSpacing.s4),
                 Text(
                   '${tx.subtitle}\n${DateFormat('dd MMM yyyy').format(tx.dateTime)}',
-                  style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                    fontSize: AppFontSizes.size11,
+                  style: AppTextStyles.caption.copyWith(
                     height: 1.25,
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: AppSpacing.s8),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -54,7 +53,6 @@ class CashStatementList extends StatelessWidget {
                 context.translate('bal_label'),
                       style: AppTextStyles.reportStatLabel.copyWith(
                         color: theme.primaryColor,
-                        fontSize: AppFontSizes.size11,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -62,7 +60,6 @@ class CashStatementList extends StatelessWidget {
                       amount: tx.runningBalance,
                       style: AppTextStyles.reportStatLabel.copyWith(
                         color: theme.primaryColor,
-                        fontSize: AppFontSizes.size11,
                         fontWeight: FontWeight.w600,
                       ),
                       isMasked: isMasked,
@@ -74,8 +71,7 @@ class CashStatementList extends StatelessWidget {
           ),
           PrivacyMaskedText(
             amount: tx.amount,
-            style: AppTextStyles.reportTransactionTitle.copyWith(
-              fontSize: AppFontSizes.size14,
+            style: AppTextStyles.bodyBold.copyWith(
               color: tx.isCredit ? theme.primaryColor : AppColors.activeRed,
             ),
             isMasked: isMasked,
@@ -95,15 +91,14 @@ class CashStatementList extends StatelessWidget {
     if (filtered.isEmpty) {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 40.0),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.p40),
           child: Column(
             children: [
               Icon(LucideIcons.wallet, color: isDark ? Colors.white24 : Colors.grey.shade300, size: 48),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.s12),
               Text(
                 context.translate('no_cash_transactions_found'),
-                style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                  fontSize: AppFontSizes.size14,
+                style: AppTextStyles.body.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
@@ -143,15 +138,15 @@ class CashStatementList extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: AppSpacing.s8),
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: displayList.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 8),
+          separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.s8),
           itemBuilder: (context, index) => buildTxCard(context, displayList[index], isMasked),
         ),
-        SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
+        SizedBox(height: MediaQuery.of(context).padding.bottom + AppSpacing.s16),
       ],
     );
   }

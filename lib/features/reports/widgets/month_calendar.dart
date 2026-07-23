@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class MonthCalendar extends StatelessWidget {
   final DateTime month;
@@ -54,12 +55,11 @@ class MonthCalendar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12),
           child: Text(
             monthName,
             style: AppTextStyles.reportTransactionTitle.copyWith(
-              color: theme.colorScheme.onSurface,
-            ),
+              color: theme.colorScheme.onSurface),
           ),
         ),
         GridView.builder(
@@ -90,13 +90,13 @@ class MonthCalendar extends StatelessWidget {
               boxColor = isDark ? AppColors.activeGreen.withValues(alpha: 0.15) : const Color(0xFFE8F8F5);
               if (date.weekday == DateTime.sunday) {
                 rangeBorderRadius = const BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  bottomLeft: Radius.circular(20),
+                  topLeft: Radius.circular(AppSpacing.r24),
+                  bottomLeft: Radius.circular(AppSpacing.r24),
                 );
               } else if (date.weekday == DateTime.saturday) {
                 rangeBorderRadius = const BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
+                  topRight: Radius.circular(AppSpacing.r24),
+                  bottomRight: Radius.circular(AppSpacing.r24),
                 );
               }
             }
@@ -128,7 +128,6 @@ class MonthCalendar extends StatelessWidget {
                                   : theme.colorScheme.onSurface),
                           fontWeight:
                               isSelected || isInRange ? FontWeight.bold : FontWeight.w500,
-                          fontSize: AppFontSizes.size14,
                         ),
                       ),
                     ),

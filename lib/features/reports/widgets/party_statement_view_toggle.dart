@@ -2,6 +2,8 @@ import 'package:expense_tracker/core/providers/reports_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
+
 
 class PartyStatementViewToggle extends StatelessWidget {
   const PartyStatementViewToggle({super.key});
@@ -15,11 +17,11 @@ class PartyStatementViewToggle extends StatelessWidget {
 
     return Container(
       height: 38,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.all(3),
+      margin: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
+      padding: const EdgeInsets.all(AppSpacing.p4),
       decoration: BoxDecoration(
         color: isDark ? theme.colorScheme.onSurface.withValues(alpha: 0.08) : const Color(0xFFF1F2F4),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -58,7 +60,7 @@ class PartyStatementViewToggle extends StatelessWidget {
         height: 32,
         decoration: BoxDecoration(
           color: isActive ? theme.cardColor : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.r8),
           boxShadow: isActive
               ? [
                   BoxShadow(

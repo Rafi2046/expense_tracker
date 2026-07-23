@@ -4,7 +4,6 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class BudgetManagementHeader extends StatelessWidget {
@@ -39,7 +38,7 @@ class BudgetManagementHeader extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.p20),
+      padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF0C4E3C), Color(0xFF146C48)],
@@ -57,7 +56,7 @@ class BudgetManagementHeader extends StatelessWidget {
                 padding: const EdgeInsets.all(AppSpacing.p8),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(AppSpacing.br10),
+                  borderRadius: BorderRadius.circular(AppSpacing.br12),
                 ),
                 child: const Icon(
                   LucideIcons.wallet,
@@ -69,8 +68,7 @@ class BudgetManagementHeader extends StatelessWidget {
               Text(
                 context.translate('budget_overview'),
                 style: AppTextStyles.cardTitle.copyWith(
-                  color: Colors.white,
-                  fontSize: AppFontSizes.size13,
+                  color: Colors.white
                 ),
               ),
               const Spacer(),
@@ -80,7 +78,7 @@ class BudgetManagementHeader extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.p12,
-                    vertical: AppSpacing.p6,
+                    vertical: AppSpacing.p8,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.15),
@@ -94,8 +92,7 @@ class BudgetManagementHeader extends StatelessWidget {
                       Text(
                         context.translate('edit'),
                         style: AppTextStyles.cardStatusText.copyWith(
-                          color: Colors.white,
-                          fontSize: AppFontSizes.size12,
+                          color: Colors.white
                         ),
                       ),
                     ],
@@ -104,7 +101,7 @@ class BudgetManagementHeader extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.s20),
+          const SizedBox(height: AppSpacing.s24),
           Row(
             children: [
               _HeaderStat(
@@ -133,7 +130,7 @@ class BudgetManagementHeader extends StatelessWidget {
           if (hasBudget) ...[
             const SizedBox(height: AppSpacing.s16),
             ClipRRect(
-              borderRadius: BorderRadius.circular(AppSpacing.br4),
+              borderRadius: BorderRadius.circular(AppSpacing.br8),
               child: LinearProgressIndicator(
                 value: percentage / 100,
                 minHeight: 8,
@@ -141,12 +138,11 @@ class BudgetManagementHeader extends StatelessWidget {
                 valueColor: AlwaysStoppedAnimation<Color>(progressColor),
               ),
             ),
-            const SizedBox(height: AppSpacing.s6),
+            const SizedBox(height: AppSpacing.s8),
             Text(
               context.translate('percent_used', namedArgs: {'percentage': percentage.toStringAsFixed(1)}),
               style: AppTextStyles.cardStatusText.copyWith(
-                color: Colors.white70,
-                fontSize: AppFontSizes.size11,
+                color: Colors.white70
               ),
             ),
           ],
@@ -190,16 +186,13 @@ class _HeaderStat extends StatelessWidget {
           label,
           style: AppTextStyles.cardTitle.copyWith(
             color: Colors.white60,
-            fontSize: AppFontSizes.size9,
-            letterSpacing: 1.2,
-          ),
+            letterSpacing: 1.2),
         ),
         const SizedBox(height: AppSpacing.s4),
         Text(
           value,
           style: AppTextStyles.cardValueGreen.copyWith(
-            color: color,
-            fontSize: AppFontSizes.size16,
+            color: color
           ),
         ),
       ],
