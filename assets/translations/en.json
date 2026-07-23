@@ -1118,6 +1118,8 @@
   "notif_budget_warning_body": "You have used {percent}% of your monthly budget ({amount} of {budget}).",
   "notif_weekly_summary_title": "Weekly Summary",
   "notif_weekly_summary_body": "You spent {amount} last week. Tap to review your habits!",
+  "notif_daily_summary_title": "Daily Summary",
+  "notif_daily_summary_body": "You spent {amount} today. Tap to review.",
   "notif_monthly_summary_title": "Monthly Summary",
   "notif_monthly_summary_body": "You spent {amount} this month. Tap to review your habits!",
   "no_analytics_data": "No data available for this period"

@@ -1110,6 +1110,8 @@
   "notif_budget_warning_body": "আপনি আপনার মাসিক বাজেটের {percent}% ব্যবহার করেছেন ({budget} এর মধ্যে {amount})।",
   "notif_weekly_summary_title": "সাপ্তাহিক সারসংক্ষেপ",
   "notif_weekly_summary_body": "গত সপ্তাহে আপনার মোট খরচ ছিল {amount}। হিসাব দেখতে ট্যাপ করুন!",
+  "notif_daily_summary_title": "দৈনিক সারসংক্ষেপ",
+  "notif_daily_summary_body": "আজ আপনি মোট {amount} খরচ করেছেন। দেখতে ট্যাপ করুন।",
   "notif_monthly_summary_title": "মাসিক সারসংক্ষেপ",
   "notif_monthly_summary_body": "এই মাসে আপনার মোট খরচ ছিল {amount}। হিসাব দেখতে ট্যাপ করুন!",
   "no_analytics_data": "এই সময়ের জন্য কোনো ডেটা নেই"

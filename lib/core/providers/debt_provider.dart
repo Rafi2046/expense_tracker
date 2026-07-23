@@ -172,7 +172,8 @@ class DebtProvider extends ChangeNotifier {
     _firestoreSubscription = null;
 
     () async {
-      if (uidChanged) {
+      // Only wipe when switching between two real accounts — never on cold start.
+      if (uidChanged && previousUser != null) {
         _knownDocIds.clear();
         _pendingIds.clear();
         _items.clear();

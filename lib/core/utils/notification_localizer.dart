@@ -18,6 +18,8 @@ class NotificationLocalizer {
     'notif_budget_warning_body',
     'notif_weekly_summary_title',
     'notif_weekly_summary_body',
+    'notif_daily_summary_title',
+    'notif_daily_summary_body',
     'notif_monthly_summary_title',
     'notif_monthly_summary_body',
   };

@@ -23,7 +23,6 @@ import 'package:expense_tracker/core/providers/account_provider.dart';
 import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:expense_tracker/core/services/notification_service.dart';
 import 'package:expense_tracker/core/services/weekly_summary_service.dart';
-import 'package:expense_tracker/core/services/daily_summary_service.dart';
 import 'package:expense_tracker/core/services/monthly_summary_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -156,9 +155,10 @@ void main() async {
       SharedPrefsHelper.getString(SharedPrefsHelper.activeProfileKey) ?? 'default_profile';
   debugPrint('main: initial active profile = $initialProfileId');
 
-  // Fire weekly/daily/monthly summary checks (non-blocking — runs async in background)
+  // Weekly/monthly in-app summaries (non-blocking).
+  // Daily *notification* is scheduled from TransactionProvider after DB load
+  // so the body uses today's real total (not a zero race at cold start).
   WeeklySummaryService.checkAndGenerate(profileId: initialProfileId);
-  DailySummaryService.updateDailyNotification(profileId: initialProfileId);
   MonthlySummaryService.checkAndGenerate(profileId: initialProfileId);
 
   final deviceLocale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;

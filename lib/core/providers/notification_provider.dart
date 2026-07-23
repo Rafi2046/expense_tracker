@@ -132,7 +132,7 @@ class NotificationProvider extends ChangeNotifier {
   Future<void> _generateSummariesForProfile() async {
     final profileId = _activeProfileId;
     await WeeklySummaryService.checkAndGenerate(profileId: profileId);
-    await DailySummaryService.updateDailyNotification(profileId: profileId);
+    await DailySummaryService.updateDailyNotification();
     await MonthlySummaryService.checkAndGenerate(profileId: profileId);
     if (_activeProfileId == profileId) {
       final rows = await _db.getInAppNotifications(profileId: profileId);

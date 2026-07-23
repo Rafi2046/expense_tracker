@@ -42,6 +42,10 @@ class NotificationService {
   bool _initialized = false;
   tz.Location? _location;
 
+  /// Exact when permitted; otherwise inexact so schedules still register on Android 14+.
+  AndroidScheduleMode _androidScheduleMode =
+      AndroidScheduleMode.exactAllowWhileIdle;
+
   /// In-memory guard: tracks (profileId, threshold, month) combos already notified
   /// in the current session. Combined with SharedPrefs persistence for app restarts.
   final Set<String> _budgetNotifiedKeys = {};
@@ -101,8 +105,10 @@ class NotificationService {
     try {
       final timezoneInfo = await FlutterTimezone.getLocalTimezone();
       _location = tz.getLocation(timezoneInfo.identifier);
+      tz.setLocalLocation(_location!);
     } catch (_) {
       _location = tz.getLocation('UTC');
+      tz.setLocalLocation(_location!);
     }
 
     const androidSettings = AndroidInitializationSettings(
@@ -124,17 +130,29 @@ class NotificationService {
       onDidReceiveNotificationResponse: _onNotificationTap,
     );
 
-    // Android 13+ runtime permission
+    // Android 13+ runtime permission + Android 14+ exact-alarm access
     final androidPlugin = _plugin
         .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin
         >();
     if (androidPlugin != null) {
       await androidPlugin.requestNotificationsPermission();
-    }
 
-    // Notification channels
-    if (androidPlugin != null) {
+      // Without this, exactAllowWhileIdle schedules are silently dropped on Android 14+.
+      final canExact = await androidPlugin.canScheduleExactNotifications();
+      debugPrint('NotificationService: canScheduleExactNotifications=$canExact');
+      if (canExact != true) {
+        await androidPlugin.requestExactAlarmsPermission();
+      }
+      final canExactAfter =
+          await androidPlugin.canScheduleExactNotifications();
+      _androidScheduleMode = canExactAfter == true
+          ? AndroidScheduleMode.exactAllowWhileIdle
+          : AndroidScheduleMode.inexactAllowWhileIdle;
+      debugPrint(
+        'NotificationService: androidScheduleMode=$_androidScheduleMode',
+      );
+
       await androidPlugin.createNotificationChannel(
         const AndroidNotificationChannel(
           'budget_alerts',
@@ -149,7 +167,7 @@ class NotificationService {
           'daily_reminders',
           'Daily Reminders',
           description: 'Morning greetings and end-of-day reminders',
-          importance: Importance.high,
+          importance: Importance.max,
           playSound: true,
         ),
       );
@@ -160,6 +178,44 @@ class NotificationService {
     await _scheduleEodReminder();
 
     _initialized = true;
+  }
+
+  Future<void> _safeZonedSchedule({
+    required int id,
+    required String? title,
+    required String? body,
+    required tz.TZDateTime scheduledDate,
+    required NotificationDetails notificationDetails,
+    String? payload,
+    DateTimeComponents? matchDateTimeComponents,
+  }) async {
+    try {
+      await _plugin.zonedSchedule(
+        id: id,
+        title: title,
+        body: body,
+        scheduledDate: scheduledDate,
+        notificationDetails: notificationDetails,
+        androidScheduleMode: _androidScheduleMode,
+        payload: payload,
+        matchDateTimeComponents: matchDateTimeComponents,
+      );
+    } catch (e) {
+      debugPrint(
+        'NotificationService: zonedSchedule exact failed ($e), retrying inexact',
+      );
+      _androidScheduleMode = AndroidScheduleMode.inexactAllowWhileIdle;
+      await _plugin.zonedSchedule(
+        id: id,
+        title: title,
+        body: body,
+        scheduledDate: scheduledDate,
+        notificationDetails: notificationDetails,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        payload: payload,
+        matchDateTimeComponents: matchDateTimeComponents,
+      );
+    }
   }
 
   // ── Locale detection ──
@@ -192,7 +248,7 @@ class NotificationService {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 
-    await _plugin.zonedSchedule(
+    await _safeZonedSchedule(
       id: 2001,
       title: title,
       body: body,
@@ -210,7 +266,6 @@ class NotificationService {
           presentSound: true,
         ),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
@@ -242,7 +297,7 @@ class NotificationService {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 
-    await _plugin.zonedSchedule(
+    await _safeZonedSchedule(
       id: 3001,
       title: title,
       body: body,
@@ -260,9 +315,13 @@ class NotificationService {
           presentSound: true,
         ),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
     );
+  }
+
+  /// Cancels a pending or delivered notification by [id].
+  Future<void> cancelNotification(int id) async {
+    await _plugin.cancel(id: id);
   }
 
   Future<void> cancelEodReminderForToday() async {
@@ -288,7 +347,7 @@ class NotificationService {
       0,
     );
 
-    await _plugin.zonedSchedule(
+    await _safeZonedSchedule(
       id: 3001,
       title: title,
       body: body,
@@ -306,7 +365,6 @@ class NotificationService {
           presentSound: true,
         ),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
@@ -318,19 +376,21 @@ class NotificationService {
     required String title,
     required String body,
     String? payload,
+    bool autoCancel = true,
   }) async {
     await _plugin.show(
       id: id,
       title: title,
       body: body,
-      notificationDetails: const NotificationDetails(
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           'daily_reminders',
           'Daily Reminders',
           importance: Importance.high,
           priority: Priority.high,
+          autoCancel: autoCancel,
         ),
-        iOS: DarwinNotificationDetails(
+        iOS: const DarwinNotificationDetails(
           presentAlert: true,
           presentBadge: true,
           presentSound: true,
@@ -347,34 +407,44 @@ class NotificationService {
 
   // ── Scheduled notification (used by DailySummaryService) ──
 
+  /// Schedules a local notification at [scheduledDate] in the device timezone.
+  ///
+  /// When [repeatDaily] is true, uses [DateTimeComponents.time] so it fires
+  /// every day at that local clock time.
+  /// [autoCancel] false keeps the notification in the shade until the user
+  /// dismisses it (Daily Summary).
   Future<void> showScheduledNotification({
     required int id,
     required String title,
     required String body,
     required tz.TZDateTime scheduledDate,
     String? payload,
+    bool repeatDaily = false,
+    bool autoCancel = true,
   }) async {
-    await _plugin.zonedSchedule(
+    await _safeZonedSchedule(
       id: id,
       title: title,
       body: body,
       scheduledDate: scheduledDate,
-      notificationDetails: const NotificationDetails(
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           'daily_reminders',
           'Daily Reminders',
           importance: Importance.max,
           priority: Priority.high,
           playSound: true,
+          autoCancel: autoCancel,
         ),
-        iOS: DarwinNotificationDetails(
+        iOS: const DarwinNotificationDetails(
           presentAlert: true,
           presentBadge: true,
           presentSound: true,
         ),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       payload: payload,
+      matchDateTimeComponents:
+          repeatDaily ? DateTimeComponents.time : null,
     );
   }
 

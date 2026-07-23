@@ -1100,6 +1100,8 @@
   "notif_budget_warning_body": "आपने अपने मासिक बजट का {percent}% उपयोग कर लिया है ({budget} में से {amount})।",
   "notif_weekly_summary_title": "साप्ताहिक सारांश",
   "notif_weekly_summary_body": "पिछले सप्ताह आपने {amount} खर्च किए। अपनी आदतों की समीक्षा करने के लिए टैप करें!",
+  "notif_daily_summary_title": "दैनिक सारांश",
+  "notif_daily_summary_body": "आज आपने कुल {amount} खर्च किए। देखने के लिए टैप करें।",
   "notif_monthly_summary_title": "मासिक सारांश",
   "notif_monthly_summary_body": "इस महीने आपने {amount} खर्च किए। अपनी आदतों की समीक्षा करने के लिए टैप करें!",
   "no_analytics_data": "इस अवधि के लिए कोई डेटा उपलब्ध नहीं है"

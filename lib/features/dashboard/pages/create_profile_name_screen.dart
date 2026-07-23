@@ -124,7 +124,9 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
               return;
             }
             _isCreating = false;
-            context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
+            await context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
+            await provider.selectProfile(newProfile);
+            if (!context.mounted) return;
             Navigator.pop(context, newProfile);
           },
         );
@@ -196,7 +198,9 @@ class _CreateProfileNameScreenState extends State<CreateProfileNameScreen> {
                       return;
                     }
                     _isCreating = false;
-                    context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
+                    await context.read<ProfileManagerProvider>().switchProfile(newProfile.id);
+                    await provider.selectProfile(newProfile);
+                    if (!context.mounted) return;
                     Navigator.pop(context, newProfile);
                   }
                 },

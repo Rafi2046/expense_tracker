@@ -1679,9 +1679,12 @@ class DatabaseHelper {
     return Sqflite.firstIntValue(result) ?? 0;
   }
 
-  /// Same calendar-day check used by Expense Insights (local DateTime).
-  bool _isSameDay(DateTime a, DateTime b) =>
-      a.year == b.year && a.month == b.month && a.day == b.day;
+  /// Same calendar day in the device's local timezone (handles UTC-stored rows).
+  bool _isSameDay(DateTime a, DateTime b) {
+    final al = a.toLocal();
+    final bl = b.toLocal();
+    return al.year == bl.year && al.month == bl.month && al.day == bl.day;
+  }
 
   /// Monday 00:00 of the week containing [date] (matches Expense Insights).
   DateTime _startOfWeek(DateTime date) {
@@ -1817,9 +1820,14 @@ class DatabaseHelper {
   }) async {
     final expenses = await _expenseTransactionsFor(profileId);
     final now = DateTime.now();
-    return expenses
-        .where((tx) => _isSameDay(tx.dateTime, now))
-        .fold<double>(0, (s, tx) => s + tx.amount);
+    final today = expenses.where((tx) => _isSameDay(tx.dateTime, now)).toList();
+    final total = today.fold<double>(0, (s, tx) => s + tx.amount);
+    debugPrint(
+      'getDailyExpenseTotal: profile=$profileId '
+      'day=${now.year}-${now.month}-${now.day} '
+      'expenseRows=${expenses.length} todayCount=${today.length} total=$total',
+    );
+    return total;
   }
 
   /// Premium daily summary — local calendar today (same as Expense Insights).

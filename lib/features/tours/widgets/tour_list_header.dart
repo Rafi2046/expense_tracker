@@ -136,10 +136,10 @@ class TourListHeader extends StatelessWidget {
                       builder: (context) => const SelectProfileScreen(),
                     ),
                   );
-                  if (newProfile != null && context.mounted) {
-                    await context
-                        .read<ProfileManagerProvider>()
-                        .switchProfile(newProfile.id);
+                  // Create screen already persisted the switch — don't force
+                  // secondary again after the user may have returned to main.
+                  if (newProfile != null) {
+                    debugPrint('Tours: profile created ${newProfile.id}');
                   }
                 },
               );

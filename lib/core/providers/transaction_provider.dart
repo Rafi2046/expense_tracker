@@ -128,7 +128,10 @@ class TransactionProvider extends ChangeNotifier {
 
     // Serialize wipe → reload so budget/expense reads never race the delete.
     () async {
-      if (uidChanged) {
+      // Only wipe when switching between two real accounts.
+      // Cold start is null → uid (uidChanged=true) — must NOT clear SQLite or
+      // Daily Summary schedules with total=0 before Firestore re-syncs.
+      if (uidChanged && previousUser != null) {
         _knownDocIds.clear();
         _pendingIds.clear();
         _knownCategoryIds.clear();
@@ -232,6 +235,9 @@ class TransactionProvider extends ChangeNotifier {
             }
             _isLoading = false;
             notifyListeners();
+            // Firestore may restore rows after a cold start — refresh the
+            // 11:30 body so it is not stuck on a stale "No expenses" schedule.
+            DailySummaryService.updateDailyNotification();
           },
           onError: (error) {
             debugPrint('Firestore snapshot listener error: $error');
@@ -297,6 +303,8 @@ class TransactionProvider extends ChangeNotifier {
     }
     _isLoading = false;
     notifyListeners();
+    // Schedule 11:30 PM daily summary from main profile totals (always).
+    DailySummaryService.updateDailyNotification();
   }
 
   List<CategoryItem> _getDefaultCategories() {
@@ -1103,7 +1111,9 @@ class TransactionProvider extends ChangeNotifier {
     _transactions.insert(0, uniqueTransaction);
     notifyListeners();
     NotificationService.instance.cancelEodReminderForToday();
-    DailySummaryService.updateDailyNotification(profileId: _activeProfileId);
+    if (_activeProfileId == 'default_profile') {
+      DailySummaryService.updateDailyNotification();
+    }
 
     // Budget threshold check (only for expenses)
     if (!uniqueTransaction.isIncome) {
@@ -1238,7 +1248,9 @@ class TransactionProvider extends ChangeNotifier {
     _pendingIds.add(id);
     _transactions.removeAt(index);
     notifyListeners();
-    DailySummaryService.updateDailyNotification(profileId: _activeProfileId);
+    if (_activeProfileId == 'default_profile') {
+      DailySummaryService.updateDailyNotification();
+    }
 
     _firestore
         .collection('users')
@@ -1282,7 +1294,9 @@ class TransactionProvider extends ChangeNotifier {
     _pendingIds.add(updated.id);
     _transactions[index] = updated;
     notifyListeners();
-    DailySummaryService.updateDailyNotification(profileId: _activeProfileId);
+    if (_activeProfileId == 'default_profile') {
+      DailySummaryService.updateDailyNotification();
+    }
 
     _firestore
         .collection('users')

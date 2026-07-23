@@ -60,7 +60,10 @@ class BudgetProvider extends ChangeNotifier {
     notifyListeners();
 
     () async {
-      if (uidChanged) {
+      // Only wipe when switching between two real accounts — never on cold start
+      // (null → logged-in user), or profiles/transactions vanish and prefs restore
+      // can land on a secondary profile.
+      if (uidChanged && previousUser != null) {
         // Join/await the same wipe TransactionProvider starts on auth.
         await _db.clearUserData();
       }

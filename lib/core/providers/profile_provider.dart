@@ -196,6 +196,10 @@ class ProfileProvider extends ChangeNotifier {
                       ),
                     );
                     _currentProfile = defaultProfile;
+                    SharedPrefsHelper.setString(
+                      SharedPrefsHelper.activeProfileKey,
+                      defaultProfile.id,
+                    );
                   }
                   changed = true;
                   break;
@@ -319,17 +323,28 @@ class ProfileProvider extends ChangeNotifier {
         });
       } else {
         final match = _profiles.where((p) => p.id == preservedProfileId);
-        _currentProfile = match.isNotEmpty ? match.first : _profiles.first;
+        if (match.isNotEmpty) {
+          _currentProfile = match.first;
+        } else {
+          // Saved id is gone (deleted profile) — fall back to main, then first.
+          // Never silently adopt a random secondary when prefs still say main.
+          final defaultMatch = _profiles.where((p) => p.id == 'default_profile');
+          _currentProfile =
+              defaultMatch.isNotEmpty ? defaultMatch.first : _profiles.first;
+          await SharedPrefsHelper.setString(
+            SharedPrefsHelper.activeProfileKey,
+            _currentProfile.id,
+          );
+          debugPrint(
+            'ProfileProvider._loadFromDb: saved "$preservedProfileId" missing → '
+            'fallback ${_currentProfile.id}',
+          );
+        }
       }
 
-      // Only rewrite prefs when the saved id is missing from DB (fallback).
-      // Never push a transient in-memory selection back into SharedPrefs.
-      if (savedId != _currentProfile.id) {
-        await SharedPrefsHelper.setString(
-          SharedPrefsHelper.activeProfileKey,
-          _currentProfile.id,
-        );
-      }
+      // Do NOT rewrite prefs when the saved id was found. Overwriting
+      // active_profile_id here used to clobber "main" with a secondary
+      // whenever default_profile was briefly missing from the loaded list.
 
       await _saveProfilesToPrefs();
     } catch (e) {
@@ -411,8 +426,6 @@ class ProfileProvider extends ChangeNotifier {
   // Setters & Actions
   void addProfile(UserProfile profile) {
     _profiles.add(profile);
-    _currentProfile = profile;
-    SharedPrefsHelper.setString(SharedPrefsHelper.activeProfileKey, profile.id);
     _saveProfilesToPrefs();
     notifyListeners();
   }
@@ -436,10 +449,8 @@ class ProfileProvider extends ChangeNotifier {
     } else {
       _currentProfile = profile;
     }
-    await SharedPrefsHelper.setString(
-      SharedPrefsHelper.activeProfileKey,
-      _currentProfile.id,
-    );
+    // Prefs are owned by ProfileManagerProvider.switchProfile — writing here
+    // raced with _loadFromDb and could leave a stale secondary on next launch.
     notifyListeners();
   }
 
@@ -544,11 +555,8 @@ class ProfileProvider extends ChangeNotifier {
     }
 
     _profiles.add(newProfile);
-    _currentProfile = newProfile;
-    await SharedPrefsHelper.setString(
-      SharedPrefsHelper.activeProfileKey,
-      newProfile.id,
-    );
+    // Do not auto-activate the new secondary here. Caller must
+    // ProfileManagerProvider.switchProfile + selectProfile so prefs/UI stay in sync.
     await _saveProfilesToPrefs();
     resetCreationState();
     notifyListeners();

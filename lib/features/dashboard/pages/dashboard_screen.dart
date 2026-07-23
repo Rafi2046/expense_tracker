@@ -73,9 +73,13 @@ class DashboardScreen extends StatelessWidget {
                   builder: (context) => const SelectProfileScreen(),
                 ),
               );
+              // Create screen already switchProfile + selectProfile.
+              // Do NOT switch again here — that re-forced secondary after the
+              // user had already returned to main and stuck prefs on secondary.
               if (newProfile != null && context.mounted) {
-                await context.read<ProfileManagerProvider>().switchProfile(
-                  newProfile.id,
+                debugPrint(
+                  'Dashboard: profile created ${newProfile.id} '
+                  '(active left to create-screen switch)',
                 );
               }
             },
