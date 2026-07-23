@@ -1679,107 +1679,218 @@ class DatabaseHelper {
     return Sqflite.firstIntValue(result) ?? 0;
   }
 
-  /// Returns total expense and top category for the last [days] days.
-  /// Result: { 'total': double, 'topCategory': String?, 'topAmount': double, 'transactionCount': int }
+  /// Same calendar-day check used by Expense Insights (local DateTime).
+  bool _isSameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
+
+  /// Monday 00:00 of the week containing [date] (matches Expense Insights).
+  DateTime _startOfWeek(DateTime date) {
+    final day = DateTime(date.year, date.month, date.day);
+    return day.subtract(Duration(days: day.weekday - 1));
+  }
+
+  String _categoryLabel(String? raw) {
+    final trimmed = raw?.trim() ?? '';
+    return trimmed.isEmpty ? 'Other' : trimmed;
+  }
+
+  Future<List<TransactionItem>> _expenseTransactionsFor(String profileId) async {
+    final all = await readAllTransactions(profileId: profileId);
+    return all.where((tx) => !tx.isIncome).toList();
+  }
+
+  Map<String, dynamic>? _highestTxMap(List<TransactionItem> list) {
+    if (list.isEmpty) return null;
+    final sorted = [...list]..sort((a, b) => b.amount.compareTo(a.amount));
+    final top = sorted.first;
+    return {
+      'note': top.note,
+      'category': _categoryLabel(top.category),
+      'amount': top.amount,
+      'dateTime': top.dateTime.toIso8601String(),
+    };
+  }
+
+  List<Map<String, dynamic>> _categoryBreakdown(List<TransactionItem> list) {
+    final grouped = <String, ({double amount, int count})>{};
+    for (final tx in list) {
+      final key = _categoryLabel(tx.category);
+      final prev = grouped[key];
+      grouped[key] = (
+        amount: (prev?.amount ?? 0) + tx.amount,
+        count: (prev?.count ?? 0) + 1,
+      );
+    }
+    final rows = grouped.entries
+        .map((e) => {
+              'category': e.key,
+              'amount': e.value.amount,
+              'count': e.value.count,
+            })
+        .toList()
+      ..sort((a, b) =>
+          ((b['amount'] as num).toDouble()).compareTo((a['amount'] as num).toDouble()));
+    return rows;
+  }
+
+  /// Returns total expense and top category for the current calendar week
+  /// (Mon–Sun), matching Expense Insights.
   Future<Map<String, dynamic>> getWeeklyExpenseSummary({
     int days = 7,
     String profileId = 'default_profile',
   }) async {
-    final db = await instance.database;
-    final cutoff = DateTime.now().subtract(Duration(days: days)).toIso8601String();
+    final expenses = await _expenseTransactionsFor(profileId);
+    final now = DateTime.now();
+    // Prefer calendar week when days == 7 (notification / insights parity).
+    final List<TransactionItem> period;
+    if (days == 7) {
+      final start = _startOfWeek(now);
+      final end = start.add(const Duration(days: 7));
+      period = expenses
+          .where((tx) =>
+              !tx.dateTime.isBefore(start) && tx.dateTime.isBefore(end))
+          .toList();
+    } else {
+      final cutoff = now.subtract(Duration(days: days));
+      period = expenses.where((tx) => !tx.dateTime.isBefore(cutoff)).toList();
+    }
 
-    final totalResult = await db.rawQuery(
-      '''SELECT COALESCE(SUM(amount), 0.0) as total, COUNT(*) as count
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ?''',
-      [profileId, cutoff],
-    );
-
-    final topResult = await db.rawQuery(
-      '''SELECT category, SUM(amount) as catTotal
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ?
-         GROUP BY category
-         ORDER BY catTotal DESC
-         LIMIT 1''',
-      [profileId, cutoff],
-    );
-
+    final total = period.fold<double>(0, (s, tx) => s + tx.amount);
+    final breakdown = _categoryBreakdown(period);
     return {
-      'total': (totalResult.first['total'] as num).toDouble(),
-      'transactionCount': (totalResult.first['count'] as num).toInt(),
-      'topCategory': topResult.isNotEmpty ? topResult.first['category'] as String : null,
-      'topAmount': topResult.isNotEmpty ? (topResult.first['catTotal'] as num).toDouble() : 0.0,
+      'total': total,
+      'transactionCount': period.length,
+      'topCategory':
+          breakdown.isNotEmpty ? breakdown.first['category'] as String : null,
+      'topAmount': breakdown.isNotEmpty
+          ? (breakdown.first['amount'] as num).toDouble()
+          : 0.0,
     };
   }
 
-  /// Returns premium weekly expense summary including daily amounts,
-  /// category breakdowns, highest transaction, and previous week's total.
+  /// Premium weekly summary — current Mon–Sun week (same as Expense Insights).
   Future<Map<String, dynamic>> getPremiumWeeklySummary({
     required String profileId,
   }) async {
-    final db = await instance.database;
+    final expenses = await _expenseTransactionsFor(profileId);
     final now = DateTime.now();
-    final cutoff = now.subtract(const Duration(days: 7)).toIso8601String();
-    final prevCutoff = now.subtract(const Duration(days: 14)).toIso8601String();
+    final start = _startOfWeek(now);
+    final end = start.add(const Duration(days: 7));
+    final prevStart = start.subtract(const Duration(days: 7));
 
-    // 1. Total spent & count
-    final totalResult = await db.rawQuery(
-      '''SELECT COALESCE(SUM(amount), 0.0) as total, COUNT(*) as count
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ?''',
-      [profileId, cutoff],
-    );
+    final current = expenses
+        .where((tx) =>
+            !tx.dateTime.isBefore(start) && tx.dateTime.isBefore(end))
+        .toList();
+    final previous = expenses
+        .where((tx) =>
+            !tx.dateTime.isBefore(prevStart) && tx.dateTime.isBefore(start))
+        .toList();
 
-    // 2. Category breakdown
-    final categoryResult = await db.rawQuery(
-      '''SELECT COALESCE(NULLIF(TRIM(category), ''), 'Other') as category,
-                SUM(amount) as amount, COUNT(*) as count
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ?
-         GROUP BY COALESCE(NULLIF(TRIM(category), ''), 'Other')
-         ORDER BY amount DESC''',
-      [profileId, cutoff],
-    );
+    final dailyMap = <String, double>{};
+    for (final tx in current) {
+      final key =
+          '${tx.dateTime.year.toString().padLeft(4, '0')}-${tx.dateTime.month.toString().padLeft(2, '0')}-${tx.dateTime.day.toString().padLeft(2, '0')}';
+      dailyMap[key] = (dailyMap[key] ?? 0) + tx.amount;
+    }
+    final dailyBreakdown = dailyMap.entries
+        .map((e) => {'dateStr': e.key, 'amount': e.value})
+        .toList()
+      ..sort((a, b) => (a['dateStr'] as String).compareTo(b['dateStr'] as String));
 
-    // 3. Daily breakdown
-    final dailyResult = await db.rawQuery(
-      '''SELECT SUBSTR(dateTime, 1, 10) as dateStr, SUM(amount) as amount
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ?
-         GROUP BY dateStr
-         ORDER BY dateStr ASC''',
-      [profileId, cutoff],
-    );
-
-    // 4. Highest transaction
-    final highestResult = await db.rawQuery(
-      '''SELECT note, category, amount, dateTime
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ?
-         ORDER BY amount DESC
-         LIMIT 1''',
-      [profileId, cutoff],
-    );
-
-    // 5. Previous week's total
-    final prevTotalResult = await db.rawQuery(
-      '''SELECT COALESCE(SUM(amount), 0.0) as prevTotal
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime < ?''',
-      [profileId, prevCutoff, cutoff],
-    );
-
-    final total = (totalResult.first['total'] as num).toDouble();
-    final count = (totalResult.first['count'] as num).toInt();
+    final total = current.fold<double>(0, (s, tx) => s + tx.amount);
+    final prevTotal = previous.fold<double>(0, (s, tx) => s + tx.amount);
 
     return {
       'total': total,
-      'transactionCount': count,
-      'categoryBreakdown': categoryResult,
-      'dailyBreakdown': dailyResult,
-      'highestTransaction': highestResult.isNotEmpty ? highestResult.first : null,
-      'previousTotal': (prevTotalResult.first['prevTotal'] as num).toDouble(),
+      'transactionCount': current.length,
+      'categoryBreakdown': _categoryBreakdown(current),
+      'dailyBreakdown': dailyBreakdown,
+      'highestTransaction': _highestTxMap(current),
+      'previousTotal': prevTotal,
+    };
+  }
+
+  // Returns today's total expense amount (local calendar day).
+  Future<double> getDailyExpenseTotal({
+    required String profileId,
+  }) async {
+    final expenses = await _expenseTransactionsFor(profileId);
+    final now = DateTime.now();
+    return expenses
+        .where((tx) => _isSameDay(tx.dateTime, now))
+        .fold<double>(0, (s, tx) => s + tx.amount);
+  }
+
+  /// Premium daily summary — local calendar today (same as Expense Insights).
+  Future<Map<String, dynamic>> getPremiumDailySummary({
+    required String profileId,
+  }) async {
+    final expenses = await _expenseTransactionsFor(profileId);
+    final now = DateTime.now();
+    final today = expenses.where((tx) => _isSameDay(tx.dateTime, now)).toList();
+
+    // Prior 7 local calendar days (excluding today) for average.
+    double last7 = 0;
+    for (int i = 1; i <= 7; i++) {
+      final day = now.subtract(Duration(days: i));
+      last7 += expenses
+          .where((tx) => _isSameDay(tx.dateTime, day))
+          .fold<double>(0, (s, tx) => s + tx.amount);
+    }
+
+    final total = today.fold<double>(0, (s, tx) => s + tx.amount);
+    return {
+      'total': total,
+      'transactionCount': today.length,
+      'categoryBreakdown': _categoryBreakdown(today),
+      'highestTransaction': _highestTxMap(today),
+      'averageDaily': last7 / 7.0,
+    };
+  }
+
+  /// Returns total expense, transaction count, and top category for the current month.
+  Future<Map<String, dynamic>> getMonthlyExpenseSummary({
+    required String profileId,
+  }) async {
+    final expenses = await _expenseTransactionsFor(profileId);
+    final now = DateTime.now();
+    final month = expenses
+        .where((tx) =>
+            tx.dateTime.year == now.year && tx.dateTime.month == now.month)
+        .toList();
+    final breakdown = _categoryBreakdown(month);
+    final total = month.fold<double>(0, (s, tx) => s + tx.amount);
+    return {
+      'total': total,
+      'transactionCount': month.length,
+      'topCategory':
+          breakdown.isNotEmpty ? breakdown.first['category'] as String : null,
+      'topAmount': breakdown.isNotEmpty
+          ? (breakdown.first['amount'] as num).toDouble()
+          : 0.0,
+    };
+  }
+
+  /// Premium monthly summary — current calendar month (same as Expense Insights).
+  Future<Map<String, dynamic>> getPremiumMonthlySummary({
+    required String profileId,
+  }) async {
+    final expenses = await _expenseTransactionsFor(profileId);
+    final now = DateTime.now();
+    final month = expenses
+        .where((tx) =>
+            tx.dateTime.year == now.year && tx.dateTime.month == now.month)
+        .toList();
+
+    final total = month.fold<double>(0, (s, tx) => s + tx.amount);
+    final daysElapsed = now.day;
+    return {
+      'total': total,
+      'transactionCount': month.length,
+      'categoryBreakdown': _categoryBreakdown(month),
+      'highestTransaction': _highestTxMap(month),
+      'averageDaily': daysElapsed > 0 ? total / daysElapsed : 0.0,
     };
   }
 
@@ -1859,208 +1970,6 @@ class DatabaseHelper {
       );
       debugPrint('$table remaining: $count');
     }
-  }
-
-  // Returns today's total expense amount
-  Future<double> getDailyExpenseTotal({
-    required String profileId,
-  }) async {
-    if (kIsWeb) return 0.0;
-    final db = await instance.database;
-    final now = DateTime.now();
-    final todayStart = DateTime(now.year, now.month, now.day).toIso8601String();
-    final todayEnd = DateTime(now.year, now.month, now.day, 23, 59, 59, 999).toIso8601String();
-
-    final result = await db.rawQuery(
-      '''SELECT COALESCE(SUM(amount), 0.0) as total
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?''',
-      [profileId, todayStart, todayEnd],
-    );
-    return (result.first['total'] as num?)?.toDouble() ?? 0.0;
-  }
-
-  /// Returns premium daily summary details including category breakdowns, highest expense,
-  /// and comparison with the average daily spending of the last 7 days.
-  Future<Map<String, dynamic>> getPremiumDailySummary({
-    required String profileId,
-  }) async {
-    if (kIsWeb) {
-      return {
-        'total': 0.0,
-        'transactionCount': 0,
-        'categoryBreakdown': [],
-        'highestTransaction': null,
-        'averageDaily': 0.0,
-      };
-    }
-    final db = await instance.database;
-    final now = DateTime.now();
-    // Date-only keys avoid timezone / ISO-offset mismatches that drop
-    // today's transactions from the distribution breakdown.
-    final todayKey =
-        '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-    final weekAgo = now.subtract(const Duration(days: 7));
-    final weekAgoKey =
-        '${weekAgo.year.toString().padLeft(4, '0')}-${weekAgo.month.toString().padLeft(2, '0')}-${weekAgo.day.toString().padLeft(2, '0')}';
-
-    // 1. Today's total & count
-    final totalResult = await db.rawQuery(
-      '''SELECT COALESCE(SUM(amount), 0.0) as total, COUNT(*) as count
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0
-           AND SUBSTR(dateTime, 1, 10) = ?''',
-      [profileId, todayKey],
-    );
-
-    // 2. Category breakdown
-    final categoryResult = await db.rawQuery(
-      '''SELECT COALESCE(NULLIF(TRIM(category), ''), 'Other') as category,
-                SUM(amount) as amount, COUNT(*) as count
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0
-           AND SUBSTR(dateTime, 1, 10) = ?
-         GROUP BY COALESCE(NULLIF(TRIM(category), ''), 'Other')
-         ORDER BY amount DESC''',
-      [profileId, todayKey],
-    );
-
-    // 3. Highest transaction today
-    final highestResult = await db.rawQuery(
-      '''SELECT note, COALESCE(NULLIF(TRIM(category), ''), 'Other') as category,
-                amount, dateTime
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0
-           AND SUBSTR(dateTime, 1, 10) = ?
-         ORDER BY amount DESC
-         LIMIT 1''',
-      [profileId, todayKey],
-    );
-
-    // 4. Last 7 days total (excluding today) for average comparison
-    final prevTotalResult = await db.rawQuery(
-      '''SELECT COALESCE(SUM(amount), 0.0) as prevTotal
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0
-           AND SUBSTR(dateTime, 1, 10) >= ?
-           AND SUBSTR(dateTime, 1, 10) < ?''',
-      [profileId, weekAgoKey, todayKey],
-    );
-
-    final total = (totalResult.first['total'] as num).toDouble();
-    final count = (totalResult.first['count'] as num).toInt();
-    final last7DaysTotal = (prevTotalResult.first['prevTotal'] as num).toDouble();
-    final averageDaily = last7DaysTotal / 7.0;
-
-    return {
-      'total': total,
-      'transactionCount': count,
-      'categoryBreakdown': categoryResult,
-      'highestTransaction': highestResult.isNotEmpty ? highestResult.first : null,
-      'averageDaily': averageDaily,
-    };
-  }
-
-  /// Returns total expense, transaction count, and top category for the current month.
-  /// Result: { 'total': double, 'transactionCount': int, 'topCategory': String?, 'topAmount': double }
-  Future<Map<String, dynamic>> getMonthlyExpenseSummary({
-    required String profileId,
-  }) async {
-    if (kIsWeb) {
-      return {'total': 0.0, 'transactionCount': 0, 'topCategory': null, 'topAmount': 0.0};
-    }
-    final db = await instance.database;
-    final now = DateTime.now();
-    final monthStart = DateTime(now.year, now.month, 1).toIso8601String();
-    final monthEnd = DateTime(now.year, now.month + 1, 0, 23, 59, 59, 999).toIso8601String();
-
-    final totalResult = await db.rawQuery(
-      '''SELECT COALESCE(SUM(amount), 0.0) as total, COUNT(*) as count
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?''',
-      [profileId, monthStart, monthEnd],
-    );
-
-    final topResult = await db.rawQuery(
-      '''SELECT category, SUM(amount) as catTotal
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?
-         GROUP BY category
-         ORDER BY catTotal DESC
-         LIMIT 1''',
-      [profileId, monthStart, monthEnd],
-    );
-
-    return {
-      'total': (totalResult.first['total'] as num).toDouble(),
-      'transactionCount': (totalResult.first['count'] as num).toInt(),
-      'topCategory': topResult.isNotEmpty ? topResult.first['category'] as String : null,
-      'topAmount': topResult.isNotEmpty ? (topResult.first['catTotal'] as num).toDouble() : 0.0,
-    };
-  }
-
-  /// Returns premium monthly expense summary including category breakdowns,
-  /// highest transaction, and daily average for the month.
-  Future<Map<String, dynamic>> getPremiumMonthlySummary({
-    required String profileId,
-  }) async {
-    if (kIsWeb) {
-      return {
-        'total': 0.0,
-        'transactionCount': 0,
-        'categoryBreakdown': [],
-        'highestTransaction': null,
-        'averageDaily': 0.0,
-      };
-    }
-    final db = await instance.database;
-    final now = DateTime.now();
-    final monthStart = DateTime(now.year, now.month, 1).toIso8601String();
-    final monthEnd = DateTime(now.year, now.month + 1, 0, 23, 59, 59, 999).toIso8601String();
-
-    // 1. Total spent & count
-    final totalResult = await db.rawQuery(
-      '''SELECT COALESCE(SUM(amount), 0.0) as total, COUNT(*) as count
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?''',
-      [profileId, monthStart, monthEnd],
-    );
-
-    // 2. Category breakdown
-    final categoryResult = await db.rawQuery(
-      '''SELECT COALESCE(NULLIF(TRIM(category), ''), 'Other') as category,
-                SUM(amount) as amount, COUNT(*) as count
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?
-         GROUP BY COALESCE(NULLIF(TRIM(category), ''), 'Other')
-         ORDER BY amount DESC''',
-      [profileId, monthStart, monthEnd],
-    );
-
-    // 3. Highest transaction
-    final highestResult = await db.rawQuery(
-      '''SELECT note, category, amount, dateTime
-         FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?
-         ORDER BY amount DESC
-         LIMIT 1''',
-      [profileId, monthStart, monthEnd],
-    );
-
-    final total = (totalResult.first['total'] as num).toDouble();
-    final count = (totalResult.first['count'] as num).toInt();
-
-    // 4. Daily average: total / days elapsed this month
-    final daysElapsed = now.day;
-    final averageDaily = daysElapsed > 0 ? total / daysElapsed : 0.0;
-
-    return {
-      'total': total,
-      'transactionCount': count,
-      'categoryBreakdown': categoryResult,
-      'highestTransaction': highestResult.isNotEmpty ? highestResult.first : null,
-      'averageDaily': averageDaily,
-    };
   }
 
   // Close database connection

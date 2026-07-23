@@ -66,9 +66,11 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
 
   String _weekRange() {
     final now = DateTime.now();
-    final start = now.subtract(const Duration(days: 6));
+    final start = DateTime(now.year, now.month, now.day)
+        .subtract(Duration(days: now.weekday - 1));
+    final end = start.add(const Duration(days: 6));
     final fmt = DateFormat('MMM d, yyyy');
-    return '${fmt.format(start)} - ${fmt.format(now)}';
+    return '${fmt.format(start)} - ${fmt.format(end)}';
   }
 
   @override
