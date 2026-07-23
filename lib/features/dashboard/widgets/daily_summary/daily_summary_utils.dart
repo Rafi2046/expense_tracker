@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/providers/currency_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 
+enum SummaryInsightPeriod { daily, monthly }
+
 class DailySummaryUtils {
   DailySummaryUtils._();
 
@@ -42,49 +44,139 @@ class DailySummaryUtils {
     required String? topCategory,
     required double topAmount,
     required double highestAmount,
+    SummaryInsightPeriod period = SummaryInsightPeriod.daily,
+  }) {
+    if (period == SummaryInsightPeriod.monthly) {
+      return _generateMonthlyInsights(
+        context: context,
+        total: total,
+        averageDaily: averageDaily,
+        topCategory: topCategory,
+        topAmount: topAmount,
+        highestAmount: highestAmount,
+      );
+    }
+    return _generateDailyInsights(
+      context: context,
+      total: total,
+      averageDaily: averageDaily,
+      topCategory: topCategory,
+      topAmount: topAmount,
+      highestAmount: highestAmount,
+    );
+  }
+
+  static List<String> _generateDailyInsights({
+    required BuildContext context,
+    required double total,
+    required double averageDaily,
+    required String? topCategory,
+    required double topAmount,
+    required double highestAmount,
   }) {
     final List<String> insights = [];
     final sym = context.currencySymbol;
+    final avgText = '$sym${averageDaily.toStringAsFixed(2)}';
 
-    // Insight 1: Today's spending level vs. 7-day average
     if (total == 0) {
       insights.add(context.translate('no_expenses_today'));
     } else if (averageDaily > 0) {
       final diffPercent = ((total - averageDaily) / averageDaily * 100).round();
       if (diffPercent > 20) {
-        insights.add(
-          'Your spending today is $diffPercent% higher than your recent 7-day daily average of $sym${averageDaily.toStringAsFixed(2)}. Consider reviewing your budget!'
-        );
+        insights.add(context.translate(
+          'insight_spend_higher_than_avg',
+          namedArgs: {
+            'percent': '$diffPercent',
+            'amount': avgText,
+          },
+        ));
       } else if (diffPercent < -20) {
-        insights.add(
-          'Great job! Your spending today is ${diffPercent.abs()}% lower than your recent 7-day daily average.'
-        );
+        insights.add(context.translate(
+          'insight_spend_lower_than_avg',
+          namedArgs: {'percent': '${diffPercent.abs()}'},
+        ));
       } else {
-        insights.add(
-          'Your daily spending is right on track, matching your recent 7-day average of $sym${averageDaily.toStringAsFixed(2)}.'
-        );
+        insights.add(context.translate(
+          'insight_spend_on_track',
+          namedArgs: {'amount': avgText},
+        ));
       }
     } else {
-      insights.add(
-        'You started logging today. Keep tracking daily to see average spending insights!'
-      );
+      insights.add(context.translate('insight_started_logging_today'));
     }
 
-    // Insight 2: Top category
     if (topCategory != null && total > 0) {
       final share = (topAmount / total * 100).round();
-      insights.add(
-        'Most of your money today went into $topCategory, which accounts for $share% of your total spending ($sym${topAmount.toStringAsFixed(2)}).'
-      );
+      insights.add(context.translate(
+        'insight_top_category_today',
+        namedArgs: {
+          'category': topCategory,
+          'share': '$share',
+          'amount': '$sym${topAmount.toStringAsFixed(2)}',
+        },
+      ));
     }
 
-    // Insight 3: Single high transaction warning
     if (highestAmount > 0 && total > 0) {
       final highestShare = (highestAmount / total * 100).round();
       if (highestShare > 50 && total > 10.0) {
-        insights.add(
-          'A single large expense today represents $highestShare% of your daily spending. Be mindful of one-off large purchases.'
-        );
+        insights.add(context.translate(
+          'insight_large_expense_today',
+          namedArgs: {'share': '$highestShare'},
+        ));
+      }
+    }
+
+    return insights;
+  }
+
+  static List<String> _generateMonthlyInsights({
+    required BuildContext context,
+    required double total,
+    required double averageDaily,
+    required String? topCategory,
+    required double topAmount,
+    required double highestAmount,
+  }) {
+    final List<String> insights = [];
+    final sym = context.currencySymbol;
+
+    if (total == 0) {
+      insights.add(context.translate('no_expenses_this_month'));
+      return insights;
+    }
+
+    insights.add(context.translate(
+      'insight_month_total',
+      namedArgs: {'amount': '$sym${total.toStringAsFixed(2)}'},
+    ));
+
+    if (averageDaily > 0) {
+      insights.add(context.translate(
+        'insight_month_daily_avg',
+        namedArgs: {'amount': '$sym${averageDaily.toStringAsFixed(2)}'},
+      ));
+    }
+
+    if (topCategory != null) {
+      final share = (topAmount / total * 100).round();
+      insights.add(context.translate(
+        'insight_top_category_month',
+        namedArgs: {
+          'category': topCategory,
+          'share': '$share',
+          'amount': '$sym${topAmount.toStringAsFixed(2)}',
+        },
+      ));
+    }
+
+    if (highestAmount > 0) {
+      final highestShare = (highestAmount / total * 100).round();
+      if (highestShare > 40 && total > 10.0) {
+        insights.add(context.translate(
+          'insight_large_expense_month',
+          namedArgs: {'share': '$highestShare'},
+        ));
       }
     }
 

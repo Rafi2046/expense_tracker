@@ -175,79 +175,68 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
                 theme.colorScheme.onSurface,
           ),
         ),
+        actionsPadding: EdgeInsets.zero,
         actions: [
-          IconButton(
-            onPressed: () => _openMemberManagement(context),
-            icon: Container(
-              padding: const EdgeInsets.all(AppSpacing.p8),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF064E3B).withValues(alpha: 0.2)
-                    : AppColors.selectionGreenBg,
-                borderRadius: BorderRadius.circular(AppSpacing.r12),
-              ),
-              child: const Icon(
-                LucideIcons.userPlus,
-                size: 20,
-                color: AppColors.activeGreen,
-              ),
-            ),
-            tooltip: context.translate('manage_members_tooltip'),
-          ),
-
-          IconButton(
-            onPressed: () => _showExportOptionsSheet(context),
-            icon: Container(
-              padding: const EdgeInsets.all(AppSpacing.p8),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF064E3B).withValues(alpha: 0.2)
-                    : AppColors.selectionGreenBg,
-                borderRadius: BorderRadius.circular(AppSpacing.r12),
-              ),
-              child: const Icon(
-                LucideIcons.share,
-                size: 20,
-                color: AppColors.activeGreen,
-              ),
-            ),
-            tooltip: context.translate('export_tooltip'),
-          ),
-
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'edit_tour') {
-                _openEditTourSheet(tour);
-              }
-            },
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r12)),
-            icon: Container(
-              padding: const EdgeInsets.all(AppSpacing.p8),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF064E3B).withValues(alpha: 0.2)
-                    : AppColors.selectionGreenBg,
-                borderRadius: BorderRadius.circular(AppSpacing.r12),
-              ),
-              child: const Icon(
-                LucideIcons.moreVertical,
-                size: 20,
-                color: AppColors.activeGreen,
-              ),
-            ),
-            itemBuilder: (context) => [
-              if (isOwner)
-              PopupMenuItem(
-                value: 'edit_tour',
-                child: Row(
-                  children: [
-                    Icon(LucideIcons.pencil, size: 18, color: theme.colorScheme.onSurface),
-                    const SizedBox(width: AppSpacing.s8),
-                    Text(context.translate('edit_tour'), style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface)),
+          Padding(
+            // Match ListView horizontal padding so ⋮ lines up with Outstanding card.
+            padding: const EdgeInsets.only(right: AppSpacing.p16),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _TourAppBarAction(
+                  icon: LucideIcons.userPlus,
+                  tooltip: context.translate('manage_members_tooltip'),
+                  isDark: isDark,
+                  onTap: () => _openMemberManagement(context),
+                ),
+                const SizedBox(width: AppSpacing.s4),
+                _TourAppBarAction(
+                  icon: LucideIcons.share,
+                  tooltip: context.translate('export_tooltip'),
+                  isDark: isDark,
+                  onTap: () => _showExportOptionsSheet(context),
+                ),
+                const SizedBox(width: AppSpacing.s4),
+                PopupMenuButton<String>(
+                  onSelected: (value) {
+                    if (value == 'edit_tour') {
+                      _openEditTourSheet(tour);
+                    }
+                  },
+                  padding: EdgeInsets.zero,
+                  offset: const Offset(0, 40),
+                  style: const ButtonStyle(
+                    visualDensity: VisualDensity.compact,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    minimumSize: WidgetStatePropertyAll(Size.zero),
+                    padding: WidgetStatePropertyAll(EdgeInsets.zero),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
+                  ),
+                  icon: _TourAppBarActionIcon(
+                    icon: LucideIcons.moreVertical,
+                    isDark: isDark,
+                  ),
+                  itemBuilder: (context) => [
+                    if (isOwner)
+                      PopupMenuItem(
+                        value: 'edit_tour',
+                        child: Row(
+                          children: [
+                            Icon(LucideIcons.pencil, size: 18, color: theme.colorScheme.onSurface),
+                            const SizedBox(width: AppSpacing.s8),
+                            Text(
+                              context.translate('edit_tour'),
+                              style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface),
+                            ),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -572,6 +561,60 @@ class _TourDashboardScreenState extends State<TourDashboardScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _TourAppBarAction extends StatelessWidget {
+  final IconData icon;
+  final String tooltip;
+  final bool isDark;
+  final VoidCallback onTap;
+
+  const _TourAppBarAction({
+    required this.icon,
+    required this.tooltip,
+    required this.isDark,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
+        child: _TourAppBarActionIcon(icon: icon, isDark: isDark),
+      ),
+    );
+  }
+}
+
+class _TourAppBarActionIcon extends StatelessWidget {
+  final IconData icon;
+  final bool isDark;
+
+  const _TourAppBarActionIcon({
+    required this.icon,
+    required this.isDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.p8),
+      decoration: BoxDecoration(
+        color: isDark
+            ? const Color(0xFF064E3B).withValues(alpha: 0.2)
+            : AppColors.selectionGreenBg,
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
+      ),
+      child: Icon(
+        icon,
+        size: 20,
+        color: AppColors.activeGreen,
       ),
     );
   }

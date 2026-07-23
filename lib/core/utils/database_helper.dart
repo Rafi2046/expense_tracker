@@ -1733,10 +1733,11 @@ class DatabaseHelper {
 
     // 2. Category breakdown
     final categoryResult = await db.rawQuery(
-      '''SELECT category, SUM(amount) as amount, COUNT(*) as count
+      '''SELECT COALESCE(NULLIF(TRIM(category), ''), 'Other') as category,
+                SUM(amount) as amount, COUNT(*) as count
          FROM transactions
          WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ?
-         GROUP BY category
+         GROUP BY COALESCE(NULLIF(TRIM(category), ''), 'Other')
          ORDER BY amount DESC''',
       [profileId, cutoff],
     );
@@ -1895,46 +1896,55 @@ class DatabaseHelper {
     }
     final db = await instance.database;
     final now = DateTime.now();
-    final todayStart = DateTime(now.year, now.month, now.day).toIso8601String();
-    final todayEnd = DateTime(now.year, now.month, now.day, 23, 59, 59, 999).toIso8601String();
-
-    final lastWeekStart = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 7)).toIso8601String();
-    final yesterdayEnd = DateTime(now.year, now.month, now.day).subtract(const Duration(milliseconds: 1)).toIso8601String();
+    // Date-only keys avoid timezone / ISO-offset mismatches that drop
+    // today's transactions from the distribution breakdown.
+    final todayKey =
+        '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    final weekAgo = now.subtract(const Duration(days: 7));
+    final weekAgoKey =
+        '${weekAgo.year.toString().padLeft(4, '0')}-${weekAgo.month.toString().padLeft(2, '0')}-${weekAgo.day.toString().padLeft(2, '0')}';
 
     // 1. Today's total & count
     final totalResult = await db.rawQuery(
       '''SELECT COALESCE(SUM(amount), 0.0) as total, COUNT(*) as count
          FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?''',
-      [profileId, todayStart, todayEnd],
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0
+           AND SUBSTR(dateTime, 1, 10) = ?''',
+      [profileId, todayKey],
     );
 
     // 2. Category breakdown
     final categoryResult = await db.rawQuery(
-      '''SELECT category, SUM(amount) as amount, COUNT(*) as count
+      '''SELECT COALESCE(NULLIF(TRIM(category), ''), 'Other') as category,
+                SUM(amount) as amount, COUNT(*) as count
          FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?
-         GROUP BY category
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0
+           AND SUBSTR(dateTime, 1, 10) = ?
+         GROUP BY COALESCE(NULLIF(TRIM(category), ''), 'Other')
          ORDER BY amount DESC''',
-      [profileId, todayStart, todayEnd],
+      [profileId, todayKey],
     );
 
     // 3. Highest transaction today
     final highestResult = await db.rawQuery(
-      '''SELECT note, category, amount, dateTime
+      '''SELECT note, COALESCE(NULLIF(TRIM(category), ''), 'Other') as category,
+                amount, dateTime
          FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0
+           AND SUBSTR(dateTime, 1, 10) = ?
          ORDER BY amount DESC
          LIMIT 1''',
-      [profileId, todayStart, todayEnd],
+      [profileId, todayKey],
     );
 
     // 4. Last 7 days total (excluding today) for average comparison
     final prevTotalResult = await db.rawQuery(
       '''SELECT COALESCE(SUM(amount), 0.0) as prevTotal
          FROM transactions
-         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?''',
-      [profileId, lastWeekStart, yesterdayEnd],
+         WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0
+           AND SUBSTR(dateTime, 1, 10) >= ?
+           AND SUBSTR(dateTime, 1, 10) < ?''',
+      [profileId, weekAgoKey, todayKey],
     );
 
     final total = (totalResult.first['total'] as num).toDouble();
@@ -2018,10 +2028,11 @@ class DatabaseHelper {
 
     // 2. Category breakdown
     final categoryResult = await db.rawQuery(
-      '''SELECT category, SUM(amount) as amount, COUNT(*) as count
+      '''SELECT COALESCE(NULLIF(TRIM(category), ''), 'Other') as category,
+                SUM(amount) as amount, COUNT(*) as count
          FROM transactions
          WHERE profileId = ? AND isIncome = 0 AND isDeleted = 0 AND dateTime >= ? AND dateTime <= ?
-         GROUP BY category
+         GROUP BY COALESCE(NULLIF(TRIM(category), ''), 'Other')
          ORDER BY amount DESC''',
       [profileId, monthStart, monthEnd],
     );

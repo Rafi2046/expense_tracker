@@ -40,32 +40,38 @@ class DailyCategoryTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: AppSpacing.s8),
-                  Text(
-                    categoryName,
-                    style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface),
-                  ),
-                  const SizedBox(width: AppSpacing.s8),
-                  Text(
-                    '(${(percentage * 100).toStringAsFixed(1)}%)',
-                    style: AppTextStyles.caption.copyWith(color: isDark ? Colors.grey.shade500 : AppColors.textMuted,
-                      fontWeight: FontWeight.w500),
-                  ),
-                ],
+                    const SizedBox(width: AppSpacing.s8),
+                    Flexible(
+                      child: Text(
+                        categoryName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onSurface),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.s8),
+                    Text(
+                      '(${(percentage * 100).toStringAsFixed(1)}%)',
+                      style: AppTextStyles.caption.copyWith(color: isDark ? Colors.grey.shade500 : AppColors.textMuted,
+                        fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
               ),
+              const SizedBox(width: AppSpacing.s8),
               PrivacyMaskedText(
                 amount: amount,
                 style: AppTextStyles.label.copyWith(fontWeight: FontWeight.bold,

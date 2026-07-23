@@ -44,7 +44,11 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
     _load();
   }
 
-  Future<void> _load() async {
+  Future<void> _load({bool showLoading = true}) async {
+    if (showLoading && mounted) {
+      setState(() => _loading = true);
+    }
+
     final profileId =
         SharedPrefsHelper.getString(SharedPrefsHelper.activeProfileKey) ??
             'default_profile';
@@ -96,8 +100,10 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
     final List<CategoryBreakdownItem> doughnutItems = [];
     for (int i = 0; i < catRows.length; i++) {
       final row = catRows[i];
-      final name = row['category'] as String;
-      final amount = (row['amount'] as num).toDouble();
+      final name = (row['category'] as String?)?.trim();
+      if (name == null || name.isEmpty) continue;
+      final amount = (row['amount'] as num?)?.toDouble() ?? 0.0;
+      if (amount <= 0) continue;
       final percentage = total > 0 ? (amount / total) : 0.0;
       doughnutItems.add(CategoryBreakdownItem(
         name: name,
@@ -168,7 +174,10 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
       ),
       body: _loading
           ? _buildShimmerSkeleton(context, isDark)
-          : SingleChildScrollView(
+          : RefreshIndicator(
+              onRefresh: () => _load(showLoading: false),
+              child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.fromLTRB(16, 16, 16, 80 + MediaQuery.of(context).padding.bottom),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -521,10 +530,12 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                             ),
                             itemBuilder: (ctx, index) {
                               final item = doughnutItems[index];
-                              final dbCount = catRows.firstWhere(
-                                (r) => (r['category'] as String) == item.name,
+                              final dbCount = (catRows.firstWhere(
+                                (r) => (r['category'] as String?) == item.name,
                                 orElse: () => {'count': 0},
-                              )['count'] as int;
+                              )['count'] as num?)
+                                      ?.toInt() ??
+                                  0;
                               return WeeklyCategoryTile(
                                 item: item,
                                 count: dbCount,
@@ -577,6 +588,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                   ],
                 ],
               ),
+            ),
             ),
     );
   }

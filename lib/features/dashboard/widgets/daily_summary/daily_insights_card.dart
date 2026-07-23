@@ -9,8 +9,13 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
 class DailyInsightsCard extends StatelessWidget {
   final List<String> insights;
+  final String titleKey;
 
-  const DailyInsightsCard({super.key, required this.insights});
+  const DailyInsightsCard({
+    super.key,
+    required this.insights,
+    this.titleKey = 'daily_insights',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +46,7 @@ class DailyInsightsCard extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.s8),
               Text(
-                context.translate('daily_insights'),
+                context.translate(titleKey),
                 style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface),
               ),
@@ -50,7 +55,11 @@ class DailyInsightsCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.s16),
           if (insights.isEmpty)
             Text(
-              context.translate('no_expenses_today'),
+              context.translate(
+                titleKey == 'monthly_insights'
+                    ? 'no_expenses_this_month'
+                    : 'no_expenses_today',
+              ),
               style: AppTextStyles.label.copyWith(color: isDark ? Colors.grey.shade400 : AppColors.textMuted),
             )
           else
