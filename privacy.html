@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Budget Mint</title>
+  <meta name="description" content="Budget Mint Privacy Policy. How we store, sync, and protect your financial data." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0C4E3C;
+      --mint: #2EBD85;
+      --bg: #F4F6F9;
+      --cream: #F7F3EB;
+      --card: #FFFFFF;
+      --text: #0F172A;
+      --muted: #64748B;
+      --border: #E2E8F0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--mint));
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .back {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .back:hover { color: var(--mint); }
+
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    .hero {
+      background: linear-gradient(160deg, var(--cream) 0%, #fff 55%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 10px 40px rgba(12, 78, 60, 0.06);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--primary);
+      background: rgba(46, 189, 133, 0.15);
+      border: 1px solid rgba(46, 189, 133, 0.35);
+      padding: 6px 10px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(1.75rem, 4vw, 2.25rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 8px 4px;
+      box-shadow: 0 4px 24px rgba(15, 23, 42, 0.04);
+    }
+
+    .section {
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child { border-bottom: none; }
+
+    h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      font-size: 0.98rem;
+      color: #475569;
+      font-weight: 450;
+    }
+
+    footer {
+      max-width: 800px;
+      margin: 28px auto 0;
+      padding: 0 20px 40px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    footer a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    footer a:hover { color: var(--mint); }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">B</span>
+        Budget Mint
+      </a>
+      <a class="back" href="index.html">← Back to home</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <span class="badge">Legal</span>
+      <h1>Privacy Policy</h1>
+      <p class="meta">Last updated: July 2026</p>
+    </div>
+
+    <article class="card">
+      <section class="section">
+        <h2>1. Data Ownership &amp; Storage</h2>
+        <p>
+          Your financial records, transactions, notes, and profiles are stored locally on your device’s secure database.
+          We do not transmit or process your financial information on external servers, except when you choose to use our cloud backup and sync service.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>2. Firebase Cloud Backup &amp; Sync</h2>
+        <p>
+          If you choose to log in and enable cloud synchronization, your transactions, categories, budgets, and profile data are backed up to secure Firebase servers (Cloud Firestore).
+          This data is strictly used to synchronize your entries across devices and is encrypted in transit and at rest.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>3. Security &amp; Encryption</h2>
+        <p>
+          Your local database is stored in your device’s isolated storage directory, accessible only by this application.
+          When biometric security (Face ID / Touch ID) is enabled, access is protected using your device’s native secure enclave.
+          We never collect or store your biometric credentials.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>4. No Selling or Sharing</h2>
+        <p>
+          We do not sell, rent, lease, or share your financial logs, personal email, display name, or profile configurations with any third-party advertisers, companies, or analytics networks.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>5. Your Rights &amp; Data Deletion</h2>
+        <p>
+          You retain ownership and control over your data. At any time, you can clear transactions, delete custom profiles, or delete your entire account and synced backups from the Settings menu.
+          Once deleted, the action cannot be undone and your data is permanently wiped from our databases.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>6. Policy Changes &amp; Updates</h2>
+        <p>
+          We may update this Privacy Policy from time to time. Changes will be posted on this page.
+          We encourage you to review it periodically to stay informed about how we protect your information.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>7. Contact &amp; Support</h2>
+        <p>
+          If you have questions about this Privacy Policy or your data, contact our support team from the Settings menu in the Budget Mint app, or email us directly.
+          <!-- Replace with your real support email when ready:
+          <a href="mailto:support@budgetmint.app">support@budgetmint.app</a>
+          -->
+        </p>
+      </section>
+    </article>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Budget Mint. All rights reserved.</p>
+    <p style="margin-top: 8px;"><a href="index.html">budgetmint.app</a></p>
+  </footer>
+</body>
+</html>
