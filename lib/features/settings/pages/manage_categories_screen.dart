@@ -76,11 +76,12 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
     TransactionProvider provider,
     String currentName,
     bool isIncome,
-  ) {
+  ) async {
     final controller = TextEditingController(text: currentName);
     final themeColor = isIncome ? AppColors.activeGreen : AppColors.activeRed;
 
-    showDialog(
+    try {
+      await showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(
@@ -149,6 +150,9 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen>
         ],
       ),
     );
+    } finally {
+      controller.dispose();
+    }
   }
 
   @override

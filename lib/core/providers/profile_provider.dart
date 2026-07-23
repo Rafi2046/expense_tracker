@@ -312,6 +312,13 @@ class ProfileProvider extends ChangeNotifier {
         _currentProfile = match.isNotEmpty ? match.first : _profiles.first;
       }
 
+      // Keep SharedPrefs aligned with the profile we actually restored so a
+      // cold start cannot reopen on a stale secondary id.
+      await SharedPrefsHelper.setString(
+        SharedPrefsHelper.activeProfileKey,
+        _currentProfile.id,
+      );
+
       await _saveProfilesToPrefs();
     } catch (e) {
       debugPrint('ProfileProvider._loadFromDb error: $e');
@@ -393,7 +400,18 @@ class ProfileProvider extends ChangeNotifier {
   void addProfile(UserProfile profile) {
     _profiles.add(profile);
     _currentProfile = profile;
+    SharedPrefsHelper.setString(SharedPrefsHelper.activeProfileKey, profile.id);
     _saveProfilesToPrefs();
+    notifyListeners();
+  }
+
+  /// Align UI selection to [id] without rewriting SharedPrefs.
+  /// Used when ProfileManager is already the source of truth.
+  void syncCurrentProfileFromId(String id) {
+    if (_currentProfile.id == id) return;
+    final match = _profiles.where((p) => p.id == id);
+    if (match.isEmpty) return;
+    _currentProfile = match.first;
     notifyListeners();
   }
 
@@ -404,6 +422,12 @@ class ProfileProvider extends ChangeNotifier {
     } else {
       _currentProfile = profile;
     }
+    // Persist immediately so a force-quit / hot restart cannot reopen on the
+    // previous (e.g. secondary) profile.
+    SharedPrefsHelper.setString(
+      SharedPrefsHelper.activeProfileKey,
+      _currentProfile.id,
+    );
     notifyListeners();
   }
 
@@ -509,6 +533,10 @@ class ProfileProvider extends ChangeNotifier {
 
     _profiles.add(newProfile);
     _currentProfile = newProfile;
+    await SharedPrefsHelper.setString(
+      SharedPrefsHelper.activeProfileKey,
+      newProfile.id,
+    );
     await _saveProfilesToPrefs();
     resetCreationState();
     notifyListeners();
@@ -535,6 +563,10 @@ class ProfileProvider extends ChangeNotifier {
         ),
       );
       _currentProfile = defaultProfile;
+      await SharedPrefsHelper.setString(
+        SharedPrefsHelper.activeProfileKey,
+        defaultProfile.id,
+      );
     }
 
     resetCreationState();

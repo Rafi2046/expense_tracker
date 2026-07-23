@@ -7,7 +7,7 @@
   "spent_today": "आज आपने कुल {amount} खर्च किए",
   "daily_trend": "दैनिक रुझान",
   "today_expenses": "आज का खर्च",
-  "daily_average": "7 दिनों का दैनिक औसत",
+  "daily_average": "दैनिक औसत",
   "highest_expense_today": "आज का उच्चतम खर्च",
   "logged_today": "आज दर्ज किया गया",
   "review_daily_spending": "दैनिक सारांश देखने के लिए टैप करें!",
@@ -1036,7 +1036,7 @@
   "loading_transaction": "Loading transaction",
   "main_profile": "Main Profile",
   "need_two_accounts": "Need at least 2 accounts to transfer.",
-  "no_expenses_this_month": "No expenses this month",
+  "no_expenses_this_month": "इस महीने कोई खर्च लॉग नहीं हुआ",
   "of_budget": "of budget",
   "of_spending": "of spending",
   "payee_label": "Client/Friend Name",
@@ -1069,7 +1069,6 @@
   "top_category": "शीर्ष श्रेणी",
   "no_expenses_this_week": "इस सप्ताह कोई खर्च नहीं",
   "tap_now": "अभी टैप करें",
-  "daily_average": "दैनिक औसत",
   "peak_spike": "उच्चतम एकल खर्च",
   "weekly_insights": "साप्ताहिक अंतर्दृष्टि",
   "avg_per_day": "औसत / दिन",
@@ -1083,7 +1082,6 @@
   "logged_this_month": "इस महीने लॉग किया गया",
   "monthly_trend": "मासिक ट्रेंड",
   "highest_expense_this_month": "इस महीने का सर्वोच्च खर्च",
-  "no_expenses_this_month": "इस महीने कोई खर्च लॉग नहीं हुआ",
   "notif_budget_exceeded_title": "बजट पार हो गया",
   "notif_budget_exceeded_body": "आपने अपना मासिक बजट {budget} पार कर लिया है। वर्तमान खर्च: {amount}।",
   "notif_budget_warning_title": "बजट चेतावनी",
@@ -1091,5 +1089,6 @@
   "notif_weekly_summary_title": "साप्ताहिक सारांश",
   "notif_weekly_summary_body": "पिछले सप्ताह आपने {amount} खर्च किए। अपनी आदतों की समीक्षा करने के लिए टैप करें!",
   "notif_monthly_summary_title": "मासिक सारांश",
-  "notif_monthly_summary_body": "इस महीने आपने {amount} खर्च किए। अपनी आदतों की समीक्षा करने के लिए टैप करें!"
+  "notif_monthly_summary_body": "इस महीने आपने {amount} खर्च किए। अपनी आदतों की समीक्षा करने के लिए टैप करें!",
+  "no_analytics_data": "इस अवधि के लिए कोई डेटा उपलब्ध नहीं है"
 }

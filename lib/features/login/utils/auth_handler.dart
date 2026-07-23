@@ -7,6 +7,7 @@ import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/services/sync_service.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/login/widgets/sync_loading_overlay.dart';
 import 'package:expense_tracker/features/onboarding/pages/onboarding_screen.dart';
 import 'package:expense_tracker/features/login/pages/verify_email_screen.dart';
@@ -192,7 +193,22 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
       return;
     }
 
-    _navigateToSync(uid);
+    final onboardingDone = SharedPrefsHelper.getBool(
+          SharedPrefsHelper.onboardingCompleteKey,
+        ) ??
+        false;
+    if (!onboardingDone) {
+      _navigateToOnboarding();
+      return;
+    }
+
+    final hasSynced =
+        SharedPrefsHelper.getBool('has_synced_for_user_$uid') ?? false;
+    if (hasSynced) {
+      _navigateToHome();
+    } else {
+      _navigateToSync(uid);
+    }
   }
 
   void _navigateToHome() {

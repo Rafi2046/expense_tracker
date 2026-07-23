@@ -166,5 +166,6 @@ Future<Map<String, dynamic>?> showAddCategoryDialog(BuildContext context) async 
     ),
   );
 
+  nameController.dispose();
   return result;
 }

@@ -7,7 +7,7 @@ import '../models/sync_progress.dart';
 import '../utils/database_helper.dart';
 
 class SyncService {
-  final _progressController = StreamController<SyncProgress>();
+  final _progressController = StreamController<SyncProgress>.broadcast();
 
   Stream<SyncProgress> get progress => _progressController.stream;
 

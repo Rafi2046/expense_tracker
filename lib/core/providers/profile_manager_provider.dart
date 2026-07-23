@@ -13,9 +13,19 @@ class ProfileManagerProvider extends ChangeNotifier {
 
   Future<void> switchProfile(String newProfileId) async {
     debugPrint('ProfileManagerProvider: switchProfile from $_activeProfileId to $newProfileId');
-    if (newProfileId == _activeProfileId) return;
+    if (newProfileId == _activeProfileId) {
+      // Still reinforce prefs in case UI already wrote a different value.
+      await SharedPrefsHelper.setString(
+        SharedPrefsHelper.activeProfileKey,
+        newProfileId,
+      );
+      return;
+    }
     _activeProfileId = newProfileId;
-    await SharedPrefsHelper.setString(SharedPrefsHelper.activeProfileKey, newProfileId);
+    await SharedPrefsHelper.setString(
+      SharedPrefsHelper.activeProfileKey,
+      newProfileId,
+    );
     notifyListeners();
   }
 }

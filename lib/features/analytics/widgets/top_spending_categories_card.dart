@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/features/analytics/widgets/analytics_empty_state.dart';
 import 'package:expense_tracker/features/analytics/widgets/top_spending_category_row.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -17,7 +18,7 @@ class TopSpendingCategoriesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (items.isEmpty) return const SizedBox.shrink();
+    if (items.isEmpty) return const AnalyticsEmptyState();
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final onSurface = Theme.of(context).colorScheme.onSurface;

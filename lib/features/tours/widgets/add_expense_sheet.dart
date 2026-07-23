@@ -133,6 +133,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     for (final c in _customValues.values) {
       c.dispose();
     }
+    for (final c in _paidByControllers.values) {
+      c.dispose();
+    }
+    _paidByControllers.clear();
     super.dispose();
   }
 

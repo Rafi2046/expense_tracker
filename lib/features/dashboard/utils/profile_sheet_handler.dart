@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
+import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
@@ -58,7 +59,11 @@ mixin ProfileSheetHandler<T extends StatefulWidget> on State<T> {
       await provider.deleteProfile(profileId);
 
       if (mounted) {
-        Navigator.pop(context);
+        // Keep data-layer active profile in sync when delete auto-switched.
+        await context.read<ProfileManagerProvider>().switchProfile(
+          provider.currentProfile.id,
+        );
+        if (mounted) Navigator.pop(context);
       }
     }
   }

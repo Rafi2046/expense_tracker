@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/services/sync_service.dart';
+import 'package:expense_tracker/core/models/sync_progress.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
@@ -32,6 +33,7 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
   String _statusText = '';
   bool _hasError = false;
   String? _errorMessage;
+  StreamSubscription<SyncProgress>? _progressSubscription;
 
   @override
   void initState() {
@@ -39,8 +41,9 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
     _startSync();
   }
 
-  Future<void> _startSync() async {
-    widget.syncService.progress.listen((progress) {
+  void _listenToProgress() {
+    _progressSubscription?.cancel();
+    _progressSubscription = widget.syncService.progress.listen((progress) {
       if (!mounted) return;
       setState(() {
         if (progress.error != null) {
@@ -51,6 +54,10 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
         }
       });
     });
+  }
+
+  Future<void> _startSync() async {
+    _listenToProgress();
 
     await widget.syncService.sync(widget.uid);
 
@@ -163,6 +170,8 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
 
   @override
   void dispose() {
+    _progressSubscription?.cancel();
+    _progressSubscription = null;
     widget.syncService.dispose();
     super.dispose();
   }

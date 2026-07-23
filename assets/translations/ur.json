@@ -7,7 +7,7 @@
   "spent_today": "آج آپ نے کل {amount} خرچ کیے",
   "daily_trend": "روزانہ کا رجحان",
   "today_expenses": "آج کا خرچ",
-  "daily_average": "7 دن کی روزانہ اوسط",
+  "daily_average": "روزانہ کا اوسط",
   "highest_expense_today": "آج کا سب سے بڑا خرچ",
   "logged_today": "آج درج کیا گیا",
   "review_daily_spending": "روزانہ کا خلاصہ دیکھنے کے لیے ٹیپ کریں!",
@@ -1036,7 +1036,7 @@
   "loading_transaction": "Loading transaction",
   "main_profile": "Main Profile",
   "need_two_accounts": "Need at least 2 accounts to transfer.",
-  "no_expenses_this_month": "No expenses this month",
+  "no_expenses_this_month": "اس مہینے کوئی اخراجات درج نہیں کیے گئے",
   "of_budget": "of budget",
   "of_spending": "of spending",
   "payee_label": "Client/Friend Name",
@@ -1069,7 +1069,6 @@
   "top_category": "سب سے اوپر کا زمرہ",
   "no_expenses_this_week": "اس ہفتے کوئی اخراجات نہیں",
   "tap_now": "ابھی کلک کریں",
-  "daily_average": "روزانہ کا اوسط",
   "peak_spike": "سب سے زیادہ واحد خرچ",
   "weekly_insights": "ہفتہ وار بصیرت",
   "avg_per_day": "اوسط / دن",
@@ -1083,7 +1082,6 @@
   "logged_this_month": "اس مہینے درج کیا گیا",
   "monthly_trend": "ماہانہ رجحان",
   "highest_expense_this_month": "اس مہینے کا سب سے زیادہ خرچ",
-  "no_expenses_this_month": "اس مہینے کوئی اخراجات درج نہیں کیے گئے",
   "notif_budget_exceeded_title": "بجٹ تجاوز کر گیا",
   "notif_budget_exceeded_body": "آپ نے اپنا ماہانہ بجٹ {budget} تجاوز کر لیا ہے۔ موجودہ اخراجات: {amount}۔",
   "notif_budget_warning_title": "بجٹ انتباہ",
@@ -1091,5 +1089,6 @@
   "notif_weekly_summary_title": "ہفتہ وار خلاصہ",
   "notif_weekly_summary_body": "پچھلے ہفتے آپ نے {amount} خرچ کیے۔ اپنی عادات کا جائزہ لینے کے لیے ٹیپ کریں!",
   "notif_monthly_summary_title": "ماہانہ خلاصہ",
-  "notif_monthly_summary_body": "اس مہینے آپ نے {amount} خرچ کیے۔ اپنی عادات کا جائزہ لینے کے لیے ٹیپ کریں!"
+  "notif_monthly_summary_body": "اس مہینے آپ نے {amount} خرچ کیے۔ اپنی عادات کا جائزہ لینے کے لیے ٹیپ کریں!",
+  "no_analytics_data": "اس مدت کے لیے کوئی ڈیٹا دستیاب نہیں"
 }

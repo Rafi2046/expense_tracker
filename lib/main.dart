@@ -186,11 +186,24 @@ void main() async {
             initialProfileId: initialProfileId,
           ),
           update: (_, profileProvider, pm) {
-            if (profileProvider.isReady &&
-                profileProvider.currentProfile.id != pm!.activeProfileId) {
-              Future.microtask(() => pm.switchProfile(profileProvider.currentProfile.id));
+            // SharedPrefs active_profile_id is the cold-start source of truth.
+            // Never overwrite it from a transient ProfileProvider selection
+            // (that caused reloads to open a secondary profile after creating one).
+            if (!profileProvider.isReady || pm == null) return pm!;
+
+            final savedId =
+                SharedPrefsHelper.getString(SharedPrefsHelper.activeProfileKey) ??
+                pm.activeProfileId;
+
+            if (pm.activeProfileId != savedId) {
+              Future.microtask(() => pm.switchProfile(savedId));
             }
-            return pm!;
+            if (profileProvider.currentProfile.id != savedId) {
+              Future.microtask(
+                () => profileProvider.syncCurrentProfileFromId(savedId),
+              );
+            }
+            return pm;
           },
         ),
         ChangeNotifierProxyProvider<ProfileManagerProvider, TransactionProvider>(

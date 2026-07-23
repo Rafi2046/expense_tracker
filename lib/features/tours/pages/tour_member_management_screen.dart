@@ -33,6 +33,12 @@ class _TourMemberManagementScreenState
     extends State<TourMemberManagementScreen> {
   final TextEditingController _nameController = TextEditingController();
 
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
   // Apple-style preset colors for avatars
   final List<Color> _presetColors = [
     const Color(0xFF007AFF), // iOS Blue

@@ -340,7 +340,7 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
     );
   }
 
-  void _showEditAccountDialog(BuildContext context, AccountModel account) {
+  Future<void> _showEditAccountDialog(BuildContext context, AccountModel account) async {
     final theme = Theme.of(context);
     final nameController = TextEditingController(text: account.name);
     final balanceController = TextEditingController(text: account.initialBalance.toStringAsFixed(2));
@@ -348,7 +348,8 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
 
     final isBuiltIn = account.name == 'Cash' || account.name == 'Bank';
 
-    showDialog(
+    try {
+      await showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: theme.cardColor,
@@ -447,6 +448,10 @@ class _TotalBalanceScreenState extends State<TotalBalanceScreen> {
         ],
       ),
     );
+    } finally {
+      nameController.dispose();
+      balanceController.dispose();
+    }
   }
 
   Future<void> _confirmDeleteAccount(BuildContext dialogContext, String accountName) async {

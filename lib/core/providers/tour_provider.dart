@@ -73,15 +73,10 @@ class TourProvider extends ChangeNotifier {
 
   void updateProfileId(String id) {
     if (id == _activeProfileId) return;
+    // Cancel all active Firestore listeners for the previous profile
+    // before switching — avoids leaking subscriptions across profiles.
+    clear();
     _activeProfileId = id;
-    _tours.clear();
-    _selectedTourId = null;
-    _participants.clear();
-    _expenses.clear();
-    _shares.clear();
-    _settlements.clear();
-    _isLoading = true;
-    notifyListeners();
     _loadTours();
   }
 

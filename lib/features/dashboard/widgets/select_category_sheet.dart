@@ -61,7 +61,8 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
   ) async {
     setState(() => _isHidden = true);
     final textController = TextEditingController();
-    await showDialog(
+    try {
+      await showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(
@@ -141,8 +142,11 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
         ],
       ),
     );
-    if (mounted) {
-      setState(() => _isHidden = false);
+    } finally {
+      textController.dispose();
+      if (mounted) {
+        setState(() => _isHidden = false);
+      }
     }
   }
 
@@ -156,7 +160,8 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
     final controller = TextEditingController(text: currentName);
     final themeColor = isIncome ? AppColors.activeGreen : AppColors.activeRed;
 
-    await showDialog(
+    try {
+      await showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(
@@ -231,8 +236,11 @@ class _SelectCategorySheetState extends State<SelectCategorySheet> {
         ],
       ),
     );
-    if (mounted) {
-      setState(() => _isHidden = false);
+    } finally {
+      controller.dispose();
+      if (mounted) {
+        setState(() => _isHidden = false);
+      }
     }
   }
 

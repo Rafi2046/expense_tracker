@@ -7,7 +7,7 @@
   "spent_today": "আজ আপনি মোট {amount} খরচ করেছেন",
   "daily_trend": "দৈনিক ট্রেন্ড",
   "today_expenses": "আজকের খরচ",
-  "daily_average": "৭ দিনের দৈনিক গড়",
+  "daily_average": "দৈনিক গড়",
   "highest_expense_today": "আজকের সর্বোচ্চ খরচ",
   "logged_today": "আজকে এন্ট্রি করা হয়েছে",
   "review_daily_spending": "দৈনিক সারসংক্ষেপ দেখতে ট্যাপ করুন!",
@@ -1046,7 +1046,7 @@
   "loading_transaction": "Loading transaction",
   "main_profile": "Main Profile",
   "need_two_accounts": "Need at least 2 accounts to transfer.",
-  "no_expenses_this_month": "No expenses this month",
+  "no_expenses_this_month": "এই মাসে কোনো খরচ লগ হয়নি",
   "of_budget": "of budget",
   "of_spending": "of spending",
   "payee_label": "Client/Friend Name",
@@ -1079,7 +1079,6 @@
   "top_category": "সর্বোচ্চ খরচের ক্যাটাগরি",
   "no_expenses_this_week": "এই সপ্তাহে কোনো খরচ নেই",
   "tap_now": "এখনই ট্যাপ করুন",
-  "daily_average": "দৈনিক গড়",
   "peak_spike": "সর্বোচ্চ একক খরচ",
   "weekly_insights": "সাপ্তাহিক অন্তর্দৃষ্টি",
   "avg_per_day": "গড় / দিন",
@@ -1093,7 +1092,6 @@
   "logged_this_month": "এই মাসে লগ করা হয়েছে",
   "monthly_trend": "মাসিক ট্রেন্ড",
   "highest_expense_this_month": "এই মাসের সর্বোচ্চ খরচ",
-  "no_expenses_this_month": "এই মাসে কোনো খরচ লগ হয়নি",
   "notif_budget_exceeded_title": "বাজেট অতিক্রম করেছে",
   "notif_budget_exceeded_body": "আপনি আপনার মাসিক বাজেট {budget} অতিক্রম করেছেন। বর্তমান খরচ: {amount}।",
   "notif_budget_warning_title": "বাজেট সতর্কতা",
@@ -1101,5 +1099,6 @@
   "notif_weekly_summary_title": "সাপ্তাহিক সারসংক্ষেপ",
   "notif_weekly_summary_body": "গত সপ্তাহে আপনার মোট খরচ ছিল {amount}। হিসাব দেখতে ট্যাপ করুন!",
   "notif_monthly_summary_title": "মাসিক সারসংক্ষেপ",
-  "notif_monthly_summary_body": "এই মাসে আপনার মোট খরচ ছিল {amount}। হিসাব দেখতে ট্যাপ করুন!"
+  "notif_monthly_summary_body": "এই মাসে আপনার মোট খরচ ছিল {amount}। হিসাব দেখতে ট্যাপ করুন!",
+  "no_analytics_data": "এই সময়ের জন্য কোনো ডেটা নেই"
 }
