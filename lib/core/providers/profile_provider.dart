@@ -212,9 +212,13 @@ class ProfileProvider extends ChangeNotifier {
       }
       _lastLoadedUid = currentUid;
 
-      // Remember current selection so force-reloads don't reset it
+      // Remember current selection so force-reloads don't reset it.
+      // Prefer the in-memory selection when already ready (pull-to-refresh /
+      // re-sync) so a stale SharedPrefs value cannot hijack the active profile.
       final savedId = SharedPrefsHelper.getString(SharedPrefsHelper.activeProfileKey);
-      final preservedProfileId = savedId ?? (force ? _currentProfile.id : _initialProfileId);
+      final preservedProfileId = force && _isReady
+          ? _currentProfile.id
+          : (savedId ?? (force ? _currentProfile.id : _initialProfileId));
 
       _profiles.clear();
       _knownProfileIds.clear();

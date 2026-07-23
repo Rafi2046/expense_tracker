@@ -28,20 +28,44 @@ class BudgetProvider extends ChangeNotifier {
   }
 
   void _onAuthChanged(User? newUser) {
+    final previousUid = _firebaseUser?.uid;
+    final previousUser = _firebaseUser;
+
+    if (newUser == null) {
+      _firestoreSubscription?.cancel();
+      _firestoreSubscription = null;
+      _firebaseUser = null;
+      _amount = 0;
+      _isLoading = true;
+      notifyListeners();
+      _db.clearUserData();
+      return;
+    }
+
+    final uidChanged = newUser.uid != previousUid;
     _firebaseUser = newUser;
+
+    // Ignore token-refresh noise from userChanges().
+    if (!uidChanged && previousUser != null && _firestoreSubscription != null) {
+      return;
+    }
 
     _firestoreSubscription?.cancel();
     _firestoreSubscription = null;
 
-    if (newUser == null) {
-      _amount = 0;
-      _isLoading = true;
-      _db.clearUserData();
-      notifyListeners();
-      return;
-    }
+    // Drop any stale limit immediately so the UI cannot paint red/green
+    // from a previous session while SQLite/Firestore are still hydrating.
+    _amount = 0;
+    _isLoading = true;
+    notifyListeners();
 
-    _startListening(newUser.uid);
+    () async {
+      if (uidChanged) {
+        // Join/await the same wipe TransactionProvider starts on auth.
+        await _db.clearUserData();
+      }
+      await _startListening(newUser.uid);
+    }();
   }
 
   String get activeProfileId => _activeProfileId;
@@ -50,14 +74,24 @@ class BudgetProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get hasBudget => _amount > 0;
 
-  void _startListening(String uid) {
+  Future<void> _startListening(String uid) async {
     _isLoading = true;
     notifyListeners();
 
-    _loadFromDatabase().then((_) {
-      _retryPendingBudget();
-      _attachBudgetListener(uid);
-    });
+    await _loadFromDatabase();
+    _retryPendingBudget();
+    _attachBudgetListener(uid);
+  }
+
+  Future<void> forceReload() async {
+    final uid = _firebaseUser?.uid;
+    if (uid == null) return;
+    _firestoreSubscription?.cancel();
+    _firestoreSubscription = null;
+    _amount = 0;
+    _isLoading = true;
+    notifyListeners();
+    await _startListening(uid);
   }
 
   void _attachBudgetListener(String uid) {
@@ -77,6 +111,12 @@ class BudgetProvider extends ChangeNotifier {
             notifyListeners();
             onBudgetChanged?.call(_activeProfileId);
           }
+        } else {
+          // Remote doc missing — do not keep a stale local limit.
+          if (_amount != 0) {
+            _amount = 0;
+            notifyListeners();
+          }
         }
         _isLoading = false;
         notifyListeners();
@@ -92,11 +132,11 @@ class BudgetProvider extends ChangeNotifier {
   Future<void> _loadFromDatabase() async {
     try {
       final budgetAmount = await _db.readBudget(profileId: _activeProfileId);
-      if (budgetAmount != null) {
-        _amount = budgetAmount;
-      }
+      // Always assign — never leave a previous session's amount when SQLite is empty.
+      _amount = budgetAmount ?? 0;
     } catch (e) {
       debugPrint('Error loading budget from database: $e');
+      _amount = 0;
     }
     _isLoading = false;
     notifyListeners();
@@ -165,6 +205,7 @@ class BudgetProvider extends ChangeNotifier {
     _activeProfileId = id;
     _firestoreSubscription?.cancel();
     _amount = 0;
+    _isLoading = true;
     final uid = _firebaseUser?.uid;
     if (uid != null) {
       _startListening(uid);

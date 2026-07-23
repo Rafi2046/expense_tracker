@@ -1806,8 +1806,25 @@ class DatabaseHelper {
     });
   }
 
+  Future<void>? _clearUserDataInFlight;
+
+  /// Wipes local user tables. Concurrent callers share one in-flight wipe
+  /// so auth listeners cannot race reads against a partial delete.
   Future<void> clearUserData() async {
     if (kIsWeb) return;
+    if (_clearUserDataInFlight != null) {
+      await _clearUserDataInFlight;
+      return;
+    }
+    _clearUserDataInFlight = _clearUserDataBody();
+    try {
+      await _clearUserDataInFlight;
+    } finally {
+      _clearUserDataInFlight = null;
+    }
+  }
+
+  Future<void> _clearUserDataBody() async {
     final db = await instance.database;
     await db.transaction((txn) async {
       await txn.delete('transactions');

@@ -38,6 +38,8 @@ class TourImageCodec {
       return TourImageSourceKind.none;
     }
     if (isNetwork(value)) return TourImageSourceKind.network;
+    // Base64 before file-path checks — raw JPEG Base64 starts with `/9j/`
+    // and would otherwise be misclassified as an absolute filesystem path.
     if (isBase64(value)) return TourImageSourceKind.base64;
     if (isLegacyFilePath(value)) return TourImageSourceKind.file;
     return TourImageSourceKind.none;
@@ -50,9 +52,41 @@ class TourImageCodec {
 
   static bool isBase64(String? value) {
     if (value == null || value.isEmpty) return false;
-    if (value.startsWith(base64Prefix)) return true;
-    if (value.startsWith('data:image/')) return true;
-    return false;
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) return false;
+
+    // Canonical stored formats
+    if (trimmed.startsWith(base64Prefix)) return true;
+    if (trimmed.startsWith('data:image/')) return true;
+
+    // Raw image magic numbers encoded as Base64 (no prefix)
+    // JPEG: FF D8 FF → "/9j/"
+    if (trimmed.startsWith('/9j/')) return true;
+    // PNG: 89 50 4E 47 → "iVBOR"
+    if (trimmed.startsWith('iVBOR')) return true;
+    // GIF: GIF8 → "R0lGOD"
+    if (trimmed.startsWith('R0lGOD')) return true;
+    // WebP/RIFF: "UklGR"
+    if (trimmed.startsWith('UklGR')) return true;
+
+    // Long pure Base64 blob (avoids short strings / paths with `_` `.`)
+    return _looksLikeRawBase64Blob(trimmed);
+  }
+
+  /// True when [value] is a long string of only Base64 alphabet (+ padding).
+  /// Real filesystem paths usually contain `.` or `_` and fail this check.
+  static bool _looksLikeRawBase64Blob(String value) {
+    final cleaned = value.replaceAll(RegExp(r'\s'), '');
+    if (cleaned.length < 64) return false;
+    // Reject known path markers early
+    if (cleaned.contains('tour_cover_')) return false;
+    if (cleaned.contains('receipts')) return false;
+    if (cleaned.length >= 3 &&
+        cleaned[1] == ':' &&
+        (cleaned[2] == '\\' || cleaned[2] == '/')) {
+      return false;
+    }
+    return RegExp(r'^[A-Za-z0-9+/]+={0,2}$').hasMatch(cleaned);
   }
 
   /// True when [value] looks like a local filesystem path (legacy storage).
@@ -147,23 +181,35 @@ class TourImageCodec {
 
   // ─── Decode ───────────────────────────────────────────────────────
 
-  /// Decode a stored Base64 / data-URI value to image bytes.
+  /// Decode a stored Base64 / data-URI / raw-Base64 value to image bytes.
   /// Returns null for network URLs, file paths, or invalid input.
   static Uint8List? decode(String? value) {
     if (value == null || value.isEmpty) return null;
+    if (!isBase64(value)) return null;
+
     try {
-      var payload = value;
+      var payload = value.trim();
       if (payload.startsWith(base64Prefix)) {
         payload = payload.substring(base64Prefix.length);
       } else if (payload.startsWith('data:image/')) {
         final comma = payload.indexOf(',');
-        if (comma < 0) return null;
+        if (comma < 0) {
+          debugPrint('TourImageCodec.decode: data-URI missing comma');
+          return null;
+        }
         payload = payload.substring(comma + 1);
-      } else {
+      }
+      // else: raw Base64 (e.g. "/9j/…") — use as-is
+
+      payload = payload.replaceAll(RegExp(r'\s'), '');
+      if (payload.isEmpty) return null;
+
+      final bytes = base64Decode(payload);
+      if (bytes.isEmpty) {
+        debugPrint('TourImageCodec.decode: decoded empty bytes');
         return null;
       }
-      if (payload.isEmpty) return null;
-      return base64Decode(payload);
+      return bytes;
     } catch (e) {
       debugPrint('TourImageCodec.decode failed: $e');
       return null;

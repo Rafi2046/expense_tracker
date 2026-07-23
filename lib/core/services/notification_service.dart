@@ -390,7 +390,8 @@ class NotificationService {
 
     final ratio = currentMonthExpense / budgetAmount;
     final now = DateTime.now();
-    final monthKey = '${now.year}-${now.month.toString().padLeft(2, '0')}';
+    final dayKey =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 
     final budgetFormatted =
         '$currencySymbol${budgetAmount.toStringAsFixed(2)}';
@@ -398,13 +399,13 @@ class NotificationService {
         '$currencySymbol${currentMonthExpense.toStringAsFixed(2)}';
     final percentFormatted = (ratio * 100).toStringAsFixed(0);
 
-    BudgetThresholdResult? result;
-
-    // ── 100% Exceeded (independent check) ──
+    // ── 100% Exceeded ──
+    // If already at/over budget, only attempt the 100% alert.
+    // Never fall through to 80% when 100% is skipped (already warned today).
     if (ratio >= 1.0) {
-      result = await _fireIfNotNotified(
+      return _fireIfNotNotified(
         thresholdKey: '100',
-        monthKey: monthKey,
+        dayKey: dayKey,
         profileId: profileId,
         notificationId: 1001,
         titleKey: 'notif_budget_exceeded_title',
@@ -414,14 +415,13 @@ class NotificationService {
           'amount': amountFormatted,
         },
       );
-      if (result != null) return result;
     }
 
-    // ── 80% Warning (independent check) ──
+    // ── 80% Warning (only when not yet fully exceeded) ──
     if (ratio >= 0.8) {
-      result = await _fireIfNotNotified(
+      return _fireIfNotNotified(
         thresholdKey: '80',
-        monthKey: monthKey,
+        dayKey: dayKey,
         profileId: profileId,
         notificationId: 1002,
         titleKey: 'notif_budget_warning_title',
@@ -434,28 +434,29 @@ class NotificationService {
       );
     }
 
-    return result;
+    return null;
   }
 
   Future<BudgetThresholdResult?> _fireIfNotNotified({
     required String thresholdKey,
-    required String monthKey,
+    required String dayKey,
     required String profileId,
     required int notificationId,
     required String titleKey,
     required String bodyKey,
     required Map<String, String> args,
   }) async {
-    final notifyKey = '${monthKey}_${profileId}_${thresholdKey}pct';
-    if (_budgetNotifiedKeys.contains(notifyKey)) {
-      debugPrint('checkBudgetThreshold: SKIP (in-memory) $notifyKey');
+    // Once per calendar day per profile (survives cold starts via SharedPrefs).
+    final memoryKey = 'budget_day_${dayKey}_$profileId';
+    if (_budgetNotifiedKeys.contains(memoryKey)) {
+      debugPrint('checkBudgetThreshold: SKIP (in-memory) $memoryKey');
       return null;
     }
 
-    final prefsKey = 'budget_${thresholdKey}pct_warned_${monthKey}_$profileId';
-    final lastNotified = SharedPrefsHelper.getString(prefsKey);
-    if (lastNotified == monthKey) {
-      debugPrint('checkBudgetThreshold: SKIP (SharedPrefs) $prefsKey=$monthKey');
+    final prefsKey = 'budget_warned_today_${dayKey}_$profileId';
+    if (SharedPrefsHelper.getBool(prefsKey) == true) {
+      debugPrint('checkBudgetThreshold: SKIP (SharedPrefs) $prefsKey=true');
+      _budgetNotifiedKeys.add(memoryKey);
       return null;
     }
 
@@ -463,7 +464,9 @@ class NotificationService {
     final title = tr(titleKey);
     final body = tr(bodyKey, namedArgs: args);
 
-    debugPrint('checkBudgetThreshold: FIRING $notifyKey | monthKey=$monthKey | prefsKey=$prefsKey');
+    debugPrint(
+      'checkBudgetThreshold: FIRING ${thresholdKey}pct | $memoryKey | prefsKey=$prefsKey',
+    );
 
     try {
       await _plugin.show(
@@ -488,9 +491,14 @@ class NotificationService {
       debugPrint('checkBudgetThreshold: _plugin.show error: $e');
     }
 
-    _budgetNotifiedKeys.add(notifyKey);
-    await SharedPrefsHelper.setString(prefsKey, monthKey);
-    debugPrint('checkBudgetThreshold: FIRED $notifyKey');
+    _budgetNotifiedKeys.add(memoryKey);
+    final saved = await SharedPrefsHelper.setBool(prefsKey, true);
+    if (!saved) {
+      debugPrint(
+        'checkBudgetThreshold: WARNING failed to persist daily flag $prefsKey',
+      );
+    }
+    debugPrint('checkBudgetThreshold: FIRED ${thresholdKey}pct | saved=$saved');
 
     return BudgetThresholdResult(
       title: title,

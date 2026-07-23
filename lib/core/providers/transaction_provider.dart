@@ -95,47 +95,82 @@ class TransactionProvider extends ChangeNotifier {
 
   void _onAuthChanged(User? newUser) {
     final uidChanged = newUser?.uid != _firebaseUser?.uid;
-
+    final previousUser = _firebaseUser;
     _firebaseUser = newUser;
+
+    if (newUser == null) {
+      _firestoreSubscription?.cancel();
+      _firestoreSubscription = null;
+      _categorySubscription?.cancel();
+      _categorySubscription = null;
+      _knownDocIds.clear();
+      _pendingIds.clear();
+      _knownCategoryIds.clear();
+      _pendingCategoryIds.clear();
+      _transactions.clear();
+      _categoryItems.clear();
+      _isLoading = true;
+      notifyListeners();
+      _db.clearUserData();
+      return;
+    }
+
+    // userChanges() also fires on token refresh — do NOT tear down listeners
+    // or re-addAll from SQLite (that doubles expenses and flips budget %).
+    if (!uidChanged && previousUser != null && _firestoreSubscription != null) {
+      return;
+    }
 
     _firestoreSubscription?.cancel();
     _firestoreSubscription = null;
     _categorySubscription?.cancel();
     _categorySubscription = null;
+
+    // Serialize wipe → reload so budget/expense reads never race the delete.
+    () async {
+      if (uidChanged) {
+        _knownDocIds.clear();
+        _pendingIds.clear();
+        _knownCategoryIds.clear();
+        _pendingCategoryIds.clear();
+        _transactions.clear();
+        _categoryItems.clear();
+        _isLoading = true;
+        notifyListeners();
+        await _db.clearUserData();
+      }
+      await _startListening(newUser.uid);
+    }();
+  }
+
+  Future<void> _startListening(String uid) async {
+    _isLoading = true;
+    notifyListeners();
+
+    // Always replace in-memory lists — never addAll on top of existing rows.
+    _transactions.clear();
+    _categoryItems.clear();
     _knownDocIds.clear();
     _pendingIds.clear();
     _knownCategoryIds.clear();
     _pendingCategoryIds.clear();
 
-    if (newUser == null) {
-      _transactions.clear();
-      _categoryItems.clear();
-      _isLoading = true;
-      _db.clearUserData();
-      notifyListeners();
-      return;
-    }
-
-    if (uidChanged) {
-      _transactions.clear();
-      _categoryItems.clear();
-      _db.clearUserData();
-    }
-
-    _startListening(newUser.uid);
+    await _loadFromDatabase();
+    await _loadCategoriesFromDatabase();
+    _retryPendingOperations();
+    _attachTransactionListener(uid);
+    _attachCategoryListener(uid);
   }
 
-  void _startListening(String uid) {
-    _isLoading = true;
-    notifyListeners();
-
-    _loadFromDatabase().then((_) {
-      return _loadCategoriesFromDatabase();
-    }).then((_) {
-      _retryPendingOperations();
-      _attachTransactionListener(uid);
-      _attachCategoryListener(uid);
-    });
+  /// Re-hydrate SQLite + Firestore for the current profile (pull-to-refresh).
+  Future<void> forceReload() async {
+    final uid = _firebaseUser?.uid;
+    if (uid == null) return;
+    _firestoreSubscription?.cancel();
+    _firestoreSubscription = null;
+    _categorySubscription?.cancel();
+    _categorySubscription = null;
+    await _startListening(uid);
   }
 
   void _attachTransactionListener(String uid) {

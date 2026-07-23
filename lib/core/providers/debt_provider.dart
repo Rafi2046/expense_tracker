@@ -149,36 +149,57 @@ class DebtProvider extends ChangeNotifier {
 
   void _onAuthChanged(User? newUser) {
     final uidChanged = newUser?.uid != _firebaseUser?.uid;
-
+    final previousUser = _firebaseUser;
     _firebaseUser = newUser;
 
-    _firestoreSubscription?.cancel();
-    _firestoreSubscription = null;
-    _knownDocIds.clear();
-    _pendingIds.clear();
-
     if (newUser == null) {
+      _firestoreSubscription?.cancel();
+      _firestoreSubscription = null;
+      _knownDocIds.clear();
+      _pendingIds.clear();
       _items.clear();
-      _db.clearUserData();
       notifyListeners();
+      _db.clearUserData();
       return;
     }
 
-    if (uidChanged) {
-      _items.clear();
-      _db.clearUserData();
+    // Ignore token-refresh noise from userChanges().
+    if (!uidChanged && previousUser != null && _firestoreSubscription != null) {
+      return;
     }
 
-    _startListening(newUser.uid);
+    _firestoreSubscription?.cancel();
+    _firestoreSubscription = null;
+
+    () async {
+      if (uidChanged) {
+        _knownDocIds.clear();
+        _pendingIds.clear();
+        _items.clear();
+        notifyListeners();
+        await _db.clearUserData();
+      }
+      await _startListening(newUser.uid);
+    }();
   }
 
-  void _startListening(String uid) {
+  Future<void> _startListening(String uid) async {
+    _items.clear();
+    _knownDocIds.clear();
+    _pendingIds.clear();
     notifyListeners();
 
-    _loadFromDatabase().then((_) {
-      _retryPendingOperations();
-      _attachDebtListener(uid);
-    });
+    await _loadFromDatabase();
+    _retryPendingOperations();
+    _attachDebtListener(uid);
+  }
+
+  Future<void> forceReload() async {
+    final uid = _firebaseUser?.uid;
+    if (uid == null) return;
+    _firestoreSubscription?.cancel();
+    _firestoreSubscription = null;
+    await _startListening(uid);
   }
 
   void _attachDebtListener(String uid) {

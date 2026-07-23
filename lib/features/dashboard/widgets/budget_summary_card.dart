@@ -3,6 +3,7 @@ import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/budget_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/dashboard/widgets/budget_progress_section.dart';
 import 'package:expense_tracker/features/dashboard/widgets/over_budget_warning.dart';
@@ -18,9 +19,22 @@ class BudgetSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final budgetProvider = context.watch<BudgetProvider>();
+    final txProvider = context.watch<TransactionProvider>();
 
-    if (budgetProvider.isLoading) {
-      return const SizedBox.shrink();
+    // Wait until BOTH limit and expenses have finished their initial hydrate
+    // so red/green is never evaluated against a half-loaded pair.
+    final isResolving = budgetProvider.isLoading || txProvider.isLoading;
+    if (isResolving) {
+      // Keep a sized shell so the parent Skeletonizer has something to shimmer.
+      return Card(
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.br8),
+          side: BorderSide(color: AppColors.borderColor.withValues(alpha: 0.2)),
+        ),
+        child: const SizedBox(height: 120, width: double.infinity),
+      );
     }
 
     final percentage = budgetProvider.hasBudget

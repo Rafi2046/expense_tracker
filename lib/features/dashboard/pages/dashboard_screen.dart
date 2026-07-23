@@ -5,6 +5,7 @@ import 'package:expense_tracker/core/providers/privacy_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/providers/budget_provider.dart';
 import 'package:expense_tracker/core/providers/balance_analytics_provider.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/appbar_widget.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
@@ -39,11 +40,13 @@ class DashboardScreen extends StatelessWidget {
     final currentProfile = profileProvider.currentProfile;
     final debtProvider = context.watch<DebtProvider>();
     final txProvider = context.watch<TransactionProvider>();
+    final budgetProvider = context.watch<BudgetProvider>();
     final balanceProvider = context.watch<BalanceAnalyticsProvider>();
     final expenseAnalytics = context.watch<ExpenseAnalyticsProvider>();
     final double totalBalance = balanceProvider.allTimeTotalBalance;
     final String currentMonthName = context.formatMonth(DateTime.now());
-    final isLoading = txProvider.isLoading;
+    // Budget card needs both expense totals and budget limit before coloring.
+    final isLoading = txProvider.isLoading || budgetProvider.isLoading;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -85,9 +88,16 @@ class DashboardScreen extends StatelessWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await profileProvider.reload();
-          txProvider.updateProfileId(profileProvider.currentProfile.id);
-          debtProvider.updateProfileId(profileProvider.currentProfile.id);
+          // Refresh data for the active profile only — never reload the
+          // profile list (that was resetting selection from SharedPrefs).
+          final tx = context.read<TransactionProvider>();
+          final debt = context.read<DebtProvider>();
+          final budget = context.read<BudgetProvider>();
+          await Future.wait([
+            tx.forceReload(),
+            debt.forceReload(),
+            budget.forceReload(),
+          ]);
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -191,7 +201,7 @@ class DashboardScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 DashboardQuickActionsRow(
                   isLoading: isLoading,
-                  monthlyExpense: txProvider.monthlyExpense,
+                  monthlyExpense: txProvider.calendarMonthExpense,
                 ),
                 DashboardTransactionList(
                   isLoading: isLoading,
