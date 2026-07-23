@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
@@ -39,6 +38,7 @@ class TourListHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final profileProvider = context.read<ProfileProvider>();
 
     return Padding(
@@ -61,16 +61,16 @@ class TourListHeader extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.activeGreen.withValues(alpha: 0.08), // Softer background
+                    color: scheme.primaryContainer,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     context.translate('where_to_next'),
                     style: AppTextStyles.caption.copyWith(
                       fontSize: AppFontSizes.size10,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                       letterSpacing: 1.5,
-                      color: AppColors.activeGreen.withValues(alpha: 0.9),
+                      color: scheme.primary,
                     ),
                   ),
                 ),
@@ -83,13 +83,14 @@ class TourListHeader extends StatelessWidget {
                       style: AppTextStyles.displayLarge.copyWith(
                         fontWeight: FontWeight.w800,
                         letterSpacing: -0.8,
-                        color: theme.colorScheme.onSurface,
+                        color: scheme.onSurface,
                       ),
                     ),
                     if (onViewAll != null && totalTours > 0)
                       TextButton(
                         onPressed: onViewAll,
                         style: TextButton.styleFrom(
+                          foregroundColor: scheme.primary,
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -98,7 +99,7 @@ class TourListHeader extends StatelessWidget {
                           context.translate('view_all'),
                           style: AppTextStyles.bodySmall.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: AppColors.activeGreen,
+                            color: scheme.primary,
                           ),
                         ),
                       ),
@@ -110,7 +111,7 @@ class TourListHeader extends StatelessWidget {
                     '$totalTours tour${totalTours == 1 ? '' : 's'} · $totalBuddies ${totalBuddies == 1 ? 'buddy' : 'buddies'}',
                     style: AppTextStyles.bodySmall.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      color: scheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -150,7 +151,7 @@ class TourListHeader extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
+                    color: scheme.onSurface.withValues(alpha: 0.1),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -158,15 +159,13 @@ class TourListHeader extends StatelessWidget {
               ),
               child: CircleAvatar(
                   radius: 20,
-                backgroundColor: theme.brightness == Brightness.dark
-                    ? Colors.grey.shade800
-                    : Colors.white,
+                backgroundColor: scheme.surfaceContainerHighest,
                 backgroundImage: _resolveImage(photoUrl),
                 child: _resolveImage(photoUrl) == null
                     ? Text(
                   initials,
                   style: AppTextStyles.h3.copyWith(
-                    color: theme.colorScheme.onSurface,
+                    color: scheme.onSurface,
                     fontWeight: FontWeight.w700,
                   ),
                 )

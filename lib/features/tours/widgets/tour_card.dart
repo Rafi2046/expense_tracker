@@ -19,17 +19,6 @@ class TourCard extends StatelessWidget {
   final VoidCallback? onToggleComplete;
   final int index;
 
-  static const _gradientPalette = [
-    [Color(0xFF0F0C29), Color(0xFF302B63), Color(0xFF24243E)],
-    [Color(0xFF0D2B1D), Color(0xFF1A6B47), Color(0xFF064E3B)],
-    [Color(0xFF2D0A0A), Color(0xFF7F1D1D), Color(0xFF450A0A)],
-    [Color(0xFF0C1F3F), Color(0xFF1E3A8A), Color(0xFF1E1B4B)],
-    [Color(0xFF2D0A4E), Color(0xFF581C87), Color(0xFF3B0764)],
-    [Color(0xFF2D0A1C), Color(0xFF831843), Color(0xFF4C0519)],
-    [Color(0xFF0A2E3F), Color(0xFF0E7490), Color(0xFF164E63)],
-    [Color(0xFF2D1A0A), Color(0xFF92400E), Color(0xFF451A03)],
-  ];
-
   const TourCard({
     super.key,
     required this.tour,
@@ -43,7 +32,19 @@ class TourCard extends StatelessWidget {
     this.index = 0,
   });
 
-  List<Color> get _gradient => _gradientPalette[index % _gradientPalette.length];
+  static List<List<Color>> _gradientPalette(ColorScheme scheme) => [
+        [scheme.primaryContainer, scheme.secondaryContainer, scheme.tertiaryContainer],
+        [scheme.secondaryContainer, scheme.tertiaryContainer, scheme.errorContainer],
+        [scheme.tertiaryContainer, scheme.errorContainer, scheme.surfaceContainerHighest],
+        [scheme.errorContainer, scheme.surfaceContainerHighest, scheme.primaryContainer],
+        [scheme.surfaceContainerHighest, scheme.primaryContainer, scheme.secondaryContainer],
+        [scheme.primaryContainer, scheme.tertiaryContainer, scheme.surfaceContainerHighest],
+        [scheme.secondaryContainer, scheme.errorContainer, scheme.primaryContainer],
+        [scheme.tertiaryContainer, scheme.surfaceContainerHighest, scheme.secondaryContainer],
+      ];
+
+  List<Color> _gradientFor(ColorScheme scheme) =>
+      _gradientPalette(scheme)[index % _gradientPalette(scheme).length];
 
   String _currencySymbol(String code) {
     const symbols = {
@@ -63,6 +64,7 @@ class TourCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final hasCoverPhoto = tour.coverPhoto != null && tour.coverPhoto!.isNotEmpty;
     final totalLabel = context.translate('total_spent');
     final memberLabel = memberCount == 1
@@ -76,7 +78,7 @@ class TourCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.18),
+              color: scheme.onSurface.withValues(alpha: 0.18),
               blurRadius: 16,
               offset: const Offset(0, 8),
             ),
@@ -88,7 +90,7 @@ class TourCard extends StatelessWidget {
             children: [
               TourCardBackground(
                 coverPhoto: hasCoverPhoto ? tour.coverPhoto : null,
-                gradient: _gradient,
+                gradient: _gradientFor(scheme),
               ),
               Positioned(
                 top: 14,

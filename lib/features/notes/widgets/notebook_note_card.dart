@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/providers/note_provider.dart';
 
@@ -14,20 +13,13 @@ String _formatDate(DateTime dt) {
 }
 
 Widget _buildCategoryBadge(BuildContext context, String category) {
-  final isDark = Theme.of(context).brightness == Brightness.dark;
-  Color bg = isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1EFF5);
-  Color fg = isDark ? Colors.white70 : Colors.black87;
-
-  if (category == 'Business') {
-    bg = isDark ? const Color(0xFF10B981).withValues(alpha: 0.15) : const Color(0xFFE8F8F5);
-    fg = isDark ? const Color(0xFF10B981) : AppColors.activeGreen;
-  } else if (category == 'Personal') {
-    bg = isDark ? Colors.blue.withValues(alpha: 0.15) : const Color(0xFFEBF5FB);
-    fg = isDark ? Colors.blue.shade400 : Colors.blue.shade700;
-  } else if (category == 'General') {
-    bg = isDark ? Colors.orange.withValues(alpha: 0.15) : const Color(0xFFFEF9E7);
-    fg = isDark ? Colors.orange.shade400 : Colors.orange.shade800;
-  }
+  final scheme = Theme.of(context).colorScheme;
+  final (Color bg, Color fg) = switch (category) {
+    'Business' => (scheme.primaryContainer, scheme.primary),
+    'Personal' => (scheme.secondaryContainer, scheme.secondary),
+    'General' => (scheme.tertiaryContainer, scheme.tertiary),
+    _ => (scheme.surfaceContainerHighest, scheme.onSurfaceVariant),
+  };
 
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -69,6 +61,8 @@ class NotebookNoteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Dismissible(
       key: ValueKey(note.id),
       direction: DismissDirection.endToStart,
@@ -77,25 +71,19 @@ class NotebookNoteCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         margin: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
-          color: isDark ? Colors.red.withValues(alpha: 0.1) : const Color(0xFFFEE2E2),
+          color: scheme.errorContainer,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFFCA5A5)),
+          border: Border.all(color: scheme.error.withValues(alpha: 0.35)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
               context.translate('swipe_to_delete'),
-              style: AppTextStyles.bodyBold.copyWith(
-                color: isDark ? Colors.red.shade400 : const Color(0xFFB91C1C),
-              ),
+              style: AppTextStyles.bodyBold.copyWith(color: scheme.error),
             ),
             const SizedBox(width: 8),
-            Icon(
-              LucideIcons.trash,
-              color: isDark ? Colors.red.shade400 : const Color(0xFFB91C1C),
-              size: 24,
-            ),
+            Icon(LucideIcons.trash, color: scheme.error, size: 24),
           ],
         ),
       ),
@@ -110,10 +98,10 @@ class NotebookNoteCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: cardColor,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF0F0F0)),
+          border: Border.all(color: scheme.outlineVariant),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
+              color: scheme.onSurface.withValues(alpha: 0.02),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -150,7 +138,7 @@ class NotebookNoteCard extends StatelessWidget {
                       },
                       child: Icon(
                         LucideIcons.trash,
-                        color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
+                        color: scheme.onSurfaceVariant,
                         size: 20,
                       ),
                     ),
@@ -163,7 +151,7 @@ class NotebookNoteCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.body.copyWith(
                     height: 1.4,
-                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                    color: scheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -174,7 +162,7 @@ class NotebookNoteCard extends StatelessWidget {
                       _formatDate(note.createdAt),
                       style: AppTextStyles.label.copyWith(
                         fontWeight: FontWeight.w400,
-                        color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
+                        color: scheme.onSurfaceVariant,
                       ),
                     ),
                     _buildCategoryBadge(context, note.category),

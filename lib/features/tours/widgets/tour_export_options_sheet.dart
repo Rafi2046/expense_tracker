@@ -20,8 +20,7 @@ class TourExportOptionsSheet extends StatelessWidget {
     final tour = provider.selectedTour;
     if (tour == null) return const SizedBox.shrink();
 
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final scheme = Theme.of(context).colorScheme;
 
     final participants = provider.participants;
     final expenses = provider.expenses;
@@ -35,13 +34,13 @@ class TourExportOptionsSheet extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: theme.cardColor,
+        color: scheme.surface,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
         ),
         border: Border.all(
-          color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFF1F5F9),
+          color: scheme.outline,
           width: 1.2,
         ),
       ),
@@ -57,7 +56,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                     height: 4,
                     margin: const EdgeInsets.only(bottom: 20),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF4B5563) : const Color(0xFFD1D5DB),
+                      color: scheme.outlineVariant,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -66,14 +65,14 @@ class TourExportOptionsSheet extends StatelessWidget {
                   context.translate('export_report_title'),
                   style: AppTextStyles.h1.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: theme.colorScheme.onSurface,
+                    color: scheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   context.translate('export_report_subtitle'),
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
+                    color: scheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -81,7 +80,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                   icon: LucideIcons.image,
                   title: context.translate('share_balances_image'),
                   subtitle: context.translate('share_balances_image_desc'),
-                  gradientColors: const [Color(0xFF059669), Color(0xFF0F766E)],
+                  gradientColors: [scheme.primary, scheme.secondary],
                   onTap: () {
                     Navigator.pop(context);
                     TourExportService.shareReport(context, tourId);
@@ -92,7 +91,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                   icon: LucideIcons.fileText,
                   title: context.translate('view_detailed_invoice_title'),
                   subtitle: context.translate('view_detailed_invoice_desc'),
-                  gradientColors: const [Color(0xFF2563EB), Color(0xFF1D4ED8)],
+                  gradientColors: [scheme.secondary, scheme.tertiary],
                   onTap: () {
                     Navigator.push(
                       context,
@@ -107,7 +106,7 @@ class TourExportOptionsSheet extends StatelessWidget {
                   icon: LucideIcons.file,
                   title: context.translate('download_pdf_invoice_title'),
                   subtitle: context.translate('download_pdf_invoice_desc'),
-                  gradientColors: const [Color(0xFFDC2626), Color(0xFFB91C1C)],
+                  gradientColors: [scheme.error, scheme.errorContainer],
                   onTap: () {
                     Navigator.pop(context);
                     TourInvoiceGenerator.generateAndShare(
@@ -145,8 +144,7 @@ class _ExportOptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final scheme = Theme.of(context).colorScheme;
 
     return Material(
       color: Colors.transparent,
@@ -156,10 +154,10 @@ class _ExportOptionTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1E1E2E) : const Color(0xFFF8F9FA),
+            color: scheme.surfaceContainer,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFE5E7EB),
+              color: scheme.outline,
             ),
           ),
           child: Row(
@@ -175,7 +173,7 @@ class _ExportOptionTile extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(icon, color: Colors.white, size: 22),
+                child: Icon(icon, color: scheme.onPrimary, size: 22),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -185,14 +183,14 @@ class _ExportOptionTile extends StatelessWidget {
                     Text(
                       title,
                       style: AppTextStyles.reportTileTitle.copyWith(
-                        color: theme.colorScheme.onSurface,
+                        color: scheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
                       style: AppTextStyles.label.copyWith(
-                        color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
+                        color: scheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -200,7 +198,7 @@ class _ExportOptionTile extends StatelessWidget {
               ),
               Icon(
                 LucideIcons.chevronRight,
-                color: isDark ? const Color(0xFF4B5563) : const Color(0xFF9CA3AF),
+                color: scheme.onSurfaceVariant,
                 size: 20,
               ),
             ],

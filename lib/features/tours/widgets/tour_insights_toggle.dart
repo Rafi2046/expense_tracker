@@ -13,15 +13,13 @@ class TourInsightsToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final scheme = Theme.of(context).colorScheme;
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.08)
-            : const Color(0xFFF0F1F3),
+        color: scheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: scheme.outlineVariant),
       ),
       padding: const EdgeInsets.all(3),
       child: Row(
@@ -57,7 +55,7 @@ class _Segment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final scheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -65,7 +63,7 @@ class _Segment extends StatelessWidget {
         curve: Curves.easeOutCubic,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? theme.primaryColor : Colors.transparent,
+          color: isSelected ? scheme.secondaryContainer : Colors.transparent,
           borderRadius: BorderRadius.circular(18),
         ),
         child: AnimatedDefaultTextStyle(
@@ -73,7 +71,9 @@ class _Segment extends StatelessWidget {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : (theme.colorScheme.onSurface.withValues(alpha: 0.6)),
+            color: isSelected
+                ? scheme.onSecondaryContainer
+                : scheme.onSurfaceVariant,
           ),
           child: Text(label),
         ),

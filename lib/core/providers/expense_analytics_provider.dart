@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
 import 'package:expense_tracker/features/dashboard/widgets/expense_trend_chart_card.dart' show ExpenseChartData;
 import 'package:expense_tracker/features/dashboard/widgets/category_breakdown_item.dart' show CategoryBreakdownItem;
@@ -13,17 +14,18 @@ class ExpenseAnalyticsProvider extends ChangeNotifier {
   String? _currentProfileId;
   StreamSubscription<User?>? _authSubscription;
 
+  /// Chart accents drawn only from the consolidated brand / error tokens.
   static const _categoryColors = [
-    Color(0xFF10B981), // Emerald green
-    Color(0xFFF59E0B), // Amber
-    Color(0xFFEC4899), // Hot pink
-    Color(0xFF6366F1), // Indigo
-    Color(0xFF8B5CF6), // Violet
-    Color(0xFF06B6D4), // Cyan
-    Color(0xFFEF4444), // Red
-    Color(0xFF14B8A6), // Teal
-    Color(0xFF3B82F6), // Blue
-    Color(0xFFF97316), // Orange
+    AppTheme.brandPrimaryDark,
+    AppTheme.brandPrimaryLight,
+    AppTheme.brandTertiaryLight,
+    AppTheme.brandTertiaryDark,
+    AppTheme.errorColor,
+    AppTheme.brandSecondaryLight,
+    AppTheme.onSurfaceVariantLight,
+    AppTheme.outlineDark,
+    AppTheme.brandSecondaryDark,
+    AppTheme.onSurfaceVariantDark,
   ];
 
   ExpenseAnalyticsProvider() {

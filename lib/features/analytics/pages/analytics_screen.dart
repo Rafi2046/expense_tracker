@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/providers/transaction_provider.dart';
+import 'package:expense_tracker/core/theme/app_theme.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
 import 'package:expense_tracker/features/analytics/widgets/monthly_comparison_card.dart';
 import 'package:expense_tracker/features/analytics/widgets/spending_overview_card.dart';
@@ -33,30 +34,31 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     });
   }
 
+  /// Consolidated brand tokens only — no orphan purple/amber/cyan hexes.
   static const _colorPalette = [
-    Color(0xFF1EA97C),
-    Color(0xFF2EBD85),
-    Color(0xFF80E2B9),
-    Color(0xFFD2F8E7),
-    Color(0xFFE24361),
-    Color(0xFFF59E0B),
-    Color(0xFFEF4444),
-    Color(0xFF8B5CF6),
-    Color(0xFF6366F1),
-    Color(0xFF06B6D4),
+    AppTheme.brandPrimaryDark,
+    AppTheme.brandPrimaryLight,
+    AppTheme.brandTertiaryLight,
+    AppTheme.brandTertiaryDark,
+    AppTheme.errorColor,
+    AppTheme.brandSecondaryLight,
+    AppTheme.onSurfaceVariantLight,
+    AppTheme.outlineDark,
+    AppTheme.brandSecondaryDark,
+    AppTheme.onSurfaceVariantDark,
   ];
 
   static const _namedCategoryColors = <String, Color>{
-    'housing': Color(0xFF1EA97C),
-    'food': Color(0xFF2EBD85),
-    'transport': Color(0xFF80E2B9),
-    'utilities': Color(0xFFD2F8E7),
-    'entertainment': Color(0xFFE24361),
-    'shopping': Color(0xFFF59E0B),
-    'health': Color(0xFFEF4444),
-    'education': Color(0xFF8B5CF6),
-    'salary': Color(0xFF2EBD85),
-    'investment': Color(0xFF6366F1),
+    'housing': AppTheme.brandPrimaryLight,
+    'food': AppTheme.brandPrimaryDark,
+    'transport': AppTheme.brandTertiaryLight,
+    'utilities': AppTheme.brandTertiaryDark,
+    'entertainment': AppTheme.errorColor,
+    'shopping': AppTheme.brandSecondaryLight,
+    'health': AppTheme.errorColor,
+    'education': AppTheme.brandPrimaryLight,
+    'salary': AppTheme.brandPrimaryDark,
+    'investment': AppTheme.brandTertiaryLight,
   };
 
   static const _namedCategoryIcons = <String, IconData>{
@@ -181,7 +183,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
-            color: Theme.of(context).dividerTheme.color ?? const Color(0xFFF0F0F0),
+            color: Theme.of(context).dividerTheme.color ?? Theme.of(context).colorScheme.outlineVariant,
             height: 1.0,
           ),
         ),

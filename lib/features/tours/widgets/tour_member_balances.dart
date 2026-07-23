@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/models/tour_participant.dart';
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
@@ -27,19 +26,28 @@ class TourMemberBalances extends StatelessWidget {
     required this.onSettleUp,
   });
 
-  Color _avatarColor(int index) {
-    if (index < 0) return const Color(0xFF6366F1);
-    const colors = [
-      Color(0xFF6366F1),
-      Color(0xFFEC4899),
-      Color(0xFF10B981),
-      Color(0xFFF59E0B),
-      Color(0xFF06B6D4),
-      Color(0xFF8B5CF6),
-      Color(0xFFEF4444),
-      Color(0xFF14B8A6),
+  Color _avatarColor(ColorScheme scheme, int index) {
+    final colors = [
+      scheme.primary,
+      scheme.secondary,
+      scheme.tertiary,
+      scheme.error,
+      scheme.primaryContainer,
+      scheme.secondaryContainer,
+      scheme.tertiaryContainer,
+      scheme.surfaceContainerHighest,
     ];
     return colors[index % colors.length];
+  }
+
+  Color _avatarTextColor(ColorScheme scheme, Color avatarBg) {
+    if (avatarBg == scheme.primaryContainer ||
+        avatarBg == scheme.secondaryContainer ||
+        avatarBg == scheme.tertiaryContainer ||
+        avatarBg == scheme.surfaceContainerHighest) {
+      return scheme.onPrimaryContainer;
+    }
+    return scheme.onPrimary;
   }
 
   ImageProvider? _getParticipantImage(TourParticipant p) {
@@ -60,9 +68,8 @@ class TourMemberBalances extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final scheme = Theme.of(context).colorScheme;
     final hasDebts = outstanding > 0;
-    final isDark = theme.brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,20 +78,20 @@ class TourMemberBalances extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 12),
           child: Text(
             context.translate('balances_label'),
-            style: AppTextStyles.h2.copyWith(color: theme.colorScheme.onSurface),
+            style: AppTextStyles.h2.copyWith(color: scheme.onSurface),
           ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: theme.cardColor,
+            color: scheme.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFF1F5F9),
+              color: scheme.outline,
               width: 1.2,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+                color: scheme.onSurface.withValues(alpha: 0.06),
                 blurRadius: 12,
                 offset: const Offset(0, 6),
               ),
@@ -102,7 +109,7 @@ class TourMemberBalances extends StatelessWidget {
                   children: [
                     _buildMemberBalanceRow(
                       context: context,
-                      theme: theme,
+                      scheme: scheme,
                       p: participant,
                       index: idx,
                       balance: balances[participant.id] ?? 0,
@@ -113,7 +120,7 @@ class TourMemberBalances extends StatelessWidget {
                         thickness: 1,
                         indent: 52,
                         endIndent: 16,
-                        color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFF1F5F9),
+                        color: scheme.outlineVariant,
                       ),
                   ],
                 );
@@ -122,7 +129,7 @@ class TourMemberBalances extends StatelessWidget {
                 Divider(
                   height: 1,
                   thickness: 1,
-                  color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFF1F5F9),
+                  color: scheme.outlineVariant,
                 ),
                 InkWell(
                   onTap: onSettleUp,
@@ -133,14 +140,10 @@ class TourMemberBalances extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? const Color(0xFF064E3B).withValues(alpha: 0.25)
-                          : const Color(0xFFF0FDF4),
-                      border: isDark
-                          ? const Border(
-                              top: BorderSide(color: Color(0xFF064E3B), width: 1),
-                            )
-                          : null,
+                      color: scheme.primaryContainer.withValues(alpha: 0.5),
+                      border: Border(
+                        top: BorderSide(color: scheme.primary.withValues(alpha: 0.3), width: 1),
+                      ),
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(16),
                         bottomRight: Radius.circular(16),
@@ -152,12 +155,12 @@ class TourMemberBalances extends StatelessWidget {
                         Icon(
                           LucideIcons.handshake,
                           size: 16,
-                          color: Color(0xFF10B981),
+                          color: scheme.primary,
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Text(
                           context.translate('settle_up_balances'),
-                          style: AppTextStyles.cardTrendGreen,
+                          style: AppTextStyles.cardTrendGreen.copyWith(color: scheme.primary),
                         ),
                       ],
                     ),
@@ -173,14 +176,14 @@ class TourMemberBalances extends StatelessWidget {
 
   Widget _buildMemberBalanceRow({
     required BuildContext context,
-    required ThemeData theme,
+    required ColorScheme scheme,
     required TourParticipant p,
     required int index,
     required double balance,
   }) {
     final isOwed = balance > 0;
     final isSettled = balance == 0;
-    final isDark = theme.brightness == Brightness.dark;
+    final avatarBg = _avatarColor(scheme, index);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -188,14 +191,14 @@ class TourMemberBalances extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 16,
-            backgroundColor: _avatarColor(index),
+            backgroundColor: avatarBg,
             backgroundImage: _getParticipantImage(p),
             child: _getParticipantImage(p) == null
                 ? Text(
                     p.name.isNotEmpty ? String.fromCharCode(p.name.runes.first).toUpperCase() : '?',
                     style: AppTextStyles.bodySmall.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: AppColors.white,
+                      color: _avatarTextColor(scheme, avatarBg),
                     ),
                   )
                 : null,
@@ -206,7 +209,7 @@ class TourMemberBalances extends StatelessWidget {
               p.name,
               style: AppTextStyles.bodyBold.copyWith(
                 fontSize: AppFontSizes.size15,
-                color: theme.colorScheme.onSurface,
+                color: scheme.onSurface,
               ),
             ),
           ),
@@ -217,14 +220,14 @@ class TourMemberBalances extends StatelessWidget {
                 vertical: 4,
               ),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFF3F4F6),
+                color: scheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 context.translate('settled_label'),
                 style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF9CA3AF),
+                  color: scheme.onSurfaceVariant,
                 ),
               ),
             )
@@ -235,14 +238,14 @@ class TourMemberBalances extends StatelessWidget {
                 vertical: 4,
               ),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF064E3B).withValues(alpha: 0.2) : AppColors.selectionGreenBg,
+                color: scheme.primaryContainer.withValues(alpha: 0.6),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 context.translate('gets_back_amount', namedArgs: {'amount': formatAmount(balance)}),
                 style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: AppColors.activeGreen,
+                  color: scheme.primary,
                 ),
               ),
             )
@@ -253,14 +256,14 @@ class TourMemberBalances extends StatelessWidget {
                 vertical: 4,
               ),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF7F1D1D).withValues(alpha: 0.2) : const Color(0xFFFEF2F2),
+                color: scheme.errorContainer,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 context.translate('owes_amount', namedArgs: {'amount': formatAmount(balance.abs())}),
                 style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: AppColors.activeRed,
+                  color: scheme.error,
                 ),
               ),
             ),

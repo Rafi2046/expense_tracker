@@ -119,11 +119,13 @@ class _BiometricSettingsTileState extends State<BiometricSettingsTile> {
           ),
           if (_checkedCapability)
             Transform.scale(
-              scale: 0.7,
+              // Scale toward trailing edge so the control sits flush right.
+              alignment: Alignment.centerRight,
+              scale: 0.72,
               child: Switch(
                 value: provider.isEnabled && isAvailable,
                 onChanged: isAvailable && !_isProcessing ? _onToggle : null,
-                activeThumbColor: theme.primaryColor,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
             )
           else

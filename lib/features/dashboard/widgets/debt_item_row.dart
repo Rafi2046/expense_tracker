@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/debt_provider.dart';
 import 'package:expense_tracker/core/widgets/privacy_masked_text.dart';
@@ -24,46 +23,32 @@ class DebtItemRow extends StatelessWidget {
     this.isMasked = false,
   });
 
+  List<Color> _avatarFgPalette(ColorScheme scheme) => [
+        scheme.primary,
+        scheme.secondary,
+        scheme.tertiary,
+        scheme.error,
+        scheme.onSurfaceVariant,
+      ];
+
+  List<Color> _avatarBgPalette(ColorScheme scheme) => [
+        scheme.primaryContainer,
+        scheme.secondaryContainer,
+        scheme.tertiaryContainer,
+        scheme.errorContainer,
+        scheme.surfaceContainerHighest,
+      ];
+
   Color _getAvatarBg(BuildContext context, String name) {
-    final hash = name.hashCode.abs();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final colors = isDark ? [
-      const Color(0xFF2EBD85).withValues(alpha: 0.15),
-      const Color(0xFFDC3545).withValues(alpha: 0.15),
-      const Color(0xFF2980B9).withValues(alpha: 0.15),
-      const Color(0xFFD35400).withValues(alpha: 0.15),
-      const Color(0xFF8E44AD).withValues(alpha: 0.15),
-      const Color(0xFF607D8B).withValues(alpha: 0.15),
-    ] : [
-      const Color(0xFFE8F8F5), // soft green
-      const Color(0xFFFEE2E2), // soft red/pink
-      const Color(0xFFEBF5FB), // soft blue
-      const Color(0xFFFEF9E7), // soft yellow
-      const Color(0xFFF3E5F5), // soft purple
-      const Color(0xFFECEFF1), // soft blue-grey
-    ];
-    return colors[hash % colors.length];
+    final scheme = Theme.of(context).colorScheme;
+    final colors = _avatarBgPalette(scheme);
+    return colors[name.hashCode.abs() % colors.length];
   }
 
   Color _getAvatarFg(BuildContext context, String name) {
-    final hash = name.hashCode.abs();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final colors = isDark ? [
-      const Color(0xFF5EDCAE),
-      const Color(0xFFFCA5A5),
-      const Color(0xFF76B9E4),
-      const Color(0xFFF5A069),
-      const Color(0xFFC084FC),
-      const Color(0xFF90A4AE),
-    ] : [
-      const Color(0xFF2EBD85),
-      const Color(0xFFDC3545),
-      const Color(0xFF2980B9),
-      const Color(0xFFD35400),
-      const Color(0xFF8E44AD),
-      const Color(0xFF607D8B),
-    ];
-    return colors[hash % colors.length];
+    final scheme = Theme.of(context).colorScheme;
+    final colors = _avatarFgPalette(scheme);
+    return colors[name.hashCode.abs() % colors.length];
   }
 
   String _getInitials(String name) {
@@ -72,14 +57,16 @@ class DebtItemRow extends StatelessWidget {
     if (parts.length > 1) {
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
-    return parts[0].runes.isNotEmpty ? String.fromCharCode(parts[0].runes.first).toUpperCase() : '';
+    return parts[0].runes.isNotEmpty
+        ? String.fromCharCode(parts[0].runes.first).toUpperCase()
+        : '';
   }
 
   @override
   Widget build(BuildContext context) {
     final debtProvider = context.read<DebtProvider>();
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final scheme = theme.colorScheme;
 
     return Dismissible(
       key: ValueKey(item.id),
@@ -89,18 +76,14 @@ class DebtItemRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
-          color: isDark
-              ? themeColor.withValues(alpha: 0.15)
-              : (themeColor == AppColors.activeRed
-                  ? const Color(0xFFFEE2E2)
-                  : const Color(0xFFE8F8F5)),
+          color: themeColor == scheme.error
+              ? scheme.errorContainer
+              : scheme.primaryContainer,
           borderRadius: BorderRadius.circular(AppSpacing.r8),
           border: Border.all(
-            color: isDark
-                ? themeColor.withValues(alpha: 0.3)
-                : (themeColor == AppColors.activeRed
-                    ? const Color(0xFFFCA5A5)
-                    : const Color(0xFFA3E4D7)),
+            color: themeColor == scheme.error
+                ? scheme.error.withValues(alpha: 0.35)
+                : scheme.primary.withValues(alpha: 0.35),
           ),
         ),
         child: Row(
@@ -125,13 +108,15 @@ class DebtItemRow extends StatelessWidget {
         Future.microtask(() => debtProvider.settleDebtItem(id));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(context.translate('debt_settled', namedArgs: {'name': name}),
-              style: const TextStyle(color: Colors.white)),
-            backgroundColor: const Color(0xFF1E293B),
+            content: Text(
+              context.translate('debt_settled', namedArgs: {'name': name}),
+              style: TextStyle(color: scheme.onPrimary),
+            ),
+            backgroundColor: scheme.surfaceContainerHighest,
             duration: const Duration(seconds: 3),
             action: SnackBarAction(
               label: context.translate('undo'),
-              textColor: Colors.yellow,
+              textColor: scheme.secondary,
               onPressed: () {
                 debtProvider.toggleSettledStatus(id);
               },
@@ -144,7 +129,9 @@ class DebtItemRow extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: BorderRadius.circular(AppSpacing.r8),
-          border: Border.all(color: theme.dividerTheme.color ?? const Color(0xFFF0F0F0)),
+          border: Border.all(
+            color: theme.dividerTheme.color ?? scheme.outlineVariant,
+          ),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(AppSpacing.r8),
@@ -164,10 +151,14 @@ class DebtItemRow extends StatelessWidget {
                     builder: (sheetContext) => Container(
                       decoration: BoxDecoration(
                         color: theme.cardColor,
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
                       ),
                       padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(sheetContext).viewInsets.bottom + MediaQuery.of(sheetContext).padding.bottom + 16,
+                        bottom: MediaQuery.of(sheetContext).viewInsets.bottom +
+                            MediaQuery.of(sheetContext).padding.bottom +
+                            16,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -177,13 +168,19 @@ class DebtItemRow extends StatelessWidget {
                             width: 40,
                             height: 4,
                             decoration: BoxDecoration(
-                              color: theme.dividerTheme.color ?? Colors.grey.shade300,
+                              color: scheme.outline,
                               borderRadius: BorderRadius.circular(2),
                             ),
                           ),
                           ListTile(
-                            leading: Icon(LucideIcons.edit, color: theme.colorScheme.onSurface),
-                            title: Text(context.translate('edit'), style: TextStyle(color: theme.colorScheme.onSurface)),
+                            leading: Icon(
+                              LucideIcons.edit,
+                              color: scheme.onSurface,
+                            ),
+                            title: Text(
+                              context.translate('edit'),
+                              style: TextStyle(color: scheme.onSurface),
+                            ),
                             onTap: () {
                               Navigator.pop(sheetContext);
                               onEditTap();
@@ -191,8 +188,14 @@ class DebtItemRow extends StatelessWidget {
                           ),
                           if (onDelete != null)
                             ListTile(
-                              leading: Icon(LucideIcons.trash2, color: Colors.red.shade400),
-                              title: Text(context.translate('delete'), style: TextStyle(color: Colors.red.shade400)),
+                              leading: Icon(
+                                LucideIcons.trash2,
+                                color: scheme.error,
+                              ),
+                              title: Text(
+                                context.translate('delete'),
+                                style: TextStyle(color: scheme.error),
+                              ),
                               onTap: () {
                                 Navigator.pop(sheetContext);
                                 onDelete?.call();
@@ -217,13 +220,15 @@ class DebtItemRow extends StatelessWidget {
                     gradient: LinearGradient(
                       colors: [
                         _getAvatarBg(context, item.name),
-                        _getAvatarBg(context, item.name).withValues(alpha: 0.85),
+                        _getAvatarBg(context, item.name)
+                            .withValues(alpha: 0.85),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     border: Border.all(
-                      color: _getAvatarFg(context, item.name).withValues(alpha: 0.15),
+                      color: _getAvatarFg(context, item.name)
+                          .withValues(alpha: 0.15),
                       width: 1,
                     ),
                   ),
@@ -242,7 +247,7 @@ class DebtItemRow extends StatelessWidget {
                   style: TextStyle(
                     fontSize: AppFontSizes.size14,
                     fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface,
+                    color: scheme.onSurface,
                   ),
                 ),
                 subtitle: Padding(
@@ -251,7 +256,7 @@ class DebtItemRow extends StatelessWidget {
                     item.detail,
                     style: TextStyle(
                       fontSize: AppFontSizes.size12,
-                      color: AppColors.textMuted,
+                      color: scheme.onSurfaceVariant,
                     ),
                   ),
                 ),

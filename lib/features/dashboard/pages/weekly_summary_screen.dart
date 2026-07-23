@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_font_sizes.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -70,8 +69,9 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
-    final activeColor = isDark ? const Color(0xFF8E75C8) : AppColors.buttonColor;
+    final activeColor = scheme.primary;
 
     final total = ((_summary?['total'] as num?)?.toDouble() ?? 0.0);
     final count = (_summary?['transactionCount'] as num?)?.toInt() ?? 0;
@@ -160,7 +160,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(
-            color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1),
+            color: isDark ? scheme.outline : scheme.surfaceContainer,
             height: 1.0,
           ),
         ),
@@ -177,23 +177,23 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF1E222B) : Colors.grey.shade50.withValues(alpha: 0.05),
+                      color: isDark ? scheme.surfaceContainerLow : scheme.surfaceContainerLowest.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: isDark ? const Color(0xFF2D323F) : Colors.grey.shade200,
+                        color: isDark ? scheme.surfaceContainerHighest : scheme.outlineVariant,
                       ),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(LucideIcons.calendar, size: 14, color: Colors.grey.shade500),
+                        Icon(LucideIcons.calendar, size: 14, color: scheme.onSurfaceVariant),
                         const SizedBox(width: 8),
                         Text(
                           _weekRange(),
                           style: TextStyle(
                             fontSize: AppFontSizes.size12,
                             fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade500,
+                            color: scheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -210,15 +210,14 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF32235B), Color(0xFF6A53A1)],
+                        gradient: LinearGradient(
+                          colors: [scheme.primary, scheme.secondary],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF6A53A1)
-                                .withValues(alpha: 0.2),
+                            color: scheme.primary.withValues(alpha: 0.35),
                             blurRadius: 15,
                             offset: const Offset(0, 6),
                           ),
@@ -232,7 +231,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                             style: TextStyle(
                               fontSize: AppFontSizes.size12,
                               fontWeight: FontWeight.w600,
-                              color: Colors.white.withValues(alpha: 0.7),
+                              color: scheme.onPrimary.withValues(alpha: 0.7),
                             ),
                           ),
                           const Spacer(),
@@ -244,7 +243,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                               style: TextStyle(
                                 fontSize: AppFontSizes.size16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: scheme.onPrimary,
                               ),
                             ),
                           ),
@@ -266,7 +265,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                         child: WeeklyStatCard(
                           label: context.translate('avg_per_day'),
                           icon: LucideIcons.calculator,
-                          iconColor: const Color(0xFF3B82F6),
+                          iconColor: scheme.tertiary,
                           isDark: isDark,
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
@@ -287,7 +286,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                         child: WeeklyStatCard(
                           label: context.translate('transactions'),
                           icon: LucideIcons.receipt,
-                          iconColor: const Color(0xFF2EBD85),
+                          iconColor: scheme.secondary,
                           isDark: isDark,
                           child: Text(
                             '$count',
@@ -311,7 +310,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                       color: theme.cardColor,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: isDark ? const Color(0xFF2D323F) : Colors.grey.shade200,
+                        color: isDark ? scheme.surfaceContainerHighest : scheme.outlineVariant,
                         width: 1,
                       ),
                     ),
@@ -323,7 +322,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                           style: TextStyle(
                             fontSize: AppFontSizes.size10,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade500,
+                            color: scheme.onSurfaceVariant,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -352,7 +351,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                                         style: TextStyle(
                                           fontSize: AppFontSizes.size10,
                                           fontWeight: FontWeight.w500,
-                                          color: Colors.grey.shade500,
+                                          color: scheme.onSurfaceVariant,
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -396,11 +395,11 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                         color: theme.cardColor,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: isDark ? const Color(0xFF2D323F) : Colors.grey.shade200,
+                          color: isDark ? scheme.surfaceContainerHighest : scheme.outlineVariant,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
+                            color: scheme.onSurface.withValues(alpha: isDark ? 0.2 : 0.03),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -446,7 +445,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                                                             context.translate('total'),
                                                             style: TextStyle(
                                                               fontSize: AppFontSizes.size10,
-                                                              color: Colors.grey.shade500,
+                                                              color: scheme.onSurfaceVariant,
                                                               fontWeight: FontWeight.w500,
                                                             ),
                                                           ),
@@ -491,7 +490,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                                         axisLine: const AxisLine(width: 0),
                                         labelStyle: TextStyle(
                                           fontSize: AppFontSizes.size10,
-                                          color: Colors.grey.shade500,
+                                          color: scheme.onSurfaceVariant,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -541,7 +540,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                         color: theme.cardColor,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: isDark ? const Color(0xFF2D323F) : Colors.grey.shade200,
+                          color: isDark ? scheme.surfaceContainerHighest : scheme.outlineVariant,
                         ),
                       ),
                       child: ConstrainedBox(
@@ -553,7 +552,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                             padding: EdgeInsets.zero,
                             itemCount: doughnutItems.length,
                             separatorBuilder: (ctx, idx) => Divider(
-                              color: isDark ? const Color(0xFF2D2D2D) : const Color(0xFFF1F1F1),
+                              color: isDark ? scheme.outline : scheme.surfaceContainer,
                               height: 16,
                               thickness: 1,
                             ),
@@ -623,9 +622,10 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
   }
 
   Widget _buildShimmerSkeleton(BuildContext context, bool isDark) {
-    final shimmerColor = isDark ? Colors.white10 : Colors.black12;
-    final baseColor = isDark ? const Color(0xFF2E323E) : Colors.grey.shade200;
-    final borderColor = isDark ? const Color(0xFF3A3F4A) : const Color(0xFFE5E7EB);
+    final scheme = Theme.of(context).colorScheme;
+    final shimmerColor = scheme.onSurface.withValues(alpha: isDark ? 0.06 : 0.08);
+    final baseColor = scheme.surfaceContainerHighest;
+    final borderColor = scheme.outline;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -637,7 +637,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
             width: double.infinity,
             height: 54,
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF22262E) : Colors.white,
+              color: scheme.surface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: borderColor, width: 1.2),
             ),
@@ -673,7 +673,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                 child: Container(
                   height: 110,
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF22262E) : Colors.white,
+                    color: scheme.surface,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: borderColor, width: 1.2),
                   ),
@@ -717,7 +717,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                 child: Container(
                   height: 110,
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF22262E) : Colors.white,
+                    color: scheme.surface,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: borderColor, width: 1.2),
                   ),
@@ -765,7 +765,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
             width: double.infinity,
             height: 46,
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF22262E) : Colors.grey.shade100,
+              color: scheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(12),
             ),
           ),
@@ -776,7 +776,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
             width: double.infinity,
             height: 260,
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF22262E) : Colors.white,
+              color: scheme.surface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: borderColor, width: 1.2),
             ),
@@ -815,7 +815,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF22262E) : Colors.white,
+              color: scheme.surface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: borderColor, width: 1.2),
             ),

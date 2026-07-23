@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -126,7 +125,7 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                   leading: CircleAvatar(
                     backgroundColor: isDark
                         ? theme.colorScheme.onSurface.withValues(alpha: 0.1)
-                        : Colors.grey.shade100,
+                        : theme.colorScheme.surfaceContainerHighest,
                     radius: 24,
                     child: Text(
                       profile.name.substring(0, 1).toUpperCase(),
@@ -143,15 +142,15 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                   subtitle: Row(
                     children: [
                       if (profile.id == 'default_profile') ...[
-                        Icon(LucideIcons.star, size: 13, color: const Color(0xFFF59E0B)),
+                        Icon(LucideIcons.star, size: 13, color: theme.colorScheme.secondary),
                         const SizedBox(width: 4),
                       ],
                       Text(
                         _profileLabel(profile),
                         style: AppTextStyles.label.copyWith(
                           color: profile.id == 'default_profile'
-                              ? const Color(0xFFF59E0B)
-                              : theme.textTheme.bodySmall?.color,
+                              ? theme.colorScheme.secondary
+                              : theme.colorScheme.onSurfaceVariant,
                           fontWeight: profile.id == 'default_profile' ? FontWeight.w600 : FontWeight.w400,
                         ),
                       ),
@@ -185,8 +184,8 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                         ),
                       const SizedBox(width: 8),
                       isSelected
-                          ? Icon(LucideIcons.circleDot, color: AppColors.selectedColor)
-                          : Icon(LucideIcons.circle, color: theme.textTheme.bodySmall?.color),
+                          ? Icon(LucideIcons.circleDot, color: theme.colorScheme.primary)
+                          : Icon(LucideIcons.circle, color: theme.colorScheme.onSurfaceVariant),
                     ],
                   ),
                   onTap: () {
@@ -212,16 +211,16 @@ class _ProfileSwitchSheetState extends State<ProfileSwitchSheet> {
                   Navigator.pop(context);
                   widget.onCreateNewTap();
                 },
-                icon: Icon(LucideIcons.plus, color: Color(0xFF00BFA5)),
+                icon: Icon(LucideIcons.plus, color: theme.colorScheme.primary),
                 label: Text(
                   context.translate('create_new_profile'),
                   style: AppTextStyles.reportTileTitle.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF00BFA5),
+                    color: theme.colorScheme.primary,
                   ),
                 ),
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Color(0xFF00BFA5)),
+                  side: BorderSide(color: theme.colorScheme.primary),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

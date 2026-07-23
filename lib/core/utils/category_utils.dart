@@ -1,3 +1,4 @@
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -28,29 +29,31 @@ class CategoryUtils {
     }
   }
 
+  /// Category accents mapped to the consolidated brand / error tokens
+  /// (no orphan amber, purple, or rainbow hexes).
   static Color getColor(String category) {
     switch (category.toLowerCase()) {
       case 'dining':
       case 'food':
-        return const Color(0xFFF39C12);
+        return AppColors.activeGreen;
       case 'transport':
-        return const Color(0xFF3498DB);
+        return AppColors.notificationIcon;
       case 'medicine':
-        return const Color(0xFFE74C3C);
+        return AppColors.activeRed;
       case 'salary':
-        return const Color(0xFF2ECC71);
+        return AppColors.activeGreen;
       case 'freelance':
-        return const Color(0xFF1ABC9C);
+        return AppColors.buttonColor;
       case 'entertainment':
-        return const Color(0xFF9B59B6);
+        return AppColors.selectedColor;
       case 'shopping':
-        return const Color(0xFFE91E63);
+        return AppColors.activeRed;
       case 'investment':
-        return const Color(0xFF27AE60);
+        return AppColors.buttonColor;
       case 'rent':
-        return const Color(0xFFE67E22);
+        return AppColors.notificationIcon;
       default:
-        return const Color(0xFF95A5A6);
+        return AppColors.textMuted;
     }
   }
 }

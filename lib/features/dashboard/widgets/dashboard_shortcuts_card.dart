@@ -1,4 +1,3 @@
-import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/shortcut_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
@@ -14,48 +13,38 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 class DashboardShortcutsCard extends StatelessWidget {
   const DashboardShortcutsCard({super.key});
 
-  // Soft gradient pair per action — gives the icon circle a little depth
-  List<Color> _gradient(String id, bool isDark) {
+  /// Soft fill pairs from ColorScheme containers — no orphan purple/amber.
+  List<Color> _gradient(String id, ColorScheme scheme) {
     switch (id) {
       case 'income':
-        return isDark
-            ? [const Color(0xFF16321F), const Color(0xFF1D4029)]
-            : [const Color(0xFFE8F9EE), const Color(0xFFD5F2E0)];
+        return [scheme.primaryContainer, scheme.secondaryContainer];
       case 'expense':
-        return isDark
-            ? [const Color(0xFF3A1E1A), const Color(0xFF4A2620)]
-            : [const Color(0xFFFDEDEA), const Color(0xFFFBDCD5)];
+        return [scheme.errorContainer, scheme.errorContainer.withValues(alpha: 0.7)];
       case 'payment_in':
-        return isDark
-            ? [const Color(0xFF17253F), const Color(0xFF1E3050)]
-            : [const Color(0xFFEAF1FE), const Color(0xFFD6E4FC)];
+        return [scheme.secondaryContainer, scheme.primaryContainer];
       case 'payment_out':
-        return isDark
-            ? [const Color(0xFF3A2A14), const Color(0xFF4A3419)]
-            : [const Color(0xFFFEF3E8), const Color(0xFFFCE4C8)];
+        return [scheme.tertiaryContainer, scheme.errorContainer.withValues(alpha: 0.5)];
       case 'add_party':
-        return isDark
-            ? [const Color(0xFF2E2140), const Color(0xFF3A2B52)]
-            : [const Color(0xFFF3EBFC), const Color(0xFFE7D5F9)];
+        return [scheme.primaryContainer, scheme.tertiaryContainer];
       default:
-        return [Colors.grey.shade200, Colors.grey.shade300];
+        return [scheme.surfaceContainerHighest, scheme.surfaceContainer];
     }
   }
 
-  Color _iconColor(String id) {
+  Color _iconColor(String id, ColorScheme scheme) {
     switch (id) {
       case 'income':
-        return const Color(0xFF16A34A);
+        return scheme.primary;
       case 'expense':
-        return const Color(0xFFDC2626);
+        return scheme.error;
       case 'payment_in':
-        return const Color(0xFF2563EB);
+        return scheme.secondary;
       case 'payment_out':
-        return const Color(0xFFEA580C);
+        return scheme.tertiary;
       case 'add_party':
-        return const Color(0xFF7C3AED);
+        return scheme.primary;
       default:
-        return AppColors.activeGreen;
+        return scheme.primary;
     }
   }
 
@@ -79,17 +68,18 @@ class DashboardShortcutsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final shortcutProvider = context.watch<ShortcutProvider>();
     final activeShortcuts = shortcutProvider.activeShortcuts;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
     context.watch<LanguageProvider>();
 
-    // Add Party is always-on and gets its own row treatment, so split it out
     final addParty = activeShortcuts.where((s) => s.id == 'add_party').toList();
     final gridItems = activeShortcuts.where((s) => s.id != 'add_party').toList();
 
-    final cardBg = Theme.of(context).cardColor;
-    final dividerColor = Theme.of(context).dividerTheme.color ?? AppColors.dividerColor;
-    final labelColor = Theme.of(context).colorScheme.onSurface;
-    final subLabelColor = AppColors.textMuted;
+    final cardBg = theme.cardColor;
+    final dividerColor = theme.dividerTheme.color ?? scheme.outline;
+    final labelColor = scheme.onSurface;
+    final subLabelColor = scheme.onSurfaceVariant;
 
     return Container(
       width: double.infinity,
@@ -98,14 +88,12 @@ class DashboardShortcutsCard extends StatelessWidget {
         color: cardBg,
         borderRadius: BorderRadius.circular(AppSpacing.r8),
         border: Border.all(
-          color: Theme.of(context).dividerTheme.color ?? AppColors.dividerColor,
+          color: dividerColor,
           width: AppSpacing.w1,
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.25)
-                : Colors.black.withValues(alpha: 0.045),
+            color: scheme.onSurface.withValues(alpha: isDark ? 0.25 : 0.045),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -123,7 +111,7 @@ class DashboardShortcutsCard extends StatelessWidget {
                   fontSize: AppFontSizes.size15,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.2,
-                  color: Theme.of(context).colorScheme.onSurface,
+                  color: scheme.onSurface,
                 ),
               ),
               GestureDetector(
@@ -143,12 +131,12 @@ class DashboardShortcutsCard extends StatelessWidget {
           const SizedBox(height: 18),
           if (gridItems.isEmpty)
             for (final item in addParty)
-              _buildRowItem(context, item, isDark, subLabelColor)
+              _buildRowItem(context, item, scheme, subLabelColor)
           else ...[
             Row(
               children: [
                 for (final item in gridItems) ...[
-                  Expanded(child: _buildGridItem(context, item, isDark, labelColor)),
+                  Expanded(child: _buildGridItem(context, item, scheme, labelColor)),
                 ],
               ],
             ),
@@ -158,7 +146,7 @@ class DashboardShortcutsCard extends StatelessWidget {
                 child: Container(height: 1, color: dividerColor),
               ),
               for (final item in addParty)
-                _buildRowItem(context, item, isDark, subLabelColor),
+                _buildRowItem(context, item, scheme, subLabelColor),
             ],
           ],
         ],
@@ -166,7 +154,12 @@ class DashboardShortcutsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildGridItem(BuildContext context, ShortcutItem item, bool isDark, Color labelColor) {
+  Widget _buildGridItem(
+    BuildContext context,
+    ShortcutItem item,
+    ColorScheme scheme,
+    Color labelColor,
+  ) {
     return GestureDetector(
       onTap: () => _handleTap(context, item),
       behavior: HitTestBehavior.opaque,
@@ -181,10 +174,10 @@ class DashboardShortcutsCard extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: _gradient(item.id, isDark),
+                colors: _gradient(item.id, scheme),
               ),
             ),
-            child: Icon(_icon(item.id), size: 17, color: _iconColor(item.id)),
+            child: Icon(_icon(item.id), size: 17, color: _iconColor(item.id, scheme)),
           ),
           const SizedBox(height: 8),
           Text(
@@ -203,7 +196,12 @@ class DashboardShortcutsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildRowItem(BuildContext context, ShortcutItem item, bool isDark, Color subLabelColor) {
+  Widget _buildRowItem(
+    BuildContext context,
+    ShortcutItem item,
+    ColorScheme scheme,
+    Color subLabelColor,
+  ) {
     return GestureDetector(
       onTap: () => _handleTap(context, item),
       behavior: HitTestBehavior.opaque,
@@ -217,10 +215,10 @@ class DashboardShortcutsCard extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: _gradient(item.id, isDark),
+                colors: _gradient(item.id, scheme),
               ),
             ),
-            child: Icon(_icon(item.id), size: 17, color: _iconColor(item.id)),
+            child: Icon(_icon(item.id), size: 17, color: _iconColor(item.id, scheme)),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -232,7 +230,7 @@ class DashboardShortcutsCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: AppFontSizes.size13,
                     fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.onSurface,
+                    color: scheme.onSurface,
                   ),
                 ),
                 Text(
@@ -242,13 +240,14 @@ class DashboardShortcutsCard extends StatelessWidget {
               ],
             ),
           ),
-          Icon(LucideIcons.chevronRight, size: 18, color: Colors.grey.shade400),
+          Icon(LucideIcons.chevronRight, size: 18, color: scheme.onSurfaceVariant),
         ],
       ),
     );
   }
 
   void _handleTap(BuildContext context, ShortcutItem item) {
+    final scheme = Theme.of(context).colorScheme;
     if (item.id == 'add_party') {
       Navigator.push(
         context,
@@ -262,14 +261,14 @@ class DashboardShortcutsCard extends StatelessWidget {
       AddEditDebtSheet.show(
         context: context,
         payeeLabel: context.translate('payee_name'),
-        themeColor: AppColors.activeRed,
+        themeColor: scheme.error,
         isReceive: false,
       );
     } else if (item.id == 'payment_in') {
       AddEditDebtSheet.show(
         context: context,
         payeeLabel: context.translate('client_friend_name'),
-        themeColor: AppColors.buttonColor,
+        themeColor: scheme.primary,
         isReceive: true,
       );
     } else {
