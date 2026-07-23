@@ -79,7 +79,19 @@ class ProfileProvider extends ChangeNotifier {
     _profiles.clear();
     final uid = FirebaseAuth.instance.currentUser?.uid;
     _profiles.add(UserProfile(id: 'default_profile', name: 'Personal', type: 'Personal', uid: uid));
-    _currentProfile = _profiles.first;
+    // Honour the cold-start id immediately so a late DB load / auth reload
+    // cannot briefly treat "default_profile" as selected when prefs say otherwise.
+    if (_initialProfileId != 'default_profile') {
+      _profiles.add(UserProfile(
+        id: _initialProfileId,
+        name: 'Profile',
+        type: 'Secondary',
+        uid: uid,
+      ));
+      _currentProfile = _profiles.last;
+    } else {
+      _currentProfile = _profiles.first;
+    }
   }
 
   void _onAuthChanged(User? newUser) {
@@ -212,13 +224,11 @@ class ProfileProvider extends ChangeNotifier {
       }
       _lastLoadedUid = currentUid;
 
-      // Remember current selection so force-reloads don't reset it.
-      // Prefer the in-memory selection when already ready (pull-to-refresh /
-      // re-sync) so a stale SharedPrefs value cannot hijack the active profile.
+      // SharedPrefs is always the source of truth for which profile to restore.
+      // Never prefer in-memory `_currentProfile` on force reload — that used to
+      // overwrite prefs with a transient secondary selection after auth/sync.
       final savedId = SharedPrefsHelper.getString(SharedPrefsHelper.activeProfileKey);
-      final preservedProfileId = force && _isReady
-          ? _currentProfile.id
-          : (savedId ?? (force ? _currentProfile.id : _initialProfileId));
+      final preservedProfileId = savedId ?? _initialProfileId;
 
       _profiles.clear();
       _knownProfileIds.clear();
@@ -312,12 +322,14 @@ class ProfileProvider extends ChangeNotifier {
         _currentProfile = match.isNotEmpty ? match.first : _profiles.first;
       }
 
-      // Keep SharedPrefs aligned with the profile we actually restored so a
-      // cold start cannot reopen on a stale secondary id.
-      await SharedPrefsHelper.setString(
-        SharedPrefsHelper.activeProfileKey,
-        _currentProfile.id,
-      );
+      // Only rewrite prefs when the saved id is missing from DB (fallback).
+      // Never push a transient in-memory selection back into SharedPrefs.
+      if (savedId != _currentProfile.id) {
+        await SharedPrefsHelper.setString(
+          SharedPrefsHelper.activeProfileKey,
+          _currentProfile.id,
+        );
+      }
 
       await _saveProfilesToPrefs();
     } catch (e) {
@@ -415,16 +427,16 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectProfile(UserProfile profile) {
+  /// Updates UI selection only. Persist via [ProfileManagerProvider.switchProfile]
+  /// first so SharedPrefs / data-layer stay the source of truth.
+  Future<void> selectProfile(UserProfile profile) async {
     final index = _profiles.indexWhere((p) => p.id == profile.id);
     if (index != -1) {
       _currentProfile = _profiles[index];
     } else {
       _currentProfile = profile;
     }
-    // Persist immediately so a force-quit / hot restart cannot reopen on the
-    // previous (e.g. secondary) profile.
-    SharedPrefsHelper.setString(
+    await SharedPrefsHelper.setString(
       SharedPrefsHelper.activeProfileKey,
       _currentProfile.id,
     );

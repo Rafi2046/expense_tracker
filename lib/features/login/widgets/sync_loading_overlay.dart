@@ -65,8 +65,10 @@ class _SyncLoadingOverlayState extends State<SyncLoadingOverlay> {
 
     await context.read<ProfileProvider>().reload();
     if (!mounted) return;
+    final profileProvider = context.read<ProfileProvider>();
     final pm = context.read<ProfileManagerProvider>();
-    await pm.switchProfile(pm.activeProfileId);
+    // After reload, keep data-layer on whatever SharedPrefs/DB restored.
+    await pm.switchProfile(profileProvider.currentProfile.id);
 
     // Save sync success status for the user
     await SharedPrefsHelper.setBool('has_synced_for_user_${widget.uid}', true);

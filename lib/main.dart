@@ -186,21 +186,15 @@ void main() async {
             initialProfileId: initialProfileId,
           ),
           update: (_, profileProvider, pm) {
-            // SharedPrefs active_profile_id is the cold-start source of truth.
-            // Never overwrite it from a transient ProfileProvider selection
-            // (that caused reloads to open a secondary profile after creating one).
+            // ProfileManager (updated only by explicit switchProfile) owns the
+            // active id. Align the UI to it — never the reverse, and never
+            // re-read SharedPrefs here (that raced with in-flight switches and
+            // could snap the UI back to a stale secondary profile).
             if (!profileProvider.isReady || pm == null) return pm!;
 
-            final savedId =
-                SharedPrefsHelper.getString(SharedPrefsHelper.activeProfileKey) ??
-                pm.activeProfileId;
-
-            if (pm.activeProfileId != savedId) {
-              Future.microtask(() => pm.switchProfile(savedId));
-            }
-            if (profileProvider.currentProfile.id != savedId) {
+            if (profileProvider.currentProfile.id != pm.activeProfileId) {
               Future.microtask(
-                () => profileProvider.syncCurrentProfileFromId(savedId),
+                () => profileProvider.syncCurrentProfileFromId(pm.activeProfileId),
               );
             }
             return pm;

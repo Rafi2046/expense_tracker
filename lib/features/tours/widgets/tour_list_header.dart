@@ -123,11 +123,11 @@ class TourListHeader extends StatelessWidget {
                 context: context,
                 currentProfileId: currentProfile.id,
                 profiles: profileProvider.profiles,
-                onProfileSelected: (selectedProfile) {
-                  profileProvider.selectProfile(selectedProfile);
-                  context.read<ProfileManagerProvider>().switchProfile(
+                onProfileSelected: (selectedProfile) async {
+                  await context.read<ProfileManagerProvider>().switchProfile(
                     selectedProfile.id,
                   );
+                  await profileProvider.selectProfile(selectedProfile);
                 },
                 onCreateNewTap: () async {
                   final newProfile = await Navigator.push<UserProfile>(
@@ -137,7 +137,7 @@ class TourListHeader extends StatelessWidget {
                     ),
                   );
                   if (newProfile != null && context.mounted) {
-                    context
+                    await context
                         .read<ProfileManagerProvider>()
                         .switchProfile(newProfile.id);
                   }

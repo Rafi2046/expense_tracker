@@ -58,11 +58,13 @@ class DashboardScreen extends StatelessWidget {
             context: context,
             currentProfileId: currentProfile.id,
             profiles: profileProvider.profiles,
-            onProfileSelected: (selectedProfile) {
-              profileProvider.selectProfile(selectedProfile);
-              context.read<ProfileManagerProvider>().switchProfile(
+            onProfileSelected: (selectedProfile) async {
+              // Persist + data-layer first, then UI — avoids ProxyProvider
+              // snapping selection back to a stale profile mid-switch.
+              await context.read<ProfileManagerProvider>().switchProfile(
                 selectedProfile.id,
               );
+              await profileProvider.selectProfile(selectedProfile);
             },
             onCreateNewTap: () async {
               final newProfile = await Navigator.push<UserProfile>(
@@ -72,7 +74,7 @@ class DashboardScreen extends StatelessWidget {
                 ),
               );
               if (newProfile != null && context.mounted) {
-                context.read<ProfileManagerProvider>().switchProfile(
+                await context.read<ProfileManagerProvider>().switchProfile(
                   newProfile.id,
                 );
               }
