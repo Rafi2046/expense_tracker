@@ -57,6 +57,7 @@ class TourMemberDistribution extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(AppSpacing.r8),
@@ -74,7 +75,7 @@ class TourMemberDistribution extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: AppSpacing.s24),
+        const SizedBox(height: AppSpacing.s16),
         ...items.map((item) => _buildRow(item, isDark, theme)),
       ],
     );

@@ -73,62 +73,50 @@ class TourCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppSpacing.r16),
-          boxShadow: [
-            BoxShadow(
-              color: scheme.onSurface.withValues(alpha: 0.18),
-              blurRadius: 16,
-              offset: const Offset(0, 8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSpacing.r16),
+        child: Stack(
+          children: [
+            TourCardBackground(
+              coverPhoto: hasCoverPhoto ? tour.coverPhoto : null,
+              gradient: _gradientFor(scheme),
+            ),
+            Positioned(
+              top: 14,
+              right: 14,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TourCardStatusBadge(isCompleted: tour.isCompleted),
+                  if (onDelete != null || onToggleComplete != null || onEdit != null) ...[
+                    const SizedBox(width: AppSpacing.s8),
+                    TourCardMenuButton(
+                      isCompleted: tour.isCompleted,
+                      isOwner: isOwner,
+                      onEdit: onEdit,
+                      onDelete: onDelete,
+                      onToggleComplete: onToggleComplete,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.p16),
+                child: TourCardBottomContent(
+                  name: tour.name,
+                  memberCount: memberCount,
+                  totalSpentFormatted: _formatAmount(totalSpent, tour.currency),
+                  totalLabel: totalLabel,
+                  memberLabel: memberLabel,
+                ),
+              ),
             ),
           ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(AppSpacing.r16),
-          child: Stack(
-            children: [
-              TourCardBackground(
-                coverPhoto: hasCoverPhoto ? tour.coverPhoto : null,
-                gradient: _gradientFor(scheme),
-              ),
-              Positioned(
-                top: 14,
-                right: 14,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TourCardStatusBadge(isCompleted: tour.isCompleted),
-                    if (onDelete != null || onToggleComplete != null || onEdit != null) ...[
-                      const SizedBox(width: AppSpacing.s8),
-                      TourCardMenuButton(
-                        isCompleted: tour.isCompleted,
-                        isOwner: isOwner,
-                        onEdit: onEdit,
-                        onDelete: onDelete,
-                        onToggleComplete: onToggleComplete,
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.p16),
-                  child: TourCardBottomContent(
-                    name: tour.name,
-                    memberCount: memberCount,
-                    totalSpentFormatted: _formatAmount(totalSpent, tour.currency),
-                    totalLabel: totalLabel,
-                    memberLabel: memberLabel,
-                  ),
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

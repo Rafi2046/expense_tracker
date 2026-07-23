@@ -269,6 +269,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }
 
   void _showAddOptions(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -280,7 +283,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           AppSpacing.p16 + MediaQuery.of(ctx).padding.bottom,
         ),
         decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
+          color: theme.cardColor,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r16)),
         ),
         child: Column(
@@ -295,24 +298,30 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               ),
             ),
             const SizedBox(height: AppSpacing.s24),
+            // Same colors as Adjust Balance → Add/Reduce Money card
             _AddOptionTile(
               icon: LucideIcons.wallet,
               label: context.translate('add_income'),
               subtitle: context.translate('record_money_received'),
-              color: AppColors.activeGreen,
-              bgColor: AppColors.activeGreen.withValues(alpha: 0.08),
+              iconColor: AppColors.activeRed,
+              iconBg: isDark
+                  ? AppColors.activeRed.withValues(alpha: 0.15)
+                  : const Color(0xFFFDECEC),
               onTap: () {
                 Navigator.pop(ctx);
                 AddTransactionSheet.show(context: context, isIncome: true);
               },
             ),
             const SizedBox(height: AppSpacing.s12),
+            // Same colors as Adjust Balance → Transfer Balance card
             _AddOptionTile(
               icon: LucideIcons.creditCard,
               label: context.translate('add_expense'),
               subtitle: context.translate('record_money_spent'),
-              color: AppColors.expensePink,
-              bgColor: AppColors.expensePink.withValues(alpha: 0.08),
+              iconColor: const Color(0xFF2980B9),
+              iconBg: isDark
+                  ? const Color(0xFF2980B9).withValues(alpha: 0.15)
+                  : const Color(0xFFEBF3F9),
               onTap: () {
                 Navigator.pop(ctx);
                 AddTransactionSheet.show(context: context, isIncome: false);
@@ -470,70 +479,76 @@ class _AddOptionTile extends StatelessWidget {
   final IconData icon;
   final String label;
   final String subtitle;
-  final Color color;
-  final Color bgColor;
+  final Color iconColor;
+  final Color iconBg;
   final VoidCallback onTap;
 
   const _AddOptionTile({
     required this.icon,
     required this.label,
     required this.subtitle,
-    required this.color,
-    required this.bgColor,
+    required this.iconColor,
+    required this.iconBg,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppSpacing.r16),
-        child: Container(
-          padding: const EdgeInsets.all(AppSpacing.p16),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(AppSpacing.r16),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(AppSpacing.r12),
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? Colors.white10 : const Color(0xFFF9F9F9),
+        borderRadius: BorderRadius.circular(AppSpacing.r12),
+        border: Border.all(
+          color: theme.dividerTheme.color ?? const Color(0xFFF1F1F1),
+          width: 1.2,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.p12),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: iconBg,
+                    borderRadius: BorderRadius.circular(AppSpacing.r12),
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(icon, color: iconColor, size: 18),
                 ),
-                child: Icon(icon, color: color, size: 22),
-              ),
-              const SizedBox(width: AppSpacing.s16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: AppTextStyles.reportTileTitle.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
+                const SizedBox(width: AppSpacing.s12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        label,
+                        style: AppTextStyles.body.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.s4),
-                    Text(
-                      subtitle,
-                      style: AppTextStyles.reportTransactionSubtitle.copyWith(
-                        color: Colors.grey.shade500,
+                      const SizedBox(height: AppSpacing.s4),
+                      Text(
+                        subtitle,
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.textMuted,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Icon(
-                LucideIcons.chevronRight,
-                color: Colors.grey.shade400,
-                size: 20,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

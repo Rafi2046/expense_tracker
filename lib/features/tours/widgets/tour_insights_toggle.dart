@@ -1,82 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
-
-
+/// Apple-style sliding segmented control for tour insights tabs.
 class TourInsightsToggle extends StatelessWidget {
-  final bool isCategory;
-  final ValueChanged<bool> onChanged;
+  final int selectedIndex;
+  final ValueChanged<int> onChanged;
 
   const TourInsightsToggle({
     super.key,
-    required this.isCategory,
+    required this.selectedIndex,
     required this.onChanged,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+  static const _swipeVelocityThreshold = 120.0;
+  static const _accent = AppColors.activeGreen; // #2EBD85
 
-    return Container(
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(AppSpacing.r24),
-        border: Border.all(color: scheme.outlineVariant),
-      ),
-      padding: const EdgeInsets.all(AppSpacing.p4),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _Segment(
-            label: context.translate('by_category'),
-            isSelected: isCategory,
-            onTap: () => onChanged(true),
-          ),
-          const SizedBox(width: AppSpacing.s4),
-          _Segment(
-            label: context.translate('by_member'),
-            isSelected: !isCategory,
-            onTap: () => onChanged(false),
-          ),
-        ],
-      ),
-    );
+  void _onHorizontalDragEnd(DragEndDetails details) {
+    final velocity = details.primaryVelocity;
+    if (velocity == null) return;
+
+    // Swipe left → next tab; swipe right → previous tab.
+    if (velocity < -_swipeVelocityThreshold && selectedIndex < 1) {
+      onChanged(1);
+    } else if (velocity > _swipeVelocityThreshold && selectedIndex > 0) {
+      onChanged(0);
+    }
   }
-}
-
-class _Segment extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _Segment({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final labels = [
+      context.translate('by_category'),
+      context.translate('by_member'),
+    ];
+
     return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeOutCubic,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p8),
+      behavior: HitTestBehavior.opaque,
+      onHorizontalDragEnd: _onHorizontalDragEnd,
+      child: Container(
+        height: AppSpacing.s40,
+        padding: const EdgeInsets.all(AppSpacing.p4),
         decoration: BoxDecoration(
-          color: isSelected ? scheme.secondaryContainer : Colors.transparent,
-          borderRadius: BorderRadius.circular(AppSpacing.r16),
+          color: scheme.surfaceContainerHighest.withValues(alpha: 0.55),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
         ),
-        child: AnimatedDefaultTextStyle(
-          duration: const Duration(milliseconds: 250),
-          style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600,
-            color: isSelected
-                ? scheme.onSecondaryContainer
-                : scheme.onSurfaceVariant),
-          child: Text(label),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final segmentWidth = constraints.maxWidth / labels.length;
+            return Stack(
+              children: [
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 220),
+                  curve: Curves.easeInOutCubic,
+                  left: selectedIndex * segmentWidth,
+                  top: 0,
+                  bottom: 0,
+                  width: segmentWidth,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: _accent,
+                      borderRadius: BorderRadius.circular(AppSpacing.r8),
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    for (var i = 0; i < labels.length; i++)
+                      Expanded(
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => onChanged(i),
+                          child: Center(
+                            child: AnimatedDefaultTextStyle(
+                              duration: const Duration(milliseconds: 180),
+                              style: AppTextStyles.label.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: selectedIndex == i
+                                    ? Colors.white
+                                    : scheme.onSurface,
+                              ),
+                              child: Text(
+                                labels[i],
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

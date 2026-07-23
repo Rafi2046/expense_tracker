@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
@@ -39,6 +40,7 @@ class TourListHeader extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final profileProvider = context.read<ProfileProvider>();
+    const accent = AppColors.activeGreen; // #2EBD85
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -60,7 +62,7 @@ class TourListHeader extends StatelessWidget {
                     vertical: AppSpacing.p8,
                   ),
                   decoration: BoxDecoration(
-                    color: scheme.primaryContainer,
+                    color: accent.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
                   child: Text(
@@ -68,7 +70,8 @@ class TourListHeader extends StatelessWidget {
                     style: AppTextStyles.caption.copyWith(
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1.5,
-                      color: scheme.primary),
+                      color: accent,
+                    ),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.s8),
@@ -86,7 +89,7 @@ class TourListHeader extends StatelessWidget {
                       TextButton(
                         onPressed: onViewAll,
                         style: TextButton.styleFrom(
-                          foregroundColor: scheme.primary,
+                          foregroundColor: accent,
                           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12),
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -95,7 +98,8 @@ class TourListHeader extends StatelessWidget {
                           context.translate('view_all'),
                           style: AppTextStyles.bodySmall.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: scheme.primary),
+                            color: accent,
+                          ),
                         ),
                       ),
                   ],

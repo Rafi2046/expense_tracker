@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
-
-
 class TourInsightsCard extends StatefulWidget {
   final TourInsightsData? insights;
   final String currency;
@@ -26,88 +24,150 @@ class TourInsightsCard extends StatefulWidget {
 }
 
 class _TourInsightsCardState extends State<TourInsightsCard> {
-  bool _isCategoryView = true;
+  /// Progress bar + gap above rows.
+  static const _headerHeight = AppSpacing.s12 + AppSpacing.s16;
+
+  /// Dot/text row + bottom padding (`p16`).
+  static const _rowHeight = 20.0 + AppSpacing.p16;
+
+  static const _emptyHeight = 96.0;
+  static const _shimmerHeight = 168.0;
+  static const _heightBuffer = AppSpacing.s8;
+
+  late final PageController _pageController;
+  int _tabIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _onTabChanged(int index) {
+    if (_tabIndex == index) return;
+    setState(() => _tabIndex = index);
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 280),
+      curve: Curves.easeInOutCubic,
+    );
+  }
+
+  void _onPageChanged(int index) {
+    if (_tabIndex == index) return;
+    setState(() => _tabIndex = index);
+  }
+
+  double _pageHeight() {
+    if (widget.isLoading) return _shimmerHeight;
+    final data = widget.insights;
+    if (data == null) return _emptyHeight;
+
+    final catRows = data.categoryBreakdown.isEmpty
+        ? 1
+        : data.categoryBreakdown.length;
+    final memRows =
+        data.memberBreakdown.isEmpty ? 1 : data.memberBreakdown.length;
+    final rows = catRows > memRows ? catRows : memRows;
+    return _headerHeight + (rows * _rowHeight) + _heightBuffer;
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final scheme = theme.colorScheme;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.p16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: scheme.surface,
         borderRadius: BorderRadius.circular(AppSpacing.r16),
         border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.08)
-              : Colors.grey.shade200,
-          width: 1,
+          color: scheme.outlineVariant.withValues(alpha: isDark ? 0.5 : 1),
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
           TourInsightsToggle(
-            isCategory: _isCategoryView,
-            onChanged: (val) => setState(() => _isCategoryView = val),
+            selectedIndex: _tabIndex,
+            onChanged: _onTabChanged,
           ),
           const SizedBox(height: AppSpacing.s16),
-          _buildContent(isDark, theme),
+          SizedBox(
+            height: _pageHeight(),
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: _onPageChanged,
+              children: [
+                _buildCategoryPage(isDark),
+                _buildMemberPage(isDark),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildContent(bool isDark, ThemeData theme) {
-    if (widget.isLoading) {
-      return _buildShimmer(isDark);
-    }
-
+  Widget _buildCategoryPage(bool isDark) {
+    if (widget.isLoading) return _buildShimmer(isDark);
     final data = widget.insights;
-    if (data == null) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.p24),
-        child: Center(
-          child: Text(
-            context.translate('add_expenses_to_see_breakdown'),
-            textAlign: TextAlign.center,
-            style: AppTextStyles.label.copyWith(color: isDark ? Colors.grey.shade500 : Colors.grey.shade600),
+    if (data == null) return _buildEmpty(isDark);
+    return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      child: TourCategoryDistribution(
+        items: data.categoryBreakdown,
+        grandTotal: data.grandTotal,
+        currency: widget.currency,
+        isEmpty: data.categoryBreakdown.isEmpty,
+      ),
+    );
+  }
+
+  Widget _buildMemberPage(bool isDark) {
+    if (widget.isLoading) return _buildShimmer(isDark);
+    final data = widget.insights;
+    if (data == null) return _buildEmpty(isDark);
+    return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      child: TourMemberDistribution(
+        items: data.memberBreakdown,
+        grandTotal: data.grandTotal,
+        currency: widget.currency,
+        isEmpty: data.memberBreakdown.isEmpty,
+      ),
+    );
+  }
+
+  Widget _buildEmpty(bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.p24),
+      child: Center(
+        child: Text(
+          context.translate('add_expenses_to_see_breakdown'),
+          textAlign: TextAlign.center,
+          style: AppTextStyles.label.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
-      );
-    }
-
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
-      switchInCurve: Curves.easeOut,
-      switchOutCurve: Curves.easeIn,
-      transitionBuilder: (child, animation) => FadeTransition(
-        opacity: animation,
-        child: child,
       ),
-      child: _isCategoryView
-          ? TourCategoryDistribution(
-              key: const ValueKey('category'),
-              items: data.categoryBreakdown,
-              grandTotal: data.grandTotal,
-              currency: widget.currency,
-              isEmpty: data.categoryBreakdown.isEmpty,
-            )
-          : TourMemberDistribution(
-              key: const ValueKey('member'),
-              items: data.memberBreakdown,
-              grandTotal: data.grandTotal,
-              currency: widget.currency,
-              isEmpty: data.memberBreakdown.isEmpty,
-            ),
     );
   }
 
   Widget _buildShimmer(bool isDark) {
-    final base = isDark ? const Color(0xFF2E323E) : Colors.grey.shade200;
+    final base = isDark
+        ? Theme.of(context).colorScheme.surfaceContainerHighest
+        : Colors.grey.shade200;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
       child: Column(
@@ -120,44 +180,51 @@ class _TourInsightsCardState extends State<TourInsightsCard> {
             ),
           ),
           const SizedBox(height: AppSpacing.s16),
-          ...List.generate(4, (i) => Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.p16),
-            child: Row(
-              children: [
-                Container(
-                  width: 8, height: 8,
-                  decoration: BoxDecoration(
-                    color: base, shape: BoxShape.circle,
+          ...List.generate(
+            4,
+            (i) => Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.p16),
+              child: Row(
+                children: [
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: base,
+                      shape: BoxShape.circle,
+                    ),
                   ),
-                ),
-                const SizedBox(width: AppSpacing.s12),
-                Expanded(
-                  child: Container(
+                  const SizedBox(width: AppSpacing.s12),
+                  Expanded(
+                    child: Container(
+                      height: 13,
+                      decoration: BoxDecoration(
+                        color: base,
+                        borderRadius: BorderRadius.circular(AppSpacing.r8),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 40,
+                    height: 11,
+                    decoration: BoxDecoration(
+                      color: base,
+                      borderRadius: BorderRadius.circular(AppSpacing.r8),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.s12),
+                  Container(
+                    width: 60,
                     height: 13,
                     decoration: BoxDecoration(
                       color: base,
                       borderRadius: BorderRadius.circular(AppSpacing.r8),
                     ),
                   ),
-                ),
-                Container(
-                  width: 40, height: 11,
-                  decoration: BoxDecoration(
-                    color: base,
-                    borderRadius: BorderRadius.circular(AppSpacing.r8),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.s12),
-                Container(
-                  width: 60, height: 13,
-                  decoration: BoxDecoration(
-                    color: base,
-                    borderRadius: BorderRadius.circular(AppSpacing.r8),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          )),
+          ),
         ],
       ),
     );

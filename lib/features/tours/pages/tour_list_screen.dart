@@ -15,6 +15,7 @@ import 'package:expense_tracker/features/tours/pages/tour_member_management_scre
 import 'package:expense_tracker/features/tours/widgets/tour_list_header.dart';
 import 'package:expense_tracker/features/tours/widgets/tour_list_empty_state.dart';
 import 'package:expense_tracker/features/tours/widgets/join_tour_sheet.dart';
+import 'package:expense_tracker/features/tours/widgets/all_tours_sheet.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/widgets/delete_tour_dialog.dart';
@@ -80,7 +81,7 @@ class _TourListScreenState extends State<TourListScreen> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(viewportFraction: 0.92);
+    _pageController = PageController(viewportFraction: 0.88);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadCounts();
       _loadInsights(_currentPageIndex);
@@ -269,37 +270,13 @@ class _TourListScreenState extends State<TourListScreen> {
     );
   }
 
-  void _showViewAllDialog() {
+  void _showViewAllSheet() {
     final tours = context.read<TourProvider>().tours;
-    final names = tours.map((t) => t.name).toList();
-    if (names.isEmpty) return;
-    final theme = Theme.of(context);
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: theme.colorScheme.surface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.r16)),
-        title: Text(
-          '${context.translate('all_tours')} (${names.length})',
-          style: AppTextStyles.dialogTitle.copyWith(color: theme.colorScheme.onSurface),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: names.map((n) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.p4),
-            child: Text(n,
-                style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface)),
-          )).toList(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child:
-                Text(context.translate('close'), style: AppTextStyles.viewAllText),
-          ),
-        ],
-      ),
+    AllToursSheet.show(
+      context,
+      tours: tours,
+      memberCounts: _memberCounts,
+      totalSpent: _totalSpent,
     );
   }
 
@@ -344,7 +321,7 @@ class _TourListScreenState extends State<TourListScreen> {
               initials: initials,
               totalTours: tours.length,
               totalBuddies: tours.fold<int>(0, (sum, t) => sum + (_memberCounts[t.id] ?? 0)),
-              onViewAll: _showViewAllDialog,
+              onViewAll: _showViewAllSheet,
             ),
             const SizedBox(height: AppSpacing.s12),
 
@@ -391,6 +368,7 @@ class _TourListScreenState extends State<TourListScreen> {
                     height: 220,
                     child: PageView.builder(
                       controller: _pageController,
+                      padEnds: false,
                       itemCount: tours.length,
                       onPageChanged: (index) {
                         setState(() => _currentPageIndex = index);
@@ -402,7 +380,12 @@ class _TourListScreenState extends State<TourListScreen> {
                         final isOwner = (tour.ownerUid == null && tour.inviteCode == null) || (currentUid != null && tour.ownerUid != null && tour.ownerUid == currentUid);
 
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8),
+                          padding: EdgeInsets.only(
+                            left: index == 0 ? AppSpacing.p16 : AppSpacing.p8,
+                            right: index == tours.length - 1
+                                ? AppSpacing.p16
+                                : AppSpacing.p8,
+                          ),
                           child: TourCard(
                             tour: tour,
                             memberCount: _memberCounts[tour.id] ?? 0,
