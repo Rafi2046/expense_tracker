@@ -93,10 +93,12 @@ class RecentActivityItemCard extends StatelessWidget {
 
   String _formatTime(DateTime dt) {
     final now = DateTime.now();
-    final diff = now.difference(dt);
-    if (diff.inDays == 0) return 'Today';
-    if (diff.inDays == 1) return 'Yesterday';
-    return '${diff.inDays} days ago';
+    final today = DateTime(now.year, now.month, now.day);
+    final day = DateTime(dt.year, dt.month, dt.day);
+    if (day == today) return 'Today';
+    if (day == today.subtract(const Duration(days: 1))) return 'Yesterday';
+    final daysAgo = today.difference(day).inDays;
+    return '$daysAgo days ago';
   }
 
   static IconData _iconForCategory(String category) {

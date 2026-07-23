@@ -51,10 +51,12 @@ class DashboardTransactionList extends StatelessWidget {
 
   static String _getRelativeTime(DateTime dateTime) {
     final now = DateTime.now();
-    final diff = now.difference(dateTime);
-    if (diff.inDays == 0) return 'Today';
-    if (diff.inDays == 1) return 'Yesterday';
-    return '${diff.inDays} days ago';
+    final today = DateTime(now.year, now.month, now.day);
+    final day = DateTime(dateTime.year, dateTime.month, dateTime.day);
+    if (day == today) return 'Today';
+    if (day == today.subtract(const Duration(days: 1))) return 'Yesterday';
+    final daysAgo = today.difference(day).inDays;
+    return '$daysAgo days ago';
   }
 
   static IconData _getCategoryIcon(String category) {
