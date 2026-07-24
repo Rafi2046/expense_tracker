@@ -26,8 +26,11 @@ class DailyCategoryTile extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.p12),
-      padding: const EdgeInsets.all(AppSpacing.p12),
+      margin: const EdgeInsets.only(bottom: AppSpacing.s8),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.p12,
+        vertical: AppSpacing.p8,
+      ),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF22262E) : Colors.white,
         borderRadius: BorderRadius.circular(AppSpacing.r12),
@@ -45,8 +48,8 @@ class DailyCategoryTile extends StatelessWidget {
                 child: Row(
                   children: [
                     Container(
-                      width: 12,
-                      height: 12,
+                      width: 10,
+                      height: 10,
                       decoration: BoxDecoration(
                         color: color,
                         shape: BoxShape.circle,
@@ -79,14 +82,14 @@ class DailyCategoryTile extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.s8),
+          const SizedBox(height: AppSpacing.s4),
           ClipRRect(
             borderRadius: BorderRadius.circular(AppSpacing.r8),
             child: LinearProgressIndicator(
               value: percentage,
               backgroundColor: isDark ? const Color(0xFF2E323E) : Colors.grey.shade100,
               valueColor: AlwaysStoppedAnimation<Color>(color),
-              minHeight: 6,
+              minHeight: 5,
             ),
           ),
         ],

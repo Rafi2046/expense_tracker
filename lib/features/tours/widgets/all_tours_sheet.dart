@@ -4,7 +4,9 @@ import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/models/tour.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/features/tours/pages/tour_dashboard_screen.dart';
+import 'package:expense_tracker/features/tours/utils/tour_image_codec.dart';
 import 'package:expense_tracker/features/tours/widgets/invoice_format_utils.dart';
+import 'package:expense_tracker/features/tours/widgets/tour_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -48,6 +50,13 @@ class _AllToursSheetBody extends StatelessWidget {
     required this.memberCounts,
     required this.totalSpent,
   });
+
+  static const _fallbackGradients = [
+    [Color(0xFF0F3D32), Color(0xFF1A5C4A)],
+    [Color(0xFF1E3A5F), Color(0xFF2E5A8F)],
+    [Color(0xFF4A1942), Color(0xFF7A306C)],
+    [Color(0xFF3D2B1F), Color(0xFF6B4F3A)],
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -126,14 +135,10 @@ class _AllToursSheetBody extends StatelessWidget {
                         ),
                       );
                     },
-                    leading: CircleAvatar(
-                      radius: 22,
-                      backgroundColor: scheme.primaryContainer,
-                      child: Icon(
-                        LucideIcons.mapPinned,
-                        size: 20,
-                        color: scheme.onPrimaryContainer,
-                      ),
+                    leading: _TourCoverThumb(
+                      coverPhoto: tour.coverPhoto,
+                      gradient: _fallbackGradients[
+                          index % _fallbackGradients.length],
                     ),
                     title: Text(
                       tour.name,
@@ -199,6 +204,61 @@ class _AllToursSheetBody extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TourCoverThumb extends StatelessWidget {
+  final String? coverPhoto;
+  final List<Color> gradient;
+
+  const _TourCoverThumb({
+    required this.coverPhoto,
+    required this.gradient,
+  });
+
+  static const double _size = 44;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasCover =
+        TourImageCodec.detect(coverPhoto) != TourImageSourceKind.none;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppSpacing.r12),
+      child: SizedBox(
+        width: _size,
+        height: _size,
+        child: hasCover
+            ? TourImage(
+                source: coverPhoto,
+                width: _size,
+                height: _size,
+                fit: BoxFit.cover,
+                placeholder: _fallback(),
+                errorBuilder: (_, __, ___) => _fallback(),
+              )
+            : _fallback(),
+      ),
+    );
+  }
+
+  Widget _fallback() {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: gradient,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: const Center(
+        child: Icon(
+          LucideIcons.mapPinned,
+          size: 18,
+          color: Colors.white70,
         ),
       ),
     );

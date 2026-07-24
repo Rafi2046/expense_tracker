@@ -47,7 +47,7 @@ class DailyStatCard extends StatelessWidget {
     final colors = iconGradient ?? defaultIconGradient;
 
     return Container(
-      constraints: const BoxConstraints(minHeight: 110),
+      constraints: const BoxConstraints(minHeight: 92),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: baseGradient,
@@ -69,7 +69,10 @@ class DailyStatCard extends StatelessWidget {
                 )
               ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p12, vertical: AppSpacing.p16),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.p12,
+        vertical: AppSpacing.p12,
+      ),
       child: Row(
         children: [
           Expanded(
@@ -82,7 +85,7 @@ class DailyStatCard extends StatelessWidget {
                   style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600,
                     color: isDark ? Colors.grey.shade400 : AppColors.textMuted),
                 ),
-                const SizedBox(height: AppSpacing.s8),
+                const SizedBox(height: AppSpacing.s4),
                 if (amount != null)
                   FittedBox(
                     fit: BoxFit.scaleDown,

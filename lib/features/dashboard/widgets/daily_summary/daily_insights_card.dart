@@ -32,7 +32,7 @@ class DailyInsightsCard extends StatelessWidget {
           width: 1.2,
         ),
       ),
-      padding: const EdgeInsets.all(AppSpacing.p16),
+      padding: const EdgeInsets.all(AppSpacing.p12),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +52,7 @@ class DailyInsightsCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.s16),
+          const SizedBox(height: AppSpacing.s12),
           if (insights.isEmpty)
             Text(
               context.translate(
@@ -70,7 +70,7 @@ class DailyInsightsCard extends StatelessWidget {
                 final text = insights[index];
                 final isLast = index == insights.length - 1;
                 return Padding(
-                  padding: EdgeInsets.only(bottom: isLast ? 0.0 : AppSpacing.p12),
+                  padding: EdgeInsets.only(bottom: isLast ? 0.0 : AppSpacing.s8),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

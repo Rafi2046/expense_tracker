@@ -180,43 +180,62 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
               onRefresh: () => _load(showLoading: false),
               child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.fromLTRB(16, 16, 16, 80 + MediaQuery.of(context).padding.bottom),
+              padding: EdgeInsets.fromLTRB(
+                16,
+                12,
+                16,
+                72 + MediaQuery.of(context).padding.bottom,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ── Date Range subtitle card ──
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.p8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.p16,
+                      vertical: AppSpacing.p8,
+                    ),
                     decoration: BoxDecoration(
-                      color: isDark ? scheme.surfaceContainerLow : scheme.surfaceContainerLowest.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(AppSpacing.r12),
+                      color: isDark ? const Color(0xFF22262E) : Colors.white,
+                      borderRadius: BorderRadius.circular(AppSpacing.r16),
                       border: Border.all(
-                        color: isDark ? scheme.surfaceContainerHighest : scheme.outlineVariant,
+                        color: isDark
+                            ? const Color(0xFF3A3F4A)
+                            : const Color(0xFFE5E7EB),
+                        width: 1.2,
                       ),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(LucideIcons.calendar, size: 14, color: scheme.onSurfaceVariant),
+                        Icon(
+                          LucideIcons.calendar,
+                          size: 14,
+                          color: isDark
+                              ? Colors.grey.shade400
+                              : scheme.onSurfaceVariant,
+                        ),
                         const SizedBox(width: AppSpacing.s8),
                         Text(
                           _weekRange(),
-                          style: AppTextStyles.label.copyWith(fontWeight: FontWeight.w600,
-                            color: scheme.onSurfaceVariant),
+                          style: AppTextStyles.label.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.onSurface,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.s16),
+                  const SizedBox(height: AppSpacing.s12),
 
                   // ── Total Spent Main Header Card ──
                   SizedBox(
                     width: double.infinity,
-                    height: 130,
+                    height: 112,
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(AppSpacing.p16),
+                      padding: const EdgeInsets.all(AppSpacing.p12),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(AppSpacing.r24),
                         gradient: LinearGradient(
@@ -251,7 +270,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                                 color: scheme.onPrimary),
                             ),
                           ),
-                          const SizedBox(height: AppSpacing.s8),
+                          const SizedBox(height: AppSpacing.s4),
                           Align(
                             alignment: Alignment.centerRight,
                             child: WeeklyComparisonBadge(total: total, previousTotal: previousTotal),
@@ -303,7 +322,10 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                   // Prominent, full-width Highest Expense card
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(AppSpacing.p12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.p12,
+                      vertical: AppSpacing.p8,
+                    ),
                     decoration: BoxDecoration(
                       color: theme.cardColor,
                       borderRadius: BorderRadius.circular(AppSpacing.r12),
@@ -367,13 +389,13 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.s16),
+                  const SizedBox(height: AppSpacing.s12),
 
                   // ── Interactive Chart Panel ──
                   if (total > 0) ...[
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(AppSpacing.p16),
+                      padding: const EdgeInsets.all(AppSpacing.p12),
                       decoration: BoxDecoration(
                         color: theme.cardColor,
                         borderRadius: BorderRadius.circular(AppSpacing.r24),
@@ -397,9 +419,9 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                             activeColor: activeColor,
                             isDark: isDark,
                           ),
-                          const SizedBox(height: AppSpacing.s16),
+                          const SizedBox(height: AppSpacing.s12),
                           SizedBox(
-                            height: 210,
+                            height: 180,
                             child: AnimatedSwitcher(
                               duration: const Duration(milliseconds: 300),
                               child: _selectedTabIndex == 0
@@ -500,7 +522,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.s16),
+                    const SizedBox(height: AppSpacing.s12),
 
                     // ── Category List Section ──
                     Text(
@@ -509,7 +531,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                     ),
                     const SizedBox(height: AppSpacing.s8),
                     Container(
-                      padding: const EdgeInsets.all(AppSpacing.p16),
+                      padding: const EdgeInsets.all(AppSpacing.p12),
                       decoration: BoxDecoration(
                         color: theme.cardColor,
                         borderRadius: BorderRadius.circular(AppSpacing.r24),
@@ -527,7 +549,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                             itemCount: doughnutItems.length,
                             separatorBuilder: (ctx, idx) => Divider(
                               color: isDark ? scheme.outline : scheme.surfaceContainer,
-                              height: 16,
+                              height: 12,
                               thickness: 1,
                             ),
                             itemBuilder: (ctx, index) {
@@ -549,7 +571,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.s16),
+                    const SizedBox(height: AppSpacing.s12),
                   ],
 
                   // ── Insights Section ──
@@ -561,24 +583,24 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
 
                   // ── No expenses state ──
                   if (total <= 0) ...[
-                    const SizedBox(height: AppSpacing.s32),
+                    const SizedBox(height: AppSpacing.s24),
                     Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(AppSpacing.p16),
+                            padding: const EdgeInsets.all(AppSpacing.p12),
                             decoration: BoxDecoration(
                               color: activeColor.withValues(alpha: 0.08),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
                               LucideIcons.sparkles,
-                              size: 40,
+                              size: 36,
                               color: activeColor,
                             ),
                           ),
-                          const SizedBox(height: AppSpacing.s16),
+                          const SizedBox(height: AppSpacing.s12),
                           Text(
                             context.translate('no_expenses_this_week'),
                             style: AppTextStyles.body.copyWith(color: theme.colorScheme.onSurface,
@@ -602,14 +624,19 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
     final borderColor = scheme.outline;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16, vertical: AppSpacing.p16),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.p16,
+        AppSpacing.p12,
+        AppSpacing.p16,
+        AppSpacing.p16,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Date Range card skeleton
           Container(
             width: double.infinity,
-            height: 54,
+            height: 44,
             decoration: BoxDecoration(
               color: scheme.surface,
               borderRadius: BorderRadius.circular(AppSpacing.r16),
@@ -638,23 +665,22 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.s16),
+          const SizedBox(height: AppSpacing.s12),
 
           // Two stat cards side by side
           Row(
             children: [
               Expanded(
                 child: Container(
-                  height: 110,
                   decoration: BoxDecoration(
                     color: scheme.surface,
                     borderRadius: BorderRadius.circular(AppSpacing.r16),
                     border: Border.all(color: borderColor, width: 1.2),
                   ),
-                  padding: const EdgeInsets.all(AppSpacing.p16),
+                  padding: const EdgeInsets.all(AppSpacing.p12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                         width: 70,
@@ -664,16 +690,16 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                           borderRadius: BorderRadius.circular(AppSpacing.r8),
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.s12),
+                      const SizedBox(height: AppSpacing.s8),
                       Container(
                         width: 100,
-                        height: 24,
+                        height: 22,
                         decoration: BoxDecoration(
                           color: baseColor,
                           borderRadius: BorderRadius.circular(AppSpacing.r8),
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.s8),
+                      const SizedBox(height: AppSpacing.s4),
                       Container(
                         width: 60,
                         height: 10,
@@ -686,19 +712,18 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: AppSpacing.s12),
+              const SizedBox(width: AppSpacing.s8),
               Expanded(
                 child: Container(
-                  height: 110,
                   decoration: BoxDecoration(
                     color: scheme.surface,
                     borderRadius: BorderRadius.circular(AppSpacing.r16),
                     border: Border.all(color: borderColor, width: 1.2),
                   ),
-                  padding: const EdgeInsets.all(AppSpacing.p16),
+                  padding: const EdgeInsets.all(AppSpacing.p12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                         width: 90,
@@ -708,16 +733,16 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                           borderRadius: BorderRadius.circular(AppSpacing.r8),
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.s12),
+                      const SizedBox(height: AppSpacing.s8),
                       Container(
                         width: 50,
-                        height: 24,
+                        height: 22,
                         decoration: BoxDecoration(
                           color: baseColor,
                           borderRadius: BorderRadius.circular(AppSpacing.r8),
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.s8),
+                      const SizedBox(height: AppSpacing.s4),
                       Container(
                         width: 80,
                         height: 10,
@@ -732,7 +757,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.s16),
+          const SizedBox(height: AppSpacing.s12),
 
           // Segment Control skeleton
           Container(
@@ -743,18 +768,18 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
               borderRadius: BorderRadius.circular(AppSpacing.r12),
             ),
           ),
-          const SizedBox(height: AppSpacing.s16),
+          const SizedBox(height: AppSpacing.s12),
 
           // Chart / Distribution card skeleton
           Container(
             width: double.infinity,
-            height: 260,
+            height: 220,
             decoration: BoxDecoration(
               color: scheme.surface,
               borderRadius: BorderRadius.circular(AppSpacing.r16),
               border: Border.all(color: borderColor, width: 1.2),
             ),
-            padding: const EdgeInsets.all(AppSpacing.p16),
+            padding: const EdgeInsets.all(AppSpacing.p12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -783,7 +808,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.s16),
+          const SizedBox(height: AppSpacing.s12),
 
           // Insights Card skeleton
           Container(
@@ -793,7 +818,7 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
               borderRadius: BorderRadius.circular(AppSpacing.r16),
               border: Border.all(color: borderColor, width: 1.2),
             ),
-            padding: const EdgeInsets.all(AppSpacing.p16),
+            padding: const EdgeInsets.all(AppSpacing.p12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -805,14 +830,14 @@ class _WeeklySummaryScreenState extends State<WeeklySummaryScreen> {
                     borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.s16),
+                const SizedBox(height: AppSpacing.s12),
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: 3,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: AppSpacing.p12),
+                      padding: const EdgeInsets.only(bottom: AppSpacing.s8),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
