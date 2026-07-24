@@ -30,38 +30,43 @@ class InvoiceSettlementCardWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.p12, horizontal: AppSpacing.p12),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E2E) : Colors.white,
-        borderRadius: BorderRadius.circular(AppSpacing.r12),
-        border: Border.all(
-          color: isDark ? const Color(0xFF2D2D3D) : const Color(0xFFE5E7EB),
+        margin: const EdgeInsets.only(bottom: AppSpacing.s8),
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSpacing.p12,
+          horizontal: AppSpacing.p16,
         ),
-      ),
-      child: Row(
-        children: [
-          Flexible(child: _PersonChip(name: fromName, isDark: isDark, color: AppColors.activeRed)),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p4),
-            child: Icon(LucideIcons.arrowRight, size: 14,
-                color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF)),
+        decoration: BoxDecoration(
+          // Distinct from invoice sheet bg so cards read as inset (not edge-flush).
+          color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF9FAFB),
+          borderRadius: BorderRadius.circular(AppSpacing.r12),
+          border: Border.all(
+            color: isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB),
           ),
-          Flexible(child: _PersonChip(name: toName, isDark: isDark, color: AppColors.activeGreen)),
-          const Spacer(),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.p4, horizontal: AppSpacing.p8),
-            decoration: BoxDecoration(
-              color: AppColors.activeGreen.withValues(alpha: isDark ? 0.15 : 0.08),
-              borderRadius: BorderRadius.circular(AppSpacing.r8),
+        ),
+        child: Row(
+          children: [
+            Flexible(child: _PersonChip(name: fromName, isDark: isDark, color: AppColors.activeRed)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8),
+              child: Icon(LucideIcons.arrowRight, size: 14,
+                  color: isDark ? Colors.grey.shade500 : const Color(0xFF9CA3AF)),
             ),
-            child: Text(
-              formatAmount(amount, currency),
-              style: AppTextStyles.bodySmall.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w800,
-                color: AppColors.activeGreen),
+            Flexible(child: _PersonChip(name: toName, isDark: isDark, color: AppColors.activeGreen)),
+            const SizedBox(width: AppSpacing.s8),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.p4, horizontal: AppSpacing.p8),
+              decoration: BoxDecoration(
+                color: AppColors.activeGreen.withValues(alpha: isDark ? 0.15 : 0.08),
+                borderRadius: BorderRadius.circular(AppSpacing.r8),
+              ),
+              child: Text(
+                formatAmount(amount, currency),
+                style: AppTextStyles.bodySmall.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w800,
+                  color: AppColors.activeGreen),
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }

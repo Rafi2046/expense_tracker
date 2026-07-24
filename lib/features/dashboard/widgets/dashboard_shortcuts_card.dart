@@ -71,7 +71,6 @@ class DashboardShortcutsCard extends StatelessWidget {
     final activeShortcuts = shortcutProvider.activeShortcuts;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
     context.watch<LanguageProvider>();
 
     final addParty = activeShortcuts.where((s) => s.id == 'add_party').toList();
@@ -92,13 +91,6 @@ class DashboardShortcutsCard extends StatelessWidget {
           color: dividerColor,
           width: AppSpacing.w1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: scheme.onSurface.withValues(alpha: isDark ? 0.25 : 0.045),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
