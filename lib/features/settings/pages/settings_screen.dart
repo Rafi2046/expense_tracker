@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/features/reports/pages/view_reports_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/account_group.dart';
 import 'package:expense_tracker/features/settings/widgets/management_group.dart';
@@ -48,7 +49,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: theme.cardColor,
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         title: Text(
@@ -59,12 +60,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             letterSpacing: -0.3),
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
+          preferredSize: const Size.fromHeight(2.0),
           child: Container(
-            color: theme.brightness == Brightness.dark
-                ? const Color(0xFF2D2D2D)
-                : const Color(0xFFF1F1F1),
-            height: 1.0,
+            color: theme.dividerTheme.color ?? AppColors.dividerColor,
+            height: 2.0,
           ),
         ),
       ),

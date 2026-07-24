@@ -123,16 +123,19 @@ class _TourInvoiceScreenState extends State<TourInvoiceScreen> {
                     ...settlements.map((s) {
                       final fromName = pById[s.fromParticipantId] ?? context.translate('unknown_member');
                       final toName = pById[s.toParticipantId] ?? context.translate('unknown_member');
-                      return InvoiceSettlementCardWidget(
-                        fromName: fromName,
-                        toName: toName,
-                        amount: s.amount,
-                        currency: tour.currency,
-                        isDark: isDark,
-                        onTap: () => _showSettlementDetail(context, fromName, toName, s.amount, tour.currency),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p4),
+                        child: InvoiceSettlementCardWidget(
+                          fromName: fromName,
+                          toName: toName,
+                          amount: s.amount,
+                          currency: tour.currency,
+                          isDark: isDark,
+                          onTap: () => _showSettlementDetail(context, fromName, toName, s.amount, tour.currency),
+                        ),
                       );
                     }),
-                    const SizedBox(height: AppSpacing.s32),
+                    const SizedBox(height: AppSpacing.s24),
                   ],
                   if (isAllSettled) ...[
                     const SizedBox(height: AppSpacing.s32),

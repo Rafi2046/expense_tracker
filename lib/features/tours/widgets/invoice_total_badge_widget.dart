@@ -42,11 +42,18 @@ class InvoiceTotalBadgeWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.s8),
-          Text(
-            formatAmount(totalSpent, currency),
-            style: AppTextStyles.displayLarge.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w800,
-              color: AppColors.activeGreen,
-              letterSpacing: -1),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              formatAmount(totalSpent, currency),
+              maxLines: 1,
+              style: AppTextStyles.displayLarge.copyWith(
+                fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                fontWeight: FontWeight.w800,
+                color: AppColors.activeGreen,
+                letterSpacing: -1,
+              ),
+            ),
           ),
         ],
       ),

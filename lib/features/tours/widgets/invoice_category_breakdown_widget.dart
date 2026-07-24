@@ -41,19 +41,36 @@ class InvoiceCategoryBreakdownWidget extends StatelessWidget {
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      e.key,
-                      style: AppTextStyles.bodySmall.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: isDark ? const Color(0xFFD1D5DB) : const Color(0xFF374151),
+                    Expanded(
+                      child: Text(
+                        e.key,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: isDark
+                              ? const Color(0xFFD1D5DB)
+                              : const Color(0xFF374151),
+                        ),
                       ),
                     ),
-                    Text(
-                      formatAmount(e.value, currency),
-                      style: AppTextStyles.bodySmall.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w700,
-                        color: isDark ? Colors.white : const Color(0xFF111827),
+                    const SizedBox(width: AppSpacing.s8),
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          formatAmount(e.value, currency),
+                          maxLines: 1,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                            fontWeight: FontWeight.w700,
+                            color: isDark
+                                ? Colors.white
+                                : const Color(0xFF111827),
+                          ),
+                        ),
                       ),
                     ),
                   ],

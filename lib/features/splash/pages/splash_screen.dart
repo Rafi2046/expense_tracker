@@ -121,7 +121,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     debugPrint('SplashScreen: build called');
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      // Match Android LaunchTheme / NormalTheme splash_background so the
+      // handoff from native → Flutter has no white flash.
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

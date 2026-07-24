@@ -32,7 +32,8 @@ class BudgetManagementScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: theme.cardColor,
+        // Match homepage app bar so the gap below reads the same.
+        backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: const BackButton(),
@@ -43,21 +44,20 @@ class BudgetManagementScreen extends StatelessWidget {
           ),
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
+          preferredSize: const Size.fromHeight(2.0),
           child: Container(
-            color: theme.brightness == Brightness.dark
-                ? const Color(0xFF2D2D2D)
-                : Colors.grey.shade200,
-            height: 1,
+            color: theme.dividerTheme.color ?? AppColors.dividerColor,
+            height: 2.0,
           ),
         ),
       ),
       body: SingleChildScrollView(
+        // Same top inset as dashboard above Amount Visible / first cards.
         padding: EdgeInsets.fromLTRB(
-          AppSpacing.p16,
-          AppSpacing.p4,
-          AppSpacing.p16,
-          AppSpacing.p24 + MediaQuery.of(context).padding.bottom,
+          16,
+          16,
+          16,
+          16 + MediaQuery.of(context).padding.bottom + 80,
         ),
         child: Skeletonizer(
           enabled: isLoading,

@@ -33,14 +33,16 @@ class TourCard extends StatelessWidget {
   });
 
   static List<List<Color>> _gradientPalette(ColorScheme scheme) => [
-        [scheme.primaryContainer, scheme.secondaryContainer, scheme.tertiaryContainer],
-        [scheme.secondaryContainer, scheme.tertiaryContainer, scheme.errorContainer],
-        [scheme.tertiaryContainer, scheme.errorContainer, scheme.surfaceContainerHighest],
-        [scheme.errorContainer, scheme.surfaceContainerHighest, scheme.primaryContainer],
-        [scheme.surfaceContainerHighest, scheme.primaryContainer, scheme.secondaryContainer],
-        [scheme.primaryContainer, scheme.tertiaryContainer, scheme.surfaceContainerHighest],
-        [scheme.secondaryContainer, scheme.errorContainer, scheme.primaryContainer],
-        [scheme.tertiaryContainer, scheme.surfaceContainerHighest, scheme.secondaryContainer],
+        // Dark, saturated fallbacks so white title/amount stay readable in light mode
+        // when there is no cover photo.
+        [const Color(0xFF0F3D32), const Color(0xFF1A5C4A), const Color(0xFF0B2E26)],
+        [const Color(0xFF1E3A5F), const Color(0xFF2E5A8A), const Color(0xFF152A45)],
+        [const Color(0xFF3D2A5C), const Color(0xFF5A3D7A), const Color(0xFF2A1C40)],
+        [const Color(0xFF4A1F2E), const Color(0xFF6B2F42), const Color(0xFF35151F)],
+        [const Color(0xFF1F3A3A), const Color(0xFF2F5C5C), const Color(0xFF152929)],
+        [const Color(0xFF3A2F1A), const Color(0xFF5C4A28), const Color(0xFF2A2112)],
+        [const Color(0xFF1A2F4A), const Color(0xFF2A4A6B), const Color(0xFF122033)],
+        [const Color(0xFF2F1A3A), const Color(0xFF4A2A5C), const Color(0xFF211229)],
       ];
 
   List<Color> _gradientFor(ColorScheme scheme) =>
