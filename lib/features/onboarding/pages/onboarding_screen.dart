@@ -20,8 +20,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 
-
-
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -35,6 +33,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   int _currentPage = 0;
   late List<_OnboardingSlide> _slides;
   bool _hasBiometrics = false;
+
   int get _totalSlides => _hasBiometrics ? 7 : 6;
 
   late AnimationController _fadeController;
@@ -65,7 +64,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   }
 
   Future<void> _checkBiometrics() async {
-    final hasBio = await context.read<BiometricAuthProvider>().canCheckBiometrics;
+    final hasBio = await context
+        .read<BiometricAuthProvider>()
+        .canCheckBiometrics;
     if (mounted) {
       setState(() {
         _hasBiometrics = hasBio;
@@ -177,15 +178,14 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final hasSynced = SharedPrefsHelper.getBool('has_synced_for_user_${user.uid}') ?? false;
+      final hasSynced =
+          SharedPrefsHelper.getBool('has_synced_for_user_${user.uid}') ?? false;
       if (!hasSynced) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => SyncLoadingOverlay(
-              syncService: SyncService(),
-              uid: user.uid,
-            ),
+            builder: (context) =>
+                SyncLoadingOverlay(syncService: SyncService(), uid: user.uid),
           ),
         );
         return;
@@ -245,9 +245,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           gradient: RadialGradient(
                             colors: [
                               _currentAccentColor.withValues(
-                                  alpha: isDark ? 0.12 : 0.08),
+                                alpha: isDark ? 0.12 : 0.08,
+                              ),
                               _currentAccentColor.withValues(
-                                  alpha: isDark ? 0.04 : 0.02),
+                                alpha: isDark ? 0.04 : 0.02,
+                              ),
                               Colors.transparent,
                             ],
                             stops: const [0.0, 0.5, 1.0],
@@ -266,8 +268,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
                             colors: [
-                              const Color(0xFFAB47BC).withValues(
-                                  alpha: isDark ? 0.1 : 0.06),
+                              const Color(
+                                0xFFAB47BC,
+                              ).withValues(alpha: isDark ? 0.1 : 0.06),
                               Colors.transparent,
                             ],
                           ),
@@ -287,7 +290,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           gradient: RadialGradient(
                             colors: [
                               _currentAccentColor.withValues(
-                                  alpha: isDark ? 0.06 : 0.04),
+                                alpha: isDark ? 0.06 : 0.04,
+                              ),
                               Colors.transparent,
                             ],
                           ),
@@ -312,9 +316,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         if (!isLastPage)
-                          OnboardingSkipButton(
-                            onSkip: _completeOnboarding,
-                          ),
+                          OnboardingSkipButton(onSkip: _completeOnboarding),
                       ],
                     ),
                   ),
@@ -341,17 +343,25 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                             Text(
                               'Welcome to BudgetMint',
                               textAlign: TextAlign.center,
-                              style: AppTextStyles.displayMedium.copyWith(fontWeight: FontWeight.bold,
-                                color: isDark ? Colors.white : const Color(0xFF1F2937),
+                              style: AppTextStyles.displayMedium.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: isDark
+                                    ? Colors.white
+                                    : const Color(0xFF1F2937),
                               ),
                             ),
                             const SizedBox(height: AppSpacing.s12),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p32),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.p32,
+                              ),
                               child: Text(
                                 'Your all-in-one companion to track daily expenses, manage budgets, and split tour bills effortlessly.',
                                 textAlign: TextAlign.center,
-                                style: AppTextStyles.body.copyWith(color: isDark ? Colors.white70 : const Color(0xFF6B7280),
+                                style: AppTextStyles.body.copyWith(
+                                  color: isDark
+                                      ? Colors.white70
+                                      : const Color(0xFF6B7280),
                                   height: 1.5,
                                 ),
                               ),
@@ -382,12 +392,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    32,
-                    0,
-                    32,
-                    bottomPadding + 24,
-                  ),
+                  padding: EdgeInsets.fromLTRB(32, 0, 32, bottomPadding + 24),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -410,7 +415,6 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       ),
     );
   }
-
 }
 
 class _OnboardingSlide {
