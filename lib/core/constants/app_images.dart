@@ -42,6 +42,7 @@ class AppImages {
   static const String transactionsIcon = 'assets/app_icons/transaction_icons.png';
   static const String categoriesIcon = 'assets/app_icons/categories_icon.png';
   static const String partyReportIcon = 'assets/app_icons/party_report_icon.png';
+  static const String noNotesIcon = 'assets/app_logo/no_notes.png';
 
 
 

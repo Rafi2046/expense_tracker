@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:expense_tracker/core/constants/app_images.dart';
 import '../../../core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 
@@ -17,18 +17,33 @@ class NotebookEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.p32),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(LucideIcons.stickyNote, size: 64, color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
+            SizedBox(
+              width: 220,
+              height: 220,
+              child: Image.asset(
+                AppImages.noNotesIcon,
+                width: 220,
+                height: 220,
+                fit: BoxFit.contain,
+                filterQuality: FilterQuality.high,
+              ),
+            ),
             const SizedBox(height: AppSpacing.s16),
             Text(
-              isSearching ? context.translate('no_matching_notes') : context.translate('no_notes_yet'),
+              isSearching
+                  ? context.translate('no_matching_notes')
+                  : context.translate('no_notes_yet'),
               style: AppTextStyles.h3.copyWith(
-                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: AppSpacing.s8),
@@ -38,7 +53,9 @@ class NotebookEmptyState extends StatelessWidget {
                   : context.translate('tap_add_button_to_add_notes'),
               textAlign: TextAlign.center,
               style: AppTextStyles.bodySmall.copyWith(
-                color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
+                color: isDark
+                    ? const Color(0xFF9CA3AF)
+                    : const Color(0xFF6B7280),
               ),
             ),
           ],
