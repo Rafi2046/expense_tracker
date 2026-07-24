@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/providers/session_provider.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/settings/widgets/image_picker_sheet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 
 
@@ -43,7 +44,14 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
         }
       }
 
-      photoUrl = user.photoURL ?? '';
+      // Prefs first (local file or uploaded https) — Auth photoURL alone
+      // often stays on the old Google avatar after a failed/partial upload.
+      final savedPhoto = SharedPrefsHelper.getString(
+        'local_profile_photo_${user.uid}',
+      );
+      photoUrl = (savedPhoto != null && savedPhoto.isNotEmpty)
+          ? savedPhoto
+          : (user.photoURL ?? '');
 
       phoneController.text = SharedPrefsHelper.getString('local_phone_number_${user.uid}') ?? '';
       selectedGender = SharedPrefsHelper.getString('local_gender_${user.uid}') ?? 'Male';
@@ -55,7 +63,11 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
         providerName = 'Google';
       }
 
-      if (photoUrl.isNotEmpty && !photoUrl.startsWith('http') && File(photoUrl).existsSync()) {
+      if (photoUrl.isNotEmpty &&
+          !photoUrl.startsWith('http') &&
+          !photoUrl.startsWith('b64:') &&
+          !photoUrl.startsWith('data:image/') &&
+          File(photoUrl).existsSync()) {
         localImageFile = File(photoUrl);
       } else {
         localImageFile = null;
@@ -164,52 +176,31 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
     try {
       await AuthService().updatePersonalInfo(displayName: name);
 
+      var photoUploadFailed = false;
+      String? photoUploadError;
       String finalPhotoUrl = photoUrl;
+
       if (localImageFile != null && localImageFile!.existsSync()) {
+        // Always keep the local file so this device shows the new photo
+        // even when Storage upload fails (rules / network).
+        await SharedPrefsHelper.setString(
+          'local_profile_photo_${user.uid}',
+          localImageFile!.path,
+        );
+        finalPhotoUrl = localImageFile!.path;
+
         try {
-          final storageRef = FirebaseStorage.instance
-              .ref()
-              .child('profile_photos')
-              .child('${user.uid}.jpg');
-          final uploadTask = storageRef.putFile(localImageFile!);
-          final snapshot = await uploadTask;
-          finalPhotoUrl = await snapshot.ref.getDownloadURL();
+          final cloudUrl =
+              await AuthService().uploadProfileImage(localImageFile!);
+          // uploadProfileImage already writes Auth + Firestore + prefs.
+          finalPhotoUrl = cloudUrl;
+          await user.reload();
+          user = FirebaseAuth.instance.currentUser ?? user;
         } catch (e) {
           debugPrint('Error uploading profile photo: $e');
-          // Never write a local file path into Auth photoURL — other devices
-          // (and reinstalls) cannot load it.
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  context.translate('failed_save_changes', namedArgs: {
-                    'error': 'Profile photo upload failed. Check Storage rules.',
-                  }),
-                ),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-          finalPhotoUrl = user.photoURL ?? '';
+          photoUploadFailed = true;
+          photoUploadError = e.toString();
         }
-      }
-
-      // Only persist https (or empty). Skip broken local paths.
-      if (finalPhotoUrl.isNotEmpty && !finalPhotoUrl.startsWith('http')) {
-        finalPhotoUrl = user.photoURL ?? '';
-      }
-
-      if (finalPhotoUrl != (user.photoURL ?? '') &&
-          (finalPhotoUrl.isEmpty || finalPhotoUrl.startsWith('http'))) {
-        await user.updatePhotoURL(finalPhotoUrl.isEmpty ? null : finalPhotoUrl);
-        await user.reload();
-        if (finalPhotoUrl.isNotEmpty) {
-          await SharedPrefsHelper.setString(
-            'local_profile_photo_${user.uid}',
-            finalPhotoUrl,
-          );
-        }
-        photoUrl = finalPhotoUrl;
       }
 
       await SharedPrefsHelper.setString('local_phone_number_${user.uid}', phoneController.text.trim());
@@ -219,18 +210,28 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
 
       loadUserInfo();
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              context.translate('profile_updated'),
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: const Color(0xFF6A53A1),
+      if (!mounted) return;
+      await context.read<SessionProvider>().refresh();
+      PaintingBinding.instance.imageCache.clear();
+      PaintingBinding.instance.imageCache.clearLiveImages();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            photoUploadFailed
+                ? 'Photo upload failed: ${photoUploadError ?? "unknown"}'
+                : context.translate('profile_updated'),
+            style: const TextStyle(color: Colors.white),
           ),
-        );
-        setState(() => isEditing = false);
-      }
+          backgroundColor: photoUploadFailed
+              ? Colors.red
+              : const Color(0xFF6A53A1),
+          duration: Duration(seconds: photoUploadFailed ? 5 : 2),
+        ),
+      );
+      setState(() {
+        isEditing = false;
+        photoUrl = finalPhotoUrl;
+      });
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

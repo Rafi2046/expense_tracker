@@ -1,5 +1,6 @@
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
+import 'package:expense_tracker/core/providers/session_provider.dart';
 import 'package:expense_tracker/features/reports/pages/view_reports_screen.dart';
 import 'package:expense_tracker/features/settings/widgets/account_group.dart';
 import 'package:expense_tracker/features/settings/widgets/management_group.dart';
@@ -10,12 +11,12 @@ import 'package:expense_tracker/features/settings/widgets/settings_profile_card.
 import 'package:expense_tracker/features/settings/widgets/edit_profile_dialog.dart';
 import 'package:expense_tracker/features/settings/widgets/delete_account_dialog.dart';
 import 'package:expense_tracker/features/settings/widgets/logout_dialog.dart';
-import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -78,26 +79,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // User Profile Card (Stream-based)
-                StreamBuilder<User?>(
-                  stream: FirebaseAuth.instance.userChanges(),
-                  builder: (context, snapshot) {
-                    final user = snapshot.data;
-                    final displayName = user?.displayName ?? context.translate('guest_user');
+                // User Profile Card — SessionProvider syncs photo via Firestore
+                Consumer2<SessionProvider, LanguageProvider>(
+                  builder: (context, session, language, _) {
+                    final user = session.firebaseUser ?? FirebaseAuth.instance.currentUser;
+                    final displayName = session.displayName.isNotEmpty
+                        ? session.displayName
+                        : context.translate('guest_user');
                     final email = user?.email ?? context.translate('no_email');
-
-                    // Retrieve local photo path if it was saved, otherwise fall back to user.photoURL
-                    final localPhoto = user != null
-                        ? SharedPrefsHelper.getString(
-                            'local_profile_photo_${user.uid}',
-                          )
-                        : null;
-                    final photoUrl = localPhoto ?? user?.photoURL;
 
                     return SettingsProfileCard(
                       name: displayName,
                       email: email,
-                      photoUrl: photoUrl,
+                      photoUrl: session.photoUrl,
                       onEditTap: _openEditProfile,
                     );
                   },

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:expense_tracker/core/constants/app_images.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
+import 'package:expense_tracker/core/utils/profile_photo_resolver.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 
@@ -65,11 +66,8 @@ class ProfileHeaderCard extends StatelessWidget {
                 backgroundColor: isDark ? Colors.grey.shade900 : Colors.grey.shade100,
                 backgroundImage: localImageFile != null
                     ? FileImage(localImageFile!) as ImageProvider
-                    : (photoUrl.startsWith('http')
-                        ? NetworkImage(photoUrl) as ImageProvider
-                        : (photoUrl.isNotEmpty && File(photoUrl).existsSync()
-                            ? FileImage(File(photoUrl)) as ImageProvider
-                            : const AssetImage(AppImages.avatarImage))),
+                    : (ProfilePhotoResolver.provider(photoUrl) ??
+                        const AssetImage(AppImages.avatarImage)),
               ),
             ),
           ),

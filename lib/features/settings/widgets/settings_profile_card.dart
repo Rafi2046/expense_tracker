@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:expense_tracker/core/constants/app_images.dart';
+import 'package:expense_tracker/core/utils/profile_photo_resolver.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -52,11 +52,8 @@ class SettingsProfileCard extends StatelessWidget {
             child: CircleAvatar(
               radius: 24,
               backgroundColor: Colors.grey.shade100,
-              backgroundImage: (photoUrl != null && photoUrl!.startsWith('http'))
-                  ? NetworkImage(photoUrl!) as ImageProvider
-                  : (photoUrl != null && photoUrl!.isNotEmpty && File(photoUrl!).existsSync()
-                      ? FileImage(File(photoUrl!)) as ImageProvider
-                      : const AssetImage(AppImages.avatarImage)),
+              backgroundImage: ProfilePhotoResolver.provider(photoUrl) ??
+                  const AssetImage(AppImages.avatarImage),
             ),
           ),
           const SizedBox(width: AppSpacing.s12),

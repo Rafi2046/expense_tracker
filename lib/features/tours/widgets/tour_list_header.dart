@@ -1,10 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
 import 'package:expense_tracker/core/providers/profile_manager_provider.dart';
+import 'package:expense_tracker/core/utils/profile_photo_resolver.dart';
 import 'package:expense_tracker/core/widgets/common_widgets/user_profile_widget.dart';
 import 'package:expense_tracker/features/dashboard/pages/select_profile_screen.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
@@ -29,10 +29,7 @@ class TourListHeader extends StatelessWidget {
   });
 
   ImageProvider? _resolveImage(String? url) {
-    if (url == null || url.isEmpty) return null;
-    if (url.startsWith('http')) return NetworkImage(url);
-    if (File(url).existsSync()) return FileImage(File(url));
-    return null;
+    return ProfilePhotoResolver.provider(url);
   }
 
   @override

@@ -1,21 +1,22 @@
 import 'dart:io';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/providers/session_provider.dart';
+import 'package:expense_tracker/core/services/auth_services.dart';
+import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:provider/provider.dart';
+import 'package:expense_tracker/core/constants/app_spacing.dart';
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
-import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
 import 'package:expense_tracker/features/login/widgets/custom_text_field_widget.dart';
 import 'package:expense_tracker/features/settings/widgets/profile_dialog_header.dart';
 import 'package:expense_tracker/features/settings/widgets/profile_photo_picker.dart';
 import 'package:expense_tracker/features/settings/widgets/profile_name_field.dart';
 import 'package:expense_tracker/features/settings/widgets/profile_save_button.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:expense_tracker/core/constants/app_spacing.dart';
-
 
 class EditProfileDialog extends StatefulWidget {
   const EditProfileDialog({super.key});
@@ -36,12 +37,18 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       _nameController.text = user.displayName ?? '';
-      _photoUrlController.text = user.photoURL ?? '';
+      final savedPhoto = SharedPrefsHelper.getString(
+        'local_profile_photo_${user.uid}',
+      );
+      final initialPhoto = (savedPhoto != null && savedPhoto.isNotEmpty)
+          ? savedPhoto
+          : (user.photoURL ?? '');
+      _photoUrlController.text = initialPhoto;
 
-      if (user.photoURL != null &&
-          !user.photoURL!.startsWith('http') &&
-          File(user.photoURL!).existsSync()) {
-        _localImageFile = File(user.photoURL!);
+      if (initialPhoto.isNotEmpty &&
+          !initialPhoto.startsWith('http') &&
+          File(initialPhoto).existsSync()) {
+        _localImageFile = File(initialPhoto);
       }
     }
   }
@@ -169,65 +176,53 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
 
     try {
       final newName = _nameController.text.trim();
+      var photoUploadFailed = false;
+      String? photoUploadError;
       String newPhotoUrl = _photoUrlController.text.trim();
 
       if (_localImageFile != null && _localImageFile!.existsSync()) {
-        try {
-          final storageRef = FirebaseStorage.instance
-              .ref()
-              .child('profile_photos')
-              .child('${user.uid}.jpg');
-          final uploadTask = storageRef.putFile(_localImageFile!);
-          final snapshot = await uploadTask;
-          newPhotoUrl = await snapshot.ref.getDownloadURL();
-        } catch (e) {
-          debugPrint('Error uploading profile photo: $e');
-          // Keep previous https URL — never Auth-update with a local path.
-          newPhotoUrl = user.photoURL ?? '';
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  context.translate('failed_update_profile', namedArgs: {
-                    'error': 'Photo upload failed. Check Storage rules.',
-                  }),
-                ),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        }
-      }
-
-      if (newPhotoUrl.isNotEmpty && !newPhotoUrl.startsWith('http')) {
-        newPhotoUrl = user.photoURL ?? '';
-      }
-
-      if (newPhotoUrl.isNotEmpty) {
+        // Persist locally first so Settings / app bar update even if upload fails.
         await SharedPrefsHelper.setString(
           'local_profile_photo_${user.uid}',
-          newPhotoUrl,
+          _localImageFile!.path,
         );
+        newPhotoUrl = _localImageFile!.path;
+
+        try {
+          final cloudUrl =
+              await AuthService().uploadProfileImage(_localImageFile!);
+          // uploadProfileImage already writes Auth + Firestore + prefs.
+          newPhotoUrl = cloudUrl;
+        } catch (e) {
+          debugPrint('Error uploading profile photo: $e');
+          photoUploadFailed = true;
+          photoUploadError = e.toString();
+        }
+      } else if (newPhotoUrl.isNotEmpty && newPhotoUrl.startsWith('http')) {
+        await AuthService().persistProfilePhotoUrl(newPhotoUrl);
       }
 
       await user.updateDisplayName(newName);
-      if (newPhotoUrl.isEmpty || newPhotoUrl.startsWith('http')) {
-        await user.updatePhotoURL(newPhotoUrl.isEmpty ? null : newPhotoUrl);
-      }
       await user.reload();
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              context.translate('profile_updated'),
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: const Color(0xFF6A53A1),
+      if (!mounted) return;
+      await context.read<SessionProvider>().refresh();
+      PaintingBinding.instance.imageCache.clear();
+      PaintingBinding.instance.imageCache.clearLiveImages();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            photoUploadFailed
+                ? 'Photo upload failed: ${photoUploadError ?? "unknown"}'
+                : context.translate('profile_updated'),
+            style: const TextStyle(color: Colors.white),
           ),
-        );
-        Navigator.pop(context);
-      }
+          backgroundColor:
+              photoUploadFailed ? Colors.red : const Color(0xFF6A53A1),
+          duration: Duration(seconds: photoUploadFailed ? 5 : 2),
+        ),
+      );
+      Navigator.pop(context);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

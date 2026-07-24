@@ -41,6 +41,25 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Surface framework errors instead of a blank white screen on device.
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+    debugPrint('FlutterError: ${details.exceptionAsString()}');
+  };
+  ErrorWidget.builder = (details) {
+    return Material(
+      color: Colors.white,
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Text(
+            'Something went wrong:\n${details.exception}',
+            style: const TextStyle(color: Colors.red, fontSize: 14),
+          ),
+        ),
+      ),
+    );
+  };
   debugPrint('main: WidgetsFlutterBinding initialized');
 
   try {
@@ -448,7 +467,9 @@ class MyApp extends StatelessWidget {
             }
           });
         }
-        return AppLockManager(child: child!);
+        // child can be null during early MaterialApp frames — child! crashed
+        // to a blank white screen on device (esp. release / cold start).
+        return AppLockManager(child: child ?? const SizedBox.shrink());
       },
     );
   }

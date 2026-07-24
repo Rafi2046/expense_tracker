@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:expense_tracker/core/constants/app_colors.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:expense_tracker/core/providers/notification_provider.dart';
 import 'package:expense_tracker/core/providers/session_provider.dart';
 import 'package:expense_tracker/core/providers/profile_provider.dart';
+import 'package:expense_tracker/core/utils/profile_photo_resolver.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -139,9 +138,6 @@ class HomepageAppbarWidget extends StatelessWidget
   }
 
   ImageProvider? _resolveImage(String? photoUrl) {
-    if (photoUrl == null || photoUrl.isEmpty) return null;
-    if (photoUrl.startsWith('http')) return NetworkImage(photoUrl);
-    if (File(photoUrl).existsSync()) return FileImage(File(photoUrl));
-    return null;
+    return ProfilePhotoResolver.provider(photoUrl);
   }
 }

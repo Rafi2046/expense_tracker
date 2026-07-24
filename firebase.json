@@ -1,1 +1,44 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"expense-tracker-8a3c5","appId":"1:1018341294472:android:25899d828fafe9ad883a3d","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"expense-tracker-8a3c5","appId":"1:1018341294472:ios:037f725723c075da883a3d","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"macos":{"default":{"projectId":"expense-tracker-8a3c5","appId":"1:1018341294472:ios:037f725723c075da883a3d","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"expense-tracker-8a3c5","configurations":{"android":"1:1018341294472:android:25899d828fafe9ad883a3d","ios":"1:1018341294472:ios:037f725723c075da883a3d","macos":"1:1018341294472:ios:037f725723c075da883a3d","web":"1:1018341294472:web:5aeffc6f1e0643c2883a3d","windows":"1:1018341294472:web:6641523e20a8ef88883a3d"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "expense-tracker-8a3c5",
+          "appId": "1:1018341294472:android:25899d828fafe9ad883a3d",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "expense-tracker-8a3c5",
+          "appId": "1:1018341294472:ios:037f725723c075da883a3d",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "expense-tracker-8a3c5",
+          "appId": "1:1018341294472:ios:037f725723c075da883a3d",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "expense-tracker-8a3c5",
+          "configurations": {
+            "android": "1:1018341294472:android:25899d828fafe9ad883a3d",
+            "ios": "1:1018341294472:ios:037f725723c075da883a3d",
+            "macos": "1:1018341294472:ios:037f725723c075da883a3d",
+            "web": "1:1018341294472:web:5aeffc6f1e0643c2883a3d",
+            "windows": "1:1018341294472:web:6641523e20a8ef88883a3d"
+          }
+        }
+      }
+    }
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}

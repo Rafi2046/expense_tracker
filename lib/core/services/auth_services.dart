@@ -1,10 +1,13 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:expense_tracker/core/utils/database_helper.dart';
+import 'package:expense_tracker/core/utils/profile_photo_resolver.dart';
 import 'package:expense_tracker/core/utils/shared_prefs_helper.dart';
+import 'package:expense_tracker/features/tours/utils/tour_image_codec.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -228,20 +231,32 @@ class AuthService {
     }
   }
 
+  /// Compresses [file] and syncs via Firestore (no Firebase Storage).
+  ///
+  /// Storage kept returning `object-not-found` for profile paths even when
+  /// tour_covers worked from other code paths — Firestore already syncs
+  /// reliably for this account, so profile photos use `b64:` there.
   Future<String> uploadProfileImage(File file) async {
     final user = _auth.currentUser;
     if (user == null) throw Exception('No user logged in');
 
     try {
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('users')
-          .child(user.uid)
-          .child('profile.jpg');
+      if (!await file.exists()) {
+        throw Exception('Selected image file is missing');
+      }
 
-      final UploadTask uploadTask = storageRef.putFile(file);
-      final TaskSnapshot snapshot = await uploadTask;
-      return await snapshot.ref.getDownloadURL();
+      final encoded = await TourImageCodec.encodeFile(file.path, isCover: false);
+      if (encoded == null || encoded.isEmpty) {
+        throw Exception('Could not compress profile photo');
+      }
+
+      // Soft size guard — Firestore doc limit is 1 MiB.
+      if (encoded.length > 900 * 1024) {
+        throw Exception('Profile photo is too large after compression');
+      }
+
+      await persistProfilePhotoUrl(encoded);
+      return encoded;
     } on SocketException {
       throw Exception(
         'No internet connection. Please check your network and try again.',
@@ -249,6 +264,45 @@ class AuthService {
     } catch (e) {
       throw Exception('Failed to upload image: $e');
     }
+  }
+
+  /// Writes photo to Auth (https only) + Firestore settings/profile + prefs.
+  Future<void> persistProfilePhotoUrl(String photoUrl) async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    if (!ProfilePhotoResolver.isCloudValue(photoUrl)) return;
+
+    // Firebase Auth photoURL only accepts http(s) URLs.
+    if (TourImageCodec.isNetwork(photoUrl)) {
+      try {
+        await user.updatePhotoURL(photoUrl);
+      } catch (e) {
+        debugPrint('AuthService.persistProfilePhotoUrl Auth update failed: $e');
+      }
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('settings')
+          .doc('profile')
+          .set(
+        {
+          'photoUrl': photoUrl,
+          'photoUpdatedAt': FieldValue.serverTimestamp(),
+        },
+        SetOptions(merge: true),
+      );
+    } catch (e) {
+      debugPrint('AuthService.persistProfilePhotoUrl Firestore failed: $e');
+      rethrow;
+    }
+
+    await SharedPrefsHelper.setString(
+      'local_profile_photo_${user.uid}',
+      photoUrl,
+    );
   }
 
   Future<void> updatePersonalInfo({required String displayName}) async {
