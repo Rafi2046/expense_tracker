@@ -176,14 +176,39 @@ mixin PersonalInfoHandler<T extends StatefulWidget> on State<T> {
           finalPhotoUrl = await snapshot.ref.getDownloadURL();
         } catch (e) {
           debugPrint('Error uploading profile photo: $e');
-          finalPhotoUrl = localImageFile!.path;
+          // Never write a local file path into Auth photoURL — other devices
+          // (and reinstalls) cannot load it.
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  context.translate('failed_save_changes', namedArgs: {
+                    'error': 'Profile photo upload failed. Check Storage rules.',
+                  }),
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+          finalPhotoUrl = user.photoURL ?? '';
         }
       }
 
-      if (finalPhotoUrl != user.photoURL) {
-        await user.updatePhotoURL(finalPhotoUrl);
+      // Only persist https (or empty). Skip broken local paths.
+      if (finalPhotoUrl.isNotEmpty && !finalPhotoUrl.startsWith('http')) {
+        finalPhotoUrl = user.photoURL ?? '';
+      }
+
+      if (finalPhotoUrl != (user.photoURL ?? '') &&
+          (finalPhotoUrl.isEmpty || finalPhotoUrl.startsWith('http'))) {
+        await user.updatePhotoURL(finalPhotoUrl.isEmpty ? null : finalPhotoUrl);
         await user.reload();
-        await SharedPrefsHelper.setString('local_profile_photo_${user.uid}', finalPhotoUrl);
+        if (finalPhotoUrl.isNotEmpty) {
+          await SharedPrefsHelper.setString(
+            'local_profile_photo_${user.uid}',
+            finalPhotoUrl,
+          );
+        }
         photoUrl = finalPhotoUrl;
       }
 

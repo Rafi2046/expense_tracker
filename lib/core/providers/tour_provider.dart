@@ -1749,12 +1749,7 @@ class TourProvider extends ChangeNotifier {
   }
 
   Future<void> _syncTourToSharedCollection(Tour tour) async {
-    final map = tour.toMap();
-    if (tour.coverPhoto != null && !tour.coverPhoto!.startsWith('http')) {
-      // Keep any existing https cover on the server — never wipe it by
-      // omitting the field in a full document replace.
-      map.remove('coverPhoto');
-    }
+    final map = _tourMapForCloud(tour);
     await _sharedToursCollection
         .doc(tour.id)
         .set(map, SetOptions(merge: true));
@@ -1763,11 +1758,19 @@ class TourProvider extends ChangeNotifier {
   Future<void> _syncTourToFirestore(Tour tour) async {
     final col = _toursCollection;
     if (col == null) return;
+    final map = _tourMapForCloud(tour);
+    await col.doc(tour.id).set(map, SetOptions(merge: true));
+  }
+
+  /// Never merge-write null / Base64 / file paths — that wipes https covers
+  /// on other devices.
+  Map<String, dynamic> _tourMapForCloud(Tour tour) {
     final map = tour.toMap();
-    if (tour.coverPhoto != null && !tour.coverPhoto!.startsWith('http')) {
+    final cover = tour.coverPhoto;
+    if (cover == null || cover.isEmpty || !cover.startsWith('http')) {
       map.remove('coverPhoto');
     }
-    await col.doc(tour.id).set(map, SetOptions(merge: true));
+    return map;
   }
 
   /// Uploads a local Base64 / file cover to Storage and persists the https URL.
@@ -1793,7 +1796,34 @@ class TourProvider extends ChangeNotifier {
       return withUrl;
     } catch (e) {
       debugPrint('TourProvider._ensureCoverUploaded (${tour.id}): $e');
-      return tour;
+      // Dead local file? Try recover previously uploaded Storage object.
+      final recovered = await _recoverCoverFromStorage(tour);
+      return recovered ?? tour;
+    }
+  }
+
+  Future<Tour?> _recoverCoverFromStorage(Tour tour) async {
+    try {
+      final url = await FirebaseStorage.instance
+          .ref()
+          .child('tour_covers')
+          .child('${tour.id}.jpg')
+          .getDownloadURL();
+      final withUrl = tour.copyWith(coverPhoto: url);
+      final db = await _db.database;
+      await db.update(
+        'tours',
+        withUrl.toJson(),
+        where: 'id = ?',
+        whereArgs: [tour.id],
+      );
+      final idx = _tours.indexWhere((t) => t.id == tour.id);
+      if (idx != -1) {
+        _tours[idx] = withUrl;
+      }
+      return withUrl;
+    } catch (_) {
+      return null;
     }
   }
 
@@ -1807,9 +1837,26 @@ class TourProvider extends ChangeNotifier {
     var changed = false;
     for (final tour in List<Tour>.from(_tours)) {
       final cover = tour.coverPhoto;
+      final isHttp = cover != null && cover.startsWith('http');
+      final isLocalOnly =
+          cover != null && cover.isNotEmpty && !cover.startsWith('http');
+      final isMissing = cover == null || cover.isEmpty;
+
+      // Dead absolute path on this device → treat as missing.
+      var needsStorageRecover = isMissing;
+      if (isLocalOnly &&
+          !TourImageCodec.isBase64(cover) &&
+          TourImageCodec.detect(cover) == TourImageSourceKind.file) {
+        final path = cover.startsWith('file://')
+            ? cover.replaceFirst('file://', '')
+            : cover;
+        if (!File(path).existsSync()) {
+          needsStorageRecover = true;
+        }
+      }
 
       // Case A: local Base64/file — upload to Storage + write https into cloud.
-      if (cover != null && cover.isNotEmpty && !cover.startsWith('http')) {
+      if (isLocalOnly && !needsStorageRecover) {
         final withUrl = await _ensureCoverUploaded(tour);
         if (withUrl.coverPhoto != null &&
             withUrl.coverPhoto!.startsWith('http')) {
@@ -1820,33 +1867,18 @@ class TourProvider extends ChangeNotifier {
             debugPrint('TourProvider._healMissingCloudCovers sync (${tour.id}): $e');
           }
           changed = true;
+        } else {
+          needsStorageRecover = true;
         }
-        continue;
       }
 
-      // Case B: no cover locally — try recover from Storage path if previously uploaded.
-      if (cover == null || cover.isEmpty) {
-        try {
-          final url = await FirebaseStorage.instance
-              .ref()
-              .child('tour_covers')
-              .child('${tour.id}.jpg')
-              .getDownloadURL();
-          final withUrl = tour.copyWith(coverPhoto: url);
-          final db = await _db.database;
-          await db.update(
-            'tours',
-            withUrl.toJson(),
-            where: 'id = ?',
-            whereArgs: [tour.id],
-          );
-          final idx = _tours.indexWhere((t) => t.id == tour.id);
-          if (idx != -1) {
-            _tours[idx] = withUrl;
-          }
+      // Case B: no usable local cover — recover from Storage if object exists.
+      if (!isHttp && needsStorageRecover) {
+        final recovered = await _recoverCoverFromStorage(tour);
+        if (recovered != null) {
           try {
-            await _syncTourToFirestore(withUrl);
-            await _syncTourToSharedCollection(withUrl);
+            await _syncTourToFirestore(recovered);
+            await _syncTourToSharedCollection(recovered);
           } catch (e) {
             debugPrint(
               'TourProvider._healMissingCloudCovers recover-sync (${tour.id}): $e',
@@ -1856,8 +1888,6 @@ class TourProvider extends ChangeNotifier {
           debugPrint(
             'TourProvider: recovered cover URL from Storage for ${tour.id}',
           );
-        } catch (_) {
-          // No object in Storage — nothing to recover.
         }
       }
     }

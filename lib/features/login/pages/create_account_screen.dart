@@ -1,4 +1,5 @@
 import 'package:expense_tracker/core/constants/app_spacing.dart';
+import 'package:expense_tracker/core/providers/app_lock_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/utils/email_validator.dart';
@@ -10,6 +11,7 @@ import 'package:expense_tracker/features/login/widgets/signup_header.dart';
 import 'package:expense_tracker/features/login/widgets/signup_login_link.dart';
 import 'package:expense_tracker/features/login/widgets/signup_social_buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 
@@ -120,14 +122,20 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     setState(() => _isLoading = true);
 
     try {
+      if (mounted) {
+        context.read<AppLockProvider>().suppressNextLock();
+      }
       final userCredential = await _authService.signInWithGoogle();
 
       if (userCredential != null && mounted) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const OnboardingScreen()),
-              (route) => false,
-        );
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+            (route) => false,
+          );
+        });
       }
     } catch (e) {
       _showErrorSnackBar(e.toString());
@@ -140,14 +148,20 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     setState(() => _isLoading = true);
 
     try {
+      if (mounted) {
+        context.read<AppLockProvider>().suppressNextLock();
+      }
       final userCredential = await _authService.signInWithApple();
 
       if (userCredential != null && mounted) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const OnboardingScreen()),
-              (route) => false,
-        );
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+            (route) => false,
+          );
+        });
       }
     } catch (e) {
       _showErrorSnackBar(e.toString());

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/core/providers/app_lock_provider.dart';
 import 'package:expense_tracker/core/providers/language_provider.dart';
+import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/widgets/lock_screen_overlay.dart';
 import 'package:expense_tracker/core/constants/app_text_styles.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -37,20 +38,26 @@ class _AppLockManagerState extends State<AppLockManager> with WidgetsBindingObse
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!mounted) return;
+    // Skip while Google/Apple auth UI owns the app lifecycle.
+    if (AuthService.oauthInProgress) return;
     if (FirebaseAuth.instance.currentUser == null) return;
 
     final provider = context.read<AppLockProvider>();
 
     switch (state) {
       case AppLifecycleState.inactive:
-        setState(() => _showBlur = true);
+        if (mounted) setState(() => _showBlur = true);
+        break;
       case AppLifecycleState.paused:
         provider.lock();
+        break;
       case AppLifecycleState.resumed:
-        setState(() => _showBlur = false);
+        if (mounted) setState(() => _showBlur = false);
         if (provider.isLocked) {
           _pushLockScreen();
         }
+        break;
       case AppLifecycleState.hidden:
       case AppLifecycleState.detached:
         break;
@@ -58,7 +65,7 @@ class _AppLockManagerState extends State<AppLockManager> with WidgetsBindingObse
   }
 
   void _pushLockScreen() {
-    if (_isPushingLockScreen) return;
+    if (!mounted || _isPushingLockScreen) return;
     _isPushingLockScreen = true;
 
     Navigator.of(context, rootNavigator: true)
@@ -75,39 +82,38 @@ class _AppLockManagerState extends State<AppLockManager> with WidgetsBindingObse
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('AppLockManager: build called');
     return Material(
       type: MaterialType.transparency,
       child: Stack(
-      children: [
-        widget.child,
-        if (_showBlur)
-          Positioned.fill(
-            child: ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Container(
-                  color: Colors.black.withValues(alpha: 0.15),
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(LucideIcons.lock, color: Colors.white, size: 48),
-                      const SizedBox(height: AppSpacing.s16),
-                      Text(
-                        context.translate('app_locked'),
-                        style: AppTextStyles.h2.copyWith(
-                          color: Colors.white,
+        children: [
+          widget.child,
+          if (_showBlur)
+            Positioned.fill(
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    color: Colors.black.withValues(alpha: 0.15),
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(LucideIcons.lock, color: Colors.white, size: 48),
+                        const SizedBox(height: AppSpacing.s16),
+                        Text(
+                          context.translate('app_locked'),
+                          style: AppTextStyles.h2.copyWith(
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-      ],
-    ),
+        ],
+      ),
     );
   }
 }

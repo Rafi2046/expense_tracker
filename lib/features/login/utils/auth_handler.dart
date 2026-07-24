@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:expense_tracker/core/providers/biometric_auth_provider.dart';
+import 'package:expense_tracker/core/providers/app_lock_provider.dart';
 import 'package:expense_tracker/core/services/auth_services.dart';
 import 'package:expense_tracker/core/services/sync_service.dart';
 import 'package:expense_tracker/features/bottom_navigation/pages/bottom_nav_screen.dart';
@@ -153,10 +154,17 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
   Future<void> handleGoogleLogin() async {
     setLoading(true);
     try {
-      final cred = await _authService.signInWithGoogle();
-      if (cred != null && context.mounted) {
-        _navigateAfterAuth(cred);
+      // Avoid app-lock overlay fighting Google's auth UI on resume.
+      if (mounted) {
+        context.read<AppLockProvider>().suppressNextLock();
       }
+      final cred = await _authService.signInWithGoogle();
+      if (!mounted || cred == null) return;
+      // Defer navigation until after Google UI fully dismisses the frame tree.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _navigateAfterAuth(cred);
+      });
     } catch (e) {
       showError(e);
     } finally {
@@ -167,10 +175,15 @@ mixin AuthHandler<T extends StatefulWidget> on State<T> {
   Future<void> handleAppleLogin() async {
     setLoading(true);
     try {
-      final cred = await _authService.signInWithApple();
-      if (cred != null && context.mounted) {
-        _navigateAfterAuth(cred);
+      if (mounted) {
+        context.read<AppLockProvider>().suppressNextLock();
       }
+      final cred = await _authService.signInWithApple();
+      if (!mounted || cred == null) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _navigateAfterAuth(cred);
+      });
     } catch (e) {
       showError(e);
     } finally {

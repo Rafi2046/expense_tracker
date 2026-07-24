@@ -182,17 +182,38 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
           newPhotoUrl = await snapshot.ref.getDownloadURL();
         } catch (e) {
           debugPrint('Error uploading profile photo: $e');
-          newPhotoUrl = _localImageFile!.path;
+          // Keep previous https URL — never Auth-update with a local path.
+          newPhotoUrl = user.photoURL ?? '';
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  context.translate('failed_update_profile', namedArgs: {
+                    'error': 'Photo upload failed. Check Storage rules.',
+                  }),
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
         }
       }
 
-      await SharedPrefsHelper.setString(
-        'local_profile_photo_${user.uid}',
-        newPhotoUrl,
-      );
+      if (newPhotoUrl.isNotEmpty && !newPhotoUrl.startsWith('http')) {
+        newPhotoUrl = user.photoURL ?? '';
+      }
+
+      if (newPhotoUrl.isNotEmpty) {
+        await SharedPrefsHelper.setString(
+          'local_profile_photo_${user.uid}',
+          newPhotoUrl,
+        );
+      }
 
       await user.updateDisplayName(newName);
-      await user.updatePhotoURL(newPhotoUrl);
+      if (newPhotoUrl.isEmpty || newPhotoUrl.startsWith('http')) {
+        await user.updatePhotoURL(newPhotoUrl.isEmpty ? null : newPhotoUrl);
+      }
       await user.reload();
 
       if (mounted) {

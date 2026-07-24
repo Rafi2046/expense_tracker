@@ -10,6 +10,10 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
+  /// True while Google/Apple auth UI is open (app may pause/resume).
+  /// AppLockManager must ignore lifecycle lock during this window.
+  static bool oauthInProgress = false;
+
   String _friendlyMessage(dynamic error) {
     if (error is SocketException) {
       return 'No internet connection. Please check your network and try again.';
@@ -98,6 +102,7 @@ class AuthService {
   bool _googleInitialized = false;
 
   Future<UserCredential?> signInWithGoogle() async {
+    AuthService.oauthInProgress = true;
     try {
       // Sign out first to force account picker to show (avoids stale session)
       try {
@@ -105,14 +110,23 @@ class AuthService {
       } catch (_) {}
 
       // initialize() only needs to be called once per app session.
-      // Android uses SHA-1 + google-services.json — no clientId needed.
+      // Android: SHA-1 + google-services.json (no clientId).
+      // iOS: native iOS OAuth clientId + web serverClientId for Firebase idToken.
       if (!_googleInitialized) {
-        if (!Platform.isAndroid) {
+        if (Platform.isIOS) {
           await _googleSignIn.initialize(
-            clientId: '1018341294472-on5co00vr8j4qadbqm3i70isbbfp7r26.apps.googleusercontent.com',
+            clientId:
+                '1018341294472-fimc4j5cm1cpvdfil0c7gujv88mm2e1e.apps.googleusercontent.com',
+            serverClientId:
+                '1018341294472-on5co00vr8j4qadbqm3i70isbbfp7r26.apps.googleusercontent.com',
           );
-        } else {
+        } else if (Platform.isAndroid) {
           await _googleSignIn.initialize();
+        } else {
+          await _googleSignIn.initialize(
+            clientId:
+                '1018341294472-on5co00vr8j4qadbqm3i70isbbfp7r26.apps.googleusercontent.com',
+          );
         }
         _googleInitialized = true;
       }
@@ -146,10 +160,13 @@ class AuthService {
     } catch (e) {
       _googleInitialized = false; // reset on unknown errors
       throw Exception(_friendlyMessage(e));
+    } finally {
+      AuthService.oauthInProgress = false;
     }
   }
 
   Future<UserCredential?> signInWithApple() async {
+    AuthService.oauthInProgress = true;
     try {
       final appleIdCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
@@ -194,6 +211,8 @@ class AuthService {
       throw Exception(_friendlyMessage(e));
     } catch (e) {
       throw Exception(_friendlyMessage(e));
+    } finally {
+      AuthService.oauthInProgress = false;
     }
   }
 
