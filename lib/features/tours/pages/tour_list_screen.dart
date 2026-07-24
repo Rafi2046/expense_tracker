@@ -201,69 +201,79 @@ class _TourListScreenState extends State<TourListScreen> {
       builder: (ctx) {
         final theme = Theme.of(context);
         final bottomInset = MediaQuery.of(context).padding.bottom;
-        return Container(
-          decoration: BoxDecoration(
-            color: theme.scaffoldBackgroundColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r16)),
+        return Material(
+          color: theme.scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(AppSpacing.r16),
           ),
-          padding: EdgeInsets.fromLTRB(0, AppSpacing.p16, 0, bottomInset + AppSpacing.p48),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: AppSpacing.p16),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade400,
-                  borderRadius: BorderRadius.circular(AppSpacing.r8),
-                ),
-              ),
-              ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(AppSpacing.p8),
+          clipBehavior: Clip.antiAlias,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+              0,
+              AppSpacing.p16,
+              0,
+              bottomInset + AppSpacing.p48,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: AppSpacing.p16),
                   decoration: BoxDecoration(
-                    color: AppColors.activeGreen.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppSpacing.r12),
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(AppSpacing.r8),
                   ),
-                  child: Icon(LucideIcons.plusCircle,
-                      color: AppColors.activeGreen, size: 24),
                 ),
-                title: Text(
-                  context.translate('create_new_tour'),
-                  style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
-                ),
-                onTap: () {
-                  Navigator.pop(ctx);
-                  _openCreateTourSheet();
-                },
-              ),
-              const SizedBox(height: AppSpacing.s4),
-              ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(AppSpacing.p8),
-                  decoration: BoxDecoration(
-                    color: AppColors.activeGreen.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppSpacing.r12),
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(AppSpacing.p8),
+                    decoration: BoxDecoration(
+                      color: AppColors.activeGreen.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(AppSpacing.r12),
+                    ),
+                    child: Icon(LucideIcons.plusCircle,
+                        color: AppColors.activeGreen, size: 24),
                   ),
-                  child: Icon(LucideIcons.qrCode,
-                      color: AppColors.activeGreen, size: 24),
+                  title: Text(
+                    context.translate('create_new_tour'),
+                    style: AppTextStyles.h3
+                        .copyWith(color: theme.colorScheme.onSurface),
+                  ),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _openCreateTourSheet();
+                  },
                 ),
-                title: Text(
-                  context.translate('join_invite_code'),
-                  style: AppTextStyles.h3.copyWith(color: theme.colorScheme.onSurface),
+                const SizedBox(height: AppSpacing.s4),
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(AppSpacing.p8),
+                    decoration: BoxDecoration(
+                      color: AppColors.activeGreen.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(AppSpacing.r12),
+                    ),
+                    child: Icon(LucideIcons.qrCode,
+                        color: AppColors.activeGreen, size: 24),
+                  ),
+                  title: Text(
+                    context.translate('join_invite_code'),
+                    style: AppTextStyles.h3
+                        .copyWith(color: theme.colorScheme.onSurface),
+                  ),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => const JoinTourSheet(),
+                    );
+                  },
                 ),
-                onTap: () {
-                  Navigator.pop(ctx);
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (_) => const JoinTourSheet(),
-                  );
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -294,7 +304,20 @@ class _TourListScreenState extends State<TourListScreen> {
     if (_lastProfileId != activeProfileId || _lastTourHash != currentHash) {
       _lastProfileId = activeProfileId;
       _lastTourHash = currentHash;
+      // Tours list may shrink (delete/sync) — keep page index in range.
+      if (tours.isEmpty) {
+        _currentPageIndex = 0;
+      } else if (_currentPageIndex >= tours.length) {
+        _currentPageIndex = tours.length - 1;
+        if (_pageController.hasClients) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted || !_pageController.hasClients) return;
+            _pageController.jumpToPage(_currentPageIndex);
+          });
+        }
+      }
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
         _loadCounts();
         _loadInsights(_currentPageIndex);
       });
@@ -350,6 +373,20 @@ class _TourListScreenState extends State<TourListScreen> {
   }
 
   Widget _buildTourListContent(ThemeData theme, List<Tour> tours) {
+    final pageIndex = tours.isEmpty
+        ? 0
+        : _currentPageIndex.clamp(0, tours.length - 1);
+    if (pageIndex != _currentPageIndex) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        setState(() => _currentPageIndex = pageIndex);
+        if (_pageController.hasClients) {
+          _pageController.jumpToPage(pageIndex);
+        }
+        _loadInsights(pageIndex);
+      });
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return SingleChildScrollView(
@@ -410,7 +447,9 @@ class _TourListScreenState extends State<TourListScreen> {
                                   transitionDuration:
                                   const Duration(milliseconds: 300),
                                 ),
-                              );
+                              ).then((_) {
+                                if (mounted) _loadCounts();
+                              });
                             },
                           ),
                         );
@@ -422,7 +461,7 @@ class _TourListScreenState extends State<TourListScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: tours.asMap().entries.map((entry) {
                       final i = entry.key;
-                      final isActive = i == _currentPageIndex;
+                      final isActive = i == pageIndex;
                       return AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
@@ -443,7 +482,7 @@ class _TourListScreenState extends State<TourListScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p16),
                     child: TourInsightsCard(
                       insights: _insights,
-                      currency: tours[_currentPageIndex].currency,
+                      currency: tours[pageIndex].currency,
                       isLoading: _insightsLoading,
                     ),
                   ),

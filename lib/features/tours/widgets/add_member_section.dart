@@ -70,30 +70,38 @@ class AddMemberSection extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.h16),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: List.generate(presetColors.length, (index) {
-                  return GestureDetector(
-                    onTap: () => onColorSelected(index),
-                    child: Container(
-                      margin: const EdgeInsets.only(right: AppSpacing.m8),
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        color: presetColors[index],
-                        shape: BoxShape.circle,
-                        border: selectedColorIndex == index
-                            ? Border.all(
-                                color: theme.colorScheme.onSurface,
-                                width: 2.5,
-                              )
-                            : null,
-                      ),
-                    ),
-                  );
-                }),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(presetColors.length, (index) {
+                      final isLast = index == presetColors.length - 1;
+                      return GestureDetector(
+                        onTap: () => onColorSelected(index),
+                        child: Container(
+                          margin: EdgeInsets.only(
+                            right: isLast ? 0 : AppSpacing.m8,
+                          ),
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: presetColors[index],
+                            shape: BoxShape.circle,
+                            border: selectedColorIndex == index
+                                ? Border.all(
+                                    color: theme.colorScheme.onSurface,
+                                    width: 2.5,
+                                  )
+                                : null,
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
               ),
+              const SizedBox(width: AppSpacing.w8),
               ElevatedButton(
                 onPressed: onAddMember,
                 style: ElevatedButton.styleFrom(

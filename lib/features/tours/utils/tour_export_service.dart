@@ -292,24 +292,33 @@ class TourExportService {
           children: [
             Row(
               children: [
-                _buildPersonBadge(from, true),
-                const Spacer(),
-                Column(
-                  children: [
-                    Icon(
-                      LucideIcons.arrowDown,
-                      size: 18,
-                      color: AppColors.activeGreen,
-                    ),
-                    Text(
-                      _formatAmount(s.amount, currency),
-                      style: AppTextStyles.h3.copyWith(fontFamily: GoogleFonts.jetBrainsMono().fontFamily, fontWeight: FontWeight.w800,
-                        color: AppColors.activeGreen),
-                    ),
-                  ],
+                Expanded(child: _buildPersonBadge(from, true)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.p8),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        LucideIcons.arrowDown,
+                        size: 16,
+                        color: AppColors.activeGreen,
+                      ),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          _formatAmount(s.amount, currency),
+                          maxLines: 1,
+                          style: AppTextStyles.h3.copyWith(
+                            fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.activeGreen,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                const Spacer(),
-                _buildPersonBadge(to, false),
+                Expanded(child: _buildPersonBadge(to, false)),
               ],
             ),
           ],
@@ -325,24 +334,27 @@ class TourExportService {
     final textColor = isPayer ? AppColors.activeRed : AppColors.activeGreen;
 
     return Row(
-      mainAxisSize: MainAxisSize.min,
       children: [
         CircleAvatar(
-          radius: 16,
+          radius: 14,
           backgroundColor: bgColor,
           child: Text(
-            name.isNotEmpty ? String.fromCharCode(name.runes.first).toUpperCase() : '?',
+            name.isNotEmpty
+                ? String.fromCharCode(name.runes.first).toUpperCase()
+                : '?',
             style: AppTextStyles.bodyBold.copyWith(
               fontWeight: FontWeight.w700,
-              color: textColor),
+              color: textColor,
+            ),
           ),
         ),
-        const SizedBox(width: AppSpacing.s8),
-        Flexible(
+        const SizedBox(width: AppSpacing.s4),
+        Expanded(
           child: Text(
             name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+            textAlign: isPayer ? TextAlign.left : TextAlign.right,
             style: AppTextStyles.bodySmall.copyWith(
               fontWeight: FontWeight.w600,
               color: const Color(0xFF374151),

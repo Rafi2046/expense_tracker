@@ -112,14 +112,44 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 _buildSection(
                   context,
                   theme,
+                  context.translate('account_auth'),
+                  context.translate('account_auth_body'),
+                ),
+                _buildSection(
+                  context,
+                  theme,
                   context.translate('firebase_backup'),
                   context.translate('firebase_backup_body'),
                 ),
                 _buildSection(
                   context,
                   theme,
+                  context.translate('tours_shared_data'),
+                  context.translate('tours_shared_data_body'),
+                ),
+                _buildSection(
+                  context,
+                  theme,
+                  context.translate('photos_media'),
+                  context.translate('photos_media_body'),
+                ),
+                _buildSection(
+                  context,
+                  theme,
+                  context.translate('device_permissions'),
+                  context.translate('device_permissions_body'),
+                ),
+                _buildSection(
+                  context,
+                  theme,
                   context.translate('security_encryption'),
                   context.translate('security_encryption_body'),
+                ),
+                _buildSection(
+                  context,
+                  theme,
+                  context.translate('third_party_services'),
+                  context.translate('third_party_services_body'),
                 ),
                 _buildSection(
                   context,
@@ -132,6 +162,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   theme,
                   context.translate('rights_deletion'),
                   context.translate('rights_deletion_body'),
+                ),
+                _buildSection(
+                  context,
+                  theme,
+                  context.translate('children_privacy'),
+                  context.translate('children_privacy_body'),
                 ),
                 _buildSection(
                   context,

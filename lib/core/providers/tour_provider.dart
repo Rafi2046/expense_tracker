@@ -114,8 +114,9 @@ class TourProvider extends ChangeNotifier {
         _initRealTimeListenerForTour(tour.id);
       }
 
-      // 4. Upload any covers that only exist locally so other devices see them
+      // 4. Upload any covers / receipts that only exist locally so other devices see them
       await _healMissingCloudCovers();
+      await _healMissingCloudReceipts();
     } catch (e) {
       debugPrint('TourProvider._loadTours error: $e');
     } finally {
@@ -165,6 +166,65 @@ class TourProvider extends ChangeNotifier {
     );
     final TaskSnapshot snapshot = await uploadTask;
     return await snapshot.ref.getDownloadURL();
+  }
+
+  /// Uploads one expense receipt to Storage (`b64:` or legacy file path).
+  Future<String> _uploadExpenseReceipt(
+    String tourId,
+    String expenseId,
+    int index,
+    String value,
+  ) async {
+    final storageRef = FirebaseStorage.instance
+        .ref()
+        .child('tour_receipts')
+        .child(tourId)
+        .child('${expenseId}_$index.jpg');
+
+    if (TourImageCodec.isBase64(value)) {
+      final bytes = TourImageCodec.decode(value);
+      if (bytes == null || bytes.isEmpty) {
+        throw Exception('Receipt Base64 is empty or invalid');
+      }
+      final TaskSnapshot snapshot = await storageRef.putData(
+        bytes,
+        SettableMetadata(contentType: 'image/jpeg'),
+      );
+      return await snapshot.ref.getDownloadURL();
+    }
+
+    String cleanedPath = value;
+    if (cleanedPath.startsWith('file://')) {
+      cleanedPath = cleanedPath.replaceFirst('file://', '');
+    }
+    final file = File(cleanedPath);
+    if (!await file.exists()) {
+      throw Exception('Receipt file does not exist locally: $cleanedPath');
+    }
+
+    final TaskSnapshot snapshot = await storageRef.putFile(
+      file,
+      SettableMetadata(contentType: 'image/jpeg'),
+    );
+    return await snapshot.ref.getDownloadURL();
+  }
+
+  /// Prefer cloud https receipts; otherwise keep usable local Base64/file paths.
+  List<String> _mergeReceiptPaths({
+    required List<String> cloud,
+    required List<String> local,
+  }) {
+    final cloudHttp = cloud.where((p) => p.startsWith('http')).toList();
+    if (cloudHttp.isNotEmpty) return cloudHttp;
+
+    final localUsable = local
+        .where((p) => TourImageCodec.detect(p) != TourImageSourceKind.none)
+        .toList();
+    if (localUsable.isNotEmpty) return localUsable;
+
+    return cloud
+        .where((p) => TourImageCodec.detect(p) != TourImageSourceKind.none)
+        .toList();
   }
 
   Future<void> createTour(Tour tour) async {
@@ -470,7 +530,9 @@ class TourProvider extends ChangeNotifier {
             .collection('expenses')
             .get();
         expenses = expenseSnapshot.docs
-            .map((doc) => TourExpense.fromMap(doc.id, doc.data()))
+            .map(
+              (doc) => _expenseFromCloudDoc(tour.id, doc.id, doc.data()),
+            )
             .toList();
 
         final expenseIds = expenses.map((e) => e.id).toList();
@@ -626,11 +688,54 @@ class TourProvider extends ChangeNotifier {
 
   // ─── Tour detail loading ────────────────────────────────────────────
 
+  /// Firestore expense docs often omit `tourId` (parent path is enough).
+  /// Always inject the parent tour id so local SQLite never stores blank tourId.
+  TourExpense _expenseFromCloudDoc(
+    String tourId,
+    String docId,
+    Map<String, dynamic> data,
+  ) {
+    final map = Map<String, dynamic>.from(data);
+    map['tourId'] = tourId;
+    return TourExpense.fromMap(docId, map);
+  }
+
+  /// Re-link expenses whose tourId was wiped by older cloud sync bugs.
+  Future<void> _reattachOrphanExpenses(String tourId) async {
+    try {
+      final db = await _db.database;
+      final cloudSnap = await _sharedToursCollection
+          .doc(tourId)
+          .collection('expenses')
+          .get();
+      for (final doc in cloudSnap.docs) {
+        await db.update(
+          'tour_expenses',
+          {'tourId': tourId, 'isDeleted': 0},
+          where: 'id = ?',
+          whereArgs: [doc.id],
+        );
+      }
+      // If this is the only tour, reclaim any leftover blank-tourId expenses.
+      if (_tours.length == 1 && _tours.first.id == tourId) {
+        await db.update(
+          'tour_expenses',
+          {'tourId': tourId, 'isDeleted': 0},
+          where: "tourId IS NULL OR tourId = ''",
+        );
+      }
+    } catch (e) {
+      debugPrint('Failed to reattach orphan expenses: $e');
+    }
+  }
+
   Future<void> selectTour(String tourId) async {
     _selectedTourId = tourId;
     _isLoading = true;
     notifyListeners();
+    await _reattachOrphanExpenses(tourId);
     await _loadTourDetails(tourId);
+    _initRealTimeListenerForTour(tourId);
   }
 
   Future<void> _loadTourDetails(String tourId) async {
@@ -643,9 +748,14 @@ class TourProvider extends ChangeNotifier {
         whereArgs: [tourId],
         orderBy: 'joinedAt ASC',
       );
-      _participants = participantMaps
-          .map((m) => TourParticipant.fromJson(m))
-          .toList();
+      _participants = [];
+      for (final m in participantMaps) {
+        try {
+          _participants.add(TourParticipant.fromJson(m));
+        } catch (e) {
+          debugPrint('TourProvider: skip bad participant row: $e');
+        }
+      }
 
       final expenseMaps = await db.query(
         'tour_expenses',
@@ -653,7 +763,80 @@ class TourProvider extends ChangeNotifier {
         whereArgs: [tourId],
         orderBy: 'date DESC',
       );
-      _expenses = expenseMaps.map((m) => TourExpense.fromJson(m)).toList();
+      _expenses = [];
+      for (final m in expenseMaps) {
+        try {
+          _expenses.add(TourExpense.fromJson(m));
+        } catch (e) {
+          debugPrint('TourProvider: skip bad expense row ${m['id']}: $e');
+        }
+      }
+
+      // If active rows failed to parse but deleted/legacy rows still have spend,
+      // revive soft-deleted rows that look like false wipes from sync.
+      if (_expenses.isEmpty) {
+        final sumRows = await db.rawQuery(
+          'SELECT COALESCE(SUM(amount), 0) as total, COUNT(*) as cnt '
+          'FROM tour_expenses WHERE tourId = ?',
+          [tourId],
+        );
+        final total = (sumRows.first['total'] as num?)?.toDouble() ?? 0;
+        final cnt = (sumRows.first['cnt'] as num?)?.toInt() ?? 0;
+        if (cnt > 0 && total > 0) {
+          debugPrint(
+            'TourProvider: repairing expenses for $tourId '
+            '(found $cnt rows / $total total with no active parseable rows)',
+          );
+          await db.update(
+            'tour_expenses',
+            {'isDeleted': 0},
+            where: 'tourId = ?',
+            whereArgs: [tourId],
+          );
+          await db.rawUpdate(
+            'UPDATE tour_expense_shares SET isDeleted = 0 '
+            'WHERE expenseId IN (SELECT id FROM tour_expenses WHERE tourId = ?)',
+            [tourId],
+          );
+          final repaired = await db.query(
+            'tour_expenses',
+            where: 'tourId = ? AND isDeleted = 0',
+            whereArgs: [tourId],
+            orderBy: 'date DESC',
+          );
+          for (final m in repaired) {
+            try {
+              _expenses.add(TourExpense.fromJson(m));
+            } catch (e) {
+              debugPrint('TourProvider: skip repaired expense ${m['id']}: $e');
+            }
+          }
+        }
+      }
+
+      // Last resort: blank tourId orphans that match this tour's cloud ids
+      // were already reattached in selectTour; also pull any remaining blanks
+      // when this is the only tour.
+      if (_expenses.isEmpty && _tours.length == 1 && _tours.first.id == tourId) {
+        final blankMaps = await db.query(
+          'tour_expenses',
+          where: "(tourId IS NULL OR tourId = '') AND isDeleted = 0",
+        );
+        for (final m in blankMaps) {
+          try {
+            final e = TourExpense.fromJson(m).copyWith(tourId: tourId);
+            await db.update(
+              'tour_expenses',
+              {'tourId': tourId},
+              where: 'id = ?',
+              whereArgs: [e.id],
+            );
+            _expenses.add(e);
+          } catch (e) {
+            debugPrint('TourProvider: skip blank-tourId expense: $e');
+          }
+        }
+      }
 
       final expenseIds = _expenses.map((e) => e.id).toList();
       if (expenseIds.isNotEmpty) {
@@ -662,7 +845,14 @@ class TourProvider extends ChangeNotifier {
           'SELECT * FROM tour_expense_shares WHERE expenseId IN ($placeholders) AND isDeleted = 0',
           expenseIds,
         );
-        _shares = shareMaps.map((m) => TourExpenseShare.fromJson(m)).toList();
+        _shares = [];
+        for (final m in shareMaps) {
+          try {
+            _shares.add(TourExpenseShare.fromJson(m));
+          } catch (e) {
+            debugPrint('TourProvider: skip bad share row: $e');
+          }
+        }
       } else {
         _shares.clear();
       }
@@ -673,13 +863,22 @@ class TourProvider extends ChangeNotifier {
         whereArgs: [tourId],
         orderBy: 'date ASC',
       );
-      _settlements = settlementMaps
-          .map((m) => TourSettlement.fromJson(m))
-          .toList();
+      _settlements = [];
+      for (final m in settlementMaps) {
+        try {
+          _settlements.add(TourSettlement.fromJson(m));
+        } catch (e) {
+          debugPrint('TourProvider: skip bad settlement row: $e');
+        }
+      }
 
       // Reconcile participants AFTER all data is loaded so
       // paidBy/participantId reassignments actually take effect.
       _reconcileParticipants(tourId);
+      debugPrint(
+        'TourProvider._loadTourDetails($tourId): '
+        '${_expenses.length} expenses, ${_participants.length} members',
+      );
     } catch (e) {
       debugPrint('TourProvider._loadTourDetails error: $e');
     } finally {
@@ -885,7 +1084,11 @@ class TourProvider extends ChangeNotifier {
       }
     });
     await refreshTourData();
-    _syncExpenseToFirestore(expense, shares);
+    try {
+      await _syncExpenseToFirestore(expense, shares);
+    } catch (e) {
+      debugPrint('TourProvider.addExpense sync error: $e');
+    }
     return true;
   }
 
@@ -924,7 +1127,11 @@ class TourProvider extends ChangeNotifier {
       }
     });
     await refreshTourData();
-    _syncExpenseToFirestore(expense, shares);
+    try {
+      await _syncExpenseToFirestore(expense, shares);
+    } catch (e) {
+      debugPrint('TourProvider.updateExpense sync error: $e');
+    }
     return true;
   }
 
@@ -1432,14 +1639,86 @@ class TourProvider extends ChangeNotifier {
             .doc(tour.id)
             .collection('expenses')
             .get();
-        final expenses = expenseSnapshot.docs
-            .map((doc) => TourExpense.fromMap(doc.id, doc.data()))
-            .toList();
+        final expenses = <TourExpense>[];
+        final cloudIds = <String>{};
+        for (final doc in expenseSnapshot.docs) {
+          try {
+            var expense = _expenseFromCloudDoc(tour.id, doc.id, doc.data());
+            cloudIds.add(expense.id);
+            final localMaps = await db.query(
+              'tour_expenses',
+              where: 'id = ?',
+              whereArgs: [expense.id],
+            );
+            if (localMaps.isNotEmpty) {
+              final local = TourExpense.fromJson(localMaps.first);
+              // Never let a stale/soft-deleted cloud doc wipe active local spend.
+              if (expense.isDeleted && !local.isDeleted) {
+                expenses.add(
+                  local.copyWith(
+                    tourId: tour.id,
+                    receiptPaths: _mergeReceiptPaths(
+                      cloud: expense.receiptPaths,
+                      local: local.receiptPaths,
+                    ),
+                  ),
+                );
+                continue;
+              }
+              expense = expense.copyWith(
+                tourId: tour.id,
+                receiptPaths: _mergeReceiptPaths(
+                  cloud: expense.receiptPaths,
+                  local: local.receiptPaths,
+                ),
+              );
+            }
+            if (!expense.isDeleted) {
+              expenses.add(expense);
+            }
+          } catch (e) {
+            debugPrint(
+              'TourProvider._syncToursFromFirestore skip expense ${doc.id}: $e',
+            );
+          }
+        }
 
-        final shares = expenses
-            .where((e) => e.shares != null)
-            .expand((e) => e.shares!)
-            .toList();
+        // Keep local-only expenses that were never (or not yet) on cloud.
+        final localExpenseMaps = await db.query(
+          'tour_expenses',
+          where: 'tourId = ? AND isDeleted = 0',
+          whereArgs: [tour.id],
+        );
+        for (final m in localExpenseMaps) {
+          try {
+            final local = TourExpense.fromJson(m);
+            if (!cloudIds.contains(local.id)) {
+              expenses.add(local);
+            }
+          } catch (_) {}
+        }
+
+        final shares = <TourExpenseShare>[];
+        for (final e in expenses) {
+          if (e.shares != null) shares.addAll(e.shares!);
+        }
+        // Also pull local shares for local-only / merged expenses.
+        if (expenses.isNotEmpty) {
+          final ids = expenses.map((e) => e.id).toList();
+          final placeholders = ids.map((_) => '?').join(',');
+          final shareMaps = await db.rawQuery(
+            'SELECT * FROM tour_expense_shares '
+            'WHERE expenseId IN ($placeholders) AND isDeleted = 0',
+            ids,
+          );
+          final seen = shares.map((s) => s.id).toSet();
+          for (final m in shareMaps) {
+            try {
+              final s = TourExpenseShare.fromJson(m);
+              if (seen.add(s.id)) shares.add(s);
+            } catch (_) {}
+          }
+        }
 
         await localService.saveJoinedTourLocally(
           updatedTour,
@@ -1585,15 +1864,125 @@ class TourProvider extends ChangeNotifier {
     if (changed) notifyListeners();
   }
 
+  /// Re-upload any expense receipts that only exist locally (Base64/file).
+  Future<void> _healMissingCloudReceipts() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    try {
+      final db = await _db.database;
+      final maps = await db.query(
+        'tour_expenses',
+        where: 'isDeleted = 0',
+      );
+      var changed = false;
+      for (final map in maps) {
+        final expense = TourExpense.fromJson(map);
+        final needsUpload = expense.receiptPaths.any(
+          (p) =>
+              !p.startsWith('http') &&
+              TourImageCodec.detect(p) != TourImageSourceKind.none,
+        );
+        if (!needsUpload) continue;
+
+        final shareMaps = await db.query(
+          'tour_expense_shares',
+          where: 'expenseId = ?',
+          whereArgs: [expense.id],
+        );
+        final shares =
+            shareMaps.map((m) => TourExpenseShare.fromJson(m)).toList();
+        try {
+          await _syncExpenseToFirestore(expense, shares);
+          changed = true;
+        } catch (e) {
+          debugPrint(
+            'TourProvider._healMissingCloudReceipts (${expense.id}): $e',
+          );
+        }
+      }
+      if (changed && _selectedTourId != null) {
+        await _loadTourDetails(_selectedTourId!);
+      } else if (changed) {
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('TourProvider._healMissingCloudReceipts error: $e');
+    }
+  }
+
+  Future<TourExpense> _ensureReceiptsUploaded(TourExpense expense) async {
+    if (expense.receiptPaths.isEmpty) return expense;
+
+    final updated = <String>[];
+    var changed = false;
+    for (var i = 0; i < expense.receiptPaths.length; i++) {
+      final path = expense.receiptPaths[i];
+      if (path.startsWith('http')) {
+        updated.add(path);
+        continue;
+      }
+      if (TourImageCodec.detect(path) == TourImageSourceKind.none) {
+        continue;
+      }
+      try {
+        final url = await _uploadExpenseReceipt(
+          expense.tourId,
+          expense.id,
+          i,
+          path,
+        );
+        updated.add(url);
+        changed = true;
+      } catch (e) {
+        debugPrint(
+          'TourProvider._ensureReceiptsUploaded (${expense.id} #$i): $e',
+        );
+        // Keep local value so the device still shows the receipt.
+        updated.add(path);
+      }
+    }
+
+    if (!changed) return expense.copyWith(receiptPaths: updated);
+
+    final withUrls = expense.copyWith(receiptPaths: updated);
+    final db = await _db.database;
+    await db.update(
+      'tour_expenses',
+      withUrls.toJson(),
+      where: 'id = ?',
+      whereArgs: [expense.id],
+    );
+    final idx = _expenses.indexWhere((e) => e.id == expense.id);
+    if (idx != -1) {
+      _expenses[idx] = withUrls;
+    }
+    return withUrls;
+  }
+
   Future<void> _syncExpenseToFirestore(
     TourExpense expense,
     List<TourExpenseShare> shares,
   ) async {
+    // Upload local receipts to Storage first — never push multi-MB Base64
+    // into Firestore (hits 1MB limit and then cloud pulls wipe local copies).
+    final withShares = expense.copyWith(shares: shares);
+    final toSync = await _ensureReceiptsUploaded(withShares);
+    final map = toSync.toMap();
+    final httpOnly =
+        toSync.receiptPaths.where((p) => p.startsWith('http')).toList();
+    if (httpOnly.isEmpty) {
+      // Don't overwrite an existing cloud receipt field with empty/Base64.
+      map.remove('receiptPath');
+    } else {
+      // Native list is easier for other clients / decode paths.
+      map['receiptPath'] = httpOnly;
+    }
     await _sharedToursCollection
-        .doc(expense.tourId)
+        .doc(toSync.tourId)
         .collection('expenses')
-        .doc(expense.id)
-        .set(expense.copyWith(shares: shares).toMap());
+        .doc(toSync.id)
+        .set(map, SetOptions(merge: true));
   }
 
   Future<void> _syncSettlementToFirestore(TourSettlement settlement) async {
@@ -1770,9 +2159,34 @@ class TourProvider extends ChangeNotifier {
           try {
             final data = change.doc.data();
             if (data == null) continue;
-            final expense = TourExpense.fromMap(change.doc.id, data);
+            var expense = _expenseFromCloudDoc(tourId, change.doc.id, data);
+            final db = await _db.database;
+            final localMaps = await db.query(
+              'tour_expenses',
+              where: 'id = ?',
+              whereArgs: [expense.id],
+            );
+            if (localMaps.isNotEmpty) {
+              final local = TourExpense.fromJson(localMaps.first);
+              if (expense.isDeleted && !local.isDeleted) {
+                // Keep active local expense; ignore stale cloud soft-delete.
+                continue;
+              }
+              expense = expense.copyWith(
+                tourId: tourId,
+                receiptPaths: _mergeReceiptPaths(
+                  cloud: expense.receiptPaths,
+                  local: local.receiptPaths,
+                ),
+              );
+            }
             final shares = expense.shares ?? [];
-            await localService.upsertExpenseWithShares(expense, shares);
+            await localService.upsertExpenseWithShares(
+              expense.tourId.isEmpty
+                  ? expense.copyWith(tourId: tourId)
+                  : expense,
+              shares,
+            );
             if (change.type == DocumentChangeType.modified &&
                 expense.isDeleted &&
                 tourOwnerUid != null &&

@@ -42,9 +42,11 @@ class TourLocalService {
       }
 
       for (final e in expenses) {
+        // Never persist blank tourId — Firestore expense docs often omit it.
+        final row = e.tourId.isEmpty ? e.copyWith(tourId: tour.id) : e;
         await txn.insert(
           'tour_expenses',
-          e.toJson(),
+          row.toJson(),
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
       }

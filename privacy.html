@@ -13,7 +13,6 @@
       --primary: #0C4E3C;
       --mint: #2EBD85;
       --bg: #F4F6F9;
-      --cream: #F7F3EB;
       --card: #FFFFFF;
       --text: #0F172A;
       --muted: #64748B;
@@ -88,7 +87,7 @@
     }
 
     .hero {
-      background: linear-gradient(160deg, var(--cream) 0%, #fff 55%);
+      background: linear-gradient(160deg, #E8F8F5 0%, #fff 55%);
       border: 1px solid var(--border);
       border-radius: 24px;
       padding: 32px 28px;
@@ -153,6 +152,8 @@
       font-weight: 450;
     }
 
+    a { color: var(--primary); font-weight: 600; }
+
     footer {
       max-width: 800px;
       margin: 28px auto 0;
@@ -186,65 +187,121 @@
     <div class="hero">
       <span class="badge">Legal</span>
       <h1>Privacy Policy</h1>
-      <p class="meta">Last updated: July 2026</p>
+      <p class="meta">Last updated: July 24, 2026</p>
     </div>
 
     <article class="card">
       <section class="section">
-        <h2>1. Data Ownership &amp; Storage</h2>
+        <h2>1. Data Ownership &amp; Local Storage</h2>
         <p>
-          Your financial records, transactions, notes, and profiles are stored locally on your device’s secure database.
-          We do not transmit or process your financial information on external servers, except when you choose to use our cloud backup and sync service.
+          Budget Mint is built offline-first. Your financial records — including transactions, accounts, budgets, debts, categories, notes, and finance profiles — are stored locally in a secure database on your device.
+          Local data stays on your device unless you sign in so that cloud backup and sync can run.
         </p>
       </section>
 
       <section class="section">
-        <h2>2. Firebase Cloud Backup &amp; Sync</h2>
+        <h2>2. Account &amp; Authentication</h2>
         <p>
-          If you choose to log in and enable cloud synchronization, your transactions, categories, budgets, and profile data are backed up to secure Firebase servers (Cloud Firestore).
-          This data is strictly used to synchronize your entries across devices and is encrypted in transit and at rest.
+          To use cloud features you may create an account with email and password, or sign in with Google or Apple.
+          Depending on the method you choose, we may process your email address, display name, and profile photo.
+          Optional personal details you enter in Settings (such as phone number, date of birth, gender, or occupation) are stored to personalize your account and are synced with your cloud profile when signed in.
         </p>
       </section>
 
       <section class="section">
-        <h2>3. Security &amp; Encryption</h2>
+        <h2>3. Cloud Backup &amp; Sync</h2>
         <p>
-          Your local database is stored in your device’s isolated storage directory, accessible only by this application.
-          When biometric security (Face ID / Touch ID) is enabled, access is protected using your device’s native secure enclave.
-          We never collect or store your biometric credentials.
+          When you are signed in, Budget Mint backs up and syncs your app data to Google Firebase (Cloud Firestore) so you can restore it on another device.
+          This may include transactions, categories, budgets, debts, profiles, and related settings.
+          Sync is used only to provide the backup and multi-device experience. Data is transmitted over encrypted connections and stored using Firebase security controls.
         </p>
       </section>
 
       <section class="section">
-        <h2>4. No Selling or Sharing</h2>
+        <h2>4. Tours &amp; Shared Group Data</h2>
         <p>
-          We do not sell, rent, lease, or share your financial logs, personal email, display name, or profile configurations with any third-party advertisers, companies, or analytics networks.
+          If you create or join a Tour (group trip / shared expenses), tour details — such as the tour name, members, expenses, settlements, invite code, and related notes — are stored in the cloud so every participant can see the shared ledger.
+          Other members of that Tour can view shared tour information you contribute.
+          Do not add sensitive personal data to a Tour that you are not comfortable sharing with its members.
         </p>
       </section>
 
       <section class="section">
-        <h2>5. Your Rights &amp; Data Deletion</h2>
+        <h2>5. Photos &amp; Media</h2>
         <p>
-          You retain ownership and control over your data. At any time, you can clear transactions, delete custom profiles, or delete your entire account and synced backups from the Settings menu.
-          Once deleted, the action cannot be undone and your data is permanently wiped from our databases.
+          With your permission, Budget Mint may access your camera or photo library so you can set a profile photo, tour cover image, or expense receipt.
+          Images you upload for cloud features may be stored in Firebase Storage and linked to your account or shared Tour.
+          You can remove or replace these images from within the app where editing is available.
         </p>
       </section>
 
       <section class="section">
-        <h2>6. Policy Changes &amp; Updates</h2>
+        <h2>6. Device Permissions &amp; Notifications</h2>
         <p>
-          We may update this Privacy Policy from time to time. Changes will be posted on this page.
-          We encourage you to review it periodically to stay informed about how we protect your information.
+          Depending on your device and choices, Budget Mint may request access to biometrics (Face ID / fingerprint), camera, photos, and notification permission.
+          Local notifications (for example budget alerts or spending summaries) are scheduled on your device.
+          We do not collect or store your biometric templates — unlocking uses your device’s secure hardware.
         </p>
       </section>
 
       <section class="section">
-        <h2>7. Contact &amp; Support</h2>
+        <h2>7. Security &amp; Encryption</h2>
         <p>
-          If you have questions about this Privacy Policy or your data, contact our support team from the Settings menu in the Budget Mint app, or email us directly.
-          <!-- Replace with your real support email when ready:
-          <a href="mailto:support@budgetmint.app">support@budgetmint.app</a>
-          -->
+          Your local database lives in the app’s isolated storage, accessible only to Budget Mint on your device.
+          Network traffic to Firebase uses encrypted transport (HTTPS/TLS).
+          When biometric lock is enabled, opening the app requires your device authentication.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>8. Third-Party Services</h2>
+        <p>
+          We use Google Firebase for authentication, database sync, and file storage, and may use Google Sign-In or Sign in with Apple for account login.
+          These providers process data according to their own privacy policies.
+          Budget Mint does not integrate third-party advertising SDKs or sell your data to advertisers.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>9. No Selling or Unrelated Sharing</h2>
+        <p>
+          We do not sell, rent, or lease your financial data, email, or profile information to advertisers or data brokers.
+          We share data only as needed to operate the app: with Firebase/Google/Apple for auth and sync, and with other Tour members for shared Tours you join or create.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>10. Your Rights &amp; Data Deletion</h2>
+        <p>
+          You control your data. You can edit or delete transactions, profiles, and many records inside the app.
+          You can delete your entire account from Settings (Danger Zone), which removes your account and associated cloud backups we maintain.
+          Shared Tour records may remain visible to other members where needed for an active group ledger until that Tour data is removed by its participants or host processes.
+          Deletion of your account cannot be undone.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>11. Children’s Privacy</h2>
+        <p>
+          Budget Mint is intended for general audiences managing personal or household finances.
+          It is not directed at children under 13 (or the minimum age required in your country).
+          If you believe a child has provided personal data, contact us and we will take appropriate steps to delete it.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>12. Policy Changes &amp; Updates</h2>
+        <p>
+          We may update this Privacy Policy from time to time. The “Last Updated” date at the top will change when we do.
+          Continued use of Budget Mint after an update means you acknowledge the revised policy. Please review this page periodically.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>13. Contact &amp; Support</h2>
+        <p>
+          Questions about this Privacy Policy or your data? Reach us from Settings → Help Center in the Budget Mint app, or email
+          <a href="mailto:support@budgetmint.app">support@budgetmint.app</a>.
         </p>
       </section>
     </article>

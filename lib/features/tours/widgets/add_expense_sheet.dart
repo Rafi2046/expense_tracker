@@ -309,48 +309,51 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => Container(
-        padding: const EdgeInsets.all(AppSpacing.p16),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.r24)),
+      builder: (ctx) => Material(
+        color: theme.colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.r24),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: theme.dividerColor.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(AppSpacing.r8),
+        clipBehavior: Clip.antiAlias,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.p16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: theme.dividerColor.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(AppSpacing.r8),
+                ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.s16),
-            Text(
-              context.translate('attach_receipt'),
-              style: AppTextStyles.h2.copyWith(
-                color: theme.colorScheme.onSurface,
+              const SizedBox(height: AppSpacing.s16),
+              Text(
+                context.translate('attach_receipt'),
+                style: AppTextStyles.h2.copyWith(
+                  color: theme.colorScheme.onSurface,
+                ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.s16),
-            _buildReceiptOption(
-              ctx,
-              theme,
-              LucideIcons.camera,
-              context.translate('take_photo'),
-              ImageSource.camera,
-            ),
-            const SizedBox(height: AppSpacing.s4),
-            _buildReceiptOption(
-              ctx,
-              theme,
-              LucideIcons.image,
-              context.translate('choose_from_gallery'),
-              ImageSource.gallery,
-            ),
-            const SizedBox(height: AppSpacing.s8),
-          ],
+              const SizedBox(height: AppSpacing.s16),
+              _buildReceiptOption(
+                ctx,
+                theme,
+                LucideIcons.camera,
+                context.translate('take_photo'),
+                ImageSource.camera,
+              ),
+              const SizedBox(height: AppSpacing.s4),
+              _buildReceiptOption(
+                ctx,
+                theme,
+                LucideIcons.image,
+                context.translate('choose_from_gallery'),
+                ImageSource.gallery,
+              ),
+              const SizedBox(height: AppSpacing.s8),
+            ],
+          ),
         ),
       ),
     );

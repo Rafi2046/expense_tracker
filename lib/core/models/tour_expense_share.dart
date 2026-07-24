@@ -66,12 +66,18 @@ class TourExpenseShare {
   /// Parses a share embedded within an expense document (id is read from the map).
   factory TourExpenseShare.fromEmbeddedMap(Map<String, dynamic> map) =>
       TourExpenseShare(
-        id: map['id'] as String,
-        expenseId: map['expenseId'] as String,
-        participantId: map['participantId'] as String,
-        shareAmount: (map['shareAmount'] as num).toDouble(),
-        customValue: (map['customValue'] as num?)?.toDouble(),
-        isExcluded: map['isExcluded'] as bool? ?? false,
+        id: (map['id'] ?? '').toString(),
+        expenseId: (map['expenseId'] ?? '').toString(),
+        participantId: (map['participantId'] ?? '').toString(),
+        shareAmount: (map['shareAmount'] is num)
+            ? (map['shareAmount'] as num).toDouble()
+            : double.tryParse('${map['shareAmount']}') ?? 0.0,
+        customValue: map['customValue'] is num
+            ? (map['customValue'] as num).toDouble()
+            : double.tryParse('${map['customValue']}'),
+        isExcluded: map['isExcluded'] == true ||
+            map['isExcluded'] == 1 ||
+            map['isExcluded']?.toString() == '1',
       );
 
   Map<String, dynamic> toJson() => {
@@ -86,18 +92,26 @@ class TourExpenseShare {
     'lastModified': lastModified.toIso8601String(),
   };
 
-  factory TourExpenseShare.fromJson(Map<String, dynamic> json) =>
-      TourExpenseShare(
-        id: json['id'] as String,
-        expenseId: json['expenseId'] as String,
-        participantId: json['participantId'] as String,
-        shareAmount: (json['shareAmount'] as num).toDouble(),
-        customValue: (json['customValue'] as num?)?.toDouble(),
-        isExcluded: (json['isExcluded'] as int? ?? 0) == 1,
-        syncStatus: json['syncStatus'] as String? ?? 'synced',
-        isDeleted: (json['isDeleted'] as int? ?? 0) == 1,
-        lastModified: json['lastModified'] != null
-            ? DateTime.parse(json['lastModified'] as String)
-            : DateTime.now(),
-      );
+  factory TourExpenseShare.fromJson(Map<String, dynamic> json) {
+    bool flag(dynamic raw) =>
+        raw == true || raw == 1 || raw?.toString() == '1' || raw?.toString() == 'true';
+
+    return TourExpenseShare(
+      id: (json['id'] ?? '').toString(),
+      expenseId: (json['expenseId'] ?? '').toString(),
+      participantId: (json['participantId'] ?? '').toString(),
+      shareAmount: (json['shareAmount'] is num)
+          ? (json['shareAmount'] as num).toDouble()
+          : double.tryParse('${json['shareAmount']}') ?? 0.0,
+      customValue: json['customValue'] is num
+          ? (json['customValue'] as num).toDouble()
+          : double.tryParse('${json['customValue']}'),
+      isExcluded: flag(json['isExcluded']),
+      syncStatus: json['syncStatus'] as String? ?? 'synced',
+      isDeleted: flag(json['isDeleted']),
+      lastModified: json['lastModified'] != null
+          ? DateTime.tryParse(json['lastModified'].toString()) ?? DateTime.now()
+          : DateTime.now(),
+    );
+  }
 }

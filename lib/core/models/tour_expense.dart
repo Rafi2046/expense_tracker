@@ -77,7 +77,9 @@ class TourExpense {
       return <String, double>{};
     }
     if (raw is Map) {
-      return raw.map<String, double>((k, v) => MapEntry(k.toString(), (v as num).toDouble()));
+      return raw.map<String, double>(
+        (k, v) => MapEntry(k.toString(), _parseAmount(v)),
+      );
     }
     if (raw is String) {
       final trimmed = raw.trim();
@@ -85,7 +87,9 @@ class TourExpense {
       try {
         final decoded = jsonDecode(trimmed);
         if (decoded is Map) {
-          return decoded.map<String, double>((k, v) => MapEntry(k.toString(), (v as num).toDouble()));
+          return decoded.map<String, double>(
+            (k, v) => MapEntry(k.toString(), _parseAmount(v)),
+          );
         }
         return <String, double>{trimmed: amount};
       } catch (_) {
@@ -102,15 +106,51 @@ class TourExpense {
 
   static List<String> _decodeReceiptPaths(dynamic raw) {
     if (raw == null) return [];
-    final s = raw.toString();
+    if (raw is List) {
+      return raw
+          .map((e) => e.toString().trim())
+          .where((s) => s.isNotEmpty)
+          .toList();
+    }
+    final s = raw.toString().trim();
     if (s.isEmpty) return [];
     if (s.startsWith('[')) {
       try {
         final decoded = jsonDecode(s);
-        if (decoded is List) return decoded.cast<String>();
+        if (decoded is List) {
+          return decoded
+              .map((e) => e.toString().trim())
+              .where((s) => s.isNotEmpty)
+              .toList();
+        }
       } catch (_) {}
     }
     return [s];
+  }
+
+  static bool _parseBoolFlag(dynamic raw) {
+    if (raw == true || raw == 1) return true;
+    if (raw == false || raw == 0 || raw == null) return false;
+    if (raw is String) {
+      final s = raw.trim().toLowerCase();
+      return s == '1' || s == 'true';
+    }
+    return false;
+  }
+
+  static DateTime? _parseDate(dynamic raw) {
+    if (raw == null) return null;
+    if (raw is DateTime) return raw;
+    try {
+      return DateTime.parse(raw.toString());
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static double _parseAmount(dynamic raw) {
+    if (raw is num) return raw.toDouble();
+    return double.tryParse(raw?.toString() ?? '') ?? 0.0;
   }
 
   Map<String, dynamic> toMap() => {
@@ -131,30 +171,41 @@ class TourExpense {
   };
 
   factory TourExpense.fromMap(String id, Map<String, dynamic> map) {
-    final shareMaps = (map['shares'] as List<dynamic>?)
-        ?.cast<Map<String, dynamic>>();
-    final amount = (map['amount'] as num).toDouble();
+    List<TourExpenseShare>? shares;
+    final rawShares = map['shares'];
+    if (rawShares is List) {
+      shares = [];
+      for (final item in rawShares) {
+        if (item is! Map) continue;
+        try {
+          shares.add(
+            TourExpenseShare.fromEmbeddedMap(
+              item.map((k, v) => MapEntry(k.toString(), v)),
+            ),
+          );
+        } catch (_) {}
+      }
+    }
+
+    final amount = _parseAmount(map['amount']);
+    final date = _parseDate(map['date']) ?? DateTime.now();
     return TourExpense(
       id: id,
-      tourId: map['tourId'] as String,
-      title: map['title'] as String,
+      tourId: (map['tourId'] ?? '').toString(),
+      title: (map['title'] ?? '').toString(),
       amount: amount,
       paidBy: _parsePaidBy(map['paidBy'], amount),
-      splitType: map['splitType'] as String? ?? 'equal',
-      category: map['category'] as String?,
-      note: map['note'] as String?,
-      date: DateTime.parse(map['date'] as String),
-      receiptPaths: _decodeReceiptPaths(map['receiptPath']),
-      createdAt: map['createdAt'] != null
-          ? DateTime.parse(map['createdAt'] as String)
-          : null,
-      isDeleted: map['isDeleted'] == true,
-      lastModified: map['lastModified'] != null
-          ? DateTime.parse(map['lastModified'] as String)
-          : null,
-      shares: shareMaps
-          ?.map((s) => TourExpenseShare.fromEmbeddedMap(s))
-          .toList(),
+      splitType: (map['splitType'] ?? 'equal').toString(),
+      category: map['category']?.toString(),
+      note: map['note']?.toString(),
+      date: date,
+      receiptPaths: _decodeReceiptPaths(
+        map['receiptPath'] ?? map['receiptPaths'],
+      ),
+      createdAt: _parseDate(map['createdAt']),
+      isDeleted: _parseBoolFlag(map['isDeleted']),
+      lastModified: _parseDate(map['lastModified']),
+      shares: shares,
     );
   }
 
@@ -176,26 +227,25 @@ class TourExpense {
   };
 
   factory TourExpense.fromJson(Map<String, dynamic> json) {
-    final amount = (json['amount'] as num).toDouble();
+    final amount = _parseAmount(json['amount']);
+    final date = _parseDate(json['date']) ?? DateTime.now();
     return TourExpense(
-      id: json['id'] as String,
-      tourId: json['tourId'] as String,
-      title: json['title'] as String,
+      id: (json['id'] ?? '').toString(),
+      tourId: (json['tourId'] ?? '').toString(),
+      title: (json['title'] ?? '').toString(),
       amount: amount,
       paidBy: _parsePaidBy(json['paidBy'], amount),
-      splitType: json['splitType'] as String? ?? 'equal',
-      category: json['category'] as String?,
-      note: json['note'] as String?,
-      date: DateTime.parse(json['date'] as String),
-      receiptPaths: _decodeReceiptPaths(json['receiptPath']),
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'] as String)
-          : null,
-      syncStatus: json['syncStatus'] as String? ?? 'synced',
-      isDeleted: (json['isDeleted'] as int? ?? 0) == 1,
-      lastModified: json['lastModified'] != null
-          ? DateTime.parse(json['lastModified'] as String)
-          : DateTime.now(),
+      splitType: (json['splitType'] ?? 'equal').toString(),
+      category: json['category']?.toString(),
+      note: json['note']?.toString(),
+      date: date,
+      receiptPaths: _decodeReceiptPaths(
+        json['receiptPath'] ?? json['receiptPaths'],
+      ),
+      createdAt: _parseDate(json['createdAt']),
+      syncStatus: (json['syncStatus'] ?? 'synced').toString(),
+      isDeleted: _parseBoolFlag(json['isDeleted']),
+      lastModified: _parseDate(json['lastModified']) ?? DateTime.now(),
     );
   }
 }
