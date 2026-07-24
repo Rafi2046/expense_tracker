@@ -186,11 +186,23 @@ void main() async {
             initialProfileId: initialProfileId,
           ),
           update: (_, profileProvider, pm) {
-            // ProfileManager (updated only by explicit switchProfile) owns the
-            // active id. Align the UI to it — never the reverse, and never
-            // re-read SharedPrefs here (that raced with in-flight switches and
-            // could snap the UI back to a stale secondary profile).
+            // ProfileManager owns the active id for normal switches. Align the
+            // UI to it — never re-read SharedPrefs here (that raced with
+            // in-flight switches and could snap back to a stale secondary).
+            // Exception: if the active profile was deleted (esp. remotely),
+            // follow ProfileProvider's fallback so data providers reload.
             if (!profileProvider.isReady || pm == null) return pm!;
+
+            final activeStillExists = profileProvider.profiles.any(
+              (p) => p.id == pm.activeProfileId,
+            );
+            if (!activeStillExists) {
+              final fallbackId = profileProvider.currentProfile.id;
+              if (fallbackId != pm.activeProfileId) {
+                Future.microtask(() => pm.switchProfile(fallbackId));
+              }
+              return pm;
+            }
 
             if (profileProvider.currentProfile.id != pm.activeProfileId) {
               Future.microtask(

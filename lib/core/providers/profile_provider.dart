@@ -187,6 +187,8 @@ class ProfileProvider extends ChangeNotifier {
                 case DocumentChangeType.removed:
                   _knownProfileIds.remove(docId);
                   DatabaseHelper.instance.deleteProfileAndData(docId);
+                  // Older builds only deleted the profile doc — clean orphans.
+                  unawaited(_deleteCloudProfileData(docId));
                   _profiles.removeWhere((p) => p.id == docId);
                   if (_currentProfile.id == docId) {
                     final defaultProfile = _profiles.firstWhere(
@@ -570,7 +572,9 @@ class ProfileProvider extends ChangeNotifier {
     if (profileId == 'default_profile') return;
 
     await DatabaseHelper.instance.deleteProfileAndData(profileId);
-    await _profileDoc(profileId)?.delete();
+    // Wipe cloud rows first so other devices' listeners cannot re-pull
+    // orphaned secondary-profile transactions after local cascade.
+    await _deleteCloudProfileData(profileId);
 
     _profiles.removeWhere((p) => p.id == profileId);
     _knownProfileIds.remove(profileId);
@@ -591,6 +595,54 @@ class ProfileProvider extends ChangeNotifier {
 
     resetCreationState();
     notifyListeners();
+  }
+
+  /// Deletes Firestore docs scoped to [profileId], then the profile doc.
+  Future<void> _deleteCloudProfileData(String profileId) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return;
+
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(uid);
+
+    Future<void> deleteMatching(String collection) async {
+      try {
+        final snap = await userDoc
+            .collection(collection)
+            .where('profileId', isEqualTo: profileId)
+            .get();
+        WriteBatch? batch;
+        var ops = 0;
+        for (final doc in snap.docs) {
+          batch ??= FirebaseFirestore.instance.batch();
+          batch.delete(doc.reference);
+          ops++;
+          if (ops >= 450) {
+            await batch.commit();
+            batch = null;
+            ops = 0;
+          }
+        }
+        if (batch != null) await batch.commit();
+      } catch (e) {
+        debugPrint('ProfileProvider._deleteCloudProfileData($collection): $e');
+      }
+    }
+
+    await deleteMatching('transactions');
+    await deleteMatching('categories');
+    await deleteMatching('debt_items');
+
+    try {
+      await userDoc.collection('budget').doc('monthly_$profileId').delete();
+    } catch (e) {
+      debugPrint('ProfileProvider._deleteCloudProfileData(budget): $e');
+    }
+
+    try {
+      await userDoc.collection('profiles').doc(profileId).delete();
+    } catch (e) {
+      debugPrint('ProfileProvider._deleteCloudProfileData(profile): $e');
+    }
   }
 
   @override

@@ -1039,7 +1039,7 @@
   "auth_failed_try_again": "Authentication failed. Try again.",
   "authenticate_to_access": "Authenticate to access your data",
   "authentication_cancelled": "Authentication cancelled",
-  "category_breakdown_title": "CATEGORY BREAKDOWN",
+  "category_breakdown_title": "श्रेणियों का विश्लेषण",
   "choose_profile_to_manage": "Choose a profile to manage",
   "choose_transaction_type": "Choose Transaction Type",
   "confirm_zero_balance": "Are you sure you want to add a party with zero balance?",
