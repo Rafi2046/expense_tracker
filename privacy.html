@@ -63,12 +63,16 @@
       width: 34px;
       height: 34px;
       border-radius: 10px;
-      background: linear-gradient(135deg, var(--primary), var(--mint));
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 800;
+      object-fit: contain;
+      display: block;
+    }
+
+    .footer-logo {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 14px;
     }
 
     .back {
@@ -176,7 +180,7 @@
   <header class="nav">
     <div class="nav-inner">
       <a class="brand" href="index.html">
-        <span class="brand-mark">B</span>
+        <img class="brand-mark" src="assets/app_logo/splash_logo_final.png" alt="Budget Mint" />
         Budget Mint
       </a>
       <a class="back" href="index.html">← Back to home</a>
@@ -308,6 +312,7 @@
   </main>
 
   <footer>
+    <img class="footer-logo" src="assets/app_logo/splash_logo_final.png" alt="Budget Mint" />
     <p>&copy; 2026 Budget Mint. All rights reserved.</p>
     <p style="margin-top: 8px;"><a href="index.html">budgetmint.app</a></p>
   </footer>

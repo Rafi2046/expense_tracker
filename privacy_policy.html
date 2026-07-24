@@ -69,25 +69,23 @@
         }
 
         .icon-container {
-            width: 64px;
-            height: 64px;
-            background: var(--primary-gradient);
+            width: 72px;
+            height: 72px;
+            background: transparent;
             border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
-            box-shadow: 0 4px 14px rgba(46, 189, 133, 0.35);
+            box-shadow: none;
+            overflow: hidden;
         }
 
-        .icon-container svg {
-            width: 32px;
-            height: 32px;
-            fill: none;
-            stroke: #FFFFFF;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+        .icon-container img {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            display: block;
         }
 
         h1 {
@@ -146,6 +144,14 @@
             font-size: 13px;
             color: var(--text-muted);
         }
+
+        .footer-logo {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto 14px;
+        }
     </style>
 </head>
 <body>
@@ -153,10 +159,7 @@
 <div class="container">
     <div class="header">
         <div class="icon-container">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <path d="m9 11 2 2 4-4"/>
-            </svg>
+            <img src="assets/app_logo/splash_logo_final.png" alt="Budget Mint" />
         </div>
         <h1>Budget Mint Privacy Policy</h1>
         <div class="meta">Last Updated: July 24, 2026</div>
@@ -228,6 +231,7 @@
     </div>
 
     <div class="footer">
+        <img class="footer-logo" src="assets/app_logo/splash_logo_final.png" alt="Budget Mint" />
         &copy; 2026 Budget Mint. All rights reserved.
     </div>
 </div>
